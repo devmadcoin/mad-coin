@@ -5,7 +5,6 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
-
       {/* RED CLOUD BACKGROUND */}
       <div className="absolute inset-0 -z-10">
         <Image
@@ -21,10 +20,8 @@ export default function Home() {
 
       {/* Content Wrapper */}
       <div className="relative z-10 flex flex-col items-center text-center px-6">
-
         {/* HERO SECTION */}
         <section className="min-h-screen flex flex-col items-center justify-center">
-
           {/* MAD Logo */}
           <Image
             src="/mad.png"
@@ -53,7 +50,6 @@ export default function Home() {
 
           {/* BUTTONS */}
           <div className="mt-10 flex gap-4 flex-wrap justify-center">
-
             {/* Buy */}
             <a
               href={`https://jup.ag/swap/SOL-${addr}`}
@@ -93,7 +89,6 @@ export default function Home() {
             >
               Join Telegram
             </a>
-
           </div>
 
           <p className="mt-16 text-white/40 text-sm tracking-wide">
@@ -106,18 +101,15 @@ export default function Home() {
             <p>$SAD farmed me.</p>
             <p className="text-red-500 font-bold text-xl">$MAD made me.</p>
           </div>
-
         </section>
 
         {/* MEME SECTION */}
         <section className="py-24 max-w-6xl w-full">
-
           <h2 className="text-4xl font-black text-center mb-16">
             The $MAD Lore
           </h2>
 
           <div className="grid md:grid-cols-2 gap-10">
-
             <div className="bg-white/5 p-4 rounded-2xl border border-white/10 hover:scale-[1.02] transition">
               <Image
                 src="/meme1.jpg"
@@ -147,13 +139,75 @@ export default function Home() {
                 className="rounded-xl"
               />
             </div>
-
           </div>
-
         </section>
 
+        {/* ===================== */}
+        {/* ROADMAP SECTION */}
+        {/* ===================== */}
+        <section className="py-24 max-w-4xl w-full">
+          <h2 className="text-4xl font-black text-center mb-12">Roadmap</h2>
+
+          <div className="grid gap-6 text-left">
+            {/* Step 1 */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                Phase 1
+              </p>
+              <h3 className="text-2xl font-black mt-2">Bond</h3>
+              <p className="text-white/60 mt-2">
+                Establish the foundation. Lock in the vibe. Build the core.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                Phase 2
+              </p>
+              <h3 className="text-2xl font-black mt-2">$1M</h3>
+              <p className="text-white/60 mt-2">
+                First major milestone. Momentum becomes undeniable.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                Phase 3
+              </p>
+              <h3 className="text-2xl font-black mt-2">$10M</h3>
+              <p className="text-white/60 mt-2">
+                Scale the energy. More eyes. More memes. More movement.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                Phase 4
+              </p>
+              <h3 className="text-2xl font-black mt-2">$50M</h3>
+              <p className="text-white/60 mt-2">
+                Serious territory. The timeline feels it.
+              </p>
+            </div>
+
+            {/* Step 5 */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+              <p className="text-xs uppercase tracking-widest text-white/50">
+                Phase 5
+              </p>
+              <h3 className="text-2xl font-black mt-2">$100M</h3>
+              <p className="text-white/60 mt-2">
+                Full send. Legendary status. Digital emotion completed.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   );
 }
+
 
