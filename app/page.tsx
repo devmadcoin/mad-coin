@@ -52,6 +52,20 @@ export default function Home() {
   }, []);
 
   // =========================
+  // 🧠 NEW: Meme Vault (your 5 new uploaded memes)
+  // =========================
+  const freshMemes = useMemo(
+    () => [
+      { src: "/mad-meme-01.png", tag: "Too Hot Coffee" },
+      { src: "/mad-meme-02.png", tag: "Toilet Paper" },
+      { src: "/mad-meme-03.png", tag: "Flight Delayed" },
+      { src: "/mad-meme-04.png", tag: "Binge Watch Pain" },
+      { src: "/mad-meme-05.png", tag: "Forgot Lunch" },
+    ],
+    []
+  );
+
+  // =========================
   // 😡 MAD COUNTER + LEADERBOARD
   // =========================
   const [rageIndex, setRageIndex] = useState<number>(847_291); // meme anchor
@@ -91,7 +105,6 @@ export default function Home() {
   }, [myMad, rageIndex]);
 
   const increaseMad = () => {
-    // bump global + personal (tiny random-ish bump, deterministic enough)
     const bump = 7 + ((rageIndex + myMad) % 19); // 7..25
     setRageIndex((v) => v + bump);
     setMyMad((v) => v + 1);
@@ -180,12 +193,10 @@ export default function Home() {
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
         {/* HERO */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
-          {/* Logo */}
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
             <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
           </div>
 
-          {/* Headline */}
           <h1 className="mt-8 text-5xl sm:text-6xl font-black tracking-tight">
             BTC: <span className="text-white">Digital gold.</span>
           </h1>
@@ -193,7 +204,6 @@ export default function Home() {
             $MAD: Digital emotion.
           </h2>
 
-          {/* CA */}
           <p className="mt-8 text-white/70 uppercase tracking-[0.35em] text-xs">
             Solana Contract
           </p>
@@ -208,7 +218,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* CTA ROW */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
               Buy on Jupiter
@@ -228,23 +237,19 @@ export default function Home() {
             Built from cycles. Forged by volatility.
           </p>
 
-          {/* Lore */}
           <div className="mt-10 space-y-2 text-base sm:text-lg text-white/60">
             <p>$HAPPY farmed me.</p>
             <p>$SAD farmed me.</p>
             <p className="text-red-500 font-black text-lg sm:text-xl">$MAD made me.</p>
           </div>
 
-          {/* Scroll hint */}
           <div className="mt-12 flex flex-col items-center gap-2 text-white/50">
             <div className="h-10 w-px bg-white/30" />
             <p className="text-xs uppercase tracking-[0.35em]">Scroll</p>
           </div>
         </section>
 
-        {/* ===================== */}
         {/* 😡 MAD COUNTER SECTION */}
-        {/* ===================== */}
         <section className="py-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
             <p className="text-white/70 uppercase tracking-[0.35em] text-xs">
@@ -281,7 +286,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Leaderboard */}
             <div className="mt-10 text-left max-w-3xl mx-auto">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-2xl font-black">Most MAD Today</h3>
@@ -317,7 +321,52 @@ export default function Home() {
           </div>
         </section>
 
-        {/* MEMES */}
+        {/* ===================== */}
+        {/* 🧠 NEW: $MAD Meme Vault */}
+        {/* ===================== */}
+        <section className="py-20 w-full">
+          <div className="text-center mb-14">
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">
+              Culture
+            </p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">
+              $MAD Meme Vault
+            </h2>
+            <p className="mt-3 text-white/60">Relatable pain. Tokenized.</p>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {freshMemes.map((m) => (
+              <div
+                key={m.src}
+                className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition"
+              >
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/50">
+                    {m.tag}
+                  </span>
+                  <span className="text-xs font-black text-red-400">$MAD</span>
+                </div>
+
+                <Image
+                  src={m.src}
+                  alt={m.tag}
+                  width={1200}
+                  height={1200}
+                  className="rounded-2xl w-full h-auto"
+                />
+
+                <div className="mt-4 h-px w-full bg-white/10" />
+
+                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">
+                  Post this. Tag it. Start fights.
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* MEMES (original lore memes) */}
         <section className="py-20 w-full">
           <h2 className="text-4xl sm:text-5xl font-black text-center mb-12">
             The $MAD Lore
@@ -435,7 +484,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FOOTER */}
         <footer className="py-12 text-center text-white/40 text-sm">
           $MAD — Digital emotion. Not financial advice.
         </footer>
