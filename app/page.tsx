@@ -36,6 +36,21 @@ export default function Home() {
     }
   };
 
+  // 😡 deterministic "anger particles" (no hydration randomness)
+  const angry = useMemo(() => {
+    const count = 18;
+    return Array.from({ length: count }, (_, i) => {
+      const seed = (i * 9973) % 10000;
+      const x = (seed % 1000) / 10; // 0–100
+      const size = 16 + ((seed % 7) * 6); // 16–52
+      const dur = 14 + (seed % 12); // 14–25s
+      const delay = seed % 10; // 0–9s
+      const drift = ((seed % 9) - 4) * 10; // -40..40px
+      const opacity = 0.10 + ((seed % 7) * 0.04); // 0.10–0.34
+      return { i, x, size, dur, delay, drift, opacity };
+    });
+  }, []);
+
   const btnBase =
     "rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur hover:scale-[1.02] active:scale-[0.98]";
   const btnPrimary = `${btnBase} bg-red-500 hover:bg-red-600 text-white`;
@@ -45,6 +60,26 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
+      {/* Inline keyframes for floating 😡 */}
+      <style jsx global>{`
+        @keyframes madFloatUp {
+          from {
+            transform: translate3d(var(--drift), 20vh, 0) rotate(0deg);
+          }
+          to {
+            transform: translate3d(calc(var(--drift) * -1), -140vh, 0)
+              rotate(18deg);
+          }
+        }
+        .mad-emoji {
+          bottom: -30vh;
+          animation-name: madFloatUp;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+          filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
+        }
+      `}</style>
+
       {/* RED CLOUD BACKGROUND */}
       <div className="absolute inset-0 -z-20">
         <Image
@@ -55,6 +90,26 @@ export default function Home() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/60" />
+      </div>
+
+      {/* 😡 FLOATING BACKGROUND */}
+      <div className="pointer-events-none absolute inset-0 -z-15 overflow-hidden">
+        {angry.map((a) => (
+          <span
+            key={a.i}
+            className="mad-emoji absolute select-none"
+            style={{
+              left: `${a.x}%`,
+              fontSize: `${a.size}px`,
+              opacity: a.opacity,
+              animationDuration: `${a.dur}s`,
+              animationDelay: `${a.delay}s`,
+              ["--drift" as any]: `${a.drift}px`,
+            }}
+          >
+            😡
+          </span>
+        ))}
       </div>
 
       {/* CENTER SCROLL GUIDE LINE */}
@@ -101,10 +156,20 @@ export default function Home() {
 
           {/* CTA ROW */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+            <a
+              href={links.buy}
+              target="_blank"
+              rel="noreferrer"
+              className={btnPrimary}
+            >
               Buy on Jupiter
             </a>
-            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+            <a
+              href={links.chart}
+              target="_blank"
+              rel="noreferrer"
+              className={btnGhost}
+            >
               View Chart
             </a>
             <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
@@ -201,16 +266,38 @@ export default function Home() {
         <section className="py-16 w-full max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
-            <p className="mt-3 text-white/60">Simple. Clean. Violent upside energy.</p>
+            <p className="mt-3 text-white/60">
+              Simple. Clean. Violent upside energy.
+            </p>
           </div>
 
           <div className="grid gap-5 text-left">
             {[
-              { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the vibe. Build the core." },
-              { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes undeniable." },
-              { phase: "Phase 3", title: "$10M", desc: "Scale the energy. More eyes. More memes. More movement." },
-              { phase: "Phase 4", title: "$50M", desc: "Serious territory. The timeline feels it." },
-              { phase: "Phase 5", title: "$100M", desc: "Full send. Legendary status. Digital emotion completed." },
+              {
+                phase: "Phase 1",
+                title: "Bond",
+                desc: "Establish the foundation. Lock in the vibe. Build the core.",
+              },
+              {
+                phase: "Phase 2",
+                title: "$1M",
+                desc: "First major milestone. Momentum becomes undeniable.",
+              },
+              {
+                phase: "Phase 3",
+                title: "$10M",
+                desc: "Scale the energy. More eyes. More memes. More movement.",
+              },
+              {
+                phase: "Phase 4",
+                title: "$50M",
+                desc: "Serious territory. The timeline feels it.",
+              },
+              {
+                phase: "Phase 5",
+                title: "$100M",
+                desc: "Full send. Legendary status. Digital emotion completed.",
+              },
             ].map((item) => (
               <div
                 key={item.phase}
