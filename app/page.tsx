@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Home() {
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
@@ -17,6 +19,16 @@ export default function Home() {
 
       {/* Content Layer */}
       <div className="relative z-10 flex flex-col items-center text-center px-6">
+
+        {/* MAD Logo */}
+        <Image
+          src="/mad.png"
+          alt="$MAD logo"
+          width={180}
+          height={180}
+          className="mb-8"
+          priority
+        />
 
         <h1 className="text-5xl sm:text-6xl font-black tracking-tight">
           BTC: Digital gold.
@@ -69,4 +81,5 @@ export default function Home() {
     </main>
   );
 }
+
 
