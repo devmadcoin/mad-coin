@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Home() {
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
@@ -42,14 +42,60 @@ export default function Home() {
     return Array.from({ length: count }, (_, i) => {
       const seed = (i * 9973) % 10000;
       const x = (seed % 1000) / 10; // 0–100
-      const size = 16 + ((seed % 7) * 6); // 16–52
+      const size = 16 + (seed % 7) * 6; // 16–52
       const dur = 14 + (seed % 12); // 14–25s
       const delay = seed % 10; // 0–9s
       const drift = ((seed % 9) - 4) * 10; // -40..40px
-      const opacity = 0.10 + ((seed % 7) * 0.04); // 0.10–0.34
+      const opacity = 0.1 + (seed % 7) * 0.04; // 0.10–0.34
       return { i, x, size, dur, delay, drift, opacity };
     });
   }, []);
+
+  // =========================
+  // 😡 MAD COUNTER + LEADERBOARD
+  // =========================
+  const [rageIndex, setRageIndex] = useState<number>(847_291); // meme anchor
+  const [myMad, setMyMad] = useState<number>(0);
+
+  const leaderboard = useMemo(
+    () => [
+      { name: "guy who sold the bottom", score: 12921 },
+      { name: "“I’ll buy the dip” (didn’t)", score: 9331 },
+      { name: "trader w/ 99 indicators", score: 8420 },
+      { name: "dev (reading replies)", score: 7777 },
+      { name: "“it’s just a retrace”", score: 6969 },
+      { name: "liquidity watcher", score: 5432 },
+      { name: "KOL laughing rn", score: 4200 },
+      { name: "“what’s the CA?” guy", score: 3001 },
+      { name: "“is this a rug?” guy", score: 2222 },
+      { name: "chart refresher", score: 1111 },
+    ],
+    []
+  );
+
+  // Persist YOUR clicks locally (fun, harmless)
+  useEffect(() => {
+    try {
+      const savedMy = localStorage.getItem("mad_myMad");
+      const savedRage = localStorage.getItem("mad_rageIndex");
+      if (savedMy) setMyMad(Number(savedMy) || 0);
+      if (savedRage) setRageIndex(Number(savedRage) || 847_291);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("mad_myMad", String(myMad));
+      localStorage.setItem("mad_rageIndex", String(rageIndex));
+    } catch {}
+  }, [myMad, rageIndex]);
+
+  const increaseMad = () => {
+    // bump global + personal (tiny random-ish bump, deterministic enough)
+    const bump = 7 + ((rageIndex + myMad) % 19); // 7..25
+    setRageIndex((v) => v + bump);
+    setMyMad((v) => v + 1);
+  };
 
   const btnBase =
     "rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur hover:scale-[1.02] active:scale-[0.98]";
@@ -77,6 +123,20 @@ export default function Home() {
           animation-timing-function: linear;
           animation-iteration-count: infinite;
           filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
+        }
+        @keyframes madWiggle {
+          0% {
+            transform: translateY(0);
+          }
+          30% {
+            transform: translateY(-1px);
+          }
+          60% {
+            transform: translateY(1px);
+          }
+          100% {
+            transform: translateY(0);
+          }
         }
       `}</style>
 
@@ -122,13 +182,7 @@ export default function Home() {
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
           {/* Logo */}
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
-            <Image
-              src="/mad.png"
-              alt="$MAD logo"
-              width={140}
-              height={140}
-              priority
-            />
+            <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
           </div>
 
           {/* Headline */}
@@ -156,20 +210,10 @@ export default function Home() {
 
           {/* CTA ROW */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a
-              href={links.buy}
-              target="_blank"
-              rel="noreferrer"
-              className={btnPrimary}
-            >
+            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
               Buy on Jupiter
             </a>
-            <a
-              href={links.chart}
-              target="_blank"
-              rel="noreferrer"
-              className={btnGhost}
-            >
+            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
               View Chart
             </a>
             <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
@@ -195,6 +239,81 @@ export default function Home() {
           <div className="mt-12 flex flex-col items-center gap-2 text-white/50">
             <div className="h-10 w-px bg-white/30" />
             <p className="text-xs uppercase tracking-[0.35em]">Scroll</p>
+          </div>
+        </section>
+
+        {/* ===================== */}
+        {/* 😡 MAD COUNTER SECTION */}
+        {/* ===================== */}
+        <section className="py-20 w-full">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
+            <p className="text-white/70 uppercase tracking-[0.35em] text-xs">
+              Global Utility
+            </p>
+
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">
+              $MAD Rage Index™ <span className="text-red-500">😡</span>
+            </h2>
+
+            <div
+              className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8"
+              style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}
+            >
+              <div className="text-5xl sm:text-6xl font-black tabular-nums">
+                {rageIndex.toLocaleString()}
+              </div>
+              <div className="mt-2 text-white/55 text-sm">
+                Emotional damage per second (scientifically unverified)
+              </div>
+
+              <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <button onClick={increaseMad} className={btnPrimary}>
+                  Increase Global Anger 😡 +1
+                </button>
+
+                <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
+                  Your clicks: <span className="text-white">{myMad}</span>
+                </div>
+              </div>
+
+              <p className="mt-4 text-xs text-white/40">
+                Tip: spam it when the chart does that thing.
+              </p>
+            </div>
+
+            {/* Leaderboard */}
+            <div className="mt-10 text-left max-w-3xl mx-auto">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-2xl font-black">Most MAD Today</h3>
+                <span className="text-xs uppercase tracking-[0.35em] text-white/50">
+                  totally real
+                </span>
+              </div>
+
+              <div className="mt-4 grid gap-3">
+                {leaderboard.map((row, idx) => (
+                  <div
+                    key={row.name}
+                    className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">
+                        {idx + 1}
+                      </div>
+                      <div className="font-bold text-white/85">{row.name}</div>
+                    </div>
+
+                    <div className="font-mono text-white/70 tabular-nums">
+                      {row.score.toLocaleString()} MAD
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-3 text-xs text-white/40">
+                Wallets ranked by emotional damage. Not financial advice. Obviously.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -324,5 +443,4 @@ export default function Home() {
     </main>
   );
 }
-
 
