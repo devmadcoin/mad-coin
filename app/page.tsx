@@ -52,6 +52,7 @@ export default function Home() {
           {/* BUTTONS */}
           <div className="mt-10 flex gap-4 flex-wrap justify-center">
 
+            {/* Buy */}
             <a
               href={`https://jup.ag/swap/SOL-${addr}`}
               target="_blank"
@@ -61,6 +62,7 @@ export default function Home() {
               Buy on Jupiter
             </a>
 
+            {/* Chart */}
             <a
               href={`https://dexscreener.com/solana/${addr}`}
               target="_blank"
@@ -70,14 +72,24 @@ export default function Home() {
               View Chart
             </a>
 
-            {/* X / Twitter Community Button */}
+            {/* X */}
             <a
               href="https://x.com/i/communities/2019256566248312879/"
               target="_blank"
               rel="noreferrer"
               className="rounded-full bg-white text-black px-8 py-3 font-bold hover:opacity-80 transition"
             >
-              Join the Community
+              Join X Community
+            </a>
+
+            {/* Telegram */}
+            <a
+              href="https://t.me/madcoinofficial001"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full bg-blue-500 px-8 py-3 font-bold hover:bg-blue-600 transition"
+            >
+              Join Telegram
             </a>
 
           </div>
@@ -95,10 +107,7 @@ export default function Home() {
 
         </section>
 
-        {/* ===================== */}
         {/* MEME SECTION */}
-        {/* ===================== */}
-
         <section className="py-24 max-w-6xl w-full">
 
           <h2 className="text-4xl font-black text-center mb-16">
@@ -107,7 +116,6 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 gap-10">
 
-            {/* Meme 1 */}
             <div className="bg-white/5 p-4 rounded-2xl border border-white/10 hover:scale-[1.02] transition">
               <Image
                 src="/meme1.jpg"
@@ -118,7 +126,6 @@ export default function Home() {
               />
             </div>
 
-            {/* Meme 2 */}
             <div className="bg-white/5 p-4 rounded-2xl border border-white/10 hover:scale-[1.02] transition">
               <Image
                 src="/meme3.jpg"
@@ -129,7 +136,6 @@ export default function Home() {
               />
             </div>
 
-            {/* Meme 3 */}
             <div className="bg-white/5 p-4 rounded-2xl border border-white/10 md:col-span-2 hover:scale-[1.02] transition">
               <Image
                 src="/meme2.jpg"
