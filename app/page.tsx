@@ -4,18 +4,20 @@ export default function Home() {
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
   return (
-    <main className="relative min-h-screen bg-black text-white overflow-hidden">
+    <main className="relative min-h-screen text-white overflow-hidden">
 
-      {/* Background Video */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-20"
-      >
-        <source src="/mad.mp4" type="video/mp4" />
-      </video>
+      {/* RED CLOUD BACKGROUND */}
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/red-clouds.png"
+          alt="Red storm background"
+          fill
+          priority
+          className="object-cover"
+        />
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-black/60"></div>
+      </div>
 
       {/* Content Wrapper */}
       <div className="relative z-10 flex flex-col items-center text-center px-6">
