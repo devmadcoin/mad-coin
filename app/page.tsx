@@ -143,13 +143,41 @@ export default function Home() {
         </section>
 
         {/* ===================== */}
+        {/* ROADMAP DIVIDER VIDEO */}
+        {/* ===================== */}
+        <section className="relative w-full max-w-6xl my-6 sm:my-10 overflow-hidden rounded-3xl border border-white/10">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source src="/roadmap-divider.mp4" type="video/mp4" />
+          </video>
+
+          <div className="absolute inset-0 bg-black/50" />
+
+          <div className="relative z-10 py-16 px-6 text-center">
+            <p className="text-white/70 uppercase tracking-[0.35em] text-xs">
+              Next Chapter
+            </p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">
+              Roadmap
+            </h2>
+            <p className="mt-4 text-white/60 max-w-2xl mx-auto">
+              Bond first. Then we climb.
+            </p>
+          </div>
+        </section>
+
+        {/* ===================== */}
         {/* ROADMAP SECTION */}
         {/* ===================== */}
         <section className="py-24 max-w-4xl w-full">
           <h2 className="text-4xl font-black text-center mb-12">Roadmap</h2>
 
           <div className="grid gap-6 text-left">
-            {/* Step 1 */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <p className="text-xs uppercase tracking-widest text-white/50">
                 Phase 1
@@ -160,7 +188,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Step 2 */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <p className="text-xs uppercase tracking-widest text-white/50">
                 Phase 2
@@ -171,7 +198,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Step 3 */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <p className="text-xs uppercase tracking-widest text-white/50">
                 Phase 3
@@ -182,7 +208,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Step 4 */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <p className="text-xs uppercase tracking-widest text-white/50">
                 Phase 4
@@ -193,7 +218,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Step 5 */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <p className="text-xs uppercase tracking-widest text-white/50">
                 Phase 5
@@ -209,5 +233,4 @@ export default function Home() {
     </main>
   );
 }
-
 
