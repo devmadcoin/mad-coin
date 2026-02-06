@@ -9,7 +9,7 @@ export default function Home() {
       {/* RED CLOUD BACKGROUND */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/red-clouds.png"
+          src="/publicred-clouds.png.png"
           alt="Red storm background"
           fill
           priority
