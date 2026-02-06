@@ -49,7 +49,9 @@ export default function Home() {
             {addr}
           </code>
 
+          {/* BUTTONS */}
           <div className="mt-10 flex gap-4 flex-wrap justify-center">
+
             <a
               href={`https://jup.ag/swap/SOL-${addr}`}
               target="_blank"
@@ -67,6 +69,17 @@ export default function Home() {
             >
               View Chart
             </a>
+
+            {/* X / Twitter Community Button */}
+            <a
+              href="https://x.com/i/communities/2019256566248312879/"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full bg-white text-black px-8 py-3 font-bold hover:opacity-80 transition"
+            >
+              Join the Community
+            </a>
+
           </div>
 
           <p className="mt-16 text-white/40 text-sm tracking-wide">
@@ -81,7 +94,6 @@ export default function Home() {
           </div>
 
         </section>
-
 
         {/* ===================== */}
         {/* MEME SECTION */}
@@ -117,7 +129,7 @@ export default function Home() {
               />
             </div>
 
-            {/* Meme 3 (Wide one) */}
+            {/* Meme 3 */}
             <div className="bg-white/5 p-4 rounded-2xl border border-white/10 md:col-span-2 hover:scale-[1.02] transition">
               <Image
                 src="/meme2.jpg"
