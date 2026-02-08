@@ -24,7 +24,6 @@ export default function Home() {
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
     } catch {
-      // fallback (rare)
       const el = document.createElement("textarea");
       el.value = addr;
       document.body.appendChild(el);
@@ -68,7 +67,7 @@ export default function Home() {
   // =========================
   // 😡 MAD COUNTER + LEADERBOARD
   // =========================
-  const [rageIndex, setRageIndex] = useState<number>(847_291); // meme anchor
+  const [rageIndex, setRageIndex] = useState<number>(847_291);
   const [myMad, setMyMad] = useState<number>(0);
 
   const leaderboard = useMemo(
@@ -87,7 +86,6 @@ export default function Home() {
     []
   );
 
-  // Persist YOUR clicks locally (fun, harmless)
   useEffect(() => {
     try {
       const savedMy = localStorage.getItem("mad_myMad");
@@ -118,7 +116,7 @@ export default function Home() {
   const btnBlue = `${btnBase} bg-blue-500 hover:bg-blue-600 text-white`;
 
   // =========================
-  // ✅ ROADMAP DATA (Phase 1 done)
+  // ✅ Roadmap (Phase 1 completed)
   // =========================
   const roadmap = useMemo(
     () => [
@@ -188,16 +186,17 @@ export default function Home() {
         }
       `}</style>
 
-      {/* RED CLOUD BACKGROUND */}
+      {/* RED CLOUD BACKGROUND (FIXED + VIVID) */}
       <div className="absolute inset-0 -z-20">
         <Image
-          src="/red-clouds.png.png"
+          src="/publicred-clouds.png.png"
           alt="Red storm background"
           fill
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/60" />
+        {/* keep red visible */}
+        <div className="absolute inset-0 bg-black/25" />
       </div>
 
       {/* 😡 FLOATING BACKGROUND */}
@@ -229,13 +228,7 @@ export default function Home() {
         {/* HERO */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
-            <Image
-              src="/mad.png"
-              alt="$MAD logo"
-              width={140}
-              height={140}
-              priority
-            />
+            <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
           </div>
 
           <h1 className="mt-8 text-5xl sm:text-6xl font-black tracking-tight">
@@ -260,36 +253,16 @@ export default function Home() {
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a
-              href={links.buy}
-              target="_blank"
-              rel="noreferrer"
-              className={btnPrimary}
-            >
+            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
               Buy on Jupiter
             </a>
-            <a
-              href={links.chart}
-              target="_blank"
-              rel="noreferrer"
-              className={btnGhost}
-            >
+            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
               View Chart
             </a>
-            <a
-              href={links.x}
-              target="_blank"
-              rel="noreferrer"
-              className={btnWhite}
-            >
+            <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
               Join X Community
             </a>
-            <a
-              href={links.tg}
-              target="_blank"
-              rel="noreferrer"
-              className={btnBlue}
-            >
+            <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
               Join Telegram
             </a>
           </div>
@@ -301,9 +274,7 @@ export default function Home() {
           <div className="mt-10 space-y-2 text-base sm:text-lg text-white/60">
             <p>$HAPPY farmed me.</p>
             <p>$SAD farmed me.</p>
-            <p className="text-red-500 font-black text-lg sm:text-xl">
-              $MAD made me.
-            </p>
+            <p className="text-red-500 font-black text-lg sm:text-xl">$MAD made me.</p>
           </div>
 
           <div className="mt-12 flex flex-col items-center gap-2 text-white/50">
@@ -378,8 +349,7 @@ export default function Home() {
               </div>
 
               <p className="mt-3 text-xs text-white/40">
-                Wallets ranked by emotional damage. Not financial advice.
-                Obviously.
+                Wallets ranked by emotional damage. Not financial advice. Obviously.
               </p>
             </div>
           </div>
@@ -391,9 +361,7 @@ export default function Home() {
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">
               Culture
             </p>
-            <h2 className="mt-3 text-4xl sm:text-5xl font-black">
-              $MAD Meme Vault
-            </h2>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Meme Vault</h2>
             <p className="mt-3 text-white/60">Relatable pain. Tokenized.</p>
           </div>
 
@@ -428,67 +396,18 @@ export default function Home() {
           </div>
         </section>
 
-        {/* MEMES (original lore memes) */}
-        <section className="py-20 w-full">
-          <h2 className="text-4xl sm:text-5xl font-black text-center mb-12">
-            The $MAD Lore
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-4 hover:scale-[1.01] transition">
-              <Image
-                src="/meme1.jpg"
-                alt="Posting my entry"
-                width={900}
-                height={900}
-                className="rounded-2xl"
-              />
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-4 hover:scale-[1.01] transition">
-              <Image
-                src="/meme3.jpg"
-                alt="After I finally sold"
-                width={900}
-                height={900}
-                className="rounded-2xl"
-              />
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-4 md:col-span-2 hover:scale-[1.01] transition">
-              <Image
-                src="/meme2.jpg"
-                alt="Checked chart before bed"
-                width={1600}
-                height={900}
-                className="rounded-2xl"
-              />
-            </div>
-          </div>
-        </section>
-
         {/* ROADMAP DIVIDER VIDEO */}
         <section className="relative w-full my-8 sm:my-12 overflow-hidden rounded-3xl border border-white/10">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 h-full w-full object-cover"
-          >
+          <video autoPlay loop muted playsInline className="absolute inset-0 h-full w-full object-cover">
             <source src="/roadmap-divider.mp4" type="video/mp4" />
           </video>
 
           <div className="absolute inset-0 bg-black/55" />
 
           <div className="relative z-10 py-16 px-6 text-center">
-            <p className="text-white/70 uppercase tracking-[0.35em] text-xs">
-              Next Chapter
-            </p>
+            <p className="text-white/70 uppercase tracking-[0.35em] text-xs">Next Chapter</p>
             <h2 className="mt-3 text-5xl font-black">Roadmap</h2>
-            <p className="mt-4 text-white/60 max-w-2xl mx-auto">
-              Bond first. Then we climb.
-            </p>
+            <p className="mt-4 text-white/60 max-w-2xl mx-auto">Bond first. Then we climb.</p>
           </div>
         </section>
 
@@ -496,9 +415,7 @@ export default function Home() {
         <section className="py-16 w-full max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
-            <p className="mt-3 text-white/60">
-              Simple. Clean. Violent upside energy.
-            </p>
+            <p className="mt-3 text-white/60">Simple. Clean. Violent upside energy.</p>
           </div>
 
           <div className="grid gap-5 text-left">
