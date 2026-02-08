@@ -51,7 +51,7 @@ export default function Home() {
   }, []);
 
   // =========================
-  // 🧠 Meme Vault (your 5 new uploaded memes)
+  // 🧠 Meme Vault
   // =========================
   const freshMemes = useMemo(
     () => [
@@ -186,16 +186,15 @@ export default function Home() {
         }
       `}</style>
 
-      {/* RED CLOUD BACKGROUND (FIXED + VIVID) */}
+      {/* RED CLOUD BACKGROUND (your uploaded pfp bg) */}
       <div className="absolute inset-0 -z-20">
         <Image
-          src="/publicred-clouds.png.png"
+          src="/pfp/bg/bg-redclouds.png.png"
           alt="Red storm background"
           fill
           priority
           className="object-cover"
         />
-        {/* keep red visible */}
         <div className="absolute inset-0 bg-black/25" />
       </div>
 
@@ -267,6 +266,61 @@ export default function Home() {
             </a>
           </div>
 
+          {/* ✅ PFP GENERATOR (UNDER BUTTONS) */}
+          <section className="mt-14 w-full max-w-xl mx-auto text-center">
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">
+              Tool
+            </p>
+            <h3 className="mt-3 text-3xl sm:text-4xl font-black">
+              $MAD PFP Generator
+            </h3>
+            <p className="mt-3 text-white/60">
+              Of course we had to weaponize identity.
+            </p>
+
+            <div className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]">
+              {/* Base */}
+              <img
+                src="/pfp/base/base-01.png"
+                className="absolute inset-0 w-full h-full object-cover"
+                alt="base"
+              />
+              {/* Eyes */}
+              <img
+                src="/pfp/eyes/eyes-01.png"
+                className="absolute inset-0 w-full h-full object-cover"
+                alt="eyes"
+              />
+              {/* Mouth */}
+              <img
+                src="/pfp/mouth/mouth-01.png"
+                className="absolute inset-0 w-full h-full object-cover"
+                alt="mouth"
+              />
+              {/* Accessories */}
+              <img
+                src="/pfp/accessories/acc-01.png"
+                className="absolute inset-0 w-full h-full object-cover"
+                alt="accessory"
+              />
+              {/* Overlays (optional later) */}
+              {/* <img src="/pfp/overlays/overlay-01.png" className="absolute inset-0 w-full h-full object-cover" alt="overlay" /> */}
+            </div>
+
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+              <button className={btnGhost} onClick={() => alert("Next: Randomize + Download 😈")}>
+                Randomize (soon)
+              </button>
+              <button className={btnWhite} onClick={() => alert("Next: Export PNG (we're close)")}>
+                Download (soon)
+              </button>
+            </div>
+
+            <p className="mt-4 text-xs text-white/40">
+              Add more PNGs into /public/pfp/* and we’ll make it random + downloadable.
+            </p>
+          </section>
+
           <p className="mt-10 text-white/40 text-sm tracking-wide">
             Built from cycles. Forged by volatility.
           </p>
@@ -275,11 +329,6 @@ export default function Home() {
             <p>$HAPPY farmed me.</p>
             <p>$SAD farmed me.</p>
             <p className="text-red-500 font-black text-lg sm:text-xl">$MAD made me.</p>
-          </div>
-
-          <div className="mt-12 flex flex-col items-center gap-2 text-white/50">
-            <div className="h-10 w-px bg-white/30" />
-            <p className="text-xs uppercase tracking-[0.35em]">Scroll</p>
           </div>
         </section>
 
