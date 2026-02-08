@@ -52,7 +52,7 @@ export default function Home() {
   }, []);
 
   // =========================
-  // 🧠 NEW: Meme Vault (your 5 new uploaded memes)
+  // 🧠 Meme Vault (your 5 new uploaded memes)
   // =========================
   const freshMemes = useMemo(
     () => [
@@ -117,6 +117,41 @@ export default function Home() {
   const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
   const btnBlue = `${btnBase} bg-blue-500 hover:bg-blue-600 text-white`;
 
+  // =========================
+  // ✅ ROADMAP DATA (Phase 1 done)
+  // =========================
+  const roadmap = useMemo(
+    () => [
+      {
+        phase: "Phase 1",
+        title: "Bond",
+        desc: "Establish the foundation. Lock in the vibe. Build the core.",
+        done: true,
+      },
+      {
+        phase: "Phase 2",
+        title: "$1M",
+        desc: "First major milestone. Momentum becomes undeniable.",
+      },
+      {
+        phase: "Phase 3",
+        title: "$10M",
+        desc: "Scale the energy. More eyes. More memes. More movement.",
+      },
+      {
+        phase: "Phase 4",
+        title: "$50M",
+        desc: "Serious territory. The timeline feels it.",
+      },
+      {
+        phase: "Phase 5",
+        title: "$100M",
+        desc: "Full send. Legendary status. Digital emotion completed.",
+      },
+    ],
+    []
+  );
+
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
       {/* Inline keyframes for floating 😡 */}
@@ -156,7 +191,7 @@ export default function Home() {
       {/* RED CLOUD BACKGROUND */}
       <div className="absolute inset-0 -z-20">
         <Image
-          src="/publicred-clouds.png.png"
+          src="/red-clouds.png.png"
           alt="Red storm background"
           fill
           priority
@@ -194,7 +229,13 @@ export default function Home() {
         {/* HERO */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
-            <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
+            <Image
+              src="/mad.png"
+              alt="$MAD logo"
+              width={140}
+              height={140}
+              priority
+            />
           </div>
 
           <h1 className="mt-8 text-5xl sm:text-6xl font-black tracking-tight">
@@ -219,16 +260,36 @@ export default function Home() {
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+            <a
+              href={links.buy}
+              target="_blank"
+              rel="noreferrer"
+              className={btnPrimary}
+            >
               Buy on Jupiter
             </a>
-            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+            <a
+              href={links.chart}
+              target="_blank"
+              rel="noreferrer"
+              className={btnGhost}
+            >
               View Chart
             </a>
-            <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
+            <a
+              href={links.x}
+              target="_blank"
+              rel="noreferrer"
+              className={btnWhite}
+            >
               Join X Community
             </a>
-            <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
+            <a
+              href={links.tg}
+              target="_blank"
+              rel="noreferrer"
+              className={btnBlue}
+            >
               Join Telegram
             </a>
           </div>
@@ -240,7 +301,9 @@ export default function Home() {
           <div className="mt-10 space-y-2 text-base sm:text-lg text-white/60">
             <p>$HAPPY farmed me.</p>
             <p>$SAD farmed me.</p>
-            <p className="text-red-500 font-black text-lg sm:text-xl">$MAD made me.</p>
+            <p className="text-red-500 font-black text-lg sm:text-xl">
+              $MAD made me.
+            </p>
           </div>
 
           <div className="mt-12 flex flex-col items-center gap-2 text-white/50">
@@ -315,15 +378,14 @@ export default function Home() {
               </div>
 
               <p className="mt-3 text-xs text-white/40">
-                Wallets ranked by emotional damage. Not financial advice. Obviously.
+                Wallets ranked by emotional damage. Not financial advice.
+                Obviously.
               </p>
             </div>
           </div>
         </section>
 
-        {/* ===================== */}
-        {/* 🧠 NEW: $MAD Meme Vault */}
-        {/* ===================== */}
+        {/* 🧠 $MAD Meme Vault */}
         <section className="py-20 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">
@@ -440,47 +502,57 @@ export default function Home() {
           </div>
 
           <div className="grid gap-5 text-left">
-            {[
-              {
-                phase: "Phase 1",
-                title: "Bond",
-                desc: "Establish the foundation. Lock in the vibe. Build the core.",
-              },
-              {
-                phase: "Phase 2",
-                title: "$1M",
-                desc: "First major milestone. Momentum becomes undeniable.",
-              },
-              {
-                phase: "Phase 3",
-                title: "$10M",
-                desc: "Scale the energy. More eyes. More memes. More movement.",
-              },
-              {
-                phase: "Phase 4",
-                title: "$50M",
-                desc: "Serious territory. The timeline feels it.",
-              },
-              {
-                phase: "Phase 5",
-                title: "$100M",
-                desc: "Full send. Legendary status. Digital emotion completed.",
-              },
-            ].map((item) => (
-              <div
-                key={item.phase}
-                className="rounded-3xl border border-white/10 bg-white/5 p-6 hover:bg-white/10 transition"
-              >
-                <p className="text-xs uppercase tracking-[0.35em] text-white/50">
-                  {item.phase}
-                </p>
-                <div className="mt-2 flex items-baseline gap-3">
-                  <h3 className="text-2xl sm:text-3xl font-black">{item.title}</h3>
-                  <span className="h-px flex-1 bg-white/10" />
+            {roadmap.map((item) => {
+              const done = !!item.done;
+
+              return (
+                <div
+                  key={item.phase}
+                  className={[
+                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
+                    done ? "opacity-70" : "hover:bg-white/10",
+                  ].join(" ")}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p
+                      className={[
+                        "text-xs uppercase tracking-[0.35em] text-white/50",
+                        done ? "line-through decoration-white/40" : "",
+                      ].join(" ")}
+                    >
+                      {item.phase}
+                    </p>
+
+                    {done && (
+                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">
+                        ✅ Completed
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-2 flex items-baseline gap-3">
+                    <h3
+                      className={[
+                        "text-2xl sm:text-3xl font-black",
+                        done ? "line-through decoration-red-500/80" : "",
+                      ].join(" ")}
+                    >
+                      {item.title}
+                    </h3>
+                    <span className="h-px flex-1 bg-white/10" />
+                  </div>
+
+                  <p
+                    className={[
+                      "text-white/60 mt-2",
+                      done ? "line-through decoration-white/20" : "",
+                    ].join(" ")}
+                  >
+                    {item.desc}
+                  </p>
                 </div>
-                <p className="text-white/60 mt-2">{item.desc}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -491,4 +563,3 @@ export default function Home() {
     </main>
   );
 }
-
