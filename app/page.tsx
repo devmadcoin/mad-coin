@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function Home() {
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
@@ -126,29 +126,155 @@ export default function Home() {
         desc: "Establish the foundation. Lock in the vibe. Build the core.",
         done: true,
       },
-      {
-        phase: "Phase 2",
-        title: "$1M",
-        desc: "First major milestone. Momentum becomes undeniable.",
-      },
-      {
-        phase: "Phase 3",
-        title: "$10M",
-        desc: "Scale the energy. More eyes. More memes. More movement.",
-      },
-      {
-        phase: "Phase 4",
-        title: "$50M",
-        desc: "Serious territory. The timeline feels it.",
-      },
-      {
-        phase: "Phase 5",
-        title: "$100M",
-        desc: "Full send. Legendary status. Digital emotion completed.",
-      },
+      { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes undeniable." },
+      { phase: "Phase 3", title: "$10M", desc: "Scale the energy. More eyes. More memes. More movement." },
+      { phase: "Phase 4", title: "$50M", desc: "Serious territory. The timeline feels it." },
+      { phase: "Phase 5", title: "$100M", desc: "Full send. Legendary status. Digital emotion completed." },
     ],
     []
   );
+
+  // =========================
+  // 🧩 PFP GENERATOR (EYES) — TRUE RANDOM
+  // =========================
+  // IMPORTANT: Make sure these paths match your /public folder.
+  // Recommended structure:
+  // public/pfp/eyes/cartoon/common/...
+  // public/pfp/eyes/cartoon/rare/...
+  // public/pfp/eyes/cartoon/legendary/...
+  // public/pfp/eyes/pixel/common/...
+  // public/pfp/eyes/pixel/rare/...
+  // public/pfp/eyes/pixel/legendary/...
+  const ALL_EYES = useMemo(
+    () => [
+      // ---- CARTOON / COMMON (6)
+      "/pfp/eyes/cartoon/common/cartoon-eye-black.png",
+      "/pfp/eyes/cartoon/common/cartoon-eye-blue.png",
+      "/pfp/eyes/cartoon/common/cartoon-eye-green.png",
+      "/pfp/eyes/cartoon/common/cartoon-eye-orange.png",
+      "/pfp/eyes/cartoon/common/cartoon-eye-pink.png",
+      "/pfp/eyes/cartoon/common/cartoon-eye-red.png",
+
+      // ---- CARTOON / RARE (6)
+      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-1.png",
+      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-2.png",
+      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-3.png",
+      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-4.png",
+      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-5.png",
+      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-6.png",
+
+      // ---- CARTOON / LEGENDARY (6)
+      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-1.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-2.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-3.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-4.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-5.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-6.png",
+
+      // ---- PIXEL / COMMON (6)
+      "/pfp/eyes/pixel/common/pixel-eyes-1.png",
+      "/pfp/eyes/pixel/common/pixel-eyes-2.png",
+      "/pfp/eyes/pixel/common/pixel-eyes-3.png",
+      "/pfp/eyes/pixel/common/pixel-eyes-4.png",
+      "/pfp/eyes/pixel/common/pixel-eyes-5.png",
+      "/pfp/eyes/pixel/common/pixel-eyes-6.png",
+
+      // ---- PIXEL / RARE (6)
+      "/pfp/eyes/pixel/rare/pixel-rare-1.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-2.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-3.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-4.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-5.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-6.png",
+
+      // ---- PIXEL / LEGENDARY (6)
+      "/pfp/eyes/pixel/legendary/pixel-legendary-1.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-2.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-3.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-4.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-5.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-6.png",
+    ],
+    []
+  );
+
+  const BASE_SRC = "/pfp/base/base-01.png";
+  const MOUTH_SRC = "/pfp/mouth/mouth-01.png";
+  const ACC_SRC = "/pfp/accessories/acc-01.png";
+
+  const [eyeSrc, setEyeSrc] = useState<string>(() => ALL_EYES[0] || "/pfp/eyes/eyes-01.png");
+  const [forgeCount, setForgeCount] = useState<number>(0);
+  const [powerIndex, setPowerIndex] = useState<number>(50);
+  const [revealing, setRevealing] = useState<boolean>(false);
+  const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
+
+  const forgeIdentity = () => {
+    if (!ALL_EYES.length) return;
+    setRevealing(true);
+
+    // suspense/reveal
+    setTimeout(() => {
+      const pick = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
+      setEyeSrc(pick);
+      setForgeCount((v) => v + 1);
+      setPowerIndex(1 + Math.floor(Math.random() * 100));
+      setRevealing(false);
+    }, 550);
+  };
+
+  const loadImg = (src: string) =>
+    new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new window.Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+
+  const downloadPNG = async () => {
+    try {
+      // 1024 is a nice crisp export size
+      const size = 1024;
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      // load layers
+      const [base, eyes, mouth, acc] = await Promise.all([
+        loadImg(BASE_SRC),
+        loadImg(eyeSrc),
+        loadImg(MOUTH_SRC),
+        loadImg(ACC_SRC),
+      ]);
+
+      // draw in order
+      ctx.clearRect(0, 0, size, size);
+      ctx.drawImage(base, 0, 0, size, size);
+      ctx.drawImage(eyes, 0, 0, size, size);
+      ctx.drawImage(mouth, 0, 0, size, size);
+      ctx.drawImage(acc, 0, 0, size, size);
+
+      // export
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+
+        const url = URL.createObjectURL(blob);
+        const a = downloadLinkRef.current || document.createElement("a");
+        a.href = url;
+        a.download = `$MAD-pfp-${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+      }, "image/png");
+    } catch (e) {
+      console.error(e);
+      alert("Download failed — usually means a file path is wrong in ALL_EYES.");
+    }
+  };
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
@@ -159,8 +285,7 @@ export default function Home() {
             transform: translate3d(var(--drift), 20vh, 0) rotate(0deg);
           }
           to {
-            transform: translate3d(calc(var(--drift) * -1), -140vh, 0)
-              rotate(18deg);
+            transform: translate3d(calc(var(--drift) * -1), -140vh, 0) rotate(18deg);
           }
         }
         .mad-emoji {
@@ -182,6 +307,20 @@ export default function Home() {
           }
           100% {
             transform: translateY(0);
+          }
+        }
+        @keyframes forgePulse {
+          0% {
+            transform: scale(1);
+            filter: saturate(1);
+          }
+          50% {
+            transform: scale(1.02);
+            filter: saturate(1.25);
+          }
+          100% {
+            transform: scale(1);
+            filter: saturate(1);
           }
         }
       `}</style>
@@ -268,56 +407,46 @@ export default function Home() {
 
           {/* ✅ PFP GENERATOR (UNDER BUTTONS) */}
           <section className="mt-14 w-full max-w-xl mx-auto text-center">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">
-              Tool
-            </p>
-            <h3 className="mt-3 text-3xl sm:text-4xl font-black">
-              $MAD PFP Generator
-            </h3>
-            <p className="mt-3 text-white/60">
-              Of course we had to weaponize identity.
-            </p>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Tool</p>
+            <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
+            <p className="mt-3 text-white/60">Of course we had to weaponize identity.</p>
 
-            <div className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]">
+            <div
+              className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]"
+              style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
+            >
               {/* Base */}
-              <img
-                src="/pfp/base/base-01.png"
-                className="absolute inset-0 w-full h-full object-cover"
-                alt="base"
-              />
-              {/* Eyes */}
-              <img
-                src="/pfp/eyes/eyes-01.png"
-                className="absolute inset-0 w-full h-full object-cover"
-                alt="eyes"
-              />
+              <img src={BASE_SRC} className="absolute inset-0 w-full h-full object-cover" alt="base" />
+              {/* Eyes (RANDOM) */}
+              <img src={eyeSrc} className="absolute inset-0 w-full h-full object-cover" alt="eyes" />
               {/* Mouth */}
-              <img
-                src="/pfp/mouth/mouth-01.png"
-                className="absolute inset-0 w-full h-full object-cover"
-                alt="mouth"
-              />
+              <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />
               {/* Accessories */}
-              <img
-                src="/pfp/accessories/acc-01.png"
-                className="absolute inset-0 w-full h-full object-cover"
-                alt="accessory"
-              />
-              {/* Overlays (optional later) */}
-              {/* <img src="/pfp/overlays/overlay-01.png" className="absolute inset-0 w-full h-full object-cover" alt="overlay" /> */}
+              <img src={ACC_SRC} className="absolute inset-0 w-full h-full object-cover" alt="accessory" />
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
+                Forge Count: <span className="text-white">{forgeCount}</span>
+              </div>
+              <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
+                Power Index: <span className="text-white">{powerIndex}</span>
+              </div>
             </div>
 
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <button className={btnGhost} onClick={() => alert("Next: Randomize + Download 😈")}>
-                Randomize (soon)
+              <button className={btnPrimary} onClick={forgeIdentity}>
+                Forge Identity
               </button>
-              <button className={btnWhite} onClick={() => alert("Next: Export PNG (we're close)")}>
-                Download (soon)
+              <button className={btnWhite} onClick={downloadPNG}>
+                Download PNG
               </button>
+              {/* hidden anchor used for download */}
+              <a ref={downloadLinkRef} className="hidden" />
             </div>
 
             <p className="mt-4 text-xs text-white/40">
-              Add more PNGs into /public/pfp/* and we’ll make it random + downloadable.
+              True random: every eye = {ALL_EYES.length ? `1/${ALL_EYES.length}` : "—"} chance.
             </p>
           </section>
 
@@ -335,9 +464,7 @@ export default function Home() {
         {/* 😡 MAD COUNTER SECTION */}
         <section className="py-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
-            <p className="text-white/70 uppercase tracking-[0.35em] text-xs">
-              Global Utility
-            </p>
+            <p className="text-white/70 uppercase tracking-[0.35em] text-xs">Global Utility</p>
 
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">
               $MAD Rage Index™ <span className="text-red-500">😡</span>
@@ -364,17 +491,13 @@ export default function Home() {
                 </div>
               </div>
 
-              <p className="mt-4 text-xs text-white/40">
-                Tip: spam it when the chart does that thing.
-              </p>
+              <p className="mt-4 text-xs text-white/40">Tip: spam it when the chart does that thing.</p>
             </div>
 
             <div className="mt-10 text-left max-w-3xl mx-auto">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-2xl font-black">Most MAD Today</h3>
-                <span className="text-xs uppercase tracking-[0.35em] text-white/50">
-                  totally real
-                </span>
+                <span className="text-xs uppercase tracking-[0.35em] text-white/50">totally real</span>
               </div>
 
               <div className="mt-4 grid gap-3">
@@ -407,9 +530,7 @@ export default function Home() {
         {/* 🧠 $MAD Meme Vault */}
         <section className="py-20 w-full">
           <div className="text-center mb-14">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">
-              Culture
-            </p>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Meme Vault</h2>
             <p className="mt-3 text-white/60">Relatable pain. Tokenized.</p>
           </div>
@@ -421,9 +542,7 @@ export default function Home() {
                 className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition"
               >
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/50">
-                    {m.tag}
-                  </span>
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/50">{m.tag}</span>
                   <span className="text-xs font-black text-red-400">$MAD</span>
                 </div>
 
@@ -529,3 +648,4 @@ export default function Home() {
     </main>
   );
 }
+
