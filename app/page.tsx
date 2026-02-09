@@ -3,6 +3,16 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+type EyeStyle = "any" | "cartoon" | "pixel";
+type EyeRarity = "any" | "common" | "rare" | "legendary";
+
+type EyeItem = {
+  src: string;
+  style: "cartoon" | "pixel";
+  rarity: "common" | "rare" | "legendary";
+  label: string;
+};
+
 export default function Home() {
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
@@ -16,8 +26,10 @@ export default function Home() {
     [addr]
   );
 
+  // =========================
+  // Clipboard
+  // =========================
   const [copied, setCopied] = useState(false);
-
   const copyCA = async () => {
     try {
       await navigator.clipboard.writeText(addr);
@@ -35,7 +47,9 @@ export default function Home() {
     }
   };
 
-  // 😡 deterministic "anger particles" (no hydration randomness)
+  // =========================
+  // 😡 deterministic particles (no hydration randomness)
+  // =========================
   const angry = useMemo(() => {
     const count = 18;
     return Array.from({ length: count }, (_, i) => {
@@ -51,7 +65,7 @@ export default function Home() {
   }, []);
 
   // =========================
-  // 🧠 Meme Vault
+  // Meme Vault
   // =========================
   const freshMemes = useMemo(
     () => [
@@ -65,7 +79,7 @@ export default function Home() {
   );
 
   // =========================
-  // 😡 MAD COUNTER + LEADERBOARD
+  // Rage Index (persisted)
   // =========================
   const [rageIndex, setRageIndex] = useState<number>(847_291);
   const [myMad, setMyMad] = useState<number>(0);
@@ -108,6 +122,9 @@ export default function Home() {
     setMyMad((v) => v + 1);
   };
 
+  // =========================
+  // Buttons
+  // =========================
   const btnBase =
     "rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur hover:scale-[1.02] active:scale-[0.98]";
   const btnPrimary = `${btnBase} bg-red-500 hover:bg-red-600 text-white`;
@@ -116,16 +133,11 @@ export default function Home() {
   const btnBlue = `${btnBase} bg-blue-500 hover:bg-blue-600 text-white`;
 
   // =========================
-  // ✅ Roadmap (Phase 1 completed)
+  // Roadmap
   // =========================
   const roadmap = useMemo(
     () => [
-      {
-        phase: "Phase 1",
-        title: "Bond",
-        desc: "Establish the foundation. Lock in the vibe. Build the core.",
-        done: true,
-      },
+      { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the vibe. Build the core.", done: true },
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes undeniable." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the energy. More eyes. More memes. More movement." },
       { phase: "Phase 4", title: "$50M", desc: "Serious territory. The timeline feels it." },
@@ -135,78 +147,127 @@ export default function Home() {
   );
 
   // =========================
-  // 🧩 PFP GENERATOR (EYES) — FIXED TO YOUR REAL FILENAMES
+  // 🧩 PFP Generator Layers
   // =========================
-  const ALL_EYES = useMemo(
-    () => [
-      // ===== CARTOON / COMMON
-      "/pfp/eyes/cartoon/common/cartoon-common-black.png",
-      "/pfp/eyes/cartoon/common/cartoon-common-blue.png",
-      "/pfp/eyes/cartoon/common/cartoon-common-green.png",
-      "/pfp/eyes/cartoon/common/cartoon-common-orange.png",
-      "/pfp/eyes/cartoon/common/cartoon-common-purple.png",
-      "/pfp/eyes/cartoon/common/cartoon-common-red.png",
-
-      // ===== CARTOON / RARE (neon)
-      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-black.png",
-      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-blue.png",
-      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-green.png",
-      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-orange.png",
-      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-purple.png",
-      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png",
-
-      // ===== CARTOON / LEGENDARY (themes)
-      "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-legendary-ice-blue.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-legendary-void-black.png",
-
-      // ===== PIXEL / COMMON
-      "/pfp/eyes/pixel/common/pixel-common-black.png",
-      "/pfp/eyes/pixel/common/pixel-common-blue.png",
-      "/pfp/eyes/pixel/common/pixel-common-green.png",
-      "/pfp/eyes/pixel/common/pixel-common-orange.png",
-      "/pfp/eyes/pixel/common/pixel-common-pink.png",
-      "/pfp/eyes/pixel/common/pixel-common-purple.png",
-
-      // ===== PIXEL / RARE (crystal)
-      "/pfp/eyes/pixel/rare/pixel-rare-crystal-black.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-crystal-blue.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-crystal-green.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-crystal-orange.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-crystal-pink.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-crystal-red.png",
-
-      // ===== PIXEL / LEGENDARY (robot)
-      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-black.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-blue.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-green.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-orange.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-pink.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-yellow.png",
-    ],
-    []
-  );
-
   const BASE_SRC = "/pfp/base/base-01.png";
   const MOUTH_SRC = "/pfp/mouth/mouth-01.png";
   const ACC_SRC = "/pfp/accessories/acc-01.png";
 
-  const [eyeSrc, setEyeSrc] = useState<string>(() => ALL_EYES[0] || "/pfp/eyes/cartoon/common/cartoon-common-black.png");
-  const [forgeCount, setForgeCount] = useState<number>(0);
-  const [powerIndex, setPowerIndex] = useState<number>(50);
-  const [revealing, setRevealing] = useState<boolean>(false);
-  const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
+  // IMPORTANT: Your real filenames (from your screenshots)
+  const EYES: EyeItem[] = useMemo(
+    () => [
+      // CARTOON / COMMON
+      { src: "/pfp/eyes/cartoon/common/cartoon-common-black.png", style: "cartoon", rarity: "common", label: "Cartoon Common Black" },
+      { src: "/pfp/eyes/cartoon/common/cartoon-common-blue.png", style: "cartoon", rarity: "common", label: "Cartoon Common Blue" },
+      { src: "/pfp/eyes/cartoon/common/cartoon-common-green.png", style: "cartoon", rarity: "common", label: "Cartoon Common Green" },
+      { src: "/pfp/eyes/cartoon/common/cartoon-common-orange.png", style: "cartoon", rarity: "common", label: "Cartoon Common Orange" },
+      { src: "/pfp/eyes/cartoon/common/cartoon-common-purple.png", style: "cartoon", rarity: "common", label: "Cartoon Common Purple" },
+      { src: "/pfp/eyes/cartoon/common/cartoon-common-red.png", style: "cartoon", rarity: "common", label: "Cartoon Common Red" },
+
+      // CARTOON / RARE (NEON)
+      { src: "/pfp/eyes/cartoon/rare/cartoon-rare-neon-black.png", style: "cartoon", rarity: "rare", label: "Cartoon Rare Neon Black" },
+      { src: "/pfp/eyes/cartoon/rare/cartoon-rare-neon-blue.png", style: "cartoon", rarity: "rare", label: "Cartoon Rare Neon Blue" },
+      { src: "/pfp/eyes/cartoon/rare/cartoon-rare-neon-green.png", style: "cartoon", rarity: "rare", label: "Cartoon Rare Neon Green" },
+      { src: "/pfp/eyes/cartoon/rare/cartoon-rare-neon-orange.png", style: "cartoon", rarity: "rare", label: "Cartoon Rare Neon Orange" },
+      { src: "/pfp/eyes/cartoon/rare/cartoon-rare-neon-purple.png", style: "cartoon", rarity: "rare", label: "Cartoon Rare Neon Purple" },
+      { src: "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png", style: "cartoon", rarity: "rare", label: "Cartoon Rare Neon Red" },
+
+      // CARTOON / LEGENDARY (THEMES)
+      { src: "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png", style: "cartoon", rarity: "legendary", label: "Cartoon Legendary Fire" },
+      { src: "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png", style: "cartoon", rarity: "legendary", label: "Cartoon Legendary Fruity" },
+      { src: "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png", style: "cartoon", rarity: "legendary", label: "Cartoon Legendary Hearts" },
+      { src: "/pfp/eyes/cartoon/legendary/cartoon-legendary-ice-blue.png", style: "cartoon", rarity: "legendary", label: "Cartoon Legendary Ice" },
+      { src: "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png", style: "cartoon", rarity: "legendary", label: "Cartoon Legendary Poison" },
+      { src: "/pfp/eyes/cartoon/legendary/cartoon-legendary-void-black.png", style: "cartoon", rarity: "legendary", label: "Cartoon Legendary Void" },
+
+      // PIXEL / COMMON
+      { src: "/pfp/eyes/pixel/common/pixel-common-black.png", style: "pixel", rarity: "common", label: "Pixel Common Black" },
+      { src: "/pfp/eyes/pixel/common/pixel-common-blue.png", style: "pixel", rarity: "common", label: "Pixel Common Blue" },
+      { src: "/pfp/eyes/pixel/common/pixel-common-green.png", style: "pixel", rarity: "common", label: "Pixel Common Green" },
+      { src: "/pfp/eyes/pixel/common/pixel-common-orange.png", style: "pixel", rarity: "common", label: "Pixel Common Orange" },
+      { src: "/pfp/eyes/pixel/common/pixel-common-pink.png", style: "pixel", rarity: "common", label: "Pixel Common Pink" },
+      { src: "/pfp/eyes/pixel/common/pixel-common-purple.png", style: "pixel", rarity: "common", label: "Pixel Common Purple" },
+
+      // PIXEL / RARE (CRYSTAL)
+      { src: "/pfp/eyes/pixel/rare/pixel-rare-crystal-black.png", style: "pixel", rarity: "rare", label: "Pixel Rare Crystal Black" },
+      { src: "/pfp/eyes/pixel/rare/pixel-rare-crystal-blue.png", style: "pixel", rarity: "rare", label: "Pixel Rare Crystal Blue" },
+      { src: "/pfp/eyes/pixel/rare/pixel-rare-crystal-green.png", style: "pixel", rarity: "rare", label: "Pixel Rare Crystal Green" },
+      { src: "/pfp/eyes/pixel/rare/pixel-rare-crystal-orange.png", style: "pixel", rarity: "rare", label: "Pixel Rare Crystal Orange" },
+      { src: "/pfp/eyes/pixel/rare/pixel-rare-crystal-pink.png", style: "pixel", rarity: "rare", label: "Pixel Rare Crystal Pink" },
+      { src: "/pfp/eyes/pixel/rare/pixel-rare-crystal-red.png", style: "pixel", rarity: "rare", label: "Pixel Rare Crystal Red" },
+
+      // PIXEL / LEGENDARY (ROBOT)
+      { src: "/pfp/eyes/pixel/legendary/pixel-legendary-robot-black.png", style: "pixel", rarity: "legendary", label: "Pixel Legendary Robot Black" },
+      { src: "/pfp/eyes/pixel/legendary/pixel-legendary-robot-blue.png", style: "pixel", rarity: "legendary", label: "Pixel Legendary Robot Blue" },
+      { src: "/pfp/eyes/pixel/legendary/pixel-legendary-robot-green.png", style: "pixel", rarity: "legendary", label: "Pixel Legendary Robot Green" },
+      { src: "/pfp/eyes/pixel/legendary/pixel-legendary-robot-orange.png", style: "pixel", rarity: "legendary", label: "Pixel Legendary Robot Orange" },
+      { src: "/pfp/eyes/pixel/legendary/pixel-legendary-robot-pink.png", style: "pixel", rarity: "legendary", label: "Pixel Legendary Robot Pink" },
+      { src: "/pfp/eyes/pixel/legendary/pixel-legendary-robot-yellow.png", style: "pixel", rarity: "legendary", label: "Pixel Legendary Robot Yellow" },
+    ],
+    []
+  );
+
+  // Filters (keeps people hunting = longer sessions)
+  const [styleFilter, setStyleFilter] = useState<EyeStyle>("any");
+  const [rarityFilter, setRarityFilter] = useState<EyeRarity>("any");
+
+  const filteredEyes = useMemo(() => {
+    return EYES.filter((e) => {
+      if (styleFilter !== "any" && e.style !== styleFilter) return false;
+      if (rarityFilter !== "any" && e.rarity !== rarityFilter) return false;
+      return true;
+    });
+  }, [EYES, styleFilter, rarityFilter]);
+
+  // Weighted rarity (when rarityFilter === "any")
+  // Common 78%, Rare 18%, Legendary 4%
+  const pickWeighted = (pool: EyeItem[]) => {
+    if (!pool.length) return null;
+
+    // If user explicitly filtered rarity, just pick from pool.
+    if (rarityFilter !== "any") {
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    const commons = pool.filter((x) => x.rarity === "common");
+    const rares = pool.filter((x) => x.rarity === "rare");
+    const leg = pool.filter((x) => x.rarity === "legendary");
+
+    const r = Math.random();
+    if (r < 0.78 && commons.length) return commons[Math.floor(Math.random() * commons.length)];
+    if (r < 0.96 && rares.length) return rares[Math.floor(Math.random() * rares.length)];
+    if (leg.length) return leg[Math.floor(Math.random() * leg.length)];
+
+    // fallback
+    return pool[Math.floor(Math.random() * pool.length)];
+  };
+
+  const [eye, setEye] = useState<EyeItem>(() => filteredEyes[0] || EYES[0]);
+  const [forgeCount, setForgeCount] = useState(0);
+  const [powerIndex, setPowerIndex] = useState(50);
+  const [revealing, setRevealing] = useState(false);
+  const downloadRef = useRef<HTMLAnchorElement | null>(null);
+
+  // When filters change, ensure current eye is valid
+  useEffect(() => {
+    if (!filteredEyes.length) return;
+    if (!eye) {
+      setEye(filteredEyes[0]);
+      return;
+    }
+    const stillValid = filteredEyes.some((x) => x.src === eye.src);
+    if (!stillValid) setEye(filteredEyes[0]);
+  }, [filteredEyes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const forgeIdentity = () => {
-    if (!ALL_EYES.length) return;
-    setRevealing(true);
+    const pool = filteredEyes;
+    if (!pool.length) return;
 
+    setRevealing(true);
     setTimeout(() => {
-      const pick = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
-      setEyeSrc(pick);
+      const pick = pickWeighted(pool);
+      if (!pick) return;
+      setEye(pick);
       setForgeCount((v) => v + 1);
       setPowerIndex(1 + Math.floor(Math.random() * 100));
       setRevealing(false);
@@ -216,7 +277,6 @@ export default function Home() {
   const loadImg = (src: string) =>
     new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new window.Image();
-      img.crossOrigin = "anonymous";
       img.onload = () => resolve(img);
       img.onerror = () => reject(new Error(`Failed to load: ${src}`));
       img.src = src;
@@ -234,12 +294,15 @@ export default function Home() {
 
       const [base, eyes, mouth, acc] = await Promise.all([
         loadImg(BASE_SRC),
-        loadImg(eyeSrc),
+        loadImg(eye.src),
         loadImg(MOUTH_SRC),
         loadImg(ACC_SRC),
       ]);
 
       ctx.clearRect(0, 0, size, size);
+
+      // NOTE: If your base is a full PFP and eyes are just an overlay,
+      // this order is correct: base -> eyes -> mouth -> accessories
       ctx.drawImage(base, 0, 0, size, size);
       ctx.drawImage(eyes, 0, 0, size, size);
       ctx.drawImage(mouth, 0, 0, size, size);
@@ -249,23 +312,28 @@ export default function Home() {
         if (!blob) return;
         const url = URL.createObjectURL(blob);
 
-        const a = downloadLinkRef.current || document.createElement("a");
+        const a = downloadRef.current || document.createElement("a");
         a.href = url;
         a.download = `$MAD-pfp-${Date.now()}.png`;
-
-        // only append if it wasn't our ref element
-        if (!downloadLinkRef.current) document.body.appendChild(a);
+        document.body.appendChild(a);
         a.click();
-        if (!downloadLinkRef.current) a.remove();
+        a.remove();
 
         setTimeout(() => URL.revokeObjectURL(url), 1500);
       }, "image/png");
     } catch (e) {
       console.error(e);
-      alert(
-        "Download failed — a file path is wrong. Open DevTools console to see which image failed to load."
-      );
+      alert("Download failed. One file path is wrong OR an image couldn't load.");
     }
+  };
+
+  // =========================
+  // Styles
+  // =========================
+  const rarityPill = (r: EyeItem["rarity"]) => {
+    if (r === "legendary") return "bg-yellow-500/20 border-yellow-400/30 text-yellow-200";
+    if (r === "rare") return "bg-purple-500/20 border-purple-400/30 text-purple-200";
+    return "bg-white/10 border-white/10 text-white/70";
   };
 
   return (
@@ -287,15 +355,32 @@ export default function Home() {
           filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
         }
         @keyframes madWiggle {
-          0% { transform: translateY(0); }
-          30% { transform: translateY(-1px); }
-          60% { transform: translateY(1px); }
-          100% { transform: translateY(0); }
+          0% {
+            transform: translateY(0);
+          }
+          30% {
+            transform: translateY(-1px);
+          }
+          60% {
+            transform: translateY(1px);
+          }
+          100% {
+            transform: translateY(0);
+          }
         }
         @keyframes forgePulse {
-          0% { transform: scale(1); filter: saturate(1); }
-          50% { transform: scale(1.02); filter: saturate(1.25); }
-          100% { transform: scale(1); filter: saturate(1); }
+          0% {
+            transform: scale(1);
+            filter: saturate(1);
+          }
+          50% {
+            transform: scale(1.02);
+            filter: saturate(1.25);
+          }
+          100% {
+            transform: scale(1);
+            filter: saturate(1);
+          }
         }
       `}</style>
 
@@ -331,10 +416,7 @@ export default function Home() {
         ))}
       </div>
 
-      {/* CENTER SCROLL GUIDE LINE */}
-      <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-px -translate-x-1/2 bg-white/20" />
-      <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-24 w-px -translate-x-1/2 bg-gradient-to-b from-white/0 via-white/50 to-white/0" />
-
+      {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
         {/* HERO */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
@@ -353,6 +435,7 @@ export default function Home() {
             <div className="max-w-[90vw] sm:max-w-[680px] rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
               {addr}
             </div>
+
             <button onClick={copyCA} className={btnGhost}>
               {copied ? "✅ Copied" : "Copy CA"}
             </button>
@@ -374,21 +457,66 @@ export default function Home() {
           </div>
 
           {/* ✅ PFP GENERATOR */}
-          <section className="mt-14 w-full max-w-xl mx-auto text-center">
+          <section className="mt-14 w-full max-w-2xl mx-auto text-center">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Tool</p>
             <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
-            <p className="mt-3 text-white/60">Free for the community. Identity, weaponized.</p>
+            <p className="mt-3 text-white/60">
+              Forge. Filter. Hunt. Download. (This is how you burn it into the subconscious.)
+            </p>
 
+            {/* Controls */}
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <select
+                value={styleFilter}
+                onChange={(e) => setStyleFilter(e.target.value as EyeStyle)}
+                className="rounded-2xl bg-black/40 border border-white/15 px-4 py-3 text-sm font-bold outline-none"
+              >
+                <option value="any">Style: Any</option>
+                <option value="cartoon">Style: Cartoon</option>
+                <option value="pixel">Style: Pixel</option>
+              </select>
+
+              <select
+                value={rarityFilter}
+                onChange={(e) => setRarityFilter(e.target.value as EyeRarity)}
+                className="rounded-2xl bg-black/40 border border-white/15 px-4 py-3 text-sm font-bold outline-none"
+              >
+                <option value="any">Rarity: Any (weighted)</option>
+                <option value="common">Rarity: Common</option>
+                <option value="rare">Rarity: Rare</option>
+                <option value="legendary">Rarity: Legendary</option>
+              </select>
+
+              <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-bold">
+                Pool: <span className="text-white">{filteredEyes.length}</span>
+              </div>
+            </div>
+
+            {/* Preview */}
             <div
-              className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]"
+              className="mt-8 relative w-64 h-64 sm:w-80 sm:h-80 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]"
               style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
             >
               <img src={BASE_SRC} className="absolute inset-0 w-full h-full object-cover" alt="base" />
-              <img src={eyeSrc} className="absolute inset-0 w-full h-full object-cover" alt="eyes" />
+              <img src={eye?.src} className="absolute inset-0 w-full h-full object-cover" alt="eyes" />
               <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />
               <img src={ACC_SRC} className="absolute inset-0 w-full h-full object-cover" alt="accessory" />
             </div>
 
+            {/* Current Pick */}
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <span className={`rounded-full border px-4 py-2 text-xs font-black ${rarityPill(eye?.rarity || "common")}`}>
+                {eye?.rarity?.toUpperCase() || "COMMON"}
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-bold text-white/70">
+                {eye?.style?.toUpperCase() || "CARTOON"}
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-bold text-white/70">
+                {eye?.label || "—"}
+              </span>
+            </div>
+
+            {/* Forge stats */}
             <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
               <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
                 Forge Count: <span className="text-white">{forgeCount}</span>
@@ -398,22 +526,27 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Actions */}
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <button className={btnPrimary} onClick={forgeIdentity}>
+              <button className={btnPrimary} onClick={forgeIdentity} disabled={!filteredEyes.length}>
                 Forge Identity
               </button>
-              <button className={btnWhite} onClick={downloadPNG}>
+              <button className={btnWhite} onClick={downloadPNG} disabled={!eye}>
                 Download PNG
               </button>
-              <a ref={downloadLinkRef} className="hidden" />
+              <a ref={downloadRef} className="hidden" />
             </div>
 
+            {!filteredEyes.length && (
+              <p className="mt-4 text-sm text-red-200/80">
+                No eyes match your filters. Switch Style/Rarity back to Any.
+              </p>
+            )}
+
             <p className="mt-4 text-xs text-white/40">
-              Eyes loaded: {ALL_EYES.length} total. (If download fails, one path is wrong.)
+              Tip: Leave Rarity on “Any (weighted)” and hunt. That loop keeps people forging.
             </p>
           </section>
-
-          <p className="mt-10 text-white/40 text-sm tracking-wide">Built from cycles. Forged by volatility.</p>
 
           <div className="mt-10 space-y-2 text-base sm:text-lg text-white/60">
             <p>$HAPPY farmed me.</p>
@@ -422,7 +555,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 😡 MAD COUNTER SECTION */}
+        {/* 😡 MAD COUNTER */}
         <section className="py-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
             <p className="text-white/70 uppercase tracking-[0.35em] text-xs">Global Utility</p>
@@ -447,8 +580,6 @@ export default function Home() {
                   Your clicks: <span className="text-white">{myMad}</span>
                 </div>
               </div>
-
-              <p className="mt-4 text-xs text-white/40">Tip: spam it when the chart does that thing.</p>
             </div>
 
             <div className="mt-10 text-left max-w-3xl mx-auto">
@@ -474,13 +605,11 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-
-              <p className="mt-3 text-xs text-white/40">Wallets ranked by emotional damage. Not financial advice. Obviously.</p>
             </div>
           </div>
         </section>
 
-        {/* 🧠 $MAD Meme Vault */}
+        {/* Meme Vault */}
         <section className="py-20 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
@@ -502,42 +631,73 @@ export default function Home() {
                 <Image src={m.src} alt={m.tag} width={1200} height={1200} className="rounded-2xl w-full h-auto" />
 
                 <div className="mt-4 h-px w-full bg-white/10" />
-
                 <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">Post this. Tag it. Start fights.</div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ROADMAP DIVIDER VIDEO */}
-        <section className="relative w-full my-8 sm:my-12 overflow-hidden rounded-3xl border border-white/10">
-          <video autoPlay loop muted playsInline className="absolute inset-0 h-full w-full object-cover">
-            <source src="/roadmap-divider.mp4" type="video/mp4" />
-          </video>
-
-          <div className="absolute inset-0 bg-black/55" />
-
-          <div className="relative z-10 py-16 px-6 text-center">
-            <p className="text-white/70 uppercase tracking-[0.35em] text-xs">Next Chapter</p>
-            <h2 className="mt-3 text-5xl font-black">Roadmap</h2>
-            <p className="mt-4 text-white/60 max-w-2xl mx-auto">Bond first. Then we climb.</p>
-          </div>
-        </section>
-
-        {/* ROADMAP */}
+        {/* Roadmap */}
         <section className="py-16 w-full max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
-            <p className="mt-3 text-white/60">Simple. Clean. Violent upside energy.</p>
+            <p className="mt-3 text-white/60">Bond first. Then we climb.</p>
           </div>
 
           <div className="grid gap-5 text-left">
             {roadmap.map((item) => {
               const done = !!item.done;
-
               return (
                 <div
                   key={item.phase}
                   className={[
-                   
+                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
+                    done ? "opacity-70" : "hover:bg-white/10",
+                  ].join(" ")}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p
+                      className={[
+                        "text-xs uppercase tracking-[0.35em] text-white/50",
+                        done ? "line-through decoration-white/40" : "",
+                      ].join(" ")}
+                    >
+                      {item.phase}
+                    </p>
+
+                    {done && (
+                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">
+                        ✅ Completed
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-2 flex items-baseline gap-3">
+                    <h3
+                      className={[
+                        "text-2xl sm:text-3xl font-black",
+                        done ? "line-through decoration-red-500/80" : "",
+                      ].join(" ")}
+                    >
+                      {item.title}
+                    </h3>
+                    <span className="h-px flex-1 bg-white/10" />
+                  </div>
+
+                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>
+                    {item.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <footer className="py-12 text-center text-white/40 text-sm">
+          $MAD — Digital emotion. Not financial advice.
+        </footer>
+      </div>
+    </main>
+  );
+}
 
