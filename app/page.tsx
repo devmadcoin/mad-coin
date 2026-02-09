@@ -5,16 +5,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 type EyeItem = {
   id: string;
-  primary: string; // preferred path
-  fallback?: string; // used if the image 404s (ex: .png.png issue)
+  primary: string;
+  fallback?: string;
   label: string;
   rarity: "common" | "rare" | "legendary";
   style: "cartoon" | "pixel";
 };
 
 function withOptionalDoublePng(path: string) {
-  // If you accidentally uploaded "name.png.png", this gives us a fallback automatically.
-  // Example: "/pfp/eyes/.../file.png" -> fallback "/pfp/eyes/.../file.png.png"
+  // Handles accidental ".png.png" uploads by providing a fallback automatically.
   if (path.endsWith(".png.png")) return { primary: path, fallback: path.replace(/\.png\.png$/, ".png") };
   if (path.endsWith(".png")) return { primary: path, fallback: `${path}.png` };
   return { primary: path, fallback: undefined };
@@ -52,24 +51,22 @@ export default function Home() {
     }
   };
 
-  // 😡 deterministic "anger particles" (no hydration randomness)
+  // 😡 deterministic "anger particles"
   const angry = useMemo(() => {
     const count = 18;
     return Array.from({ length: count }, (_, i) => {
       const seed = (i * 9973) % 10000;
-      const x = (seed % 1000) / 10; // 0–100
-      const size = 16 + (seed % 7) * 6; // 16–52
-      const dur = 14 + (seed % 12); // 14–25s
-      const delay = seed % 10; // 0–9s
-      const drift = ((seed % 9) - 4) * 10; // -40..40px
-      const opacity = 0.1 + (seed % 7) * 0.04; // 0.10–0.34
+      const x = (seed % 1000) / 10;
+      const size = 16 + (seed % 7) * 6;
+      const dur = 14 + (seed % 12);
+      const delay = seed % 10;
+      const drift = ((seed % 9) - 4) * 10;
+      const opacity = 0.1 + (seed % 7) * 0.04;
       return { i, x, size, dur, delay, drift, opacity };
     });
   }, []);
 
-  // =========================
   // 🧠 Meme Vault
-  // =========================
   const freshMemes = useMemo(
     () => [
       { src: "/mad-meme-01.png", tag: "Too Hot Coffee" },
@@ -81,9 +78,7 @@ export default function Home() {
     []
   );
 
-  // =========================
   // 😡 MAD COUNTER + LEADERBOARD
-  // =========================
   const [rageIndex, setRageIndex] = useState<number>(847_291);
   const [myMad, setMyMad] = useState<number>(0);
 
@@ -120,7 +115,7 @@ export default function Home() {
   }, [myMad, rageIndex]);
 
   const increaseMad = () => {
-    const bump = 7 + ((rageIndex + myMad) % 19); // 7..25
+    const bump = 7 + ((rageIndex + myMad) % 19);
     setRageIndex((v) => v + bump);
     setMyMad((v) => v + 1);
   };
@@ -132,9 +127,7 @@ export default function Home() {
   const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
   const btnBlue = `${btnBase} bg-blue-500 hover:bg-blue-600 text-white`;
 
-  // =========================
   // ✅ Roadmap
-  // =========================
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the vibe. Build the core.", done: true },
@@ -146,9 +139,7 @@ export default function Home() {
     []
   );
 
-  // =========================
-  // 🧩 PFP GENERATOR (EYES) — your real filenames
-  // =========================
+  // 🧩 PFP GENERATOR (EYES)
   const ALL_EYES: EyeItem[] = useMemo(() => {
     const add = (id: string, path: string, label: string, rarity: EyeItem["rarity"], style: EyeItem["style"]) => {
       const { primary, fallback } = withOptionalDoublePng(path);
@@ -210,9 +201,24 @@ export default function Home() {
   const MOUTH_SRC = "/pfp/mouth/mouth-01.png";
   const ACC_SRC = "/pfp/accessories/acc-01.png";
 
-  const [eyeSrc, setEyeSrc] = useState<string>(() => ALL_EYES[0]?.primary || "/pfp/eyes/eyes-01.png");
-  const [eyeFallback, setEyeFallback] = useState<string | undefined>(() => ALL_EYES[0]?.fallback);
-  const [eyeLabel, setEyeLabel] = useState<string>(() => ALL_EYES[0]?.label || "Eyes");
+  // ✅ Layer toggles (THIS fixes your “base underneath” problem)
+  const [showBase, setShowBase] = useState(true);
+  const [showMouth, setShowMouth] = useState(true);
+  const [showAcc, setShowAcc] = useState(true);
+
+  // ✅ safe initial state
+  const firstEye = ALL_EYES[0] ?? {
+    id: "default",
+    primary: "/pfp/eyes/eyes-01.png",
+    fallback: undefined,
+    label: "Eyes",
+    rarity: "common",
+    style: "cartoon",
+  };
+
+  const [eyeSrc, setEyeSrc] = useState<string>(firstEye.primary);
+  const [eyeFallback, setEyeFallback] = useState<string | undefined>(firstEye.fallback);
+  const [eyeLabel, setEyeLabel] = useState<string>(firstEye.label);
 
   const [forgeCount, setForgeCount] = useState<number>(0);
   const [powerIndex, setPowerIndex] = useState<number>(50);
@@ -237,6 +243,8 @@ export default function Home() {
   const loadImg = (src: string) =>
     new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new window.Image();
+      // prevents canvas from being tainted if you ever move assets to a CDN
+      img.crossOrigin = "anonymous";
       img.onload = () => resolve(img);
       img.onerror = () => reject(new Error(`Failed to load: ${src}`));
       img.src = src;
@@ -252,23 +260,25 @@ export default function Home() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // If primary fails, try fallback for the eyes
+      // Eyes with fallback
       const eyesImg = await loadImg(eyeSrc).catch(async () => {
         if (!eyeFallback) throw new Error(`Failed to load eyes primary and no fallback: ${eyeSrc}`);
         return await loadImg(eyeFallback);
       });
 
+      // Only load what we will draw (faster + fewer errors)
       const [base, mouth, acc] = await Promise.all([
-        loadImg(BASE_SRC),
-        loadImg(MOUTH_SRC),
-        loadImg(ACC_SRC),
+        showBase ? loadImg(BASE_SRC) : Promise.resolve(null),
+        showMouth ? loadImg(MOUTH_SRC) : Promise.resolve(null),
+        showAcc ? loadImg(ACC_SRC) : Promise.resolve(null),
       ]);
 
       ctx.clearRect(0, 0, size, size);
-      ctx.drawImage(base, 0, 0, size, size);
+
+      if (showBase && base) ctx.drawImage(base, 0, 0, size, size);
       ctx.drawImage(eyesImg, 0, 0, size, size);
-      ctx.drawImage(mouth, 0, 0, size, size);
-      ctx.drawImage(acc, 0, 0, size, size);
+      if (showMouth && mouth) ctx.drawImage(mouth, 0, 0, size, size);
+      if (showAcc && acc) ctx.drawImage(acc, 0, 0, size, size);
 
       canvas.toBlob((blob) => {
         if (!blob) return;
@@ -319,13 +329,7 @@ export default function Home() {
 
       {/* ✅ RED CLOUD BACKGROUND */}
       <div className="absolute inset-0 -z-20">
-        <Image
-          src="/pfp/bg/bg-redclouds.png.png"
-          alt="Red storm background"
-          fill
-          priority
-          className="object-cover"
-        />
+        <Image src="/pfp/bg/bg-redclouds.png.png" alt="Red storm background" fill priority className="object-cover" />
         <div className="absolute inset-0 bg-black/25" />
       </div>
 
@@ -368,22 +372,22 @@ export default function Home() {
             <div className="max-w-[90vw] sm:max-w-[680px] rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
               {addr}
             </div>
-            <button onClick={copyCA} className={"rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur bg-white/10 hover:bg-white/15 text-white"}>
+            <button onClick={copyCA} className={btnGhost}>
               {copied ? "✅ Copied" : "Copy CA"}
             </button>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href={links.buy} target="_blank" rel="noreferrer" className={"rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur bg-red-500 hover:bg-red-600 text-white"}>
+            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
               Buy on Jupiter
             </a>
-            <a href={links.chart} target="_blank" rel="noreferrer" className={"rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur bg-white/10 hover:bg-white/15 text-white"}>
+            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
               View Chart
             </a>
-            <a href={links.x} target="_blank" rel="noreferrer" className={"rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur bg-white text-black hover:opacity-90"}>
+            <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
               Join X Community
             </a>
-            <a href={links.tg} target="_blank" rel="noreferrer" className={"rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur bg-blue-500 hover:bg-blue-600 text-white"}>
+            <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
               Join Telegram
             </a>
           </div>
@@ -394,24 +398,36 @@ export default function Home() {
             <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
             <p className="mt-3 text-white/60">Free for the community. Forge a look that sticks.</p>
 
+            {/* Layer toggles */}
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+              <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
+                {showBase ? "Hide Base" : "Show Base"}
+              </button>
+              <button className={btnGhost} onClick={() => setShowMouth((v) => !v)}>
+                {showMouth ? "Hide Mouth" : "Show Mouth"}
+              </button>
+              <button className={btnGhost} onClick={() => setShowAcc((v) => !v)}>
+                {showAcc ? "Hide Accessory" : "Show Accessory"}
+              </button>
+            </div>
+
             <div
               className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]"
               style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
             >
-              <img src={BASE_SRC} className="absolute inset-0 w-full h-full object-cover" alt="base" />
+              {showBase && <img src={BASE_SRC} className="absolute inset-0 w-full h-full object-cover" alt="base" />}
               <img
                 src={eyeSrc}
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="eyes"
                 onError={(e) => {
-                  // auto swap to fallback if primary 404s
                   if (eyeFallback && (e.currentTarget as HTMLImageElement).src !== eyeFallback) {
                     (e.currentTarget as HTMLImageElement).src = eyeFallback;
                   }
                 }}
               />
-              <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />
-              <img src={ACC_SRC} className="absolute inset-0 w-full h-full object-cover" alt="accessory" />
+              {showMouth && <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />}
+              {showAcc && <img src={ACC_SRC} className="absolute inset-0 w-full h-full object-cover" alt="accessory" />}
             </div>
 
             <div className="mt-4 text-xs text-white/60">{eyeLabel}</div>
@@ -426,10 +442,10 @@ export default function Home() {
             </div>
 
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <button className={"rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur bg-red-500 hover:bg-red-600 text-white"} onClick={forgeIdentity}>
+              <button className={btnPrimary} onClick={forgeIdentity}>
                 Forge Identity
               </button>
-              <button className={"rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur bg-white text-black hover:opacity-90"} onClick={downloadPNG}>
+              <button className={btnWhite} onClick={downloadPNG}>
                 Download PNG
               </button>
               <a ref={downloadLinkRef} className="hidden" />
@@ -463,7 +479,7 @@ export default function Home() {
               <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center items-center">
-                <button onClick={increaseMad} className={"rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur bg-red-500 hover:bg-red-600 text-white"}>
+                <button onClick={increaseMad} className={btnPrimary}>
                   Increase Global Anger 😡 +1
                 </button>
 
@@ -575,4 +591,3 @@ export default function Home() {
     </main>
   );
 }
-
