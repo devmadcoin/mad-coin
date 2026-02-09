@@ -135,65 +135,57 @@ export default function Home() {
   );
 
   // =========================
-  // 🧩 PFP GENERATOR (EYES) — TRUE RANDOM
+  // 🧩 PFP GENERATOR (EYES) — FIXED TO YOUR REAL FILENAMES
   // =========================
-  // IMPORTANT: Make sure these paths match your /public folder.
-  // Recommended structure:
-  // public/pfp/eyes/cartoon/common/...
-  // public/pfp/eyes/cartoon/rare/...
-  // public/pfp/eyes/cartoon/legendary/...
-  // public/pfp/eyes/pixel/common/...
-  // public/pfp/eyes/pixel/rare/...
-  // public/pfp/eyes/pixel/legendary/...
   const ALL_EYES = useMemo(
     () => [
-      // ---- CARTOON / COMMON (6)
-      "/pfp/eyes/cartoon/common/cartoon-eye-black.png",
-      "/pfp/eyes/cartoon/common/cartoon-eye-blue.png",
-      "/pfp/eyes/cartoon/common/cartoon-eye-green.png",
-      "/pfp/eyes/cartoon/common/cartoon-eye-orange.png",
-      "/pfp/eyes/cartoon/common/cartoon-eye-pink.png",
-      "/pfp/eyes/cartoon/common/cartoon-eye-red.png",
+      // ===== CARTOON / COMMON
+      "/pfp/eyes/cartoon/common/cartoon-common-black.png",
+      "/pfp/eyes/cartoon/common/cartoon-common-blue.png",
+      "/pfp/eyes/cartoon/common/cartoon-common-green.png",
+      "/pfp/eyes/cartoon/common/cartoon-common-orange.png",
+      "/pfp/eyes/cartoon/common/cartoon-common-purple.png",
+      "/pfp/eyes/cartoon/common/cartoon-common-red.png",
 
-      // ---- CARTOON / RARE (6)
-      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-1.png",
-      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-2.png",
-      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-3.png",
-      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-4.png",
-      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-5.png",
-      "/pfp/eyes/cartoon/rare/cartoon-eyes-rare-6.png",
+      // ===== CARTOON / RARE (neon)
+      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-black.png",
+      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-blue.png",
+      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-green.png",
+      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-orange.png",
+      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-purple.png",
+      "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png",
 
-      // ---- CARTOON / LEGENDARY (6)
-      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-1.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-2.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-3.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-4.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-5.png",
-      "/pfp/eyes/cartoon/legendary/cartoon-eyes-legendary-6.png",
+      // ===== CARTOON / LEGENDARY (themes)
+      "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-legendary-ice-blue.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png",
+      "/pfp/eyes/cartoon/legendary/cartoon-legendary-void-black.png",
 
-      // ---- PIXEL / COMMON (6)
-      "/pfp/eyes/pixel/common/pixel-eyes-1.png",
-      "/pfp/eyes/pixel/common/pixel-eyes-2.png",
-      "/pfp/eyes/pixel/common/pixel-eyes-3.png",
-      "/pfp/eyes/pixel/common/pixel-eyes-4.png",
-      "/pfp/eyes/pixel/common/pixel-eyes-5.png",
-      "/pfp/eyes/pixel/common/pixel-eyes-6.png",
+      // ===== PIXEL / COMMON
+      "/pfp/eyes/pixel/common/pixel-common-black.png",
+      "/pfp/eyes/pixel/common/pixel-common-blue.png",
+      "/pfp/eyes/pixel/common/pixel-common-green.png",
+      "/pfp/eyes/pixel/common/pixel-common-orange.png",
+      "/pfp/eyes/pixel/common/pixel-common-pink.png",
+      "/pfp/eyes/pixel/common/pixel-common-purple.png",
 
-      // ---- PIXEL / RARE (6)
-      "/pfp/eyes/pixel/rare/pixel-rare-1.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-2.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-3.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-4.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-5.png",
-      "/pfp/eyes/pixel/rare/pixel-rare-6.png",
+      // ===== PIXEL / RARE (crystal)
+      "/pfp/eyes/pixel/rare/pixel-rare-crystal-black.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-crystal-blue.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-crystal-green.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-crystal-orange.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-crystal-pink.png",
+      "/pfp/eyes/pixel/rare/pixel-rare-crystal-red.png",
 
-      // ---- PIXEL / LEGENDARY (6)
-      "/pfp/eyes/pixel/legendary/pixel-legendary-1.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-2.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-3.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-4.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-5.png",
-      "/pfp/eyes/pixel/legendary/pixel-legendary-6.png",
+      // ===== PIXEL / LEGENDARY (robot)
+      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-black.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-blue.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-green.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-orange.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-pink.png",
+      "/pfp/eyes/pixel/legendary/pixel-legendary-robot-yellow.png",
     ],
     []
   );
@@ -202,7 +194,7 @@ export default function Home() {
   const MOUTH_SRC = "/pfp/mouth/mouth-01.png";
   const ACC_SRC = "/pfp/accessories/acc-01.png";
 
-  const [eyeSrc, setEyeSrc] = useState<string>(() => ALL_EYES[0] || "/pfp/eyes/eyes-01.png");
+  const [eyeSrc, setEyeSrc] = useState<string>(() => ALL_EYES[0] || "/pfp/eyes/cartoon/common/cartoon-common-black.png");
   const [forgeCount, setForgeCount] = useState<number>(0);
   const [powerIndex, setPowerIndex] = useState<number>(50);
   const [revealing, setRevealing] = useState<boolean>(false);
@@ -212,7 +204,6 @@ export default function Home() {
     if (!ALL_EYES.length) return;
     setRevealing(true);
 
-    // suspense/reveal
     setTimeout(() => {
       const pick = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
       setEyeSrc(pick);
@@ -225,14 +216,14 @@ export default function Home() {
   const loadImg = (src: string) =>
     new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new window.Image();
+      img.crossOrigin = "anonymous";
       img.onload = () => resolve(img);
-      img.onerror = reject;
+      img.onerror = () => reject(new Error(`Failed to load: ${src}`));
       img.src = src;
     });
 
   const downloadPNG = async () => {
     try {
-      // 1024 is a nice crisp export size
       const size = 1024;
       const canvas = document.createElement("canvas");
       canvas.width = size;
@@ -241,7 +232,6 @@ export default function Home() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // load layers
       const [base, eyes, mouth, acc] = await Promise.all([
         loadImg(BASE_SRC),
         loadImg(eyeSrc),
@@ -249,36 +239,37 @@ export default function Home() {
         loadImg(ACC_SRC),
       ]);
 
-      // draw in order
       ctx.clearRect(0, 0, size, size);
       ctx.drawImage(base, 0, 0, size, size);
       ctx.drawImage(eyes, 0, 0, size, size);
       ctx.drawImage(mouth, 0, 0, size, size);
       ctx.drawImage(acc, 0, 0, size, size);
 
-      // export
       canvas.toBlob((blob) => {
         if (!blob) return;
-
         const url = URL.createObjectURL(blob);
+
         const a = downloadLinkRef.current || document.createElement("a");
         a.href = url;
         a.download = `$MAD-pfp-${Date.now()}.png`;
-        document.body.appendChild(a);
+
+        // only append if it wasn't our ref element
+        if (!downloadLinkRef.current) document.body.appendChild(a);
         a.click();
-        a.remove();
+        if (!downloadLinkRef.current) a.remove();
 
         setTimeout(() => URL.revokeObjectURL(url), 1500);
       }, "image/png");
     } catch (e) {
       console.error(e);
-      alert("Download failed — usually means a file path is wrong in ALL_EYES.");
+      alert(
+        "Download failed — a file path is wrong. Open DevTools console to see which image failed to load."
+      );
     }
   };
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
-      {/* Inline keyframes for floating 😡 */}
       <style jsx global>{`
         @keyframes madFloatUp {
           from {
@@ -296,36 +287,19 @@ export default function Home() {
           filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
         }
         @keyframes madWiggle {
-          0% {
-            transform: translateY(0);
-          }
-          30% {
-            transform: translateY(-1px);
-          }
-          60% {
-            transform: translateY(1px);
-          }
-          100% {
-            transform: translateY(0);
-          }
+          0% { transform: translateY(0); }
+          30% { transform: translateY(-1px); }
+          60% { transform: translateY(1px); }
+          100% { transform: translateY(0); }
         }
         @keyframes forgePulse {
-          0% {
-            transform: scale(1);
-            filter: saturate(1);
-          }
-          50% {
-            transform: scale(1.02);
-            filter: saturate(1.25);
-          }
-          100% {
-            transform: scale(1);
-            filter: saturate(1);
-          }
+          0% { transform: scale(1); filter: saturate(1); }
+          50% { transform: scale(1.02); filter: saturate(1.25); }
+          100% { transform: scale(1); filter: saturate(1); }
         }
       `}</style>
 
-      {/* RED CLOUD BACKGROUND (your uploaded pfp bg) */}
+      {/* ✅ RED CLOUD BACKGROUND */}
       <div className="absolute inset-0 -z-20">
         <Image
           src="/pfp/bg/bg-redclouds.png.png"
@@ -361,7 +335,6 @@ export default function Home() {
       <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-px -translate-x-1/2 bg-white/20" />
       <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-24 w-px -translate-x-1/2 bg-gradient-to-b from-white/0 via-white/50 to-white/0" />
 
-      {/* CONTENT WRAPPER */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
         {/* HERO */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
@@ -372,19 +345,14 @@ export default function Home() {
           <h1 className="mt-8 text-5xl sm:text-6xl font-black tracking-tight">
             BTC: <span className="text-white">Digital gold.</span>
           </h1>
-          <h2 className="mt-3 text-5xl sm:text-6xl font-black text-red-500">
-            $MAD: Digital emotion.
-          </h2>
+          <h2 className="mt-3 text-5xl sm:text-6xl font-black text-red-500">$MAD: Digital emotion.</h2>
 
-          <p className="mt-8 text-white/70 uppercase tracking-[0.35em] text-xs">
-            Solana Contract
-          </p>
+          <p className="mt-8 text-white/70 uppercase tracking-[0.35em] text-xs">Solana Contract</p>
 
           <div className="mt-3 flex flex-col sm:flex-row items-center gap-3">
             <div className="max-w-[90vw] sm:max-w-[680px] rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
               {addr}
             </div>
-
             <button onClick={copyCA} className={btnGhost}>
               {copied ? "✅ Copied" : "Copy CA"}
             </button>
@@ -405,23 +373,19 @@ export default function Home() {
             </a>
           </div>
 
-          {/* ✅ PFP GENERATOR (UNDER BUTTONS) */}
+          {/* ✅ PFP GENERATOR */}
           <section className="mt-14 w-full max-w-xl mx-auto text-center">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Tool</p>
             <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
-            <p className="mt-3 text-white/60">Of course we had to weaponize identity.</p>
+            <p className="mt-3 text-white/60">Free for the community. Identity, weaponized.</p>
 
             <div
               className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]"
               style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
             >
-              {/* Base */}
               <img src={BASE_SRC} className="absolute inset-0 w-full h-full object-cover" alt="base" />
-              {/* Eyes (RANDOM) */}
               <img src={eyeSrc} className="absolute inset-0 w-full h-full object-cover" alt="eyes" />
-              {/* Mouth */}
               <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />
-              {/* Accessories */}
               <img src={ACC_SRC} className="absolute inset-0 w-full h-full object-cover" alt="accessory" />
             </div>
 
@@ -441,18 +405,15 @@ export default function Home() {
               <button className={btnWhite} onClick={downloadPNG}>
                 Download PNG
               </button>
-              {/* hidden anchor used for download */}
               <a ref={downloadLinkRef} className="hidden" />
             </div>
 
             <p className="mt-4 text-xs text-white/40">
-              True random: every eye = {ALL_EYES.length ? `1/${ALL_EYES.length}` : "—"} chance.
+              Eyes loaded: {ALL_EYES.length} total. (If download fails, one path is wrong.)
             </p>
           </section>
 
-          <p className="mt-10 text-white/40 text-sm tracking-wide">
-            Built from cycles. Forged by volatility.
-          </p>
+          <p className="mt-10 text-white/40 text-sm tracking-wide">Built from cycles. Forged by volatility.</p>
 
           <div className="mt-10 space-y-2 text-base sm:text-lg text-white/60">
             <p>$HAPPY farmed me.</p>
@@ -474,12 +435,8 @@ export default function Home() {
               className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8"
               style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}
             >
-              <div className="text-5xl sm:text-6xl font-black tabular-nums">
-                {rageIndex.toLocaleString()}
-              </div>
-              <div className="mt-2 text-white/55 text-sm">
-                Emotional damage per second (scientifically unverified)
-              </div>
+              <div className="text-5xl sm:text-6xl font-black tabular-nums">{rageIndex.toLocaleString()}</div>
+              <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center items-center">
                 <button onClick={increaseMad} className={btnPrimary}>
@@ -513,16 +470,12 @@ export default function Home() {
                       <div className="font-bold text-white/85">{row.name}</div>
                     </div>
 
-                    <div className="font-mono text-white/70 tabular-nums">
-                      {row.score.toLocaleString()} MAD
-                    </div>
+                    <div className="font-mono text-white/70 tabular-nums">{row.score.toLocaleString()} MAD</div>
                   </div>
                 ))}
               </div>
 
-              <p className="mt-3 text-xs text-white/40">
-                Wallets ranked by emotional damage. Not financial advice. Obviously.
-              </p>
+              <p className="mt-3 text-xs text-white/40">Wallets ranked by emotional damage. Not financial advice. Obviously.</p>
             </div>
           </div>
         </section>
@@ -546,19 +499,11 @@ export default function Home() {
                   <span className="text-xs font-black text-red-400">$MAD</span>
                 </div>
 
-                <Image
-                  src={m.src}
-                  alt={m.tag}
-                  width={1200}
-                  height={1200}
-                  className="rounded-2xl w-full h-auto"
-                />
+                <Image src={m.src} alt={m.tag} width={1200} height={1200} className="rounded-2xl w-full h-auto" />
 
                 <div className="mt-4 h-px w-full bg-white/10" />
 
-                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">
-                  Post this. Tag it. Start fights.
-                </div>
+                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">Post this. Tag it. Start fights.</div>
               </div>
             ))}
           </div>
@@ -594,58 +539,5 @@ export default function Home() {
                 <div
                   key={item.phase}
                   className={[
-                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
-                    done ? "opacity-70" : "hover:bg-white/10",
-                  ].join(" ")}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <p
-                      className={[
-                        "text-xs uppercase tracking-[0.35em] text-white/50",
-                        done ? "line-through decoration-white/40" : "",
-                      ].join(" ")}
-                    >
-                      {item.phase}
-                    </p>
-
-                    {done && (
-                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">
-                        ✅ Completed
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="mt-2 flex items-baseline gap-3">
-                    <h3
-                      className={[
-                        "text-2xl sm:text-3xl font-black",
-                        done ? "line-through decoration-red-500/80" : "",
-                      ].join(" ")}
-                    >
-                      {item.title}
-                    </h3>
-                    <span className="h-px flex-1 bg-white/10" />
-                  </div>
-
-                  <p
-                    className={[
-                      "text-white/60 mt-2",
-                      done ? "line-through decoration-white/20" : "",
-                    ].join(" ")}
-                  >
-                    {item.desc}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        <footer className="py-12 text-center text-white/40 text-sm">
-          $MAD — Digital emotion. Not financial advice.
-        </footer>
-      </div>
-    </main>
-  );
-}
+                   
 
