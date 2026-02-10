@@ -3,13 +3,16 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+type Rarity = "common" | "rare" | "legendary";
+type Style = "cartoon" | "pixel";
+
 type EyeItem = {
   id: string;
   primary: string;
   fallback?: string;
   label: string;
-  rarity: "common" | "rare" | "legendary";
-  style: "cartoon" | "pixel";
+  rarity: Rarity;
+  style: Style;
 };
 
 type AccessoryItem = {
@@ -17,8 +20,8 @@ type AccessoryItem = {
   primary: string;
   fallback?: string;
   label: string;
-  rarity: "common" | "rare" | "legendary";
-  style: "cartoon" | "pixel";
+  rarity: Rarity;
+  style: Style;
 };
 
 function withOptionalDoublePng(path: string) {
@@ -33,6 +36,27 @@ function withOptionalDoublePng(path: string) {
   return { primary: path, fallback: undefined };
 }
 
+function pickWeightedAccessory(all: AccessoryItem[]) {
+  const commons = all.filter((a) => a.rarity === "common");
+  const rares = all.filter((a) => a.rarity === "rare");
+  const legendaries = all.filter((a) => a.rarity === "legendary");
+
+  // If you don’t have a pool yet, fall back safely
+  const safeCommons = commons.length ? commons : all;
+  const safeRares = rares.length ? rares : safeCommons;
+  const safeLegs = legendaries.length ? legendaries : safeRares;
+
+  const roll = Math.random();
+  let pool: AccessoryItem[];
+
+  // 75% common, 20% rare, 5% legendary
+  if (roll < 0.75) pool = safeCommons;
+  else if (roll < 0.95) pool = safeRares;
+  else pool = safeLegs;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 export default function Home() {
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
@@ -40,7 +64,6 @@ export default function Home() {
     () => ({
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
-      // ✅ FIXED: removed the broken backtick in the string
       x: "https://x.com/i/communities/2019256566248312879/",
       tg: "https://t.me/madcoinofficial001",
     }),
@@ -212,20 +235,15 @@ export default function Home() {
     ];
   }, []);
 
-  // 🧩 PFP GENERATOR (ACCESSORIES)
+  // 🧩 PFP GENERATOR (ACCESSORIES) — commons + your rares (exact filenames)
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
-    const add = (
-      id: string,
-      path: string,
-      label: string,
-      rarity: AccessoryItem["rarity"],
-      style: AccessoryItem["style"]
-    ) => {
+    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style) => {
       const { primary, fallback } = withOptionalDoublePng(path);
       return { id, primary, fallback, label, rarity, style } as AccessoryItem;
     };
 
     return [
+      // CARTOON / COMMON
       add("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
       add("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
       add("a-c-common-beanie", "/pfp/accessories/cartoon/common/cartoon-common-beanie.png", "Beanie", "common", "cartoon"),
@@ -236,9 +254,21 @@ export default function Home() {
       add("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
       add("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
       add("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
-
-      // ✅ CHANGED: Wristband -> Headband
+      // ✅ Wristband -> Headband
       add("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
+
+      // CARTOON / RARE (your filenames)
+      add("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
+      add("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
+      add("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
+      add("a-c-rare-fierysunglasses", "/pfp/accessories/cartoon/rare/cartoon-rare-fierysunglasses.png", "Flame Shades", "rare", "cartoon"),
+      add("a-c-rare-greencandle", "/pfp/accessories/cartoon/rare/cartoon-rare-greencandle.png", "Crypto Candle Badge", "rare", "cartoon"),
+      add("a-c-rare-madmeter", "/pfp/accessories/cartoon/rare/cartoon-rare-madmeter.png", "$MAD Meter Pin", "rare", "cartoon"),
+      add("a-c-rare-ragekeyboard", "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png", "Broken Keyboard Necklace", "rare", "cartoon"),
+      add("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
+      add("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
+
+      // (Legendary accessories can go here later)
     ];
   }, []);
 
@@ -275,11 +305,11 @@ export default function Home() {
 
   const [eyeSrc, setEyeSrc] = useState<string>(firstEye.primary);
   const [eyeFallback, setEyeFallback] = useState<string | undefined>(firstEye.fallback);
-  const [eyeLabel, setEyeLabel] = useState<string>(firstEye.label);
+  const [eyeLabel, setEyeLabel] = useState<string>(`${firstEye.label} • ${firstEye.rarity.toUpperCase()}`);
 
   const [accSrc, setAccSrc] = useState<string>(firstAcc.primary);
   const [accFallback, setAccFallback] = useState<string | undefined>(firstAcc.fallback);
-  const [accLabel, setAccLabel] = useState<string>(firstAcc.label);
+  const [accLabel, setAccLabel] = useState<string>(`${firstAcc.label} • ${firstAcc.rarity.toUpperCase()}`);
 
   const [forgeCount, setForgeCount] = useState<number>(0);
   const [powerIndex, setPowerIndex] = useState<number>(50);
@@ -297,7 +327,7 @@ export default function Home() {
       setEyeLabel(`${pickEye.label} • ${pickEye.rarity.toUpperCase()}`);
 
       if (ALL_ACCESSORIES.length) {
-        const pickAcc = ALL_ACCESSORIES[Math.floor(Math.random() * ALL_ACCESSORIES.length)];
+        const pickAcc = pickWeightedAccessory(ALL_ACCESSORIES);
         setAccSrc(pickAcc.primary);
         setAccFallback(pickAcc.fallback);
         setAccLabel(`${pickAcc.label} • ${pickAcc.rarity.toUpperCase()}`);
@@ -431,7 +461,8 @@ export default function Home() {
           onError={(e) => {
             if (!bg.fallback) return;
             const img = e.currentTarget as HTMLImageElement;
-            if (img.src.endsWith(bg.primary)) img.src = bg.fallback;
+            // safer: if primary fails, swap to fallback once
+            if (img.src.includes(bg.primary)) img.src = bg.fallback;
           }}
         />
         <div className="absolute inset-0 bg-black/25" />
@@ -593,10 +624,7 @@ export default function Home() {
               $MAD Rage Index™ <span className="text-red-500">😡</span>
             </h2>
 
-            <div
-              className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8"
-              style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}
-            >
+            <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8" style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}>
               <div className="text-5xl sm:text-6xl font-black tabular-nums">{rageIndex.toLocaleString()}</div>
               <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
 
@@ -623,9 +651,7 @@ export default function Home() {
                 {leaderboard.map((row, idx) => (
                   <div key={row.name} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">
-                        {idx + 1}
-                      </div>
+                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">{idx + 1}</div>
                       <div className="font-bold text-white/85">{row.name}</div>
                     </div>
                     <div className="font-mono text-white/70 tabular-nums">{row.score.toLocaleString()} MAD</div>
@@ -648,10 +674,7 @@ export default function Home() {
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {freshMemes.map((m) => (
-              <div
-                key={m.src}
-                className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition"
-              >
+              <div key={m.src} className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-xs uppercase tracking-[0.3em] text-white/50">{m.tag}</span>
                   <span className="text-xs font-black text-red-400">$MAD</span>
@@ -659,9 +682,7 @@ export default function Home() {
 
                 <Image src={m.src} alt={m.tag} width={1200} height={1200} className="rounded-2xl w-full h-auto" />
                 <div className="mt-4 h-px w-full bg-white/10" />
-                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">
-                  Post this. Tag it. Start fights.
-                </div>
+                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">Post this. Tag it. Start fights.</div>
               </div>
             ))}
           </div>
@@ -716,3 +737,4 @@ export default function Home() {
     </main>
   );
 }
+
