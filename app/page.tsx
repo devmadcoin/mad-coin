@@ -35,7 +35,7 @@ export default function Home() {
     () => ({
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
-      x: "https://x.com/i/communities/2019256566248312879/`,
+      x: "https://x.com/devmadcoin",
       tg: "https://t.me/madcoinofficial001",
     }),
     [addr]
