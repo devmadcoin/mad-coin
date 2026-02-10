@@ -201,12 +201,11 @@ export default function Home() {
   const MOUTH_SRC = "/pfp/mouth/mouth-01.png";
   const ACC_SRC = "/pfp/accessories/acc-01.png";
 
-  // ✅ Layer toggles (THIS fixes your “base underneath” problem)
+  // ✅ Layer toggles
   const [showBase, setShowBase] = useState(true);
   const [showMouth, setShowMouth] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  // ✅ safe initial state
   const firstEye = ALL_EYES[0] ?? {
     id: "default",
     primary: "/pfp/eyes/eyes-01.png",
@@ -243,7 +242,6 @@ export default function Home() {
   const loadImg = (src: string) =>
     new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new window.Image();
-      // prevents canvas from being tainted if you ever move assets to a CDN
       img.crossOrigin = "anonymous";
       img.onload = () => resolve(img);
       img.onerror = () => reject(new Error(`Failed to load: ${src}`));
@@ -260,17 +258,15 @@ export default function Home() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Eyes with fallback
       const eyesImg = await loadImg(eyeSrc).catch(async () => {
         if (!eyeFallback) throw new Error(`Failed to load eyes primary and no fallback: ${eyeSrc}`);
         return await loadImg(eyeFallback);
       });
 
-      // Only load what we will draw (faster + fewer errors)
       const [base, mouth, acc] = await Promise.all([
-        showBase ? loadImg(BASE_SRC) : Promise.resolve(null),
-        showMouth ? loadImg(MOUTH_SRC) : Promise.resolve(null),
-        showAcc ? loadImg(ACC_SRC) : Promise.resolve(null),
+        showBase ? loadImg(BASE_SRC) : Promise.resolve<HTMLImageElement | null>(null),
+        showMouth ? loadImg(MOUTH_SRC) : Promise.resolve<HTMLImageElement | null>(null),
+        showAcc ? loadImg(ACC_SRC) : Promise.resolve<HTMLImageElement | null>(null),
       ]);
 
       ctx.clearRect(0, 0, size, size);
@@ -300,6 +296,9 @@ export default function Home() {
     }
   };
 
+  // ✅ background path + fallback (fixes png vs png.png)
+  const bg = useMemo(() => withOptionalDoublePng("/pfp/bg/bg-redclouds.png"), []);
+
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
       <style jsx global>{`
@@ -327,14 +326,23 @@ export default function Home() {
         }
       `}</style>
 
-      {/* ✅ RED CLOUD BACKGROUND */}
-      <div className="absolute inset-0 -z-20">
-        <Image src="/pfp/bg/bg-redclouds.png.png" alt="Red storm background" fill priority className="object-cover" />
+      {/* ✅ RED CLOUD BACKGROUND (FIXED: fixed layer + correct path + fallback) */}
+      <div className="fixed inset-0 -z-20">
+        <img
+          src={bg.primary}
+          alt="Red storm background"
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            if (!bg.fallback) return;
+            const img = e.currentTarget as HTMLImageElement;
+            if (img.src.endsWith(bg.primary)) img.src = bg.fallback;
+          }}
+        />
         <div className="absolute inset-0 bg-black/25" />
       </div>
 
       {/* 😡 FLOATING BACKGROUND */}
-      <div className="pointer-events-none absolute inset-0 -z-15 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         {angry.map((a) => (
           <span
             key={a.i}
@@ -421,9 +429,7 @@ export default function Home() {
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="eyes"
                 onError={(e) => {
-                  if (eyeFallback && (e.currentTarget as HTMLImageElement).src !== eyeFallback) {
-                    (e.currentTarget as HTMLImageElement).src = eyeFallback;
-                  }
+                  if (eyeFallback) (e.currentTarget as HTMLImageElement).src = eyeFallback;
                 }}
               />
               {showMouth && <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />}
@@ -474,7 +480,10 @@ export default function Home() {
               $MAD Rage Index™ <span className="text-red-500">😡</span>
             </h2>
 
-            <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8" style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}>
+            <div
+              className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8"
+              style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}
+            >
               <div className="text-5xl sm:text-6xl font-black tabular-nums">{rageIndex.toLocaleString()}</div>
               <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
 
@@ -501,7 +510,9 @@ export default function Home() {
                 {leaderboard.map((row, idx) => (
                   <div key={row.name} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">{idx + 1}</div>
+                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">
+                        {idx + 1}
+                      </div>
                       <div className="font-bold text-white/85">{row.name}</div>
                     </div>
                     <div className="font-mono text-white/70 tabular-nums">{row.score.toLocaleString()} MAD</div>
@@ -584,9 +595,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="py-12 text-center text-white/40 text-sm">
-          $MAD — Digital emotion. Not financial advice.
-        </footer>
+        <footer className="py-12 text-center text-white/40 text-sm">$MAD — Digital emotion. Not financial advice.</footer>
       </div>
     </main>
   );
