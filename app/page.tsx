@@ -3,13 +3,16 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+type Rarity = "common" | "rare" | "legendary";
+type Style = "cartoon" | "pixel";
+
 type EyeItem = {
   id: string;
   primary: string;
   fallback?: string;
   label: string;
-  rarity: "common" | "rare" | "legendary";
-  style: "cartoon" | "pixel";
+  rarity: Rarity;
+  style: Style;
 };
 
 type AccessoryItem = {
@@ -17,8 +20,8 @@ type AccessoryItem = {
   primary: string;
   fallback?: string;
   label: string;
-  rarity: "common" | "rare" | "legendary";
-  style: "cartoon" | "pixel";
+  rarity: Rarity;
+  style: Style;
 };
 
 function withOptionalDoublePng(path: string) {
@@ -35,7 +38,7 @@ export default function Home() {
     () => ({
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
-      x: "https://x.com/devmadcoin",
+      x: "https://x.com/devmadcoin", // ✅ your Twitter
       tg: "https://t.me/madcoinofficial001",
     }),
     [addr]
@@ -150,7 +153,7 @@ export default function Home() {
 
   // 🧩 PFP GENERATOR (EYES)
   const ALL_EYES: EyeItem[] = useMemo(() => {
-    const add = (id: string, path: string, label: string, rarity: EyeItem["rarity"], style: EyeItem["style"]) => {
+    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style) => {
       const { primary, fallback } = withOptionalDoublePng(path);
       return { id, primary, fallback, label, rarity, style } as EyeItem;
     };
@@ -206,21 +209,16 @@ export default function Home() {
     ];
   }, []);
 
-  // 🧩 PFP GENERATOR (ACCESSORIES) — your common set
+  // 🧩 PFP GENERATOR (ACCESSORIES) — ✅ YOUR COMMON SET
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
-    const add = (
-      id: string,
-      path: string,
-      label: string,
-      rarity: AccessoryItem["rarity"],
-      style: AccessoryItem["style"]
-    ) => {
+    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style) => {
       const { primary, fallback } = withOptionalDoublePng(path);
       return { id, primary, fallback, label, rarity, style } as AccessoryItem;
     };
 
     return [
-      add("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
+      // CARTOON / COMMON (from your filenames)
+      add("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandaid", "common", "cartoon"),
       add("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
       add("a-c-common-beanie", "/pfp/accessories/cartoon/common/cartoon-common-beanie.png", "Beanie", "common", "cartoon"),
       add("a-c-common-chain", "/pfp/accessories/cartoon/common/cartoon-common-chain.png", "Chain", "common", "cartoon"),
@@ -228,9 +226,13 @@ export default function Home() {
       add("a-c-common-hoodiecollar", "/pfp/accessories/cartoon/common/cartoon-common-hoodiecollar.png", "Hoodie Collar", "common", "cartoon"),
       add("a-c-common-lanyardbadge", "/pfp/accessories/cartoon/common/cartoon-common-lanyardbadge.png", "Lanyard Badge", "common", "cartoon"),
       add("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
-      add("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
-      add("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
+      add("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Black Shades", "common", "cartoon"),
+      add("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop Earring", "common", "cartoon"),
       add("a-c-common-wristband", "/pfp/accessories/cartoon/common/cartoon-common-wristband.png", "Wristband", "common", "cartoon"),
+
+      // When you add Rare + Legendary later, just append them here:
+      // add("a-c-rare-...", "/pfp/accessories/cartoon/rare/....png", "...", "rare", "cartoon"),
+      // add("a-c-leg-...", "/pfp/accessories/cartoon/legendary/....png", "...", "legendary", "cartoon"),
     ];
   }, []);
 
@@ -242,32 +244,28 @@ export default function Home() {
   const [showMouth, setShowMouth] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  // ✅ safe initial states
-  const firstEye =
-    ALL_EYES[0] ??
-    ({
-      id: "default",
-      primary: "/pfp/eyes/eyes-01.png",
-      fallback: undefined,
-      label: "Eyes",
-      rarity: "common",
-      style: "cartoon",
-    } as EyeItem);
-
-  const firstAcc =
-    ALL_ACCESSORIES[0] ??
-    ({
-      id: "default-acc",
-      primary: "/pfp/accessories/acc-01.png",
-      fallback: undefined,
-      label: "Accessory",
-      rarity: "common",
-      style: "cartoon",
-    } as AccessoryItem);
+  // ✅ safe initial state
+  const firstEye = ALL_EYES[0] ?? {
+    id: "default",
+    primary: "/pfp/eyes/eyes-01.png",
+    fallback: undefined,
+    label: "Eyes",
+    rarity: "common" as Rarity,
+    style: "cartoon" as Style,
+  };
 
   const [eyeSrc, setEyeSrc] = useState<string>(firstEye.primary);
   const [eyeFallback, setEyeFallback] = useState<string | undefined>(firstEye.fallback);
   const [eyeLabel, setEyeLabel] = useState<string>(firstEye.label);
+
+  const firstAcc = ALL_ACCESSORIES[0] ?? {
+    id: "none",
+    primary: "",
+    fallback: undefined,
+    label: "None",
+    rarity: "common" as Rarity,
+    style: "cartoon" as Style,
+  };
 
   const [accSrc, setAccSrc] = useState<string>(firstAcc.primary);
   const [accFallback, setAccFallback] = useState<string | undefined>(firstAcc.fallback);
@@ -283,16 +281,26 @@ export default function Home() {
 
     setRevealing(true);
     setTimeout(() => {
-      const pickEye = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
-      setEyeSrc(pickEye.primary);
-      setEyeFallback(pickEye.fallback);
-      setEyeLabel(`${pickEye.label} • ${pickEye.rarity.toUpperCase()}`);
+      const pickedEye = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
 
-      if (ALL_ACCESSORIES.length) {
-        const pickAcc = ALL_ACCESSORIES[Math.floor(Math.random() * ALL_ACCESSORIES.length)];
-        setAccSrc(pickAcc.primary);
-        setAccFallback(pickAcc.fallback);
-        setAccLabel(`${pickAcc.label} • ${pickAcc.rarity.toUpperCase()}`);
+      // ✅ Match accessory to eye style+rarity (looks way more “designed”)
+      const matchingAcc = ALL_ACCESSORIES.filter((a) => a.style === pickedEye.style && a.rarity === pickedEye.rarity);
+      const pickedAcc = matchingAcc.length
+        ? matchingAcc[Math.floor(Math.random() * matchingAcc.length)]
+        : ALL_ACCESSORIES[0];
+
+      setEyeSrc(pickedEye.primary);
+      setEyeFallback(pickedEye.fallback);
+      setEyeLabel(`${pickedEye.label} • ${pickedEye.rarity.toUpperCase()}`);
+
+      if (pickedAcc?.primary) {
+        setAccSrc(pickedAcc.primary);
+        setAccFallback(pickedAcc.fallback);
+        setAccLabel(`${pickedAcc.label} • ${pickedAcc.rarity.toUpperCase()}`);
+      } else {
+        setAccSrc("");
+        setAccFallback(undefined);
+        setAccLabel("None");
       }
 
       setForgeCount((v) => v + 1);
@@ -310,6 +318,14 @@ export default function Home() {
       img.src = src;
     });
 
+  const loadWithFallback = async (primary: string, fallback?: string) => {
+    if (!primary) return null;
+    return await loadImg(primary).catch(async () => {
+      if (!fallback) throw new Error(`Failed to load and no fallback: ${primary}`);
+      return await loadImg(fallback);
+    });
+  };
+
   const downloadPNG = async () => {
     try {
       const size = 1024;
@@ -320,31 +336,20 @@ export default function Home() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Eyes with fallback
-      const eyesImg = await loadImg(eyeSrc).catch(async () => {
-        if (!eyeFallback) throw new Error(`Failed to load eyes primary and no fallback: ${eyeSrc}`);
-        return await loadImg(eyeFallback);
-      });
+      const eyesImg = await loadWithFallback(eyeSrc, eyeFallback);
 
-      // Accessory with fallback
-      const accImg = await (showAcc
-        ? loadImg(accSrc).catch(async () => {
-            if (!accFallback) throw new Error(`Failed to load accessory primary and no fallback: ${accSrc}`);
-            return await loadImg(accFallback);
-          })
-        : Promise.resolve<HTMLImageElement | null>(null));
-
-      const [base, mouth] = await Promise.all([
+      const [base, mouth, acc] = await Promise.all([
         showBase ? loadImg(BASE_SRC) : Promise.resolve<HTMLImageElement | null>(null),
         showMouth ? loadImg(MOUTH_SRC) : Promise.resolve<HTMLImageElement | null>(null),
+        showAcc ? loadWithFallback(accSrc, accFallback) : Promise.resolve<HTMLImageElement | null>(null),
       ]);
 
       ctx.clearRect(0, 0, size, size);
 
       if (showBase && base) ctx.drawImage(base, 0, 0, size, size);
-      ctx.drawImage(eyesImg, 0, 0, size, size);
+      if (eyesImg) ctx.drawImage(eyesImg, 0, 0, size, size);
       if (showMouth && mouth) ctx.drawImage(mouth, 0, 0, size, size);
-      if (showAcc && accImg) ctx.drawImage(accImg, 0, 0, size, size);
+      if (showAcc && acc) ctx.drawImage(acc, 0, 0, size, size);
 
       canvas.toBlob((blob) => {
         if (!blob) return;
@@ -362,7 +367,7 @@ export default function Home() {
       }, "image/png");
     } catch (e) {
       console.error(e);
-      alert("Download failed — this usually means one image path is wrong or an image is missing.");
+      alert("Download failed — usually a filename/path mismatch.");
     }
   };
 
@@ -373,12 +378,8 @@ export default function Home() {
     <main className="relative min-h-screen text-white overflow-hidden">
       <style jsx global>{`
         @keyframes madFloatUp {
-          from {
-            transform: translate3d(var(--drift), 20vh, 0) rotate(0deg);
-          }
-          to {
-            transform: translate3d(calc(var(--drift) * -1), -140vh, 0) rotate(18deg);
-          }
+          from { transform: translate3d(var(--drift), 20vh, 0) rotate(0deg); }
+          to { transform: translate3d(calc(var(--drift) * -1), -140vh, 0) rotate(18deg); }
         }
         .mad-emoji {
           bottom: -30vh;
@@ -388,32 +389,15 @@ export default function Home() {
           filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
         }
         @keyframes madWiggle {
-          0% {
-            transform: translateY(0);
-          }
-          30% {
-            transform: translateY(-1px);
-          }
-          60% {
-            transform: translateY(1px);
-          }
-          100% {
-            transform: translateY(0);
-          }
+          0% { transform: translateY(0); }
+          30% { transform: translateY(-1px); }
+          60% { transform: translateY(1px); }
+          100% { transform: translateY(0); }
         }
         @keyframes forgePulse {
-          0% {
-            transform: scale(1);
-            filter: saturate(1);
-          }
-          50% {
-            transform: scale(1.02);
-            filter: saturate(1.25);
-          }
-          100% {
-            transform: scale(1);
-            filter: saturate(1);
-          }
+          0% { transform: scale(1); filter: saturate(1); }
+          50% { transform: scale(1.02); filter: saturate(1.25); }
+          100% { transform: scale(1); filter: saturate(1); }
         }
       `}</style>
 
@@ -426,7 +410,8 @@ export default function Home() {
           onError={(e) => {
             if (!bg.fallback) return;
             const img = e.currentTarget as HTMLImageElement;
-            if (img.src.endsWith(bg.primary)) img.src = bg.fallback;
+            // swap to fallback only once
+            if (img.src.includes(bg.primary)) img.src = bg.fallback;
           }}
         />
         <div className="absolute inset-0 bg-black/25" />
@@ -477,18 +462,10 @@ export default function Home() {
           </div>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-              Buy on Jupiter
-            </a>
-            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-              View Chart
-            </a>
-            <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
-              Join X Community
-            </a>
-            <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
-              Join Telegram
-            </a>
+            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>Buy on Jupiter</a>
+            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>View Chart</a>
+            <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>Follow on X</a>
+            <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>Join Telegram</a>
           </div>
 
           {/* ✅ PFP GENERATOR */}
@@ -499,15 +476,9 @@ export default function Home() {
 
             {/* Layer toggles */}
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-              <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
-                {showBase ? "Hide Base" : "Show Base"}
-              </button>
-              <button className={btnGhost} onClick={() => setShowMouth((v) => !v)}>
-                {showMouth ? "Hide Mouth" : "Show Mouth"}
-              </button>
-              <button className={btnGhost} onClick={() => setShowAcc((v) => !v)}>
-                {showAcc ? "Hide Accessory" : "Show Accessory"}
-              </button>
+              <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>{showBase ? "Hide Base" : "Show Base"}</button>
+              <button className={btnGhost} onClick={() => setShowMouth((v) => !v)}>{showMouth ? "Hide Mouth" : "Show Mouth"}</button>
+              <button className={btnGhost} onClick={() => setShowAcc((v) => !v)}>{showAcc ? "Hide Accessory" : "Show Accessory"}</button>
             </div>
 
             <div
@@ -516,6 +487,7 @@ export default function Home() {
             >
               {showBase && <img src={BASE_SRC} className="absolute inset-0 w-full h-full object-cover" alt="base" />}
 
+              {/* Eyes */}
               <img
                 src={eyeSrc}
                 className="absolute inset-0 w-full h-full object-cover"
@@ -529,7 +501,8 @@ export default function Home() {
 
               {showMouth && <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />}
 
-              {showAcc && (
+              {/* ✅ Accessories */}
+              {showAcc && !!accSrc && (
                 <img
                   src={accSrc}
                   className="absolute inset-0 w-full h-full object-cover"
@@ -543,8 +516,10 @@ export default function Home() {
               )}
             </div>
 
-            <div className="mt-4 text-xs text-white/60">{eyeLabel}</div>
-            <div className="mt-1 text-xs text-white/50">{accLabel}</div>
+            <div className="mt-4 text-xs text-white/60">
+              {eyeLabel}
+              {showAcc && accSrc ? <div>{accLabel}</div> : null}
+            </div>
 
             <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
               <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
@@ -556,12 +531,8 @@ export default function Home() {
             </div>
 
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <button className={btnPrimary} onClick={forgeIdentity}>
-                Forge Identity
-              </button>
-              <button className={btnWhite} onClick={downloadPNG}>
-                Download PNG
-              </button>
+              <button className={btnPrimary} onClick={forgeIdentity}>Forge Identity</button>
+              <button className={btnWhite} onClick={downloadPNG}>Download PNG</button>
               <a ref={downloadLinkRef} className="hidden" />
             </div>
 
@@ -593,10 +564,7 @@ export default function Home() {
               <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center items-center">
-                <button onClick={increaseMad} className={btnPrimary}>
-                  Increase Global Anger 😡 +1
-                </button>
-
+                <button onClick={increaseMad} className={btnPrimary}>Increase Global Anger 😡 +1</button>
                 <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
                   Your clicks: <span className="text-white">{myMad}</span>
                 </div>
@@ -676,7 +644,9 @@ export default function Home() {
                     </p>
 
                     {done && (
-                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">✅ Completed</span>
+                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">
+                        ✅ Completed
+                      </span>
                     )}
                   </div>
 
@@ -687,7 +657,9 @@ export default function Home() {
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>{item.desc}</p>
+                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>
+                    {item.desc}
+                  </p>
                 </div>
               );
             })}
