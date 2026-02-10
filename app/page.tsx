@@ -23,8 +23,13 @@ type AccessoryItem = {
 
 function withOptionalDoublePng(path: string) {
   // Handles accidental ".png.png" uploads by providing a fallback automatically.
-  if (path.endsWith(".png.png")) return { primary: path, fallback: path.replace(/\.png\.png$/, ".png") };
-  if (path.endsWith(".png")) return { primary: path, fallback: `${path}.png` };
+  if (path.endsWith(".png.png")) {
+    return { primary: path, fallback: path.replace(/\.png\.png$/, ".png") };
+  }
+  if (path.endsWith(".png")) {
+    // If you uploaded without realizing it became ".png.png" on disk, try that too
+    return { primary: path, fallback: `${path}.png` };
+  }
   return { primary: path, fallback: undefined };
 }
 
@@ -35,7 +40,8 @@ export default function Home() {
     () => ({
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
-      x: "https://x.com/i/communities/2019256566248312879/`,
+      // ✅ FIXED: removed the broken backtick in the string
+      x: "https://x.com/i/communities/2019256566248312879/",
       tg: "https://t.me/madcoinofficial001",
     }),
     [addr]
@@ -206,7 +212,7 @@ export default function Home() {
     ];
   }, []);
 
-  // 🧩 PFP GENERATOR (ACCESSORIES) — your common set
+  // 🧩 PFP GENERATOR (ACCESSORIES)
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
     const add = (
       id: string,
@@ -230,7 +236,9 @@ export default function Home() {
       add("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
       add("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
       add("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
-      add("a-c-common-wristband", "/pfp/accessories/cartoon/common/cartoon-common-wristband.png", "Wristband", "common", "cartoon"),
+
+      // ✅ CHANGED: Wristband -> Headband
+      add("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
     ];
   }, []);
 
@@ -320,13 +328,11 @@ export default function Home() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Eyes with fallback
       const eyesImg = await loadImg(eyeSrc).catch(async () => {
         if (!eyeFallback) throw new Error(`Failed to load eyes primary and no fallback: ${eyeSrc}`);
         return await loadImg(eyeFallback);
       });
 
-      // Accessory with fallback
       const accImg = await (showAcc
         ? loadImg(accSrc).catch(async () => {
             if (!accFallback) throw new Error(`Failed to load accessory primary and no fallback: ${accSrc}`);
@@ -366,7 +372,6 @@ export default function Home() {
     }
   };
 
-  // ✅ background path + fallback (fixes png vs png.png)
   const bg = useMemo(() => withOptionalDoublePng("/pfp/bg/bg-redclouds.png"), []);
 
   return (
@@ -588,7 +593,10 @@ export default function Home() {
               $MAD Rage Index™ <span className="text-red-500">😡</span>
             </h2>
 
-            <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8" style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}>
+            <div
+              className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8"
+              style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}
+            >
               <div className="text-5xl sm:text-6xl font-black tabular-nums">{rageIndex.toLocaleString()}</div>
               <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
 
@@ -615,7 +623,9 @@ export default function Home() {
                 {leaderboard.map((row, idx) => (
                   <div key={row.name} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">{idx + 1}</div>
+                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">
+                        {idx + 1}
+                      </div>
                       <div className="font-bold text-white/85">{row.name}</div>
                     </div>
                     <div className="font-mono text-white/70 tabular-nums">{row.score.toLocaleString()} MAD</div>
@@ -638,7 +648,10 @@ export default function Home() {
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {freshMemes.map((m) => (
-              <div key={m.src} className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+              <div
+                key={m.src}
+                className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition"
+              >
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-xs uppercase tracking-[0.3em] text-white/50">{m.tag}</span>
                   <span className="text-xs font-black text-red-400">$MAD</span>
@@ -646,7 +659,9 @@ export default function Home() {
 
                 <Image src={m.src} alt={m.tag} width={1200} height={1200} className="rounded-2xl w-full h-auto" />
                 <div className="mt-4 h-px w-full bg-white/10" />
-                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">Post this. Tag it. Start fights.</div>
+                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">
+                  Post this. Tag it. Start fights.
+                </div>
               </div>
             ))}
           </div>
@@ -676,7 +691,9 @@ export default function Home() {
                     </p>
 
                     {done && (
-                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">✅ Completed</span>
+                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">
+                        ✅ Completed
+                      </span>
                     )}
                   </div>
 
