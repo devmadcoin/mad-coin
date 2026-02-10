@@ -12,6 +12,15 @@ type EyeItem = {
   style: "cartoon" | "pixel";
 };
 
+type AccessoryItem = {
+  id: string;
+  primary: string;
+  fallback?: string;
+  label: string;
+  rarity: "common" | "rare" | "legendary";
+  style: "cartoon" | "pixel";
+};
+
 function withOptionalDoublePng(path: string) {
   // Handles accidental ".png.png" uploads by providing a fallback automatically.
   if (path.endsWith(".png.png")) return { primary: path, fallback: path.replace(/\.png\.png$/, ".png") };
@@ -26,7 +35,7 @@ export default function Home() {
     () => ({
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
-      x: "https://x.com/i/communities/2019256566248312879/",
+      x: "https://x.com/i/communities/2019256566248312879/`,
       tg: "https://t.me/madcoinofficial001",
     }),
     [addr]
@@ -197,27 +206,72 @@ export default function Home() {
     ];
   }, []);
 
+  // 🧩 PFP GENERATOR (ACCESSORIES) — your common set
+  const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
+    const add = (
+      id: string,
+      path: string,
+      label: string,
+      rarity: AccessoryItem["rarity"],
+      style: AccessoryItem["style"]
+    ) => {
+      const { primary, fallback } = withOptionalDoublePng(path);
+      return { id, primary, fallback, label, rarity, style } as AccessoryItem;
+    };
+
+    return [
+      add("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
+      add("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
+      add("a-c-common-beanie", "/pfp/accessories/cartoon/common/cartoon-common-beanie.png", "Beanie", "common", "cartoon"),
+      add("a-c-common-chain", "/pfp/accessories/cartoon/common/cartoon-common-chain.png", "Chain", "common", "cartoon"),
+      add("a-c-common-coffeemug", "/pfp/accessories/cartoon/common/cartoon-common-coffeemug.png", "Coffee Mug", "common", "cartoon"),
+      add("a-c-common-hoodiecollar", "/pfp/accessories/cartoon/common/cartoon-common-hoodiecollar.png", "Hoodie Collar", "common", "cartoon"),
+      add("a-c-common-lanyardbadge", "/pfp/accessories/cartoon/common/cartoon-common-lanyardbadge.png", "Lanyard Badge", "common", "cartoon"),
+      add("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
+      add("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
+      add("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
+      add("a-c-common-wristband", "/pfp/accessories/cartoon/common/cartoon-common-wristband.png", "Wristband", "common", "cartoon"),
+    ];
+  }, []);
+
   const BASE_SRC = "/pfp/base/base-01.png";
   const MOUTH_SRC = "/pfp/mouth/mouth-01.png";
-  const ACC_SRC = "/pfp/accessories/acc-01.png";
 
   // ✅ Layer toggles
   const [showBase, setShowBase] = useState(true);
   const [showMouth, setShowMouth] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  const firstEye = ALL_EYES[0] ?? {
-    id: "default",
-    primary: "/pfp/eyes/eyes-01.png",
-    fallback: undefined,
-    label: "Eyes",
-    rarity: "common",
-    style: "cartoon",
-  };
+  // ✅ safe initial states
+  const firstEye =
+    ALL_EYES[0] ??
+    ({
+      id: "default",
+      primary: "/pfp/eyes/eyes-01.png",
+      fallback: undefined,
+      label: "Eyes",
+      rarity: "common",
+      style: "cartoon",
+    } as EyeItem);
+
+  const firstAcc =
+    ALL_ACCESSORIES[0] ??
+    ({
+      id: "default-acc",
+      primary: "/pfp/accessories/acc-01.png",
+      fallback: undefined,
+      label: "Accessory",
+      rarity: "common",
+      style: "cartoon",
+    } as AccessoryItem);
 
   const [eyeSrc, setEyeSrc] = useState<string>(firstEye.primary);
   const [eyeFallback, setEyeFallback] = useState<string | undefined>(firstEye.fallback);
   const [eyeLabel, setEyeLabel] = useState<string>(firstEye.label);
+
+  const [accSrc, setAccSrc] = useState<string>(firstAcc.primary);
+  const [accFallback, setAccFallback] = useState<string | undefined>(firstAcc.fallback);
+  const [accLabel, setAccLabel] = useState<string>(firstAcc.label);
 
   const [forgeCount, setForgeCount] = useState<number>(0);
   const [powerIndex, setPowerIndex] = useState<number>(50);
@@ -229,10 +283,18 @@ export default function Home() {
 
     setRevealing(true);
     setTimeout(() => {
-      const pick = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
-      setEyeSrc(pick.primary);
-      setEyeFallback(pick.fallback);
-      setEyeLabel(`${pick.label} • ${pick.rarity.toUpperCase()}`);
+      const pickEye = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
+      setEyeSrc(pickEye.primary);
+      setEyeFallback(pickEye.fallback);
+      setEyeLabel(`${pickEye.label} • ${pickEye.rarity.toUpperCase()}`);
+
+      if (ALL_ACCESSORIES.length) {
+        const pickAcc = ALL_ACCESSORIES[Math.floor(Math.random() * ALL_ACCESSORIES.length)];
+        setAccSrc(pickAcc.primary);
+        setAccFallback(pickAcc.fallback);
+        setAccLabel(`${pickAcc.label} • ${pickAcc.rarity.toUpperCase()}`);
+      }
+
       setForgeCount((v) => v + 1);
       setPowerIndex(1 + Math.floor(Math.random() * 100));
       setRevealing(false);
@@ -258,15 +320,23 @@ export default function Home() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
+      // Eyes with fallback
       const eyesImg = await loadImg(eyeSrc).catch(async () => {
         if (!eyeFallback) throw new Error(`Failed to load eyes primary and no fallback: ${eyeSrc}`);
         return await loadImg(eyeFallback);
       });
 
-      const [base, mouth, acc] = await Promise.all([
+      // Accessory with fallback
+      const accImg = await (showAcc
+        ? loadImg(accSrc).catch(async () => {
+            if (!accFallback) throw new Error(`Failed to load accessory primary and no fallback: ${accSrc}`);
+            return await loadImg(accFallback);
+          })
+        : Promise.resolve<HTMLImageElement | null>(null));
+
+      const [base, mouth] = await Promise.all([
         showBase ? loadImg(BASE_SRC) : Promise.resolve<HTMLImageElement | null>(null),
         showMouth ? loadImg(MOUTH_SRC) : Promise.resolve<HTMLImageElement | null>(null),
-        showAcc ? loadImg(ACC_SRC) : Promise.resolve<HTMLImageElement | null>(null),
       ]);
 
       ctx.clearRect(0, 0, size, size);
@@ -274,7 +344,7 @@ export default function Home() {
       if (showBase && base) ctx.drawImage(base, 0, 0, size, size);
       ctx.drawImage(eyesImg, 0, 0, size, size);
       if (showMouth && mouth) ctx.drawImage(mouth, 0, 0, size, size);
-      if (showAcc && acc) ctx.drawImage(acc, 0, 0, size, size);
+      if (showAcc && accImg) ctx.drawImage(accImg, 0, 0, size, size);
 
       canvas.toBlob((blob) => {
         if (!blob) return;
@@ -303,8 +373,12 @@ export default function Home() {
     <main className="relative min-h-screen text-white overflow-hidden">
       <style jsx global>{`
         @keyframes madFloatUp {
-          from { transform: translate3d(var(--drift), 20vh, 0) rotate(0deg); }
-          to { transform: translate3d(calc(var(--drift) * -1), -140vh, 0) rotate(18deg); }
+          from {
+            transform: translate3d(var(--drift), 20vh, 0) rotate(0deg);
+          }
+          to {
+            transform: translate3d(calc(var(--drift) * -1), -140vh, 0) rotate(18deg);
+          }
         }
         .mad-emoji {
           bottom: -30vh;
@@ -314,19 +388,36 @@ export default function Home() {
           filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
         }
         @keyframes madWiggle {
-          0% { transform: translateY(0); }
-          30% { transform: translateY(-1px); }
-          60% { transform: translateY(1px); }
-          100% { transform: translateY(0); }
+          0% {
+            transform: translateY(0);
+          }
+          30% {
+            transform: translateY(-1px);
+          }
+          60% {
+            transform: translateY(1px);
+          }
+          100% {
+            transform: translateY(0);
+          }
         }
         @keyframes forgePulse {
-          0% { transform: scale(1); filter: saturate(1); }
-          50% { transform: scale(1.02); filter: saturate(1.25); }
-          100% { transform: scale(1); filter: saturate(1); }
+          0% {
+            transform: scale(1);
+            filter: saturate(1);
+          }
+          50% {
+            transform: scale(1.02);
+            filter: saturate(1.25);
+          }
+          100% {
+            transform: scale(1);
+            filter: saturate(1);
+          }
         }
       `}</style>
 
-      {/* ✅ RED CLOUD BACKGROUND (FIXED: fixed layer + correct path + fallback) */}
+      {/* ✅ RED CLOUD BACKGROUND */}
       <div className="fixed inset-0 -z-20">
         <img
           src={bg.primary}
@@ -424,19 +515,36 @@ export default function Home() {
               style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
             >
               {showBase && <img src={BASE_SRC} className="absolute inset-0 w-full h-full object-cover" alt="base" />}
+
               <img
                 src={eyeSrc}
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="eyes"
                 onError={(e) => {
-                  if (eyeFallback) (e.currentTarget as HTMLImageElement).src = eyeFallback;
+                  if (!eyeFallback) return;
+                  const img = e.currentTarget as HTMLImageElement;
+                  if (img.src !== eyeFallback) img.src = eyeFallback;
                 }}
               />
+
               {showMouth && <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />}
-              {showAcc && <img src={ACC_SRC} className="absolute inset-0 w-full h-full object-cover" alt="accessory" />}
+
+              {showAcc && (
+                <img
+                  src={accSrc}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  alt="accessory"
+                  onError={(e) => {
+                    if (!accFallback) return;
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (img.src !== accFallback) img.src = accFallback;
+                  }}
+                />
+              )}
             </div>
 
             <div className="mt-4 text-xs text-white/60">{eyeLabel}</div>
+            <div className="mt-1 text-xs text-white/50">{accLabel}</div>
 
             <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
               <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
@@ -458,7 +566,7 @@ export default function Home() {
             </div>
 
             <p className="mt-4 text-xs text-white/40">
-              Eyes loaded: {ALL_EYES.length}. If one doesn’t show, it’s 99% a filename mismatch.
+              Eyes loaded: {ALL_EYES.length}. Accessories loaded: {ALL_ACCESSORIES.length}.
             </p>
           </section>
 
@@ -480,10 +588,7 @@ export default function Home() {
               $MAD Rage Index™ <span className="text-red-500">😡</span>
             </h2>
 
-            <div
-              className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8"
-              style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}
-            >
+            <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8" style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}>
               <div className="text-5xl sm:text-6xl font-black tabular-nums">{rageIndex.toLocaleString()}</div>
               <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
 
@@ -510,9 +615,7 @@ export default function Home() {
                 {leaderboard.map((row, idx) => (
                   <div key={row.name} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">
-                        {idx + 1}
-                      </div>
+                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">{idx + 1}</div>
                       <div className="font-bold text-white/85">{row.name}</div>
                     </div>
                     <div className="font-mono text-white/70 tabular-nums">{row.score.toLocaleString()} MAD</div>
@@ -573,9 +676,7 @@ export default function Home() {
                     </p>
 
                     {done && (
-                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">
-                        ✅ Completed
-                      </span>
+                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">✅ Completed</span>
                     )}
                   </div>
 
@@ -586,9 +687,7 @@ export default function Home() {
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>
-                    {item.desc}
-                  </p>
+                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>{item.desc}</p>
                 </div>
               );
             })}
