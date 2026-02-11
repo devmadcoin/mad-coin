@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 type Rarity = "common" | "rare" | "legendary";
 type Style = "cartoon" | "pixel";
@@ -9,7 +9,7 @@ type Style = "cartoon" | "pixel";
 type EyeItem = {
   id: string;
   primary: string;
-  fallback?: string;
+  fallbacks: string[];
   label: string;
   rarity: Rarity;
   style: Style;
@@ -18,33 +18,62 @@ type EyeItem = {
 type AccessoryItem = {
   id: string;
   primary: string;
-  fallback?: string;
+  fallbacks: string[];
   label: string;
   rarity: Rarity;
   style: Style;
 };
 
-function normalizePath(p: string) {
+function ensureLeadingSlash(p: string) {
   if (!p) return p;
-  if (p.startsWith("/")) return p;
-  return `/${p}`;
+  return p.startsWith("/") ? p : `/${p}`;
 }
 
 /**
- * Handles accidental ".png.png" or missing extension mismatches.
- * - if path ends with ".png.png" => fallback to ".png"
- * - if path ends with ".png" => fallback to ".png.png"
+ * Builds a safe list of candidate paths.
+ * WHY:
+ * - In Next.js, static files live under /public and are served at "/..."
+ * - Sometimes people accidentally reference "/public/..." or have ".png.png"
+ * - We try sane candidates in order.
  */
-function withOptionalDoublePng(path: string) {
-  const p = normalizePath(path);
+function buildCandidates(originalPath: string): string[] {
+  const raw = ensureLeadingSlash(originalPath);
+  const prefixes = ["", "/public", "/public/public"];
+  const out: string[] = [];
 
-  if (p.endsWith(".png.png")) {
-    return { primary: p, fallback: p.replace(/\.png\.png$/, ".png") };
+  const pushUnique = (v: string) => {
+    const cleaned = v.replace(/\/{2,}/g, "/");
+    if (!out.includes(cleaned)) out.push(cleaned);
+  };
+
+  for (const pre of prefixes) {
+    const p = `${pre}${raw}`.replace(/\/{2,}/g, "/");
+    pushUnique(p);
+
+    // If someone uploaded "file.png.png" by accident, try the other variant too:
+    if (p.endsWith(".png.png")) pushUnique(p.replace(/\.png\.png$/, ".png"));
+    if (p.endsWith(".png")) pushUnique(`${p}.png`);
   }
-  if (p.endsWith(".png")) {
-    return { primary: p, fallback: `${p}.png` };
-  }
-  return { primary: p, fallback: undefined as string | undefined };
+
+  return out;
+}
+
+function makeItem<T extends { id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
+  id: string,
+  path: string,
+  label: string,
+  rarity: Rarity,
+  style: Style
+): T {
+  const candidates = buildCandidates(path);
+  return {
+    id,
+    primary: candidates[0],
+    fallbacks: candidates.slice(1),
+    label,
+    rarity,
+    style,
+  } as T;
 }
 
 /** Preload helper for download */
@@ -58,13 +87,17 @@ function loadImg(src: string) {
   });
 }
 
-/** Try primary then fallback */
-async function loadImgWithFallback(primary: string, fallback?: string) {
+/** Try primary then fallbacks (multiple) */
+async function loadImgWithFallbacks(primary: string, fallbacks: string[]) {
   try {
     return await loadImg(primary);
   } catch {
-    if (!fallback) throw new Error(`Failed to load primary and no fallback: ${primary}`);
-    return await loadImg(fallback);
+    for (const f of fallbacks || []) {
+      try {
+        return await loadImg(f);
+      } catch {}
+    }
+    throw new Error(`Failed to load primary + all fallbacks: ${primary}`);
   }
 }
 
@@ -79,13 +112,31 @@ function pickWeightedAccessory(all: AccessoryItem[]) {
   const safeLegs = legs.length ? legs : safeRares;
 
   const roll = Math.random();
-  let pool: AccessoryItem[];
+  if (roll < 0.75) return safeCommons[Math.floor(Math.random() * safeCommons.length)];
+  if (roll < 0.95) return safeRares[Math.floor(Math.random() * safeRares.length)];
+  return safeLegs[Math.floor(Math.random() * safeLegs.length)];
+}
 
-  if (roll < 0.75) pool = safeCommons;
-  else if (roll < 0.95) pool = safeRares;
-  else pool = safeLegs;
+/**
+ * Cycle image src through fallbacks without infinite loops.
+ * We store a fallback index on the element.
+ */
+function cycleFallback(
+  e: React.SyntheticEvent<HTMLImageElement, Event>,
+  fallbacks: string[]
+) {
+  const img = e.currentTarget;
+  if (!fallbacks?.length) return;
 
-  return pool[Math.floor(Math.random() * pool.length)];
+  const idx = Number(img.dataset.fallbackIndex || "0");
+  if (idx >= fallbacks.length) return;
+
+  img.dataset.fallbackIndex = String(idx + 1);
+  img.src = fallbacks[idx];
+}
+
+function resetFallbackIndex(e: React.SyntheticEvent<HTMLImageElement, Event>) {
+  e.currentTarget.dataset.fallbackIndex = "0";
 }
 
 export default function Home() {
@@ -122,7 +173,10 @@ export default function Home() {
   const btnBlue = `${btnBase} bg-blue-500 hover:bg-blue-600 text-white`;
 
   // ====== Background + particles ======
-  const bg = useMemo(() => withOptionalDoublePng("/pfp/bg/bg-redclouds.png"), []);
+  const bg = useMemo(() => {
+    const c = buildCandidates("/pfp/bg/bg-redclouds.png");
+    return { primary: c[0], fallbacks: c.slice(1) };
+  }, []);
 
   const angry = useMemo(() => {
     const count = 18;
@@ -137,11 +191,8 @@ export default function Home() {
     });
   }, []);
 
-  // ====== Meme Vault (keep your existing list) ======
-  const freshMemes = useMemo(
-    () => [{ src: "/mad-meme-01.png", tag: "Too Hot Coffee" }],
-    []
-  );
+  // ====== Meme Vault ======
+  const freshMemes = useMemo(() => [{ src: "/mad-meme-01.png", tag: "Too Hot Coffee" }], []);
 
   // ====== MAD COUNTER ======
   const [rageIndex, setRageIndex] = useState<number>(847_291);
@@ -181,113 +232,103 @@ export default function Home() {
 
   // ====== PFP data ======
   const ALL_EYES: EyeItem[] = useMemo(() => {
-    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style): EyeItem => {
-      const { primary, fallback } = withOptionalDoublePng(path);
-      return { id, primary, fallback, label, rarity, style };
-    };
-
     return [
       // CARTOON / COMMON
-      add("c-common-black", "/pfp/eyes/cartoon/common/cartoon-common-black.png", "Cartoon Common Black", "common", "cartoon"),
-      add("c-common-blue", "/pfp/eyes/cartoon/common/cartoon-common-blue.png", "Cartoon Common Blue", "common", "cartoon"),
-      add("c-common-green", "/pfp/eyes/cartoon/common/cartoon-common-green.png", "Cartoon Common Green", "common", "cartoon"),
-      add("c-common-orange", "/pfp/eyes/cartoon/common/cartoon-common-orange.png", "Cartoon Common Orange", "common", "cartoon"),
-      add("c-common-purple", "/pfp/eyes/cartoon/common/cartoon-common-purple.png", "Cartoon Common Purple", "common", "cartoon"),
-      add("c-common-red", "/pfp/eyes/cartoon/common/cartoon-common-red.png", "Cartoon Common Red", "common", "cartoon"),
+      makeItem<EyeItem>("c-common-black", "/pfp/eyes/cartoon/common/cartoon-common-black.png", "Cartoon Common Black", "common", "cartoon"),
+      makeItem<EyeItem>("c-common-blue", "/pfp/eyes/cartoon/common/cartoon-common-blue.png", "Cartoon Common Blue", "common", "cartoon"),
+      makeItem<EyeItem>("c-common-green", "/pfp/eyes/cartoon/common/cartoon-common-green.png", "Cartoon Common Green", "common", "cartoon"),
+      makeItem<EyeItem>("c-common-orange", "/pfp/eyes/cartoon/common/cartoon-common-orange.png", "Cartoon Common Orange", "common", "cartoon"),
+      makeItem<EyeItem>("c-common-purple", "/pfp/eyes/cartoon/common/cartoon-common-purple.png", "Cartoon Common Purple", "common", "cartoon"),
+      makeItem<EyeItem>("c-common-red", "/pfp/eyes/cartoon/common/cartoon-common-red.png", "Cartoon Common Red", "common", "cartoon"),
 
       // CARTOON / RARE
-      add("c-rare-neon-black", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-black.png", "Cartoon Rare Neon Black", "rare", "cartoon"),
-      add("c-rare-neon-blue", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-blue.png", "Cartoon Rare Neon Blue", "rare", "cartoon"),
-      add("c-rare-neon-green", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-green.png", "Cartoon Rare Neon Green", "rare", "cartoon"),
-      add("c-rare-neon-orange", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-orange.png", "Cartoon Rare Neon Orange", "rare", "cartoon"),
-      add("c-rare-neon-purple", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-purple.png", "Cartoon Rare Neon Purple", "rare", "cartoon"),
-      add("c-rare-neon-red", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png", "Cartoon Rare Neon Red", "rare", "cartoon"),
+      makeItem<EyeItem>("c-rare-neon-black", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-black.png", "Cartoon Rare Neon Black", "rare", "cartoon"),
+      makeItem<EyeItem>("c-rare-neon-blue", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-blue.png", "Cartoon Rare Neon Blue", "rare", "cartoon"),
+      makeItem<EyeItem>("c-rare-neon-green", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-green.png", "Cartoon Rare Neon Green", "rare", "cartoon"),
+      makeItem<EyeItem>("c-rare-neon-orange", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-orange.png", "Cartoon Rare Neon Orange", "rare", "cartoon"),
+      makeItem<EyeItem>("c-rare-neon-purple", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-purple.png", "Cartoon Rare Neon Purple", "rare", "cartoon"),
+      makeItem<EyeItem>("c-rare-neon-red", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png", "Cartoon Rare Neon Red", "rare", "cartoon"),
 
       // CARTOON / LEGENDARY
-      add("c-leg-fire-red", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png", "Cartoon Legendary Fire (Red)", "legendary", "cartoon"),
-      add("c-leg-fruity-orange", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png", "Cartoon Legendary Fruity (Orange)", "legendary", "cartoon"),
-      add("c-leg-hearts-pink", "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png", "Cartoon Legendary Hearts (Pink)", "legendary", "cartoon"),
-      add("c-leg-ice-blue", "/pfp/eyes/cartoon/legendary/cartoon-legendary-ice-blue.png", "Cartoon Legendary Ice (Blue)", "legendary", "cartoon"),
-      add("c-leg-poison-green", "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png", "Cartoon Legendary Poison (Green)", "legendary", "cartoon"),
-      add("c-leg-void-black", "/pfp/eyes/cartoon/legendary/cartoon-legendary-void-black.png", "Cartoon Legendary Void (Black)", "legendary", "cartoon"),
+      makeItem<EyeItem>("c-leg-fire-red", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png", "Cartoon Legendary Fire (Red)", "legendary", "cartoon"),
+      makeItem<EyeItem>("c-leg-fruity-orange", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png", "Cartoon Legendary Fruity (Orange)", "legendary", "cartoon"),
+      makeItem<EyeItem>("c-leg-hearts-pink", "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png", "Cartoon Legendary Hearts (Pink)", "legendary", "cartoon"),
+      makeItem<EyeItem>("c-leg-ice-blue", "/pfp/eyes/cartoon/legendary/cartoon-legendary-ice-blue.png", "Cartoon Legendary Ice (Blue)", "legendary", "cartoon"),
+      makeItem<EyeItem>("c-leg-poison-green", "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png", "Cartoon Legendary Poison (Green)", "legendary", "cartoon"),
+      makeItem<EyeItem>("c-leg-void-black", "/pfp/eyes/cartoon/legendary/cartoon-legendary-void-black.png", "Cartoon Legendary Void (Black)", "legendary", "cartoon"),
 
       // PIXEL / COMMON
-      add("p-common-black", "/pfp/eyes/pixel/common/pixel-common-black.png", "Pixel Common Black", "common", "pixel"),
-      add("p-common-blue", "/pfp/eyes/pixel/common/pixel-common-blue.png", "Pixel Common Blue", "common", "pixel"),
-      add("p-common-green", "/pfp/eyes/pixel/common/pixel-common-green.png", "Pixel Common Green", "common", "pixel"),
-      add("p-common-orange", "/pfp/eyes/pixel/common/pixel-common-orange.png", "Pixel Common Orange", "common", "pixel"),
-      add("p-common-pink", "/pfp/eyes/pixel/common/pixel-common-pink.png", "Pixel Common Pink", "common", "pixel"),
-      add("p-common-purple", "/pfp/eyes/pixel/common/pixel-common-purple.png", "Pixel Common Purple", "common", "pixel"),
+      makeItem<EyeItem>("p-common-black", "/pfp/eyes/pixel/common/pixel-common-black.png", "Pixel Common Black", "common", "pixel"),
+      makeItem<EyeItem>("p-common-blue", "/pfp/eyes/pixel/common/pixel-common-blue.png", "Pixel Common Blue", "common", "pixel"),
+      makeItem<EyeItem>("p-common-green", "/pfp/eyes/pixel/common/pixel-common-green.png", "Pixel Common Green", "common", "pixel"),
+      makeItem<EyeItem>("p-common-orange", "/pfp/eyes/pixel/common/pixel-common-orange.png", "Pixel Common Orange", "common", "pixel"),
+      makeItem<EyeItem>("p-common-pink", "/pfp/eyes/pixel/common/pixel-common-pink.png", "Pixel Common Pink", "common", "pixel"),
+      makeItem<EyeItem>("p-common-purple", "/pfp/eyes/pixel/common/pixel-common-purple.png", "Pixel Common Purple", "common", "pixel"),
 
       // PIXEL / RARE
-      add("p-rare-crystal-black", "/pfp/eyes/pixel/rare/pixel-rare-crystal-black.png", "Pixel Rare Crystal Black", "rare", "pixel"),
-      add("p-rare-crystal-blue", "/pfp/eyes/pixel/rare/pixel-rare-crystal-blue.png", "Pixel Rare Crystal Blue", "rare", "pixel"),
-      add("p-rare-crystal-green", "/pfp/eyes/pixel/rare/pixel-rare-crystal-green.png", "Pixel Rare Crystal Green", "rare", "pixel"),
-      add("p-rare-crystal-orange", "/pfp/eyes/pixel/rare/pixel-rare-crystal-orange.png", "Pixel Rare Crystal Orange", "rare", "pixel"),
-      add("p-rare-crystal-pink", "/pfp/eyes/pixel/rare/pixel-rare-crystal-pink.png", "Pixel Rare Crystal Pink", "rare", "pixel"),
-      add("p-rare-crystal-red", "/pfp/eyes/pixel/rare/pixel-rare-crystal-red.png", "Pixel Rare Crystal Red", "rare", "pixel"),
+      makeItem<EyeItem>("p-rare-crystal-black", "/pfp/eyes/pixel/rare/pixel-rare-crystal-black.png", "Pixel Rare Crystal Black", "rare", "pixel"),
+      makeItem<EyeItem>("p-rare-crystal-blue", "/pfp/eyes/pixel/rare/pixel-rare-crystal-blue.png", "Pixel Rare Crystal Blue", "rare", "pixel"),
+      makeItem<EyeItem>("p-rare-crystal-green", "/pfp/eyes/pixel/rare/pixel-rare-crystal-green.png", "Pixel Rare Crystal Green", "rare", "pixel"),
+      makeItem<EyeItem>("p-rare-crystal-orange", "/pfp/eyes/pixel/rare/pixel-rare-crystal-orange.png", "Pixel Rare Crystal Orange", "rare", "pixel"),
+      makeItem<EyeItem>("p-rare-crystal-pink", "/pfp/eyes/pixel/rare/pixel-rare-crystal-pink.png", "Pixel Rare Crystal Pink", "rare", "pixel"),
+      makeItem<EyeItem>("p-rare-crystal-red", "/pfp/eyes/pixel/rare/pixel-rare-crystal-red.png", "Pixel Rare Crystal Red", "rare", "pixel"),
 
       // PIXEL / LEGENDARY
-      add("p-leg-robot-black", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-black.png", "Pixel Legendary Robot Black", "legendary", "pixel"),
-      add("p-leg-robot-blue", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-blue.png", "Pixel Legendary Robot Blue", "legendary", "pixel"),
-      add("p-leg-robot-green", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-green.png", "Pixel Legendary Robot Green", "legendary", "pixel"),
-      add("p-leg-robot-orange", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-orange.png", "Pixel Legendary Robot Orange", "legendary", "pixel"),
-      add("p-leg-robot-pink", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-pink.png", "Pixel Legendary Robot Pink", "legendary", "pixel"),
-      add("p-leg-robot-yellow", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-yellow.png", "Pixel Legendary Robot Yellow", "legendary", "pixel"),
+      makeItem<EyeItem>("p-leg-robot-black", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-black.png", "Pixel Legendary Robot Black", "legendary", "pixel"),
+      makeItem<EyeItem>("p-leg-robot-blue", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-blue.png", "Pixel Legendary Robot Blue", "legendary", "pixel"),
+      makeItem<EyeItem>("p-leg-robot-green", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-green.png", "Pixel Legendary Robot Green", "legendary", "pixel"),
+      makeItem<EyeItem>("p-leg-robot-orange", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-orange.png", "Pixel Legendary Robot Orange", "legendary", "pixel"),
+      makeItem<EyeItem>("p-leg-robot-pink", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-pink.png", "Pixel Legendary Robot Pink", "legendary", "pixel"),
+      makeItem<EyeItem>("p-leg-robot-yellow", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-yellow.png", "Pixel Legendary Robot Yellow", "legendary", "pixel"),
     ];
   }, []);
 
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
-    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style): AccessoryItem => {
-      const { primary, fallback } = withOptionalDoublePng(path);
-      return { id, primary, fallback, label, rarity, style };
-    };
-
     return [
       // CARTOON / COMMON
-      add("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
-      add("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
-      add("a-c-common-beanie", "/pfp/accessories/cartoon/common/cartoon-common-beanie.png", "Beanie", "common", "cartoon"),
-      add("a-c-common-chain", "/pfp/accessories/cartoon/common/cartoon-common-chain.png", "Chain", "common", "cartoon"),
-      add("a-c-common-coffeemug", "/pfp/accessories/cartoon/common/cartoon-common-coffeemug.png", "Coffee Mug", "common", "cartoon"),
-      add("a-c-common-hoodiecollar", "/pfp/accessories/cartoon/common/cartoon-common-hoodiecollar.png", "Hoodie Collar", "common", "cartoon"),
-      add("a-c-common-lanyardbadge", "/pfp/accessories/cartoon/common/cartoon-common-lanyardbadge.png", "Lanyard Badge", "common", "cartoon"),
-      add("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
-      add("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
-      add("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
-      add("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-beanie", "/pfp/accessories/cartoon/common/cartoon-common-beanie.png", "Beanie", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-chain", "/pfp/accessories/cartoon/common/cartoon-common-chain.png", "Chain", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-coffeemug", "/pfp/accessories/cartoon/common/cartoon-common-coffeemug.png", "Coffee Mug", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-hoodiecollar", "/pfp/accessories/cartoon/common/cartoon-common-hoodiecollar.png", "Hoodie Collar", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-lanyardbadge", "/pfp/accessories/cartoon/common/cartoon-common-lanyardbadge.png", "Lanyard Badge", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
+      makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
       // CARTOON / RARE
-      add("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
-      add("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
-      add("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
-      add("a-c-rare-fierysunglasses", "/pfp/accessories/cartoon/rare/cartoon-rare-fierysunglasses.png", "Flame Shades", "rare", "cartoon"),
-      add("a-c-rare-greencandle", "/pfp/accessories/cartoon/rare/cartoon-rare-greencandle.png", "Crypto Candle Badge", "rare", "cartoon"),
-      add("a-c-rare-madmeter", "/pfp/accessories/cartoon/rare/cartoon-rare-madmeter.png", "$MAD Meter Pin", "rare", "cartoon"),
-      add("a-c-rare-ragekeyboard", "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png", "Broken Keyboard Necklace", "rare", "cartoon"),
-      add("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
-      add("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-fierysunglasses", "/pfp/accessories/cartoon/rare/cartoon-rare-fierysunglasses.png", "Flame Shades", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-greencandle", "/pfp/accessories/cartoon/rare/cartoon-rare-greencandle.png", "Crypto Candle Badge", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-madmeter", "/pfp/accessories/cartoon/rare/cartoon-rare-madmeter.png", "$MAD Meter Pin", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-ragekeyboard", "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png", "Broken Keyboard Necklace", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
 
-      // CARTOON / LEGENDARY (your exact filenames)
-      add("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
-      add("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon"),
-      add("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon"),
-      add("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon"),
-      add("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
-      add("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon"),
-      add("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon"),
-      add("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon"),
-      add("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
-      add("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
-      add("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
-      add("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
-      add("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
-      add("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon"),
+      // CARTOON / LEGENDARY (matches your repo screenshot)
+      makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon"),
     ];
   }, []);
 
-  const BASE = useMemo(() => withOptionalDoublePng("/pfp/base/base-01.png"), []);
-  const MOUTH = useMemo(() => withOptionalDoublePng("/pfp/mouth/mouth-01.png"), []);
+  const BASE = useMemo(() => makeItem<any>("base", "/pfp/base/base-01.png", "Base", "common", "cartoon"), []);
+  const MOUTH = useMemo(() => makeItem<any>("mouth", "/pfp/mouth/mouth-01.png", "Mouth", "common", "cartoon"), []);
 
   // ====== toggles ======
   const [showBase, setShowBase] = useState(true);
@@ -295,30 +336,16 @@ export default function Home() {
   const [showAcc, setShowAcc] = useState(true);
 
   // ====== safe initial picks ======
-  const firstEye = ALL_EYES[0] ?? {
-    id: "default-eye",
-    primary: "/pfp/eyes/eyes-01.png",
-    fallback: undefined,
-    label: "Eyes",
-    rarity: "common" as Rarity,
-    style: "cartoon" as Style,
-  };
-
-  const firstAcc = ALL_ACCESSORIES[0] ?? {
-    id: "default-acc",
-    primary: "/pfp/accessories/acc-01.png",
-    fallback: undefined,
-    label: "Accessory",
-    rarity: "common" as Rarity,
-    style: "cartoon" as Style,
-  };
+  const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
+  const firstAcc =
+    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeSrc, setEyeSrc] = useState(firstEye.primary);
-  const [eyeFallback, setEyeFallback] = useState<string | undefined>(firstEye.fallback);
+  const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(firstEye.fallbacks);
   const [eyeLabel, setEyeLabel] = useState(`${firstEye.label} • ${firstEye.rarity.toUpperCase()}`);
 
   const [accSrc, setAccSrc] = useState(firstAcc.primary);
-  const [accFallback, setAccFallback] = useState<string | undefined>(firstAcc.fallback);
+  const [accFallbacks, setAccFallbacks] = useState<string[]>(firstAcc.fallbacks);
   const [accLabel, setAccLabel] = useState(`${firstAcc.label} • ${firstAcc.rarity.toUpperCase()}`);
 
   const [forgeCount, setForgeCount] = useState(0);
@@ -335,13 +362,13 @@ export default function Home() {
     setTimeout(() => {
       const pickEye = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
       setEyeSrc(pickEye.primary);
-      setEyeFallback(pickEye.fallback);
+      setEyeFallbacks(pickEye.fallbacks);
       setEyeLabel(`${pickEye.label} • ${pickEye.rarity.toUpperCase()}`);
 
       if (ALL_ACCESSORIES.length) {
         const pickAcc = pickWeightedAccessory(ALL_ACCESSORIES);
         setAccSrc(pickAcc.primary);
-        setAccFallback(pickAcc.fallback);
+        setAccFallbacks(pickAcc.fallbacks);
         setAccLabel(`${pickAcc.label} • ${pickAcc.rarity.toUpperCase()}`);
       }
 
@@ -365,10 +392,10 @@ export default function Home() {
       if (!ctx) return;
 
       const [baseImg, eyesImg, mouthImg, accessoryImg] = await Promise.all([
-        showBase ? loadImgWithFallback(BASE.primary, BASE.fallback) : Promise.resolve<HTMLImageElement | null>(null),
-        loadImgWithFallback(eyeSrc, eyeFallback),
-        showMouth ? loadImgWithFallback(MOUTH.primary, MOUTH.fallback) : Promise.resolve<HTMLImageElement | null>(null),
-        showAcc ? loadImgWithFallback(accSrc, accFallback) : Promise.resolve<HTMLImageElement | null>(null),
+        showBase ? loadImgWithFallbacks(BASE.primary, BASE.fallbacks) : Promise.resolve<HTMLImageElement | null>(null),
+        loadImgWithFallbacks(eyeSrc, eyeFallbacks),
+        showMouth ? loadImgWithFallbacks(MOUTH.primary, MOUTH.fallbacks) : Promise.resolve<HTMLImageElement | null>(null),
+        showAcc ? loadImgWithFallbacks(accSrc, accFallbacks) : Promise.resolve<HTMLImageElement | null>(null),
       ]);
 
       ctx.clearRect(0, 0, size, size);
@@ -391,13 +418,6 @@ export default function Home() {
       console.error(e);
       alert("Download failed — this usually means one image path is wrong or an image is missing.");
     }
-  };
-
-  // ====== Image error handlers (single fallback swap) ======
-  const swapToFallbackOnce = (fallback?: string) => (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (!fallback) return;
-    const img = e.currentTarget;
-    if (img.src !== fallback) img.src = fallback;
   };
 
   return (
@@ -455,7 +475,8 @@ export default function Home() {
           src={bg.primary}
           alt="Red storm background"
           className="h-full w-full object-cover"
-          onError={swapToFallbackOnce(bg.fallback)}
+          onLoad={resetFallbackIndex}
+          onError={(e) => cycleFallback(e, bg.fallbacks)}
         />
         <div className="absolute inset-0 bg-black/25" />
       </div>
@@ -548,7 +569,8 @@ export default function Home() {
                   src={BASE.primary}
                   className="absolute inset-0 w-full h-full object-cover"
                   alt="base"
-                  onError={swapToFallbackOnce(BASE.fallback)}
+                  onLoad={resetFallbackIndex}
+                  onError={(e) => cycleFallback(e, BASE.fallbacks)}
                 />
               )}
 
@@ -557,7 +579,8 @@ export default function Home() {
                 src={eyeSrc}
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="eyes"
-                onError={swapToFallbackOnce(eyeFallback)}
+                onLoad={resetFallbackIndex}
+                onError={(e) => cycleFallback(e, eyeFallbacks)}
               />
 
               {showMouth && (
@@ -566,7 +589,8 @@ export default function Home() {
                   src={MOUTH.primary}
                   className="absolute inset-0 w-full h-full object-cover"
                   alt="mouth"
-                  onError={swapToFallbackOnce(MOUTH.fallback)}
+                  onLoad={resetFallbackIndex}
+                  onError={(e) => cycleFallback(e, MOUTH.fallbacks)}
                 />
               )}
 
@@ -576,7 +600,8 @@ export default function Home() {
                   src={accSrc}
                   className="absolute inset-0 w-full h-full object-cover"
                   alt="accessory"
-                  onError={swapToFallbackOnce(accFallback)}
+                  onLoad={resetFallbackIndex}
+                  onError={(e) => cycleFallback(e, accFallbacks)}
                 />
               )}
             </div>
@@ -696,7 +721,9 @@ export default function Home() {
 
                 <Image src={m.src} alt={m.tag} width={1200} height={1200} className="rounded-2xl w-full h-auto" />
                 <div className="mt-4 h-px w-full bg-white/10" />
-                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">Post this. Tag it. Start fights.</div>
+                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">
+                  Post this. Tag it. Start fights.
+                </div>
               </div>
             ))}
           </div>
@@ -758,5 +785,3 @@ export default function Home() {
     </main>
   );
 }
-
-
