@@ -176,15 +176,22 @@ export default function Home() {
     });
   }, []);
 
-  // ====== Meme Vault (✅ Book Mode, simple) ======
+  // ====== Meme Vault (✅ FIXED PATHS FOR YOUR CURRENT FOLDER) ======
+  // Your repo shows: public/public/memes/*.png
+  // Browser URL becomes: /public/memes/*.png
   const freshMemes = useMemo(
     () => [
-      { src: "/memes/mad-traffic-stuck.png", tag: "Traffic Rage" },
-      { src: "/memes/mad-wifi-buffer.png", tag: "Slow Internet" },
-      { src: "/memes/mad-scam-call.png", tag: "Scam Call" },
-      { src: "/memes/mad-forgot-password.png", tag: "Locked Out" },
-      { src: "/memes/mad-battery-low.png", tag: "1% Battery" },
-      { src: "/memes/mad-group-chat-ghosted.png", tag: "Ghosted" },
+      { src: "/public/memes/mad-meme-trafficstuck.png", tag: "Traffic Rage" },
+      { src: "/public/memes/mad-meme-wifibuffer.png", tag: "Slow Internet" },
+      { src: "/public/memes/mad-meme-scamcall.png", tag: "Scam Call" },
+      { src: "/public/memes/mad-meme-forgotpassword.png", tag: "Locked Out" },
+      { src: "/public/memes/mad-meme-batterylow.png", tag: "1% Battery" },
+      { src: "/public/memes/mad-meme-groupmessage.png", tag: "Ghosted" },
+      { src: "/public/memes/mad-meme-coffeehot.png", tag: "Coffee Too Hot" },
+      { src: "/public/memes/mad-meme-lasttimebeingfarmed.png", tag: "Farmed Again" },
+      { src: "/public/memes/mad-meme-lipbalm.png", tag: "Lip Balm" },
+      { src: "/public/memes/mad-meme-toiletpaper.png", tag: "Toilet Paper" },
+      { src: "/public/memes/mad-meme-whydidifade.png", tag: "CT Fade" },
     ],
     []
   );
@@ -264,13 +271,7 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-lanyardbadge", "/pfp/accessories/cartoon/common/cartoon-common-lanyardbadge.png", "Lanyard Badge", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-common-smallgoldhoopearing",
-        "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png",
-        "Gold Hoop",
-        "common",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
       makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
@@ -290,30 +291,11 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
       makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>(
-        "a-c-leg-lightninghorns",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
-        "Lightning Horns",
-        "legendary",
-        "cartoon",
-        tall(24, 0.96)
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-madchaininfinity",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png",
-        "Infinity Chain",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
+      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-leg-rugproofshield",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
-        "Rugproof Shield",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
     ];
@@ -336,11 +318,9 @@ export default function Home() {
   const [showAcc, setShowAcc] = useState(true);
 
   // ====== safe initial picks ======
-  const firstEye =
-    ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
+  const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
   const firstAcc =
-    ALL_ACCESSORIES[0] ??
-    makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeSrc, setEyeSrc] = useState(firstEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(firstEye.fallbacks);
@@ -748,7 +728,10 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-70" : "hover:bg-white/10"].join(" ")}
+                  className={[
+                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
+                    done ? "opacity-70" : "hover:bg-white/10",
+                  ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/40" : ""].join(" ")}>
@@ -776,7 +759,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5) MEME VAULT (✅ Book + green glow, simple) */}
+        {/* 5) MEME VAULT (✅ Book + green glow + FIXED image paths) */}
         <section className="py-20 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
@@ -813,10 +796,7 @@ export default function Home() {
                     </div>
 
                     <div className="flex gap-2">
-                      <button
-                        className={btnGhost}
-                        onClick={() => setMemePage((p) => (p - 1 + freshMemes.length) % freshMemes.length)}
-                      >
+                      <button className={btnGhost} onClick={() => setMemePage((p) => (p - 1 + freshMemes.length) % freshMemes.length)}>
                         ← Prev
                       </button>
                       <button className={btnGhost} onClick={() => setMemePage((p) => (p + 1) % freshMemes.length)}>
@@ -831,13 +811,14 @@ export default function Home() {
                     <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 overflow-hidden">
                       <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent" />
                       <div className="text-xs uppercase tracking-[0.3em] text-white/50 mb-3">Left Page</div>
-                      <Image
+
+                      <img
                         src={freshMemes[memePage].src}
                         alt={freshMemes[memePage].tag}
-                        width={1200}
-                        height={1200}
                         className="rounded-2xl w-full h-auto"
+                        loading="lazy"
                       />
+
                       <div className="mt-3 text-xs text-white/40">Post this. Tag it. Start fights.</div>
                     </div>
 
@@ -845,13 +826,14 @@ export default function Home() {
                     <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 overflow-hidden">
                       <div className="absolute inset-0 pointer-events-none bg-gradient-to-bl from-white/5 to-transparent" />
                       <div className="text-xs uppercase tracking-[0.3em] text-white/50 mb-3">Right Page</div>
-                      <Image
+
+                      <img
                         src={freshMemes[(memePage + 1) % freshMemes.length].src}
                         alt={freshMemes[(memePage + 1) % freshMemes.length].tag}
-                        width={1200}
-                        height={1200}
                         className="rounded-2xl w-full h-auto opacity-95"
+                        loading="lazy"
                       />
+
                       <div className="mt-3 text-xs text-white/40">Next rage loads instantly.</div>
                     </div>
                   </div>
@@ -868,16 +850,12 @@ export default function Home() {
                         ].join(" ")}
                         title={m.tag}
                       >
-                        <img src={m.src} alt={m.tag} className="h-20 w-auto block" />
+                        <img src={m.src} alt={m.tag} className="h-20 w-auto block" loading="lazy" />
                       </button>
                     ))}
                   </div>
                 </div>
               </div>
-
-              <p className="mt-4 text-center text-xs text-white/35">
-                Tip: put memes in <span className="font-mono text-white/50">/public/memes/</span> so these paths work.
-              </p>
             </div>
           )}
         </section>
@@ -913,4 +891,3 @@ export default function Home() {
     </main>
   );
 }
-
