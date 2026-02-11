@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type Rarity = "common" | "rare" | "legendary";
 type Style = "cartoon" | "pixel";
@@ -46,14 +46,11 @@ function pickWeightedAccessory(all: AccessoryItem[]) {
   const safeLegs = legendaries.length ? legendaries : safeRares;
 
   const roll = Math.random();
-  let pool: AccessoryItem[];
 
   // 75% common, 20% rare, 5% legendary
-  if (roll < 0.75) pool = safeCommons;
-  else if (roll < 0.95) pool = safeRares;
-  else pool = safeLegs;
-
-  return pool[Math.floor(Math.random() * pool.length)];
+  if (roll < 0.75) return safeCommons[Math.floor(Math.random() * safeCommons.length)];
+  if (roll < 0.95) return safeRares[Math.floor(Math.random() * safeRares.length)];
+  return safeLegs[Math.floor(Math.random() * safeLegs.length)];
 }
 
 function applyImgFallback(
@@ -62,8 +59,10 @@ function applyImgFallback(
 ) {
   if (!fallback) return;
   const img = e.currentTarget;
+
   // prevent infinite loops
   if (img.dataset.fallbackApplied === "1") return;
+
   img.dataset.fallbackApplied = "1";
   img.src = fallback;
 }
@@ -190,7 +189,7 @@ export default function Home() {
 
   // 🧩 PFP GENERATOR (EYES)
   const ALL_EYES: EyeItem[] = useMemo(() => {
-    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style) => {
+    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style): EyeItem => {
       const { primary, fallback } = withOptionalDoublePng(path);
       return { id, primary, fallback, label, rarity, style };
     };
@@ -246,9 +245,9 @@ export default function Home() {
     ];
   }, []);
 
-  // 🧩 PFP GENERATOR (ACCESSORIES) — commons + rares + your legendaries (exact filenames)
+  // 🧩 PFP GENERATOR (ACCESSORIES)
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
-    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style) => {
+    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style): AccessoryItem => {
       const { primary, fallback } = withOptionalDoublePng(path);
       return { id, primary, fallback, label, rarity, style };
     };
@@ -267,7 +266,7 @@ export default function Home() {
       add("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
       add("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
-      // CARTOON / RARE (your filenames)
+      // CARTOON / RARE
       add("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
       add("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
       add("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
@@ -278,7 +277,7 @@ export default function Home() {
       add("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       add("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
 
-      // CARTOON / LEGENDARY (your exact filenames from the screenshot)
+      // CARTOON / LEGENDARY (exact filenames from your screenshot)
       add("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Flaming Cigar", "legendary", "cartoon"),
       add("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon"),
       add("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon"),
@@ -299,41 +298,20 @@ export default function Home() {
   const BASE_SRC = "/pfp/base/base-01.png";
   const MOUTH_SRC = "/pfp/mouth/mouth-01.png";
 
-  // ✅ Layer toggles
   const [showBase, setShowBase] = useState(true);
   const [showMouth, setShowMouth] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  // ✅ safe initial states
-  const firstEye =
-    ALL_EYES[0] ??
-    ({
-      id: "default",
-      primary: "/pfp/eyes/eyes-01.png",
-      fallback: undefined,
-      label: "Eyes",
-      rarity: "common",
-      style: "cartoon",
-    } as EyeItem);
+  const firstEye = ALL_EYES[0];
+  const firstAcc = ALL_ACCESSORIES[0];
 
-  const firstAcc =
-    ALL_ACCESSORIES[0] ??
-    ({
-      id: "default-acc",
-      primary: "/pfp/accessories/acc-01.png",
-      fallback: undefined,
-      label: "Accessory",
-      rarity: "common",
-      style: "cartoon",
-    } as AccessoryItem);
+  const [eyeSrc, setEyeSrc] = useState(firstEye?.primary ?? "/pfp/eyes/eyes-01.png");
+  const [eyeFallback, setEyeFallback] = useState<string | undefined>(firstEye?.fallback);
+  const [eyeLabel, setEyeLabel] = useState(`${firstEye?.label ?? "Eyes"} • ${(firstEye?.rarity ?? "common").toUpperCase()}`);
 
-  const [eyeSrc, setEyeSrc] = useState<string>(firstEye.primary);
-  const [eyeFallback, setEyeFallback] = useState<string | undefined>(firstEye.fallback);
-  const [eyeLabel, setEyeLabel] = useState<string>(`${firstEye.label} • ${firstEye.rarity.toUpperCase()}`);
-
-  const [accSrc, setAccSrc] = useState<string>(firstAcc.primary);
-  const [accFallback, setAccFallback] = useState<string | undefined>(firstAcc.fallback);
-  const [accLabel, setAccLabel] = useState<string>(`${firstAcc.label} • ${firstAcc.rarity.toUpperCase()}`);
+  const [accSrc, setAccSrc] = useState(firstAcc?.primary ?? "/pfp/accessories/acc-01.png");
+  const [accFallback, setAccFallback] = useState<string | undefined>(firstAcc?.fallback);
+  const [accLabel, setAccLabel] = useState(`${firstAcc?.label ?? "Accessory"} • ${(firstAcc?.rarity ?? "common").toUpperCase()}`);
 
   const [forgeCount, setForgeCount] = useState<number>(0);
   const [powerIndex, setPowerIndex] = useState<number>(50);
@@ -447,32 +425,15 @@ export default function Home() {
           filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
         }
         @keyframes madWiggle {
-          0% {
-            transform: translateY(0);
-          }
-          30% {
-            transform: translateY(-1px);
-          }
-          60% {
-            transform: translateY(1px);
-          }
-          100% {
-            transform: translateY(0);
-          }
+          0% { transform: translateY(0); }
+          30% { transform: translateY(-1px); }
+          60% { transform: translateY(1px); }
+          100% { transform: translateY(0); }
         }
         @keyframes forgePulse {
-          0% {
-            transform: scale(1);
-            filter: saturate(1);
-          }
-          50% {
-            transform: scale(1.02);
-            filter: saturate(1.25);
-          }
-          100% {
-            transform: scale(1);
-            filter: saturate(1);
-          }
+          0% { transform: scale(1); filter: saturate(1); }
+          50% { transform: scale(1.02); filter: saturate(1.25); }
+          100% { transform: scale(1); filter: saturate(1); }
         }
       `}</style>
 
@@ -509,7 +470,6 @@ export default function Home() {
 
       {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
-        {/* HERO */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
             <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
@@ -552,7 +512,6 @@ export default function Home() {
             <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
             <p className="mt-3 text-white/60">Free for the community. Forge a look that sticks.</p>
 
-            {/* Layer toggles */}
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
               <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
                 {showBase ? "Hide Base" : "Show Base"}
@@ -748,4 +707,3 @@ export default function Home() {
     </main>
   );
 }
-
