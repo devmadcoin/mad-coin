@@ -24,32 +24,63 @@ type AccessoryItem = {
   style: Style;
 };
 
-function withOptionalDoublePng(path: string) {
-  // Handles accidental ".png.png" uploads by providing a fallback automatically.
-  if (path.endsWith(".png.png")) {
-    return { primary: path, fallback: path.replace(/\.png\.png$/, ".png") };
-  }
-  if (path.endsWith(".png")) {
-    // If you uploaded without realizing it became ".png.png" on disk, try that too
-    return { primary: path, fallback: `${path}.png` };
-  }
-  return { primary: path, fallback: undefined };
+function normalizePath(p: string) {
+  if (!p) return p;
+  if (p.startsWith("/")) return p;
+  return `/${p}`;
 }
 
+/**
+ * Handles accidental ".png.png" or missing extension mismatches.
+ * - if path ends with ".png.png" => fallback to ".png"
+ * - if path ends with ".png" => fallback to ".png.png"
+ */
+function withOptionalDoublePng(path: string) {
+  const p = normalizePath(path);
+
+  if (p.endsWith(".png.png")) {
+    return { primary: p, fallback: p.replace(/\.png\.png$/, ".png") };
+  }
+  if (p.endsWith(".png")) {
+    return { primary: p, fallback: `${p}.png` };
+  }
+  return { primary: p, fallback: undefined as string | undefined };
+}
+
+/** Preload helper for download */
+function loadImg(src: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Failed to load: ${src}`));
+    img.src = src;
+  });
+}
+
+/** Try primary then fallback */
+async function loadImgWithFallback(primary: string, fallback?: string) {
+  try {
+    return await loadImg(primary);
+  } catch {
+    if (!fallback) throw new Error(`Failed to load primary and no fallback: ${primary}`);
+    return await loadImg(fallback);
+  }
+}
+
+/** Weighted: 75% common, 20% rare, 5% legendary */
 function pickWeightedAccessory(all: AccessoryItem[]) {
   const commons = all.filter((a) => a.rarity === "common");
   const rares = all.filter((a) => a.rarity === "rare");
-  const legendaries = all.filter((a) => a.rarity === "legendary");
+  const legs = all.filter((a) => a.rarity === "legendary");
 
-  // If you don’t have a pool yet, fall back safely
   const safeCommons = commons.length ? commons : all;
   const safeRares = rares.length ? rares : safeCommons;
-  const safeLegs = legendaries.length ? legendaries : safeRares;
+  const safeLegs = legs.length ? legs : safeRares;
 
   const roll = Math.random();
   let pool: AccessoryItem[];
 
-  // 75% common, 20% rare, 5% legendary
   if (roll < 0.75) pool = safeCommons;
   else if (roll < 0.95) pool = safeRares;
   else pool = safeLegs;
@@ -58,6 +89,7 @@ function pickWeightedAccessory(all: AccessoryItem[]) {
 }
 
 export default function Home() {
+  // ====== Token / Links ======
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
   const links = useMemo(
@@ -71,101 +103,67 @@ export default function Home() {
   );
 
   const [copied, setCopied] = useState(false);
-
   const copyCA = async () => {
     try {
       await navigator.clipboard.writeText(addr);
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
     } catch {
-      const el = document.createElement("textarea");
-      el.value = addr;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1200);
+      alert("Could not copy. Try manually selecting.");
     }
   };
 
-  // 😡 deterministic "anger particles"
-  const angry = useMemo(() => {
-    const count = 18;
-    return Array.from({ length: count }, (_, i) => {
-      const seed = (i * 9973) % 10000;
-      const x = (seed % 1000) / 10;
-      const size = 16 + (seed % 7) * 6;
-      const dur = 14 + (seed % 12);
-      const delay = seed % 10;
-      const drift = ((seed % 9) - 4) * 10;
-      const opacity = 0.1 + (seed % 7) * 0.04;
-      return { i, x, size, dur, delay, drift, opacity };
-    });
-  }, []);
-
-  // 🧠 Meme Vault
-  const freshMemes = useMemo(
-    () => [
-      { src: "/mad-meme-01.png", tag: "Too Hot Coffee" },
-      { src: "/mad-meme-02.png", tag: "Toilet Paper" },
-      { src: "/mad-meme-03.png", tag: "Flight Delayed" },
-      { src: "/mad-meme-04.png", tag: "Binge Watch Pain" },
-      { src: "/mad-meme-05.png", tag: "Forgot Lunch" },
-    ],
-    []
-  );
-
-  // 😡 MAD COUNTER + LEADERBOARD
-  const [rageIndex, setRageIndex] = useState<number>(847_291);
-  const [myMad, setMyMad] = useState<number>(0);
-
-  const leaderboard = useMemo(
-    () => [
-      { name: "guy who sold the bottom", score: 12921 },
-      { name: "“I’ll buy the dip” (didn’t)", score: 9331 },
-      { name: "trader w/ 99 indicators", score: 8420 },
-      { name: "dev (reading replies)", score: 7777 },
-      { name: "“it’s just a retrace”", score: 6969 },
-      { name: "liquidity watcher", score: 5432 },
-      { name: "KOL laughing rn", score: 4200 },
-      { name: "“what’s the CA?” guy", score: 3001 },
-      { name: "“is this a rug?” guy", score: 2222 },
-      { name: "chart refresher", score: 1111 },
-    ],
-    []
-  );
-
-  useEffect(() => {
-    try {
-      const savedMy = localStorage.getItem("mad_myMad");
-      const savedRage = localStorage.getItem("mad_rageIndex");
-      if (savedMy) setMyMad(Number(savedMy) || 0);
-      if (savedRage) setRageIndex(Number(savedRage) || 847_291);
-    } catch {}
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("mad_myMad", String(myMad));
-      localStorage.setItem("mad_rageIndex", String(rageIndex));
-    } catch {}
-  }, [myMad, rageIndex]);
-
-  const increaseMad = () => {
-    const bump = 7 + ((rageIndex + myMad) % 19);
-    setRageIndex((v) => v + bump);
-    setMyMad((v) => v + 1);
-  };
-
+  // ====== UI buttons ======
   const btnBase =
-    "rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur hover:scale-[1.02] active:scale-[0.98]";
-  const btnPrimary = `${btnBase} bg-red-500 hover:bg-red-600 text-white`;
+    "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition border border-white/10";
+  const btnPrimary = `${btnBase} bg-red-600 hover:bg-red-500 text-white`;
   const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
   const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
   const btnBlue = `${btnBase} bg-blue-500 hover:bg-blue-600 text-white`;
 
-  // ✅ Roadmap
+  // ====== Background + particles ======
+  const bg = useMemo(() => withOptionalDoublePng("/pfp/bg/bg-redclouds.png"), []);
+
+  const angry = useMemo(() => {
+    const count = 18;
+    return Array.from({ length: count }, (_, i) => {
+      const x = (i * 100) / count + (Math.random() * 6 - 3);
+      const size = 18 + Math.floor(Math.random() * 26);
+      const opacity = 0.12 + Math.random() * 0.22;
+      const dur = 10 + Math.random() * 18;
+      const delay = Math.random() * 6;
+      const drift = Math.floor(Math.random() * 240 - 120);
+      return { i, x, size, opacity, dur, delay, drift };
+    });
+  }, []);
+
+  // ====== Meme Vault (keep your existing list) ======
+  const freshMemes = useMemo(
+    () => [{ src: "/mad-meme-01.png", tag: "Too Hot Coffee" }],
+    []
+  );
+
+  // ====== MAD COUNTER ======
+  const [rageIndex, setRageIndex] = useState<number>(847_291);
+  const [myMad, setMyMad] = useState<number>(0);
+
+  const increaseMad = () => {
+    setRageIndex((v) => v + 1);
+    setMyMad((v) => v + 1);
+  };
+
+  const leaderboard = useMemo(
+    () => [
+      { name: "PaperHandsPete", score: 9021 },
+      { name: "RugProofRita", score: 8501 },
+      { name: "DipBuyerDan", score: 7777 },
+      { name: "GasFeeGary", score: 6666 },
+      { name: "FOMOFranny", score: 5555 },
+    ],
+    []
+  );
+
+  // ====== Roadmap ======
   const roadmap = useMemo(
     () => [
       {
@@ -177,14 +175,13 @@ export default function Home() {
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes undeniable." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the energy. More eyes. More memes. More movement." },
       { phase: "Phase 4", title: "$50M", desc: "Serious territory. The timeline feels it." },
-      { phase: "Phase 5", title: "$100M", desc: "Full send. Legendary status. Digital emotion completed." },
     ],
     []
   );
 
-  // 🧩 PFP GENERATOR (EYES)
+  // ====== PFP data ======
   const ALL_EYES: EyeItem[] = useMemo(() => {
-    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style) => {
+    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style): EyeItem => {
       const { primary, fallback } = withOptionalDoublePng(path);
       return { id, primary, fallback, label, rarity, style };
     };
@@ -198,7 +195,7 @@ export default function Home() {
       add("c-common-purple", "/pfp/eyes/cartoon/common/cartoon-common-purple.png", "Cartoon Common Purple", "common", "cartoon"),
       add("c-common-red", "/pfp/eyes/cartoon/common/cartoon-common-red.png", "Cartoon Common Red", "common", "cartoon"),
 
-      // CARTOON / RARE (neon)
+      // CARTOON / RARE
       add("c-rare-neon-black", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-black.png", "Cartoon Rare Neon Black", "rare", "cartoon"),
       add("c-rare-neon-blue", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-blue.png", "Cartoon Rare Neon Blue", "rare", "cartoon"),
       add("c-rare-neon-green", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-green.png", "Cartoon Rare Neon Green", "rare", "cartoon"),
@@ -222,7 +219,7 @@ export default function Home() {
       add("p-common-pink", "/pfp/eyes/pixel/common/pixel-common-pink.png", "Pixel Common Pink", "common", "pixel"),
       add("p-common-purple", "/pfp/eyes/pixel/common/pixel-common-purple.png", "Pixel Common Purple", "common", "pixel"),
 
-      // PIXEL / RARE (crystal)
+      // PIXEL / RARE
       add("p-rare-crystal-black", "/pfp/eyes/pixel/rare/pixel-rare-crystal-black.png", "Pixel Rare Crystal Black", "rare", "pixel"),
       add("p-rare-crystal-blue", "/pfp/eyes/pixel/rare/pixel-rare-crystal-blue.png", "Pixel Rare Crystal Blue", "rare", "pixel"),
       add("p-rare-crystal-green", "/pfp/eyes/pixel/rare/pixel-rare-crystal-green.png", "Pixel Rare Crystal Green", "rare", "pixel"),
@@ -230,7 +227,7 @@ export default function Home() {
       add("p-rare-crystal-pink", "/pfp/eyes/pixel/rare/pixel-rare-crystal-pink.png", "Pixel Rare Crystal Pink", "rare", "pixel"),
       add("p-rare-crystal-red", "/pfp/eyes/pixel/rare/pixel-rare-crystal-red.png", "Pixel Rare Crystal Red", "rare", "pixel"),
 
-      // PIXEL / LEGENDARY (robot)
+      // PIXEL / LEGENDARY
       add("p-leg-robot-black", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-black.png", "Pixel Legendary Robot Black", "legendary", "pixel"),
       add("p-leg-robot-blue", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-blue.png", "Pixel Legendary Robot Blue", "legendary", "pixel"),
       add("p-leg-robot-green", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-green.png", "Pixel Legendary Robot Green", "legendary", "pixel"),
@@ -240,9 +237,8 @@ export default function Home() {
     ];
   }, []);
 
-  // 🧩 PFP GENERATOR (ACCESSORIES) — commons + rares (no legendary yet)
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
-    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style) => {
+    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style): AccessoryItem => {
       const { primary, fallback } = withOptionalDoublePng(path);
       return { id, primary, fallback, label, rarity, style };
     };
@@ -271,52 +267,66 @@ export default function Home() {
       add("a-c-rare-ragekeyboard", "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png", "Broken Keyboard Necklace", "rare", "cartoon"),
       add("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       add("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
+
+      // CARTOON / LEGENDARY (your exact filenames)
+      add("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
+      add("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon"),
+      add("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon"),
+      add("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon"),
+      add("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
+      add("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon"),
+      add("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon"),
+      add("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon"),
+      add("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
+      add("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
+      add("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
+      add("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
+      add("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
+      add("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon"),
     ];
   }, []);
 
-  const BASE_SRC = "/pfp/base/base-01.png";
-  const MOUTH_SRC = "/pfp/mouth/mouth-01.png";
+  const BASE = useMemo(() => withOptionalDoublePng("/pfp/base/base-01.png"), []);
+  const MOUTH = useMemo(() => withOptionalDoublePng("/pfp/mouth/mouth-01.png"), []);
 
-  // ✅ Layer toggles
+  // ====== toggles ======
   const [showBase, setShowBase] = useState(true);
   const [showMouth, setShowMouth] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  // ✅ safe initial states
-  const firstEye: EyeItem =
-    ALL_EYES[0] ??
-    ({
-      id: "default",
-      primary: "/pfp/eyes/eyes-01.png",
-      fallback: undefined,
-      label: "Eyes",
-      rarity: "common",
-      style: "cartoon",
-    } as EyeItem);
+  // ====== safe initial picks ======
+  const firstEye = ALL_EYES[0] ?? {
+    id: "default-eye",
+    primary: "/pfp/eyes/eyes-01.png",
+    fallback: undefined,
+    label: "Eyes",
+    rarity: "common" as Rarity,
+    style: "cartoon" as Style,
+  };
 
-  const firstAcc: AccessoryItem =
-    ALL_ACCESSORIES[0] ??
-    ({
-      id: "default-acc",
-      primary: "/pfp/accessories/acc-01.png",
-      fallback: undefined,
-      label: "Accessory",
-      rarity: "common",
-      style: "cartoon",
-    } as AccessoryItem);
+  const firstAcc = ALL_ACCESSORIES[0] ?? {
+    id: "default-acc",
+    primary: "/pfp/accessories/acc-01.png",
+    fallback: undefined,
+    label: "Accessory",
+    rarity: "common" as Rarity,
+    style: "cartoon" as Style,
+  };
 
-  const [eyeSrc, setEyeSrc] = useState<string>(firstEye.primary);
+  const [eyeSrc, setEyeSrc] = useState(firstEye.primary);
   const [eyeFallback, setEyeFallback] = useState<string | undefined>(firstEye.fallback);
-  const [eyeLabel, setEyeLabel] = useState<string>(`${firstEye.label} • ${firstEye.rarity.toUpperCase()}`);
+  const [eyeLabel, setEyeLabel] = useState(`${firstEye.label} • ${firstEye.rarity.toUpperCase()}`);
 
-  const [accSrc, setAccSrc] = useState<string>(firstAcc.primary);
+  const [accSrc, setAccSrc] = useState(firstAcc.primary);
   const [accFallback, setAccFallback] = useState<string | undefined>(firstAcc.fallback);
-  const [accLabel, setAccLabel] = useState<string>(`${firstAcc.label} • ${firstAcc.rarity.toUpperCase()}`);
+  const [accLabel, setAccLabel] = useState(`${firstAcc.label} • ${firstAcc.rarity.toUpperCase()}`);
 
-  const [forgeCount, setForgeCount] = useState<number>(0);
-  const [powerIndex, setPowerIndex] = useState<number>(50);
-  const [revealing, setRevealing] = useState<boolean>(false);
-  const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
+  const [forgeCount, setForgeCount] = useState(0);
+  const [powerIndex, setPowerIndex] = useState(50);
+  const [revealing, setRevealing] = useState(false);
+
+  // force remount of layered imgs when forging
+  const [renderNonce, setRenderNonce] = useState(0);
 
   const forgeIdentity = () => {
     if (!ALL_EYES.length) return;
@@ -336,19 +346,14 @@ export default function Home() {
       }
 
       setForgeCount((v) => v + 1);
+      setRenderNonce((n) => n + 1);
       setPowerIndex(1 + Math.floor(Math.random() * 100));
       setRevealing(false);
     }, 550);
   };
 
-  const loadImg = (src: string) =>
-    new Promise<HTMLImageElement>((resolve, reject) => {
-      const img = new window.Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error(`Failed to load: ${src}`));
-      img.src = src;
-    });
+  // ====== Download ======
+  const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
 
   const downloadPNG = async () => {
     try {
@@ -356,47 +361,31 @@ export default function Home() {
       const canvas = document.createElement("canvas");
       canvas.width = size;
       canvas.height = size;
-
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      const eyesImg = await loadImg(eyeSrc).catch(async () => {
-        if (!eyeFallback) throw new Error(`Failed to load eyes primary and no fallback: ${eyeSrc}`);
-        return await loadImg(eyeFallback);
-      });
-
-      const accImg = await (showAcc
-        ? loadImg(accSrc).catch(async () => {
-            if (!accFallback) throw new Error(`Failed to load accessory primary and no fallback: ${accSrc}`);
-            return await loadImg(accFallback);
-          })
-        : Promise.resolve<HTMLImageElement | null>(null));
-
-      const [base, mouth] = await Promise.all([
-        showBase ? loadImg(BASE_SRC) : Promise.resolve<HTMLImageElement | null>(null),
-        showMouth ? loadImg(MOUTH_SRC) : Promise.resolve<HTMLImageElement | null>(null),
+      const [baseImg, eyesImg, mouthImg, accessoryImg] = await Promise.all([
+        showBase ? loadImgWithFallback(BASE.primary, BASE.fallback) : Promise.resolve<HTMLImageElement | null>(null),
+        loadImgWithFallback(eyeSrc, eyeFallback),
+        showMouth ? loadImgWithFallback(MOUTH.primary, MOUTH.fallback) : Promise.resolve<HTMLImageElement | null>(null),
+        showAcc ? loadImgWithFallback(accSrc, accFallback) : Promise.resolve<HTMLImageElement | null>(null),
       ]);
 
       ctx.clearRect(0, 0, size, size);
-
-      if (showBase && base) ctx.drawImage(base, 0, 0, size, size);
+      if (showBase && baseImg) ctx.drawImage(baseImg, 0, 0, size, size);
       ctx.drawImage(eyesImg, 0, 0, size, size);
-      if (showMouth && mouth) ctx.drawImage(mouth, 0, 0, size, size);
-      if (showAcc && accImg) ctx.drawImage(accImg, 0, 0, size, size);
+      if (showMouth && mouthImg) ctx.drawImage(mouthImg, 0, 0, size, size);
+      if (showAcc && accessoryImg) ctx.drawImage(accessoryImg, 0, 0, size, size);
 
       canvas.toBlob((blob) => {
         if (!blob) return;
         const url = URL.createObjectURL(blob);
-
-        const a = downloadLinkRef.current || document.createElement("a");
+        const a = downloadLinkRef.current;
+        if (!a) return;
         a.href = url;
-        a.download = `$MAD-pfp-${Date.now()}.png`;
-
-        if (!downloadLinkRef.current) document.body.appendChild(a);
+        a.download = `$MAD_PFP_${forgeCount + 1}.png`;
         a.click();
-        if (!downloadLinkRef.current) a.remove();
-
-        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        setTimeout(() => URL.revokeObjectURL(url), 2500);
       }, "image/png");
     } catch (e) {
       console.error(e);
@@ -404,7 +393,12 @@ export default function Home() {
     }
   };
 
-  const bg = useMemo(() => withOptionalDoublePng("/pfp/bg/bg-redclouds.png"), []);
+  // ====== Image error handlers (single fallback swap) ======
+  const swapToFallbackOnce = (fallback?: string) => (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    if (!fallback) return;
+    const img = e.currentTarget;
+    if (img.src !== fallback) img.src = fallback;
+  };
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
@@ -457,15 +451,11 @@ export default function Home() {
       {/* ✅ RED CLOUD BACKGROUND */}
       <div className="fixed inset-0 -z-20">
         <img
+          key={`bg-${renderNonce}`}
           src={bg.primary}
           alt="Red storm background"
           className="h-full w-full object-cover"
-          onError={(e) => {
-            if (!bg.fallback) return;
-            const img = e.currentTarget as HTMLImageElement;
-            // swap to fallback once
-            if (img.src !== bg.fallback) img.src = bg.fallback;
-          }}
+          onError={swapToFallbackOnce(bg.fallback)}
         />
         <div className="absolute inset-0 bg-black/25" />
       </div>
@@ -552,31 +542,41 @@ export default function Home() {
               className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]"
               style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
             >
-              {showBase && <img src={BASE_SRC} className="absolute inset-0 w-full h-full object-cover" alt="base" />}
+              {showBase && (
+                <img
+                  key={`base-${renderNonce}`}
+                  src={BASE.primary}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  alt="base"
+                  onError={swapToFallbackOnce(BASE.fallback)}
+                />
+              )}
 
               <img
+                key={`eyes-${eyeSrc}-${renderNonce}`}
                 src={eyeSrc}
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="eyes"
-                onError={(e) => {
-                  if (!eyeFallback) return;
-                  const img = e.currentTarget as HTMLImageElement;
-                  if (img.src !== eyeFallback) img.src = eyeFallback;
-                }}
+                onError={swapToFallbackOnce(eyeFallback)}
               />
 
-              {showMouth && <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />}
+              {showMouth && (
+                <img
+                  key={`mouth-${renderNonce}`}
+                  src={MOUTH.primary}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  alt="mouth"
+                  onError={swapToFallbackOnce(MOUTH.fallback)}
+                />
+              )}
 
               {showAcc && (
                 <img
+                  key={`acc-${accSrc}-${renderNonce}`}
                   src={accSrc}
                   className="absolute inset-0 w-full h-full object-cover"
                   alt="accessory"
-                  onError={(e) => {
-                    if (!accFallback) return;
-                    const img = e.currentTarget as HTMLImageElement;
-                    if (img.src !== accFallback) img.src = accFallback;
-                  }}
+                  onError={swapToFallbackOnce(accFallback)}
                 />
               )}
             </div>
@@ -597,14 +597,15 @@ export default function Home() {
               <button className={btnPrimary} onClick={forgeIdentity}>
                 Forge Identity
               </button>
-              <button className={btnWhite} onClick={downloadPNG}>
+              <button className={btnGhost} onClick={downloadPNG}>
                 Download PNG
               </button>
               <a ref={downloadLinkRef} className="hidden" />
             </div>
 
             <p className="mt-4 text-xs text-white/40">
-              Eyes loaded: {ALL_EYES.length}. Accessories loaded: {ALL_ACCESSORIES.length}.
+              Eyes loaded: {ALL_EYES.length}. Accessories loaded: {ALL_ACCESSORIES.length}. Legendary accessories loaded:{" "}
+              {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
             </p>
           </section>
 
@@ -737,12 +738,7 @@ export default function Home() {
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3
-                      className={[
-                        "text-2xl sm:text-3xl font-black",
-                        done ? "line-through decoration-red-500/80" : "",
-                      ].join(" ")}
-                    >
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-red-500/80" : ""].join(" ")}>
                       {item.title}
                     </h3>
                     <span className="h-px flex-1 bg-white/10" />
