@@ -41,7 +41,6 @@ function pickWeightedAccessory(all: AccessoryItem[]) {
   const rares = all.filter((a) => a.rarity === "rare");
   const legendaries = all.filter((a) => a.rarity === "legendary");
 
-  // If you don’t have a pool yet, fall back safely
   const safeCommons = commons.length ? commons : all;
   const safeRares = rares.length ? rares : safeCommons;
   const safeLegs = legendaries.length ? legendaries : safeRares;
@@ -55,6 +54,18 @@ function pickWeightedAccessory(all: AccessoryItem[]) {
   else pool = safeLegs;
 
   return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function applyImgFallback(
+  e: React.SyntheticEvent<HTMLImageElement, Event>,
+  fallback?: string
+) {
+  if (!fallback) return;
+  const img = e.currentTarget;
+  // prevent infinite loops
+  if (img.dataset.fallbackApplied === "1") return;
+  img.dataset.fallbackApplied = "1";
+  img.src = fallback;
 }
 
 export default function Home() {
@@ -179,9 +190,9 @@ export default function Home() {
 
   // 🧩 PFP GENERATOR (EYES)
   const ALL_EYES: EyeItem[] = useMemo(() => {
-    const add = (id: string, path: string, label: string, rarity: EyeItem["rarity"], style: EyeItem["style"]) => {
+    const add = (id: string, path: string, label: string, rarity: Rarity, style: Style) => {
       const { primary, fallback } = withOptionalDoublePng(path);
-      return { id, primary, fallback, label, rarity, style } as EyeItem;
+      return { id, primary, fallback, label, rarity, style };
     };
 
     return [
@@ -235,11 +246,11 @@ export default function Home() {
     ];
   }, []);
 
-  // 🧩 PFP GENERATOR (ACCESSORIES) — commons + your rares (exact filenames)
+  // 🧩 PFP GENERATOR (ACCESSORIES) — commons + rares + your legendaries (exact filenames)
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
     const add = (id: string, path: string, label: string, rarity: Rarity, style: Style) => {
       const { primary, fallback } = withOptionalDoublePng(path);
-      return { id, primary, fallback, label, rarity, style } as AccessoryItem;
+      return { id, primary, fallback, label, rarity, style };
     };
 
     return [
@@ -254,7 +265,6 @@ export default function Home() {
       add("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
       add("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
       add("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
-      // ✅ Wristband -> Headband
       add("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
       // CARTOON / RARE (your filenames)
@@ -268,7 +278,21 @@ export default function Home() {
       add("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       add("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
 
-      // (Legendary accessories can go here later)
+      // CARTOON / LEGENDARY (your exact filenames from the screenshot)
+      add("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Flaming Cigar", "legendary", "cartoon"),
+      add("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon"),
+      add("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon"),
+      add("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura Ring", "legendary", "cartoon"),
+      add("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
+      add("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon"),
+      add("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack Strap", "legendary", "cartoon"),
+      add("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon"),
+      add("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
+      add("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Bag of $MAD", "legendary", "cartoon"),
+      add("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
+      add("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "RUG PROOF Shield", "legendary", "cartoon"),
+      add("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "CEO OF MAD Sash", "legendary", "cartoon"),
+      add("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void Shades", "legendary", "cartoon"),
     ];
   }, []);
 
@@ -458,12 +482,7 @@ export default function Home() {
           src={bg.primary}
           alt="Red storm background"
           className="h-full w-full object-cover"
-          onError={(e) => {
-            if (!bg.fallback) return;
-            const img = e.currentTarget as HTMLImageElement;
-            // safer: if primary fails, swap to fallback once
-            if (img.src.includes(bg.primary)) img.src = bg.fallback;
-          }}
+          onError={(e) => applyImgFallback(e, bg.fallback)}
         />
         <div className="absolute inset-0 bg-black/25" />
       </div>
@@ -556,11 +575,7 @@ export default function Home() {
                 src={eyeSrc}
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="eyes"
-                onError={(e) => {
-                  if (!eyeFallback) return;
-                  const img = e.currentTarget as HTMLImageElement;
-                  if (img.src !== eyeFallback) img.src = eyeFallback;
-                }}
+                onError={(e) => applyImgFallback(e, eyeFallback)}
               />
 
               {showMouth && <img src={MOUTH_SRC} className="absolute inset-0 w-full h-full object-cover" alt="mouth" />}
@@ -570,11 +585,7 @@ export default function Home() {
                   src={accSrc}
                   className="absolute inset-0 w-full h-full object-cover"
                   alt="accessory"
-                  onError={(e) => {
-                    if (!accFallback) return;
-                    const img = e.currentTarget as HTMLImageElement;
-                    if (img.src !== accFallback) img.src = accFallback;
-                  }}
+                  onError={(e) => applyImgFallback(e, accFallback)}
                 />
               )}
             </div>
