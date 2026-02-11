@@ -24,24 +24,14 @@ type AccessoryItem = {
   style: Style;
 };
 
-/**
- * Build a robust list of candidates for a given asset path.
- * This fixes:
- * - accidental ".png.png"
- * - accidental nested "public/public" folder
- * - cases where files are inside "/public/public/..." and you reference "/..."
- */
 function buildCandidates(originalPath: string): string[] {
   const ensureLeadingSlash = (p: string) => (p.startsWith("/") ? p : `/${p}`);
-
   const raw = ensureLeadingSlash(originalPath);
 
-  // Try these base prefixes because the repo screenshot shows /public/public/... happened.
+  // If you accidentally nested /public/public, the browser path becomes /public/...
   const prefixes = ["", "/public", "/public/public"];
 
-  // For each prefix, create variants for png mistakes
   const out: string[] = [];
-
   const pushUnique = (p: string) => {
     const v = p.replace(/\/{2,}/g, "/");
     if (!out.includes(v)) out.push(v);
@@ -51,10 +41,10 @@ function buildCandidates(originalPath: string): string[] {
     const p = `${pre}${raw}`.replace(/\/{2,}/g, "/");
     pushUnique(p);
 
-    // If it's .png, try .png.png (upload mistake)
+    // .png -> .png.png
     if (p.endsWith(".png")) pushUnique(`${p}.png`);
 
-    // If it's .png.png, try stripping to .png
+    // .png.png -> .png
     if (p.endsWith(".png.png")) pushUnique(p.replace(/\.png\.png$/, ".png"));
   }
 
@@ -95,11 +85,15 @@ function pickWeightedAccessory(all: AccessoryItem[]) {
 }
 
 /**
- * Cycles through multiple fallbacks (not just one).
- * Stores:
- * - data-fallbacks: JSON array of fallbacks
- * - data-fallback-index: current index
+ * IMPORTANT FIX:
+ * - reset fallbackIndex when src changes (onLoad)
+ * - also reset when we start error cycling for a *new* primary
  */
+function resetFallbackState(img: HTMLImageElement) {
+  img.dataset.fallbackIndex = "0";
+  img.dataset.lastTried = img.currentSrc || img.src || "";
+}
+
 function applyImgFallbackCycle(
   e: React.SyntheticEvent<HTMLImageElement, Event>,
   fallbacks: string[]
@@ -107,11 +101,18 @@ function applyImgFallbackCycle(
   const img = e.currentTarget;
   if (!fallbacks?.length) return;
 
-  const currentIndex = Number(img.dataset.fallbackIndex || "0");
-  if (currentIndex >= fallbacks.length) return; // exhausted
+  // If this is a different image than last time, reset the cycle
+  const current = img.currentSrc || img.src || "";
+  if (img.dataset.lastTried !== current) {
+    img.dataset.fallbackIndex = "0";
+    img.dataset.lastTried = current;
+  }
 
-  img.dataset.fallbackIndex = String(currentIndex + 1);
-  img.src = fallbacks[currentIndex];
+  const idx = Number(img.dataset.fallbackIndex || "0");
+  if (idx >= fallbacks.length) return; // exhausted
+
+  img.dataset.fallbackIndex = String(idx + 1);
+  img.src = fallbacks[idx];
 }
 
 async function loadImgWithFallbacks(primary: string, fallbacks: string[]) {
@@ -130,9 +131,7 @@ async function loadImgWithFallbacks(primary: string, fallbacks: string[]) {
     for (const f of fallbacks || []) {
       try {
         return await tryLoad(f);
-      } catch {
-        // keep going
-      }
+      } catch {}
     }
     throw new Error(`Failed to load primary + all fallbacks: ${primary}`);
   }
@@ -256,7 +255,6 @@ export default function Home() {
 
   const ALL_EYES: EyeItem[] = useMemo(() => {
     return [
-      // CARTOON / COMMON
       makeItem<EyeItem>("c-common-black", "/pfp/eyes/cartoon/common/cartoon-common-black.png", "Cartoon Common Black", "common", "cartoon"),
       makeItem<EyeItem>("c-common-blue", "/pfp/eyes/cartoon/common/cartoon-common-blue.png", "Cartoon Common Blue", "common", "cartoon"),
       makeItem<EyeItem>("c-common-green", "/pfp/eyes/cartoon/common/cartoon-common-green.png", "Cartoon Common Green", "common", "cartoon"),
@@ -264,7 +262,6 @@ export default function Home() {
       makeItem<EyeItem>("c-common-purple", "/pfp/eyes/cartoon/common/cartoon-common-purple.png", "Cartoon Common Purple", "common", "cartoon"),
       makeItem<EyeItem>("c-common-red", "/pfp/eyes/cartoon/common/cartoon-common-red.png", "Cartoon Common Red", "common", "cartoon"),
 
-      // CARTOON / RARE
       makeItem<EyeItem>("c-rare-neon-black", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-black.png", "Cartoon Rare Neon Black", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-blue", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-blue.png", "Cartoon Rare Neon Blue", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-green", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-green.png", "Cartoon Rare Neon Green", "rare", "cartoon"),
@@ -272,7 +269,6 @@ export default function Home() {
       makeItem<EyeItem>("c-rare-neon-purple", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-purple.png", "Cartoon Rare Neon Purple", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-red", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png", "Cartoon Rare Neon Red", "rare", "cartoon"),
 
-      // CARTOON / LEGENDARY
       makeItem<EyeItem>("c-leg-fire-red", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png", "Cartoon Legendary Fire (Red)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-fruity-orange", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png", "Cartoon Legendary Fruity (Orange)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-hearts-pink", "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png", "Cartoon Legendary Hearts (Pink)", "legendary", "cartoon"),
@@ -280,7 +276,6 @@ export default function Home() {
       makeItem<EyeItem>("c-leg-poison-green", "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png", "Cartoon Legendary Poison (Green)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-void-black", "/pfp/eyes/cartoon/legendary/cartoon-legendary-void-black.png", "Cartoon Legendary Void (Black)", "legendary", "cartoon"),
 
-      // PIXEL / COMMON
       makeItem<EyeItem>("p-common-black", "/pfp/eyes/pixel/common/pixel-common-black.png", "Pixel Common Black", "common", "pixel"),
       makeItem<EyeItem>("p-common-blue", "/pfp/eyes/pixel/common/pixel-common-blue.png", "Pixel Common Blue", "common", "pixel"),
       makeItem<EyeItem>("p-common-green", "/pfp/eyes/pixel/common/pixel-common-green.png", "Pixel Common Green", "common", "pixel"),
@@ -288,7 +283,6 @@ export default function Home() {
       makeItem<EyeItem>("p-common-pink", "/pfp/eyes/pixel/common/pixel-common-pink.png", "Pixel Common Pink", "common", "pixel"),
       makeItem<EyeItem>("p-common-purple", "/pfp/eyes/pixel/common/pixel-common-purple.png", "Pixel Common Purple", "common", "pixel"),
 
-      // PIXEL / RARE
       makeItem<EyeItem>("p-rare-crystal-black", "/pfp/eyes/pixel/rare/pixel-rare-crystal-black.png", "Pixel Rare Crystal Black", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-blue", "/pfp/eyes/pixel/rare/pixel-rare-crystal-blue.png", "Pixel Rare Crystal Blue", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-green", "/pfp/eyes/pixel/rare/pixel-rare-crystal-green.png", "Pixel Rare Crystal Green", "rare", "pixel"),
@@ -296,7 +290,6 @@ export default function Home() {
       makeItem<EyeItem>("p-rare-crystal-pink", "/pfp/eyes/pixel/rare/pixel-rare-crystal-pink.png", "Pixel Rare Crystal Pink", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-red", "/pfp/eyes/pixel/rare/pixel-rare-crystal-red.png", "Pixel Rare Crystal Red", "rare", "pixel"),
 
-      // PIXEL / LEGENDARY
       makeItem<EyeItem>("p-leg-robot-black", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-black.png", "Pixel Legendary Robot Black", "legendary", "pixel"),
       makeItem<EyeItem>("p-leg-robot-blue", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-blue.png", "Pixel Legendary Robot Blue", "legendary", "pixel"),
       makeItem<EyeItem>("p-leg-robot-green", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-green.png", "Pixel Legendary Robot Green", "legendary", "pixel"),
@@ -308,7 +301,6 @@ export default function Home() {
 
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
     return [
-      // CARTOON / COMMON
       makeItem<AccessoryItem>("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-beanie", "/pfp/accessories/cartoon/common/cartoon-common-beanie.png", "Beanie", "common", "cartoon"),
@@ -321,7 +313,6 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
-      // CARTOON / RARE
       makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
@@ -332,7 +323,6 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
 
-      // CARTOON / LEGENDARY (your official filenames)
       makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Flaming Cigar", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon"),
@@ -346,25 +336,34 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "RUG PROOF Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "CEO OF MAD Sash", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void Shades", "legendary", "cartoon"),
+      // keep this if you uploaded cartoon-legendary-void.png (your screenshot shows it exists)
+      makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon"),
     ];
   }, []);
 
-  const BASE = useMemo(() => makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
-    "base",
-    "/pfp/base/base-01.png",
-    "Base",
-    "common",
-    "cartoon"
-  ), []);
+  const BASE = useMemo(
+    () =>
+      makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
+        "base",
+        "/pfp/base/base-01.png",
+        "Base",
+        "common",
+        "cartoon"
+      ),
+    []
+  );
 
-  const MOUTH = useMemo(() => makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
-    "mouth",
-    "/pfp/mouth/mouth-01.png",
-    "Mouth",
-    "common",
-    "cartoon"
-  ), []);
+  const MOUTH = useMemo(
+    () =>
+      makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
+        "mouth",
+        "/pfp/mouth/mouth-01.png",
+        "Mouth",
+        "common",
+        "cartoon"
+      ),
+    []
+  );
 
   const bg = useMemo(() => {
     const candidates = buildCandidates("/pfp/bg/bg-redclouds.png");
@@ -379,17 +378,23 @@ export default function Home() {
   const firstAcc = ALL_ACCESSORIES[0];
 
   const [eyeSrc, setEyeSrc] = useState(firstEye?.primary ?? "/pfp/eyes/eyes-01.png");
-  const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(firstEye?.fallbacks ?? buildCandidates("/pfp/eyes/eyes-01.png").slice(1));
+  const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(
+    firstEye?.fallbacks ?? buildCandidates("/pfp/eyes/eyes-01.png").slice(1)
+  );
   const [eyeLabel, setEyeLabel] = useState(`${firstEye?.label ?? "Eyes"} • ${(firstEye?.rarity ?? "common").toUpperCase()}`);
 
   const [accSrc, setAccSrc] = useState(firstAcc?.primary ?? "/pfp/accessories/acc-01.png");
-  const [accFallbacks, setAccFallbacks] = useState<string[]>(firstAcc?.fallbacks ?? buildCandidates("/pfp/accessories/acc-01.png").slice(1));
+  const [accFallbacks, setAccFallbacks] = useState<string[]>(
+    firstAcc?.fallbacks ?? buildCandidates("/pfp/accessories/acc-01.png").slice(1)
+  );
   const [accLabel, setAccLabel] = useState(`${firstAcc?.label ?? "Accessory"} • ${(firstAcc?.rarity ?? "common").toUpperCase()}`);
 
   const [forgeCount, setForgeCount] = useState<number>(0);
-  const [powerIndex, setPowerIndex] = useState<number>(50);
   const [revealing, setRevealing] = useState<boolean>(false);
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null);
+
+  // 🔥 This forces remounts so dataset fallbackIndex doesn’t “stick”
+  const [renderNonce, setRenderNonce] = useState(0);
 
   const forgeIdentity = () => {
     if (!ALL_EYES.length) return;
@@ -409,7 +414,7 @@ export default function Home() {
       }
 
       setForgeCount((v) => v + 1);
-      setPowerIndex(1 + Math.floor(Math.random() * 100));
+      setRenderNonce((n) => n + 1); // ✅ key refresh
       setRevealing(false);
     }, 550);
   };
@@ -464,152 +469,78 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
-      <style jsx global>{`
-        @keyframes madFloatUp {
-          from { transform: translate3d(var(--drift), 20vh, 0) rotate(0deg); }
-          to { transform: translate3d(calc(var(--drift) * -1), -140vh, 0) rotate(18deg); }
-        }
-        .mad-emoji {
-          bottom: -30vh;
-          animation-name: madFloatUp;
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-          filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
-        }
-        @keyframes madWiggle {
-          0% { transform: translateY(0); }
-          30% { transform: translateY(-1px); }
-          60% { transform: translateY(1px); }
-          100% { transform: translateY(0); }
-        }
-        @keyframes forgePulse {
-          0% { transform: scale(1); filter: saturate(1); }
-          50% { transform: scale(1.02); filter: saturate(1.25); }
-          100% { transform: scale(1); filter: saturate(1); }
-        }
-      `}</style>
-
-      {/* BG */}
       <div className="fixed inset-0 -z-20">
         <img
+          key={`bg-${renderNonce}`}
           src={bg.primary}
           alt="Red storm background"
           className="h-full w-full object-cover"
+          onLoad={(e) => resetFallbackState(e.currentTarget)}
           onError={(e) => applyImgFallbackCycle(e, bg.fallbacks)}
         />
         <div className="absolute inset-0 bg-black/25" />
       </div>
 
-      {/* FLOATING */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        {angry.map((a) => (
-          <span
-            key={a.i}
-            className="mad-emoji absolute select-none"
-            style={{
-              left: `${a.x}%`,
-              fontSize: `${a.size}px`,
-              opacity: a.opacity,
-              animationDuration: `${a.dur}s`,
-              animationDelay: `${a.delay}s`,
-              ["--drift" as any]: `${a.drift}px`,
-            }}
-          >
-            😡
-          </span>
-        ))}
-      </div>
-
-      {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
             <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
           </div>
 
-          <h1 className="mt-8 text-5xl sm:text-6xl font-black tracking-tight">
-            BTC: <span className="text-white">Digital gold.</span>
-          </h1>
-          <h2 className="mt-3 text-5xl sm:text-6xl font-black text-red-500">$MAD: Digital emotion.</h2>
-
-          <p className="mt-8 text-white/70 uppercase tracking-[0.35em] text-xs">Solana Contract</p>
-
-          <div className="mt-3 flex flex-col sm:flex-row items-center gap-3">
-            <div className="max-w-[90vw] sm:max-w-[680px] rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
-              {addr}
-            </div>
-            <button onClick={copyCA} className="rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur hover:scale-[1.02] active:scale-[0.98] bg-white/10 hover:bg-white/15 text-white">
-              {copied ? "✅ Copied" : "Copy CA"}
-            </button>
-          </div>
-
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href={links.buy} target="_blank" rel="noreferrer" className="rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur hover:scale-[1.02] active:scale-[0.98] bg-red-500 hover:bg-red-600 text-white">
-              Buy on Jupiter
-            </a>
-            <a href={links.chart} target="_blank" rel="noreferrer" className="rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur hover:scale-[1.02] active:scale-[0.98] bg-white/10 hover:bg-white/15 text-white">
-              View Chart
-            </a>
-            <a href={links.x} target="_blank" rel="noreferrer" className="rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur hover:scale-[1.02] active:scale-[0.98] bg-white text-black hover:opacity-90">
-              Join X Community
-            </a>
-            <a href={links.tg} target="_blank" rel="noreferrer" className="rounded-full px-7 py-3 font-extrabold transition border border-white/15 backdrop-blur hover:scale-[1.02] active:scale-[0.98] bg-blue-500 hover:bg-blue-600 text-white">
-              Join Telegram
-            </a>
-          </div>
-
-          {/* PFP GENERATOR */}
-          <section className="mt-14 w-full max-w-xl mx-auto text-center">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Tool</p>
+          <div className="mt-14 w-full max-w-xl mx-auto text-center">
             <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
-            <p className="mt-3 text-white/60">Free for the community. Forge a look that sticks.</p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-              <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
+              <button className={`${btnBase} bg-white/10 hover:bg-white/15 text-white`} onClick={() => setShowBase((v) => !v)}>
                 {showBase ? "Hide Base" : "Show Base"}
               </button>
-              <button className={btnGhost} onClick={() => setShowMouth((v) => !v)}>
+              <button className={`${btnBase} bg-white/10 hover:bg-white/15 text-white`} onClick={() => setShowMouth((v) => !v)}>
                 {showMouth ? "Hide Mouth" : "Show Mouth"}
               </button>
-              <button className={btnGhost} onClick={() => setShowAcc((v) => !v)}>
+              <button className={`${btnBase} bg-white/10 hover:bg-white/15 text-white`} onClick={() => setShowAcc((v) => !v)}>
                 {showAcc ? "Hide Accessory" : "Show Accessory"}
               </button>
             </div>
 
-            <div
-              className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]"
-              style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
-            >
+            <div className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80">
               {showBase && (
                 <img
+                  key={`base-${renderNonce}`}
                   src={BASE.primary}
                   className="absolute inset-0 w-full h-full object-cover"
                   alt="base"
+                  onLoad={(e) => resetFallbackState(e.currentTarget)}
                   onError={(e) => applyImgFallbackCycle(e, BASE.fallbacks)}
                 />
               )}
 
               <img
+                key={`eyes-${eyeSrc}-${renderNonce}`}
                 src={eyeSrc}
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="eyes"
+                onLoad={(e) => resetFallbackState(e.currentTarget)}
                 onError={(e) => applyImgFallbackCycle(e, eyeFallbacks)}
               />
 
               {showMouth && (
                 <img
+                  key={`mouth-${renderNonce}`}
                   src={MOUTH.primary}
                   className="absolute inset-0 w-full h-full object-cover"
                   alt="mouth"
+                  onLoad={(e) => resetFallbackState(e.currentTarget)}
                   onError={(e) => applyImgFallbackCycle(e, MOUTH.fallbacks)}
                 />
               )}
 
               {showAcc && (
                 <img
+                  key={`acc-${accSrc}-${renderNonce}`}
                   src={accSrc}
                   className="absolute inset-0 w-full h-full object-cover"
                   alt="accessory"
+                  onLoad={(e) => resetFallbackState(e.currentTarget)}
                   onError={(e) => applyImgFallbackCycle(e, accFallbacks)}
                 />
               )}
@@ -631,9 +562,7 @@ export default function Home() {
             <p className="mt-4 text-xs text-white/40">
               Eyes loaded: {ALL_EYES.length}. Accessories loaded: {ALL_ACCESSORIES.length}.
             </p>
-          </section>
-
-          {/* keep your other sections below as-is */}
+          </div>
         </section>
       </div>
     </main>
