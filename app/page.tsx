@@ -385,6 +385,44 @@ export default function Home() {
             filter: saturate(1);
           }
         }
+
+        /* 🔥 token status fire animations */
+        @keyframes flameFlicker {
+          0% {
+            transform: translate3d(-6%, 2%, 0) scale(1);
+            opacity: 0.65;
+          }
+          25% {
+            transform: translate3d(4%, -2%, 0) scale(1.03);
+            opacity: 0.78;
+          }
+          50% {
+            transform: translate3d(-2%, -6%, 0) scale(1.06);
+            opacity: 0.7;
+          }
+          75% {
+            transform: translate3d(6%, 1%, 0) scale(1.02);
+            opacity: 0.82;
+          }
+          100% {
+            transform: translate3d(-6%, 2%, 0) scale(1);
+            opacity: 0.65;
+          }
+        }
+        @keyframes flameRise {
+          0% {
+            transform: translate3d(0, 18%, 0) scale(1);
+            opacity: 0.35;
+          }
+          50% {
+            transform: translate3d(0, -6%, 0) scale(1.05);
+            opacity: 0.55;
+          }
+          100% {
+            transform: translate3d(0, 18%, 0) scale(1);
+            opacity: 0.35;
+          }
+        }
       `}</style>
 
       {/* ✅ RED CLOUD BACKGROUND */}
@@ -455,18 +493,13 @@ export default function Home() {
             </button>
           </div>
 
+          {/* ✅ Only these 2 at the top */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
               Buy on Jupiter
             </a>
             <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
               View Chart
-            </a>
-            <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
-              Join X Community
-            </a>
-            <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
-              Join Telegram
             </a>
           </div>
         </section>
@@ -486,7 +519,7 @@ export default function Home() {
             </button>
           </div>
 
-          {/* ✅ FIX: removed outer ring (no border / glow) */}
+          {/* ✅ No outer ring */}
           <div
             className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden"
             style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
@@ -548,26 +581,61 @@ export default function Home() {
           </p>
         </section>
 
-        {/* 3) BURN + LOCK */}
+        {/* 3) BURN + LOCK (🔥 + 🔒) */}
         <section className="py-16 w-full">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">Burned & Locked</h2>
             <p className="mt-3 text-white/60">Simple stats for easy screenshots.</p>
 
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 text-left">
-              <div className="rounded-3xl border border-white/10 bg-black/30 p-6">
-                <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
-                <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
-                <p className="mt-2 text-white/60">
-                  Burn rate: <span className="font-black text-white">{BURN_RATE}%</span>
-                </p>
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 text-left">
+              {/* 🔥 Burned Card */}
+              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
+                {/* fire layers */}
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 30% 70%, rgba(255,120,0,.45), transparent 55%)," +
+                      "radial-gradient(circle at 70% 70%, rgba(255,0,0,.35), transparent 60%)," +
+                      "radial-gradient(circle at 50% 95%, rgba(255,200,0,.35), transparent 55%)",
+                    filter: "blur(18px) saturate(1.2)",
+                    animation: "flameFlicker 1.7s ease-in-out infinite",
+                    opacity: 0.85,
+                  }}
+                />
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: "radial-gradient(circle at 50% 85%, rgba(255,160,0,.25), transparent 60%)",
+                    filter: "blur(22px)",
+                    animation: "flameRise 2.4s ease-in-out infinite",
+                    mixBlendMode: "screen",
+                  }}
+                />
+
+                <div className="relative">
+                  <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
+                  <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">
+                    {BURNED.toLocaleString()}
+                  </div>
+                  <p className="mt-2 text-white/70">
+                    Burn rate: <span className="font-black text-white">{BURN_RATE}%</span>
+                  </p>
+                </div>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+              {/* 🔒 Locked Card */}
+              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/30 p-6">
+                <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">
+                  🔒
+                </div>
+
                 <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
-                <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
-                <p className="mt-2 text-white/60">
+                <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">
+                  {LOCKED.toLocaleString()}
+                </div>
+                <p className="mt-2 text-white/70">
                   Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
                 </p>
               </div>
@@ -660,7 +728,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 6) CONTACT / SOCIALS */}
+        {/* 6) CONTACT / SOCIALS (only place for socials) */}
         <section className="pb-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Contact</p>
@@ -686,7 +754,9 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
+        <footer className="py-10 text-center text-white/35 text-sm">
+          © {new Date().getFullYear()} $MAD. Built by the community.
+        </footer>
       </div>
     </main>
   );
