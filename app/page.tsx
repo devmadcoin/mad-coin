@@ -302,8 +302,7 @@ export default function Home() {
   // ====== safe initial picks ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
   const firstAcc =
-    ALL_ACCESSORIES[0] ??
-    makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeSrc, setEyeSrc] = useState(firstEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(firstEye.fallbacks);
@@ -318,10 +317,7 @@ export default function Home() {
   const [revealing, setRevealing] = useState(false);
   const [renderNonce, setRenderNonce] = useState(0);
 
-  const selectedAcc = useMemo(
-    () => ALL_ACCESSORIES.find((a) => a.primary === accSrc) ?? null,
-    [ALL_ACCESSORIES, accSrc]
-  );
+  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.primary === accSrc) ?? null, [ALL_ACCESSORIES, accSrc]);
 
   const forgeIdentity = () => {
     if (!ALL_EYES.length) return;
@@ -371,6 +367,7 @@ export default function Home() {
           animation-iteration-count: infinite;
           filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
         }
+
         @keyframes forgePulse {
           0% {
             transform: scale(1);
@@ -386,7 +383,7 @@ export default function Home() {
           }
         }
 
-        /* 🔥 token status fire animations */
+        /* 🔥 fire animations */
         @keyframes flameFlicker {
           0% {
             transform: translate3d(-6%, 2%, 0) scale(1);
@@ -421,6 +418,44 @@ export default function Home() {
           100% {
             transform: translate3d(0, 18%, 0) scale(1);
             opacity: 0.35;
+          }
+        }
+
+        /* 🧊 blue locked energy animations */
+        @keyframes iceFlicker {
+          0% {
+            transform: translate3d(-5%, 2%, 0) scale(1);
+            opacity: 0.62;
+          }
+          25% {
+            transform: translate3d(4%, -2%, 0) scale(1.03);
+            opacity: 0.78;
+          }
+          50% {
+            transform: translate3d(-2%, -5%, 0) scale(1.06);
+            opacity: 0.7;
+          }
+          75% {
+            transform: translate3d(6%, 1%, 0) scale(1.02);
+            opacity: 0.82;
+          }
+          100% {
+            transform: translate3d(-5%, 2%, 0) scale(1);
+            opacity: 0.62;
+          }
+        }
+        @keyframes icePulse {
+          0% {
+            transform: translate3d(0, 14%, 0) scale(1);
+            opacity: 0.32;
+          }
+          50% {
+            transform: translate3d(0, -6%, 0) scale(1.06);
+            opacity: 0.58;
+          }
+          100% {
+            transform: translate3d(0, 14%, 0) scale(1);
+            opacity: 0.32;
           }
         }
       `}</style>
@@ -591,6 +626,11 @@ export default function Home() {
             <div className="mt-10 grid gap-6 sm:grid-cols-2 text-left">
               {/* 🔥 Burned Card */}
               <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
+                {/* 🔥 emoji badge */}
+                <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">
+                  🔥
+                </div>
+
                 {/* fire layers */}
                 <div
                   className="pointer-events-none absolute inset-0"
@@ -616,28 +656,50 @@ export default function Home() {
 
                 <div className="relative">
                   <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
-                  <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">
-                    {BURNED.toLocaleString()}
-                  </div>
+                  <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
                   <p className="mt-2 text-white/70">
                     Burn rate: <span className="font-black text-white">{BURN_RATE}%</span>
                   </p>
                 </div>
               </div>
 
-              {/* 🔒 Locked Card */}
-              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/30 p-6">
+              {/* 🔒 Locked Card (blue energy like burn) */}
+              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
+                {/* 🔒 emoji badge */}
                 <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">
                   🔒
                 </div>
 
-                <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
-                <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">
-                  {LOCKED.toLocaleString()}
+                {/* blue layers */}
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 30% 70%, rgba(0,160,255,.40), transparent 55%)," +
+                      "radial-gradient(circle at 70% 70%, rgba(0,90,255,.30), transparent 60%)," +
+                      "radial-gradient(circle at 50% 95%, rgba(120,220,255,.28), transparent 55%)",
+                    filter: "blur(18px) saturate(1.25)",
+                    animation: "iceFlicker 1.8s ease-in-out infinite",
+                    opacity: 0.85,
+                  }}
+                />
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: "radial-gradient(circle at 50% 85%, rgba(120,220,255,.22), transparent 60%)",
+                    filter: "blur(22px)",
+                    animation: "icePulse 2.6s ease-in-out infinite",
+                    mixBlendMode: "screen",
+                  }}
+                />
+
+                <div className="relative">
+                  <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
+                  <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
+                  <p className="mt-2 text-white/70">
+                    Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
+                  </p>
                 </div>
-                <p className="mt-2 text-white/70">
-                  Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
-                </p>
               </div>
             </div>
           </div>
@@ -656,18 +718,10 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={[
-                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
-                    done ? "opacity-70" : "hover:bg-white/10",
-                  ].join(" ")}
+                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-70" : "hover:bg-white/10"].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p
-                      className={[
-                        "text-xs uppercase tracking-[0.35em] text-white/50",
-                        done ? "line-through decoration-white/40" : "",
-                      ].join(" ")}
-                    >
+                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/40" : ""].join(" ")}>
                       {item.phase}
                     </p>
 
@@ -679,20 +733,13 @@ export default function Home() {
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3
-                      className={[
-                        "text-2xl sm:text-3xl font-black",
-                        done ? "line-through decoration-red-500/80" : "",
-                      ].join(" ")}
-                    >
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-red-500/80" : ""].join(" ")}>
                       {item.title}
                     </h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>
-                    {item.desc}
-                  </p>
+                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>{item.desc}</p>
                 </div>
               );
             })}
@@ -709,10 +756,7 @@ export default function Home() {
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {freshMemes.map((m) => (
-              <div
-                key={m.src}
-                className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition"
-              >
+              <div key={m.src} className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-xs uppercase tracking-[0.3em] text-white/50">{m.tag}</span>
                   <span className="text-xs font-black text-red-400">$MAD</span>
@@ -720,9 +764,7 @@ export default function Home() {
 
                 <Image src={m.src} alt={m.tag} width={1200} height={1200} className="rounded-2xl w-full h-auto" />
                 <div className="mt-4 h-px w-full bg-white/10" />
-                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">
-                  Post this. Tag it. Start fights.
-                </div>
+                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">Post this. Tag it. Start fights.</div>
               </div>
             ))}
           </div>
@@ -754,9 +796,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">
-          © {new Date().getFullYear()} $MAD. Built by the community.
-        </footer>
+        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
       </div>
     </main>
   );
