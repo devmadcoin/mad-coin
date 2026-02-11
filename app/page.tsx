@@ -25,7 +25,7 @@ type AccessoryItem = {
   rarity: Rarity;
   style: Style;
 
-  // Helps “tall” legendaries (halo/horns/aura/jetpack) show inside the circle.
+  // Helps tall legendaries (halo/horns/aura/jetpack) show inside the circle.
   cssTransform?: string;
   draw?: DrawTransform;
 };
@@ -35,6 +35,12 @@ function ensureLeadingSlash(p: string) {
   return p.startsWith("/") ? p : `/${p}`;
 }
 
+/**
+ * Builds a safe list of candidate paths.
+ * - Tries normal path
+ * - Also tries accidental /public prefix
+ * - Also tries .png vs .png.png variants
+ */
 function buildCandidates(originalPath: string): string[] {
   const raw = ensureLeadingSlash(originalPath);
   const prefixes = ["", "/public", "/public/public"];
@@ -652,7 +658,7 @@ export default function Home() {
 
           <div className="grid gap-5 text-left">
             {roadmap.map((item) => {
-              const done = !!(item as any).done;
+              const done = !!item.done;
               return (
                 <div
                   key={item.phase + item.title}
@@ -689,3 +695,4 @@ export default function Home() {
     </main>
   );
 }
+
