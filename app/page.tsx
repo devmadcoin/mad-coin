@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 
@@ -31,10 +32,9 @@ function ensureLeadingSlash(p: string) {
 
 /**
  * Builds a safe list of candidate paths.
- * WHY:
- * - In Next.js, static files live under /public and are served at "/..."
- * - Sometimes people accidentally reference "/public/..." or have ".png.png"
- * - We try sane candidates in order.
+ * - Tries normal path
+ * - Also tries accidental /public prefix
+ * - Also tries .png vs .png.png variants
  */
 function buildCandidates(originalPath: string): string[] {
   const raw = ensureLeadingSlash(originalPath);
@@ -50,7 +50,6 @@ function buildCandidates(originalPath: string): string[] {
     const p = `${pre}${raw}`.replace(/\/{2,}/g, "/");
     pushUnique(p);
 
-    // If someone uploaded "file.png.png" by accident, try the other variant too:
     if (p.endsWith(".png.png")) pushUnique(p.replace(/\.png\.png$/, ".png"));
     if (p.endsWith(".png")) pushUnique(`${p}.png`);
   }
@@ -58,13 +57,9 @@ function buildCandidates(originalPath: string): string[] {
   return out;
 }
 
-function makeItem<T extends { id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
-  id: string,
-  path: string,
-  label: string,
-  rarity: Rarity,
-  style: Style
-): T {
+function makeItem<
+  T extends { id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }
+>(id: string, path: string, label: string, rarity: Rarity, style: Style): T {
   const candidates = buildCandidates(path);
   return {
     id,
@@ -76,19 +71,34 @@ function makeItem<T extends { id: string; primary: string; fallbacks: string[]; 
   } as T;
 }
 
-/** Preload helper for download */
+function isRemoteUrl(src: string) {
+  return /^https?:\/\//i.test(src);
+}
+
+/** Preload helper for download (safe for same-origin + remote) */
 function loadImg(src: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new window.Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
+
+    // Only set crossOrigin for REMOTE urls.
+    // Same-origin assets on Next/Vercel do not need it and it can cause export issues in some cases.
+    if (isRemoteUrl(src)) img.crossOrigin = "anonymous";
+
+    img.onload = async () => {
+      // decode() helps ensure it draws properly before canvas export
+      try {
+        if ("decode" in img) await (img as any).decode();
+      } catch {}
+      resolve(img);
+    };
+
     img.onerror = () => reject(new Error(`Failed to load: ${src}`));
     img.src = src;
   });
 }
 
 /** Try primary then fallbacks (multiple) */
-async function loadImgWithFallbacks(primary: string, fallbacks: string[]) {
+async function loadImgWithFallbacks(primary: string, fallbacks: string[], label: string) {
   try {
     return await loadImg(primary);
   } catch {
@@ -97,7 +107,7 @@ async function loadImgWithFallbacks(primary: string, fallbacks: string[]) {
         return await loadImg(f);
       } catch {}
     }
-    throw new Error(`Failed to load primary + all fallbacks: ${primary}`);
+    throw new Error(`[${label}] Failed to load primary + all fallbacks. Primary: ${primary}`);
   }
 }
 
@@ -119,14 +129,18 @@ function pickWeightedAccessory(all: AccessoryItem[]) {
 
 /**
  * Cycle image src through fallbacks without infinite loops.
- * We store a fallback index on the element.
+ * Resets when src changes so it doesn't get stuck.
  */
-function cycleFallback(
-  e: React.SyntheticEvent<HTMLImageElement, Event>,
-  fallbacks: string[]
-) {
+function cycleFallback(e: React.SyntheticEvent<HTMLImageElement, Event>, fallbacks: string[]) {
   const img = e.currentTarget;
   if (!fallbacks?.length) return;
+
+  const current = img.currentSrc || img.src || "";
+
+  if (img.dataset.lastTried !== current) {
+    img.dataset.fallbackIndex = "0";
+    img.dataset.lastTried = current;
+  }
 
   const idx = Number(img.dataset.fallbackIndex || "0");
   if (idx >= fallbacks.length) return;
@@ -136,7 +150,9 @@ function cycleFallback(
 }
 
 function resetFallbackIndex(e: React.SyntheticEvent<HTMLImageElement, Event>) {
-  e.currentTarget.dataset.fallbackIndex = "0";
+  const img = e.currentTarget;
+  img.dataset.fallbackIndex = "0";
+  img.dataset.lastTried = img.currentSrc || img.src || "";
 }
 
 export default function Home() {
@@ -233,47 +249,36 @@ export default function Home() {
   // ====== PFP data ======
   const ALL_EYES: EyeItem[] = useMemo(() => {
     return [
-      // CARTOON / COMMON
       makeItem<EyeItem>("c-common-black", "/pfp/eyes/cartoon/common/cartoon-common-black.png", "Cartoon Common Black", "common", "cartoon"),
       makeItem<EyeItem>("c-common-blue", "/pfp/eyes/cartoon/common/cartoon-common-blue.png", "Cartoon Common Blue", "common", "cartoon"),
       makeItem<EyeItem>("c-common-green", "/pfp/eyes/cartoon/common/cartoon-common-green.png", "Cartoon Common Green", "common", "cartoon"),
       makeItem<EyeItem>("c-common-orange", "/pfp/eyes/cartoon/common/cartoon-common-orange.png", "Cartoon Common Orange", "common", "cartoon"),
       makeItem<EyeItem>("c-common-purple", "/pfp/eyes/cartoon/common/cartoon-common-purple.png", "Cartoon Common Purple", "common", "cartoon"),
       makeItem<EyeItem>("c-common-red", "/pfp/eyes/cartoon/common/cartoon-common-red.png", "Cartoon Common Red", "common", "cartoon"),
-
-      // CARTOON / RARE
       makeItem<EyeItem>("c-rare-neon-black", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-black.png", "Cartoon Rare Neon Black", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-blue", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-blue.png", "Cartoon Rare Neon Blue", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-green", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-green.png", "Cartoon Rare Neon Green", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-orange", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-orange.png", "Cartoon Rare Neon Orange", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-purple", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-purple.png", "Cartoon Rare Neon Purple", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-red", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png", "Cartoon Rare Neon Red", "rare", "cartoon"),
-
-      // CARTOON / LEGENDARY
       makeItem<EyeItem>("c-leg-fire-red", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png", "Cartoon Legendary Fire (Red)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-fruity-orange", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png", "Cartoon Legendary Fruity (Orange)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-hearts-pink", "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png", "Cartoon Legendary Hearts (Pink)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-ice-blue", "/pfp/eyes/cartoon/legendary/cartoon-legendary-ice-blue.png", "Cartoon Legendary Ice (Blue)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-poison-green", "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png", "Cartoon Legendary Poison (Green)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-void-black", "/pfp/eyes/cartoon/legendary/cartoon-legendary-void-black.png", "Cartoon Legendary Void (Black)", "legendary", "cartoon"),
-
-      // PIXEL / COMMON
       makeItem<EyeItem>("p-common-black", "/pfp/eyes/pixel/common/pixel-common-black.png", "Pixel Common Black", "common", "pixel"),
       makeItem<EyeItem>("p-common-blue", "/pfp/eyes/pixel/common/pixel-common-blue.png", "Pixel Common Blue", "common", "pixel"),
       makeItem<EyeItem>("p-common-green", "/pfp/eyes/pixel/common/pixel-common-green.png", "Pixel Common Green", "common", "pixel"),
       makeItem<EyeItem>("p-common-orange", "/pfp/eyes/pixel/common/pixel-common-orange.png", "Pixel Common Orange", "common", "pixel"),
       makeItem<EyeItem>("p-common-pink", "/pfp/eyes/pixel/common/pixel-common-pink.png", "Pixel Common Pink", "common", "pixel"),
       makeItem<EyeItem>("p-common-purple", "/pfp/eyes/pixel/common/pixel-common-purple.png", "Pixel Common Purple", "common", "pixel"),
-
-      // PIXEL / RARE
       makeItem<EyeItem>("p-rare-crystal-black", "/pfp/eyes/pixel/rare/pixel-rare-crystal-black.png", "Pixel Rare Crystal Black", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-blue", "/pfp/eyes/pixel/rare/pixel-rare-crystal-blue.png", "Pixel Rare Crystal Blue", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-green", "/pfp/eyes/pixel/rare/pixel-rare-crystal-green.png", "Pixel Rare Crystal Green", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-orange", "/pfp/eyes/pixel/rare/pixel-rare-crystal-orange.png", "Pixel Rare Crystal Orange", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-pink", "/pfp/eyes/pixel/rare/pixel-rare-crystal-pink.png", "Pixel Rare Crystal Pink", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-red", "/pfp/eyes/pixel/rare/pixel-rare-crystal-red.png", "Pixel Rare Crystal Red", "rare", "pixel"),
-
-      // PIXEL / LEGENDARY
       makeItem<EyeItem>("p-leg-robot-black", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-black.png", "Pixel Legendary Robot Black", "legendary", "pixel"),
       makeItem<EyeItem>("p-leg-robot-blue", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-blue.png", "Pixel Legendary Robot Blue", "legendary", "pixel"),
       makeItem<EyeItem>("p-leg-robot-green", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-green.png", "Pixel Legendary Robot Green", "legendary", "pixel"),
@@ -285,7 +290,6 @@ export default function Home() {
 
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
     return [
-      // CARTOON / COMMON
       makeItem<AccessoryItem>("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-beanie", "/pfp/accessories/cartoon/common/cartoon-common-beanie.png", "Beanie", "common", "cartoon"),
@@ -297,8 +301,6 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
-
-      // CARTOON / RARE
       makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
@@ -308,8 +310,6 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-rare-ragekeyboard", "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png", "Broken Keyboard Necklace", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
-
-      // CARTOON / LEGENDARY (matches your repo screenshot)
       makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon"),
@@ -327,8 +327,27 @@ export default function Home() {
     ];
   }, []);
 
-  const BASE = useMemo(() => makeItem<any>("base", "/pfp/base/base-01.png", "Base", "common", "cartoon"), []);
-  const MOUTH = useMemo(() => makeItem<any>("mouth", "/pfp/mouth/mouth-01.png", "Mouth", "common", "cartoon"), []);
+  const BASE = useMemo(
+    () => makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
+      "base",
+      "/pfp/base/base-01.png",
+      "Base",
+      "common",
+      "cartoon"
+    ),
+    []
+  );
+
+  const MOUTH = useMemo(
+    () => makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
+      "mouth",
+      "/pfp/mouth/mouth-01.png",
+      "Mouth",
+      "common",
+      "cartoon"
+    ),
+    []
+  );
 
   // ====== toggles ======
   const [showBase, setShowBase] = useState(true);
@@ -389,13 +408,13 @@ export default function Home() {
       canvas.width = size;
       canvas.height = size;
       const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+      if (!ctx) throw new Error("No 2D canvas context");
 
       const [baseImg, eyesImg, mouthImg, accessoryImg] = await Promise.all([
-        showBase ? loadImgWithFallbacks(BASE.primary, BASE.fallbacks) : Promise.resolve<HTMLImageElement | null>(null),
-        loadImgWithFallbacks(eyeSrc, eyeFallbacks),
-        showMouth ? loadImgWithFallbacks(MOUTH.primary, MOUTH.fallbacks) : Promise.resolve<HTMLImageElement | null>(null),
-        showAcc ? loadImgWithFallbacks(accSrc, accFallbacks) : Promise.resolve<HTMLImageElement | null>(null),
+        showBase ? loadImgWithFallbacks(BASE.primary, BASE.fallbacks, "BASE") : Promise.resolve<HTMLImageElement | null>(null),
+        loadImgWithFallbacks(eyeSrc, eyeFallbacks, "EYES"),
+        showMouth ? loadImgWithFallbacks(MOUTH.primary, MOUTH.fallbacks, "MOUTH") : Promise.resolve<HTMLImageElement | null>(null),
+        showAcc ? loadImgWithFallbacks(accSrc, accFallbacks, "ACCESSORY") : Promise.resolve<HTMLImageElement | null>(null),
       ]);
 
       ctx.clearRect(0, 0, size, size);
@@ -404,19 +423,29 @@ export default function Home() {
       if (showMouth && mouthImg) ctx.drawImage(mouthImg, 0, 0, size, size);
       if (showAcc && accessoryImg) ctx.drawImage(accessoryImg, 0, 0, size, size);
 
-      canvas.toBlob((blob) => {
-        if (!blob) return;
+      const filename = `$MAD_PFP_${forgeCount + 1}.png`;
+
+      // toBlob sometimes returns null in Safari; fallback to toDataURL.
+      const blob: Blob | null = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+
+      const a = downloadLinkRef.current ?? document.createElement("a");
+      if (!downloadLinkRef.current) document.body.appendChild(a);
+
+      if (blob) {
         const url = URL.createObjectURL(blob);
-        const a = downloadLinkRef.current;
-        if (!a) return;
         a.href = url;
-        a.download = `$MAD_PFP_${forgeCount + 1}.png`;
+        a.download = filename;
         a.click();
         setTimeout(() => URL.revokeObjectURL(url), 2500);
-      }, "image/png");
-    } catch (e) {
+      } else {
+        const url = canvas.toDataURL("image/png");
+        a.href = url;
+        a.download = filename;
+        a.click();
+      }
+    } catch (e: any) {
       console.error(e);
-      alert("Download failed — this usually means one image path is wrong or an image is missing.");
+      alert(`Download failed.\n\n${e?.message ?? "Unknown error"}\n\nMost likely: a file path is wrong (404).`);
     }
   };
 
@@ -503,7 +532,6 @@ export default function Home() {
 
       {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
-        {/* HERO */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
             <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
@@ -546,7 +574,6 @@ export default function Home() {
             <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
             <p className="mt-3 text-white/60">Free for the community. Forge a look that sticks.</p>
 
-            {/* Layer toggles */}
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
               <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
                 {showBase ? "Hide Base" : "Show Base"}
@@ -652,10 +679,7 @@ export default function Home() {
               $MAD Rage Index™ <span className="text-red-500">😡</span>
             </h2>
 
-            <div
-              className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8"
-              style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}
-            >
+            <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8" style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}>
               <div className="text-5xl sm:text-6xl font-black tabular-nums">{rageIndex.toLocaleString()}</div>
               <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
 
@@ -680,14 +704,9 @@ export default function Home() {
 
               <div className="mt-4 grid gap-3">
                 {leaderboard.map((row, idx) => (
-                  <div
-                    key={row.name}
-                    className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
-                  >
+                  <div key={row.name} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">
-                        {idx + 1}
-                      </div>
+                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">{idx + 1}</div>
                       <div className="font-bold text-white/85">{row.name}</div>
                     </div>
                     <div className="font-mono text-white/70 tabular-nums">{row.score.toLocaleString()} MAD</div>
@@ -710,10 +729,7 @@ export default function Home() {
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {freshMemes.map((m) => (
-              <div
-                key={m.src}
-                className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition"
-              >
+              <div key={m.src} className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-xs uppercase tracking-[0.3em] text-white/50">{m.tag}</span>
                   <span className="text-xs font-black text-red-400">$MAD</span>
@@ -721,9 +737,7 @@ export default function Home() {
 
                 <Image src={m.src} alt={m.tag} width={1200} height={1200} className="rounded-2xl w-full h-auto" />
                 <div className="mt-4 h-px w-full bg-white/10" />
-                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">
-                  Post this. Tag it. Start fights.
-                </div>
+                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">Post this. Tag it. Start fights.</div>
               </div>
             ))}
           </div>
@@ -741,19 +755,11 @@ export default function Home() {
               const done = !!item.done;
               return (
                 <div
-                  key={item.phase}
-                  className={[
-                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
-                    done ? "opacity-70" : "hover:bg-white/10",
-                  ].join(" ")}
+                  key={item.phase + item.title}
+                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-70" : "hover:bg-white/10"].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p
-                      className={[
-                        "text-xs uppercase tracking-[0.35em] text-white/50",
-                        done ? "line-through decoration-white/40" : "",
-                      ].join(" ")}
-                    >
+                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/40" : ""].join(" ")}>
                       {item.phase}
                     </p>
 
