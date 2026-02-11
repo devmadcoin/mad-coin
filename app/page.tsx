@@ -179,26 +179,6 @@ export default function Home() {
   // ====== Meme Vault ======
   const freshMemes = useMemo(() => [{ src: "/mad-meme-01.png", tag: "Too Hot Coffee" }], []);
 
-  // ====== MAD COUNTER ======
-  const [rageIndex, setRageIndex] = useState<number>(847_291);
-  const [myMad, setMyMad] = useState<number>(0);
-
-  const increaseMad = () => {
-    setRageIndex((v) => v + 1);
-    setMyMad((v) => v + 1);
-  };
-
-  const leaderboard = useMemo(
-    () => [
-      { name: "PaperHandsPete", score: 9021 },
-      { name: "RugProofRita", score: 8501 },
-      { name: "DipBuyerDan", score: 7777 },
-      { name: "GasFeeGary", score: 6666 },
-      { name: "FOMOFranny", score: 5555 },
-    ],
-    []
-  );
-
   // ====== Roadmap ======
   const roadmap = useMemo(
     () => [
@@ -322,7 +302,8 @@ export default function Home() {
   // ====== safe initial picks ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
   const firstAcc =
-    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+    ALL_ACCESSORIES[0] ??
+    makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeSrc, setEyeSrc] = useState(firstEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(firstEye.fallbacks);
@@ -337,7 +318,10 @@ export default function Home() {
   const [revealing, setRevealing] = useState(false);
   const [renderNonce, setRenderNonce] = useState(0);
 
-  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.primary === accSrc) ?? null, [ALL_ACCESSORIES, accSrc]);
+  const selectedAcc = useMemo(
+    () => ALL_ACCESSORIES.find((a) => a.primary === accSrc) ?? null,
+    [ALL_ACCESSORIES, accSrc]
+  );
 
   const forgeIdentity = () => {
     if (!ALL_EYES.length) return;
@@ -363,6 +347,12 @@ export default function Home() {
     }, 550);
   };
 
+  // ====== Token Stats (your numbers) ======
+  const BURNED = 230_000_000;
+  const BURN_RATE = 23; // %
+  const LOCKED = 111_000_000;
+  const LOCK_UNTIL = "6/1/2026";
+
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
       <style jsx global>{`
@@ -380,20 +370,6 @@ export default function Home() {
           animation-timing-function: linear;
           animation-iteration-count: infinite;
           filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
-        }
-        @keyframes madWiggle {
-          0% {
-            transform: translateY(0);
-          }
-          30% {
-            transform: translateY(-1px);
-          }
-          60% {
-            transform: translateY(1px);
-          }
-          100% {
-            transform: translateY(0);
-          }
         }
         @keyframes forgePulse {
           0% {
@@ -446,17 +422,29 @@ export default function Home() {
 
       {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
-        <section className="min-h-screen flex flex-col items-center justify-center text-center">
+        {/* 1) DETAILS */}
+        <section className="pt-20 pb-14 flex flex-col items-center text-center">
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
             <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
           </div>
 
-          <h1 className="mt-8 text-5xl sm:text-6xl font-black tracking-tight">
-            BTC: <span className="text-white">Digital gold.</span>
+          <h1 className="mt-10 text-4xl sm:text-6xl font-black tracking-tight">
+            $MAD <span className="text-white/80">— Digital emotion on Solana.</span>
           </h1>
-          <h2 className="mt-3 text-5xl sm:text-6xl font-black text-red-500">$MAD: Digital emotion.</h2>
 
-          <p className="mt-8 text-white/70 uppercase tracking-[0.35em] text-xs">Solana Contract</p>
+          <p className="mt-6 max-w-2xl text-white/70 leading-relaxed text-base sm:text-lg">
+            $MAD is a digital emotion on Solana.
+            <br />
+            Forged by market cycles, born from volatility.
+            <br />
+            $HAPPY built us. $SAD tested us.
+            <br />
+            Now we move as $MAD 😡
+            <br />
+            A memecoin powered by community, chaos, and conviction.
+          </p>
+
+          <p className="mt-10 text-white/70 uppercase tracking-[0.35em] text-xs">Solana Contract</p>
 
           <div className="mt-3 flex flex-col sm:flex-row items-center gap-3">
             <div className="max-w-[90vw] sm:max-w-[680px] rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
@@ -481,167 +469,113 @@ export default function Home() {
               Join Telegram
             </a>
           </div>
+        </section>
 
-          {/* ✅ PFP GENERATOR */}
-          <section className="mt-14 w-full max-w-xl mx-auto text-center">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Tool</p>
-            <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
-            <p className="mt-3 text-white/60">Free for the community. Forge a look that sticks.</p>
+        {/* 2) PFP GENERATOR */}
+        <section className="py-16 w-full max-w-xl mx-auto text-center">
+          <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Tool</p>
+          <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
+          <p className="mt-3 text-white/60">Free for the community. Forge a look that sticks.</p>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-              <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
-                {showBase ? "Hide Base" : "Show Base"}
-              </button>
-              <button className={btnGhost} onClick={() => setShowAcc((v) => !v)}>
-                {showAcc ? "Hide Accessory" : "Show Accessory"}
-              </button>
-            </div>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
+              {showBase ? "Hide Base" : "Show Base"}
+            </button>
+            <button className={btnGhost} onClick={() => setShowAcc((v) => !v)}>
+              {showAcc ? "Hide Accessory" : "Show Accessory"}
+            </button>
+          </div>
 
-            {/* ✅ FIX: removed the outer red ring (border + glow) */}
-            <div
-              className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden"
-              style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
-            >
-              {showBase && (
-                <img
-                  key={`base-${renderNonce}`}
-                  src={BASE.primary}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  alt="base"
-                  onLoad={resetFallbackIndex}
-                  onError={(e) => cycleFallback(e, BASE.fallbacks)}
-                />
-              )}
-
+          {/* ✅ FIX: removed outer ring (no border / glow) */}
+          <div
+            className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden"
+            style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
+          >
+            {showBase && (
               <img
-                key={`eyes-${eyeSrc}-${renderNonce}`}
-                src={eyeSrc}
+                key={`base-${renderNonce}`}
+                src={BASE.primary}
                 className="absolute inset-0 w-full h-full object-cover"
-                alt="eyes"
+                alt="base"
                 onLoad={resetFallbackIndex}
-                onError={(e) => cycleFallback(e, eyeFallbacks)}
+                onError={(e) => cycleFallback(e, BASE.fallbacks)}
               />
+            )}
 
-              {showAcc && (
-                <img
-                  key={`acc-${accSrc}-${renderNonce}`}
-                  src={accSrc}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  alt="accessory"
-                  style={selectedAcc?.cssTransform ? { transform: selectedAcc.cssTransform } : undefined}
-                  onLoad={resetFallbackIndex}
-                  onError={(e) => cycleFallback(e, accFallbacks)}
-                />
-              )}
-            </div>
+            <img
+              key={`eyes-${eyeSrc}-${renderNonce}`}
+              src={eyeSrc}
+              className="absolute inset-0 w-full h-full object-cover"
+              alt="eyes"
+              onLoad={resetFallbackIndex}
+              onError={(e) => cycleFallback(e, eyeFallbacks)}
+            />
 
-            <div className="mt-4 text-xs text-white/60">{eyeLabel}</div>
-            <div className="mt-1 text-xs text-white/50">{accLabel}</div>
-
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-              <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
-                Forge Count: <span className="text-white">{forgeCount}</span>
-              </div>
-              <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
-                Power Index: <span className="text-white">{powerIndex}</span>
-              </div>
-            </div>
-
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <button className={btnPrimary} onClick={forgeIdentity}>
-                Forge Identity
-              </button>
-            </div>
-
-            <p className="mt-4 text-xs text-white/40">
-              Eyes loaded: {ALL_EYES.length}. Accessories loaded: {ALL_ACCESSORIES.length}. Legendary accessories loaded:{" "}
-              {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
-            </p>
-          </section>
-
-          <p className="mt-10 text-white/40 text-sm tracking-wide">Built from cycles. Forged by volatility.</p>
-
-          <div className="mt-10 space-y-2 text-base sm:text-lg text-white/60">
-            <p>$HAPPY farmed me.</p>
-            <p>$SAD farmed me.</p>
-            <p className="text-red-500 font-black text-lg sm:text-xl">$MAD made me.</p>
+            {showAcc && (
+              <img
+                key={`acc-${accSrc}-${renderNonce}`}
+                src={accSrc}
+                className="absolute inset-0 w-full h-full object-cover"
+                alt="accessory"
+                style={selectedAcc?.cssTransform ? { transform: selectedAcc.cssTransform } : undefined}
+                onLoad={resetFallbackIndex}
+                onError={(e) => cycleFallback(e, accFallbacks)}
+              />
+            )}
           </div>
+
+          <div className="mt-4 text-xs text-white/60">{eyeLabel}</div>
+          <div className="mt-1 text-xs text-white/50">{accLabel}</div>
+
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
+              Forge Count: <span className="text-white">{forgeCount}</span>
+            </div>
+            <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
+              Power Index: <span className="text-white">{powerIndex}</span>
+            </div>
+          </div>
+
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <button className={btnPrimary} onClick={forgeIdentity}>
+              Forge Identity
+            </button>
+          </div>
+
+          <p className="mt-4 text-xs text-white/40">
+            Eyes loaded: {ALL_EYES.length}. Accessories loaded: {ALL_ACCESSORIES.length}. Legendary accessories loaded:{" "}
+            {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
+          </p>
         </section>
 
-        {/* 😡 MAD COUNTER */}
-        <section className="py-20 w-full">
+        {/* 3) BURN + LOCK */}
+        <section className="py-16 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
-            <p className="text-white/70 uppercase tracking-[0.35em] text-xs">Global Utility</p>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Burned & Locked</h2>
+            <p className="mt-3 text-white/60">Simple stats for easy screenshots.</p>
 
-            <h2 className="mt-3 text-4xl sm:text-5xl font-black">
-              $MAD Rage Index™ <span className="text-red-500">😡</span>
-            </h2>
-
-            <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8" style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}>
-              <div className="text-5xl sm:text-6xl font-black tabular-nums">{rageIndex.toLocaleString()}</div>
-              <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
-
-              <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center items-center">
-                <button onClick={increaseMad} className={btnPrimary}>
-                  Increase Global Anger 😡 +1
-                </button>
-
-                <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-bold">
-                  Your clicks: <span className="text-white">{myMad}</span>
-                </div>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 text-left">
+              <div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+                <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
+                <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
+                <p className="mt-2 text-white/60">
+                  Burn rate: <span className="font-black text-white">{BURN_RATE}%</span>
+                </p>
               </div>
 
-              <p className="mt-4 text-xs text-white/40">Tip: spam it when the chart does that thing.</p>
-            </div>
-
-            <div className="mt-10 text-left max-w-3xl mx-auto">
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="text-2xl font-black">Most MAD Today</h3>
-                <span className="text-xs uppercase tracking-[0.35em] text-white/50">totally real</span>
+              <div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+                <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
+                <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
+                <p className="mt-2 text-white/60">
+                  Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
+                </p>
               </div>
-
-              <div className="mt-4 grid gap-3">
-                {leaderboard.map((row, idx) => (
-                  <div key={row.name} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-xl bg-white/10 border border-white/10 grid place-items-center font-black">{idx + 1}</div>
-                      <div className="font-bold text-white/85">{row.name}</div>
-                    </div>
-                    <div className="font-mono text-white/70 tabular-nums">{row.score.toLocaleString()} MAD</div>
-                  </div>
-                ))}
-              </div>
-
-              <p className="mt-3 text-xs text-white/40">Wallets ranked by emotional damage. Not financial advice. Obviously.</p>
             </div>
           </div>
         </section>
 
-        {/* 🧠 MEME VAULT */}
-        <section className="py-20 w-full">
-          <div className="text-center mb-14">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Meme Vault</h2>
-            <p className="mt-3 text-white/60">Relatable pain. Tokenized.</p>
-          </div>
-
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {freshMemes.map((m) => (
-              <div key={m.src} className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/50">{m.tag}</span>
-                  <span className="text-xs font-black text-red-400">$MAD</span>
-                </div>
-
-                <Image src={m.src} alt={m.tag} width={1200} height={1200} className="rounded-2xl w-full h-auto" />
-                <div className="mt-4 h-px w-full bg-white/10" />
-                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">Post this. Tag it. Start fights.</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ROADMAP */}
+        {/* 4) ROADMAP */}
         <section className="py-16 w-full max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
@@ -654,10 +588,18 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-70" : "hover:bg-white/10"].join(" ")}
+                  className={[
+                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
+                    done ? "opacity-70" : "hover:bg-white/10",
+                  ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/40" : ""].join(" ")}>
+                    <p
+                      className={[
+                        "text-xs uppercase tracking-[0.35em] text-white/50",
+                        done ? "line-through decoration-white/40" : "",
+                      ].join(" ")}
+                    >
                       {item.phase}
                     </p>
 
@@ -669,20 +611,82 @@ export default function Home() {
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-red-500/80" : ""].join(" ")}>
+                    <h3
+                      className={[
+                        "text-2xl sm:text-3xl font-black",
+                        done ? "line-through decoration-red-500/80" : "",
+                      ].join(" ")}
+                    >
                       {item.title}
                     </h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>{item.desc}</p>
+                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>
+                    {item.desc}
+                  </p>
                 </div>
               );
             })}
           </div>
         </section>
 
-        <footer className="py-12 text-center text-white/40 text-sm">$MAD — Digital emotion. Not financial advice.</footer>
+        {/* 5) MEME VAULT */}
+        <section className="py-20 w-full">
+          <div className="text-center mb-14">
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Meme Vault</h2>
+            <p className="mt-3 text-white/60">Relatable pain. Tokenized.</p>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {freshMemes.map((m) => (
+              <div
+                key={m.src}
+                className="group relative rounded-3xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition"
+              >
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/50">{m.tag}</span>
+                  <span className="text-xs font-black text-red-400">$MAD</span>
+                </div>
+
+                <Image src={m.src} alt={m.tag} width={1200} height={1200} className="rounded-2xl w-full h-auto" />
+                <div className="mt-4 h-px w-full bg-white/10" />
+                <div className="mt-3 text-xs text-white/40 group-hover:text-white/70 transition">
+                  Post this. Tag it. Start fights.
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 6) CONTACT / SOCIALS */}
+        <section className="pb-20 w-full">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Contact</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Socials</h2>
+            <p className="mt-3 text-white/60">Join the chaos. Bring conviction.</p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
+                Join X Community
+              </a>
+              <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
+                Join Telegram
+              </a>
+              <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+                View Chart
+              </a>
+              <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+                Buy on Jupiter
+              </a>
+            </div>
+
+            <p className="mt-8 text-xs text-white/40">$MAD — Digital emotion. Not financial advice.</p>
+          </div>
+        </section>
+
+        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
       </div>
     </main>
   );
