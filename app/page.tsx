@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
 
 type Rarity = "common" | "rare" | "legendary";
 type Style = "cartoon" | "pixel";
+
+type DrawTransform = { x?: number; y?: number; scale?: number };
 
 type EyeItem = {
   id: string;
@@ -23,6 +24,15 @@ type AccessoryItem = {
   label: string;
   rarity: Rarity;
   style: Style;
+
+  /**
+   * ✅ FIX for “legendary not showing”
+   * Some legendaries extend above the head (halo, horns, jetpack, aura).
+   * Preview is a circle + overflow-hidden, so tall items get clipped.
+   * We apply a per-accessory transform to nudge them down into the circle.
+   */
+  cssTransform?: string;
+  draw?: DrawTransform;
 };
 
 function ensureLeadingSlash(p: string) {
@@ -58,8 +68,22 @@ function buildCandidates(originalPath: string): string[] {
 }
 
 function makeItem<
-  T extends { id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }
->(id: string, path: string, label: string, rarity: Rarity, style: Style): T {
+  T extends {
+    id: string;
+    primary: string;
+    fallbacks: string[];
+    label: string;
+    rarity: Rarity;
+    style: Style;
+  }
+>(
+  id: string,
+  path: string,
+  label: string,
+  rarity: Rarity,
+  style: Style,
+  extra?: Partial<T>
+): T {
   const candidates = buildCandidates(path);
   return {
     id,
@@ -68,6 +92,7 @@ function makeItem<
     label,
     rarity,
     style,
+    ...(extra || {}),
   } as T;
 }
 
@@ -79,19 +104,14 @@ function isRemoteUrl(src: string) {
 function loadImg(src: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new window.Image();
-
-    // Only set crossOrigin for REMOTE urls.
-    // Same-origin assets on Next/Vercel do not need it and it can cause export issues in some cases.
     if (isRemoteUrl(src)) img.crossOrigin = "anonymous";
 
     img.onload = async () => {
-      // decode() helps ensure it draws properly before canvas export
       try {
         if ("decode" in img) await (img as any).decode();
       } catch {}
       resolve(img);
     };
-
     img.onerror = () => reject(new Error(`Failed to load: ${src}`));
     img.src = src;
   });
@@ -255,30 +275,35 @@ export default function Home() {
       makeItem<EyeItem>("c-common-orange", "/pfp/eyes/cartoon/common/cartoon-common-orange.png", "Cartoon Common Orange", "common", "cartoon"),
       makeItem<EyeItem>("c-common-purple", "/pfp/eyes/cartoon/common/cartoon-common-purple.png", "Cartoon Common Purple", "common", "cartoon"),
       makeItem<EyeItem>("c-common-red", "/pfp/eyes/cartoon/common/cartoon-common-red.png", "Cartoon Common Red", "common", "cartoon"),
+
       makeItem<EyeItem>("c-rare-neon-black", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-black.png", "Cartoon Rare Neon Black", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-blue", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-blue.png", "Cartoon Rare Neon Blue", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-green", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-green.png", "Cartoon Rare Neon Green", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-orange", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-orange.png", "Cartoon Rare Neon Orange", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-purple", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-purple.png", "Cartoon Rare Neon Purple", "rare", "cartoon"),
       makeItem<EyeItem>("c-rare-neon-red", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png", "Cartoon Rare Neon Red", "rare", "cartoon"),
+
       makeItem<EyeItem>("c-leg-fire-red", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png", "Cartoon Legendary Fire (Red)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-fruity-orange", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png", "Cartoon Legendary Fruity (Orange)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-hearts-pink", "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png", "Cartoon Legendary Hearts (Pink)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-ice-blue", "/pfp/eyes/cartoon/legendary/cartoon-legendary-ice-blue.png", "Cartoon Legendary Ice (Blue)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-poison-green", "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png", "Cartoon Legendary Poison (Green)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-void-black", "/pfp/eyes/cartoon/legendary/cartoon-legendary-void-black.png", "Cartoon Legendary Void (Black)", "legendary", "cartoon"),
+
       makeItem<EyeItem>("p-common-black", "/pfp/eyes/pixel/common/pixel-common-black.png", "Pixel Common Black", "common", "pixel"),
       makeItem<EyeItem>("p-common-blue", "/pfp/eyes/pixel/common/pixel-common-blue.png", "Pixel Common Blue", "common", "pixel"),
       makeItem<EyeItem>("p-common-green", "/pfp/eyes/pixel/common/pixel-common-green.png", "Pixel Common Green", "common", "pixel"),
       makeItem<EyeItem>("p-common-orange", "/pfp/eyes/pixel/common/pixel-common-orange.png", "Pixel Common Orange", "common", "pixel"),
       makeItem<EyeItem>("p-common-pink", "/pfp/eyes/pixel/common/pixel-common-pink.png", "Pixel Common Pink", "common", "pixel"),
       makeItem<EyeItem>("p-common-purple", "/pfp/eyes/pixel/common/pixel-common-purple.png", "Pixel Common Purple", "common", "pixel"),
+
       makeItem<EyeItem>("p-rare-crystal-black", "/pfp/eyes/pixel/rare/pixel-rare-crystal-black.png", "Pixel Rare Crystal Black", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-blue", "/pfp/eyes/pixel/rare/pixel-rare-crystal-blue.png", "Pixel Rare Crystal Blue", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-green", "/pfp/eyes/pixel/rare/pixel-rare-crystal-green.png", "Pixel Rare Crystal Green", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-orange", "/pfp/eyes/pixel/rare/pixel-rare-crystal-orange.png", "Pixel Rare Crystal Orange", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-pink", "/pfp/eyes/pixel/rare/pixel-rare-crystal-pink.png", "Pixel Rare Crystal Pink", "rare", "pixel"),
       makeItem<EyeItem>("p-rare-crystal-red", "/pfp/eyes/pixel/rare/pixel-rare-crystal-red.png", "Pixel Rare Crystal Red", "rare", "pixel"),
+
       makeItem<EyeItem>("p-leg-robot-black", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-black.png", "Pixel Legendary Robot Black", "legendary", "pixel"),
       makeItem<EyeItem>("p-leg-robot-blue", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-blue.png", "Pixel Legendary Robot Blue", "legendary", "pixel"),
       makeItem<EyeItem>("p-leg-robot-green", "/pfp/eyes/pixel/legendary/pixel-legendary-robot-green.png", "Pixel Legendary Robot Green", "legendary", "pixel"),
@@ -289,6 +314,12 @@ export default function Home() {
   }, []);
 
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
+    // helper for “tall” accessories inside circle
+    const tall = (y: number, scale = 1) => ({
+      cssTransform: `translateY(${y}px) scale(${scale})`,
+      draw: { y, scale },
+    });
+
     return [
       makeItem<AccessoryItem>("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
@@ -301,6 +332,7 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
+
       makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
@@ -310,42 +342,46 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-rare-ragekeyboard", "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png", "Broken Keyboard Necklace", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
+
+      // LEGENDARY — add transforms for tall items so they are visible in the circle
       makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon", tall(18, 0.98)),
+      makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon", tall(22, 0.98)),
+      makeItem<AccessoryItem>("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon", tall(22, 0.98)),
       makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
+      makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
+      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
       makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
     ];
   }, []);
 
   const BASE = useMemo(
-    () => makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
-      "base",
-      "/pfp/base/base-01.png",
-      "Base",
-      "common",
-      "cartoon"
-    ),
+    () =>
+      makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
+        "base",
+        "/pfp/base/base-01.png",
+        "Base",
+        "common",
+        "cartoon"
+      ),
     []
   );
 
   const MOUTH = useMemo(
-    () => makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
-      "mouth",
-      "/pfp/mouth/mouth-01.png",
-      "Mouth",
-      "common",
-      "cartoon"
-    ),
+    () =>
+      makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: Rarity; style: Style }>(
+        "mouth",
+        "/pfp/mouth/mouth-01.png",
+        "Mouth",
+        "common",
+        "cartoon"
+      ),
     []
   );
 
@@ -371,8 +407,10 @@ export default function Home() {
   const [powerIndex, setPowerIndex] = useState(50);
   const [revealing, setRevealing] = useState(false);
 
-  // force remount of layered imgs when forging
   const [renderNonce, setRenderNonce] = useState(0);
+
+  // ✅ track selected accessory object so we can apply transforms + download transforms
+  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.primary === accSrc) ?? null, [ALL_ACCESSORIES, accSrc]);
 
   const forgeIdentity = () => {
     if (!ALL_EYES.length) return;
@@ -407,6 +445,7 @@ export default function Home() {
       const canvas = document.createElement("canvas");
       canvas.width = size;
       canvas.height = size;
+
       const ctx = canvas.getContext("2d");
       if (!ctx) throw new Error("No 2D canvas context");
 
@@ -418,10 +457,26 @@ export default function Home() {
       ]);
 
       ctx.clearRect(0, 0, size, size);
+
       if (showBase && baseImg) ctx.drawImage(baseImg, 0, 0, size, size);
       ctx.drawImage(eyesImg, 0, 0, size, size);
       if (showMouth && mouthImg) ctx.drawImage(mouthImg, 0, 0, size, size);
-      if (showAcc && accessoryImg) ctx.drawImage(accessoryImg, 0, 0, size, size);
+
+      if (showAcc && accessoryImg) {
+        const d = selectedAcc?.draw;
+        if (d?.x || d?.y || (d?.scale && d.scale !== 1)) {
+          const x = d.x ?? 0;
+          const y = d.y ?? 0;
+          const s = d.scale ?? 1;
+
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.drawImage(accessoryImg, 0, 0, size * s, size * s);
+          ctx.restore();
+        } else {
+          ctx.drawImage(accessoryImg, 0, 0, size, size);
+        }
+      }
 
       const filename = `$MAD_PFP_${forgeCount + 1}.png`;
 
@@ -586,6 +641,8 @@ export default function Home() {
               </button>
             </div>
 
+            {/* ✅ Keep overflow-hidden for the clean circle.
+                We now transform tall legendary accessories down so they appear. */}
             <div
               className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border-4 border-red-500/80 shadow-[0_0_50px_rgba(255,0,0,0.35)]"
               style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
@@ -627,6 +684,7 @@ export default function Home() {
                   src={accSrc}
                   className="absolute inset-0 w-full h-full object-cover"
                   alt="accessory"
+                  style={selectedAcc?.cssTransform ? { transform: selectedAcc.cssTransform } : undefined}
                   onLoad={resetFallbackIndex}
                   onError={(e) => cycleFallback(e, accFallbacks)}
                 />
@@ -679,7 +737,10 @@ export default function Home() {
               $MAD Rage Index™ <span className="text-red-500">😡</span>
             </h2>
 
-            <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8" style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}>
+            <div
+              className="mt-6 rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8"
+              style={{ animation: "madWiggle 2.8s ease-in-out infinite" }}
+            >
               <div className="text-5xl sm:text-6xl font-black tabular-nums">{rageIndex.toLocaleString()}</div>
               <div className="mt-2 text-white/55 text-sm">Emotional damage per second (scientifically unverified)</div>
 
@@ -777,9 +838,7 @@ export default function Home() {
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>
-                    {item.desc}
-                  </p>
+                  <p className={["text-white/60 mt-2", done ? "line-through decoration-white/20" : ""].join(" ")}>{item.desc}</p>
                 </div>
               );
             })}
