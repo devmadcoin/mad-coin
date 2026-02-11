@@ -652,7 +652,7 @@ export default function Home() {
 
           <div className="grid gap-5 text-left">
             {roadmap.map((item) => {
-              const done = !!item.done;
+              const done = !!(item as any).done;
               return (
                 <div
                   key={item.phase + item.title}
@@ -689,3 +689,4 @@ export default function Home() {
     </main>
   );
 }
+
