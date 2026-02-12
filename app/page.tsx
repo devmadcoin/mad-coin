@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
 type Rarity = "common" | "rare" | "legendary";
@@ -122,6 +122,36 @@ function resetFallbackIndex(e: React.SyntheticEvent<HTMLImageElement, Event>) {
   const img = e.currentTarget;
   img.dataset.fallbackIndex = "0";
   img.dataset.lastTried = img.currentSrc || img.src || "";
+}
+
+// ====== $MAD Confessions types/helpers ======
+type Confession = {
+  id: string;
+  text: string;
+  createdAt: number;
+  reactions: { same: number; lol: number; handshake: number };
+};
+
+const LS_CONFESSIONS_KEY = "mad_confessions_v1";
+const LS_REACTED_KEY = "mad_confessions_reacted_v1";
+
+function safeJsonParse<T>(raw: string | null, fallback: T): T {
+  try {
+    if (!raw) return fallback;
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+function clampText(s: string, max = 240) {
+  const t = (s || "").replace(/\s+/g, " ").trim();
+  return t.length > max ? t.slice(0, max).trim() : t;
+}
+
+function uid() {
+  // not crypto-strong; just for UI ids
+  return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
 export default function Home() {
@@ -384,6 +414,130 @@ export default function Home() {
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
 
+  // ====== $MAD Confessions (anonymous, client-only via localStorage) ======
+  const ragePrompts = useMemo(
+    () => [
+      "What small thing ruined your mood instantly?",
+      "What’s the most petty thing that made you mad today?",
+      "What ‘minor inconvenience’ turned into a full villain arc?",
+      "What was the last thing that made you whisper: ‘I’m so $MAD’?",
+      "What’s something that should be illegal but isn’t?",
+      "What’s a sound that instantly makes you rage?",
+      "What’s a ‘helpful’ feature that always breaks everything?",
+      "What’s a price that made you close the tab immediately?",
+    ],
+    []
+  );
+
+  const todayPrompt = useMemo(() => {
+    const d = new Date();
+    // day-seed: YYYY-MM-DD
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    // simple hash
+    let h = 0;
+    for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+    return ragePrompts[h % ragePrompts.length];
+  }, [ragePrompts]);
+
+  const [confessions, setConfessions] = useState<Confession[]>([]);
+  const [confessionText, setConfessionText] = useState("");
+  const [confessionErr, setConfessionErr] = useState<string | null>(null);
+  const [reactedMap, setReactedMap] = useState<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>({});
+
+  useEffect(() => {
+    // load from localStorage
+    const initial = safeJsonParse<Confession[]>(typeof window !== "undefined" ? localStorage.getItem(LS_CONFESSIONS_KEY) : null, []);
+    const reacted = safeJsonParse<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>(
+      typeof window !== "undefined" ? localStorage.getItem(LS_REACTED_KEY) : null,
+      {}
+    );
+
+    // normalize
+    const normalized = (initial || [])
+      .filter((c) => c && typeof c.text === "string")
+      .map((c) => ({
+        id: c.id || uid(),
+        text: clampText(c.text, 240),
+        createdAt: typeof c.createdAt === "number" ? c.createdAt : Date.now(),
+        reactions: {
+          same: c.reactions?.same ?? 0,
+          lol: c.reactions?.lol ?? 0,
+          handshake: c.reactions?.handshake ?? 0,
+        },
+      }))
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 200);
+
+    setConfessions(normalized);
+    setReactedMap(reacted || {});
+  }, []);
+
+  const persistConfessions = (next: Confession[]) => {
+    setConfessions(next);
+    try {
+      localStorage.setItem(LS_CONFESSIONS_KEY, JSON.stringify(next));
+    } catch {
+      // ignore
+    }
+  };
+
+  const persistReacted = (next: typeof reactedMap) => {
+    setReactedMap(next);
+    try {
+      localStorage.setItem(LS_REACTED_KEY, JSON.stringify(next));
+    } catch {
+      // ignore
+    }
+  };
+
+  const submitConfession = () => {
+    setConfessionErr(null);
+    const t = clampText(confessionText, 240);
+
+    if (!t) {
+      setConfessionErr("Type something first 😡");
+      return;
+    }
+    if (t.length < 4) {
+      setConfessionErr("Give it a little more sauce.");
+      return;
+    }
+
+    const item: Confession = {
+      id: uid(),
+      text: t,
+      createdAt: Date.now(),
+      reactions: { same: 0, lol: 0, handshake: 0 },
+    };
+
+    const next = [item, ...confessions].slice(0, 200);
+    persistConfessions(next);
+    setConfessionText("");
+  };
+
+  const react = (id: string, kind: "same" | "lol" | "handshake") => {
+    // one-tap reaction per device per confession per kind (toggle on/off)
+    const already = !!reactedMap?.[id]?.[kind];
+
+    const nextConf = confessions.map((c) => {
+      if (c.id !== id) return c;
+      const delta = already ? -1 : 1;
+      const nextCount = Math.max(0, (c.reactions?.[kind] ?? 0) + delta);
+      return {
+        ...c,
+        reactions: { ...c.reactions, [kind]: nextCount },
+      };
+    });
+
+    const nextReacted = {
+      ...reactedMap,
+      [id]: { ...(reactedMap[id] || {}), [kind]: !already },
+    };
+
+    persistConfessions(nextConf);
+    persistReacted(nextReacted);
+  };
+
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
       <style jsx global>{`
@@ -530,55 +684,21 @@ export default function Home() {
 
       {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
-        {/* 1) DETAILS */}
-        <section className="pt-20 pb-14 flex flex-col items-center text-center">
-          <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
-            <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
-          </div>
-
-          <h1 className="mt-10 text-4xl sm:text-6xl font-black tracking-tight">
-            $MAD <span className="text-white/80">— Digital emotion on Solana.</span>
-          </h1>
-
-          <p className="mt-6 max-w-2xl text-white/70 leading-relaxed text-base sm:text-lg">
-            $MAD is a digital emotion on Solana.
-            <br />
-            Forged by market cycles, born from volatility.
-            <br />
-            $HAPPY built us. $SAD tested us.
-            <br />
-            Now we move as $MAD 😡
-            <br />
-            A memecoin powered by community, chaos, and conviction.
-          </p>
-
-          <p className="mt-10 text-white/70 uppercase tracking-[0.35em] text-xs">Solana Contract</p>
-
-          <div className="mt-3 flex flex-col sm:flex-row items-center gap-3">
-            <div className="max-w-[90vw] sm:max-w-[680px] rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
-              {addr}
+        {/* =========================
+            1) PFP GENERATOR (TOP)
+           ========================= */}
+        <section className="pt-16 pb-12 w-full max-w-xl mx-auto text-center">
+          <div className="mb-6 flex items-center justify-center gap-3">
+            <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
+              <Image src="/mad.png" alt="$MAD logo" width={64} height={64} priority />
             </div>
-            <button onClick={copyCA} className={btnGhost}>
-              {copied ? "✅ Copied" : "Copy CA"}
-            </button>
+            <div className="text-left">
+              <div className="text-xs uppercase tracking-[0.35em] text-white/60">Tool</div>
+              <div className="text-2xl sm:text-3xl font-black leading-tight">Forge Your $MAD Identity</div>
+            </div>
           </div>
 
-          {/* ✅ Only these 2 at the top */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-              Buy on Jupiter
-            </a>
-            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-              View Chart
-            </a>
-          </div>
-        </section>
-
-        {/* 2) PFP GENERATOR */}
-        <section className="py-16 w-full max-w-xl mx-auto text-center">
-          <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Tool</p>
-          <h3 className="mt-3 text-3xl sm:text-4xl font-black">$MAD PFP Generator</h3>
-          <p className="mt-3 text-white/60">Free for the community. Forge a look that sticks.</p>
+          <p className="text-white/60">Free for the community. Forge a look that sticks.</p>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
             <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
@@ -651,7 +771,161 @@ export default function Home() {
           </p>
         </section>
 
-        {/* 3) BURN + LOCK */}
+        {/* =========================
+            2) $MAD CONFESSIONS
+           ========================= */}
+        <section className="py-14 w-full max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Community</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Confessions</h2>
+            <p className="mt-3 text-white/60">Anonymous rage. Public healing. (Mostly rage.)</p>
+          </div>
+
+          {/* daily prompt */}
+          <div className="mb-6 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
+            <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s rage prompt</div>
+            <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
+          </div>
+
+          {/* input */}
+          <div className="rounded-3xl border border-white/10 bg-black/25 p-5 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <div className="text-sm font-black">Confess what made you $MAD 😡</div>
+                <div className="text-xs text-white/50 mt-1">No names. No DMs. Just vibes. (Saved on your device for now.)</div>
+              </div>
+              <button className={btnPrimary} onClick={submitConfession}>
+                Post Confession
+              </button>
+            </div>
+
+            <div className="mt-4">
+              <textarea
+                value={confessionText}
+                onChange={(e) => setConfessionText(e.target.value)}
+                placeholder="Example: I opened a chip bag and it was 90% air..."
+                className="w-full min-h-[100px] rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:border-white/20"
+                maxLength={240}
+              />
+              <div className="mt-2 flex items-center justify-between text-xs">
+                <div className="text-red-300/90">{confessionErr ? `⚠️ ${confessionErr}` : ""}</div>
+                <div className="text-white/40">{clampText(confessionText, 240).length}/240</div>
+              </div>
+            </div>
+          </div>
+
+          {/* feed */}
+          <div className="mt-8 grid gap-4">
+            {confessions.length === 0 ? (
+              <div className="text-center text-white/55 py-10">Be the first confession. Break the seal. 😈</div>
+            ) : (
+              confessions.map((c) => {
+                const reacted = reactedMap[c.id] || {};
+                return (
+                  <div key={c.id} className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="text-white/85 leading-relaxed text-sm sm:text-base">{c.text}</div>
+                      <div className="shrink-0 text-xs text-white/35">
+                        {new Date(c.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                      </div>
+                    </div>
+
+                    {/* reactions */}
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <button
+                        className={[
+                          "rounded-full border px-4 py-2 text-xs font-black transition",
+                          reacted.same ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                        ].join(" ")}
+                        onClick={() => react(c.id, "same")}
+                        title="Same 😡"
+                      >
+                        Same 😡 <span className="text-white/70">{c.reactions.same}</span>
+                      </button>
+
+                      <button
+                        className={[
+                          "rounded-full border px-4 py-2 text-xs font-black transition",
+                          reacted.lol ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                        ].join(" ")}
+                        onClick={() => react(c.id, "lol")}
+                        title="LOL 💀"
+                      >
+                        LOL 💀 <span className="text-white/70">{c.reactions.lol}</span>
+                      </button>
+
+                      <button
+                        className={[
+                          "rounded-full border px-4 py-2 text-xs font-black transition",
+                          reacted.handshake ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                        ].join(" ")}
+                        onClick={() => react(c.id, "handshake")}
+                        title="Relatable 🤝"
+                      >
+                        🤝 <span className="text-white/70">{c.reactions.handshake}</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          <p className="mt-5 text-center text-xs text-white/35">
+            Note: this version is anonymous + “public” only on your device (localStorage). When you’re ready, I can upgrade it to a real shared feed
+            (database + moderation).
+          </p>
+        </section>
+
+        {/* =========================
+            3) DETAILS
+           ========================= */}
+        <section className="py-14 flex flex-col items-center text-center">
+          <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
+            <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
+          </div>
+
+          <h1 className="mt-10 text-4xl sm:text-6xl font-black tracking-tight">
+            $MAD <span className="text-white/80">— Digital emotion on Solana.</span>
+          </h1>
+
+          <p className="mt-6 max-w-2xl text-white/70 leading-relaxed text-base sm:text-lg">
+            $MAD is a digital emotion on Solana.
+            <br />
+            Forged by market cycles, born from volatility.
+            <br />
+            $HAPPY built us. $SAD tested us.
+            <br />
+            Now we move as $MAD 😡
+            <br />
+            A memecoin powered by community, chaos, and conviction.
+          </p>
+
+          <p className="mt-10 text-white/70 uppercase tracking-[0.35em] text-xs">Solana Contract</p>
+
+          <div className="mt-3 flex flex-col sm:flex-row items-center gap-3">
+            <div className="max-w-[90vw] sm:max-w-[680px] rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
+              {addr}
+            </div>
+            <button onClick={copyCA} className={btnGhost}>
+              {copied ? "✅ Copied" : "Copy CA"}
+            </button>
+          </div>
+
+          {/* ✅ Only these 2 here (details section) */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+              Buy on Jupiter
+            </a>
+            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+              View Chart
+            </a>
+          </div>
+        </section>
+
+        {/* =========================
+            4) BURN + LOCK
+           ========================= */}
         <section className="py-16 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
@@ -732,7 +1006,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4) ROADMAP */}
+        {/* =========================
+            5) ROADMAP (after burned/locked)
+           ========================= */}
         <section className="py-16 w-full max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
@@ -745,10 +1021,7 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={[
-                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
-                    done ? "opacity-70" : "hover:bg-white/10",
-                  ].join(" ")}
+                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-70" : "hover:bg-white/10"].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/40" : ""].join(" ")}>
@@ -776,7 +1049,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5) MEME VAULT — SIDEWAYS SCROLL */}
+        {/* =========================
+            6) MEME VAULT
+           ========================= */}
         <section className="py-20 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
@@ -835,7 +1110,9 @@ export default function Home() {
           )}
         </section>
 
-        {/* 6) CONTACT / SOCIALS */}
+        {/* =========================
+            7) SOCIALS (LAST)
+           ========================= */}
         <section className="pb-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Contact</p>
