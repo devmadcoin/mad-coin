@@ -40,11 +40,6 @@ function ensureLeadingSlash(p: string) {
  * - Tries normal path
  * - Also tries accidental /public prefix
  * - Also tries .png vs .png.png variants
- *
- * NOTE:
- * Next.js serves assets from /public at the site root.
- * So your "real" URL should be "/pfp/..." not "/public/pfp/...".
- * We still include fallbacks because your repo had a nested public/public at one point.
  */
 function buildCandidates(originalPath: string): string[] {
   const raw = ensureLeadingSlash(originalPath);
@@ -60,9 +55,7 @@ function buildCandidates(originalPath: string): string[] {
     const p = `${pre}${raw}`.replace(/\/{2,}/g, "/");
     pushUnique(p);
 
-    // handle accidental .png.png
     if (p.endsWith(".png.png")) pushUnique(p.replace(/\.png\.png$/, ".png"));
-    // handle missing .png (rare but happens)
     if (p.endsWith(".png")) pushUnique(`${p}.png`);
   }
 
@@ -183,10 +176,9 @@ export default function Home() {
     });
   }, []);
 
-  // ====== Meme Vault (✅ FIXED PATHS FOR YOUR CURRENT FOLDER) ======
-  // If your memes are truly in /public/memes, then the URL is /memes/xxx.png
-  // BUT you said you had public/public/memes at some point; your current code uses /public/memes.
-  // Keeping your current URLs exactly as-is to avoid breaking your deployed setup.
+  // ====== Meme Vault ======
+  // Your repo shows: public/public/memes/*.png
+  // Browser URL becomes: /public/memes/*.png
   const freshMemes = useMemo(
     () => [
       { src: "/public/memes/mad-meme-trafficstuck.png", tag: "Traffic Rage" },
@@ -203,7 +195,6 @@ export default function Home() {
     ],
     []
   );
-  const [memePage, setMemePage] = useState(0);
 
   // ====== Roadmap ======
   const roadmap = useMemo(
@@ -270,7 +261,7 @@ export default function Home() {
     });
 
     return [
-      // ===== COMMON =====
+      // ===== common =====
       makeItem<AccessoryItem>("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-beanie", "/pfp/accessories/cartoon/common/cartoon-common-beanie.png", "Beanie", "common", "cartoon"),
@@ -283,7 +274,7 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
-      // ===== RARE =====
+      // ===== rare =====
       makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
@@ -294,25 +285,11 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
 
-      // ✅ NEW RARE (your files)
-      makeItem<AccessoryItem>(
-        "a-c-rare-spatula",
-        "/pfp/accessories/cartoon/rare/cartoon-rare-spatula.png",
-        "Spatula",
-        "rare",
-        "cartoon",
-        { cssTransform: "translate(0px, 0px) scale(0.98)", draw: { x: 0, y: 0, scale: 0.98 } }
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-rare-madsword",
-        "/pfp/accessories/cartoon/rare/cartoon-rare-madsword.png",
-        "MAD Sword",
-        "rare",
-        "cartoon",
-        { cssTransform: "translate(0px, 0px) scale(0.98)", draw: { x: 0, y: 0, scale: 0.98 } }
-      ),
+      // ✅ NEW rares you added (filenames you showed)
+      makeItem<AccessoryItem>("a-c-rare-madsword", "/pfp/accessories/cartoon/rare/cartoon-rare-madsword.png", "MAD Sword", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-spatula", "/pfp/accessories/cartoon/rare/cartoon-rare-spatula.png", "Spatula", "rare", "cartoon"),
 
-      // ===== LEGENDARY =====
+      // ===== legendary =====
       makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon", tall(18, 0.98)),
       makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon", tall(22, 0.98)),
@@ -320,49 +297,23 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
       makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>(
-        "a-c-leg-lightninghorns",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
-        "Lightning Horns",
-        "legendary",
-        "cartoon",
-        tall(24, 0.96)
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-madchaininfinity",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png",
-        "Infinity Chain",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
+      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-leg-rugproofshield",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
-        "Rugproof Shield",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
 
-      // ✅ NEW LEGENDARY (your files)
-      makeItem<AccessoryItem>(
-        "a-c-leg-madplush",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png",
-        "MAD Plush",
-        "legendary",
-        "cartoon",
-        { cssTransform: "translateY(10px) scale(0.92)", draw: { y: 10, scale: 0.92 } }
-      ),
+      // ✅ NEW legendary you added (filenames you showed)
+      makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
       makeItem<AccessoryItem>(
         "a-c-leg-halomadplush",
         "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
-        "Halo MAD Plush",
+        "Pink Halo MAD Plush",
         "legendary",
         "cartoon",
-        { cssTransform: "translateY(-6px) scale(0.90)", draw: { y: -6, scale: 0.9 } }
+        tall(26, 0.96)
       ),
     ];
   }, []);
@@ -386,8 +337,7 @@ export default function Home() {
   // ====== safe initial picks ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
   const firstAcc =
-    ALL_ACCESSORIES[0] ??
-    makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeSrc, setEyeSrc] = useState(firstEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(firstEye.fallbacks);
@@ -428,8 +378,8 @@ export default function Home() {
     }, 550);
   };
 
-  // ====== Token Stats (your numbers) ======
-  const BURNED = 230_000_000;
+  // ====== Token Stats ======
+  const BURNED = 250_000_000; // ✅ updated
   const BURN_RATE = 23; // %
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
@@ -639,7 +589,7 @@ export default function Home() {
             </button>
           </div>
 
-          {/* ✅ No outer ring */}
+          {/* ✅ PFP positions unchanged */}
           <div
             className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden"
             style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
@@ -664,12 +614,11 @@ export default function Home() {
               onError={(e) => cycleFallback(e, eyeFallbacks)}
             />
 
-            {/* ✅ FIX: accessories should be object-contain so swords/spatulas/plush don't get cropped */}
             {showAcc && (
               <img
                 key={`acc-${accSrc}-${renderNonce}`}
                 src={accSrc}
-                className="absolute inset-0 w-full h-full object-contain"
+                className="absolute inset-0 w-full h-full object-cover"
                 alt="accessory"
                 style={selectedAcc?.cssTransform ? { transform: selectedAcc.cssTransform } : undefined}
                 onLoad={resetFallbackIndex}
@@ -702,7 +651,7 @@ export default function Home() {
           </p>
         </section>
 
-        {/* 3) BURN + LOCK (🔥 + 🔒) */}
+        {/* 3) BURN + LOCK */}
         <section className="py-16 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
@@ -796,9 +745,10 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-70" : "hover:bg-white/10"].join(
-                    " "
-                  )}
+                  className={[
+                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
+                    done ? "opacity-70" : "hover:bg-white/10",
+                  ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/40" : ""].join(" ")}>
@@ -806,7 +756,9 @@ export default function Home() {
                     </p>
 
                     {done && (
-                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">✅ Completed</span>
+                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">
+                        ✅ Completed
+                      </span>
                     )}
                   </div>
 
@@ -824,89 +776,32 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5) MEME VAULT */}
+        {/* 5) MEME VAULT — SCROLL FEED */}
         <section className="py-20 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Meme Vault</h2>
-            <p className="mt-3 text-white/60">Flip the pages. Screenshot the rage.</p>
+            <p className="mt-3 text-white/60">Scroll the rage. Screenshot the best ones.</p>
           </div>
 
           {freshMemes.length === 0 ? (
             <div className="text-center text-white/60">No memes yet.</div>
           ) : (
             <div className="relative mx-auto w-full max-w-5xl">
-              <div className="pointer-events-none absolute -inset-6 rounded-[2.5rem] bg-emerald-400/15 blur-3xl" />
-              <div className="pointer-events-none absolute -inset-10 rounded-[3rem] bg-green-500/10 blur-[70px]" />
-
-              <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/35 shadow-[0_0_50px_rgba(0,255,140,0.18)]">
-                <div className="absolute left-0 top-0 h-full w-10 bg-gradient-to-b from-zinc-900/80 to-black/80 border-r border-white/10" />
-                <div className="absolute left-10 top-0 h-full w-px bg-white/10" />
-                <div className="absolute left-1/2 top-0 h-full w-px bg-white/10 opacity-70" />
-
-                <div className="px-6 sm:px-10 py-8 sm:py-10">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                    <div>
-                      <div className="text-xs uppercase tracking-[0.35em] text-white/50">The Book of Rage</div>
-                      <div className="mt-2 text-xl sm:text-2xl font-black">
-                        {freshMemes[memePage]?.tag}{" "}
-                        <span className="text-white/40">
-                          • Page {memePage + 1}/{freshMemes.length}
-                        </span>
-                      </div>
+              <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-red-500/10 blur-3xl" />
+              <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6 max-h-[650px] overflow-y-auto space-y-6">
+                {freshMemes.map((m, idx) => (
+                  <div key={m.src} className="rounded-3xl border border-white/10 bg-black/40 p-4 transition hover:bg-white/10">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-xs uppercase tracking-[0.35em] text-white/50">#{idx + 1}</div>
+                      <div className="text-sm font-bold text-white/70">{m.tag}</div>
                     </div>
 
-                    <div className="flex gap-2">
-                      <button className={btnGhost} onClick={() => setMemePage((p) => (p - 1 + freshMemes.length) % freshMemes.length)}>
-                        ← Prev
-                      </button>
-                      <button className={btnGhost} onClick={() => setMemePage((p) => (p + 1) % freshMemes.length)}>
-                        Next →
-                      </button>
-                    </div>
+                    <img src={m.src} alt={m.tag} className="rounded-2xl w-full h-auto" loading="lazy" />
+
+                    <div className="mt-3 text-xs text-white/40">Screenshot. Post. Tag $MAD.</div>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 overflow-hidden">
-                      <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent" />
-                      <div className="text-xs uppercase tracking-[0.3em] text-white/50 mb-3">Left Page</div>
-
-                      <img src={freshMemes[memePage].src} alt={freshMemes[memePage].tag} className="rounded-2xl w-full h-auto" loading="lazy" />
-
-                      <div className="mt-3 text-xs text-white/40">Post this. Tag it. Start fights.</div>
-                    </div>
-
-                    <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 overflow-hidden">
-                      <div className="absolute inset-0 pointer-events-none bg-gradient-to-bl from-white/5 to-transparent" />
-                      <div className="text-xs uppercase tracking-[0.3em] text-white/50 mb-3">Right Page</div>
-
-                      <img
-                        src={freshMemes[(memePage + 1) % freshMemes.length].src}
-                        alt={freshMemes[(memePage + 1) % freshMemes.length].tag}
-                        className="rounded-2xl w-full h-auto opacity-95"
-                        loading="lazy"
-                      />
-
-                      <div className="mt-3 text-xs text-white/40">Next rage loads instantly.</div>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 flex gap-3 overflow-x-auto pb-2">
-                    {freshMemes.map((m, idx) => (
-                      <button
-                        key={m.src}
-                        onClick={() => setMemePage(idx)}
-                        className={[
-                          "shrink-0 rounded-2xl border overflow-hidden transition",
-                          idx === memePage ? "border-emerald-400/70" : "border-white/10 hover:border-white/20",
-                        ].join(" ")}
-                        title={m.tag}
-                      >
-                        <img src={m.src} alt={m.tag} className="h-20 w-auto block" loading="lazy" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           )}
