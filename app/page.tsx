@@ -285,7 +285,7 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
 
-      // ✅ NEW rares you added (filenames you showed)
+      // ✅ NEW rares you added
       makeItem<AccessoryItem>("a-c-rare-madsword", "/pfp/accessories/cartoon/rare/cartoon-rare-madsword.png", "MAD Sword", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-spatula", "/pfp/accessories/cartoon/rare/cartoon-rare-spatula.png", "Spatula", "rare", "cartoon"),
 
@@ -305,7 +305,7 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
 
-      // ✅ NEW legendary you added (filenames you showed)
+      // ✅ NEW legendary you added
       makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
       makeItem<AccessoryItem>(
         "a-c-leg-halomadplush",
@@ -776,32 +776,60 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5) MEME VAULT — SCROLL FEED */}
+        {/* 5) MEME VAULT — SIDEWAYS SCROLL */}
         <section className="py-20 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Meme Vault</h2>
-            <p className="mt-3 text-white/60">Scroll the rage. Screenshot the best ones.</p>
+            <p className="mt-3 text-white/60">Swipe the rage. Screenshot the best ones.</p>
           </div>
 
           {freshMemes.length === 0 ? (
             <div className="text-center text-white/60">No memes yet.</div>
           ) : (
-            <div className="relative mx-auto w-full max-w-5xl">
+            <div className="relative mx-auto w-full max-w-6xl">
               <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-red-500/10 blur-3xl" />
-              <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6 max-h-[650px] overflow-y-auto space-y-6">
-                {freshMemes.map((m, idx) => (
-                  <div key={m.src} className="rounded-3xl border border-white/10 bg-black/40 p-4 transition hover:bg-white/10">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="text-xs uppercase tracking-[0.35em] text-white/50">#{idx + 1}</div>
-                      <div className="text-sm font-bold text-white/70">{m.tag}</div>
+
+              <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <div className="text-xs uppercase tracking-[0.35em] text-white/50">Swipe →</div>
+                  <div className="text-xs text-white/40">({freshMemes.length} memes)</div>
+                </div>
+
+                <div
+                  className={[
+                    "flex gap-5 overflow-x-auto overflow-y-hidden pb-3",
+                    "snap-x snap-mandatory",
+                    "scroll-px-4",
+                    "[scrollbar-width:thin]",
+                  ].join(" ")}
+                  style={{ WebkitOverflowScrolling: "touch" }}
+                >
+                  {freshMemes.map((m, idx) => (
+                    <div
+                      key={m.src}
+                      className={[
+                        "snap-start shrink-0",
+                        "w-[85vw] sm:w-[520px] md:w-[560px] lg:w-[600px]",
+                        "rounded-3xl border border-white/10 bg-black/40 p-4",
+                        "transition hover:bg-white/10",
+                      ].join(" ")}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-xs uppercase tracking-[0.35em] text-white/50">#{idx + 1}</div>
+                        <div className="text-sm font-bold text-white/70">{m.tag}</div>
+                      </div>
+
+                      <img src={m.src} alt={m.tag} className="rounded-2xl w-full h-auto" loading="lazy" />
+
+                      <div className="mt-3 text-xs text-white/40">Screenshot. Post. Tag $MAD.</div>
                     </div>
+                  ))}
+                </div>
 
-                    <img src={m.src} alt={m.tag} className="rounded-2xl w-full h-auto" loading="lazy" />
-
-                    <div className="mt-3 text-xs text-white/40">Screenshot. Post. Tag $MAD.</div>
-                  </div>
-                ))}
+                {/* edge fades */}
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black/35 to-transparent rounded-l-3xl" />
+                <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black/35 to-transparent rounded-r-3xl" />
               </div>
             </div>
           )}
