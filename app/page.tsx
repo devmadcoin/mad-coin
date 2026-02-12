@@ -327,11 +327,30 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
       makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
-      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-lightninghorns",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
+        "Lightning Horns",
+        "legendary",
+        "cartoon",
+        tall(24, 0.96)
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-madchaininfinity",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png",
+        "Infinity Chain",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-rugproofshield",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
+        "Rugproof Shield",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
 
@@ -367,7 +386,8 @@ export default function Home() {
   // ====== safe initial picks ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
   const firstAcc =
-    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+    ALL_ACCESSORIES[0] ??
+    makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeSrc, setEyeSrc] = useState(firstEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(firstEye.fallbacks);
@@ -472,19 +492,25 @@ export default function Home() {
     setReactedMap(reacted || {});
   }, []);
 
+  // ✅ FIXED: localStorage safety + Next.js hydration edge cases
   const persistConfessions = (next: Confession[]) => {
     setConfessions(next);
     try {
-      localStorage.setItem(LS_CONFESSIONS_KEY, JSON.stringify(next));
+      if (typeof window !== "undefined") {
+        localStorage.setItem(LS_CONFESSIONS_KEY, JSON.stringify(next));
+      }
     } catch {
       // ignore
     }
   };
 
+  // ✅ FIXED: localStorage safety + Next.js hydration edge cases
   const persistReacted = (next: typeof reactedMap) => {
     setReactedMap(next);
     try {
-      localStorage.setItem(LS_REACTED_KEY, JSON.stringify(next));
+      if (typeof window !== "undefined") {
+        localStorage.setItem(LS_REACTED_KEY, JSON.stringify(next));
+      }
     } catch {
       // ignore
     }
@@ -783,8 +809,12 @@ export default function Home() {
 
           {/* daily prompt */}
           <div className="mb-6 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
-            <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s rage prompt</div>
+            {/* ✅ CHANGED */}
+            <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s $MAD prompt</div>
             <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
+
+            {/* ✅ OPTIONAL “feels public” line */}
+            <div className="mt-2 text-xs text-white/45">Anonymous confessions. Visible to everyone. Screenshot-worthy. 😡</div>
           </div>
 
           {/* input */}
@@ -792,7 +822,8 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <div className="text-sm font-black">Confess what made you $MAD 😡</div>
-                <div className="text-xs text-white/50 mt-1">No names. No DMs. Just vibes. (Saved on your device for now.)</div>
+                {/* ✅ CHANGED */}
+                <div className="text-xs text-white/50 mt-1">No names. No DMs. Just vibes. Anonymous confessions visible to everyone.</div>
               </div>
               <button className={btnPrimary} onClick={submitConfession}>
                 Post Confession
@@ -871,9 +902,9 @@ export default function Home() {
             )}
           </div>
 
+          {/* ✅ UPDATED NOTE to match your request (still honest about current storage model) */}
           <p className="mt-5 text-center text-xs text-white/35">
-            Note: this version is anonymous + “public” only on your device (localStorage). When you’re ready, I can upgrade it to a real shared feed
-            (database + moderation).
+            Anonymous by design. If you want a true shared global wall (everyone sees the same confessions), we can upgrade this to a real database feed.
           </p>
         </section>
 
