@@ -27,6 +27,19 @@ function isReactionKey(x: any): x is ReactionKey {
   return x === "same" || x === "lol" || x === "handshake";
 }
 
+function safeJson<T>(raw: unknown): T | null {
+  try {
+    if (typeof raw !== "string") return null;
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * GET /api/confessions
+ * Returns: { confessions: Confession[] }
+ */
 export async function GET() {
   const ids = (await kv.lrange<string>(KEY, 0, 199)) ?? [];
   const items = await Promise.all(ids.map((id) => kv.get<Confession>(ITEM(id))));
@@ -34,8 +47,13 @@ export async function GET() {
   return Response.json({ confessions });
 }
 
+/**
+ * POST /api/confessions
+ * Body: { text: string }
+ * Returns: { item: Confession }
+ */
 export async function POST(req: Request) {
-  const body = await req.json().catch(() => ({}));
+  const body = await req.json().catch(() => ({} as any));
   const text = clampText(String(body?.text ?? ""), 240);
 
   if (!text) return Response.json({ error: "Text required" }, { status: 400 });
@@ -57,12 +75,18 @@ export async function POST(req: Request) {
 
 /**
  * PATCH /api/confessions
- * body: { id: string, reaction: "same"|"lol"|"handshake", delta?: number }
+ * Accepts either:
+ *   Body: { id: string, reaction: "same"|"lol"|"handshake", delta?: number }
+ * or (your client currently uses):
+ *   Body: { id: string, kind: "same"|"lol"|"handshake", delta?: number }
+ *
+ * Returns: { item: Confession }
  */
 export async function PATCH(req: Request) {
-  const body = await req.json().catch(() => ({}));
+  const body = await req.json().catch(() => ({} as any));
+
   const id = String(body?.id ?? "");
-  const reaction = body?.reaction;
+  const reaction = body?.reaction ?? body?.kind; // support both shapes
   const delta = Number(body?.delta ?? 1);
 
   if (!id) return Response.json({ error: "id required" }, { status: 400 });
@@ -71,7 +95,10 @@ export async function PATCH(req: Request) {
 
   const key = ITEM(id);
 
-  const updated = await kv.eval<string | null>(
+  // IMPORTANT:
+  // kv.eval typing can be strict; do NOT pass a generic like <string | null>.
+  // We parse the returned string ourselves.
+  const result = await kv.eval(
     `
 local k = KEYS[1]
 local reaction = ARGV[1]
@@ -84,8 +111,12 @@ end
 
 local data = cjson.decode(obj)
 data.reactions = data.reactions or {}
-data.reactions[reaction] = (tonumber(data.reactions[reaction]) or 0) + delta
-if data.reactions[reaction] < 0 then data.reactions[reaction] = 0 end
+
+local current = tonumber(data.reactions[reaction]) or 0
+local nextVal = current + delta
+if nextVal < 0 then nextVal = 0 end
+
+data.reactions[reaction] = nextVal
 
 redis.call("SET", k, cjson.encode(data))
 return cjson.encode(data)
@@ -94,7 +125,11 @@ return cjson.encode(data)
     [reaction, String(delta)]
   );
 
-  if (!updated) return Response.json({ error: "not found" }, { status: 404 });
+  if (!result) return Response.json({ error: "not found" }, { status: 404 });
 
-  return Response.json({ item: JSON.parse(updated) });
+  // `result` is typically a JSON string. If KV returns something else, handle safely.
+  const parsed = safeJson<Confession>(result);
+  if (!parsed) return Response.json({ error: "bad data" }, { status: 500 });
+
+  return Response.json({ item: parsed });
 }
