@@ -27,10 +27,27 @@ function isReactionKey(x: any): x is ReactionKey {
   return x === "same" || x === "lol" || x === "handshake";
 }
 
+function toStringSafe(v: unknown): string | null {
+  if (typeof v === "string") return v;
+  // KV can sometimes return Buffer-ish types in Node
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const anyV: any = v;
+  if (anyV && typeof anyV === "object" && typeof anyV.toString === "function") {
+    try {
+      const s = anyV.toString();
+      return typeof s === "string" ? s : null;
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
 function safeJson<T>(raw: unknown): T | null {
   try {
-    if (typeof raw !== "string") return null;
-    return JSON.parse(raw) as T;
+    const s = toStringSafe(raw);
+    if (!s) return null;
+    return JSON.parse(s) as T;
   } catch {
     return null;
   }
@@ -41,10 +58,15 @@ function safeJson<T>(raw: unknown): T | null {
  * Returns: { confessions: Confession[] }
  */
 export async function GET() {
-  const ids = (await kv.lrange<string>(KEY, 0, 199)) ?? [];
-  const items = await Promise.all(ids.map((id) => kv.get<Confession>(ITEM(id))));
-  const confessions = (items.filter(Boolean) as Confession[]).sort((a, b) => b.createdAt - a.createdAt);
-  return Response.json({ confessions });
+  try {
+    const ids = (await kv.lrange<string>(KEY, 0, 199)) ?? [];
+    const items = await Promise.all(ids.map((id) => kv.get<Confession>(ITEM(id))));
+    const confessions = (items.filter(Boolean) as Confession[]).sort((a, b) => b.createdAt - a.createdAt);
+    return Response.json({ confessions });
+  } catch (err: any) {
+    // Keep UI alive; return empty feed but include error string (helps debugging)
+    return Response.json({ confessions: [], error: err?.message || "KV error" }, { status: 200 });
+  }
 }
 
 /**
@@ -53,53 +75,56 @@ export async function GET() {
  * Returns: { item: Confession }
  */
 export async function POST(req: Request) {
-  const body = await req.json().catch(() => ({} as any));
-  const text = clampText(String(body?.text ?? ""), 240);
+  try {
+    const body = await req.json().catch(() => ({} as any));
+    const text = clampText(String(body?.text ?? ""), 240);
 
-  if (!text) return Response.json({ error: "Text required" }, { status: 400 });
-  if (text.length < 4) return Response.json({ error: "Too short" }, { status: 400 });
+    if (!text) return Response.json({ error: "Text required" }, { status: 400 });
+    if (text.length < 4) return Response.json({ error: "Too short" }, { status: 400 });
 
-  const item: Confession = {
-    id: makeId(),
-    text,
-    createdAt: Date.now(),
-    reactions: { same: 0, lol: 0, handshake: 0 },
-  };
+    const item: Confession = {
+      id: makeId(),
+      text,
+      createdAt: Date.now(),
+      reactions: { same: 0, lol: 0, handshake: 0 },
+    };
 
-  await kv.set(ITEM(item.id), item);
-  await kv.lpush(KEY, item.id);
-  await kv.ltrim(KEY, 0, 199);
+    await kv.set(ITEM(item.id), item);
+    await kv.lpush(KEY, item.id);
+    await kv.ltrim(KEY, 0, 199);
 
-  return Response.json({ item });
+    return Response.json({ item });
+  } catch (err: any) {
+    return Response.json({ error: err?.message || "POST failed" }, { status: 500 });
+  }
 }
 
 /**
  * PATCH /api/confessions
  * Accepts either:
- *   Body: { id: string, reaction: "same"|"lol"|"handshake", delta?: number }
- * or (your client currently uses):
- *   Body: { id: string, kind: "same"|"lol"|"handshake", delta?: number }
- *
- * Returns: { item: Confession }
+ *   { id, reaction, delta? }
+ * or:
+ *   { id, kind, delta? }  // your client uses "kind"
  */
 export async function PATCH(req: Request) {
-  const body = await req.json().catch(() => ({} as any));
+  try {
+    const body = await req.json().catch(() => ({} as any));
 
-  const id = String(body?.id ?? "");
-  const reaction = body?.reaction ?? body?.kind; // support both shapes
-  const delta = Number(body?.delta ?? 1);
+    const id = String(body?.id ?? "");
+    const reaction = body?.reaction ?? body?.kind;
+    const delta = Number(body?.delta ?? 1);
 
-  if (!id) return Response.json({ error: "id required" }, { status: 400 });
-  if (!isReactionKey(reaction)) return Response.json({ error: "invalid reaction" }, { status: 400 });
-  if (!Number.isFinite(delta) || delta === 0) return Response.json({ error: "invalid delta" }, { status: 400 });
+    if (!id) return Response.json({ error: "id required" }, { status: 400 });
+    if (!isReactionKey(reaction)) return Response.json({ error: "invalid reaction" }, { status: 400 });
+    if (!Number.isFinite(delta) || delta === 0) return Response.json({ error: "invalid delta" }, { status: 400 });
 
-  const key = ITEM(id);
+    const key = ITEM(id);
 
-  // IMPORTANT:
-  // kv.eval typing can be strict; do NOT pass a generic like <string | null>.
-  // We parse the returned string ourselves.
-  const result = await kv.eval(
-    `
+    // NOTE:
+    // Use kv.eval without TS generic to avoid strict typing issues.
+    // We'll parse whatever comes back safely.
+    const result = await kv.eval(
+      `
 local k = KEYS[1]
 local reaction = ARGV[1]
 local delta = tonumber(ARGV[2])
@@ -120,16 +145,18 @@ data.reactions[reaction] = nextVal
 
 redis.call("SET", k, cjson.encode(data))
 return cjson.encode(data)
-    `,
-    [key],
-    [reaction, String(delta)]
-  );
+      `,
+      [key],
+      [reaction, String(delta)]
+    );
 
-  if (!result) return Response.json({ error: "not found" }, { status: 404 });
+    if (!result) return Response.json({ error: "not found" }, { status: 404 });
 
-  // `result` is typically a JSON string. If KV returns something else, handle safely.
-  const parsed = safeJson<Confession>(result);
-  if (!parsed) return Response.json({ error: "bad data" }, { status: 500 });
+    const parsed = safeJson<Confession>(result);
+    if (!parsed) return Response.json({ error: "bad data from KV" }, { status: 500 });
 
-  return Response.json({ item: parsed });
+    return Response.json({ item: parsed });
+  } catch (err: any) {
+    return Response.json({ error: err?.message || "PATCH failed" }, { status: 500 });
+  }
 }
