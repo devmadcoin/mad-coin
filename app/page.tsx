@@ -36,13 +36,20 @@ function ensureLeadingSlash(p: string) {
 }
 
 /**
- * Builds a safe list of candidate paths.
- * - Tries normal path
- * - Also tries accidental /public prefix
- * - Also tries .png vs .png.png variants
+ * Builds a safe list of candidate paths for <img src="...">.
+ *
+ * ✅ Next.js serves /public/* at the ROOT ("/").
+ * If your repo accidentally has /public/public/... you might still reference it as:
+ *   "/public/..."
+ * so we try BOTH:
+ *   "/pfp/..." and "/public/pfp/..." and "/public/public/pfp/..."
+ *
+ * Also tries ".png" vs ".png.png" mistakes.
  */
 function buildCandidates(originalPath: string): string[] {
   const raw = ensureLeadingSlash(originalPath);
+
+  // Try the "correct" root path first, THEN try legacy "/public" prefixes.
   const prefixes = ["", "/public", "/public/public"];
   const out: string[] = [];
 
@@ -55,7 +62,10 @@ function buildCandidates(originalPath: string): string[] {
     const p = `${pre}${raw}`.replace(/\/{2,}/g, "/");
     pushUnique(p);
 
+    // If someone uploaded ".png.png"
     if (p.endsWith(".png.png")) pushUnique(p.replace(/\.png\.png$/, ".png"));
+
+    // If someone referenced ".png" but file is actually ".png.png"
     if (p.endsWith(".png")) pushUnique(`${p}.png`);
   }
 
@@ -100,6 +110,11 @@ function pickWeightedAccessory(all: AccessoryItem[]) {
   return safeLegs[Math.floor(Math.random() * safeLegs.length)];
 }
 
+/**
+ * Robust fallback cycling:
+ * - Works even if some assets are missing.
+ * - Keeps accessory transform working by tracking selected IDs (not just src).
+ */
 function cycleFallback(e: React.SyntheticEvent<HTMLImageElement, Event>, fallbacks: string[]) {
   const img = e.currentTarget;
   if (!fallbacks?.length) return;
@@ -207,8 +222,9 @@ export default function Home() {
   }, []);
 
   // ====== Meme Vault ======
-  // Your repo shows: public/public/memes/*.png
-  // Browser URL becomes: /public/memes/*.png
+  // If your files actually live in /public/memes/*, this is correct (served from "/memes/*").
+  // If your repo has /public/public/memes/*, then "/public/memes/*" is correct.
+  // We'll keep your paths, but ALSO add fallback candidates in case you later move them.
   const freshMemes = useMemo(
     () => [
       { src: "/public/memes/mad-meme-trafficstuck.png", tag: "Traffic Rage" },
@@ -301,7 +317,13 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-lanyardbadge", "/pfp/accessories/cartoon/common/cartoon-common-lanyardbadge.png", "Lanyard Badge", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
-      makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-common-smallgoldhoopearing",
+        "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png",
+        "Gold Hoop",
+        "common",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
       // ===== rare =====
@@ -314,19 +336,37 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-rare-ragekeyboard", "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png", "Broken Keyboard Necklace", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
-
-      // ✅ NEW rares you added
       makeItem<AccessoryItem>("a-c-rare-madsword", "/pfp/accessories/cartoon/rare/cartoon-rare-madsword.png", "MAD Sword", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-spatula", "/pfp/accessories/cartoon/rare/cartoon-rare-spatula.png", "Spatula", "rare", "cartoon"),
 
       // ===== legendary =====
       makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon", tall(22, 0.98)),
+      makeItem<AccessoryItem>(
+        "a-c-leg-fieryaura",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png",
+        "Fiery Aura",
+        "legendary",
+        "cartoon",
+        tall(22, 0.98)
+      ),
       makeItem<AccessoryItem>("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon", tall(22, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-firegrills",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png",
+        "Fire Grills",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
-      makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
+      makeItem<AccessoryItem>(
+        "a-c-leg-jetpack",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png",
+        "Jetpack",
+        "legendary",
+        "cartoon",
+        tall(18, 0.98)
+      ),
       makeItem<AccessoryItem>(
         "a-c-leg-lightninghorns",
         "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
@@ -342,8 +382,20 @@ export default function Home() {
         "legendary",
         "cartoon"
       ),
-      makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-moneybag",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png",
+        "Money Bag",
+        "legendary",
+        "cartoon"
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-pinkgrill",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png",
+        "Pink Grill",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>(
         "a-c-leg-rugproofshield",
         "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
@@ -354,8 +406,13 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
 
-      // ✅ NEW legendary you added
-      makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-madplush",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png",
+        "MAD Plush",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>(
         "a-c-leg-halomadplush",
         "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
@@ -383,26 +440,45 @@ export default function Home() {
   const [showBase, setShowBase] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  // ====== safe initial picks ======
+  // ====== IMPORTANT FIX: track IDs (so transform always works even after fallback swaps) ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
   const firstAcc =
-    ALL_ACCESSORIES[0] ??
-    makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
-  const [eyeSrc, setEyeSrc] = useState(firstEye.primary);
-  const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(firstEye.fallbacks);
-  const [eyeLabel, setEyeLabel] = useState(`${firstEye.label} • ${firstEye.rarity.toUpperCase()}`);
+  const [eyeId, setEyeId] = useState(firstEye.id);
+  const [accId, setAccId] = useState(firstAcc.id);
 
-  const [accSrc, setAccSrc] = useState(firstAcc.primary);
-  const [accFallbacks, setAccFallbacks] = useState<string[]>(firstAcc.fallbacks);
-  const [accLabel, setAccLabel] = useState(`${firstAcc.label} • ${firstAcc.rarity.toUpperCase()}`);
+  const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? firstEye, [ALL_EYES, eyeId, firstEye]);
+  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.id === accId) ?? firstAcc, [ALL_ACCESSORIES, accId, firstAcc]);
+
+  // These drive the actual <img src> and fallback cycling
+  const [eyeSrc, setEyeSrc] = useState(selectedEye.primary);
+  const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye.fallbacks);
+  const [eyeLabel, setEyeLabel] = useState(`${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}`);
+
+  const [accSrc, setAccSrc] = useState(selectedAcc.primary);
+  const [accFallbacks, setAccFallbacks] = useState<string[]>(selectedAcc.fallbacks);
+  const [accLabel, setAccLabel] = useState(`${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}`);
+
+  // Keep src/fallbacks synced when IDs change (prevents stale fallbacks)
+  useEffect(() => {
+    setEyeSrc(selectedEye.primary);
+    setEyeFallbacks(selectedEye.fallbacks);
+    setEyeLabel(`${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedEye.id]);
+
+  useEffect(() => {
+    setAccSrc(selectedAcc.primary);
+    setAccFallbacks(selectedAcc.fallbacks);
+    setAccLabel(`${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAcc.id]);
 
   const [forgeCount, setForgeCount] = useState(0);
   const [powerIndex, setPowerIndex] = useState(50);
   const [revealing, setRevealing] = useState(false);
   const [renderNonce, setRenderNonce] = useState(0);
-
-  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.primary === accSrc) ?? null, [ALL_ACCESSORIES, accSrc]);
 
   const forgeIdentity = () => {
     if (!ALL_EYES.length) return;
@@ -410,15 +486,11 @@ export default function Home() {
     setRevealing(true);
     setTimeout(() => {
       const pickEye = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
-      setEyeSrc(pickEye.primary);
-      setEyeFallbacks(pickEye.fallbacks);
-      setEyeLabel(`${pickEye.label} • ${pickEye.rarity.toUpperCase()}`);
+      setEyeId(pickEye.id);
 
       if (ALL_ACCESSORIES.length) {
         const pickAcc = pickWeightedAccessory(ALL_ACCESSORIES);
-        setAccSrc(pickAcc.primary);
-        setAccFallbacks(pickAcc.fallbacks);
-        setAccLabel(`${pickAcc.label} • ${pickAcc.rarity.toUpperCase()}`);
+        setAccId(pickAcc.id);
       }
 
       setForgeCount((v) => v + 1);
@@ -429,7 +501,7 @@ export default function Home() {
   };
 
   // ====== Token Stats ======
-  const BURNED = 250_000_000; // ✅ updated
+  const BURNED = 250_000_000;
   const BURN_RATE = 23; // %
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
@@ -451,9 +523,7 @@ export default function Home() {
 
   const todayPrompt = useMemo(() => {
     const d = new Date();
-    // day-seed: YYYY-MM-DD
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-    // simple hash
     let h = 0;
     for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
     return ragePrompts[h % ragePrompts.length];
@@ -465,14 +535,15 @@ export default function Home() {
   const [reactedMap, setReactedMap] = useState<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>({});
 
   useEffect(() => {
-    // load from localStorage
-    const initial = safeJsonParse<Confession[]>(typeof window !== "undefined" ? localStorage.getItem(LS_CONFESSIONS_KEY) : null, []);
+    const initial = safeJsonParse<Confession[]>(
+      typeof window !== "undefined" ? localStorage.getItem(LS_CONFESSIONS_KEY) : null,
+      []
+    );
     const reacted = safeJsonParse<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>(
       typeof window !== "undefined" ? localStorage.getItem(LS_REACTED_KEY) : null,
       {}
     );
 
-    // normalize
     const normalized = (initial || [])
       .filter((c) => c && typeof c.text === "string")
       .map((c) => ({
@@ -492,25 +563,19 @@ export default function Home() {
     setReactedMap(reacted || {});
   }, []);
 
-  // ✅ FIXED: localStorage safety + Next.js hydration edge cases
   const persistConfessions = (next: Confession[]) => {
     setConfessions(next);
     try {
-      if (typeof window !== "undefined") {
-        localStorage.setItem(LS_CONFESSIONS_KEY, JSON.stringify(next));
-      }
+      if (typeof window !== "undefined") localStorage.setItem(LS_CONFESSIONS_KEY, JSON.stringify(next));
     } catch {
       // ignore
     }
   };
 
-  // ✅ FIXED: localStorage safety + Next.js hydration edge cases
   const persistReacted = (next: typeof reactedMap) => {
     setReactedMap(next);
     try {
-      if (typeof window !== "undefined") {
-        localStorage.setItem(LS_REACTED_KEY, JSON.stringify(next));
-      }
+      if (typeof window !== "undefined") localStorage.setItem(LS_REACTED_KEY, JSON.stringify(next));
     } catch {
       // ignore
     }
@@ -520,14 +585,8 @@ export default function Home() {
     setConfessionErr(null);
     const t = clampText(confessionText, 240);
 
-    if (!t) {
-      setConfessionErr("Type something first 😡");
-      return;
-    }
-    if (t.length < 4) {
-      setConfessionErr("Give it a little more sauce.");
-      return;
-    }
+    if (!t) return setConfessionErr("Type something first 😡");
+    if (t.length < 4) return setConfessionErr("Give it a little more sauce.");
 
     const item: Confession = {
       id: uid(),
@@ -542,23 +601,16 @@ export default function Home() {
   };
 
   const react = (id: string, kind: "same" | "lol" | "handshake") => {
-    // one-tap reaction per device per confession per kind (toggle on/off)
     const already = !!reactedMap?.[id]?.[kind];
 
     const nextConf = confessions.map((c) => {
       if (c.id !== id) return c;
       const delta = already ? -1 : 1;
       const nextCount = Math.max(0, (c.reactions?.[kind] ?? 0) + delta);
-      return {
-        ...c,
-        reactions: { ...c.reactions, [kind]: nextCount },
-      };
+      return { ...c, reactions: { ...c.reactions, [kind]: nextCount } };
     });
 
-    const nextReacted = {
-      ...reactedMap,
-      [id]: { ...(reactedMap[id] || {}), [kind]: !already },
-    };
+    const nextReacted = { ...reactedMap, [id]: { ...(reactedMap[id] || {}), [kind]: !already } };
 
     persistConfessions(nextConf);
     persistReacted(nextReacted);
@@ -598,7 +650,6 @@ export default function Home() {
           }
         }
 
-        /* 🔥 fire animations */
         @keyframes flameFlicker {
           0% {
             transform: translate3d(-6%, 2%, 0) scale(1);
@@ -636,7 +687,6 @@ export default function Home() {
           }
         }
 
-        /* 🧊 blue locked energy animations */
         @keyframes iceFlicker {
           0% {
             transform: translate3d(-5%, 2%, 0) scale(1);
@@ -735,7 +785,7 @@ export default function Home() {
             </button>
           </div>
 
-          {/* ✅ PFP positions unchanged */}
+          {/* ✅ PFP positions */}
           <div
             className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden"
             style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
@@ -752,7 +802,7 @@ export default function Home() {
             )}
 
             <img
-              key={`eyes-${eyeSrc}-${renderNonce}`}
+              key={`eyes-${eyeId}-${renderNonce}`}
               src={eyeSrc}
               className="absolute inset-0 w-full h-full object-cover"
               alt="eyes"
@@ -762,7 +812,7 @@ export default function Home() {
 
             {showAcc && (
               <img
-                key={`acc-${accSrc}-${renderNonce}`}
+                key={`acc-${accId}-${renderNonce}`}
                 src={accSrc}
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="accessory"
@@ -809,11 +859,8 @@ export default function Home() {
 
           {/* daily prompt */}
           <div className="mb-6 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
-            {/* ✅ CHANGED */}
             <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s $MAD prompt</div>
             <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
-
-            {/* ✅ OPTIONAL “feels public” line */}
             <div className="mt-2 text-xs text-white/45">Anonymous confessions. Visible to everyone. Screenshot-worthy. 😡</div>
           </div>
 
@@ -822,7 +869,6 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <div className="text-sm font-black">Confess what made you $MAD 😡</div>
-                {/* ✅ CHANGED */}
                 <div className="text-xs text-white/50 mt-1">No names. No DMs. Just vibes. Anonymous confessions visible to everyone.</div>
               </div>
               <button className={btnPrimary} onClick={submitConfession}>
@@ -861,7 +907,6 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* reactions */}
                     <div className="mt-4 flex flex-wrap gap-2">
                       <button
                         className={[
@@ -902,7 +947,6 @@ export default function Home() {
             )}
           </div>
 
-          {/* ✅ UPDATED NOTE to match your request (still honest about current storage model) */}
           <p className="mt-5 text-center text-xs text-white/35">
             Anonymous by design. If you want a true shared global wall (everyone sees the same confessions), we can upgrade this to a real database feed.
           </p>
@@ -943,7 +987,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* ✅ Only these 2 here (details section) */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
               Buy on Jupiter
@@ -1038,7 +1081,7 @@ export default function Home() {
         </section>
 
         {/* =========================
-            5) ROADMAP (after burned/locked)
+            5) ROADMAP
            ========================= */}
         <section className="py-16 w-full max-w-4xl mx-auto">
           <div className="text-center mb-10">
@@ -1111,29 +1154,41 @@ export default function Home() {
                   ].join(" ")}
                   style={{ WebkitOverflowScrolling: "touch" }}
                 >
-                  {freshMemes.map((m, idx) => (
-                    <div
-                      key={m.src}
-                      className={[
-                        "snap-start shrink-0",
-                        "w-[85vw] sm:w-[520px] md:w-[560px] lg:w-[600px]",
-                        "rounded-3xl border border-white/10 bg-black/40 p-4",
-                        "transition hover:bg-white/10",
-                      ].join(" ")}
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="text-xs uppercase tracking-[0.35em] text-white/50">#{idx + 1}</div>
-                        <div className="text-sm font-bold text-white/70">{m.tag}</div>
+                  {freshMemes.map((m, idx) => {
+                    const candidates = buildCandidates(m.src);
+                    const primary = candidates[0];
+                    const fallbacks = candidates.slice(1);
+
+                    return (
+                      <div
+                        key={m.src}
+                        className={[
+                          "snap-start shrink-0",
+                          "w-[85vw] sm:w-[520px] md:w-[560px] lg:w-[600px]",
+                          "rounded-3xl border border-white/10 bg-black/40 p-4",
+                          "transition hover:bg-white/10",
+                        ].join(" ")}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="text-xs uppercase tracking-[0.35em] text-white/50">#{idx + 1}</div>
+                          <div className="text-sm font-bold text-white/70">{m.tag}</div>
+                        </div>
+
+                        <img
+                          src={primary}
+                          alt={m.tag}
+                          className="rounded-2xl w-full h-auto"
+                          loading="lazy"
+                          onLoad={resetFallbackIndex}
+                          onError={(e) => cycleFallback(e, fallbacks)}
+                        />
+
+                        <div className="mt-3 text-xs text-white/40">Screenshot. Post. Tag $MAD.</div>
                       </div>
-
-                      <img src={m.src} alt={m.tag} className="rounded-2xl w-full h-auto" loading="lazy" />
-
-                      <div className="mt-3 text-xs text-white/40">Screenshot. Post. Tag $MAD.</div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
-                {/* edge fades */}
                 <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black/35 to-transparent rounded-l-3xl" />
                 <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black/35 to-transparent rounded-r-3xl" />
               </div>
@@ -1142,7 +1197,7 @@ export default function Home() {
         </section>
 
         {/* =========================
-            7) SOCIALS (LAST)
+            7) SOCIALS
            ========================= */}
         <section className="pb-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
@@ -1174,3 +1229,4 @@ export default function Home() {
     </main>
   );
 }
+
