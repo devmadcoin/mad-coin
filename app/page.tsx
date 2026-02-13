@@ -168,6 +168,11 @@ export default function Home() {
     [addr]
   );
 
+  // ✅ INSERTED: Dex embed URL (dark)
+  const DEX_EMBED = useMemo(() => {
+    return `https://dexscreener.com/solana/${addr}?embed=1&theme=dark`;
+  }, [addr]);
+
   const [copied, setCopied] = useState(false);
   const copyCA = async () => {
     try {
@@ -299,17 +304,35 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-lanyardbadge", "/pfp/accessories/cartoon/common/cartoon-common-lanyardbadge.png", "Lanyard Badge", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
-      makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-common-smallgoldhoopearing",
+        "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png",
+        "Gold Hoop",
+        "common",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
       // ===== rare =====
       makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
-      makeItem<AccessoryItem>("a-c-rare-fierysunglasses", "/pfp/accessories/cartoon/rare/cartoon-rare-fierysunglasses.png", "Flame Shades", "rare", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-rare-fierysunglasses",
+        "/pfp/accessories/cartoon/rare/cartoon-rare-fierysunglasses.png",
+        "Flame Shades",
+        "rare",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-rare-greencandle", "/pfp/accessories/cartoon/rare/cartoon-rare-greencandle.png", "Crypto Candle Badge", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-madmeter", "/pfp/accessories/cartoon/rare/cartoon-rare-madmeter.png", "$MAD Meter Pin", "rare", "cartoon"),
-      makeItem<AccessoryItem>("a-c-rare-ragekeyboard", "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png", "Broken Keyboard Necklace", "rare", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-rare-ragekeyboard",
+        "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png",
+        "Broken Keyboard Necklace",
+        "rare",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-madsword", "/pfp/accessories/cartoon/rare/cartoon-rare-madsword.png", "MAD Sword", "rare", "cartoon"),
@@ -318,20 +341,85 @@ export default function Home() {
       // ===== legendary =====
       makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon", tall(22, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon", tall(22, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-fieryaura",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png",
+        "Fiery Aura",
+        "legendary",
+        "cartoon",
+        tall(22, 0.98)
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-fireaura",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png",
+        "Fire Aura",
+        "legendary",
+        "cartoon",
+        tall(22, 0.98)
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-firegrills",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png",
+        "Fire Grills",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
-      makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
-      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-jetpack",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png",
+        "Jetpack",
+        "legendary",
+        "cartoon",
+        tall(18, 0.98)
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-lightninghorns",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
+        "Lightning Horns",
+        "legendary",
+        "cartoon",
+        tall(24, 0.96)
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-madchaininfinity",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png",
+        "Infinity Chain",
+        "legendary",
+        "cartoon"
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-moneybag",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png",
+        "Money Bag",
+        "legendary",
+        "cartoon"
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-pinkgrill",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png",
+        "Pink Grill",
+        "legendary",
+        "cartoon"
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-rugproofshield",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
+        "Rugproof Shield",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
       makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-halomadplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png", "Pink Halo MAD Plush", "legendary", "cartoon", tall(26, 0.96)),
+      makeItem<AccessoryItem>(
+        "a-c-leg-halomadplush",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
+        "Pink Halo MAD Plush",
+        "legendary",
+        "cartoon",
+        tall(26, 0.96)
+      ),
     ];
   }, []);
 
@@ -354,7 +442,8 @@ export default function Home() {
   // ====== IMPORTANT FIX: track IDs so transform always works ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
   const firstAcc =
-    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+    ALL_ACCESSORIES[0] ??
+    makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeId, setEyeId] = useState(firstEye.id);
   const [accId, setAccId] = useState(firstAcc.id);
@@ -1072,9 +1161,7 @@ export default function Home() {
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-red-500/80" : ""].join(" ")}>
-                      {item.title}
-                    </h3>
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-red-500/80" : ""].join(" ")}>{item.title}</h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
@@ -1154,7 +1241,49 @@ export default function Home() {
         </section>
 
         {/* =========================
-            7) SOCIALS
+            7) LIVE CHART (Dexscreener)  ✅ INSERTED
+           ========================= */}
+        <section className="pb-20 w-full">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 overflow-hidden">
+            <div className="text-center mb-8">
+              <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Live</p>
+              <h2 className="mt-3 text-4xl sm:text-5xl font-black">Dexscreener Chart</h2>
+              <p className="mt-3 text-white/60">Right under the Meme Vault. Screenshot-friendly.</p>
+
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+                  Open on Dexscreener
+                </a>
+                <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+                  Buy on Jupiter
+                </a>
+              </div>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-6xl">
+              <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-red-500/10 blur-3xl" />
+
+              <div className="relative rounded-3xl border border-white/10 bg-black/40 overflow-hidden">
+                <div style={{ height: "min(70vh, 640px)" }}>
+                  <iframe
+                    src={DEX_EMBED}
+                    title="$MAD Dexscreener Chart"
+                    loading="lazy"
+                    style={{ width: "100%", height: "100%", border: 0 }}
+                    allow="clipboard-write; encrypted-media; fullscreen"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-3 text-center text-xs text-white/35">
+                If the embed ever shows blank, Dex may be blocking iframes — use “Open on Dexscreener.”
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================
+            8) SOCIALS
            ========================= */}
         <section className="pb-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
