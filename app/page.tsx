@@ -213,6 +213,30 @@ export default function Home() {
     });
   }, []);
 
+  // ====== NEW: scroll-reactive glow intensity ======
+  const [scrollGlow, setScrollGlow] = useState(0);
+
+  useEffect(() => {
+    let raf = 0;
+
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY || 0;
+        const max = Math.max(600, document.body.scrollHeight - window.innerHeight);
+        const t = Math.min(1, y / max);
+        setScrollGlow(t);
+      });
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   // ====== Meme Vault (✅ FIX: remove "/public" prefix) ======
   const freshMemes = useMemo(
     () => [
@@ -820,6 +844,37 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/45" />
       </div>
 
+      {/* ✅ SCROLL-REACTIVE SIDE GLOWS (premium subtle) */}
+      <div className="pointer-events-none fixed inset-0" style={{ zIndex: -15 }}>
+        {/* Left glow */}
+        <div
+          className="absolute left-0 top-0 h-full w-[22vw] max-w-[360px] blur-3xl"
+          style={{
+            opacity: 0.08 + scrollGlow * 0.22,
+            background:
+              "radial-gradient(circle at 30% 50%, rgba(255,110,60,0.55), transparent 62%)," +
+              "radial-gradient(circle at 10% 70%, rgba(255,40,40,0.35), transparent 60%)",
+          }}
+        />
+
+        {/* Right glow */}
+        <div
+          className="absolute right-0 top-0 h-full w-[22vw] max-w-[360px] blur-3xl"
+          style={{
+            opacity: 0.08 + scrollGlow * 0.22,
+            background:
+              "radial-gradient(circle at 70% 50%, rgba(255,110,60,0.55), transparent 62%)," +
+              "radial-gradient(circle at 90% 70%, rgba(255,40,40,0.35), transparent 60%)",
+          }}
+        />
+
+        {/* Edge vignette */}
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35"
+          style={{ opacity: 0.35 }}
+        />
+      </div>
+
       {/* 😡 FLOATING BACKGROUND */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         {angry.map((a) => (
@@ -872,7 +927,11 @@ export default function Home() {
             </div>
 
             <div className="mt-12">
-              <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">$MAD</h1>
+              {/* ✅ CHANGED HERO TITLE */}
+              <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">
+                Welcome To $MAD
+              </h1>
+
               <p className="mt-5 text-xl sm:text-2xl text-white/75 leading-[1.7] max-w-2xl">
                 Emotion evolves.
                 <br />
@@ -905,9 +964,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <p className="mt-6 text-xs text-white/40 leading-[1.8]">
-                Not financial advice. Culture experiment. Wearable energy.
-              </p>
+              <p className="mt-6 text-xs text-white/40 leading-[1.8]">Not financial advice. Culture experiment. Wearable energy.</p>
             </div>
           </div>
         </section>
@@ -1331,7 +1388,12 @@ export default function Home() {
                   ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
+                    <p
+                      className={[
+                        "text-xs uppercase tracking-[0.35em] text-white/50",
+                        done ? "line-through decoration-white/30" : "",
+                      ].join(" ")}
+                    >
                       {item.phase}
                     </p>
 
@@ -1339,11 +1401,25 @@ export default function Home() {
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
+                    <h3
+                      className={[
+                        "text-2xl sm:text-3xl font-black",
+                        done ? "line-through decoration-white/25" : "",
+                      ].join(" ")}
+                    >
+                      {item.title}
+                    </h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>{item.desc}</p>
+                  <p
+                    className={[
+                      "text-white/65 mt-2 leading-[1.95]",
+                      done ? "line-through decoration-white/15" : "",
+                    ].join(" ")}
+                  >
+                    {item.desc}
+                  </p>
                 </div>
               );
             })}
@@ -1373,7 +1449,12 @@ export default function Home() {
                 </div>
 
                 <div
-                  className={["flex gap-5 overflow-x-auto overflow-y-hidden pb-3", "snap-x snap-mandatory", "scroll-px-4", "[scrollbar-width:thin]"].join(" ")}
+                  className={[
+                    "flex gap-5 overflow-x-auto overflow-y-hidden pb-3",
+                    "snap-x snap-mandatory",
+                    "scroll-px-4",
+                    "[scrollbar-width:thin]",
+                  ].join(" ")}
                   style={{ WebkitOverflowScrolling: "touch" }}
                 >
                   {freshMemes.map((m, idx) => {
@@ -1446,9 +1527,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">
-          © {new Date().getFullYear()} $MAD. Built by the community.
-        </footer>
+        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
       </div>
     </main>
   );
