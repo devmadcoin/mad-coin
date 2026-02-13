@@ -162,16 +162,23 @@ export default function Home() {
     () => ({
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
+      // (kept your original)
       x: "https://x.com/i/communities/2019256566248312879/",
       tg: "https://t.me/madcoinofficial001",
     }),
     [addr]
   );
 
-  // ✅ Dexscreener embed (goes in iframe)
-  const DEX_EMBED = useMemo(() => {
-    return `https://dexscreener.com/solana/${addr}?embed=1&theme=dark`;
-  }, [addr]);
+  // ====== Roblox Game (Beta) ======
+  const robloxGame = useMemo(
+    () => ({
+      url: "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD",
+      title: "Will You Get RICH 💰… Or Stay MAD 😡?",
+      subtitle: "Beta",
+      creator: "@CoffeeCollectsBlox",
+    }),
+    []
+  );
 
   const [copied, setCopied] = useState(false);
   const copyCA = async () => {
@@ -211,7 +218,7 @@ export default function Home() {
     });
   }, []);
 
-  // ====== Meme Vault ======
+  // ====== Meme Vault (✅ FIX: remove "/public" prefix) ======
   const freshMemes = useMemo(
     () => [
       { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic Rage" },
@@ -229,11 +236,11 @@ export default function Home() {
     []
   );
 
-  // ====== Roadmap (✅ includes Phase 1.1 done) ======
+  // ====== Roadmap (UPDATED: add Phase 1.1 completed) ======
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the vibe. Build the core.", done: true },
-      { phase: "Phase 1.1", title: "300M Token Burn", desc: "Milestone burn completed. Supply tightened. Conviction confirmed.", done: true },
+      { phase: "Phase 1.1", title: "300M Burn", desc: "Community milestone: 300,000,000 tokens burned.", done: true },
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes undeniable." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the energy. More eyes. More memes. More movement." },
       { phase: "Phase 4", title: "$50M", desc: "Serious territory. The timeline feels it." },
@@ -415,9 +422,9 @@ export default function Home() {
     }, 550);
   };
 
-  // ====== Token Stats (✅ updated) ======
-  const BURNED = 300_000_000;
-  const BURN_RATE = 30;
+  // ====== Token Stats (UPDATED) ======
+  const BURNED = 300_000_000; // ✅ was 250M
+  const BURN_RATE = 30; // ✅ was 23%
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
 
@@ -579,6 +586,13 @@ export default function Home() {
       // re-sync on next polling fetch
     }
   };
+
+  // ====== Dexscreener embed URL (NEW section placement) ======
+  const dexscreenerEmbed = useMemo(() => {
+    // Dexscreener supports embedded mode via query params commonly used in the wild.
+    // If you want a different look: theme=light or remove the params.
+    return `https://dexscreener.com/solana/${addr}?embed=1&theme=dark&trades=0&info=1`;
+  }, [addr]);
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
@@ -921,49 +935,42 @@ export default function Home() {
         </section>
 
         {/* =========================
-            3) LIVE DEXSCREENER (✅ added under Confessions)
+            2.5) LIVE DEXSCREENER (NEW — right under confessions)
            ========================= */}
-        <section className="pb-16 w-full">
+        <section className="pb-16 w-full max-w-5xl mx-auto">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 overflow-hidden">
-            <div className="text-center mb-8">
+            <div className="text-center">
               <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Live</p>
               <h2 className="mt-3 text-4xl sm:text-5xl font-black">Dexscreener</h2>
-              <p className="mt-3 text-white/60">Live chart widget for the timeline.</p>
+              <p className="mt-3 text-white/60">Live chart embed for instant credibility + screenshots.</p>
+            </div>
 
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-                  Open on Dexscreener
-                </a>
-                <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-                  Buy on Jupiter
-                </a>
+            <div className="mt-8 rounded-3xl border border-white/10 bg-black/35 overflow-hidden">
+              <div className="relative w-full" style={{ paddingTop: "62%" }}>
+                <iframe
+                  src={dexscreenerEmbed}
+                  className="absolute inset-0 w-full h-full"
+                  allow="clipboard-write; encrypted-media"
+                  sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                  loading="lazy"
+                  title="Dexscreener chart"
+                />
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-6xl">
-              <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-red-500/10 blur-3xl" />
-
-              <div className="relative rounded-3xl border border-white/10 bg-black/40 overflow-hidden">
-                <div style={{ height: "min(70vh, 640px)" }}>
-                  <iframe
-                    src={DEX_EMBED}
-                    title="$MAD Dexscreener Chart"
-                    loading="lazy"
-                    style={{ width: "100%", height: "100%", border: 0 }}
-                    allow="clipboard-write; encrypted-media; fullscreen"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-3 text-center text-xs text-white/35">
-                If the embed ever shows blank, Dex may block iframes — use “Open on Dexscreener.”
-              </div>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+                Open on Dexscreener
+              </a>
+              <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+                Buy on Jupiter
+              </a>
             </div>
           </div>
         </section>
 
         {/* =========================
-            4) DETAILS (moved after Dexscreener)
+            3) DETAILS (now AFTER dexscreener)
            ========================= */}
         <section className="py-14 flex flex-col items-center text-center">
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,0,0,0.15)]">
@@ -1008,7 +1015,35 @@ export default function Home() {
         </section>
 
         {/* =========================
-            5) BURN + LOCK (✅ updated burn)
+            3.5) ROBLOX GAME (NEW — best placement for Beta)
+           ========================= */}
+        <section className="pb-16 w-full max-w-4xl mx-auto">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Experience</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Play the Game</h2>
+            <p className="mt-3 text-white/60">
+              {robloxGame.title} <span className="text-white/40">• {robloxGame.subtitle}</span>
+              <br />
+              <span className="text-white/40">By {robloxGame.creator}</span>
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <a href={robloxGame.url} target="_blank" rel="noreferrer" className={btnWhite}>
+                Play on Roblox (Beta)
+              </a>
+              <a href={links.x} target="_blank" rel="noreferrer" className={btnGhost}>
+                Share to X Community
+              </a>
+            </div>
+
+            <p className="mt-6 text-xs text-white/40">
+              Tip: This “Game” block is perfect here because visitors just saw the chart + meaning… now they can DO something.
+            </p>
+          </div>
+        </section>
+
+        {/* =========================
+            4) BURN + LOCK (UPDATED numbers)
            ========================= */}
         <section className="py-16 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
@@ -1091,7 +1126,7 @@ export default function Home() {
         </section>
 
         {/* =========================
-            6) ROADMAP (Phase 1 + 1.1 completed)
+            5) ROADMAP (UPDATED)
            ========================= */}
         <section className="py-16 w-full max-w-4xl mx-auto">
           <div className="text-center mb-10">
@@ -1134,7 +1169,7 @@ export default function Home() {
         </section>
 
         {/* =========================
-            7) MEME VAULT
+            6) MEME VAULT
            ========================= */}
         <section className="py-20 w-full">
           <div className="text-center mb-14">
@@ -1202,7 +1237,7 @@ export default function Home() {
         </section>
 
         {/* =========================
-            8) SOCIALS
+            7) SOCIALS
            ========================= */}
         <section className="pb-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
@@ -1223,15 +1258,16 @@ export default function Home() {
               <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
                 Buy on Jupiter
               </a>
+              <a href={robloxGame.url} target="_blank" rel="noreferrer" className={btnGhost}>
+                Play Roblox (Beta)
+              </a>
             </div>
 
             <p className="mt-8 text-xs text-white/40">$MAD — Digital emotion. Not financial advice.</p>
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">
-          © {new Date().getFullYear()} $MAD. Built by the community.
-        </footer>
+        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
       </div>
     </main>
   );
