@@ -32,43 +32,14 @@ export async function GET() {
   const items = await Promise.all(ids.map((id) => kv.get<Confession>(ITEM(id))));
   const confessions = items.filter(Boolean) as Confession[];
 
+  // newest first (just in case)
+  confessions.sort((a, b) => b.createdAt - a.createdAt);
+
   return Response.json({ confessions });
 }
 
-/**
- * POST supports 2 actions (so you don't have to change your frontend):
- * 1) Create confession: { text: string }
- * 2) React: { id: string, reaction: "same"|"lol"|"handshake" }
- */
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
-
-  // --- (A) React ---
-  const maybeId = String(body?.id ?? "");
-  const maybeReaction = body?.reaction ?? body?.type; // supports either key name
-  if (maybeId && isReactionKey(maybeReaction)) {
-    const key = ITEM(maybeId);
-
-    const existing = await kv.get<Confession>(key);
-    if (!existing) return Response.json({ error: "Not found" }, { status: 404 });
-
-    const next: Confession = {
-      ...existing,
-      reactions: {
-        same: existing.reactions?.same ?? 0,
-        lol: existing.reactions?.lol ?? 0,
-        handshake: existing.reactions?.handshake ?? 0,
-      },
-    };
-
-    next.reactions[maybeReaction] = (next.reactions[maybeReaction] ?? 0) + 1;
-
-    await kv.set(key, next);
-
-    return Response.json({ item: next });
-  }
-
-  // --- (B) Create confession ---
   const text = clampText(String(body?.text ?? ""), 240);
 
   if (!text) return Response.json({ error: "Text required" }, { status: 400 });
@@ -89,38 +60,47 @@ export async function POST(req: Request) {
 }
 
 /**
- * PATCH (optional) react endpoint:
- * { id: string, reaction: "same"|"lol"|"handshake" }
+ * PATCH /api/confessions
+ * body: { id: string, reaction: "same"|"lol"|"handshake", delta?: number }
  */
 export async function PATCH(req: Request) {
   const body = await req.json().catch(() => ({}));
   const id = String(body?.id ?? "");
-  const reaction = body?.reaction ?? body?.type;
+  const reaction = body?.reaction;
+  const delta = Number(body?.delta ?? 1);
 
-  if (!id || !isReactionKey(reaction)) {
-    return Response.json(
-      { error: "Provide { id, reaction } where reaction is same|lol|handshake" },
-      { status: 400 }
-    );
-  }
+  if (!id) return Response.json({ error: "id required" }, { status: 400 });
+  if (!isReactionKey(reaction)) return Response.json({ error: "invalid reaction" }, { status: 400 });
+  if (!Number.isFinite(delta) || delta === 0) return Response.json({ error: "invalid delta" }, { status: 400 });
 
   const key = ITEM(id);
-  const existing = await kv.get<Confession>(key);
-  if (!existing) return Response.json({ error: "Not found" }, { status: 404 });
 
-  const next: Confession = {
-    ...existing,
-    reactions: {
-      same: existing.reactions?.same ?? 0,
-      lol: existing.reactions?.lol ?? 0,
-      handshake: existing.reactions?.handshake ?? 0,
-    },
-  };
+  // Atomic update (prevents race conditions when many people spam react)
+  const updated = await kv.eval<Confession | null>(
+    `
+local k = KEYS[1]
+local reaction = ARGV[1]
+local delta = tonumber(ARGV[2])
 
-  next.reactions[reaction] = (next.reactions[reaction] ?? 0) + 1;
+local obj = redis.call("GET", k)
+if not obj then
+  return nil
+end
 
-  await kv.set(key, next);
+local data = cjson.decode(obj)
+data.reactions = data.reactions or {}
+data.reactions[reaction] = (tonumber(data.reactions[reaction]) or 0) + delta
+if data.reactions[reaction] < 0 then data.reactions[reaction] = 0 end
 
-  return Response.json({ item: next });
+redis.call("SET", k, cjson.encode(data))
+return cjson.encode(data)
+    `,
+    [key],
+    [reaction, String(delta)]
+  );
+
+  if (!updated) return Response.json({ error: "not found" }, { status: 404 });
+
+  return Response.json({ item: updated });
 }
 
