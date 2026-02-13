@@ -24,7 +24,6 @@ type AccessoryItem = {
   label: string;
   rarity: Rarity;
   style: Style;
-
   // Helps tall legendaries (halo/horns/aura/jetpack) show inside the circle.
   cssTransform?: string;
   draw?: DrawTransform;
@@ -37,19 +36,11 @@ function ensureLeadingSlash(p: string) {
 
 /**
  * Builds a safe list of candidate paths for <img src="...">.
- *
- * ✅ Next.js serves /public/* at the ROOT ("/").
- * If your repo accidentally has /public/public/... you might still reference it as:
- *   "/public/..."
- * so we try BOTH:
- *   "/pfp/..." and "/public/pfp/..." and "/public/public/pfp/..."
- *
- * Also tries ".png" vs ".png.png" mistakes.
+ * ✅ Next.js serves /public/* at ROOT ("/")
+ * Also tries legacy "/public" prefixes and ".png.png" mistakes.
  */
 function buildCandidates(originalPath: string): string[] {
   const raw = ensureLeadingSlash(originalPath);
-
-  // Try the "correct" root path first, THEN try legacy "/public" prefixes.
   const prefixes = ["", "/public", "/public/public"];
   const out: string[] = [];
 
@@ -111,9 +102,9 @@ function pickWeightedAccessory(all: AccessoryItem[]) {
 }
 
 /**
- * Robust fallback cycling:
+ * Robust fallback cycling for <img>:
  * - Works even if some assets are missing.
- * - Keeps accessory transform working by tracking selected IDs (not just src).
+ * - Cycles through the provided fallbacks safely.
  */
 function cycleFallback(e: React.SyntheticEvent<HTMLImageElement, Event>, fallbacks: string[]) {
   const img = e.currentTarget;
@@ -147,7 +138,6 @@ type Confession = {
   reactions: { same: number; lol: number; handshake: number };
 };
 
-const LS_CONFESSIONS_KEY = "mad_confessions_v1";
 const LS_REACTED_KEY = "mad_confessions_reacted_v1";
 
 function safeJsonParse<T>(raw: string | null, fallback: T): T {
@@ -162,11 +152,6 @@ function safeJsonParse<T>(raw: string | null, fallback: T): T {
 function clampText(s: string, max = 240) {
   const t = (s || "").replace(/\s+/g, " ").trim();
   return t.length > max ? t.slice(0, max).trim() : t;
-}
-
-function uid() {
-  // not crypto-strong; just for UI ids
-  return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
 export default function Home() {
@@ -196,7 +181,7 @@ export default function Home() {
 
   // ====== UI buttons ======
   const btnBase =
-    "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition border border-white/10";
+    "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition border border-white/10 disabled:opacity-60 disabled:cursor-not-allowed";
   const btnPrimary = `${btnBase} bg-red-600 hover:bg-red-500 text-white`;
   const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
   const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
@@ -222,9 +207,6 @@ export default function Home() {
   }, []);
 
   // ====== Meme Vault ======
-  // If your files actually live in /public/memes/*, this is correct (served from "/memes/*").
-  // If your repo has /public/public/memes/*, then "/public/memes/*" is correct.
-  // We'll keep your paths, but ALSO add fallback candidates in case you later move them.
   const freshMemes = useMemo(
     () => [
       { src: "/public/memes/mad-meme-trafficstuck.png", tag: "Traffic Rage" },
@@ -317,13 +299,7 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-lanyardbadge", "/pfp/accessories/cartoon/common/cartoon-common-lanyardbadge.png", "Lanyard Badge", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-common-smallgoldhoopearing",
-        "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png",
-        "Gold Hoop",
-        "common",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
       // ===== rare =====
@@ -342,85 +318,20 @@ export default function Home() {
       // ===== legendary =====
       makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>(
-        "a-c-leg-fieryaura",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png",
-        "Fiery Aura",
-        "legendary",
-        "cartoon",
-        tall(22, 0.98)
-      ),
+      makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon", tall(22, 0.98)),
       makeItem<AccessoryItem>("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon", tall(22, 0.98)),
-      makeItem<AccessoryItem>(
-        "a-c-leg-firegrills",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png",
-        "Fire Grills",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
-      makeItem<AccessoryItem>(
-        "a-c-leg-jetpack",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png",
-        "Jetpack",
-        "legendary",
-        "cartoon",
-        tall(18, 0.98)
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-lightninghorns",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
-        "Lightning Horns",
-        "legendary",
-        "cartoon",
-        tall(24, 0.96)
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-madchaininfinity",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png",
-        "Infinity Chain",
-        "legendary",
-        "cartoon"
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-moneybag",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png",
-        "Money Bag",
-        "legendary",
-        "cartoon"
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-pinkgrill",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png",
-        "Pink Grill",
-        "legendary",
-        "cartoon"
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-rugproofshield",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
-        "Rugproof Shield",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
+      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
+      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
-
-      makeItem<AccessoryItem>(
-        "a-c-leg-madplush",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png",
-        "MAD Plush",
-        "legendary",
-        "cartoon"
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-halomadplush",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
-        "Pink Halo MAD Plush",
-        "legendary",
-        "cartoon",
-        tall(26, 0.96)
-      ),
+      makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-halomadplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png", "Pink Halo MAD Plush", "legendary", "cartoon", tall(26, 0.96)),
     ];
   }, []);
 
@@ -440,18 +351,16 @@ export default function Home() {
   const [showBase, setShowBase] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  // ====== IMPORTANT FIX: track IDs (so transform always works even after fallback swaps) ======
+  // ====== IMPORTANT FIX: track IDs so transform always works ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
-  const firstAcc =
-    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+  const firstAcc = ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeId, setEyeId] = useState(firstEye.id);
   const [accId, setAccId] = useState(firstAcc.id);
 
-  const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? firstEye, [ALL_EYES, eyeId, firstEye]);
-  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.id === accId) ?? firstAcc, [ALL_ACCESSORIES, accId, firstAcc]);
+  const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? firstEye, [eyeId, firstEye, ALL_EYES]);
+  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.id === accId) ?? firstAcc, [accId, firstAcc, ALL_ACCESSORIES]);
 
-  // These drive the actual <img src> and fallback cycling
   const [eyeSrc, setEyeSrc] = useState(selectedEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye.fallbacks);
   const [eyeLabel, setEyeLabel] = useState(`${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}`);
@@ -460,7 +369,6 @@ export default function Home() {
   const [accFallbacks, setAccFallbacks] = useState<string[]>(selectedAcc.fallbacks);
   const [accLabel, setAccLabel] = useState(`${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}`);
 
-  // Keep src/fallbacks synced when IDs change (prevents stale fallbacks)
   useEffect(() => {
     setEyeSrc(selectedEye.primary);
     setEyeFallbacks(selectedEye.fallbacks);
@@ -502,11 +410,11 @@ export default function Home() {
 
   // ====== Token Stats ======
   const BURNED = 250_000_000;
-  const BURN_RATE = 23; // %
+  const BURN_RATE = 23;
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
 
-  // ====== $MAD Confessions (anonymous, client-only via localStorage) ======
+  // ====== $MAD Confessions (PUBLIC via API) ======
   const ragePrompts = useMemo(
     () => [
       "What small thing ruined your mood instantly?",
@@ -532,45 +440,10 @@ export default function Home() {
   const [confessions, setConfessions] = useState<Confession[]>([]);
   const [confessionText, setConfessionText] = useState("");
   const [confessionErr, setConfessionErr] = useState<string | null>(null);
+  const [confessionBusy, setConfessionBusy] = useState(false);
+
   const [reactedMap, setReactedMap] = useState<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>({});
-
-  useEffect(() => {
-    const initial = safeJsonParse<Confession[]>(
-      typeof window !== "undefined" ? localStorage.getItem(LS_CONFESSIONS_KEY) : null,
-      []
-    );
-    const reacted = safeJsonParse<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>(
-      typeof window !== "undefined" ? localStorage.getItem(LS_REACTED_KEY) : null,
-      {}
-    );
-
-    const normalized = (initial || [])
-      .filter((c) => c && typeof c.text === "string")
-      .map((c) => ({
-        id: c.id || uid(),
-        text: clampText(c.text, 240),
-        createdAt: typeof c.createdAt === "number" ? c.createdAt : Date.now(),
-        reactions: {
-          same: c.reactions?.same ?? 0,
-          lol: c.reactions?.lol ?? 0,
-          handshake: c.reactions?.handshake ?? 0,
-        },
-      }))
-      .sort((a, b) => b.createdAt - a.createdAt)
-      .slice(0, 200);
-
-    setConfessions(normalized);
-    setReactedMap(reacted || {});
-  }, []);
-
-  const persistConfessions = (next: Confession[]) => {
-    setConfessions(next);
-    try {
-      if (typeof window !== "undefined") localStorage.setItem(LS_CONFESSIONS_KEY, JSON.stringify(next));
-    } catch {
-      // ignore
-    }
-  };
+  const [apiOk, setApiOk] = useState(true);
 
   const persistReacted = (next: typeof reactedMap) => {
     setReactedMap(next);
@@ -581,39 +454,113 @@ export default function Home() {
     }
   };
 
-  const submitConfession = () => {
+  const loadReacted = () => {
+    const reacted = safeJsonParse<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>(
+      typeof window !== "undefined" ? localStorage.getItem(LS_REACTED_KEY) : null,
+      {}
+    );
+    setReactedMap(reacted || {});
+  };
+
+  const normalizeConfessions = (raw: any): Confession[] => {
+    const list: any[] = Array.isArray(raw) ? raw : [];
+    return list
+      .filter((c) => c && typeof c.text === "string")
+      .map((c) => ({
+        id: String(c.id ?? ""),
+        text: clampText(String(c.text ?? ""), 240),
+        createdAt: typeof c.createdAt === "number" ? c.createdAt : Date.now(),
+        reactions: {
+          same: Number(c.reactions?.same ?? 0) || 0,
+          lol: Number(c.reactions?.lol ?? 0) || 0,
+          handshake: Number(c.reactions?.handshake ?? 0) || 0,
+        },
+      }))
+      .filter((c) => c.id.length > 0)
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 200);
+  };
+
+  const fetchConfessions = async () => {
+    try {
+      const res = await fetch("/api/confessions", { cache: "no-store" });
+      const data = await res.json().catch(() => ({} as any));
+      if (!res.ok) throw new Error(data?.error || "Fetch failed");
+      setConfessions(normalizeConfessions(data?.confessions));
+      setApiOk(true);
+    } catch {
+      // If API not ready, keep UI alive (but feed won't be public)
+      setApiOk(false);
+    }
+  };
+
+  useEffect(() => {
+    loadReacted();
+    fetchConfessions();
+
+    const t = setInterval(fetchConfessions, 8000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const submitConfession = async () => {
     setConfessionErr(null);
     const t = clampText(confessionText, 240);
 
     if (!t) return setConfessionErr("Type something first 😡");
     if (t.length < 4) return setConfessionErr("Give it a little more sauce.");
 
-    const item: Confession = {
-      id: uid(),
-      text: t,
-      createdAt: Date.now(),
-      reactions: { same: 0, lol: 0, handshake: 0 },
-    };
+    setConfessionBusy(true);
+    try {
+      const res = await fetch("/api/confessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: t }),
+      });
 
-    const next = [item, ...confessions].slice(0, 200);
-    persistConfessions(next);
-    setConfessionText("");
+      const data = await res.json().catch(() => ({} as any));
+      if (!res.ok) throw new Error(data?.error || "Failed to post");
+
+      const item = data?.item;
+      if (!item?.id) throw new Error("API returned no item");
+
+      setConfessionText("");
+      setConfessions((prev) => normalizeConfessions([item, ...prev]));
+      setApiOk(true);
+    } catch (err: any) {
+      setApiOk(false);
+      setConfessionErr(err?.message || "Post failed");
+    } finally {
+      setConfessionBusy(false);
+    }
   };
 
-  const react = (id: string, kind: "same" | "lol" | "handshake") => {
+  const react = async (id: string, kind: "same" | "lol" | "handshake") => {
     const already = !!reactedMap?.[id]?.[kind];
 
-    const nextConf = confessions.map((c) => {
-      if (c.id !== id) return c;
-      const delta = already ? -1 : 1;
-      const nextCount = Math.max(0, (c.reactions?.[kind] ?? 0) + delta);
-      return { ...c, reactions: { ...c.reactions, [kind]: nextCount } };
-    });
+    // optimistic UI
+    setConfessions((prev) =>
+      prev.map((c) => {
+        if (c.id !== id) return c;
+        const delta = already ? -1 : 1;
+        const nextCount = Math.max(0, (c.reactions?.[kind] ?? 0) + delta);
+        return { ...c, reactions: { ...c.reactions, [kind]: nextCount } };
+      })
+    );
 
     const nextReacted = { ...reactedMap, [id]: { ...(reactedMap[id] || {}), [kind]: !already } };
-
-    persistConfessions(nextConf);
     persistReacted(nextReacted);
+
+    // server best-effort
+    try {
+      await fetch("/api/confessions/react", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, kind, delta: already ? -1 : 1 }),
+      });
+    } catch {
+      // re-sync on next polling fetch
+    }
   };
 
   return (
@@ -785,7 +732,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* ✅ PFP positions */}
           <div
             className="mt-8 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden"
             style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
@@ -855,6 +801,12 @@ export default function Home() {
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Community</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Confessions</h2>
             <p className="mt-3 text-white/60">Anonymous rage. Public healing. (Mostly rage.)</p>
+
+            {!apiOk && (
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
+                ⚠️ Confessions API not reachable yet — feed may look empty until you add <span className="font-mono">/api/confessions</span>.
+              </div>
+            )}
           </div>
 
           {/* daily prompt */}
@@ -869,10 +821,10 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <div className="text-sm font-black">Confess what made you $MAD 😡</div>
-                <div className="text-xs text-white/50 mt-1">No names. No DMs. Just vibes. Anonymous confessions visible to everyone.</div>
+                <div className="text-xs text-white/50 mt-1">No names. No DMs. Just vibes. Public feed.</div>
               </div>
-              <button className={btnPrimary} onClick={submitConfession}>
-                Post Confession
+              <button className={btnPrimary} onClick={submitConfession} disabled={confessionBusy}>
+                {confessionBusy ? "Posting..." : "Post Confession"}
               </button>
             </div>
 
@@ -886,7 +838,7 @@ export default function Home() {
               />
               <div className="mt-2 flex items-center justify-between text-xs">
                 <div className="text-red-300/90">{confessionErr ? `⚠️ ${confessionErr}` : ""}</div>
-                <div className="text-white/40">{clampText(confessionText, 240).length}/240</div>
+                <div className="text-white/40">{confessionText.length}/240</div>
               </div>
             </div>
           </div>
@@ -894,7 +846,7 @@ export default function Home() {
           {/* feed */}
           <div className="mt-8 grid gap-4">
             {confessions.length === 0 ? (
-              <div className="text-center text-white/55 py-10">Be the first confession. Break the seal. 😈</div>
+              <div className="text-center text-white/55 py-10">No confessions yet. Someone has to break the seal. 😈</div>
             ) : (
               confessions.map((c) => {
                 const reacted = reactedMap[c.id] || {};
@@ -947,9 +899,7 @@ export default function Home() {
             )}
           </div>
 
-          <p className="mt-5 text-center text-xs text-white/35">
-            Anonymous by design. If you want a true shared global wall (everyone sees the same confessions), we can upgrade this to a real database feed.
-          </p>
+          <p className="mt-5 text-center text-xs text-white/35">Public feed powered by your API. (No names, just rage.)</p>
         </section>
 
         {/* =========================
@@ -1146,12 +1096,9 @@ export default function Home() {
                 </div>
 
                 <div
-                  className={[
-                    "flex gap-5 overflow-x-auto overflow-y-hidden pb-3",
-                    "snap-x snap-mandatory",
-                    "scroll-px-4",
-                    "[scrollbar-width:thin]",
-                  ].join(" ")}
+                  className={["flex gap-5 overflow-x-auto overflow-y-hidden pb-3", "snap-x snap-mandatory", "scroll-px-4", "[scrollbar-width:thin]"].join(
+                    " "
+                  )}
                   style={{ WebkitOverflowScrolling: "touch" }}
                 >
                   {freshMemes.map((m, idx) => {
@@ -1229,4 +1176,3 @@ export default function Home() {
     </main>
   );
 }
-
