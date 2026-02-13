@@ -9,8 +9,8 @@ type Confession = {
   reactions: { same: number; lol: number; handshake: number };
 };
 
-const KEY = "mad:confessions"; // list of confession IDs
-const ITEM = (id: string) => `mad:confession:${id}`; // confession object
+const KEY = "mad:confessions";
+const ITEM = (id: string) => `mad:confession:${id}`;
 
 function clampText(s: string, max = 240) {
   const t = (s || "").replace(/\s+/g, " ").trim();
@@ -18,13 +18,11 @@ function clampText(s: string, max = 240) {
 }
 
 function makeId() {
-  // good enough for this use (unique + sortable-ish)
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 export async function GET() {
-  // Most recent first
-  const ids = (await kv.lrange<string[]>(KEY, 0, 199)) || [];
+  const ids = (await kv.lrange<string>(KEY, 0, 199)) ?? [];
   const items = await Promise.all(ids.map((id) => kv.get<Confession>(ITEM(id))));
   const confessions = items.filter(Boolean) as Confession[];
 
@@ -47,8 +45,7 @@ export async function POST(req: Request) {
 
   await kv.set(ITEM(item.id), item);
   await kv.lpush(KEY, item.id);
-  await kv.ltrim(KEY, 0, 199); // keep feed capped
+  await kv.ltrim(KEY, 0, 199);
 
   return Response.json({ item });
 }
-
