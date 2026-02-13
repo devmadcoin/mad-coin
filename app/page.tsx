@@ -187,8 +187,8 @@ export default function Home() {
   const btnPrimary = [
     btnBase,
     "text-white",
-    "bg-gradient-to-r from-red-500/90 to-orange-500/90 hover:from-red-500 hover:to-orange-500",
-    "shadow-[0_18px_70px_rgba(255,90,70,0.22)]",
+    "bg-gradient-to-r from-red-500/80 to-orange-500/80 hover:from-red-500 hover:to-orange-500",
+    "shadow-[0_18px_70px_rgba(255,120,80,0.18)]",
   ].join(" ");
   const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
   const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
@@ -205,7 +205,7 @@ export default function Home() {
     return Array.from({ length: count }, (_, i) => {
       const x = (i * 100) / count + (Math.random() * 6 - 3);
       const size = 18 + Math.floor(Math.random() * 26);
-      const opacity = 0.12 + Math.random() * 0.22;
+      const opacity = 0.1 + Math.random() * 0.2;
       const dur = 10 + Math.random() * 18;
       const delay = Math.random() * 6;
       const drift = Math.floor(Math.random() * 240 - 120);
@@ -216,17 +216,17 @@ export default function Home() {
   // ====== Meme Vault (✅ FIX: remove "/public" prefix) ======
   const freshMemes = useMemo(
     () => [
-      { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic Rage" },
-      { src: "/memes/mad-meme-wifibuffer.png", tag: "Slow Internet" },
+      { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic" },
+      { src: "/memes/mad-meme-wifibuffer.png", tag: "Buffering" },
       { src: "/memes/mad-meme-scamcall.png", tag: "Scam Call" },
       { src: "/memes/mad-meme-forgotpassword.png", tag: "Locked Out" },
       { src: "/memes/mad-meme-batterylow.png", tag: "1% Battery" },
-      { src: "/memes/mad-meme-groupmessage.png", tag: "Ghosted" },
-      { src: "/memes/mad-meme-coffeehot.png", tag: "Coffee Too Hot" },
-      { src: "/memes/mad-meme-lasttimebeingfarmed.png", tag: "Farmed Again" },
+      { src: "/memes/mad-meme-groupmessage.png", tag: "Group Chat" },
+      { src: "/memes/mad-meme-coffeehot.png", tag: "Too Hot" },
+      { src: "/memes/mad-meme-lasttimebeingfarmed.png", tag: "Farmed" },
       { src: "/memes/mad-meme-lipbalm.png", tag: "Lip Balm" },
-      { src: "/memes/mad-meme-toiletpaper.png", tag: "Toilet Paper" },
-      { src: "/memes/mad-meme-whydidifade.png", tag: "CT Fade" },
+      { src: "/memes/mad-meme-toiletpaper.png", tag: "No Paper" },
+      { src: "/memes/mad-meme-whydidifade.png", tag: "Fade" },
     ],
     []
   );
@@ -234,11 +234,11 @@ export default function Home() {
   // ====== Roadmap (updated) ======
   const roadmap = useMemo(
     () => [
-      { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the vibe. Build the core.", done: true },
-      { phase: "Phase 1.1", title: "300M Burn", desc: "Proof-of-rage. Big burn. Loud signal.", done: true },
-      { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes undeniable." },
-      { phase: "Phase 3", title: "$10M", desc: "Scale the energy. More eyes. More memes. More movement." },
-      { phase: "Phase 4", title: "$50M", desc: "Serious territory. The timeline feels it." },
+      { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
+      { phase: "Phase 1.1", title: "300M Burn", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
+      { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
+      { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
+      { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive." },
     ],
     []
   );
@@ -307,36 +307,18 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-lanyardbadge", "/pfp/accessories/cartoon/common/cartoon-common-lanyardbadge.png", "Lanyard Badge", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-paperreceipt", "/pfp/accessories/cartoon/common/cartoon-common-paperreceipt.png", "Paper Receipt", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-simpleblackshades", "/pfp/accessories/cartoon/common/cartoon-common-simpleblackshades.png", "Shades", "common", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-common-smallgoldhoopearing",
-        "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png",
-        "Gold Hoop",
-        "common",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
       // ===== rare =====
       makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-rare-fierysunglasses",
-        "/pfp/accessories/cartoon/rare/cartoon-rare-fierysunglasses.png",
-        "Flame Shades",
-        "rare",
-        "cartoon"
-      ),
-      makeItem<AccessoryItem>("a-c-rare-greencandle", "/pfp/accessories/cartoon/rare/cartoon-rare-greencandle.png", "Crypto Candle Badge", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-fierysunglasses", "/pfp/accessories/cartoon/rare/cartoon-rare-fierysunglasses.png", "Flame Shades", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-greencandle", "/pfp/accessories/cartoon/rare/cartoon-rare-greencandle.png", "Candle Badge", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-madmeter", "/pfp/accessories/cartoon/rare/cartoon-rare-madmeter.png", "$MAD Meter Pin", "rare", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-rare-ragekeyboard",
-        "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png",
-        "Broken Keyboard Necklace",
-        "rare",
-        "cartoon"
-      ),
-      makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "Thick MAD Scarf", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-ragekeyboard", "/pfp/accessories/cartoon/rare/cartoon-rare-ragekeyboard.png", "Broken Keyboard", "rare", "cartoon"),
+      makeItem<AccessoryItem>("a-c-rare-scarf", "/pfp/accessories/cartoon/rare/cartoon-rare-scarf.png", "MAD Scarf", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-warningtape", "/pfp/accessories/cartoon/rare/cartoon-rare-warningtape.png", "Warning Tape", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-madsword", "/pfp/accessories/cartoon/rare/cartoon-rare-madsword.png", "MAD Sword", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-spatula", "/pfp/accessories/cartoon/rare/cartoon-rare-spatula.png", "Spatula", "rare", "cartoon"),
@@ -344,65 +326,20 @@ export default function Home() {
       // ===== legendary =====
       makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>(
-        "a-c-leg-fieryaura",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png",
-        "Fiery Aura",
-        "legendary",
-        "cartoon",
-        tall(22, 0.98)
-      ),
+      makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon", tall(22, 0.98)),
       makeItem<AccessoryItem>("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon", tall(22, 0.98)),
-      makeItem<AccessoryItem>(
-        "a-c-leg-firegrills",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png",
-        "Fire Grills",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
       makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>(
-        "a-c-leg-lightninghorns",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
-        "Lightning Horns",
-        "legendary",
-        "cartoon",
-        tall(24, 0.96)
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-madchaininfinity",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png",
-        "Infinity Chain",
-        "legendary",
-        "cartoon"
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-moneybag",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png",
-        "Money Bag",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
+      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
+      makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-leg-rugproofshield",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
-        "Rugproof Shield",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
       makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-leg-halomadplush",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
-        "Pink Halo MAD Plush",
-        "legendary",
-        "cartoon",
-        tall(26, 0.96)
-      ),
+      makeItem<AccessoryItem>("a-c-leg-halomadplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png", "Pink Halo MAD Plush", "legendary", "cartoon", tall(26, 0.96)),
     ];
   }, []);
 
@@ -424,13 +361,17 @@ export default function Home() {
 
   // ====== IMPORTANT FIX: track IDs so transform always works ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
-  const firstAcc = ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+  const firstAcc =
+    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeId, setEyeId] = useState(firstEye.id);
   const [accId, setAccId] = useState(firstAcc.id);
 
   const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? firstEye, [eyeId, firstEye, ALL_EYES]);
-  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.id === accId) ?? firstAcc, [accId, firstAcc, ALL_ACCESSORIES]);
+  const selectedAcc = useMemo(
+    () => ALL_ACCESSORIES.find((a) => a.id === accId) ?? firstAcc,
+    [accId, firstAcc, ALL_ACCESSORIES]
+  );
 
   const [eyeSrc, setEyeSrc] = useState(selectedEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye.fallbacks);
@@ -491,7 +432,7 @@ export default function Home() {
       "What small thing ruined your mood instantly?",
       "What’s the most petty thing that made you mad today?",
       "What ‘minor inconvenience’ turned into a full villain arc?",
-      "What was the last thing that made you whisper: ‘I’m so $MAD’?",
+      "What was the last thing that made you whisper: ‘I’m so mad’?",
       "What’s something that should be illegal but isn’t?",
       "What’s a sound that instantly makes you rage?",
       "What’s a ‘helpful’ feature that always breaks everything?",
@@ -580,8 +521,8 @@ export default function Home() {
     setConfessionErr(null);
     const t = clampText(confessionText, 240);
 
-    if (!t) return setConfessionErr("Type something first 😡");
-    if (t.length < 4) return setConfessionErr("Give it a little more sauce.");
+    if (!t) return setConfessionErr("Type something first.");
+    if (t.length < 4) return setConfessionErr("A little more detail.");
 
     setConfessionBusy(true);
     try {
@@ -645,7 +586,7 @@ export default function Home() {
   };
 
   // ====== Rage Tap Gate (optional / skippable) ======
-  const [gateUnlocked, setGateUnlocked] = useState(true); // default true to avoid SSR flicker
+  const [gateUnlocked, setGateUnlocked] = useState(true); // avoid SSR flicker
   const [gateTaps, setGateTaps] = useState(0);
 
   useEffect(() => {
@@ -679,18 +620,24 @@ export default function Home() {
   };
 
   const gateLine = useMemo(() => {
-    if (gateTaps <= 0) return "Tap to enter. Prove you’re $MAD.";
-    if (gateTaps <= 3) return "That’s it? I’ve seen calmer group chats.";
-    if (gateTaps <= 6) return "Okay okay… now we’re heating up.";
-    if (gateTaps <= 9) return "One more… don’t stop now 😈";
+    if (gateTaps <= 0) return "Tap to enter. Emotion requires commitment.";
+    if (gateTaps <= 3) return "Warming up.";
+    if (gateTaps <= 6) return "Now we’re moving.";
+    if (gateTaps <= 9) return "Last one.";
     return "Unlocked.";
   }, [gateTaps]);
 
   const dexscreenerEmbedSrc = useMemo(() => {
     const base = `https://dexscreener.com/solana/${addr}`;
-    // Dexscreener supports embed params; if they change, normal page still loads inside iframe.
     return `${base}?embed=1&theme=dark&trades=0&info=0`;
   }, [addr]);
+
+  // ====== quick section anchors (smooth) ======
+  const scrollToId = (id: string) => {
+    const el = typeof document !== "undefined" ? document.getElementById(id) : null;
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
@@ -699,21 +646,21 @@ export default function Home() {
         <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
 
-          <div className="relative w-full max-w-lg rounded-[2rem] border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6 sm:p-8 shadow-[0_30px_120px_rgba(255,90,70,0.18)]">
+          <div className="relative w-full max-w-lg rounded-[2rem] border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6 sm:p-8 shadow-[0_30px_120px_rgba(255,120,80,0.18)]">
             <div className="flex items-center gap-4">
               <div className="rounded-2xl border border-white/10 bg-white/10 p-3">
                 <Image src="/mad.png" alt="$MAD" width={44} height={44} priority />
               </div>
               <div className="text-left">
                 <div className="text-xs uppercase tracking-[0.35em] text-white/60">Entry</div>
-                <div className="text-2xl sm:text-3xl font-black leading-tight">Rage Tap to Enter</div>
+                <div className="text-2xl sm:text-3xl font-black leading-tight">Tap to Enter</div>
               </div>
             </div>
 
             <p className="mt-4 text-white/70 leading-[1.75]">
-              Smash the 😡 <span className="font-black text-white">10x</span> to unlock the site.
+              Tap the 😡 <span className="font-black text-white">10x</span> to unlock.
               <br />
-              Or skip if you’re chill (we won’t judge… much).
+              Or skip if you’re calm.
             </p>
 
             <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
@@ -746,7 +693,7 @@ export default function Home() {
                 </button>
               </div>
 
-              <div className="mt-3 text-xs text-white/45 leading-[1.75]">You only have to do this once. We remember your rage.</div>
+              <div className="mt-3 text-xs text-white/45 leading-[1.75]">You only do this once. Your rage is remembered.</div>
             </div>
           </div>
         </div>
@@ -766,7 +713,7 @@ export default function Home() {
           animation-name: madFloatUp;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
-          filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.18));
+          filter: drop-shadow(0 0 18px rgba(255, 120, 80, 0.14));
         }
 
         @keyframes forgePulse {
@@ -776,7 +723,7 @@ export default function Home() {
           }
           50% {
             transform: scale(1.02);
-            filter: saturate(1.25);
+            filter: saturate(1.2);
           }
           100% {
             transform: scale(1);
@@ -787,74 +734,74 @@ export default function Home() {
         @keyframes flameFlicker {
           0% {
             transform: translate3d(-6%, 2%, 0) scale(1);
-            opacity: 0.65;
+            opacity: 0.6;
           }
           25% {
             transform: translate3d(4%, -2%, 0) scale(1.03);
-            opacity: 0.78;
+            opacity: 0.72;
           }
           50% {
             transform: translate3d(-2%, -6%, 0) scale(1.06);
-            opacity: 0.7;
+            opacity: 0.66;
           }
           75% {
             transform: translate3d(6%, 1%, 0) scale(1.02);
-            opacity: 0.82;
+            opacity: 0.78;
           }
           100% {
             transform: translate3d(-6%, 2%, 0) scale(1);
-            opacity: 0.65;
+            opacity: 0.6;
           }
         }
         @keyframes flameRise {
           0% {
             transform: translate3d(0, 18%, 0) scale(1);
-            opacity: 0.35;
+            opacity: 0.28;
           }
           50% {
             transform: translate3d(0, -6%, 0) scale(1.05);
-            opacity: 0.55;
+            opacity: 0.45;
           }
           100% {
             transform: translate3d(0, 18%, 0) scale(1);
-            opacity: 0.35;
+            opacity: 0.28;
           }
         }
 
         @keyframes iceFlicker {
           0% {
             transform: translate3d(-5%, 2%, 0) scale(1);
-            opacity: 0.62;
+            opacity: 0.58;
           }
           25% {
             transform: translate3d(4%, -2%, 0) scale(1.03);
-            opacity: 0.78;
+            opacity: 0.72;
           }
           50% {
             transform: translate3d(-2%, -5%, 0) scale(1.06);
-            opacity: 0.7;
+            opacity: 0.64;
           }
           75% {
             transform: translate3d(6%, 1%, 0) scale(1.02);
-            opacity: 0.82;
+            opacity: 0.78;
           }
           100% {
             transform: translate3d(-5%, 2%, 0) scale(1);
-            opacity: 0.62;
+            opacity: 0.58;
           }
         }
         @keyframes icePulse {
           0% {
             transform: translate3d(0, 14%, 0) scale(1);
-            opacity: 0.32;
+            opacity: 0.26;
           }
           50% {
             transform: translate3d(0, -6%, 0) scale(1.06);
-            opacity: 0.58;
+            opacity: 0.46;
           }
           100% {
             transform: translate3d(0, 14%, 0) scale(1);
-            opacity: 0.32;
+            opacity: 0.26;
           }
         }
       `}</style>
@@ -870,7 +817,7 @@ export default function Home() {
           onError={(e) => cycleFallback(e, bg.fallbacks)}
         />
         <div className="absolute inset-0 bg-black/25" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/35" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/45" />
       </div>
 
       {/* 😡 FLOATING BACKGROUND */}
@@ -896,20 +843,116 @@ export default function Home() {
       {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
         {/* =========================
-            1) PFP GENERATOR (TOP)
+            0) HERO (TYPOGRAPHY FIRST)
            ========================= */}
-        <section className="pt-16 pb-16 w-full max-w-xl mx-auto text-center">
-          <div className="mb-8 flex items-center justify-center gap-3">
-            <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.14)]">
-              <Image src="/mad.png" alt="$MAD logo" width={64} height={64} priority />
+        <section className="pt-16 pb-20 w-full">
+          <div className="mx-auto max-w-5xl">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+                  <Image src="/mad.png" alt="$MAD" width={52} height={52} priority />
+                </div>
+                <div className="text-left">
+                  <div className="text-xs uppercase tracking-[0.35em] text-white/60">Solana</div>
+                  <div className="text-sm font-black text-white/80">Digital emotion — refined</div>
+                </div>
+              </div>
+
+              <div className="hidden sm:flex items-center gap-2">
+                <button className={btnGhost} onClick={() => scrollToId("confessions")}>
+                  Confessions
+                </button>
+                <button className={btnGhost} onClick={() => scrollToId("forge")}>
+                  Forge
+                </button>
+                <button className={btnGhost} onClick={() => scrollToId("status")}>
+                  Status
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-12">
+              <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">$MAD</h1>
+              <p className="mt-5 text-xl sm:text-2xl text-white/75 leading-[1.7] max-w-2xl">
+                Emotion evolves.
+                <br />
+                Born in volatility.
+                <br />
+                Refined through discipline.
+              </p>
+
+              <div className="mt-9 flex flex-wrap gap-3">
+                <button className={btnPrimary} onClick={() => scrollToId("forge")}>
+                  Forge Identity
+                </button>
+                <a className={btnGhost} href={links.buy} target="_blank" rel="noreferrer">
+                  Buy on Jupiter
+                </a>
+                <a className={btnGhost} href={links.chart} target="_blank" rel="noreferrer">
+                  Track Momentum
+                </a>
+              </div>
+
+              <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
+                <div className="text-xs uppercase tracking-[0.35em] text-white/50">Contract</div>
+                <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                  <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
+                    {addr}
+                  </div>
+                  <button onClick={copyCA} className={btnGhost}>
+                    {copied ? "Copied" : "Copy"}
+                  </button>
+                </div>
+              </div>
+
+              <p className="mt-6 text-xs text-white/40 leading-[1.8]">
+                Not financial advice. Culture experiment. Wearable energy.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================
+            0.5) MANIFESTO (QUIET REBELLION)
+           ========================= */}
+        <section className="pb-20 w-full">
+          <div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 sm:p-10 text-center">
+            <div className="text-xs uppercase tracking-[0.35em] text-white/55">Statement</div>
+            <h2 className="mt-4 text-3xl sm:text-4xl font-black leading-tight">Quiet rebellion.</h2>
+            <p className="mt-5 text-white/70 leading-[1.9] text-base sm:text-lg max-w-3xl mx-auto">
+              The market tested conviction.
+              <br />
+              Most reacted. Some refined.
+              <br />
+              Not chaos — composure.
+            </p>
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <button className={btnGhost} onClick={() => scrollToId("confessions")}>
+                Share the emotion
+              </button>
+              <button className={btnGhost} onClick={() => scrollToId("roadmap")}>
+                See the roadmap
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================
+            1) PFP GENERATOR
+           ========================= */}
+        <section id="forge" className="py-20 w-full max-w-xl mx-auto text-center">
+          <div className="mb-10 flex items-center justify-center gap-3">
+            <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+              <Image src="/mad.png" alt="$MAD logo" width={56} height={56} priority />
             </div>
             <div className="text-left">
-              <div className="text-xs uppercase tracking-[0.35em] text-white/60">Tool</div>
-              <div className="text-2xl sm:text-3xl font-black leading-tight">Forge Your $MAD Identity</div>
+              <div className="text-xs uppercase tracking-[0.35em] text-white/60">Forge</div>
+              <div className="text-2xl sm:text-3xl font-black leading-tight">Wear the mark.</div>
             </div>
           </div>
 
-          <p className="text-white/65 leading-[1.8]">Free for the community. Forge a look that sticks.</p>
+          <p className="text-white/65 leading-[1.9]">Free for the community. Clean looks. Strong signal.</p>
 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
             <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
@@ -975,8 +1018,8 @@ export default function Home() {
             </button>
           </div>
 
-          <p className="mt-5 text-xs text-white/40 leading-[1.7]">
-            Eyes loaded: {ALL_EYES.length}. Accessories loaded: {ALL_ACCESSORIES.length}. Legendary accessories loaded:{" "}
+          <p className="mt-5 text-xs text-white/40 leading-[1.8]">
+            Eyes: {ALL_EYES.length}. Accessories: {ALL_ACCESSORIES.length}. Legendary:{" "}
             {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
           </p>
         </section>
@@ -984,15 +1027,15 @@ export default function Home() {
         {/* =========================
             2) $MAD CONFESSIONS
            ========================= */}
-        <section className="py-16 w-full max-w-4xl mx-auto">
+        <section id="confessions" className="py-20 w-full max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Community</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Confessions</h2>
-            <p className="mt-4 text-white/65 leading-[1.8]">Anonymous rage. Public healing. (Mostly rage.)</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Mad Confessions</h2>
+            <p className="mt-4 text-white/65 leading-[1.9]">Structured chaos. Anonymous truth.</p>
 
             {!apiOk && (
               <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
-                ⚠️ Confessions API not reachable yet — feed may look empty until you add{" "}
+                Confessions API not reachable yet — feed may look empty until you add{" "}
                 <span className="font-mono">/api/confessions</span>.
               </div>
             )}
@@ -1000,20 +1043,20 @@ export default function Home() {
 
           {/* daily prompt */}
           <div className="mb-7 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
-            <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s $MAD prompt</div>
+            <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s prompt</div>
             <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
-            <div className="mt-2 text-xs text-white/45">Anonymous confessions. Visible to everyone. Screenshot-worthy. 😡</div>
+            <div className="mt-2 text-xs text-white/45">Anonymous. Public. Real.</div>
           </div>
 
           {/* input */}
           <div className="rounded-3xl border border-white/10 bg-black/25 p-5 sm:p-7">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <div className="text-sm font-black">Confess what made you $MAD 😡</div>
-                <div className="text-xs text-white/55 mt-1">No names. No DMs. Just vibes. Public feed.</div>
+                <div className="text-sm font-black">Post a confession</div>
+                <div className="text-xs text-white/55 mt-1">No names. No DMs. Just signal.</div>
               </div>
               <button className={btnPrimary} onClick={submitConfession} disabled={confessionBusy}>
-                {confessionBusy ? "Posting..." : "Post Confession"}
+                {confessionBusy ? "Posting..." : "Post"}
               </button>
             </div>
 
@@ -1021,7 +1064,7 @@ export default function Home() {
               <textarea
                 value={confessionText}
                 onChange={(e) => setConfessionText(e.target.value)}
-                placeholder="Example: I opened a chip bag and it was 90% air..."
+                placeholder="Example: I paid gas fees and the transaction still failed."
                 className="w-full min-h-[110px] rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:border-white/20"
                 maxLength={240}
               />
@@ -1035,7 +1078,7 @@ export default function Home() {
           {/* feed */}
           <div className="mt-9 grid gap-4">
             {confessions.length === 0 ? (
-              <div className="text-center text-white/55 py-10">No confessions yet. Someone has to break the seal. 😈</div>
+              <div className="text-center text-white/55 py-10">No confessions yet.</div>
             ) : (
               confessions.map((c) => {
                 const reacted = reactedMap[c.id] || {};
@@ -1055,9 +1098,9 @@ export default function Home() {
                           reacted.same ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
                         ].join(" ")}
                         onClick={() => react(c.id, "same")}
-                        title="Same 😡"
+                        title="Same"
                       >
-                        Same 😡 <span className="text-white/70 tabular-nums">{c.reactions.same}</span>
+                        Same <span className="text-white/70 tabular-nums">{c.reactions.same}</span>
                       </button>
 
                       <button
@@ -1066,9 +1109,9 @@ export default function Home() {
                           reacted.lol ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
                         ].join(" ")}
                         onClick={() => react(c.id, "lol")}
-                        title="LOL 💀"
+                        title="LOL"
                       >
-                        LOL 💀 <span className="text-white/70 tabular-nums">{c.reactions.lol}</span>
+                        LOL <span className="text-white/70 tabular-nums">{c.reactions.lol}</span>
                       </button>
 
                       <button
@@ -1077,7 +1120,7 @@ export default function Home() {
                           reacted.handshake ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
                         ].join(" ")}
                         onClick={() => react(c.id, "handshake")}
-                        title="Relatable 🤝"
+                        title="Relatable"
                       >
                         🤝 <span className="text-white/70 tabular-nums">{c.reactions.handshake}</span>
                       </button>
@@ -1088,24 +1131,24 @@ export default function Home() {
             )}
           </div>
 
-          <p className="mt-6 text-center text-xs text-white/35">Public feed powered by your API. (No names, just rage.)</p>
+          <p className="mt-6 text-center text-xs text-white/35">Public feed. Anonymous voice.</p>
         </section>
 
         {/* =========================
             2.5) LIVE DEXSCREENER WIDGET (RIGHT UNDER CONFESSIONS)
            ========================= */}
-        <section className="pb-18 w-full max-w-5xl mx-auto">
+        <section className="pb-20 w-full max-w-5xl mx-auto">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
               <div>
                 <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Live</p>
-                <h3 className="mt-2 text-3xl sm:text-4xl font-black">Dexscreener</h3>
-                <p className="mt-2 text-white/60 leading-[1.8]">Real-time chart + vibes. Screenshot-friendly.</p>
+                <h3 className="mt-2 text-3xl sm:text-4xl font-black">Track Momentum</h3>
+                <p className="mt-2 text-white/60 leading-[1.9]">Observe. Don’t react.</p>
               </div>
 
               <div className="flex flex-wrap gap-2">
                 <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-                  Open on Dexscreener
+                  Open Dexscreener
                 </a>
                 <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
                   Buy on Jupiter
@@ -1124,44 +1167,31 @@ export default function Home() {
               </div>
             </div>
 
-            <p className="mt-3 text-xs text-white/40">If the embed ever changes on Dexscreener’s side, the “Open” button still works.</p>
+            <p className="mt-3 text-xs text-white/40">If the embed ever changes, the open button still works.</p>
           </div>
         </section>
 
         {/* =========================
             3) DETAILS (AFTER DEX WIDGET)
            ========================= */}
-        <section className="pt-16 pb-12 flex flex-col items-center text-center">
-          <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.14)]">
-            <Image src="/mad.png" alt="$MAD logo" width={140} height={140} priority />
+        <section className="py-20 flex flex-col items-center text-center">
+          <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+            <Image src="/mad.png" alt="$MAD logo" width={120} height={120} priority />
           </div>
 
-          <h1 className="mt-10 text-4xl sm:text-6xl font-black tracking-tight">
-            $MAD <span className="text-white/80">— Digital emotion on Solana.</span>
-          </h1>
+          <h2 className="mt-10 text-4xl sm:text-6xl font-black tracking-tight">
+            Born in volatility.
+            <br />
+            Refined into culture.
+          </h2>
 
-          <p className="mt-6 max-w-2xl text-white/70 leading-relaxed text-base sm:text-lg">
-            $MAD is a digital emotion on Solana.
+          <p className="mt-6 max-w-2xl text-white/70 leading-[1.95] text-base sm:text-lg">
+            The market was brutal. People lost money.
             <br />
-            Forged by market cycles, born from volatility.
+            The emotion was real — and shared.
             <br />
-            $HAPPY built us. $SAD tested us.
-            <br />
-            Now we move as $MAD 😡
-            <br />
-            A memecoin powered by community, chaos, and conviction.
+            Then it flips: the same emotion becomes the cost of fading.
           </p>
-
-          <p className="mt-12 text-white/70 uppercase tracking-[0.35em] text-xs">Solana Contract</p>
-
-          <div className="mt-3 flex flex-col sm:flex-row items-center gap-3">
-            <div className="max-w-[90vw] sm:max-w-[680px] rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
-              {addr}
-            </div>
-            <button onClick={copyCA} className={btnGhost}>
-              {copied ? "✅ Copied" : "Copy CA"}
-            </button>
-          </div>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
@@ -1176,12 +1206,12 @@ export default function Home() {
         {/* =========================
             3.5) ROBLOX GAME (BETA)
            ========================= */}
-        <section className="pb-14 w-full max-w-4xl mx-auto">
+        <section className="pb-20 w-full max-w-4xl mx-auto">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center overflow-hidden">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Bonus</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-black">Play the $MAD Roblox Game (Beta)</h2>
-            <p className="mt-4 text-white/65 leading-[1.8] max-w-2xl mx-auto">
-              It’s still in beta — but the vibe is real: <span className="font-black text-white/85">Will You Get RICH 💰… Or Stay MAD 😡?</span>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Universe</p>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-black">Roblox (Beta)</h2>
+            <p className="mt-4 text-white/65 leading-[1.9] max-w-2xl mx-auto">
+              The experiment has a playground: <span className="font-black text-white/85">Will You Get RICH… Or Stay MAD?</span>
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -1193,18 +1223,18 @@ export default function Home() {
               </a>
             </div>
 
-            <p className="mt-4 text-xs text-white/40">Roblox blocks most site embeds — so this opens directly in Roblox.</p>
+            <p className="mt-4 text-xs text-white/40">Roblox blocks most site embeds — this opens directly in Roblox.</p>
           </div>
         </section>
 
         {/* =========================
-            4) BURN + LOCK (AFTER DETAILS)
+            4) BURN + LOCK
            ========================= */}
-        <section className="py-16 w-full">
+        <section id="status" className="py-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">Burned & Locked</h2>
-            <p className="mt-4 text-white/65 leading-[1.8]">Simple stats for easy screenshots.</p>
+            <p className="mt-4 text-white/65 leading-[1.9]">Scarcity is intentional.</p>
 
             <div className="mt-10 grid gap-6 sm:grid-cols-2 text-left">
               {/* 🔥 Burned Card */}
@@ -1215,18 +1245,18 @@ export default function Home() {
                   className="pointer-events-none absolute inset-0"
                   style={{
                     background:
-                      "radial-gradient(circle at 30% 70%, rgba(255,120,0,.45), transparent 55%)," +
-                      "radial-gradient(circle at 70% 70%, rgba(255,0,0,.35), transparent 60%)," +
-                      "radial-gradient(circle at 50% 95%, rgba(255,200,0,.35), transparent 55%)",
-                    filter: "blur(18px) saturate(1.2)",
+                      "radial-gradient(circle at 30% 70%, rgba(255,120,0,.38), transparent 55%)," +
+                      "radial-gradient(circle at 70% 70%, rgba(255,0,0,.28), transparent 60%)," +
+                      "radial-gradient(circle at 50% 95%, rgba(255,200,0,.24), transparent 55%)",
+                    filter: "blur(18px) saturate(1.15)",
                     animation: "flameFlicker 1.7s ease-in-out infinite",
-                    opacity: 0.85,
+                    opacity: 0.78,
                   }}
                 />
                 <div
                   className="pointer-events-none absolute inset-0"
                   style={{
-                    background: "radial-gradient(circle at 50% 85%, rgba(255,160,0,.25), transparent 60%)",
+                    background: "radial-gradient(circle at 50% 85%, rgba(255,160,0,.18), transparent 60%)",
                     filter: "blur(22px)",
                     animation: "flameRise 2.4s ease-in-out infinite",
                     mixBlendMode: "screen",
@@ -1250,18 +1280,18 @@ export default function Home() {
                   className="pointer-events-none absolute inset-0"
                   style={{
                     background:
-                      "radial-gradient(circle at 30% 70%, rgba(0,160,255,.40), transparent 55%)," +
-                      "radial-gradient(circle at 70% 70%, rgba(0,90,255,.30), transparent 60%)," +
-                      "radial-gradient(circle at 50% 95%, rgba(120,220,255,.28), transparent 55%)",
-                    filter: "blur(18px) saturate(1.25)",
+                      "radial-gradient(circle at 30% 70%, rgba(0,160,255,.34), transparent 55%)," +
+                      "radial-gradient(circle at 70% 70%, rgba(0,90,255,.24), transparent 60%)," +
+                      "radial-gradient(circle at 50% 95%, rgba(120,220,255,.20), transparent 55%)",
+                    filter: "blur(18px) saturate(1.2)",
                     animation: "iceFlicker 1.8s ease-in-out infinite",
-                    opacity: 0.85,
+                    opacity: 0.78,
                   }}
                 />
                 <div
                   className="pointer-events-none absolute inset-0"
                   style={{
-                    background: "radial-gradient(circle at 50% 85%, rgba(120,220,255,.22), transparent 60%)",
+                    background: "radial-gradient(circle at 50% 85%, rgba(120,220,255,.18), transparent 60%)",
                     filter: "blur(22px)",
                     animation: "icePulse 2.6s ease-in-out infinite",
                     mixBlendMode: "screen",
@@ -1281,12 +1311,12 @@ export default function Home() {
         </section>
 
         {/* =========================
-            5) ROADMAP (UPDATED)
+            5) ROADMAP
            ========================= */}
-        <section className="py-16 w-full max-w-4xl mx-auto">
+        <section id="roadmap" className="py-20 w-full max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
-            <p className="mt-4 text-white/65 leading-[1.8]">Bond first. Then we climb.</p>
+            <p className="mt-4 text-white/65 leading-[1.9]">Bond first. Then climb.</p>
           </div>
 
           <div className="grid gap-5 text-left">
@@ -1297,29 +1327,23 @@ export default function Home() {
                   key={item.phase + item.title}
                   className={[
                     "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
-                    done ? "opacity-75" : "hover:bg-white/10",
+                    done ? "opacity-80" : "hover:bg-white/10",
                   ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/40" : ""].join(" ")}>
+                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
                       {item.phase}
                     </p>
 
-                    {done && (
-                      <span className="text-xs font-black text-white/60 border border-white/10 bg-white/10 px-3 py-1 rounded-full">
-                        ✅ Completed
-                      </span>
-                    )}
+                    {done && <span className="text-xs font-black text-white/55">Completed</span>}
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-red-500/80" : ""].join(" ")}>
-                      {item.title}
-                    </h3>
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/65 mt-2 leading-[1.85]", done ? "line-through decoration-white/20" : ""].join(" ")}>{item.desc}</p>
+                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>{item.desc}</p>
                 </div>
               );
             })}
@@ -1329,11 +1353,11 @@ export default function Home() {
         {/* =========================
             6) MEME VAULT
            ========================= */}
-        <section className="py-20 w-full">
+        <section className="py-24 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl font-black">$MAD Meme Vault</h2>
-            <p className="mt-4 text-white/65 leading-[1.8]">Swipe the rage. Screenshot the best ones.</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Meme Vault</h2>
+            <p className="mt-4 text-white/65 leading-[1.9]">Archives. Signals. Receipts.</p>
           </div>
 
           {freshMemes.length === 0 ? (
@@ -1344,8 +1368,8 @@ export default function Home() {
 
               <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6">
                 <div className="mb-4 flex items-center justify-between gap-3">
-                  <div className="text-xs uppercase tracking-[0.35em] text-white/50">Swipe →</div>
-                  <div className="text-xs text-white/40">({freshMemes.length} memes)</div>
+                  <div className="text-xs uppercase tracking-[0.35em] text-white/50">Swipe</div>
+                  <div className="text-xs text-white/40">({freshMemes.length} items)</div>
                 </div>
 
                 <div
@@ -1397,11 +1421,11 @@ export default function Home() {
         {/* =========================
             7) SOCIALS
            ========================= */}
-        <section className="pb-20 w-full">
+        <section className="pb-24 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Contact</p>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Connect</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">Socials</h2>
-            <p className="mt-4 text-white/65 leading-[1.8]">Join the chaos. Bring conviction.</p>
+            <p className="mt-4 text-white/65 leading-[1.9]">Join the community. Move with intent.</p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
@@ -1418,11 +1442,13 @@ export default function Home() {
               </a>
             </div>
 
-            <p className="mt-8 text-xs text-white/40">$MAD — Digital emotion. Not financial advice.</p>
+            <p className="mt-8 text-xs text-white/40">$MAD — digital emotion. Not financial advice.</p>
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
+        <footer className="py-10 text-center text-white/35 text-sm">
+          © {new Date().getFullYear()} $MAD. Built by the community.
+        </footer>
       </div>
     </main>
   );
