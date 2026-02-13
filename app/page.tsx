@@ -206,20 +206,20 @@ export default function Home() {
     });
   }, []);
 
-  // ====== Meme Vault ======
+  // ====== Meme Vault (✅ FIX: remove "/public" prefix) ======
   const freshMemes = useMemo(
     () => [
-      { src: "/public/memes/mad-meme-trafficstuck.png", tag: "Traffic Rage" },
-      { src: "/public/memes/mad-meme-wifibuffer.png", tag: "Slow Internet" },
-      { src: "/public/memes/mad-meme-scamcall.png", tag: "Scam Call" },
-      { src: "/public/memes/mad-meme-forgotpassword.png", tag: "Locked Out" },
-      { src: "/public/memes/mad-meme-batterylow.png", tag: "1% Battery" },
-      { src: "/public/memes/mad-meme-groupmessage.png", tag: "Ghosted" },
-      { src: "/public/memes/mad-meme-coffeehot.png", tag: "Coffee Too Hot" },
-      { src: "/public/memes/mad-meme-lasttimebeingfarmed.png", tag: "Farmed Again" },
-      { src: "/public/memes/mad-meme-lipbalm.png", tag: "Lip Balm" },
-      { src: "/public/memes/mad-meme-toiletpaper.png", tag: "Toilet Paper" },
-      { src: "/public/memes/mad-meme-whydidifade.png", tag: "CT Fade" },
+      { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic Rage" },
+      { src: "/memes/mad-meme-wifibuffer.png", tag: "Slow Internet" },
+      { src: "/memes/mad-meme-scamcall.png", tag: "Scam Call" },
+      { src: "/memes/mad-meme-forgotpassword.png", tag: "Locked Out" },
+      { src: "/memes/mad-meme-batterylow.png", tag: "1% Battery" },
+      { src: "/memes/mad-meme-groupmessage.png", tag: "Ghosted" },
+      { src: "/memes/mad-meme-coffeehot.png", tag: "Coffee Too Hot" },
+      { src: "/memes/mad-meme-lasttimebeingfarmed.png", tag: "Farmed Again" },
+      { src: "/memes/mad-meme-lipbalm.png", tag: "Lip Balm" },
+      { src: "/memes/mad-meme-toiletpaper.png", tag: "Toilet Paper" },
+      { src: "/memes/mad-meme-whydidifade.png", tag: "CT Fade" },
     ],
     []
   );
@@ -353,7 +353,8 @@ export default function Home() {
 
   // ====== IMPORTANT FIX: track IDs so transform always works ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
-  const firstAcc = ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+  const firstAcc =
+    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
 
   const [eyeId, setEyeId] = useState(firstEye.id);
   const [accId, setAccId] = useState(firstAcc.id);
@@ -486,10 +487,12 @@ export default function Home() {
       const res = await fetch("/api/confessions", { cache: "no-store" });
       const data = await res.json().catch(() => ({} as any));
       if (!res.ok) throw new Error(data?.error || "Fetch failed");
-      setConfessions(normalizeConfessions(data?.confessions));
+
+      // ✅ support either { confessions } or { items }
+      const list = data?.confessions ?? data?.items ?? [];
+      setConfessions(normalizeConfessions(list));
       setApiOk(true);
     } catch {
-      // If API not ready, keep UI alive (but feed won't be public)
       setApiOk(false);
     }
   };
@@ -535,6 +538,7 @@ export default function Home() {
     }
   };
 
+  // ✅ FIX: correct reaction endpoint + payload shape
   const react = async (id: string, kind: "same" | "lol" | "handshake") => {
     const already = !!reactedMap?.[id]?.[kind];
 
@@ -553,11 +557,18 @@ export default function Home() {
 
     // server best-effort
     try {
-      await fetch("/api/confessions/react", {
-        method: "POST",
+      await fetch("/api/confessions", {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, kind, delta: already ? -1 : 1 }),
+        body: JSON.stringify({
+          id,
+          reaction: kind,
+          delta: already ? -1 : 1,
+        }),
       });
+
+      // optional: instant re-sync so it feels "locked in"
+      fetchConfessions();
     } catch {
       // re-sync on next polling fetch
     }
@@ -804,7 +815,8 @@ export default function Home() {
 
             {!apiOk && (
               <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
-                ⚠️ Confessions API not reachable yet — feed may look empty until you add <span className="font-mono">/api/confessions</span>.
+                ⚠️ Confessions API not reachable yet — feed may look empty until you add{" "}
+                <span className="font-mono">/api/confessions</span>.
               </div>
             )}
           </div>
@@ -1096,9 +1108,7 @@ export default function Home() {
                 </div>
 
                 <div
-                  className={["flex gap-5 overflow-x-auto overflow-y-hidden pb-3", "snap-x snap-mandatory", "scroll-px-4", "[scrollbar-width:thin]"].join(
-                    " "
-                  )}
+                  className={["flex gap-5 overflow-x-auto overflow-y-hidden pb-3", "snap-x snap-mandatory", "scroll-px-4", "[scrollbar-width:thin]"].join(" ")}
                   style={{ WebkitOverflowScrolling: "touch" }}
                 >
                   {freshMemes.map((m, idx) => {
