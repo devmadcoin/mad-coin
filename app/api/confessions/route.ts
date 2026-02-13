@@ -71,7 +71,7 @@ export async function PATCH(req: Request) {
 
   const key = ITEM(id);
 
-  const updatedJson = await kv.eval<string | null>(
+  const updated = await kv.eval<string | null>(
     `
 local k = KEYS[1]
 local reaction = ARGV[1]
@@ -94,8 +94,7 @@ return cjson.encode(data)
     [reaction, String(delta)]
   );
 
-  if (!updatedJson) return Response.json({ error: "not found" }, { status: 404 });
+  if (!updated) return Response.json({ error: "not found" }, { status: 404 });
 
-  const item = JSON.parse(updatedJson) as Confession;
-  return Response.json({ item });
+  return Response.json({ item: JSON.parse(updated) });
 }
