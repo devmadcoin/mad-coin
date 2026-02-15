@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 type Rarity = "common" | "rare" | "legendary";
@@ -24,7 +24,6 @@ type AccessoryItem = {
   label: string;
   rarity: Rarity;
   style: Style;
-  // Helps tall legendaries (halo/horns/aura/jetpack) show inside the circle.
   cssTransform?: string;
   draw?: DrawTransform;
 };
@@ -53,10 +52,7 @@ function buildCandidates(originalPath: string): string[] {
     const p = `${pre}${raw}`.replace(/\/{2,}/g, "/");
     pushUnique(p);
 
-    // If someone uploaded ".png.png"
     if (p.endsWith(".png.png")) pushUnique(p.replace(/\.png\.png$/, ".png"));
-
-    // If someone referenced ".png" but file is actually ".png.png"
     if (p.endsWith(".png")) pushUnique(`${p}.png`);
   }
 
@@ -110,8 +106,10 @@ function cycleFallback(e: React.SyntheticEvent<HTMLImageElement, Event>, fallbac
   const img = e.currentTarget;
   if (!fallbacks?.length) return;
 
-  const current = img.currentSrc || img.src || "";
+  // Some browsers don’t set currentSrc for normal <img>. Prefer src.
+  const current = img.getAttribute("src") || img.currentSrc || "";
 
+  // Reset sequence whenever the src changes.
   if (img.dataset.lastTried !== current) {
     img.dataset.fallbackIndex = "0";
     img.dataset.lastTried = current;
@@ -121,13 +119,13 @@ function cycleFallback(e: React.SyntheticEvent<HTMLImageElement, Event>, fallbac
   if (idx >= fallbacks.length) return;
 
   img.dataset.fallbackIndex = String(idx + 1);
-  img.src = fallbacks[idx];
+  img.setAttribute("src", fallbacks[idx]);
 }
 
 function resetFallbackIndex(e: React.SyntheticEvent<HTMLImageElement, Event>) {
   const img = e.currentTarget;
   img.dataset.fallbackIndex = "0";
-  img.dataset.lastTried = img.currentSrc || img.src || "";
+  img.dataset.lastTried = img.getAttribute("src") || img.currentSrc || "";
 }
 
 // ====== $MAD Confessions types/helpers ======
@@ -164,24 +162,24 @@ export default function Home() {
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
       x: "https://x.com/i/communities/2019256566248312879/",
-      tg: "https://t.me/madcoinofficial001",
+      tg: "https://t.me/madfamtoken", // ✅ FIXED
       game: "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD",
     }),
     [addr]
   );
 
   const [copied, setCopied] = useState(false);
-  const copyCA = useCallback(async () => {
+  const copyCA = async () => {
     try {
       await navigator.clipboard.writeText(addr);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 1200);
+      setTimeout(() => setCopied(false), 1200);
     } catch {
       alert("Could not copy. Try manually selecting.");
     }
-  }, [addr]);
+  };
 
-  // ====== UI buttons (warmer + softer gradients) ======
+  // ====== UI buttons ======
   const btnBase =
     "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-white/15";
   const btnPrimary = [
@@ -213,22 +211,19 @@ export default function Home() {
     });
   }, []);
 
-  // ====== scroll-reactive glow intensity (✅ guards against divide-by-zero) ======
+  // ====== scroll-reactive glow intensity ======
   const [scrollGlow, setScrollGlow] = useState(0);
-
   useEffect(() => {
     let raf = 0;
-
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const y = window.scrollY || 0;
-        const denom = Math.max(1, document.body.scrollHeight - window.innerHeight);
-        const t = Math.min(1, y / denom);
+        const max = Math.max(600, document.body.scrollHeight - window.innerHeight);
+        const t = Math.min(1, y / max);
         setScrollGlow(t);
       });
     };
-
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
@@ -237,7 +232,7 @@ export default function Home() {
     };
   }, []);
 
-  // ====== Meme Vault ======
+  // ====== Meme Vault (✅ keep ROOT paths) ======
   const freshMemes = useMemo(
     () => [
       { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic" },
@@ -285,13 +280,7 @@ export default function Home() {
       makeItem<EyeItem>("c-rare-neon-red", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png", "Cartoon Rare Neon Red", "rare", "cartoon"),
 
       makeItem<EyeItem>("c-leg-fire-red", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png", "Cartoon Legendary Fire (Red)", "legendary", "cartoon"),
-      makeItem<EyeItem>(
-        "c-leg-fruity-orange",
-        "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png",
-        "Cartoon Legendary Fruity (Orange)",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<EyeItem>("c-leg-fruity-orange", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png", "Cartoon Legendary Fruity (Orange)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-hearts-pink", "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png", "Cartoon Legendary Hearts (Pink)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-ice-blue", "/pfp/eyes/cartoon/legendary/cartoon-legendary-ice-blue.png", "Cartoon Legendary Ice (Blue)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-poison-green", "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png", "Cartoon Legendary Poison (Green)", "legendary", "cartoon"),
@@ -327,7 +316,6 @@ export default function Home() {
     });
 
     return [
-      // ===== common =====
       makeItem<AccessoryItem>("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-baseballcap", "/pfp/accessories/cartoon/common/cartoon-common-baseballcap.png", "Baseball Cap", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-beanie", "/pfp/accessories/cartoon/common/cartoon-common-beanie.png", "Beanie", "common", "cartoon"),
@@ -340,7 +328,6 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-common-smallgoldhoopearing", "/pfp/accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png", "Gold Hoop", "common", "cartoon"),
       makeItem<AccessoryItem>("a-c-common-headband", "/pfp/accessories/cartoon/common/cartoon-common-headband.png", "Headband", "common", "cartoon"),
 
-      // ===== rare =====
       makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-cowboyhat", "/pfp/accessories/cartoon/rare/cartoon-rare-cowboyhat.png", "Cowboy Hat", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-energydrink", "/pfp/accessories/cartoon/rare/cartoon-rare-energydrink.png", "Energy Drink", "rare", "cartoon"),
@@ -353,7 +340,6 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-rare-madsword", "/pfp/accessories/cartoon/rare/cartoon-rare-madsword.png", "MAD Sword", "rare", "cartoon"),
       makeItem<AccessoryItem>("a-c-rare-spatula", "/pfp/accessories/cartoon/rare/cartoon-rare-spatula.png", "Spatula", "rare", "cartoon"),
 
-      // ===== legendary =====
       makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon", tall(18, 0.98)),
       makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon", tall(22, 0.98)),
@@ -361,43 +347,15 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
       makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>(
-        "a-c-leg-lightninghorns",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
-        "Lightning Horns",
-        "legendary",
-        "cartoon",
-        tall(24, 0.96)
-      ),
-      makeItem<AccessoryItem>(
-        "a-c-leg-madchaininfinity",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png",
-        "Infinity Chain",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
+      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-leg-rugproofshield",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
-        "Rugproof Shield",
-        "legendary",
-        "cartoon"
-      ),
+      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
-
-      // (These two were in your list; keep them, but they MUST exist in /public or fallbacks will kick in.)
       makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
-      makeItem<AccessoryItem>(
-        "a-c-leg-halomadplush",
-        "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
-        "Pink Halo MAD Plush",
-        "legendary",
-        "cartoon",
-        tall(26, 0.96)
-      ),
+      makeItem<AccessoryItem>("a-c-leg-halomadplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png", "Pink Halo MAD Plush", "legendary", "cartoon", tall(26, 0.96)),
     ];
   }, []);
 
@@ -417,16 +375,23 @@ export default function Home() {
   const [showBase, setShowBase] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  // ====== track IDs so transform always works ======
-  const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
-  const firstAcc =
-    ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
+  // ====== stable initial picks ======
+  const initialEye = useMemo(() => ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon"), [ALL_EYES]);
+  const initialAcc = useMemo(
+    () =>
+      ALL_ACCESSORIES[0] ??
+      makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon"),
+    [ALL_ACCESSORIES]
+  );
 
-  const [eyeId, setEyeId] = useState(firstEye.id);
-  const [accId, setAccId] = useState(firstAcc.id);
+  const [eyeId, setEyeId] = useState(initialEye.id);
+  const [accId, setAccId] = useState(initialAcc.id);
 
-  const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? firstEye, [eyeId, firstEye, ALL_EYES]);
-  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.id === accId) ?? firstAcc, [accId, firstAcc, ALL_ACCESSORIES]);
+  const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? initialEye, [eyeId, initialEye, ALL_EYES]);
+  const selectedAcc = useMemo(
+    () => ALL_ACCESSORIES.find((a) => a.id === accId) ?? initialAcc,
+    [accId, initialAcc, ALL_ACCESSORIES]
+  );
 
   const [eyeSrc, setEyeSrc] = useState(selectedEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye.fallbacks);
@@ -455,11 +420,11 @@ export default function Home() {
   const [revealing, setRevealing] = useState(false);
   const [renderNonce, setRenderNonce] = useState(0);
 
-  const forgeIdentity = useCallback(() => {
+  const forgeIdentity = () => {
     if (!ALL_EYES.length) return;
 
     setRevealing(true);
-    window.setTimeout(() => {
+    setTimeout(() => {
       const pickEye = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
       setEyeId(pickEye.id);
 
@@ -473,7 +438,7 @@ export default function Home() {
       setPowerIndex(1 + Math.floor(Math.random() * 100));
       setRevealing(false);
     }, 550);
-  }, [ALL_EYES, ALL_ACCESSORIES]);
+  };
 
   // ====== Token Stats ======
   const BURNED = 300_000_000;
@@ -481,7 +446,7 @@ export default function Home() {
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
 
-  // ====== $MAD Confessions (PUBLIC via API) ======
+  // ====== $MAD Confessions ======
   const ragePrompts = useMemo(
     () => [
       "What small thing ruined your mood instantly?",
@@ -512,21 +477,22 @@ export default function Home() {
   const [reactedMap, setReactedMap] = useState<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>({});
   const [apiOk, setApiOk] = useState(true);
 
-  const persistReacted = useCallback((next: typeof reactedMap) => {
+  const persistReacted = (next: typeof reactedMap) => {
     setReactedMap(next);
     try {
       localStorage.setItem(LS_REACTED_KEY, JSON.stringify(next));
-    } catch {
-      // ignore
-    }
-  }, []);
+    } catch {}
+  };
 
-  useEffect(() => {
-    const reacted = safeJsonParse<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>(localStorage.getItem(LS_REACTED_KEY), {});
+  const loadReacted = () => {
+    const reacted = safeJsonParse<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>(
+      typeof window !== "undefined" ? localStorage.getItem(LS_REACTED_KEY) : null,
+      {}
+    );
     setReactedMap(reacted || {});
-  }, []);
+  };
 
-  const normalizeConfessions = useCallback((raw: any): Confession[] => {
+  const normalizeConfessions = (raw: any): Confession[] => {
     const list: any[] = Array.isArray(raw) ? raw : [];
     return list
       .filter((c) => c && typeof c.text === "string")
@@ -543,40 +509,37 @@ export default function Home() {
       .filter((c) => c.id.length > 0)
       .sort((a, b) => b.createdAt - a.createdAt)
       .slice(0, 200);
-  }, []);
+  };
 
-  const inFlight = useRef<AbortController | null>(null);
-
-  const fetchConfessions = useCallback(async () => {
+  const fetchConfessions = async () => {
     try {
-      inFlight.current?.abort();
-      const ac = new AbortController();
-      inFlight.current = ac;
-
-      const res = await fetch("/api/confessions", { cache: "no-store", signal: ac.signal });
+      const res = await fetch("/api/confessions", { cache: "no-store" });
       const data = await res.json().catch(() => ({} as any));
       if (!res.ok) throw new Error(data?.error || "Fetch failed");
-
-      // supports either { confessions } or { items }
       const list = data?.confessions ?? data?.items ?? [];
       setConfessions(normalizeConfessions(list));
       setApiOk(true);
-    } catch (e: any) {
-      if (e?.name === "AbortError") return;
+    } catch {
       setApiOk(false);
     }
-  }, [normalizeConfessions]);
+  };
+
+  const pollRef = useRef<number | null>(null);
 
   useEffect(() => {
+    loadReacted();
     fetchConfessions();
-    const t = window.setInterval(fetchConfessions, 8000);
-    return () => {
-      window.clearInterval(t);
-      inFlight.current?.abort();
-    };
-  }, [fetchConfessions]);
 
-  const submitConfession = useCallback(async () => {
+    // ✅ safe polling (no stacking)
+    pollRef.current = window.setInterval(fetchConfessions, 8000);
+    return () => {
+      if (pollRef.current) window.clearInterval(pollRef.current);
+      pollRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const submitConfession = async () => {
     setConfessionErr(null);
     const t = clampText(confessionText, 240);
 
@@ -606,41 +569,36 @@ export default function Home() {
     } finally {
       setConfessionBusy(false);
     }
-  }, [confessionText, normalizeConfessions]);
+  };
 
-  const react = useCallback(
-    async (id: string, kind: "same" | "lol" | "handshake") => {
-      const already = !!reactedMap?.[id]?.[kind];
+  const react = async (id: string, kind: "same" | "lol" | "handshake") => {
+    const already = !!reactedMap?.[id]?.[kind];
 
-      // optimistic UI
-      setConfessions((prev) =>
-        prev.map((c) => {
-          if (c.id !== id) return c;
-          const delta = already ? -1 : 1;
-          const nextCount = Math.max(0, (c.reactions?.[kind] ?? 0) + delta);
-          return { ...c, reactions: { ...c.reactions, [kind]: nextCount } };
-        })
-      );
+    // optimistic UI
+    setConfessions((prev) =>
+      prev.map((c) => {
+        if (c.id !== id) return c;
+        const delta = already ? -1 : 1;
+        const nextCount = Math.max(0, (c.reactions?.[kind] ?? 0) + delta);
+        return { ...c, reactions: { ...c.reactions, [kind]: nextCount } };
+      })
+    );
 
-      const nextReacted = { ...reactedMap, [id]: { ...(reactedMap[id] || {}), [kind]: !already } };
-      persistReacted(nextReacted);
+    const nextReacted = { ...reactedMap, [id]: { ...(reactedMap[id] || {}), [kind]: !already } };
+    persistReacted(nextReacted);
 
-      try {
-        await fetch("/api/confessions", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, reaction: kind, delta: already ? -1 : 1 }),
-        });
-        fetchConfessions();
-      } catch {
-        // re-sync on next poll
-      }
-    },
-    [reactedMap, persistReacted, fetchConfessions]
-  );
+    try {
+      await fetch("/api/confessions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, reaction: kind, delta: already ? -1 : 1 }),
+      });
+      fetchConfessions();
+    } catch {}
+  };
 
-  // ====== Rage Tap Gate (✅ fixed SSR flicker: start as "unknown") ======
-  const [gateUnlocked, setGateUnlocked] = useState<boolean | null>(null);
+  // ====== Rage Tap Gate ======
+  const [gateUnlocked, setGateUnlocked] = useState(true);
   const [gateTaps, setGateTaps] = useState(0);
 
   useEffect(() => {
@@ -655,23 +613,25 @@ export default function Home() {
     }
   }, []);
 
-  const unlockGate = useCallback(() => {
+  const unlockGate = () => {
     setGateUnlocked(true);
-    setGateTaps(10);
     try {
       localStorage.setItem(LS_SITE_UNLOCK_KEY, "1");
-    } catch {
-      // ignore
-    }
-  }, []);
+    } catch {}
+  };
 
-  const tapGate = useCallback(() => {
+  const tapGate = () => {
     setGateTaps((prev) => {
       const next = Math.min(10, prev + 1);
       if (next >= 10) unlockGate();
       return next;
     });
-  }, [unlockGate]);
+  };
+
+  useEffect(() => {
+    // ✅ ensure taps show full when unlocked, without recursion
+    if (gateUnlocked) setGateTaps(10);
+  }, [gateUnlocked]);
 
   const gateLine = useMemo(() => {
     if (gateTaps <= 0) return "Tap to enter. Emotion requires commitment.";
@@ -686,19 +646,16 @@ export default function Home() {
     return `${base}?embed=1&theme=dark&trades=0&info=0`;
   }, [addr]);
 
-  // ====== quick section anchors (smooth) ======
-  const scrollToId = useCallback((id: string) => {
+  const scrollToId = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
+  };
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
-      {/* ====== OPTIONAL RAGE TAP GATE (SKIPPABLE) ======
-          gateUnlocked === null means "loading from localStorage" (don’t render either state yet)
-      */}
-      {gateUnlocked === false && (
+      {/* ====== OPTIONAL RAGE TAP GATE (SKIPPABLE) ====== */}
+      {!gateUnlocked && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
 
@@ -921,9 +878,7 @@ export default function Home() {
 
       {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
-        {/* =========================
-            0) HERO
-           ========================= */}
+        {/* HERO */}
         <section className="pt-16 pb-20 w-full">
           <div className="mx-auto max-w-5xl">
             <div className="flex items-center justify-between gap-4">
@@ -976,7 +931,9 @@ export default function Home() {
               <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
                 <div className="text-xs uppercase tracking-[0.35em] text-white/50">Contract</div>
                 <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                  <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">{addr}</div>
+                  <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
+                    {addr}
+                  </div>
                   <button onClick={copyCA} className={btnGhost}>
                     {copied ? "Copied" : "Copy"}
                   </button>
@@ -988,9 +945,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* =========================
-            0.5) MANIFESTO
-           ========================= */}
+        {/* MANIFESTO */}
         <section className="pb-20 w-full">
           <div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 sm:p-10 text-center">
             <div className="text-xs uppercase tracking-[0.35em] text-white/55">Statement</div>
@@ -1014,9 +969,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* =========================
-            1) PFP GENERATOR
-           ========================= */}
+        {/* PFP GENERATOR */}
         <section id="forge" className="py-20 w-full max-w-xl mx-auto text-center">
           <div className="mb-10 flex items-center justify-center gap-3">
             <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
@@ -1095,13 +1048,12 @@ export default function Home() {
           </div>
 
           <p className="mt-5 text-xs text-white/40 leading-[1.8]">
-            Eyes: {ALL_EYES.length}. Accessories: {ALL_ACCESSORIES.length}. Legendary: {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
+            Eyes: {ALL_EYES.length}. Accessories: {ALL_ACCESSORIES.length}. Legendary:{" "}
+            {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
           </p>
         </section>
 
-        {/* =========================
-            2) $MAD CONFESSIONS
-           ========================= */}
+        {/* CONFESSIONS */}
         <section id="confessions" className="py-20 w-full max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Community</p>
@@ -1110,7 +1062,8 @@ export default function Home() {
 
             {!apiOk && (
               <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
-                Confessions API not reachable yet — feed may look empty until you add <span className="font-mono">/api/confessions</span>.
+                Confessions API not reachable yet — feed may look empty until you add{" "}
+                <span className="font-mono">/api/confessions</span>.
               </div>
             )}
           </div>
@@ -1205,9 +1158,7 @@ export default function Home() {
           <p className="mt-6 text-center text-xs text-white/35">Public feed. Anonymous voice.</p>
         </section>
 
-        {/* =========================
-            2.5) LIVE DEXSCREENER WIDGET
-           ========================= */}
+        {/* DEXSCREENER */}
         <section className="pb-20 w-full max-w-5xl mx-auto">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
@@ -1242,9 +1193,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* =========================
-            3) DETAILS
-           ========================= */}
+        {/* DETAILS */}
         <section className="py-20 flex flex-col items-center text-center">
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
             <Image src="/mad.png" alt="$MAD logo" width={120} height={120} priority />
@@ -1274,9 +1223,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* =========================
-            3.5) ROBLOX GAME
-           ========================= */}
+        {/* ROBLOX */}
         <section className="pb-20 w-full max-w-4xl mx-auto">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center overflow-hidden">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Universe</p>
@@ -1298,9 +1245,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* =========================
-            4) BURN + LOCK
-           ========================= */}
+        {/* STATUS */}
         <section id="status" className="py-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
@@ -1379,9 +1324,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* =========================
-            5) ROADMAP
-           ========================= */}
+        {/* ROADMAP */}
         <section id="roadmap" className="py-20 w-full max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
@@ -1394,33 +1337,35 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={[
-                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
-                    done ? "opacity-80" : "hover:bg-white/10",
-                  ].join(" ")}
+                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(
+                    " "
+                  )}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
                       {item.phase}
                     </p>
+
                     {done && <span className="text-xs font-black text-white/55">Completed</span>}
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>
+                      {item.title}
+                    </h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>{item.desc}</p>
+                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>
+                    {item.desc}
+                  </p>
                 </div>
               );
             })}
           </div>
         </section>
 
-        {/* =========================
-            6) MEME VAULT
-           ========================= */}
+        {/* MEME VAULT */}
         <section className="py-24 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
@@ -1491,9 +1436,7 @@ export default function Home() {
           )}
         </section>
 
-        {/* =========================
-            7) SOCIALS
-           ========================= */}
+        {/* SOCIALS */}
         <section className="pb-24 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Connect</p>
