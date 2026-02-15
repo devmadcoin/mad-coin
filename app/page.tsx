@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import Image from "next/image";
 
 type Rarity = "common" | "rare" | "legendary";
@@ -171,15 +171,15 @@ export default function Home() {
   );
 
   const [copied, setCopied] = useState(false);
-  const copyCA = async () => {
+  const copyCA = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(addr);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1200);
+      window.setTimeout(() => setCopied(false), 1200);
     } catch {
       alert("Could not copy. Try manually selecting.");
     }
-  };
+  }, [addr]);
 
   // ====== UI buttons (warmer + softer gradients) ======
   const btnBase =
@@ -213,7 +213,7 @@ export default function Home() {
     });
   }, []);
 
-  // ====== NEW: scroll-reactive glow intensity ======
+  // ====== scroll-reactive glow intensity (✅ guards against divide-by-zero) ======
   const [scrollGlow, setScrollGlow] = useState(0);
 
   useEffect(() => {
@@ -223,8 +223,8 @@ export default function Home() {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const y = window.scrollY || 0;
-        const max = Math.max(600, document.body.scrollHeight - window.innerHeight);
-        const t = Math.min(1, y / max);
+        const denom = Math.max(1, document.body.scrollHeight - window.innerHeight);
+        const t = Math.min(1, y / denom);
         setScrollGlow(t);
       });
     };
@@ -237,7 +237,7 @@ export default function Home() {
     };
   }, []);
 
-  // ====== Meme Vault (✅ FIX: remove "/public" prefix) ======
+  // ====== Meme Vault ======
   const freshMemes = useMemo(
     () => [
       { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic" },
@@ -255,7 +255,7 @@ export default function Home() {
     []
   );
 
-  // ====== Roadmap (updated) ======
+  // ====== Roadmap ======
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
@@ -285,7 +285,13 @@ export default function Home() {
       makeItem<EyeItem>("c-rare-neon-red", "/pfp/eyes/cartoon/rare/cartoon-rare-neon-red.png", "Cartoon Rare Neon Red", "rare", "cartoon"),
 
       makeItem<EyeItem>("c-leg-fire-red", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fire-red.png", "Cartoon Legendary Fire (Red)", "legendary", "cartoon"),
-      makeItem<EyeItem>("c-leg-fruity-orange", "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png", "Cartoon Legendary Fruity (Orange)", "legendary", "cartoon"),
+      makeItem<EyeItem>(
+        "c-leg-fruity-orange",
+        "/pfp/eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png",
+        "Cartoon Legendary Fruity (Orange)",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<EyeItem>("c-leg-hearts-pink", "/pfp/eyes/cartoon/legendary/cartoon-legendary-hearts-pink.png", "Cartoon Legendary Hearts (Pink)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-ice-blue", "/pfp/eyes/cartoon/legendary/cartoon-legendary-ice-blue.png", "Cartoon Legendary Ice (Blue)", "legendary", "cartoon"),
       makeItem<EyeItem>("c-leg-poison-green", "/pfp/eyes/cartoon/legendary/cartoon-legendary-poison-green.png", "Cartoon Legendary Poison (Green)", "legendary", "cartoon"),
@@ -355,15 +361,43 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
       makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
-      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-lightninghorns",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
+        "Lightning Horns",
+        "legendary",
+        "cartoon",
+        tall(24, 0.96)
+      ),
+      makeItem<AccessoryItem>(
+        "a-c-leg-madchaininfinity",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png",
+        "Infinity Chain",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-rugproofshield",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
+        "Rugproof Shield",
+        "legendary",
+        "cartoon"
+      ),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
+
+      // (These two were in your list; keep them, but they MUST exist in /public or fallbacks will kick in.)
       makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-halomadplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png", "Pink Halo MAD Plush", "legendary", "cartoon", tall(26, 0.96)),
+      makeItem<AccessoryItem>(
+        "a-c-leg-halomadplush",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
+        "Pink Halo MAD Plush",
+        "legendary",
+        "cartoon",
+        tall(26, 0.96)
+      ),
     ];
   }, []);
 
@@ -383,7 +417,7 @@ export default function Home() {
   const [showBase, setShowBase] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  // ====== IMPORTANT FIX: track IDs so transform always works ======
+  // ====== track IDs so transform always works ======
   const firstEye = ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon");
   const firstAcc =
     ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon");
@@ -392,10 +426,7 @@ export default function Home() {
   const [accId, setAccId] = useState(firstAcc.id);
 
   const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? firstEye, [eyeId, firstEye, ALL_EYES]);
-  const selectedAcc = useMemo(
-    () => ALL_ACCESSORIES.find((a) => a.id === accId) ?? firstAcc,
-    [accId, firstAcc, ALL_ACCESSORIES]
-  );
+  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.id === accId) ?? firstAcc, [accId, firstAcc, ALL_ACCESSORIES]);
 
   const [eyeSrc, setEyeSrc] = useState(selectedEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye.fallbacks);
@@ -424,11 +455,11 @@ export default function Home() {
   const [revealing, setRevealing] = useState(false);
   const [renderNonce, setRenderNonce] = useState(0);
 
-  const forgeIdentity = () => {
+  const forgeIdentity = useCallback(() => {
     if (!ALL_EYES.length) return;
 
     setRevealing(true);
-    setTimeout(() => {
+    window.setTimeout(() => {
       const pickEye = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
       setEyeId(pickEye.id);
 
@@ -442,9 +473,9 @@ export default function Home() {
       setPowerIndex(1 + Math.floor(Math.random() * 100));
       setRevealing(false);
     }, 550);
-  };
+  }, [ALL_EYES, ALL_ACCESSORIES]);
 
-  // ====== Token Stats (updated) ======
+  // ====== Token Stats ======
   const BURNED = 300_000_000;
   const BURN_RATE = 30;
   const LOCKED = 111_000_000;
@@ -481,24 +512,21 @@ export default function Home() {
   const [reactedMap, setReactedMap] = useState<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>({});
   const [apiOk, setApiOk] = useState(true);
 
-  const persistReacted = (next: typeof reactedMap) => {
+  const persistReacted = useCallback((next: typeof reactedMap) => {
     setReactedMap(next);
     try {
-      if (typeof window !== "undefined") localStorage.setItem(LS_REACTED_KEY, JSON.stringify(next));
+      localStorage.setItem(LS_REACTED_KEY, JSON.stringify(next));
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  const loadReacted = () => {
-    const reacted = safeJsonParse<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>(
-      typeof window !== "undefined" ? localStorage.getItem(LS_REACTED_KEY) : null,
-      {}
-    );
+  useEffect(() => {
+    const reacted = safeJsonParse<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>(localStorage.getItem(LS_REACTED_KEY), {});
     setReactedMap(reacted || {});
-  };
+  }, []);
 
-  const normalizeConfessions = (raw: any): Confession[] => {
+  const normalizeConfessions = useCallback((raw: any): Confession[] => {
     const list: any[] = Array.isArray(raw) ? raw : [];
     return list
       .filter((c) => c && typeof c.text === "string")
@@ -515,33 +543,40 @@ export default function Home() {
       .filter((c) => c.id.length > 0)
       .sort((a, b) => b.createdAt - a.createdAt)
       .slice(0, 200);
-  };
+  }, []);
 
-  const fetchConfessions = async () => {
+  const inFlight = useRef<AbortController | null>(null);
+
+  const fetchConfessions = useCallback(async () => {
     try {
-      const res = await fetch("/api/confessions", { cache: "no-store" });
+      inFlight.current?.abort();
+      const ac = new AbortController();
+      inFlight.current = ac;
+
+      const res = await fetch("/api/confessions", { cache: "no-store", signal: ac.signal });
       const data = await res.json().catch(() => ({} as any));
       if (!res.ok) throw new Error(data?.error || "Fetch failed");
 
-      // ✅ support either { confessions } or { items }
+      // supports either { confessions } or { items }
       const list = data?.confessions ?? data?.items ?? [];
       setConfessions(normalizeConfessions(list));
       setApiOk(true);
-    } catch {
+    } catch (e: any) {
+      if (e?.name === "AbortError") return;
       setApiOk(false);
     }
-  };
+  }, [normalizeConfessions]);
 
   useEffect(() => {
-    loadReacted();
     fetchConfessions();
+    const t = window.setInterval(fetchConfessions, 8000);
+    return () => {
+      window.clearInterval(t);
+      inFlight.current?.abort();
+    };
+  }, [fetchConfessions]);
 
-    const t = setInterval(fetchConfessions, 8000);
-    return () => clearInterval(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const submitConfession = async () => {
+  const submitConfession = useCallback(async () => {
     setConfessionErr(null);
     const t = clampText(confessionText, 240);
 
@@ -571,51 +606,46 @@ export default function Home() {
     } finally {
       setConfessionBusy(false);
     }
-  };
+  }, [confessionText, normalizeConfessions]);
 
-  // ✅ FIX: correct reaction endpoint + payload shape
-  const react = async (id: string, kind: "same" | "lol" | "handshake") => {
-    const already = !!reactedMap?.[id]?.[kind];
+  const react = useCallback(
+    async (id: string, kind: "same" | "lol" | "handshake") => {
+      const already = !!reactedMap?.[id]?.[kind];
 
-    // optimistic UI
-    setConfessions((prev) =>
-      prev.map((c) => {
-        if (c.id !== id) return c;
-        const delta = already ? -1 : 1;
-        const nextCount = Math.max(0, (c.reactions?.[kind] ?? 0) + delta);
-        return { ...c, reactions: { ...c.reactions, [kind]: nextCount } };
-      })
-    );
+      // optimistic UI
+      setConfessions((prev) =>
+        prev.map((c) => {
+          if (c.id !== id) return c;
+          const delta = already ? -1 : 1;
+          const nextCount = Math.max(0, (c.reactions?.[kind] ?? 0) + delta);
+          return { ...c, reactions: { ...c.reactions, [kind]: nextCount } };
+        })
+      );
 
-    const nextReacted = { ...reactedMap, [id]: { ...(reactedMap[id] || {}), [kind]: !already } };
-    persistReacted(nextReacted);
+      const nextReacted = { ...reactedMap, [id]: { ...(reactedMap[id] || {}), [kind]: !already } };
+      persistReacted(nextReacted);
 
-    // server best-effort
-    try {
-      await fetch("/api/confessions", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id,
-          reaction: kind,
-          delta: already ? -1 : 1,
-        }),
-      });
+      try {
+        await fetch("/api/confessions", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, reaction: kind, delta: already ? -1 : 1 }),
+        });
+        fetchConfessions();
+      } catch {
+        // re-sync on next poll
+      }
+    },
+    [reactedMap, persistReacted, fetchConfessions]
+  );
 
-      // optional: instant re-sync so it feels "locked in"
-      fetchConfessions();
-    } catch {
-      // re-sync on next polling fetch
-    }
-  };
-
-  // ====== Rage Tap Gate (optional / skippable) ======
-  const [gateUnlocked, setGateUnlocked] = useState(true); // avoid SSR flicker
+  // ====== Rage Tap Gate (✅ fixed SSR flicker: start as "unknown") ======
+  const [gateUnlocked, setGateUnlocked] = useState<boolean | null>(null);
   const [gateTaps, setGateTaps] = useState(0);
 
   useEffect(() => {
     try {
-      const saved = typeof window !== "undefined" ? localStorage.getItem(LS_SITE_UNLOCK_KEY) : null;
+      const saved = localStorage.getItem(LS_SITE_UNLOCK_KEY);
       const isUnlocked = saved === "1";
       setGateUnlocked(isUnlocked);
       setGateTaps(0);
@@ -625,7 +655,7 @@ export default function Home() {
     }
   }, []);
 
-  const unlockGate = () => {
+  const unlockGate = useCallback(() => {
     setGateUnlocked(true);
     setGateTaps(10);
     try {
@@ -633,15 +663,15 @@ export default function Home() {
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  const tapGate = () => {
+  const tapGate = useCallback(() => {
     setGateTaps((prev) => {
       const next = Math.min(10, prev + 1);
       if (next >= 10) unlockGate();
       return next;
     });
-  };
+  }, [unlockGate]);
 
   const gateLine = useMemo(() => {
     if (gateTaps <= 0) return "Tap to enter. Emotion requires commitment.";
@@ -657,16 +687,18 @@ export default function Home() {
   }, [addr]);
 
   // ====== quick section anchors (smooth) ======
-  const scrollToId = (id: string) => {
-    const el = typeof document !== "undefined" ? document.getElementById(id) : null;
+  const scrollToId = useCallback((id: string) => {
+    const el = document.getElementById(id);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  }, []);
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
-      {/* ====== OPTIONAL RAGE TAP GATE (SKIPPABLE) ====== */}
-      {!gateUnlocked && (
+      {/* ====== OPTIONAL RAGE TAP GATE (SKIPPABLE) ======
+          gateUnlocked === null means "loading from localStorage" (don’t render either state yet)
+      */}
+      {gateUnlocked === false && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
 
@@ -844,9 +876,8 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/45" />
       </div>
 
-      {/* ✅ SCROLL-REACTIVE SIDE GLOWS (premium subtle) */}
+      {/* ✅ SCROLL-REACTIVE SIDE GLOWS */}
       <div className="pointer-events-none fixed inset-0" style={{ zIndex: -15 }}>
-        {/* Left glow */}
         <div
           className="absolute left-0 top-0 h-full w-[22vw] max-w-[360px] blur-3xl"
           style={{
@@ -856,8 +887,6 @@ export default function Home() {
               "radial-gradient(circle at 10% 70%, rgba(255,40,40,0.35), transparent 60%)",
           }}
         />
-
-        {/* Right glow */}
         <div
           className="absolute right-0 top-0 h-full w-[22vw] max-w-[360px] blur-3xl"
           style={{
@@ -867,12 +896,7 @@ export default function Home() {
               "radial-gradient(circle at 90% 70%, rgba(255,40,40,0.35), transparent 60%)",
           }}
         />
-
-        {/* Edge vignette */}
-        <div
-          className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35"
-          style={{ opacity: 0.35 }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" style={{ opacity: 0.35 }} />
       </div>
 
       {/* 😡 FLOATING BACKGROUND */}
@@ -898,7 +922,7 @@ export default function Home() {
       {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
         {/* =========================
-            0) HERO (TYPOGRAPHY FIRST)
+            0) HERO
            ========================= */}
         <section className="pt-16 pb-20 w-full">
           <div className="mx-auto max-w-5xl">
@@ -927,10 +951,7 @@ export default function Home() {
             </div>
 
             <div className="mt-12">
-              {/* ✅ CHANGED HERO TITLE */}
-              <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">
-                Welcome To $MAD
-              </h1>
+              <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">Welcome To $MAD</h1>
 
               <p className="mt-5 text-xl sm:text-2xl text-white/75 leading-[1.7] max-w-2xl">
                 Emotion evolves.
@@ -955,9 +976,7 @@ export default function Home() {
               <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
                 <div className="text-xs uppercase tracking-[0.35em] text-white/50">Contract</div>
                 <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                  <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
-                    {addr}
-                  </div>
+                  <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">{addr}</div>
                   <button onClick={copyCA} className={btnGhost}>
                     {copied ? "Copied" : "Copy"}
                   </button>
@@ -970,7 +989,7 @@ export default function Home() {
         </section>
 
         {/* =========================
-            0.5) MANIFESTO (QUIET REBELLION)
+            0.5) MANIFESTO
            ========================= */}
         <section className="pb-20 w-full">
           <div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 sm:p-10 text-center">
@@ -1076,8 +1095,7 @@ export default function Home() {
           </div>
 
           <p className="mt-5 text-xs text-white/40 leading-[1.8]">
-            Eyes: {ALL_EYES.length}. Accessories: {ALL_ACCESSORIES.length}. Legendary:{" "}
-            {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
+            Eyes: {ALL_EYES.length}. Accessories: {ALL_ACCESSORIES.length}. Legendary: {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
           </p>
         </section>
 
@@ -1092,20 +1110,17 @@ export default function Home() {
 
             {!apiOk && (
               <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
-                Confessions API not reachable yet — feed may look empty until you add{" "}
-                <span className="font-mono">/api/confessions</span>.
+                Confessions API not reachable yet — feed may look empty until you add <span className="font-mono">/api/confessions</span>.
               </div>
             )}
           </div>
 
-          {/* daily prompt */}
           <div className="mb-7 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
             <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s prompt</div>
             <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
             <div className="mt-2 text-xs text-white/45">Anonymous. Public. Real.</div>
           </div>
 
-          {/* input */}
           <div className="rounded-3xl border border-white/10 bg-black/25 p-5 sm:p-7">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
@@ -1132,7 +1147,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* feed */}
           <div className="mt-9 grid gap-4">
             {confessions.length === 0 ? (
               <div className="text-center text-white/55 py-10">No confessions yet.</div>
@@ -1192,7 +1206,7 @@ export default function Home() {
         </section>
 
         {/* =========================
-            2.5) LIVE DEXSCREENER WIDGET (RIGHT UNDER CONFESSIONS)
+            2.5) LIVE DEXSCREENER WIDGET
            ========================= */}
         <section className="pb-20 w-full max-w-5xl mx-auto">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
@@ -1229,7 +1243,7 @@ export default function Home() {
         </section>
 
         {/* =========================
-            3) DETAILS (AFTER DEX WIDGET)
+            3) DETAILS
            ========================= */}
         <section className="py-20 flex flex-col items-center text-center">
           <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
@@ -1261,7 +1275,7 @@ export default function Home() {
         </section>
 
         {/* =========================
-            3.5) ROBLOX GAME (BETA)
+            3.5) ROBLOX GAME
            ========================= */}
         <section className="pb-20 w-full max-w-4xl mx-auto">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center overflow-hidden">
@@ -1294,7 +1308,6 @@ export default function Home() {
             <p className="mt-4 text-white/65 leading-[1.9]">Scarcity is intentional.</p>
 
             <div className="mt-10 grid gap-6 sm:grid-cols-2 text-left">
-              {/* 🔥 Burned Card */}
               <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
                 <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">🔥</div>
 
@@ -1329,7 +1342,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* 🔒 Locked Card */}
               <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
                 <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">🔒</div>
 
@@ -1388,38 +1400,18 @@ export default function Home() {
                   ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p
-                      className={[
-                        "text-xs uppercase tracking-[0.35em] text-white/50",
-                        done ? "line-through decoration-white/30" : "",
-                      ].join(" ")}
-                    >
+                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
                       {item.phase}
                     </p>
-
                     {done && <span className="text-xs font-black text-white/55">Completed</span>}
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3
-                      className={[
-                        "text-2xl sm:text-3xl font-black",
-                        done ? "line-through decoration-white/25" : "",
-                      ].join(" ")}
-                    >
-                      {item.title}
-                    </h3>
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p
-                    className={[
-                      "text-white/65 mt-2 leading-[1.95]",
-                      done ? "line-through decoration-white/15" : "",
-                    ].join(" ")}
-                  >
-                    {item.desc}
-                  </p>
+                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>{item.desc}</p>
                 </div>
               );
             })}
