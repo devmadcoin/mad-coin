@@ -441,8 +441,8 @@ export default function Home() {
   };
 
   // ====== Token Stats ======
-  const BURNED = 300_000_000;
-  const BURN_RATE = 30;
+  const BURNED = 350_000_000;
+  const BURN_RATE = 35;
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
 
