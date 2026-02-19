@@ -254,9 +254,21 @@ export default function Home() {
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
-      { phase: "Phase 1.1", title: "300M Burn", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
-      // ✅ ADDED
-      { phase: "Phase 1.2", title: "350M Burn", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
+
+      // ✅ UPDATED: add % after burn amounts
+      { phase: "Phase 1.1", title: "300M Burn (30%)", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
+
+      // ✅ UPDATED: add % after burn amounts
+      { phase: "Phase 1.2", title: "350M Burn (35%)", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
+
+      // ✅ ADDED: Phase 1.3 not completed
+      {
+        phase: "Phase 1.3",
+        title: "40% Supply Burned",
+        desc: "Target milestone — 40% of total supply burned.",
+        done: false,
+      },
+
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
       { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive." },
@@ -378,7 +390,10 @@ export default function Home() {
   const [showAcc, setShowAcc] = useState(true);
 
   // ====== stable initial picks ======
-  const initialEye = useMemo(() => ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon"), [ALL_EYES]);
+  const initialEye = useMemo(
+    () => ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon"),
+    [ALL_EYES]
+  );
   const initialAcc = useMemo(
     () =>
       ALL_ACCESSORIES[0] ??
@@ -1344,11 +1359,17 @@ export default function Home() {
                   )}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
+                    <p
+                      className={[
+                        "text-xs uppercase tracking-[0.35em] text-white/50",
+                        done ? "line-through decoration-white/30" : "",
+                      ].join(" ")}
+                    >
                       {item.phase}
                     </p>
 
-                    {done && <span className="text-xs font-black text-white/55">Completed</span>}
+                    {/* ✅ show label for both states */}
+                    <span className="text-xs font-black text-white/55">{done ? "Completed" : "Not Completed"}</span>
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
@@ -1469,4 +1490,3 @@ export default function Home() {
     </main>
   );
 }
-
