@@ -162,7 +162,7 @@ export default function Home() {
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
       x: "https://x.com/i/communities/2019256566248312879/",
-      tg: "https://t.me/madfamtoken", // ✅ FIXED
+      tg: "https://t.me/madtokenfam", // ✅ UPDATED
       game: "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD",
     }),
     [addr]
@@ -255,6 +255,8 @@ export default function Home() {
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
       { phase: "Phase 1.1", title: "300M Burn", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
+      // ✅ ADDED
+      { phase: "Phase 1.2", title: "350M Burn", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
       { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive." },
@@ -1467,3 +1469,4 @@ export default function Home() {
     </main>
   );
 }
+
