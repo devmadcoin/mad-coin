@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -33,7 +33,7 @@ type AccessoryItem = {
   draw?: DrawTransform;
 };
 
-// ====== $MAD Confessions types/helpers ======
+// ====== Confessions types/helpers ======
 type Confession = {
   id: string;
   text: string;
@@ -157,9 +157,9 @@ function clampText(s: string, max = 240) {
 // =====================
 // Shared constants
 // =====================
-const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
+export const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
-const links = {
+export const links = {
   buy: `https://jup.ag/swap/SOL-${addr}`,
   chart: `https://dexscreener.com/solana/${addr}`,
   x: "https://x.com/i/communities/2019256566248312879/",
@@ -168,16 +168,15 @@ const links = {
 };
 
 // Token Stats
-const BURNED = 350_000_000;
-const BURN_RATE = 35;
-const LOCKED = 111_000_000;
-const LOCK_UNTIL = "6/1/2026";
+export const BURNED = 350_000_000;
+export const BURN_RATE = 35;
+export const LOCKED = 111_000_000;
+export const LOCK_UNTIL = "6/1/2026";
 
 // =====================
 // Shared Shell (Nav + BG + Gate)
 // =====================
-function MadShell({ children }: { children: React.ReactNode }) {
-  // Rage Tap Gate
+export function MadShell({ children }: { children: React.ReactNode }) {
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [gateTaps, setGateTaps] = useState(0);
 
@@ -217,7 +216,6 @@ function MadShell({ children }: { children: React.ReactNode }) {
     return "Unlocked.";
   }, [gateTaps]);
 
-  // Background
   const bg = useMemo(() => {
     const c = buildCandidates("/pfp/bg/bg-redclouds.png");
     return { primary: c[0], fallbacks: c.slice(1) };
@@ -245,7 +243,6 @@ function MadShell({ children }: { children: React.ReactNode }) {
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
-      {/* Gate */}
       {!gateUnlocked && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
@@ -301,32 +298,7 @@ function MadShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* Global styles */}
       <style jsx global>{`
-        @keyframes flameFlicker {
-          0% { transform: translate3d(-6%, 2%, 0) scale(1); opacity: 0.6; }
-          25% { transform: translate3d(4%, -2%, 0) scale(1.03); opacity: 0.72; }
-          50% { transform: translate3d(-2%, -6%, 0) scale(1.06); opacity: 0.66; }
-          75% { transform: translate3d(6%, 1%, 0) scale(1.02); opacity: 0.78; }
-          100% { transform: translate3d(-6%, 2%, 0) scale(1); opacity: 0.6; }
-        }
-        @keyframes flameRise {
-          0% { transform: translate3d(0, 18%, 0) scale(1); opacity: 0.28; }
-          50% { transform: translate3d(0, -6%, 0) scale(1.05); opacity: 0.45; }
-          100% { transform: translate3d(0, 18%, 0) scale(1); opacity: 0.28; }
-        }
-        @keyframes iceFlicker {
-          0% { transform: translate3d(-5%, 2%, 0) scale(1); opacity: 0.58; }
-          25% { transform: translate3d(4%, -2%, 0) scale(1.03); opacity: 0.72; }
-          50% { transform: translate3d(-2%, -5%, 0) scale(1.06); opacity: 0.64; }
-          75% { transform: translate3d(6%, 1%, 0) scale(1.02); opacity: 0.78; }
-          100% { transform: translate3d(-5%, 2%, 0) scale(1); opacity: 0.58; }
-        }
-        @keyframes icePulse {
-          0% { transform: translate3d(0, 14%, 0) scale(1); opacity: 0.26; }
-          50% { transform: translate3d(0, -6%, 0) scale(1.06); opacity: 0.46; }
-          100% { transform: translate3d(0, 14%, 0) scale(1); opacity: 0.26; }
-        }
         @keyframes forgePulse {
           0% { transform: scale(1); filter: saturate(1); }
           50% { transform: scale(1.02); filter: saturate(1.2); }
@@ -382,11 +354,8 @@ function MadShell({ children }: { children: React.ReactNode }) {
             <NavPill href="/">Home</NavPill>
             <NavPill href="/forge">Forge</NavPill>
             <NavPill href="/confessions">Confessions</NavPill>
-            <NavPill href="/chart">Chart</NavPill>
-            <NavPill href="/status">Status</NavPill>
             <NavPill href="/roadmap">Roadmap</NavPill>
             <NavPill href="/memes">Memes</NavPill>
-            <NavPill href="/socials">Socials</NavPill>
           </div>
         </div>
       </div>
@@ -408,14 +377,7 @@ function NavPill({ href, children }: { href: string; children: React.ReactNode }
 }
 
 // =====================
-// ✅ DEFAULT EXPORT (THIS FIXES YOUR VERCEL BUILD ERROR)
-// =====================
-export default function Page() {
-  return <MadHomePage />;
-}
-
-// =====================
-// Pages
+// Home Page (now includes Chart + Status + Socials)
 // =====================
 export function MadHomePage() {
   const [copied, setCopied] = useState(false);
@@ -439,11 +401,19 @@ export function MadHomePage() {
     "shadow-[0_18px_70px_rgba(255,120,80,0.18)]",
   ].join(" ");
   const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
+  const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
+  const btnBlue = `${btnBase} bg-blue-500/90 hover:bg-blue-600 text-white`;
+
+  const dexscreenerEmbedSrc = useMemo(() => {
+    const base = `https://dexscreener.com/solana/${addr}`;
+    return `${base}?embed=1&theme=dark&trades=0&info=0`;
+  }, []);
 
   return (
     <MadShell>
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
-        <section className="pt-16 pb-20 w-full">
+        {/* HERO */}
+        <section className="pt-16 pb-10 w-full">
           <div className="mx-auto max-w-5xl">
             <div className="flex items-center gap-3">
               <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
@@ -455,7 +425,7 @@ export function MadHomePage() {
               </div>
             </div>
 
-            <div className="mt-12">
+            <div className="mt-10">
               <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">Welcome To $MAD</h1>
 
               <p className="mt-5 text-xl sm:text-2xl text-white/75 leading-[1.7] max-w-2xl">
@@ -466,7 +436,7 @@ export function MadHomePage() {
                 Refined through discipline.
               </p>
 
-              <div className="mt-9 flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link className={btnPrimary} href="/forge">
                   Forge Identity
                 </Link>
@@ -478,7 +448,8 @@ export function MadHomePage() {
                 </a>
               </div>
 
-              <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
+              {/* Contract */}
+              <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
                 <div className="text-xs uppercase tracking-[0.35em] text-white/50">Contract</div>
                 <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                   <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
@@ -490,7 +461,62 @@ export function MadHomePage() {
                 </div>
               </div>
 
-              <p className="mt-6 text-xs text-white/40 leading-[1.8]">Not financial advice. Culture experiment. Wearable energy.</p>
+              {/* Socials on home */}
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
+                  Join X Community
+                </a>
+                <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
+                  Join Telegram
+                </a>
+                <a href={links.game} target="_blank" rel="noreferrer" className={btnGhost}>
+                  Play Roblox
+                </a>
+              </div>
+
+              <p className="mt-5 text-xs text-white/40 leading-[1.8]">Not financial advice. Culture experiment. Wearable energy.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* STATUS */}
+        <section className="pb-10">
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
+              <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
+              <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
+              <p className="mt-2 text-white/70">
+                Burn rate: <span className="font-black text-white tabular-nums">{BURN_RATE}%</span>
+              </p>
+            </div>
+
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
+              <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
+              <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
+              <p className="mt-2 text-white/70">
+                Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* CHART */}
+        <section className="pb-20">
+          <div className="flex items-end justify-between gap-3">
+            <h2 className="text-3xl sm:text-4xl font-black">Chart</h2>
+            <a className="text-xs font-black text-white/60 hover:text-white" href={links.chart} target="_blank" rel="noreferrer">
+              Open Dexscreener →
+            </a>
+          </div>
+
+          <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
+            <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+              <iframe
+                title="$MAD Dexscreener"
+                src={dexscreenerEmbedSrc}
+                className="absolute inset-0 h-full w-full"
+                allow="clipboard-write; fullscreen"
+              />
             </div>
           </div>
         </section>
@@ -502,7 +528,7 @@ export function MadHomePage() {
 }
 
 // =====================
-// Forge Page (kept short + safe)
+// Forge Page
 // =====================
 export function MadForgePage() {
   const btnBase =
@@ -560,9 +586,7 @@ export function MadForgePage() {
     [ALL_EYES]
   );
   const initialAcc = useMemo(
-    () =>
-      ALL_ACCESSORIES[0] ??
-      makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon"),
+    () => ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon"),
     [ALL_ACCESSORIES]
   );
 
@@ -713,7 +737,7 @@ export function MadForgePage() {
 }
 
 // =====================
-// ✅ FULL Confessions Page (POST + FEED + REACTIONS + POLL)
+// Confessions Page
 // =====================
 export function MadConfessionsPage() {
   const btnBase =
@@ -803,7 +827,6 @@ export function MadConfessionsPage() {
     }
   }, [normalizeConfessions]);
 
-  // ✅ no stacking interval
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -952,7 +975,6 @@ export function MadConfessionsPage() {
                           reacted.same ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
                         ].join(" ")}
                         onClick={() => react(c.id, "same")}
-                        title="Same"
                       >
                         Same <span className="text-white/70 tabular-nums">{c.reactions.same}</span>
                       </button>
@@ -963,7 +985,6 @@ export function MadConfessionsPage() {
                           reacted.lol ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
                         ].join(" ")}
                         onClick={() => react(c.id, "lol")}
-                        title="LOL"
                       >
                         LOL <span className="text-white/70 tabular-nums">{c.reactions.lol}</span>
                       </button>
@@ -974,7 +995,6 @@ export function MadConfessionsPage() {
                           reacted.handshake ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
                         ].join(" ")}
                         onClick={() => react(c.id, "handshake")}
-                        title="Relatable"
                       >
                         🤝 <span className="text-white/70 tabular-nums">{c.reactions.handshake}</span>
                       </button>
@@ -995,60 +1015,8 @@ export function MadConfessionsPage() {
 }
 
 // =====================
-// Other pages (unchanged simple versions)
+// Roadmap Page
 // =====================
-export function MadChartPage() {
-  const dexscreenerEmbedSrc = useMemo(() => {
-    const base = `https://dexscreener.com/solana/${addr}`;
-    return `${base}?embed=1&theme=dark&trades=0&info=0`;
-  }, []);
-
-  return (
-    <MadShell>
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-16 pb-24">
-        <h1 className="text-4xl sm:text-5xl font-black">Chart</h1>
-        <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
-          <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-            <iframe
-              title="$MAD Dexscreener"
-              src={dexscreenerEmbedSrc}
-              className="absolute inset-0 h-full w-full"
-              allow="clipboard-write; fullscreen"
-            />
-          </div>
-        </div>
-      </div>
-    </MadShell>
-  );
-}
-
-export function MadStatusPage() {
-  return (
-    <MadShell>
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-16 pb-24">
-        <h1 className="text-4xl sm:text-5xl font-black">Status</h1>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
-            <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
-            <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
-            <p className="mt-2 text-white/70">
-              Burn rate: <span className="font-black text-white tabular-nums">{BURN_RATE}%</span>
-            </p>
-          </div>
-
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
-            <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
-            <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
-            <p className="mt-2 text-white/70">
-              Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </MadShell>
-  );
-}
-
 export function MadRoadmapPage() {
   const roadmap = useMemo(
     () => [
@@ -1084,6 +1052,9 @@ export function MadRoadmapPage() {
   );
 }
 
+// =====================
+// Memes Page
+// =====================
 export function MadMemesPage() {
   const freshMemes = useMemo(
     () => [
@@ -1118,47 +1089,6 @@ export function MadMemesPage() {
               </div>
             );
           })}
-        </div>
-      </div>
-    </MadShell>
-  );
-}
-
-export function MadSocialsPage() {
-  const btnBase =
-    "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-white/15";
-  const btnPrimary = [
-    btnBase,
-    "text-white",
-    "bg-gradient-to-r from-red-500/80 to-orange-500/80 hover:from-red-500 hover:to-orange-500",
-    "shadow-[0_18px_70px_rgba(255,120,80,0.18)]",
-  ].join(" ");
-  const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
-  const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
-  const btnBlue = `${btnBase} bg-blue-500/90 hover:bg-blue-600 text-white`;
-
-  return (
-    <MadShell>
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-16 pb-24">
-        <h1 className="text-4xl sm:text-5xl font-black">Socials</h1>
-        <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
-              Join X Community
-            </a>
-            <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
-              Join Telegram
-            </a>
-            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-              View Chart
-            </a>
-            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-              Buy on Jupiter
-            </a>
-            <a href={links.game} target="_blank" rel="noreferrer" className={btnPrimary}>
-              Play on Roblox
-            </a>
-          </div>
         </div>
       </div>
     </MadShell>
