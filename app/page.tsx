@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -106,10 +107,8 @@ function cycleFallback(e: React.SyntheticEvent<HTMLImageElement, Event>, fallbac
   const img = e.currentTarget;
   if (!fallbacks?.length) return;
 
-  // Some browsers don’t set currentSrc for normal <img>. Prefer src.
   const current = img.getAttribute("src") || img.currentSrc || "";
 
-  // Reset sequence whenever the src changes.
   if (img.dataset.lastTried !== current) {
     img.dataset.fallbackIndex = "0";
     img.dataset.lastTried = current;
@@ -255,13 +254,10 @@ export default function Home() {
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
 
-      // ✅ UPDATED: add % after burn amounts
       { phase: "Phase 1.1", title: "300M Burn (30%)", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
 
-      // ✅ UPDATED: add % after burn amounts
       { phase: "Phase 1.2", title: "350M Burn (35%)", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
 
-      // ✅ ADDED: Phase 1.3 not completed
       {
         phase: "Phase 1.3",
         title: "40% Supply Burned",
@@ -368,8 +364,17 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
+
+      // Optional extras (won’t crash if missing because of fallbacks)
       makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-halomadplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png", "Pink Halo MAD Plush", "legendary", "cartoon", tall(26, 0.96)),
+      makeItem<AccessoryItem>(
+        "a-c-leg-halomadplush",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
+        "Pink Halo MAD Plush",
+        "legendary",
+        "cartoon",
+        tall(26, 0.96)
+      ),
     ];
   }, []);
 
@@ -541,16 +546,16 @@ export default function Home() {
     }
   };
 
-  const pollRef = useRef<number | null>(null);
+  // ✅ Fix: interval typing + no stacking
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     loadReacted();
     fetchConfessions();
 
-    // ✅ safe polling (no stacking)
-    pollRef.current = window.setInterval(fetchConfessions, 8000);
+    pollRef.current = setInterval(fetchConfessions, 8000);
     return () => {
-      if (pollRef.current) window.clearInterval(pollRef.current);
+      if (pollRef.current) clearInterval(pollRef.current);
       pollRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -615,7 +620,8 @@ export default function Home() {
   };
 
   // ====== Rage Tap Gate ======
-  const [gateUnlocked, setGateUnlocked] = useState(true);
+  // ✅ Fix: start locked by default to avoid “flash unlocked” on first paint
+  const [gateUnlocked, setGateUnlocked] = useState(false);
   const [gateTaps, setGateTaps] = useState(0);
 
   useEffect(() => {
@@ -623,7 +629,7 @@ export default function Home() {
       const saved = localStorage.getItem(LS_SITE_UNLOCK_KEY);
       const isUnlocked = saved === "1";
       setGateUnlocked(isUnlocked);
-      setGateTaps(0);
+      setGateTaps(isUnlocked ? 10 : 0);
     } catch {
       setGateUnlocked(false);
       setGateTaps(0);
@@ -632,6 +638,7 @@ export default function Home() {
 
   const unlockGate = () => {
     setGateUnlocked(true);
+    setGateTaps(10);
     try {
       localStorage.setItem(LS_SITE_UNLOCK_KEY, "1");
     } catch {}
@@ -644,11 +651,6 @@ export default function Home() {
       return next;
     });
   };
-
-  useEffect(() => {
-    // ✅ ensure taps show full when unlocked, without recursion
-    if (gateUnlocked) setGateTaps(10);
-  }, [gateUnlocked]);
 
   const gateLine = useMemo(() => {
     if (gateTaps <= 0) return "Tap to enter. Emotion requires commitment.";
@@ -1354,34 +1356,22 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(
-                    " "
-                  )}
+                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p
-                      className={[
-                        "text-xs uppercase tracking-[0.35em] text-white/50",
-                        done ? "line-through decoration-white/30" : "",
-                      ].join(" ")}
-                    >
+                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
                       {item.phase}
                     </p>
 
-                    {/* ✅ show label for both states */}
                     <span className="text-xs font-black text-white/55">{done ? "Completed" : "Not Completed"}</span>
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>
-                      {item.title}
-                    </h3>
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>
-                    {item.desc}
-                  </p>
+                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>{item.desc}</p>
                 </div>
               );
             })}
