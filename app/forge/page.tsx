@@ -2,19 +2,15 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import MadShell from "@/app/_components/MadShell";
-import {
-  type EyeItem,
-  type AccessoryItem,
-  FORGE_EYES,
-  FORGE_ACCESSORIES,
-  FORGE_BASE,
-  pickWeightedAccessory,
-  cycleFallback,
-  resetFallbackIndex,
-} from "@/app/_lib/mad";
+
+import type { EyeItem, AccessoryItem } from "@/app/_lib/mad";
+import { pickWeightedAccessory, cycleFallback, resetFallbackIndex } from "@/app/_lib/mad";
+
+// ✅ If you created: app/_lib/forge-data.ts
+import { FORGE_EYES, FORGE_ACCESSORIES, FORGE_BASE } from "@/app/_lib/forge-data";
 
 export default function Page() {
   const btnBase =
@@ -27,18 +23,19 @@ export default function Page() {
   ].join(" ");
   const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
 
-  // Pull lists from lib (keeps this file tiny)
-  const ALL_EYES: EyeItem[] = useMemo(() => FORGE_EYES, []);
-  const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => FORGE_ACCESSORIES, []);
-  const BASE = useMemo(() => FORGE_BASE, []);
+  // ✅ Directly use the exported arrays (no need for useMemo wrappers)
+  const ALL_EYES: EyeItem[] = FORGE_EYES;
+  const ALL_ACCESSORIES: AccessoryItem[] = FORGE_ACCESSORIES;
+  const BASE = FORGE_BASE;
 
   const [showBase, setShowBase] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  const [eyeId, setEyeId] = useState("");
-  const [accId, setAccId] = useState("");
+  // ✅ Safe initial IDs (no empty state needed)
+  const [eyeId, setEyeId] = useState<string>(() => ALL_EYES[0]?.id ?? "");
+  const [accId, setAccId] = useState<string>(() => ALL_ACCESSORIES[0]?.id ?? "");
 
-  // Ensure we always have valid defaults (avoids undefined crashes)
+  // ✅ If lists ever change (hot reload), keep IDs valid
   useEffect(() => {
     if (!eyeId && ALL_EYES.length) setEyeId(ALL_EYES[0].id);
     if (!accId && ALL_ACCESSORIES.length) setAccId(ALL_ACCESSORIES[0].id);
@@ -54,27 +51,31 @@ export default function Page() {
     [accId, ALL_ACCESSORIES]
   );
 
-  const [eyeSrc, setEyeSrc] = useState("");
-  const [eyeFallbacks, setEyeFallbacks] = useState<string[]>([]);
-  const [eyeLabel, setEyeLabel] = useState("");
+  const [eyeSrc, setEyeSrc] = useState<string>(selectedEye?.primary ?? "");
+  const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye?.fallbacks ?? []);
+  const [eyeLabel, setEyeLabel] = useState<string>(
+    selectedEye ? `${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}` : ""
+  );
 
-  const [accSrc, setAccSrc] = useState("");
-  const [accFallbacks, setAccFallbacks] = useState<string[]>([]);
-  const [accLabel, setAccLabel] = useState("");
+  const [accSrc, setAccSrc] = useState<string>(selectedAcc?.primary ?? "");
+  const [accFallbacks, setAccFallbacks] = useState<string[]>(selectedAcc?.fallbacks ?? []);
+  const [accLabel, setAccLabel] = useState<string>(
+    selectedAcc ? `${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}` : ""
+  );
 
   useEffect(() => {
     if (!selectedEye) return;
     setEyeSrc(selectedEye.primary);
     setEyeFallbacks(selectedEye.fallbacks);
     setEyeLabel(`${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}`);
-  }, [selectedEye?.id]);
+  }, [selectedEye?.id, selectedEye]);
 
   useEffect(() => {
     if (!selectedAcc) return;
     setAccSrc(selectedAcc.primary);
     setAccFallbacks(selectedAcc.fallbacks);
     setAccLabel(`${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}`);
-  }, [selectedAcc?.id]);
+  }, [selectedAcc?.id, selectedAcc]);
 
   const [forgeCount, setForgeCount] = useState(0);
   const [powerIndex, setPowerIndex] = useState(50);
@@ -188,9 +189,7 @@ export default function Page() {
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">
-          © {new Date().getFullYear()} $MAD.
-        </footer>
+        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
 
         <style jsx global>{`
           @keyframes forgePulse {
