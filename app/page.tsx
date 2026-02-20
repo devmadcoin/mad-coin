@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -243,17 +243,6 @@ function MadShell({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // Buttons
-  const btnBase =
-    "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-white/15";
-  const btnPrimary = [
-    btnBase,
-    "text-white",
-    "bg-gradient-to-r from-red-500/80 to-orange-500/80 hover:from-red-500 hover:to-orange-500",
-    "shadow-[0_18px_70px_rgba(255,120,80,0.18)]",
-  ].join(" ");
-  const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
-
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
       {/* Gate */}
@@ -291,11 +280,11 @@ function MadShell({ children }: { children: React.ReactNode }) {
               </div>
 
               <div className="mt-5 flex flex-col sm:flex-row gap-3">
-                <button className={btnPrimary} onClick={tapGate} aria-label="Tap rage emoji to enter">
+                <button className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 bg-gradient-to-r from-red-500/80 to-orange-500/80 hover:from-red-500 hover:to-orange-500 text-white shadow-[0_18px_70px_rgba(255,120,80,0.18)]" onClick={tapGate}>
                   😡 Tap ({gateTaps}/10)
                 </button>
 
-                <button className={btnGhost} onClick={unlockGate}>
+                <button className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 bg-white/10 hover:bg-white/15 text-white" onClick={unlockGate}>
                   Skip →
                 </button>
               </div>
@@ -331,6 +320,11 @@ function MadShell({ children }: { children: React.ReactNode }) {
           0% { transform: translate3d(0, 14%, 0) scale(1); opacity: 0.26; }
           50% { transform: translate3d(0, -6%, 0) scale(1.06); opacity: 0.46; }
           100% { transform: translate3d(0, 14%, 0) scale(1); opacity: 0.26; }
+        }
+        @keyframes forgePulse {
+          0% { transform: scale(1); filter: saturate(1); }
+          50% { transform: scale(1.02); filter: saturate(1.2); }
+          100% { transform: scale(1); filter: saturate(1); }
         }
       `}</style>
 
@@ -495,7 +489,7 @@ export function MadHomePage() {
 }
 
 // =====================
-// Forge Page (kept from your logic)
+// Forge Page (kept short + safe)
 // =====================
 export function MadForgePage() {
   const btnBase =
@@ -508,7 +502,6 @@ export function MadForgePage() {
   ].join(" ");
   const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
 
-  // PFP data
   const ALL_EYES: EyeItem[] = useMemo(() => {
     return [
       makeItem<EyeItem>("c-common-black", "/pfp/eyes/cartoon/common/cartoon-common-black.png", "Cartoon Common Black", "common", "cartoon"),
@@ -578,13 +571,13 @@ export function MadForgePage() {
     setEyeSrc(selectedEye.primary);
     setEyeFallbacks(selectedEye.fallbacks);
     setEyeLabel(`${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}`);
-  }, [selectedEye.id]); // ✅ correct dependency
+  }, [selectedEye.id]);
 
   useEffect(() => {
     setAccSrc(selectedAcc.primary);
     setAccFallbacks(selectedAcc.fallbacks);
     setAccLabel(`${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}`);
-  }, [selectedAcc.id]); // ✅ correct dependency
+  }, [selectedAcc.id]);
 
   const [forgeCount, setForgeCount] = useState(0);
   const [powerIndex, setPowerIndex] = useState(50);
@@ -700,13 +693,287 @@ export function MadForgePage() {
           </div>
         </section>
 
-        <style jsx global>{`
-          @keyframes forgePulse {
-            0% { transform: scale(1); filter: saturate(1); }
-            50% { transform: scale(1.02); filter: saturate(1.2); }
-            100% { transform: scale(1); filter: saturate(1); }
-          }
-        `}</style>
+        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
+      </div>
+    </MadShell>
+  );
+}
+
+// =====================
+// ✅ FULL Confessions Page (POST + FEED + REACTIONS + POLL)
+// =====================
+export function MadConfessionsPage() {
+  const btnBase =
+    "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-white/15";
+  const btnPrimary = [
+    btnBase,
+    "text-white",
+    "bg-gradient-to-r from-red-500/80 to-orange-500/80 hover:from-red-500 hover:to-orange-500",
+    "shadow-[0_18px_70px_rgba(255,120,80,0.18)]",
+  ].join(" ");
+  const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
+
+  const ragePrompts = useMemo(
+    () => [
+      "What small thing ruined your mood instantly?",
+      "What’s the most petty thing that made you mad today?",
+      "What ‘minor inconvenience’ turned into a full villain arc?",
+      "What was the last thing that made you whisper: ‘I’m so mad’?",
+      "What’s something that should be illegal but isn’t?",
+      "What’s a sound that instantly makes you rage?",
+      "What’s a ‘helpful’ feature that always breaks everything?",
+      "What’s a price that made you close the tab immediately?",
+    ],
+    []
+  );
+
+  const todayPrompt = useMemo(() => {
+    const d = new Date();
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    let h = 0;
+    for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+    return ragePrompts[h % ragePrompts.length];
+  }, [ragePrompts]);
+
+  const [confessions, setConfessions] = useState<Confession[]>([]);
+  const [confessionText, setConfessionText] = useState("");
+  const [confessionErr, setConfessionErr] = useState<string | null>(null);
+  const [confessionBusy, setConfessionBusy] = useState(false);
+
+  const [reactedMap, setReactedMap] = useState<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>({});
+  const [apiOk, setApiOk] = useState(true);
+
+  const persistReacted = (next: typeof reactedMap) => {
+    setReactedMap(next);
+    try {
+      localStorage.setItem(LS_REACTED_KEY, JSON.stringify(next));
+    } catch {}
+  };
+
+  const loadReacted = () => {
+    const reacted = safeJsonParse<Record<string, { same?: boolean; lol?: boolean; handshake?: boolean }>>(
+      typeof window !== "undefined" ? localStorage.getItem(LS_REACTED_KEY) : null,
+      {}
+    );
+    setReactedMap(reacted || {});
+  };
+
+  const normalizeConfessions = useCallback((raw: any): Confession[] => {
+    const list: any[] = Array.isArray(raw) ? raw : [];
+    return list
+      .filter((c) => c && typeof c.text === "string")
+      .map((c) => ({
+        id: String(c.id ?? ""),
+        text: clampText(String(c.text ?? ""), 240),
+        createdAt: typeof c.createdAt === "number" ? c.createdAt : Date.now(),
+        reactions: {
+          same: Number(c.reactions?.same ?? 0) || 0,
+          lol: Number(c.reactions?.lol ?? 0) || 0,
+          handshake: Number(c.reactions?.handshake ?? 0) || 0,
+        },
+      }))
+      .filter((c) => c.id.length > 0)
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 200);
+  }, []);
+
+  const fetchConfessions = useCallback(async () => {
+    try {
+      const res = await fetch("/api/confessions", { cache: "no-store" });
+      const data = await res.json().catch(() => ({} as any));
+      if (!res.ok) throw new Error(data?.error || "Fetch failed");
+      const list = data?.confessions ?? data?.items ?? [];
+      setConfessions(normalizeConfessions(list));
+      setApiOk(true);
+    } catch {
+      setApiOk(false);
+    }
+  }, [normalizeConfessions]);
+
+  // ✅ no stacking interval
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    loadReacted();
+    fetchConfessions();
+
+    pollRef.current = setInterval(fetchConfessions, 8000);
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+      pollRef.current = null;
+    };
+  }, [fetchConfessions]);
+
+  const submitConfession = async () => {
+    setConfessionErr(null);
+    const t = clampText(confessionText, 240);
+
+    if (!t) return setConfessionErr("Type something first.");
+    if (t.length < 4) return setConfessionErr("A little more detail.");
+
+    setConfessionBusy(true);
+    try {
+      const res = await fetch("/api/confessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: t }),
+      });
+
+      const data = await res.json().catch(() => ({} as any));
+      if (!res.ok) throw new Error(data?.error || "Failed to post");
+
+      const item = data?.item;
+      if (!item?.id) throw new Error("API returned no item");
+
+      setConfessionText("");
+      setConfessions((prev) => normalizeConfessions([item, ...prev]));
+      setApiOk(true);
+    } catch (err: any) {
+      setApiOk(false);
+      setConfessionErr(err?.message || "Post failed");
+    } finally {
+      setConfessionBusy(false);
+    }
+  };
+
+  const react = async (id: string, kind: "same" | "lol" | "handshake") => {
+    const already = !!reactedMap?.[id]?.[kind];
+
+    // optimistic UI
+    setConfessions((prev) =>
+      prev.map((c) => {
+        if (c.id !== id) return c;
+        const delta = already ? -1 : 1;
+        const nextCount = Math.max(0, (c.reactions?.[kind] ?? 0) + delta);
+        return { ...c, reactions: { ...c.reactions, [kind]: nextCount } };
+      })
+    );
+
+    const nextReacted = { ...reactedMap, [id]: { ...(reactedMap[id] || {}), [kind]: !already } };
+    persistReacted(nextReacted);
+
+    try {
+      await fetch("/api/confessions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, reaction: kind, delta: already ? -1 : 1 }),
+      });
+      fetchConfessions();
+    } catch {}
+  };
+
+  return (
+    <MadShell>
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
+        <section className="pt-16 pb-4 w-full">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Community</p>
+              <h2 className="mt-2 text-4xl sm:text-5xl font-black">Mad Confessions</h2>
+              <p className="mt-3 text-white/65 leading-[1.9]">Structured chaos. Anonymous truth.</p>
+            </div>
+            <Link className={btnGhost} href="/">
+              ← Back
+            </Link>
+          </div>
+
+          {!apiOk && (
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
+              Confessions API not reachable yet — add <span className="font-mono">/api/confessions</span> and refresh.
+            </div>
+          )}
+        </section>
+
+        <section className="py-10 w-full max-w-4xl mx-auto">
+          <div className="mb-7 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
+            <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s prompt</div>
+            <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
+            <div className="mt-2 text-xs text-white/45">Anonymous. Public. Real.</div>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-black/25 p-5 sm:p-7">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <div className="text-sm font-black">Post a confession</div>
+                <div className="text-xs text-white/55 mt-1">No names. No DMs. Just signal.</div>
+              </div>
+              <button className={btnPrimary} onClick={submitConfession} disabled={confessionBusy}>
+                {confessionBusy ? "Posting..." : "Post"}
+              </button>
+            </div>
+
+            <div className="mt-4">
+              <textarea
+                value={confessionText}
+                onChange={(e) => setConfessionText(e.target.value)}
+                placeholder="Example: I paid gas fees and the transaction still failed."
+                className="w-full min-h-[110px] rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:border-white/20"
+                maxLength={240}
+              />
+              <div className="mt-2 flex items-center justify-between text-xs">
+                <div className="text-red-300/90">{confessionErr ? `⚠️ ${confessionErr}` : ""}</div>
+                <div className="text-white/40 tabular-nums">{confessionText.length}/240</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-9 grid gap-4">
+            {confessions.length === 0 ? (
+              <div className="text-center text-white/55 py-10">No confessions yet.</div>
+            ) : (
+              confessions.map((c) => {
+                const reacted = reactedMap[c.id] || {};
+                return (
+                  <div key={c.id} className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="text-white/85 leading-relaxed text-sm sm:text-base">{c.text}</div>
+                      <div className="shrink-0 text-xs text-white/35">
+                        {new Date(c.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                      </div>
+                    </div>
+
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      <button
+                        className={[
+                          "rounded-full border px-4 py-2 text-xs font-black transition",
+                          reacted.same ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                        ].join(" ")}
+                        onClick={() => react(c.id, "same")}
+                        title="Same"
+                      >
+                        Same <span className="text-white/70 tabular-nums">{c.reactions.same}</span>
+                      </button>
+
+                      <button
+                        className={[
+                          "rounded-full border px-4 py-2 text-xs font-black transition",
+                          reacted.lol ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                        ].join(" ")}
+                        onClick={() => react(c.id, "lol")}
+                        title="LOL"
+                      >
+                        LOL <span className="text-white/70 tabular-nums">{c.reactions.lol}</span>
+                      </button>
+
+                      <button
+                        className={[
+                          "rounded-full border px-4 py-2 text-xs font-black transition",
+                          reacted.handshake ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                        ].join(" ")}
+                        onClick={() => react(c.id, "handshake")}
+                        title="Relatable"
+                      >
+                        🤝 <span className="text-white/70 tabular-nums">{c.reactions.handshake}</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          <p className="mt-6 text-center text-xs text-white/35">Public feed. Anonymous voice.</p>
+        </section>
 
         <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
       </div>
@@ -715,45 +982,28 @@ export function MadForgePage() {
 }
 
 // =====================
-// The remaining pages (Confessions/Chart/Status/Roadmap/Memes/Socials)
+// Other pages (unchanged simple versions)
 // =====================
-// To keep this message from turning into a 20,000-line brick,
-// tell me which ones you want NEXT and I’ll paste each page section in full.
-//
-// But the routing + structure above is already fixed and deploy-safe.
-export function MadConfessionsPage() {
-  return (
-    <MadShell>
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-16 pb-24">
-        <h1 className="text-4xl sm:text-5xl font-black">Confessions</h1>
-        <p className="mt-4 text-white/65">Drop your /api/confessions route in place and this page becomes live.</p>
-      </div>
-    </MadShell>
-  );
-}
 export function MadChartPage() {
   const dexscreenerEmbedSrc = useMemo(() => {
     const base = `https://dexscreener.com/solana/${addr}`;
     return `${base}?embed=1&theme=dark&trades=0&info=0`;
   }, []);
+
   return (
     <MadShell>
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-16 pb-24">
         <h1 className="text-4xl sm:text-5xl font-black">Chart</h1>
         <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
           <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-            <iframe
-              title="$MAD Dexscreener"
-              src={dexscreenerEmbedSrc}
-              className="absolute inset-0 h-full w-full"
-              allow="clipboard-write; fullscreen"
-            />
+            <iframe title="$MAD Dexscreener" src={dexscreenerEmbedSrc} className="absolute inset-0 h-full w-full" allow="clipboard-write; fullscreen" />
           </div>
         </div>
       </div>
     </MadShell>
   );
 }
+
 export function MadStatusPage() {
   return (
     <MadShell>
@@ -761,7 +1011,6 @@ export function MadStatusPage() {
         <h1 className="text-4xl sm:text-5xl font-black">Status</h1>
         <div className="mt-8 grid gap-6 sm:grid-cols-2">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
-            <div className="pointer-events-none absolute inset-0" style={{ animation: "flameFlicker 1.7s ease-in-out infinite" }} />
             <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
             <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
             <p className="mt-2 text-white/70">
@@ -770,7 +1019,6 @@ export function MadStatusPage() {
           </div>
 
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
-            <div className="pointer-events-none absolute inset-0" style={{ animation: "iceFlicker 1.8s ease-in-out infinite" }} />
             <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
             <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
             <p className="mt-2 text-white/70">
@@ -782,6 +1030,7 @@ export function MadStatusPage() {
     </MadShell>
   );
 }
+
 export function MadRoadmapPage() {
   const roadmap = useMemo(
     () => [
@@ -801,24 +1050,22 @@ export function MadRoadmapPage() {
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-16 pb-24">
         <h1 className="text-4xl sm:text-5xl font-black">Roadmap</h1>
         <div className="mt-8 grid gap-5">
-          {roadmap.map((item) => {
-            const done = !!item.done;
-            return (
-              <div key={item.phase + item.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs uppercase tracking-[0.35em] text-white/50">{item.phase}</p>
-                  <span className="text-xs font-black text-white/55">{done ? "Completed" : "Not Completed"}</span>
-                </div>
-                <h3 className="mt-2 text-2xl sm:text-3xl font-black">{item.title}</h3>
-                <p className="mt-2 text-white/65 leading-[1.95]">{item.desc}</p>
+          {roadmap.map((item) => (
+            <div key={item.phase + item.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase tracking-[0.35em] text-white/50">{item.phase}</p>
+                <span className="text-xs font-black text-white/55">{item.done ? "Completed" : "Not Completed"}</span>
               </div>
-            );
-          })}
+              <h3 className="mt-2 text-2xl sm:text-3xl font-black">{item.title}</h3>
+              <p className="mt-2 text-white/65 leading-[1.95]">{item.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </MadShell>
   );
 }
+
 export function MadMemesPage() {
   const freshMemes = useMemo(
     () => [
@@ -858,6 +1105,7 @@ export function MadMemesPage() {
     </MadShell>
   );
 }
+
 export function MadSocialsPage() {
   const btnBase =
     "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-white/15";
