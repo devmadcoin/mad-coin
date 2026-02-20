@@ -3,6 +3,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
 
 type Rarity = "common" | "rare" | "legendary";
 type Style = "cartoon" | "pixel";
@@ -253,18 +254,9 @@ export default function Home() {
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
-
       { phase: "Phase 1.1", title: "300M Burn (30%)", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
-
       { phase: "Phase 1.2", title: "350M Burn (35%)", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
-
-      {
-        phase: "Phase 1.3",
-        title: "40% Supply Burned",
-        desc: "Target milestone — 40% of total supply burned.",
-        done: false,
-      },
-
+      { phase: "Phase 1.3", title: "40% Supply Burned", desc: "Target milestone — 40% of total supply burned.", done: false },
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
       { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive." },
@@ -665,10 +657,616 @@ export default function Home() {
     return `${base}?embed=1&theme=dark&trades=0&info=0`;
   }, [addr]);
 
-  const scrollToId = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  // ========= TABS + SWIPE TRANSITIONS =========
+  type TabKey = "home" | "forge" | "confessions" | "track" | "status" | "roadmap" | "memes" | "socials";
+
+  const tabs = useMemo(
+    () =>
+      [
+        { key: "home", label: "Home" },
+        { key: "forge", label: "Forge" },
+        { key: "confessions", label: "Confessions" },
+        { key: "track", label: "Track" },
+        { key: "status", label: "Status" },
+        { key: "roadmap", label: "Roadmap" },
+        { key: "memes", label: "Memes" },
+        { key: "socials", label: "Socials" },
+      ] as { key: TabKey; label: string }[],
+    []
+  );
+
+  const [activeTab, setActiveTab] = useState<TabKey>("home");
+  const [tabDir, setTabDir] = useState<1 | -1>(1);
+
+  const goTab = (next: TabKey) => {
+    if (next === activeTab) return;
+    const fromIdx = tabs.findIndex((t) => t.key === activeTab);
+    const toIdx = tabs.findIndex((t) => t.key === next);
+    setTabDir(toIdx > fromIdx ? 1 : -1);
+    setActiveTab(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const tabBtn = (isActive: boolean) =>
+    [
+      "shrink-0 rounded-full px-4 py-2 text-xs sm:text-sm font-black border transition",
+      isActive ? "bg-white text-black border-white/10" : "bg-white/10 text-white border-white/10 hover:bg-white/15",
+    ].join(" ");
+
+  // ========= PANELS =========
+  const PanelHome = (
+    <>
+      {/* HERO */}
+      <section className="pt-16 pb-20 w-full">
+        <div className="mx-auto max-w-5xl">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+                <Image src="/mad.png" alt="$MAD" width={52} height={52} priority />
+              </div>
+              <div className="text-left">
+                <div className="text-xs uppercase tracking-[0.35em] text-white/60">Solana</div>
+                <div className="text-sm font-black text-white/80">Digital emotion — refined</div>
+              </div>
+            </div>
+
+            <div className="hidden sm:flex items-center gap-2">
+              <button className={btnGhost} onClick={() => goTab("confessions")}>
+                Confessions
+              </button>
+              <button className={btnGhost} onClick={() => goTab("forge")}>
+                Forge
+              </button>
+              <button className={btnGhost} onClick={() => goTab("status")}>
+                Status
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-12">
+            <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">Welcome To $MAD</h1>
+
+            <p className="mt-5 text-xl sm:text-2xl text-white/75 leading-[1.7] max-w-2xl">
+              Emotion evolves.
+              <br />
+              Born in volatility.
+              <br />
+              Refined through discipline.
+            </p>
+
+            <div className="mt-9 flex flex-wrap gap-3">
+              <button className={btnPrimary} onClick={() => goTab("forge")}>
+                Forge Identity
+              </button>
+              <a className={btnGhost} href={links.buy} target="_blank" rel="noreferrer">
+                Buy on Jupiter
+              </a>
+              <a className={btnGhost} href={links.chart} target="_blank" rel="noreferrer">
+                Track Momentum
+              </a>
+            </div>
+
+            <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
+              <div className="text-xs uppercase tracking-[0.35em] text-white/50">Contract</div>
+              <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">{addr}</div>
+                <button onClick={copyCA} className={btnGhost}>
+                  {copied ? "Copied" : "Copy"}
+                </button>
+              </div>
+            </div>
+
+            <p className="mt-6 text-xs text-white/40 leading-[1.8]">Not financial advice. Culture experiment. Wearable energy.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* MANIFESTO */}
+      <section className="pb-20 w-full">
+        <div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 sm:p-10 text-center">
+          <div className="text-xs uppercase tracking-[0.35em] text-white/55">Statement</div>
+          <h2 className="mt-4 text-3xl sm:text-4xl font-black leading-tight">Quiet rebellion.</h2>
+          <p className="mt-5 text-white/70 leading-[1.9] text-base sm:text-lg max-w-3xl mx-auto">
+            The market tested conviction.
+            <br />
+            Most reacted. Some refined.
+            <br />
+            Not chaos — composure.
+          </p>
+
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <button className={btnGhost} onClick={() => goTab("confessions")}>
+              Share the emotion
+            </button>
+            <button className={btnGhost} onClick={() => goTab("roadmap")}>
+              See the roadmap
+            </button>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+
+  const PanelForge = (
+    <section className="py-20 w-full max-w-xl mx-auto text-center">
+      <div className="mb-10 flex items-center justify-center gap-3">
+        <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+          <Image src="/mad.png" alt="$MAD logo" width={56} height={56} priority />
+        </div>
+        <div className="text-left">
+          <div className="text-xs uppercase tracking-[0.35em] text-white/60">Forge</div>
+          <div className="text-2xl sm:text-3xl font-black leading-tight">Wear the mark.</div>
+        </div>
+      </div>
+
+      <p className="text-white/65 leading-[1.9]">Free for the community. Clean looks. Strong signal.</p>
+
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
+        <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
+          {showBase ? "Hide Base" : "Show Base"}
+        </button>
+        <button className={btnGhost} onClick={() => setShowAcc((v) => !v)}>
+          {showAcc ? "Hide Accessory" : "Show Accessory"}
+        </button>
+      </div>
+
+      <div
+        className="mt-10 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border border-white/10 bg-white/5 shadow-[0_30px_120px_rgba(255,120,80,0.10)]"
+        style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
+      >
+        {showBase && (
+          <img
+            key={`base-${renderNonce}`}
+            src={BASE.primary}
+            className="absolute inset-0 w-full h-full object-cover"
+            alt="base"
+            onLoad={resetFallbackIndex}
+            onError={(e) => cycleFallback(e, BASE.fallbacks)}
+          />
+        )}
+
+        <img
+          key={`eyes-${eyeId}-${renderNonce}`}
+          src={eyeSrc}
+          className="absolute inset-0 w-full h-full object-cover"
+          alt="eyes"
+          onLoad={resetFallbackIndex}
+          onError={(e) => cycleFallback(e, eyeFallbacks)}
+        />
+
+        {showAcc && (
+          <img
+            key={`acc-${accId}-${renderNonce}`}
+            src={accSrc}
+            className="absolute inset-0 w-full h-full object-cover"
+            alt="accessory"
+            style={selectedAcc?.cssTransform ? { transform: selectedAcc.cssTransform } : undefined}
+            onLoad={resetFallbackIndex}
+            onError={(e) => cycleFallback(e, accFallbacks)}
+          />
+        )}
+      </div>
+
+      <div className="mt-5 text-xs text-white/65">{eyeLabel}</div>
+      <div className="mt-1 text-xs text-white/50">{accLabel}</div>
+
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+        <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-black">
+          Forge Count: <span className="text-white tabular-nums">{forgeCount}</span>
+        </div>
+        <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-black">
+          Power Index: <span className="text-white tabular-nums">{powerIndex}</span>
+        </div>
+      </div>
+
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <button className={btnPrimary} onClick={forgeIdentity}>
+          Forge Identity
+        </button>
+      </div>
+
+      <p className="mt-5 text-xs text-white/40 leading-[1.8]">
+        Eyes: {ALL_EYES.length}. Accessories: {ALL_ACCESSORIES.length}. Legendary: {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
+      </p>
+    </section>
+  );
+
+  const PanelConfessions = (
+    <section className="py-20 w-full max-w-4xl mx-auto">
+      <div className="text-center mb-12">
+        <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Community</p>
+        <h2 className="mt-3 text-4xl sm:text-5xl font-black">Mad Confessions</h2>
+        <p className="mt-4 text-white/65 leading-[1.9]">Structured chaos. Anonymous truth.</p>
+
+        {!apiOk && (
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
+            Confessions API not reachable yet — feed may look empty until you add <span className="font-mono">/api/confessions</span>.
+          </div>
+        )}
+      </div>
+
+      <div className="mb-7 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
+        <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s prompt</div>
+        <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
+        <div className="mt-2 text-xs text-white/45">Anonymous. Public. Real.</div>
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-black/25 p-5 sm:p-7">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <div className="text-sm font-black">Post a confession</div>
+            <div className="text-xs text-white/55 mt-1">No names. No DMs. Just signal.</div>
+          </div>
+          <button className={btnPrimary} onClick={submitConfession} disabled={confessionBusy}>
+            {confessionBusy ? "Posting..." : "Post"}
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <textarea
+            value={confessionText}
+            onChange={(e) => setConfessionText(e.target.value)}
+            placeholder="Example: I paid gas fees and the transaction still failed."
+            className="w-full min-h-[110px] rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:border-white/20"
+            maxLength={240}
+          />
+          <div className="mt-2 flex items-center justify-between text-xs">
+            <div className="text-red-300/90">{confessionErr ? `⚠️ ${confessionErr}` : ""}</div>
+            <div className="text-white/40 tabular-nums">{confessionText.length}/240</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-9 grid gap-4">
+        {confessions.length === 0 ? (
+          <div className="text-center text-white/55 py-10">No confessions yet.</div>
+        ) : (
+          confessions.map((c) => {
+            const reacted = reactedMap[c.id] || {};
+            return (
+              <div key={c.id} className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="text-white/85 leading-relaxed text-sm sm:text-base">{c.text}</div>
+                  <div className="shrink-0 text-xs text-white/35">
+                    {new Date(c.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                  </div>
+                </div>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <button
+                    className={[
+                      "rounded-full border px-4 py-2 text-xs font-black transition",
+                      reacted.same ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                    ].join(" ")}
+                    onClick={() => react(c.id, "same")}
+                    title="Same"
+                  >
+                    Same <span className="text-white/70 tabular-nums">{c.reactions.same}</span>
+                  </button>
+
+                  <button
+                    className={[
+                      "rounded-full border px-4 py-2 text-xs font-black transition",
+                      reacted.lol ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                    ].join(" ")}
+                    onClick={() => react(c.id, "lol")}
+                    title="LOL"
+                  >
+                    LOL <span className="text-white/70 tabular-nums">{c.reactions.lol}</span>
+                  </button>
+
+                  <button
+                    className={[
+                      "rounded-full border px-4 py-2 text-xs font-black transition",
+                      reacted.handshake ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                    ].join(" ")}
+                    onClick={() => react(c.id, "handshake")}
+                    title="Relatable"
+                  >
+                    🤝 <span className="text-white/70 tabular-nums">{c.reactions.handshake}</span>
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      <p className="mt-6 text-center text-xs text-white/35">Public feed. Anonymous voice.</p>
+    </section>
+  );
+
+  const PanelTrack = (
+    <section className="py-20 w-full max-w-5xl mx-auto">
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Live</p>
+            <h3 className="mt-2 text-3xl sm:text-4xl font-black">Track Momentum</h3>
+            <p className="mt-2 text-white/60 leading-[1.9]">Observe. Don’t react.</p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+              Open Dexscreener
+            </a>
+            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+              Buy on Jupiter
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 overflow-hidden">
+          <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+            <iframe title="$MAD Dexscreener" src={dexscreenerEmbedSrc} className="absolute inset-0 h-full w-full" allow="clipboard-write; fullscreen" />
+          </div>
+        </div>
+
+        <p className="mt-3 text-xs text-white/40">If the embed ever changes, the open button still works.</p>
+      </div>
+    </section>
+  );
+
+  const PanelStatus = (
+    <section className="py-20 w-full max-w-5xl mx-auto">
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
+        <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
+        <h2 className="mt-3 text-4xl sm:text-5xl font-black">Burned & Locked</h2>
+        <p className="mt-4 text-white/65 leading-[1.9]">Scarcity is intentional.</p>
+
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 text-left">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
+            <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">🔥</div>
+
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(circle at 30% 70%, rgba(255,120,0,.38), transparent 55%)," +
+                  "radial-gradient(circle at 70% 70%, rgba(255,0,0,.28), transparent 60%)," +
+                  "radial-gradient(circle at 50% 95%, rgba(255,200,0,.24), transparent 55%)",
+                filter: "blur(18px) saturate(1.15)",
+                animation: "flameFlicker 1.7s ease-in-out infinite",
+                opacity: 0.78,
+              }}
+            />
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background: "radial-gradient(circle at 50% 85%, rgba(255,160,0,.18), transparent 60%)",
+                filter: "blur(22px)",
+                animation: "flameRise 2.4s ease-in-out infinite",
+                mixBlendMode: "screen",
+              }}
+            />
+
+            <div className="relative">
+              <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
+              <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
+              <p className="mt-2 text-white/70">
+                Burn rate: <span className="font-black text-white tabular-nums">{BURN_RATE}%</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
+            <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">🔒</div>
+
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(circle at 30% 70%, rgba(0,160,255,.34), transparent 55%)," +
+                  "radial-gradient(circle at 70% 70%, rgba(0,90,255,.24), transparent 60%)," +
+                  "radial-gradient(circle at 50% 95%, rgba(120,220,255,.20), transparent 55%)",
+                filter: "blur(18px) saturate(1.2)",
+                animation: "iceFlicker 1.8s ease-in-out infinite",
+                opacity: 0.78,
+              }}
+            />
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background: "radial-gradient(circle at 50% 85%, rgba(120,220,255,.18), transparent 60%)",
+                filter: "blur(22px)",
+                animation: "icePulse 2.6s ease-in-out infinite",
+                mixBlendMode: "screen",
+              }}
+            />
+
+            <div className="relative">
+              <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
+              <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
+              <p className="mt-2 text-white/70">
+                Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+            Buy on Jupiter
+          </a>
+          <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+            View Chart
+          </a>
+        </div>
+      </div>
+
+      {/* ROBLOX */}
+      <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center overflow-hidden">
+        <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Universe</p>
+        <h2 className="mt-3 text-3xl sm:text-4xl font-black">Roblox (Beta)</h2>
+        <p className="mt-4 text-white/65 leading-[1.9] max-w-2xl mx-auto">
+          The experiment has a playground: <span className="font-black text-white/85">Will You Get RICH… Or Stay MAD?</span>
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a href={links.game} target="_blank" rel="noreferrer" className={btnPrimary}>
+            Play on Roblox
+          </a>
+          <a href={links.x} target="_blank" rel="noreferrer" className={btnGhost}>
+            Join X Community
+          </a>
+        </div>
+
+        <p className="mt-4 text-xs text-white/40">Roblox blocks most site embeds — this opens directly in Roblox.</p>
+      </div>
+    </section>
+  );
+
+  const PanelRoadmap = (
+    <section className="py-20 w-full max-w-4xl mx-auto">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
+        <p className="mt-4 text-white/65 leading-[1.9]">Bond first. Then climb.</p>
+      </div>
+
+      <div className="grid gap-5 text-left">
+        {roadmap.map((item) => {
+          const done = !!item.done;
+          return (
+            <div
+              key={item.phase + item.title}
+              className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(" ")}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
+                  {item.phase}
+                </p>
+
+                <span className="text-xs font-black text-white/55">{done ? "Completed" : "Not Completed"}</span>
+              </div>
+
+              <div className="mt-2 flex items-baseline gap-3">
+                <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
+                <span className="h-px flex-1 bg-white/10" />
+              </div>
+
+              <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>{item.desc}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+
+  const PanelMemes = (
+    <section className="py-24 w-full max-w-6xl mx-auto">
+      <div className="text-center mb-14">
+        <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
+        <h2 className="mt-3 text-4xl sm:text-5xl font-black">Meme Vault</h2>
+        <p className="mt-4 text-white/65 leading-[1.9]">Archives. Signals. Receipts.</p>
+      </div>
+
+      {freshMemes.length === 0 ? (
+        <div className="text-center text-white/60">No memes yet.</div>
+      ) : (
+        <div className="relative mx-auto w-full">
+          <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-white/10 blur-3xl" />
+
+          <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div className="text-xs uppercase tracking-[0.35em] text-white/50">Swipe</div>
+              <div className="text-xs text-white/40">({freshMemes.length} items)</div>
+            </div>
+
+            <div
+              className={[
+                "flex gap-5 overflow-x-auto overflow-y-hidden pb-3",
+                "snap-x snap-mandatory",
+                "scroll-px-4",
+                "[scrollbar-width:thin]",
+              ].join(" ")}
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
+              {freshMemes.map((m, idx) => {
+                const candidates = buildCandidates(m.src);
+                const primary = candidates[0];
+                const fallbacks = candidates.slice(1);
+
+                return (
+                  <div
+                    key={m.src}
+                    className={[
+                      "snap-start shrink-0",
+                      "w-[85vw] sm:w-[520px] md:w-[560px] lg:w-[600px]",
+                      "rounded-3xl border border-white/10 bg-black/40 p-4",
+                      "transition hover:bg-white/10",
+                    ].join(" ")}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-xs uppercase tracking-[0.35em] text-white/50">#{idx + 1}</div>
+                      <div className="text-sm font-black text-white/70">{m.tag}</div>
+                    </div>
+
+                    <img
+                      src={primary}
+                      alt={m.tag}
+                      className="rounded-2xl w-full h-auto"
+                      loading="lazy"
+                      onLoad={resetFallbackIndex}
+                      onError={(e) => cycleFallback(e, fallbacks)}
+                    />
+
+                    <div className="mt-3 text-xs text-white/40">Screenshot. Post. Tag $MAD.</div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black/35 to-transparent rounded-l-3xl" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black/35 to-transparent rounded-r-3xl" />
+          </div>
+        </div>
+      )}
+    </section>
+  );
+
+  const PanelSocials = (
+    <section className="py-20 w-full max-w-4xl mx-auto">
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
+        <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Connect</p>
+        <h2 className="mt-3 text-4xl sm:text-5xl font-black">Socials</h2>
+        <p className="mt-4 text-white/65 leading-[1.9]">Join the community. Move with intent.</p>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
+            Join X Community
+          </a>
+          <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
+            Join Telegram
+          </a>
+          <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+            View Chart
+          </a>
+          <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+            Buy on Jupiter
+          </a>
+        </div>
+
+        <p className="mt-8 text-xs text-white/40">$MAD — digital emotion. Not financial advice.</p>
+      </div>
+    </section>
+  );
+
+  const panelByTab: Record<TabKey, React.ReactNode> = {
+    home: PanelHome,
+    forge: PanelForge,
+    confessions: PanelConfessions,
+    track: PanelTrack,
+    status: PanelStatus,
+    roadmap: PanelRoadmap,
+    memes: PanelMemes,
+    socials: PanelSocials,
+  };
+
+  // ========= SWIPE ANIMATION VARIANTS =========
+  const pageMotion = {
+    initial: (dir: number) => ({ x: dir * 28, opacity: 0 }),
+    animate: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir * -28, opacity: 0 }),
   };
 
   return (
@@ -895,587 +1493,57 @@ export default function Home() {
         ))}
       </div>
 
+      {/* TOP TABS BAR */}
+      <div className="sticky top-0 z-20 backdrop-blur-md bg-black/35 border-b border-white/10">
+        <div className="mx-auto max-w-6xl px-6 py-3 flex items-center gap-3">
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="rounded-xl border border-white/10 bg-white/10 p-2">
+              <Image src="/mad.png" alt="$MAD" width={28} height={28} priority />
+            </div>
+            <div className="text-xs uppercase tracking-[0.35em] text-white/60 hidden sm:block">$MAD</div>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
+            {tabs.map((t) => (
+              <button key={t.key} className={tabBtn(t.key === activeTab)} onClick={() => goTab(t.key)}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
-        {/* HERO */}
-        <section className="pt-16 pb-20 w-full">
-          <div className="mx-auto max-w-5xl">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
-                  <Image src="/mad.png" alt="$MAD" width={52} height={52} priority />
-                </div>
-                <div className="text-left">
-                  <div className="text-xs uppercase tracking-[0.35em] text-white/60">Solana</div>
-                  <div className="text-sm font-black text-white/80">Digital emotion — refined</div>
-                </div>
-              </div>
-
-              <div className="hidden sm:flex items-center gap-2">
-                <button className={btnGhost} onClick={() => scrollToId("confessions")}>
-                  Confessions
-                </button>
-                <button className={btnGhost} onClick={() => scrollToId("forge")}>
-                  Forge
-                </button>
-                <button className={btnGhost} onClick={() => scrollToId("status")}>
-                  Status
-                </button>
-              </div>
-            </div>
-
-            <div className="mt-12">
-              <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">Welcome To $MAD</h1>
-
-              <p className="mt-5 text-xl sm:text-2xl text-white/75 leading-[1.7] max-w-2xl">
-                Emotion evolves.
-                <br />
-                Born in volatility.
-                <br />
-                Refined through discipline.
-              </p>
-
-              <div className="mt-9 flex flex-wrap gap-3">
-                <button className={btnPrimary} onClick={() => scrollToId("forge")}>
-                  Forge Identity
-                </button>
-                <a className={btnGhost} href={links.buy} target="_blank" rel="noreferrer">
-                  Buy on Jupiter
-                </a>
-                <a className={btnGhost} href={links.chart} target="_blank" rel="noreferrer">
-                  Track Momentum
-                </a>
-              </div>
-
-              <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
-                <div className="text-xs uppercase tracking-[0.35em] text-white/50">Contract</div>
-                <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                  <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
-                    {addr}
-                  </div>
-                  <button onClick={copyCA} className={btnGhost}>
-                    {copied ? "Copied" : "Copy"}
-                  </button>
-                </div>
-              </div>
-
-              <p className="mt-6 text-xs text-white/40 leading-[1.8]">Not financial advice. Culture experiment. Wearable energy.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* MANIFESTO */}
-        <section className="pb-20 w-full">
-          <div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 sm:p-10 text-center">
-            <div className="text-xs uppercase tracking-[0.35em] text-white/55">Statement</div>
-            <h2 className="mt-4 text-3xl sm:text-4xl font-black leading-tight">Quiet rebellion.</h2>
-            <p className="mt-5 text-white/70 leading-[1.9] text-base sm:text-lg max-w-3xl mx-auto">
-              The market tested conviction.
-              <br />
-              Most reacted. Some refined.
-              <br />
-              Not chaos — composure.
-            </p>
-
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <button className={btnGhost} onClick={() => scrollToId("confessions")}>
-                Share the emotion
-              </button>
-              <button className={btnGhost} onClick={() => scrollToId("roadmap")}>
-                See the roadmap
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* PFP GENERATOR */}
-        <section id="forge" className="py-20 w-full max-w-xl mx-auto text-center">
-          <div className="mb-10 flex items-center justify-center gap-3">
-            <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
-              <Image src="/mad.png" alt="$MAD logo" width={56} height={56} priority />
-            </div>
-            <div className="text-left">
-              <div className="text-xs uppercase tracking-[0.35em] text-white/60">Forge</div>
-              <div className="text-2xl sm:text-3xl font-black leading-tight">Wear the mark.</div>
-            </div>
-          </div>
-
-          <p className="text-white/65 leading-[1.9]">Free for the community. Clean looks. Strong signal.</p>
-
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
-            <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
-              {showBase ? "Hide Base" : "Show Base"}
-            </button>
-            <button className={btnGhost} onClick={() => setShowAcc((v) => !v)}>
-              {showAcc ? "Hide Accessory" : "Show Accessory"}
-            </button>
-          </div>
-
-          <div
-            className="mt-10 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border border-white/10 bg-white/5 shadow-[0_30px_120px_rgba(255,120,80,0.10)]"
-            style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
+        <AnimatePresence mode="wait" initial={false} custom={tabDir}>
+          <motion.div
+            key={activeTab}
+            custom={tabDir}
+            variants={pageMotion}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="relative"
           >
-            {showBase && (
-              <img
-                key={`base-${renderNonce}`}
-                src={BASE.primary}
-                className="absolute inset-0 w-full h-full object-cover"
-                alt="base"
-                onLoad={resetFallbackIndex}
-                onError={(e) => cycleFallback(e, BASE.fallbacks)}
-              />
-            )}
-
-            <img
-              key={`eyes-${eyeId}-${renderNonce}`}
-              src={eyeSrc}
-              className="absolute inset-0 w-full h-full object-cover"
-              alt="eyes"
-              onLoad={resetFallbackIndex}
-              onError={(e) => cycleFallback(e, eyeFallbacks)}
+            {/* Swipe overlay streak */}
+            <motion.div
+              className="pointer-events-none fixed inset-0 z-[9999]"
+              initial={{ x: tabDir === 1 ? "-110%" : "110%" }}
+              animate={{ x: tabDir === 1 ? "110%" : "-110%" }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(255,0,0,0) 0%, rgba(255,60,30,0.25) 40%, rgba(255,120,60,0.35) 50%, rgba(255,60,30,0.25) 60%, rgba(255,0,0,0) 100%)",
+                mixBlendMode: "screen",
+              }}
             />
 
-            {showAcc && (
-              <img
-                key={`acc-${accId}-${renderNonce}`}
-                src={accSrc}
-                className="absolute inset-0 w-full h-full object-cover"
-                alt="accessory"
-                style={selectedAcc?.cssTransform ? { transform: selectedAcc.cssTransform } : undefined}
-                onLoad={resetFallbackIndex}
-                onError={(e) => cycleFallback(e, accFallbacks)}
-              />
-            )}
-          </div>
+            {panelByTab[activeTab]}
 
-          <div className="mt-5 text-xs text-white/65">{eyeLabel}</div>
-          <div className="mt-1 text-xs text-white/50">{accLabel}</div>
-
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-black">
-              Forge Count: <span className="text-white tabular-nums">{forgeCount}</span>
-            </div>
-            <div className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-black">
-              Power Index: <span className="text-white tabular-nums">{powerIndex}</span>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <button className={btnPrimary} onClick={forgeIdentity}>
-              Forge Identity
-            </button>
-          </div>
-
-          <p className="mt-5 text-xs text-white/40 leading-[1.8]">
-            Eyes: {ALL_EYES.length}. Accessories: {ALL_ACCESSORIES.length}. Legendary:{" "}
-            {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
-          </p>
-        </section>
-
-        {/* CONFESSIONS */}
-        <section id="confessions" className="py-20 w-full max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Community</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Mad Confessions</h2>
-            <p className="mt-4 text-white/65 leading-[1.9]">Structured chaos. Anonymous truth.</p>
-
-            {!apiOk && (
-              <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
-                Confessions API not reachable yet — feed may look empty until you add{" "}
-                <span className="font-mono">/api/confessions</span>.
-              </div>
-            )}
-          </div>
-
-          <div className="mb-7 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
-            <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s prompt</div>
-            <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
-            <div className="mt-2 text-xs text-white/45">Anonymous. Public. Real.</div>
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-black/25 p-5 sm:p-7">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div>
-                <div className="text-sm font-black">Post a confession</div>
-                <div className="text-xs text-white/55 mt-1">No names. No DMs. Just signal.</div>
-              </div>
-              <button className={btnPrimary} onClick={submitConfession} disabled={confessionBusy}>
-                {confessionBusy ? "Posting..." : "Post"}
-              </button>
-            </div>
-
-            <div className="mt-4">
-              <textarea
-                value={confessionText}
-                onChange={(e) => setConfessionText(e.target.value)}
-                placeholder="Example: I paid gas fees and the transaction still failed."
-                className="w-full min-h-[110px] rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:border-white/20"
-                maxLength={240}
-              />
-              <div className="mt-2 flex items-center justify-between text-xs">
-                <div className="text-red-300/90">{confessionErr ? `⚠️ ${confessionErr}` : ""}</div>
-                <div className="text-white/40 tabular-nums">{confessionText.length}/240</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-9 grid gap-4">
-            {confessions.length === 0 ? (
-              <div className="text-center text-white/55 py-10">No confessions yet.</div>
-            ) : (
-              confessions.map((c) => {
-                const reacted = reactedMap[c.id] || {};
-                return (
-                  <div key={c.id} className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="text-white/85 leading-relaxed text-sm sm:text-base">{c.text}</div>
-                      <div className="shrink-0 text-xs text-white/35">
-                        {new Date(c.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
-                      </div>
-                    </div>
-
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      <button
-                        className={[
-                          "rounded-full border px-4 py-2 text-xs font-black transition",
-                          reacted.same ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
-                        ].join(" ")}
-                        onClick={() => react(c.id, "same")}
-                        title="Same"
-                      >
-                        Same <span className="text-white/70 tabular-nums">{c.reactions.same}</span>
-                      </button>
-
-                      <button
-                        className={[
-                          "rounded-full border px-4 py-2 text-xs font-black transition",
-                          reacted.lol ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
-                        ].join(" ")}
-                        onClick={() => react(c.id, "lol")}
-                        title="LOL"
-                      >
-                        LOL <span className="text-white/70 tabular-nums">{c.reactions.lol}</span>
-                      </button>
-
-                      <button
-                        className={[
-                          "rounded-full border px-4 py-2 text-xs font-black transition",
-                          reacted.handshake ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
-                        ].join(" ")}
-                        onClick={() => react(c.id, "handshake")}
-                        title="Relatable"
-                      >
-                        🤝 <span className="text-white/70 tabular-nums">{c.reactions.handshake}</span>
-                      </button>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
-
-          <p className="mt-6 text-center text-xs text-white/35">Public feed. Anonymous voice.</p>
-        </section>
-
-        {/* DEXSCREENER */}
-        <section className="pb-20 w-full max-w-5xl mx-auto">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-              <div>
-                <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Live</p>
-                <h3 className="mt-2 text-3xl sm:text-4xl font-black">Track Momentum</h3>
-                <p className="mt-2 text-white/60 leading-[1.9]">Observe. Don’t react.</p>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-                  Open Dexscreener
-                </a>
-                <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-                  Buy on Jupiter
-                </a>
-              </div>
-            </div>
-
-            <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 overflow-hidden">
-              <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-                <iframe
-                  title="$MAD Dexscreener"
-                  src={dexscreenerEmbedSrc}
-                  className="absolute inset-0 h-full w-full"
-                  allow="clipboard-write; fullscreen"
-                />
-              </div>
-            </div>
-
-            <p className="mt-3 text-xs text-white/40">If the embed ever changes, the open button still works.</p>
-          </div>
-        </section>
-
-        {/* DETAILS */}
-        <section className="py-20 flex flex-col items-center text-center">
-          <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
-            <Image src="/mad.png" alt="$MAD logo" width={120} height={120} priority />
-          </div>
-
-          <h2 className="mt-10 text-4xl sm:text-6xl font-black tracking-tight">
-            Born in volatility.
-            <br />
-            Refined into culture.
-          </h2>
-
-          <p className="mt-6 max-w-2xl text-white/70 leading-[1.95] text-base sm:text-lg">
-            The market was brutal. People lost money.
-            <br />
-            The emotion was real — and shared.
-            <br />
-            Then it flips: the same emotion becomes the cost of fading.
-          </p>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-              Buy on Jupiter
-            </a>
-            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-              View Chart
-            </a>
-          </div>
-        </section>
-
-        {/* ROBLOX */}
-        <section className="pb-20 w-full max-w-4xl mx-auto">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center overflow-hidden">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Universe</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-black">Roblox (Beta)</h2>
-            <p className="mt-4 text-white/65 leading-[1.9] max-w-2xl mx-auto">
-              The experiment has a playground: <span className="font-black text-white/85">Will You Get RICH… Or Stay MAD?</span>
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <a href={links.game} target="_blank" rel="noreferrer" className={btnPrimary}>
-                Play on Roblox
-              </a>
-              <a href={links.x} target="_blank" rel="noreferrer" className={btnGhost}>
-                Join X Community
-              </a>
-            </div>
-
-            <p className="mt-4 text-xs text-white/40">Roblox blocks most site embeds — this opens directly in Roblox.</p>
-          </div>
-        </section>
-
-        {/* STATUS */}
-        <section id="status" className="py-20 w-full">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Burned & Locked</h2>
-            <p className="mt-4 text-white/65 leading-[1.9]">Scarcity is intentional.</p>
-
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 text-left">
-              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
-                <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">🔥</div>
-
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 30% 70%, rgba(255,120,0,.38), transparent 55%)," +
-                      "radial-gradient(circle at 70% 70%, rgba(255,0,0,.28), transparent 60%)," +
-                      "radial-gradient(circle at 50% 95%, rgba(255,200,0,.24), transparent 55%)",
-                    filter: "blur(18px) saturate(1.15)",
-                    animation: "flameFlicker 1.7s ease-in-out infinite",
-                    opacity: 0.78,
-                  }}
-                />
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background: "radial-gradient(circle at 50% 85%, rgba(255,160,0,.18), transparent 60%)",
-                    filter: "blur(22px)",
-                    animation: "flameRise 2.4s ease-in-out infinite",
-                    mixBlendMode: "screen",
-                  }}
-                />
-
-                <div className="relative">
-                  <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
-                  <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
-                  <p className="mt-2 text-white/70">
-                    Burn rate: <span className="font-black text-white tabular-nums">{BURN_RATE}%</span>
-                  </p>
-                </div>
-              </div>
-
-              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
-                <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">🔒</div>
-
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 30% 70%, rgba(0,160,255,.34), transparent 55%)," +
-                      "radial-gradient(circle at 70% 70%, rgba(0,90,255,.24), transparent 60%)," +
-                      "radial-gradient(circle at 50% 95%, rgba(120,220,255,.20), transparent 55%)",
-                    filter: "blur(18px) saturate(1.2)",
-                    animation: "iceFlicker 1.8s ease-in-out infinite",
-                    opacity: 0.78,
-                  }}
-                />
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background: "radial-gradient(circle at 50% 85%, rgba(120,220,255,.18), transparent 60%)",
-                    filter: "blur(22px)",
-                    animation: "icePulse 2.6s ease-in-out infinite",
-                    mixBlendMode: "screen",
-                  }}
-                />
-
-                <div className="relative">
-                  <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
-                  <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
-                  <p className="mt-2 text-white/70">
-                    Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ROADMAP */}
-        <section id="roadmap" className="py-20 w-full max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
-            <p className="mt-4 text-white/65 leading-[1.9]">Bond first. Then climb.</p>
-          </div>
-
-          <div className="grid gap-5 text-left">
-            {roadmap.map((item) => {
-              const done = !!item.done;
-              return (
-                <div
-                  key={item.phase + item.title}
-                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(" ")}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
-                      {item.phase}
-                    </p>
-
-                    <span className="text-xs font-black text-white/55">{done ? "Completed" : "Not Completed"}</span>
-                  </div>
-
-                  <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
-                    <span className="h-px flex-1 bg-white/10" />
-                  </div>
-
-                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>{item.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* MEME VAULT */}
-        <section className="py-24 w-full">
-          <div className="text-center mb-14">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Meme Vault</h2>
-            <p className="mt-4 text-white/65 leading-[1.9]">Archives. Signals. Receipts.</p>
-          </div>
-
-          {freshMemes.length === 0 ? (
-            <div className="text-center text-white/60">No memes yet.</div>
-          ) : (
-            <div className="relative mx-auto w-full max-w-6xl">
-              <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-white/10 blur-3xl" />
-
-              <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6">
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <div className="text-xs uppercase tracking-[0.35em] text-white/50">Swipe</div>
-                  <div className="text-xs text-white/40">({freshMemes.length} items)</div>
-                </div>
-
-                <div
-                  className={[
-                    "flex gap-5 overflow-x-auto overflow-y-hidden pb-3",
-                    "snap-x snap-mandatory",
-                    "scroll-px-4",
-                    "[scrollbar-width:thin]",
-                  ].join(" ")}
-                  style={{ WebkitOverflowScrolling: "touch" }}
-                >
-                  {freshMemes.map((m, idx) => {
-                    const candidates = buildCandidates(m.src);
-                    const primary = candidates[0];
-                    const fallbacks = candidates.slice(1);
-
-                    return (
-                      <div
-                        key={m.src}
-                        className={[
-                          "snap-start shrink-0",
-                          "w-[85vw] sm:w-[520px] md:w-[560px] lg:w-[600px]",
-                          "rounded-3xl border border-white/10 bg-black/40 p-4",
-                          "transition hover:bg-white/10",
-                        ].join(" ")}
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="text-xs uppercase tracking-[0.35em] text-white/50">#{idx + 1}</div>
-                          <div className="text-sm font-black text-white/70">{m.tag}</div>
-                        </div>
-
-                        <img
-                          src={primary}
-                          alt={m.tag}
-                          className="rounded-2xl w-full h-auto"
-                          loading="lazy"
-                          onLoad={resetFallbackIndex}
-                          onError={(e) => cycleFallback(e, fallbacks)}
-                        />
-
-                        <div className="mt-3 text-xs text-white/40">Screenshot. Post. Tag $MAD.</div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black/35 to-transparent rounded-l-3xl" />
-                <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black/35 to-transparent rounded-r-3xl" />
-              </div>
-            </div>
-          )}
-        </section>
-
-        {/* SOCIALS */}
-        <section className="pb-24 w-full">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Connect</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Socials</h2>
-            <p className="mt-4 text-white/65 leading-[1.9]">Join the community. Move with intent.</p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
-                Join X Community
-              </a>
-              <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
-                Join Telegram
-              </a>
-              <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-                View Chart
-              </a>
-              <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-                Buy on Jupiter
-              </a>
-            </div>
-
-            <p className="mt-8 text-xs text-white/40">$MAD — digital emotion. Not financial advice.</p>
-          </div>
-        </section>
-
-        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
+            <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </main>
   );
