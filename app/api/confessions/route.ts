@@ -29,7 +29,6 @@ function isReactionKey(x: any): x is ReactionKey {
 
 function toStringSafe(v: unknown): string | null {
   if (typeof v === "string") return v;
-  // KV can sometimes return Buffer-ish types in Node
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const anyV: any = v;
   if (anyV && typeof anyV === "object" && typeof anyV.toString === "function") {
@@ -53,10 +52,6 @@ function safeJson<T>(raw: unknown): T | null {
   }
 }
 
-/**
- * GET /api/confessions
- * Returns: { confessions: Confession[] }
- */
 export async function GET() {
   try {
     const ids = (await kv.lrange<string>(KEY, 0, 199)) ?? [];
@@ -64,16 +59,10 @@ export async function GET() {
     const confessions = (items.filter(Boolean) as Confession[]).sort((a, b) => b.createdAt - a.createdAt);
     return Response.json({ confessions });
   } catch (err: any) {
-    // Keep UI alive; return empty feed but include error string (helps debugging)
-    return Response.json({ confessions: [], error: err?.message || "KV error" }, { status: 200 });
+    return Response.json({ confessions: [], error: err?.message || "KV error" }, { status: 500 });
   }
 }
 
-/**
- * POST /api/confessions
- * Body: { text: string }
- * Returns: { item: Confession }
- */
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({} as any));
@@ -99,13 +88,6 @@ export async function POST(req: Request) {
   }
 }
 
-/**
- * PATCH /api/confessions
- * Accepts either:
- *   { id, reaction, delta? }
- * or:
- *   { id, kind, delta? }  // your client uses "kind"
- */
 export async function PATCH(req: Request) {
   try {
     const body = await req.json().catch(() => ({} as any));
@@ -116,13 +98,10 @@ export async function PATCH(req: Request) {
 
     if (!id) return Response.json({ error: "id required" }, { status: 400 });
     if (!isReactionKey(reaction)) return Response.json({ error: "invalid reaction" }, { status: 400 });
-    if (!Number.isFinite(delta) || delta === 0) return Response.json({ error: "invalid delta" }, { status: 400 });
+    if (![1, -1].includes(delta)) return Response.json({ error: "invalid delta" }, { status: 400 });
 
     const key = ITEM(id);
 
-    // NOTE:
-    // Use kv.eval without TS generic to avoid strict typing issues.
-    // We'll parse whatever comes back safely.
     const result = await kv.eval(
       `
 local k = KEYS[1]
