@@ -163,7 +163,7 @@ const links = {
   buy: `https://jup.ag/swap/SOL-${addr}`,
   chart: `https://dexscreener.com/solana/${addr}`,
   x: "https://x.com/i/communities/2019256566248312879/",
-  tg: "https://t.me/madtokenfam",
+  tg: "https://t.me/MadOfficalChannel", // ✅ UPDATED
   game: "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD",
 };
 
@@ -280,11 +280,17 @@ function MadShell({ children }: { children: React.ReactNode }) {
               </div>
 
               <div className="mt-5 flex flex-col sm:flex-row gap-3">
-                <button className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 bg-gradient-to-r from-red-500/80 to-orange-500/80 hover:from-red-500 hover:to-orange-500 text-white shadow-[0_18px_70px_rgba(255,120,80,0.18)]" onClick={tapGate}>
+                <button
+                  className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 bg-gradient-to-r from-red-500/80 to-orange-500/80 hover:from-red-500 hover:to-orange-500 text-white shadow-[0_18px_70px_rgba(255,120,80,0.18)]"
+                  onClick={tapGate}
+                >
                   😡 Tap ({gateTaps}/10)
                 </button>
 
-                <button className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 bg-white/10 hover:bg-white/15 text-white" onClick={unlockGate}>
+                <button
+                  className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 bg-white/10 hover:bg-white/15 text-white"
+                  onClick={unlockGate}
+                >
                   Skip →
                 </button>
               </div>
@@ -399,6 +405,13 @@ function NavPill({ href, children }: { href: string; children: React.ReactNode }
       {children}
     </Link>
   );
+}
+
+// =====================
+// ✅ DEFAULT EXPORT (THIS FIXES YOUR VERCEL BUILD ERROR)
+// =====================
+export default function Page() {
+  return <MadHomePage />;
 }
 
 // =====================
@@ -996,7 +1009,12 @@ export function MadChartPage() {
         <h1 className="text-4xl sm:text-5xl font-black">Chart</h1>
         <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
           <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-            <iframe title="$MAD Dexscreener" src={dexscreenerEmbedSrc} className="absolute inset-0 h-full w-full" allow="clipboard-write; fullscreen" />
+            <iframe
+              title="$MAD Dexscreener"
+              src={dexscreenerEmbedSrc}
+              className="absolute inset-0 h-full w-full"
+              allow="clipboard-write; fullscreen"
+            />
           </div>
         </div>
       </div>
