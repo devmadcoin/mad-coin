@@ -6,9 +6,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import MadShell from "@/app/_components/MadShell";
 import {
-  AccessoryItem,
-  EyeItem,
-  makeItem,
+  type EyeItem,
+  type AccessoryItem,
+  FORGE_EYES,
+  FORGE_ACCESSORIES,
+  FORGE_BASE,
   pickWeightedAccessory,
   cycleFallback,
   resetFallbackIndex,
@@ -25,79 +27,40 @@ export default function Page() {
   ].join(" ");
   const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
 
-  const ALL_EYES: EyeItem[] = useMemo(() => {
-    return [
-      makeItem<EyeItem>("c-common-black", "/pfp/eyes/cartoon/common/cartoon-common-black.png", "Cartoon Common Black", "common", "cartoon"),
-      makeItem<EyeItem>("c-common-blue", "/pfp/eyes/cartoon/common/cartoon-common-blue.png", "Cartoon Common Blue", "common", "cartoon"),
-      makeItem<EyeItem>("c-common-green", "/pfp/eyes/cartoon/common/cartoon-common-green.png", "Cartoon Common Green", "common", "cartoon"),
-      makeItem<EyeItem>("c-common-orange", "/pfp/eyes/cartoon/common/cartoon-common-orange.png", "Cartoon Common Orange", "common", "cartoon"),
-      makeItem<EyeItem>("c-common-pink", "/pfp/eyes/cartoon/common/cartoon-common-pink.png", "Cartoon Common Pink", "common", "cartoon"),
-      makeItem<EyeItem>("c-common-red", "/pfp/eyes/cartoon/common/cartoon-common-red.png", "Cartoon Common Red", "common", "cartoon"),
-    ];
-  }, []);
-
-  const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
-    const tall = (y: number, scale = 1) => ({
-      cssTransform: `translateY(${y}px) scale(${scale})`,
-      draw: { y, scale },
-    });
-
-    return [
-      makeItem<AccessoryItem>("a-c-common-bandaid", "/pfp/accessories/cartoon/common/cartoon-common-bandaid.png", "Bandage", "common", "cartoon"),
-      makeItem<AccessoryItem>("a-c-rare-icedchain", "/pfp/accessories/cartoon/rare/cartoon-rare-icedchain.png", "Iced $MAD Chain", "rare", "cartoon"),
-
-      // Legendary (your real filenames)
-      makeItem<AccessoryItem>("a-c-leg-cigar", "/pfp/accessories/cartoon/legendary/cartoon-legendary-cigar.png", "Cigar", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-crown", "/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png", "Crown", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-halo", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halo.png", "Halo", "legendary", "cartoon", tall(28, 0.95)),
-      makeItem<AccessoryItem>("a-c-leg-jetpack", "/pfp/accessories/cartoon/legendary/cartoon-legendary-jetpack.png", "Jetpack", "legendary", "cartoon", tall(18, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-lightninghorns", "/pfp/accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png", "Lightning Horns", "legendary", "cartoon", tall(24, 0.96)),
-      makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-moneybag", "/pfp/accessories/cartoon/legendary/cartoon-legendary-moneybag.png", "Money Bag", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-pinkgrill", "/pfp/accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png", "Pink Grill", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-firegrills", "/pfp/accessories/cartoon/legendary/cartoon-legendary-firegrills.png", "Fire Grills", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-fieryaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fieryaura.png", "Fiery Aura", "legendary", "cartoon", tall(22, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-fireaura", "/pfp/accessories/cartoon/legendary/cartoon-legendary-fireaura.png", "Fire Aura", "legendary", "cartoon", tall(22, 0.98)),
-      makeItem<AccessoryItem>("a-c-leg-madchaininfinity", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png", "Infinity Chain", "legendary", "cartoon"),
-    ];
-  }, []);
-
-  const BASE = useMemo(
-    () =>
-      makeItem<{ id: string; primary: string; fallbacks: string[]; label: string; rarity: "common"; style: "cartoon" }>(
-        "base",
-        "/pfp/base/base-01.png",
-        "Base",
-        "common",
-        "cartoon"
-      ),
-    []
-  );
+  // Pull lists from lib (keeps this file tiny)
+  const ALL_EYES: EyeItem[] = useMemo(() => FORGE_EYES, []);
+  const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => FORGE_ACCESSORIES, []);
+  const BASE = useMemo(() => FORGE_BASE, []);
 
   const [showBase, setShowBase] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  const initialEye = useMemo(() => ALL_EYES[0], [ALL_EYES]);
-  const initialAcc = useMemo(() => ALL_ACCESSORIES[0], [ALL_ACCESSORIES]);
+  const [eyeId, setEyeId] = useState("");
+  const [accId, setAccId] = useState("");
 
-  const [eyeId, setEyeId] = useState(initialEye?.id ?? "");
-  const [accId, setAccId] = useState(initialAcc?.id ?? "");
+  // Ensure we always have valid defaults (avoids undefined crashes)
+  useEffect(() => {
+    if (!eyeId && ALL_EYES.length) setEyeId(ALL_EYES[0].id);
+    if (!accId && ALL_ACCESSORIES.length) setAccId(ALL_ACCESSORIES[0].id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ALL_EYES.length, ALL_ACCESSORIES.length]);
 
-  const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? initialEye, [eyeId, initialEye, ALL_EYES]);
+  const selectedEye = useMemo(
+    () => ALL_EYES.find((e) => e.id === eyeId) ?? ALL_EYES[0],
+    [eyeId, ALL_EYES]
+  );
   const selectedAcc = useMemo(
-    () => ALL_ACCESSORIES.find((a) => a.id === accId) ?? initialAcc,
-    [accId, initialAcc, ALL_ACCESSORIES]
+    () => ALL_ACCESSORIES.find((a) => a.id === accId) ?? ALL_ACCESSORIES[0],
+    [accId, ALL_ACCESSORIES]
   );
 
-  const [eyeSrc, setEyeSrc] = useState(selectedEye?.primary ?? "");
-  const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye?.fallbacks ?? []);
-  const [eyeLabel, setEyeLabel] = useState(selectedEye ? `${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}` : "");
+  const [eyeSrc, setEyeSrc] = useState("");
+  const [eyeFallbacks, setEyeFallbacks] = useState<string[]>([]);
+  const [eyeLabel, setEyeLabel] = useState("");
 
-  const [accSrc, setAccSrc] = useState(selectedAcc?.primary ?? "");
-  const [accFallbacks, setAccFallbacks] = useState<string[]>(selectedAcc?.fallbacks ?? []);
-  const [accLabel, setAccLabel] = useState(selectedAcc ? `${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}` : "");
+  const [accSrc, setAccSrc] = useState("");
+  const [accFallbacks, setAccFallbacks] = useState<string[]>([]);
+  const [accLabel, setAccLabel] = useState("");
 
   useEffect(() => {
     if (!selectedEye) return;
@@ -122,7 +85,7 @@ export default function Page() {
     if (!ALL_EYES.length) return;
 
     setRevealing(true);
-    setTimeout(() => {
+    window.setTimeout(() => {
       const pickEye = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
       setEyeId(pickEye.id);
 
@@ -152,7 +115,9 @@ export default function Page() {
             </div>
           </div>
 
-          <p className="mt-6 text-white/65 leading-[1.9] max-w-2xl">Free for the community. Clean looks. Strong signal.</p>
+          <p className="mt-6 text-white/65 leading-[1.9] max-w-2xl">
+            Free for the community. Clean looks. Strong signal.
+          </p>
         </section>
 
         <section className="pb-20 w-full max-w-xl mx-auto text-center">
@@ -180,16 +145,18 @@ export default function Page() {
               />
             )}
 
-            <img
-              key={`eyes-${eyeId}-${renderNonce}`}
-              src={eyeSrc}
-              className="absolute inset-0 w-full h-full object-cover"
-              alt="eyes"
-              onLoad={resetFallbackIndex}
-              onError={(e) => cycleFallback(e, eyeFallbacks)}
-            />
+            {!!eyeSrc && (
+              <img
+                key={`eyes-${eyeId}-${renderNonce}`}
+                src={eyeSrc}
+                className="absolute inset-0 w-full h-full object-cover"
+                alt="eyes"
+                onLoad={resetFallbackIndex}
+                onError={(e) => cycleFallback(e, eyeFallbacks)}
+              />
+            )}
 
-            {showAcc && (
+            {showAcc && !!accSrc && (
               <img
                 key={`acc-${accId}-${renderNonce}`}
                 src={accSrc}
@@ -221,9 +188,10 @@ export default function Page() {
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
+        <footer className="py-10 text-center text-white/35 text-sm">
+          © {new Date().getFullYear()} $MAD.
+        </footer>
 
-        {/* local animation used by forge */}
         <style jsx global>{`
           @keyframes forgePulse {
             0% {
