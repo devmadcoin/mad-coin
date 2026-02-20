@@ -153,27 +153,7 @@ function clampText(s: string, max = 240) {
   return t.length > max ? t.slice(0, max).trim() : t;
 }
 
-// =============================
-// Swipe Tabs
-// =============================
-type TabKey = "home" | "forge" | "confessions" | "chart" | "status" | "roadmap" | "memes" | "socials";
-
-const TAB_ORDER: TabKey[] = ["home", "forge", "confessions", "chart", "status", "roadmap", "memes", "socials"];
-
-const TAB_LABEL: Record<TabKey, string> = {
-  home: "Home",
-  forge: "Forge",
-  confessions: "Confessions",
-  chart: "Chart",
-  status: "Status",
-  roadmap: "Roadmap",
-  memes: "Memes",
-  socials: "Socials",
-};
-
-function clamp(n: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, n));
-}
+type TabId = "home" | "forge" | "confessions" | "chart" | "status" | "roadmap" | "memes" | "socials";
 
 export default function Home() {
   // ====== Token / Links ======
@@ -276,18 +256,9 @@ export default function Home() {
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
-
       { phase: "Phase 1.1", title: "300M Burn (30%)", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
-
       { phase: "Phase 1.2", title: "350M Burn (35%)", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
-
-      {
-        phase: "Phase 1.3",
-        title: "40% Supply Burned",
-        desc: "Target milestone — 40% of total supply burned.",
-        done: false,
-      },
-
+      { phase: "Phase 1.3", title: "40% Supply Burned", desc: "Target milestone — 40% of total supply burned.", done: false },
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
       { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive." },
@@ -423,7 +394,9 @@ export default function Home() {
     [ALL_EYES]
   );
   const initialAcc = useMemo(
-    () => ALL_ACCESSORIES[0] ?? makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon"),
+    () =>
+      ALL_ACCESSORIES[0] ??
+      makeItem<AccessoryItem>("default-acc", "/pfp/accessories/acc-01.png", "Accessory", "common", "cartoon"),
     [ALL_ACCESSORIES]
   );
 
@@ -431,7 +404,10 @@ export default function Home() {
   const [accId, setAccId] = useState(initialAcc.id);
 
   const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? initialEye, [eyeId, initialEye, ALL_EYES]);
-  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.id === accId) ?? initialAcc, [accId, initialAcc, ALL_ACCESSORIES]);
+  const selectedAcc = useMemo(
+    () => ALL_ACCESSORIES.find((a) => a.id === accId) ?? initialAcc,
+    [accId, initialAcc, ALL_ACCESSORIES]
+  );
 
   const [eyeSrc, setEyeSrc] = useState(selectedEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye.fallbacks);
@@ -638,6 +614,7 @@ export default function Home() {
   };
 
   // ====== Rage Tap Gate ======
+  // ✅ Fix: start locked by default to avoid “flash unlocked” on first paint
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [gateTaps, setGateTaps] = useState(0);
 
@@ -682,152 +659,116 @@ export default function Home() {
     return `${base}?embed=1&theme=dark&trades=0&info=0`;
   }, [addr]);
 
-  // =============================
-  // Tabs + swipe transition state
-  // =============================
-  const [active, setActive] = useState<TabKey>("home");
-  const [dir, setDir] = useState<1 | -1>(1);
+  // ====== TABS + SWIPE TRANSITION ======
+  const tabs = useMemo(
+    () =>
+      [
+        ["home", "Home"],
+        ["forge", "Forge"],
+        ["confessions", "Confessions"],
+        ["chart", "Chart"],
+        ["status", "Status"],
+        ["roadmap", "Roadmap"],
+        ["memes", "Memes"],
+        ["socials", "Socials"],
+      ] as Array<[TabId, string]>,
+    []
+  );
 
-  const activeIndex = useMemo(() => TAB_ORDER.indexOf(active), [active]);
+  const [activeTab, setActiveTab] = useState<TabId>("home");
+  const [dir, setDir] = useState<1 | -1>(1); // swipe direction
 
-  const goTo = (key: TabKey) => {
-    const nextIdx = TAB_ORDER.indexOf(key);
-    const d = nextIdx >= activeIndex ? 1 : -1;
-    setDir(d as 1 | -1);
-    setActive(key);
-    // Keep it feeling “page-like”
+  const tabIndex = (t: TabId) => tabs.findIndex(([id]) => id === t);
+  const goTab = (t: TabId) => {
+    if (t === activeTab) return;
+    setDir(tabIndex(t) > tabIndex(activeTab) ? 1 : -1);
+    setActiveTab(t);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const goRel = (delta: number) => {
-    const nextIdx = clamp(activeIndex + delta, 0, TAB_ORDER.length - 1);
-    const nextKey = TAB_ORDER[nextIdx];
-    if (nextKey === active) return;
-    setDir(delta >= 0 ? 1 : -1);
-    setActive(nextKey);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const touchStartX = useRef<number | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches?.[0]?.clientX ?? null;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStartX.current;
+    touchStartX.current = null;
+    if (start == null) return;
+
+    const end = e.changedTouches?.[0]?.clientX ?? start;
+    const dx = end - start;
+
+    // threshold
+    if (Math.abs(dx) < 55) return;
+
+    const idx = tabIndex(activeTab);
+    if (dx < 0 && idx < tabs.length - 1) goTab(tabs[idx + 1][0]); // swipe left = next
+    if (dx > 0 && idx > 0) goTab(tabs[idx - 1][0]); // swipe right = prev
   };
 
-  // Keyboard support: left/right arrows
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") goRel(-1);
-      if (e.key === "ArrowRight") goRel(1);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex, active]);
-
-  const swipeThreshold = 65; // px
   const pageVariants = {
-    enter: (d: number) => ({ x: d > 0 ? 60 : -60, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (d: number) => ({ x: d > 0 ? -60 : 60, opacity: 0 }),
+    enter: (direction: 1 | -1) => ({
+      x: direction === 1 ? 90 : -90,
+      opacity: 0,
+      filter: "blur(6px)",
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+    },
+    exit: (direction: 1 | -1) => ({
+      x: direction === 1 ? -90 : 90,
+      opacity: 0,
+      filter: "blur(6px)",
+    }),
   };
 
-  // =============================
-  // UI helpers
-  // =============================
-  const TopNav = () => (
-    <div className="sticky top-0 z-30 -mx-6 px-6 pt-4 pb-3 backdrop-blur-xl bg-black/20 border-b border-white/10">
-      <div className="mx-auto max-w-6xl flex items-center justify-between gap-4">
-        <button onClick={() => goTo("home")} className="flex items-center gap-3 text-left">
-          <div className="rounded-2xl bg-white/10 p-2.5 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
-            <Image src="/mad.png" alt="$MAD" width={34} height={34} priority />
-          </div>
-          <div className="hidden sm:block">
-            <div className="text-xs uppercase tracking-[0.35em] text-white/60">Solana</div>
-            <div className="text-sm font-black text-white/85">Welcome To $MAD</div>
-          </div>
-        </button>
-
-        <div className="hidden md:flex items-center gap-2">
-          {TAB_ORDER.map((k) => (
-            <button
-              key={k}
-              className={[
-                "rounded-full px-4 py-2 text-xs font-black border transition",
-                active === k ? "bg-white text-black border-white/10" : "bg-white/5 hover:bg-white/10 border-white/10 text-white",
-              ].join(" ")}
-              onClick={() => goTo(k)}
-            >
-              {TAB_LABEL[k]}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <a className={btnGhost} href={links.buy} target="_blank" rel="noreferrer">
-            Buy
-          </a>
-          <a className={btnGhost} href={links.chart} target="_blank" rel="noreferrer">
-            Chart
-          </a>
-        </div>
-      </div>
-
-      {/* Mobile tabs row */}
-      <div className="md:hidden mt-3 overflow-x-auto pb-1 [scrollbar-width:thin]">
-        <div className="flex gap-2 min-w-max">
-          {TAB_ORDER.map((k) => (
-            <button
-              key={k}
-              className={[
-                "rounded-full px-4 py-2 text-xs font-black border transition shrink-0",
-                active === k ? "bg-white text-black border-white/10" : "bg-white/5 hover:bg-white/10 border-white/10 text-white",
-              ].join(" ")}
-              onClick={() => goTo(k)}
-            >
-              {TAB_LABEL[k]}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-3 h-px bg-white/10" />
-      <div className="mt-3 flex items-center justify-between text-xs text-white/55">
-        <div className="font-mono">Swipe ← / →</div>
-        <div className="tabular-nums">
-          {activeIndex + 1}/{TAB_ORDER.length}
-        </div>
-      </div>
-    </div>
+  const PageShell = ({ children }: { children: React.ReactNode }) => (
+    <motion.div
+      key={activeTab}
+      custom={dir}
+      variants={pageVariants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      transition={{ type: "tween", ease: "easeOut", duration: 0.22 }}
+      className="w-full"
+    >
+      {children}
+    </motion.div>
   );
 
-  const BottomNav = () => (
-    <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-4 pointer-events-none">
-      <div className="mx-auto max-w-6xl pointer-events-auto">
-        <div className="rounded-3xl border border-white/10 bg-black/45 backdrop-blur-xl shadow-[0_30px_120px_rgba(0,0,0,0.35)] p-2">
-          <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-            {TAB_ORDER.map((k) => (
-              <button
-                key={k}
-                onClick={() => goTo(k)}
-                className={[
-                  "rounded-2xl px-3 py-2 text-xs font-black border transition",
-                  active === k ? "bg-white text-black border-white/10" : "bg-white/5 hover:bg-white/10 border-white/10 text-white",
-                ].join(" ")}
-                title={TAB_LABEL[k]}
-              >
-                {TAB_LABEL[k]}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  // =============================
-  // Panels (each is its “page”)
-  // =============================
-  const PanelHome = () => (
-    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-28">
-      {/* HERO */}
-      <section className="pt-16 pb-16 w-full">
+  // ====== PAGES ======
+  const PageHome = () => (
+    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
+      <section className="pt-16 pb-20 w-full">
         <div className="mx-auto max-w-5xl">
-          <div className="mt-8">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+                <Image src="/mad.png" alt="$MAD" width={52} height={52} priority />
+              </div>
+              <div className="text-left">
+                <div className="text-xs uppercase tracking-[0.35em] text-white/60">Solana</div>
+                <div className="text-sm font-black text-white/80">Digital emotion — refined</div>
+              </div>
+            </div>
+
+            <div className="hidden sm:flex items-center gap-2">
+              <button className={btnGhost} onClick={() => goTab("confessions")}>
+                Confessions
+              </button>
+              <button className={btnGhost} onClick={() => goTab("forge")}>
+                Forge
+              </button>
+              <button className={btnGhost} onClick={() => goTab("status")}>
+                Status
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-12">
             <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">Welcome To $MAD</h1>
 
             <p className="mt-5 text-xl sm:text-2xl text-white/75 leading-[1.7] max-w-2xl">
@@ -839,21 +780,23 @@ export default function Home() {
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
-              <button className={btnPrimary} onClick={() => goTo("forge")}>
+              <button className={btnPrimary} onClick={() => goTab("forge")}>
                 Forge Identity
               </button>
-              <button className={btnGhost} onClick={() => goTo("confessions")}>
-                Confessions
-              </button>
-              <button className={btnGhost} onClick={() => goTo("chart")}>
+              <a className={btnGhost} href={links.buy} target="_blank" rel="noreferrer">
+                Buy on Jupiter
+              </a>
+              <a className={btnGhost} href={links.chart} target="_blank" rel="noreferrer">
                 Track Momentum
-              </button>
+              </a>
             </div>
 
             <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
               <div className="text-xs uppercase tracking-[0.35em] text-white/50">Contract</div>
               <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">{addr}</div>
+                <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
+                  {addr}
+                </div>
                 <button onClick={copyCA} className={btnGhost}>
                   {copied ? "Copied" : "Copy"}
                 </button>
@@ -865,8 +808,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MANIFESTO */}
-      <section className="pb-10 w-full">
+      <section className="pb-24 w-full">
         <div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 sm:p-10 text-center">
           <div className="text-xs uppercase tracking-[0.35em] text-white/55">Statement</div>
           <h2 className="mt-4 text-3xl sm:text-4xl font-black leading-tight">Quiet rebellion.</h2>
@@ -879,36 +821,43 @@ export default function Home() {
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <button className={btnGhost} onClick={() => goTo("confessions")}>
+            <button className={btnGhost} onClick={() => goTab("confessions")}>
               Share the emotion
             </button>
-            <button className={btnGhost} onClick={() => goTo("roadmap")}>
+            <button className={btnGhost} onClick={() => goTab("roadmap")}>
               See the roadmap
-            </button>
-            <button className={btnGhost} onClick={() => goTo("socials")}>
-              Socials
             </button>
           </div>
         </div>
       </section>
+
+      <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
     </div>
   );
 
-  const PanelForge = () => (
-    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-28">
-      <section className="pt-16 pb-14 w-full max-w-xl mx-auto text-center">
-        <div className="mb-10 flex items-center justify-center gap-3">
-          <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
-            <Image src="/mad.png" alt="$MAD logo" width={56} height={56} priority />
+  const PageForge = () => (
+    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
+      <section className="pt-16 pb-6 w-full">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+              <Image src="/mad.png" alt="$MAD logo" width={48} height={48} priority />
+            </div>
+            <div className="text-left">
+              <div className="text-xs uppercase tracking-[0.35em] text-white/60">Forge</div>
+              <div className="text-2xl sm:text-3xl font-black leading-tight">Wear the mark.</div>
+            </div>
           </div>
-          <div className="text-left">
-            <div className="text-xs uppercase tracking-[0.35em] text-white/60">Forge</div>
-            <div className="text-2xl sm:text-3xl font-black leading-tight">Wear the mark.</div>
-          </div>
+
+          <button className={btnGhost} onClick={() => goTab("home")}>
+            ← Back
+          </button>
         </div>
 
-        <p className="text-white/65 leading-[1.9]">Free for the community. Clean looks. Strong signal.</p>
+        <p className="mt-6 text-white/65 leading-[1.9] max-w-2xl">Free for the community. Clean looks. Strong signal.</p>
+      </section>
 
+      <section className="pb-20 w-full max-w-xl mx-auto text-center">
         <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
           <button className={btnGhost} onClick={() => setShowBase((v) => !v)}>
             {showBase ? "Hide Base" : "Show Base"}
@@ -971,33 +920,40 @@ export default function Home() {
           <button className={btnPrimary} onClick={forgeIdentity}>
             Forge Identity
           </button>
-          <button className={btnGhost} onClick={() => goTo("socials")}>
-            Use as PFP → Socials
-          </button>
         </div>
 
         <p className="mt-5 text-xs text-white/40 leading-[1.8]">
-          Eyes: {ALL_EYES.length}. Accessories: {ALL_ACCESSORIES.length}. Legendary: {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
+          Eyes: {ALL_EYES.length}. Accessories: {ALL_ACCESSORIES.length}. Legendary:{" "}
+          {ALL_ACCESSORIES.filter((a) => a.rarity === "legendary").length}.
         </p>
       </section>
+
+      <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
     </div>
   );
 
-  const PanelConfessions = () => (
-    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-28">
-      <section className="pt-16 pb-10 w-full max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Community</p>
-          <h2 className="mt-3 text-4xl sm:text-5xl font-black">Mad Confessions</h2>
-          <p className="mt-4 text-white/65 leading-[1.9]">Structured chaos. Anonymous truth.</p>
-
-          {!apiOk && (
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
-              Confessions API not reachable yet — feed may look empty until you add <span className="font-mono">/api/confessions</span>.
-            </div>
-          )}
+  const PageConfessions = () => (
+    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
+      <section className="pt-16 pb-4 w-full">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Community</p>
+            <h2 className="mt-2 text-4xl sm:text-5xl font-black">Mad Confessions</h2>
+            <p className="mt-3 text-white/65 leading-[1.9]">Structured chaos. Anonymous truth.</p>
+          </div>
+          <button className={btnGhost} onClick={() => goTab("home")}>
+            ← Back
+          </button>
         </div>
 
+        {!apiOk && (
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-xs text-yellow-200">
+            Confessions API not reachable yet — feed may look empty until you add <span className="font-mono">/api/confessions</span>.
+          </div>
+        )}
+      </section>
+
+      <section className="py-10 w-full max-w-4xl mx-auto">
         <div className="mb-7 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
           <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s prompt</div>
           <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
@@ -1087,20 +1043,30 @@ export default function Home() {
 
         <p className="mt-6 text-center text-xs text-white/35">Public feed. Anonymous voice.</p>
       </section>
+
+      <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
     </div>
   );
 
-  const PanelChart = () => (
-    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-28">
-      <section className="pt-16 pb-10 w-full max-w-5xl mx-auto">
+  const PageChart = () => (
+    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
+      <section className="pt-16 pb-8 w-full">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Live</p>
+            <h3 className="mt-2 text-3xl sm:text-4xl font-black">Track Momentum</h3>
+            <p className="mt-2 text-white/60 leading-[1.9]">Observe. Don’t react.</p>
+          </div>
+          <button className={btnGhost} onClick={() => goTab("home")}>
+            ← Back
+          </button>
+        </div>
+      </section>
+
+      <section className="pb-20 w-full max-w-5xl mx-auto">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-            <div>
-              <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Live</p>
-              <h3 className="mt-2 text-3xl sm:text-4xl font-black">Track Momentum</h3>
-              <p className="mt-2 text-white/60 leading-[1.9]">Observe. Don’t react.</p>
-            </div>
-
+            <div />
             <div className="flex flex-wrap gap-2">
               <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
                 Open Dexscreener
@@ -1113,25 +1079,41 @@ export default function Home() {
 
           <div className="mt-6 rounded-3xl border border-white/10 bg-black/30 overflow-hidden">
             <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-              <iframe title="$MAD Dexscreener" src={dexscreenerEmbedSrc} className="absolute inset-0 h-full w-full" allow="clipboard-write; fullscreen" />
+              <iframe
+                title="$MAD Dexscreener"
+                src={dexscreenerEmbedSrc}
+                className="absolute inset-0 h-full w-full"
+                allow="clipboard-write; fullscreen"
+              />
             </div>
           </div>
 
           <p className="mt-3 text-xs text-white/40">If the embed ever changes, the open button still works.</p>
         </div>
       </section>
+
+      <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
     </div>
   );
 
-  const PanelStatus = () => (
-    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-28">
+  const PageStatus = () => (
+    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
       <section className="pt-16 pb-10 w-full">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden max-w-5xl mx-auto">
-          <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
-          <h2 className="mt-3 text-4xl sm:text-5xl font-black">Burned & Locked</h2>
-          <p className="mt-4 text-white/65 leading-[1.9]">Scarcity is intentional.</p>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Burned & Locked</h2>
+            <p className="mt-4 text-white/65 leading-[1.9]">Scarcity is intentional.</p>
+          </div>
+          <button className={btnGhost} onClick={() => goTab("home")}>
+            ← Back
+          </button>
+        </div>
+      </section>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 text-left">
+      <section className="pb-20 w-full">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 text-left">
             <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
               <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">🔥</div>
 
@@ -1200,28 +1182,28 @@ export default function Home() {
               </div>
             </div>
           </div>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-              Buy on Jupiter
-            </a>
-            <button className={btnGhost} onClick={() => goTo("roadmap")}>
-              Roadmap →
-            </button>
-          </div>
         </div>
       </section>
+
+      <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
     </div>
   );
 
-  const PanelRoadmap = () => (
-    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-28">
+  const PageRoadmap = () => (
+    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
       <section className="pt-16 pb-10 w-full max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
-          <p className="mt-4 text-white/65 leading-[1.9]">Bond first. Then climb.</p>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-4xl sm:text-5xl font-black">Roadmap</h2>
+            <p className="mt-4 text-white/65 leading-[1.9]">Bond first. Then climb.</p>
+          </div>
+          <button className={btnGhost} onClick={() => goTab("home")}>
+            ← Back
+          </button>
         </div>
+      </section>
 
+      <section className="pb-20 w-full max-w-4xl mx-auto">
         <div className="grid gap-5 text-left">
           {roadmap.map((item) => {
             const done = !!item.done;
@@ -1248,28 +1230,28 @@ export default function Home() {
             );
           })}
         </div>
-
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <button className={btnGhost} onClick={() => goTo("memes")}>
-            Meme Vault →
-          </button>
-          <button className={btnPrimary} onClick={() => goTo("socials")}>
-            Join the community →
-          </button>
-        </div>
       </section>
+
+      <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
     </div>
   );
 
-  const PanelMemes = () => (
-    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-28">
+  const PageMemes = () => (
+    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
       <section className="pt-16 pb-10 w-full">
-        <div className="text-center mb-14">
-          <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
-          <h2 className="mt-3 text-4xl sm:text-5xl font-black">Meme Vault</h2>
-          <p className="mt-4 text-white/65 leading-[1.9]">Archives. Signals. Receipts.</p>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Meme Vault</h2>
+            <p className="mt-4 text-white/65 leading-[1.9]">Archives. Signals. Receipts.</p>
+          </div>
+          <button className={btnGhost} onClick={() => goTab("home")}>
+            ← Back
+          </button>
         </div>
+      </section>
 
+      <section className="pb-24 w-full">
         {freshMemes.length === 0 ? (
           <div className="text-center text-white/60">No memes yet.</div>
         ) : (
@@ -1332,90 +1314,83 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
     </div>
   );
 
-  const PanelSocials = () => (
-    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-28">
+  const PageSocials = () => (
+    <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
       <section className="pt-16 pb-10 w-full">
-        {/* ROBLOX */}
-        <div className="pb-10 w-full max-w-4xl mx-auto">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center overflow-hidden">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Universe</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-black">Roblox (Beta)</h2>
-            <p className="mt-4 text-white/65 leading-[1.9] max-w-2xl mx-auto">
-              The experiment has a playground: <span className="font-black text-white/85">Will You Get RICH… Or Stay MAD?</span>
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <a href={links.game} target="_blank" rel="noreferrer" className={btnPrimary}>
-                Play on Roblox
-              </a>
-              <a href={links.x} target="_blank" rel="noreferrer" className={btnGhost}>
-                Join X Community
-              </a>
-            </div>
-
-            <p className="mt-4 text-xs text-white/40">Roblox blocks most site embeds — this opens directly in Roblox.</p>
-          </div>
-        </div>
-
-        {/* SOCIALS */}
-        <div className="pb-10 w-full max-w-4xl mx-auto">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
+        <div className="flex items-center justify-between gap-3">
+          <div>
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Connect</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">Socials</h2>
             <p className="mt-4 text-white/65 leading-[1.9]">Join the community. Move with intent.</p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
-                Join X Community
-              </a>
-              <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
-                Join Telegram
-              </a>
-              <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-                View Chart
-              </a>
-              <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-                Buy on Jupiter
-              </a>
-            </div>
-
-            <p className="mt-8 text-xs text-white/40">$MAD — digital emotion. Not financial advice.</p>
           </div>
+          <button className={btnGhost} onClick={() => goTab("home")}>
+            ← Back
+          </button>
         </div>
-
-        <footer className="pb-16 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
       </section>
+
+      <section className="pb-24 w-full">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <a href={links.x} target="_blank" rel="noreferrer" className={btnWhite}>
+              Join X Community
+            </a>
+            <a href={links.tg} target="_blank" rel="noreferrer" className={btnBlue}>
+              Join Telegram
+            </a>
+            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+              View Chart
+            </a>
+            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+              Buy on Jupiter
+            </a>
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a href={links.game} target="_blank" rel="noreferrer" className={btnPrimary}>
+              Play on Roblox
+            </a>
+          </div>
+
+          <p className="mt-8 text-xs text-white/40">$MAD — digital emotion. Not financial advice.</p>
+        </div>
+      </section>
+
+      <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
     </div>
   );
 
-  const renderPanel = () => {
-    switch (active) {
+  // Which page to render
+  const ActivePage = () => {
+    switch (activeTab) {
       case "home":
-        return <PanelHome />;
+        return <PageHome />;
       case "forge":
-        return <PanelForge />;
+        return <PageForge />;
       case "confessions":
-        return <PanelConfessions />;
+        return <PageConfessions />;
       case "chart":
-        return <PanelChart />;
+        return <PageChart />;
       case "status":
-        return <PanelStatus />;
+        return <PageStatus />;
       case "roadmap":
-        return <PanelRoadmap />;
+        return <PageRoadmap />;
       case "memes":
-        return <PanelMemes />;
+        return <PageMemes />;
       case "socials":
-        return <PanelSocials />;
+        return <PageSocials />;
       default:
-        return <PanelHome />;
+        return <PageHome />;
     }
   };
 
   return (
-    <main className="relative min-h-screen text-white overflow-hidden">
+    <main className="relative min-h-screen text-white overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       {/* ====== OPTIONAL RAGE TAP GATE (SKIPPABLE) ====== */}
       {!gateUnlocked && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
@@ -1445,7 +1420,10 @@ export default function Home() {
               </div>
 
               <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
-                <div className="h-full rounded-full bg-gradient-to-r from-red-500 to-orange-500 transition-all" style={{ width: `${(gateTaps / 10) * 100}%` }} />
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-red-500 to-orange-500 transition-all"
+                  style={{ width: `${(gateTaps / 10) * 100}%` }}
+                />
               </div>
 
               <div className="mt-5 flex flex-col sm:flex-row gap-3">
@@ -1471,7 +1449,6 @@ export default function Home() {
         </div>
       )}
 
-      {/* Animations */}
       <style jsx global>{`
         @keyframes madFloatUp {
           from {
@@ -1636,43 +1613,49 @@ export default function Home() {
         ))}
       </div>
 
-      {/* NAV */}
-      <TopNav />
+      {/* TOP TAB BAR */}
+      <div className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/30 backdrop-blur-md">
+        <div className="mx-auto max-w-6xl px-6 py-3 flex items-center justify-between gap-3">
+          <button className="flex items-center gap-2" onClick={() => goTab("home")} aria-label="Go home">
+            <Image src="/mad.png" alt="$MAD" width={28} height={28} />
+            <span className="text-sm font-black tracking-tight">$MAD</span>
+          </button>
 
-      {/* SWIPE CONTAINER */}
-      <div className="relative">
-        <AnimatePresence mode="wait" custom={dir}>
-          <motion.div
-            key={active}
-            custom={dir}
-            variants={pageVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.12}
-            onDragEnd={(_, info) => {
-              const offset = info.offset.x;
-              if (offset > swipeThreshold) goRel(-1);
-              if (offset < -swipeThreshold) goRel(1);
-            }}
-            className="min-h-[70vh]"
-          >
-            {renderPanel()}
-          </motion.div>
-        </AnimatePresence>
+          <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
+            {tabs.map(([id, label]) => {
+              const on = id === activeTab;
+              return (
+                <button
+                  key={id}
+                  onClick={() => goTab(id)}
+                  className={[
+                    "rounded-full px-4 py-2 text-xs font-black border transition whitespace-nowrap",
+                    on ? "border-white/25 bg-white/15" : "border-white/10 bg-white/5 hover:bg-white/10",
+                  ].join(" ")}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
-      {/* Bottom tab bar */}
-      <BottomNav />
+      {/* SWIPE HINT */}
+      <div className="mx-auto max-w-6xl px-6 pt-4">
+        <div className="text-xs text-white/35">
+          Tip: Swipe left/right to switch tabs (mobile). Or click the pill tabs.
+        </div>
+      </div>
+
+      {/* PAGE TRANSITION AREA */}
+      <div className="relative">
+        <AnimatePresence mode="wait" initial={false}>
+          <PageShell>
+            <ActivePage />
+          </PageShell>
+        </AnimatePresence>
+      </div>
     </main>
   );
 }
-
-/**
- * IMPORTANT:
- * If you haven't installed Framer Motion yet, run:
- *   npm i framer-motion
- */
