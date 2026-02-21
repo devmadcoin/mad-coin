@@ -1,3 +1,5 @@
+/* app/globals.css */
+
 @import "tailwindcss";
 
 /* Smooth scroll */
@@ -17,6 +19,56 @@ html {
   }
 }
 
+/* use as a class */
 .animate-fadeUp {
   animation: fadeUp 700ms ease-out both;
+}
+
+/* ================================
+   $MAD Animated Orange Progress Bar
+   ================================ */
+
+@keyframes madShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* Track */
+.mad-progress-track {
+  height: 10px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fill */
+.mad-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 120, 0, 0.25),
+    rgba(255, 160, 0, 0.95),
+    rgba(255, 80, 0, 0.85),
+    rgba(255, 200, 120, 0.95),
+    rgba(255, 120, 0, 0.25)
+  );
+  background-size: 200% 200%;
+  animation: madShimmer 2.2s linear infinite;
+  box-shadow: 0 0 24px rgba(255, 140, 0, 0.35);
+}
+
+/* Optional: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fadeUp {
+    animation: none;
+  }
+  .mad-progress-fill {
+    animation: none;
+  }
 }
