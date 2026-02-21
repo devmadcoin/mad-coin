@@ -1,8 +1,5 @@
 /* app/roadmap/page.tsx */
 
-"use client";
-
-import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
 type RoadmapItem = {
@@ -27,33 +24,63 @@ function formatCompactUSD(n: number) {
 
 export default function Page() {
   // --- EDIT THIS WHEN YOU WANT ---
-  const CURRENT_MCAP_USD = 0; // set your current market cap here
+  // If you don’t know current mcap, leave 0 and the bar will sit at 0%.
+  const CURRENT_MCAP_USD = 0;
+
+  // Goal: $100M
   const GOAL_USD = 100_000_000;
 
-  const progressPct = useMemo(
-    () => clamp((CURRENT_MCAP_USD / GOAL_USD) * 100, 0, 100),
-    [CURRENT_MCAP_USD, GOAL_USD]
-  );
-
-  // Animated width target (starts at 0 then animates to progressPct)
-  const [animatedPct, setAnimatedPct] = useState(0);
-
-  useEffect(() => {
-    // reset then animate (works even if you later change CURRENT_MCAP_USD)
-    setAnimatedPct(0);
-    const t = window.setTimeout(() => setAnimatedPct(progressPct), 120);
-    return () => window.clearTimeout(t);
-  }, [progressPct]);
+  const progressPct = clamp((CURRENT_MCAP_USD / GOAL_USD) * 100, 0, 100);
 
   const roadmap: RoadmapItem[] = [
-    { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
-    { phase: "Phase 1.1", title: "300M Burn (30%)", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
-    { phase: "Phase 1.2", title: "350M Burn (35%)", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
-    { phase: "Phase 1.3", title: "40% Supply Burned", desc: "Target milestone — 40% of total supply burned.", done: false },
-    { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible.", done: false },
-    { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit.", done: false },
-    { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive.", done: false },
-    { phase: "Phase 5", title: "$100M", desc: "Full signal. The mission is obvious to everyone.", done: false },
+    {
+      phase: "Phase 1",
+      title: "Bond",
+      desc: "Establish the foundation. Lock in the culture. Build the core.",
+      done: true,
+    },
+    {
+      phase: "Phase 1.1",
+      title: "300M Burn (30%)",
+      desc: "Proof-of-signal. Big burn. Clear intent.",
+      done: true,
+    },
+    {
+      phase: "Phase 1.2",
+      title: "350M Burn (35%)",
+      desc: "Phase 1.2 complete — 350,000,000 tokens burned.",
+      done: true,
+    },
+    {
+      phase: "Phase 1.3",
+      title: "40% Supply Burned",
+      desc: "Target milestone — 40% of total supply burned.",
+      done: false,
+    },
+    {
+      phase: "Phase 2",
+      title: "$1M",
+      desc: "First major milestone. Momentum becomes visible.",
+      done: false,
+    },
+    {
+      phase: "Phase 3",
+      title: "$10M",
+      desc: "Scale the culture. Expand the orbit.",
+      done: false,
+    },
+    {
+      phase: "Phase 4",
+      title: "$50M",
+      desc: "The line gets crowded. The fade gets expensive.",
+      done: false,
+    },
+    {
+      phase: "Phase 5",
+      title: "$100M",
+      desc: "Full signal. The mission is obvious to everyone.",
+      done: false,
+    },
   ];
 
   const milestones = [
@@ -86,9 +113,9 @@ export default function Page() {
             <div>
               <div className="text-sm font-black">Progress Meter</div>
               <div className="text-xs text-white/55 mt-1">
-                Current: <span className="text-white/80">{formatCompactUSD(CURRENT_MCAP_USD)}</span> / Goal:{" "}
-                <span className="text-white/80">{formatCompactUSD(GOAL_USD)}</span>
-                <span className="ml-2 text-white/45">({Math.round(progressPct)}%)</span>
+                Current:{" "}
+                <span className="text-white/80">{formatCompactUSD(CURRENT_MCAP_USD)}</span>{" "}
+                / Goal: <span className="text-white/80">{formatCompactUSD(GOAL_USD)}</span>
               </div>
             </div>
             <div className="text-xs text-white/55">
@@ -99,14 +126,12 @@ export default function Page() {
           {/* Animated Progress Bar */}
           <div className="mt-4 h-4 w-full rounded-full bg-white/10 overflow-hidden border border-white/10">
             <div
-              className="relative h-full rounded-full bg-gradient-to-r from-red-500/80 to-orange-500/80 transition-[width] duration-1000 ease-out"
-              style={{ width: `${animatedPct}%` }}
+              className="h-full rounded-full bg-gradient-to-r from-red-500/80 to-orange-500/80 transition-[width] duration-700 ease-out relative"
+              style={{ width: `${progressPct}%` }}
               aria-label="progress bar"
             >
-              {/* Shine sweep */}
-              <div className="absolute inset-0 opacity-35 pointer-events-none">
-                <div className="h-full w-1/3 bg-white/40 blur-md shine-sweep" />
-              </div>
+              {/* moving shine */}
+              <div className="absolute inset-0 opacity-35 animate-madShine bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.35),transparent)]" />
             </div>
           </div>
 
@@ -153,18 +178,18 @@ export default function Page() {
 
         <footer className="mt-12 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
 
-        {/* Shine animation */}
+        {/* tiny global anim for the bar shine */}
         <style jsx global>{`
-          @keyframes shineSweep {
+          @keyframes madShine {
             0% {
               transform: translateX(-120%);
             }
             100% {
-              transform: translateX(360%);
+              transform: translateX(120%);
             }
           }
-          .shine-sweep {
-            animation: shineSweep 1.6s ease-in-out infinite;
+          .animate-madShine {
+            animation: madShine 1.4s linear infinite;
           }
         `}</style>
       </div>
