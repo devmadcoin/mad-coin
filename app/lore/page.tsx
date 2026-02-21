@@ -25,7 +25,7 @@ const EVENTS: LoreEvent[] = [
     accent: "neutral",
   },
   {
-    date: "Launch Week",
+    date: "Launch week",
     title: "THE TRIAL — The 5% Wallet",
     desc: "A wallet held ~5% of supply for about 3 days. Everyone demanded a relaunch. But $MAD did not reset. Discipline over panic.",
     accent: "amber",
@@ -45,13 +45,13 @@ const EVENTS: LoreEvent[] = [
   {
     date: "Feb 18, 2026 — 3:19 PM",
     title: "THE ATTACK",
-    desc: "Coordinated botting hit Telegram and Dexscreener. Noise tried to bury signal. But $MAD kept moving.",
+    desc: "$MAD was targeted—Telegram and Dexscreener got botted. Noise on purpose. The mission stayed clean.",
     accent: "amber",
   },
   {
     date: "Feb 20, 2026 — 11:32 AM",
     title: "THE COMEBACK",
-    desc: "I woke up and our Telegram had been deleted. But they can’t delete belief. $MAD rose back up again.",
+    desc: "I woke up and our Telegram had been deleted. But they can’t delete belief. And $MAD rose back up again.",
     accent: "red",
   },
 ];
@@ -79,6 +79,22 @@ function AccentText({
   );
 }
 
+function TonePill({ tone }: { tone: "red" | "amber" | "neutral" }) {
+  const label = tone === "red" ? "CORE" : tone === "amber" ? "TRIAL" : "NOTE";
+  const cls =
+    tone === "red"
+      ? "border-red-500/40 bg-red-500/15 text-red-300 shadow-[0_0_12px_rgba(255,0,0,0.35)]"
+      : tone === "amber"
+      ? "border-amber-400/30 bg-amber-400/10 text-amber-200"
+      : "border-white/10 bg-white/5 text-white/75";
+
+  return (
+    <span className={["inline-flex items-center rounded-full border px-4 py-2 text-xs font-semibold", cls].join(" ")}>
+      {label}
+    </span>
+  );
+}
+
 export default function LorePage() {
   return (
     <div className="relative overflow-hidden">
@@ -98,20 +114,19 @@ export default function LorePage() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-2xl text-white/65 leading-relaxed">
-            Not a dev log. A founder chronicle. Structure before hype. Discipline
-            over panic.
+            Not a dev log. A founder chronicle. Structure before hype. Discipline over panic.
           </p>
 
-          {/* Sticker (swap to Never Selling) */}
+          {/* Sticker swap */}
           <div className="mt-10 flex justify-center">
-            <div className="relative h-[150px] w-[150px] rotate-[-2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+            <div className="relative h-[150px] w-[150px] rotate-[-3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
               <Image
                 src="/stickers/never-selling.webp"
                 alt="Never Selling"
                 fill
                 sizes="150px"
                 className="object-contain"
-                priority={false}
+                priority
               />
             </div>
           </div>
@@ -125,16 +140,12 @@ export default function LorePage() {
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
                 DOCTRINE
               </p>
-
               <p className="mt-4 text-sm text-white/75 leading-relaxed">
                 One chain. One contract. One coin.
               </p>
-
               <p className="mt-4 text-sm text-white/70 leading-relaxed">
-                <AccentText>Emotion evolves.</AccentText> Born in volatility.
-                Refined through discipline.
+                <AccentText>Emotion evolves.</AccentText> Born in volatility. Refined through discipline.
               </p>
-
               <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-white/70">
                 No relaunch. No reset. No fragmentation.
               </div>
@@ -165,68 +176,77 @@ export default function LorePage() {
                     </div>
 
                     <div className="shrink-0">
-                      <span
-                        className={[
-                          "inline-flex items-center rounded-full border px-4 py-2 text-xs font-semibold",
-                          e.accent === "red"
-                            ? "border-red-500/40 bg-red-500/15 text-red-300 shadow-[0_0_12px_rgba(255,0,0,0.35)]"
-                            : e.accent === "amber"
-                            ? "border-amber-400/30 bg-amber-400/10 text-amber-200"
-                            : "border-white/10 bg-white/5 text-white/75",
-                        ].join(" ")}
-                      >
-                        {e.accent === "red"
-                          ? "CORE"
-                          : e.accent === "amber"
-                          ? "TRIAL"
-                          : "NOTE"}
-                      </span>
+                      <TonePill tone={e.accent ?? "neutral"} />
                     </div>
                   </div>
                 </div>
               ))}
 
-              {/* Cinematic BELIEVE image block (above final quote) */}
-              <div className="animate-fadeUp">
-                <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl">
-                  <div className="relative w-full h-[520px] sm:h-[620px] md:h-[720px]">
-                    <Image
-                      src="/lore/believe.png"
-                      alt="Believe"
-                      fill
-                      className="object-cover object-center"
-                      sizes="100vw"
-                      priority={false}
-                    />
+              {/* Closing identity */}
+              <div className="animate-fadeUp rounded-3xl border border-white/10 bg-black/35 p-7 backdrop-blur-xl shadow-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
+                  THE IDENTITY
+                </p>
+
+                <h3 className="mt-4 text-3xl sm:text-4xl font-black">
+                  The <AccentText>One-Coiner</AccentText> Dev
+                </h3>
+
+                <p className="mt-4 text-white/75 leading-relaxed max-w-3xl">
+                  When pressure hit, the easy path was a relaunch. But $MAD stayed.
+                  People chase rugs to zero—this was built for the people who stayed,
+                  and the dev who doesn’t run.
+                </p>
+
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
+                    Structure &gt; Hype
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
+                    Discipline &gt; Panic
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
+                    One coin. No relaunch.
+                  </div>
                 </div>
               </div>
 
-              {/* Closing quote card */}
-              <div className="animate-fadeUp rounded-3xl border border-white/10 bg-black/35 p-10 backdrop-blur-xl shadow-2xl text-center">
-                <h3 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+              {/* BELIEVE poster (THIS is the part you want at the bottom) */}
+              <div className="animate-fadeUp overflow-hidden rounded-3xl border border-white/10 bg-black/35 backdrop-blur-xl shadow-2xl">
+                {/* IMPORTANT: relative + aspect ratio so fill can render */}
+                <div className="relative w-full" style={{ aspectRatio: "3 / 4" }}>
+                  <Image
+                    src="/lore/believe.webp"
+                    alt="BELIEVE"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 900px"
+                    className="object-cover"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                </div>
+              </div>
+
+              {/* Final quote card */}
+              <div className="animate-fadeUp rounded-3xl border border-white/10 bg-black/30 p-8 text-center backdrop-blur-xl shadow-2xl">
+                <h3 className="text-3xl sm:text-4xl font-black">
                   You Can Delete A Channel.
                 </h3>
-
-                <p className="mt-5 text-white/75 text-base sm:text-lg">
+                <p className="mt-3 text-white/70">
                   But you can’t delete belief.
-                </p>
-
-                <p className="mt-2 text-lg sm:text-xl font-black text-red-400 drop-shadow-[0_0_12px_rgba(255,0,0,0.35)]">
-                  And $MAD doesn’t reset.
+                  <br />
+                  And <span className="text-red-500 font-bold">{$"MAD".replace('"','')}</span> doesn’t reset.
                 </p>
               </div>
             </div>
 
-            {/* mobile doctrine (since sticky rail is hidden) */}
+            {/* mobile doctrine */}
             <div className="mt-10 lg:hidden animate-fadeUp rounded-3xl border border-white/10 bg-black/30 p-6 backdrop-blur-xl shadow-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
                 DOCTRINE
               </p>
               <p className="mt-4 text-sm text-white/75 leading-relaxed">
-                One chain. One contract. One coin. No relaunch. No reset. No
-                fragmentation.
+                One chain. One contract. One coin. No relaunch. No reset. No fragmentation.
               </p>
             </div>
           </div>
