@@ -42,6 +42,12 @@ const EVENTS: LoreEvent[] = [
     desc: "Telegram ownership was secured for $200 to retain members and avoid disruption. Not ego—responsibility.",
     accent: "neutral",
   },
+  {
+    date: "Feb 18, 2026 — 3:19 PM",
+    title: "THE RAID",
+    desc: "MAD was attacked and botted across Telegram and Dexscreener. Instead of folding, we documented it, cleaned it up, and kept moving.",
+    accent: "amber",
+  },
 ];
 
 function AccentText({
@@ -90,14 +96,14 @@ export default function LorePage() {
             over panic.
           </p>
 
-          {/* Optional sticker (you can swap to any /public/stickers/*) */}
+          {/* Sticker (swapped) */}
           <div className="mt-10 flex justify-center">
-            <div className="relative h-[140px] w-[140px] rotate-[-3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+            <div className="relative h-[150px] w-[150px] rotate-[-2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
               <Image
-                src="/stickers/keep-building.webp"
-                alt="Keep Building"
+                src="/stickers/never-selling.webp"
+                alt="Never Selling"
                 fill
-                sizes="140px"
+                sizes="150px"
                 className="object-contain"
                 priority={false}
               />
