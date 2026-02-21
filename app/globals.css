@@ -1,13 +1,15 @@
 /* app/globals.css */
 
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
 }
 
-/* Fade-up animation (your existing class) */
+/* Fade-up animation */
 @keyframes fadeUp {
   from {
     opacity: 0;
