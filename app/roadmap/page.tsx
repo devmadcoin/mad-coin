@@ -4,15 +4,29 @@
 import React, { useMemo } from "react";
 import Image from "next/image";
 
+type Status = "complete" | "in_progress" | "planned";
+
 type RoadmapItem = {
   phase: string;
   title: string;
   desc: string;
-  status: "complete" | "in_progress" | "planned";
+  status: Status;
 };
 
 function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
+}
+
+function statusChip(status: Status) {
+  if (status === "complete") return { label: "Complete", cls: "bg-emerald-500/15 text-emerald-200 border-emerald-500/25" };
+  if (status === "in_progress") return { label: "In Progress", cls: "bg-white/10 text-white/75 border-white/10" };
+  return { label: "Planned", cls: "bg-white/5 text-white/60 border-white/10" };
+}
+
+function phaseBarWidth(status: Status) {
+  if (status === "complete") return "100%";
+  if (status === "in_progress") return "55%";
+  return "15%";
 }
 
 export default function RoadmapPage() {
@@ -26,9 +40,15 @@ export default function RoadmapPage() {
       },
       {
         phase: "PHASE 1.2",
-        title: "Supply Burn",
-        desc: "Burn 350,000,000 tokens to reinforce anti-rug structure.",
+        title: "Lock Tokens",
+        desc: "Lock 111,000,000 tokens until 6/1/26 to reinforce anti-rug structure.",
         status: "complete",
+      },
+      {
+        phase: "PHASE 1.3",
+        title: "Physical Stickers",
+        desc: "Release physical $MAD stickers for the community.",
+        status: "planned",
       },
       {
         phase: "PHASE 2",
@@ -50,7 +70,7 @@ export default function RoadmapPage() {
   const completed = items.filter((x) => x.status === "complete").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
-  // Your current uploaded filename has spaces + "sticker.webp " prefix.
+  // Your filename includes spaces + the "sticker.webp " prefix
   const chillSrc = "/stickers/sticker.webp%20Chill.webp";
 
   return (
@@ -77,8 +97,7 @@ export default function RoadmapPage() {
 
         {/* Overall progress card */}
         <div className="mt-10 animate-fadeUp">
-          <div className="rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
-            {/* Top row */}
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
@@ -88,39 +107,33 @@ export default function RoadmapPage() {
                   {completed} of {total} phases complete
                 </p>
               </div>
-
-              <div className="shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80">
-                {pct}%
-              </div>
             </div>
 
-            {/* ✅ Chill sticker centered ABOVE the bar (NOT absolute) */}
-            <div className="mt-5 flex justify-center">
-              <div className="pointer-events-none opacity-95">
-                <Image
-                  src={chillSrc}
-                  alt="Chill sticker"
-                  width={220}
-                  height={220}
-                  priority={false}
-                />
-              </div>
+            {/* Chill sticker centered ABOVE bar */}
+            <div className="pointer-events-none mt-6 flex justify-center">
+              <Image
+                src={chillSrc}
+                alt="Chill sticker"
+                width={220}
+                height={220}
+                priority={false}
+                className="rounded-2xl"
+              />
             </div>
 
-            {/* ✅ Progress bar centered UNDER sticker */}
-            <div className="mt-4">
-              <div className="mx-auto w-full max-w-xl">
-                <div className="mad-progress-track">
-                  <div
-                    className={`mad-progress-fill ${
-                      pct === 100 ? "mad-progress-fill--full" : ""
-                    }`}
-                    style={{ width: `${pct}%` }}
-                  />
+            {/* Progress bar centered + % on right */}
+            <div className="mt-6 w-full max-w-2xl mx-auto">
+              <div className="flex items-center gap-4">
+                <div className="mad-progress-track flex-1">
+                  <div className="mad-progress-fill" style={{ width: `${pct}%` }} />
+                </div>
+
+                <div className="shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-semibold text-white/90">
+                  {pct}%
                 </div>
               </div>
 
-              <p className="mt-2 text-center text-xs text-white/40">
+              <p className="mt-3 text-center text-xs text-white/40">
                 Progress updates as phases are marked complete.
               </p>
             </div>
@@ -139,15 +152,8 @@ export default function RoadmapPage() {
 }
 
 function RoadmapCard({ item }: { item: RoadmapItem }) {
-  const isDone = item.status === "complete";
-  const isProgress = item.status === "in_progress";
-
-  const chip =
-    item.status === "complete"
-      ? "Complete"
-      : item.status === "in_progress"
-      ? "In Progress"
-      : "Planned";
+  const chip = statusChip(item.status);
+  const barWidth = phaseBarWidth(item.status);
 
   return (
     <div className="animate-fadeUp">
@@ -161,30 +167,24 @@ function RoadmapCard({ item }: { item: RoadmapItem }) {
             <p className="mt-3 text-white/70">{item.desc}</p>
           </div>
 
-          <div
-            className={[
-              "shrink-0 rounded-full px-4 py-2 text-xs font-semibold border",
-              isDone
-                ? "bg-emerald-500/15 text-emerald-200 border-emerald-500/25"
-                : isProgress
-                ? "bg-white/10 text-white/75 border-white/10"
-                : "bg-white/5 text-white/60 border-white/10",
-            ].join(" ")}
-          >
-            {chip}
+          <div className={["shrink-0 rounded-full px-4 py-2 text-xs font-semibold border", chip.cls].join(" ")}>
+            {chip.label}
           </div>
         </div>
 
-        {/* bottom bar per phase */}
+        {/* Bottom bar per phase */}
         <div className="mt-6">
           <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden border border-white/10">
             <div
               className={[
-                "h-full",
-                isDone ? "bg-emerald-400/70" : isProgress ? "bg-white/15" : "bg-white/10",
-                isDone ? "rounded-full" : "rounded-l-full",
+                "h-full rounded-full",
+                item.status === "complete"
+                  ? "bg-emerald-400/70"
+                  : item.status === "in_progress"
+                  ? "bg-white/15"
+                  : "bg-white/10",
               ].join(" ")}
-              style={{ width: isDone ? "100%" : isProgress ? "55%" : "15%" }}
+              style={{ width: barWidth }}
             />
           </div>
         </div>
