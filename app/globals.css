@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
+/* Smooth scroll */
 html {
   scroll-behavior: smooth;
 }
 
+/* Fade-up animation (your existing class) */
 @keyframes fadeUp {
   from {
     opacity: 0;
