@@ -25,7 +25,7 @@ const EVENTS: LoreEvent[] = [
     accent: "neutral",
   },
   {
-    date: "Launch week",
+    date: "Launch Week",
     title: "THE TRIAL — The 5% Wallet",
     desc: "A wallet held ~5% of supply for about 3 days. Everyone demanded a relaunch. But $MAD did not reset. Discipline over panic.",
     accent: "amber",
@@ -39,19 +39,19 @@ const EVENTS: LoreEvent[] = [
   {
     date: "Feb 14, 2026",
     title: "RECLAMATION",
-    desc: "I realized I didn’t have ownership of the Telegram group. I paid $200 to secure ownership and retain the members—saving everyone the trouble.",
+    desc: "Telegram ownership was secured for $200 to retain members and avoid disruption. Not ego—responsibility.",
     accent: "neutral",
   },
   {
     date: "Feb 18, 2026 — 3:19 PM",
-    title: "ATTACKED",
-    desc: "$MAD was targeted: botted on Telegram and hit on Dexscreener. Noise tried to rewrite the narrative.",
+    title: "THE ATTACK",
+    desc: "Coordinated botting hit Telegram and Dexscreener. Noise tried to bury signal. But $MAD kept moving.",
     accent: "amber",
   },
   {
     date: "Feb 20, 2026 — 11:32 AM",
-    title: "THE RISE BACK",
-    desc: "I woke up and the Telegram was deleted again. But they can’t delete belief. $MAD rose back up anyway.",
+    title: "THE COMEBACK",
+    desc: "I woke up and our Telegram had been deleted. But they can’t delete belief. $MAD rose back up again.",
     accent: "red",
   },
 ];
@@ -82,7 +82,7 @@ function AccentText({
 export default function LorePage() {
   return (
     <div className="relative overflow-hidden">
-      {/* background (matches your other pages) */}
+      {/* background (matches other pages) */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
@@ -102,7 +102,7 @@ export default function LorePage() {
             over panic.
           </p>
 
-          {/* Sticker */}
+          {/* Sticker (swap to Never Selling) */}
           <div className="mt-10 flex justify-center">
             <div className="relative h-[150px] w-[150px] rotate-[-2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
               <Image
@@ -186,63 +186,36 @@ export default function LorePage() {
                 </div>
               ))}
 
-              {/* Closing card */}
-              <div className="animate-fadeUp rounded-3xl border border-white/10 bg-black/35 p-7 backdrop-blur-xl shadow-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
-                  THE IDENTITY
-                </p>
-
-                <h3 className="mt-4 text-3xl sm:text-4xl font-black">
-                  The <AccentText>One-Coiner</AccentText> Dev
-                </h3>
-
-                <p className="mt-4 text-white/75 leading-relaxed max-w-3xl">
-                  On launch, a wallet held ~5% and everyone shouted “relaunch.”
-                  I didn’t. People always chase resets until they hit zero. I
-                  cared about the ones who supported this, and I refused to
-                  fragment into another coin. One chain. One contract. One coin.
-                </p>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
-                    Structure &gt; Hype
-                  </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
-                    Discipline &gt; Panic
-                  </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
-                    One coin. No relaunch.
-                  </div>
-                </div>
-              </div>
-
-              {/* FINAL IMAGE (RELIEVE) */}
-              <div className="mt-10 animate-fadeUp">
-                <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl">
-                  <div className="relative w-full" style={{ aspectRatio: "3 / 4" }}>
+              {/* Cinematic BELIEVE image block (above final quote) */}
+              <div className="animate-fadeUp">
+                <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl">
+                  <div className="relative w-full h-[520px] sm:h-[620px] md:h-[720px]">
                     <Image
-                      src="/lore/relieve.webp"
-                      alt="Relieve"
+                      src="/lore/believe.png"
+                      alt="Believe"
                       fill
+                      className="object-cover object-center"
                       sizes="100vw"
-                      className="object-cover"
                       priority={false}
                     />
                   </div>
-
-                  <div className="absolute inset-0 flex items-end justify-center p-8 bg-gradient-to-t from-black/80 via-black/35 to-transparent">
-                    <div className="text-center max-w-2xl">
-                      <h3 className="text-3xl sm:text-4xl font-black text-white drop-shadow-[0_0_15px_rgba(255,0,0,0.5)]">
-                        You Can Delete A Channel.
-                      </h3>
-                      <p className="mt-4 text-white/80 text-sm sm:text-base leading-relaxed">
-                        But you can’t delete belief. <br />
-                        And <span className="text-red-400 font-black">$MAD</span>{" "}
-                        doesn’t reset.
-                      </p>
-                    </div>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                 </div>
+              </div>
+
+              {/* Closing quote card */}
+              <div className="animate-fadeUp rounded-3xl border border-white/10 bg-black/35 p-10 backdrop-blur-xl shadow-2xl text-center">
+                <h3 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                  You Can Delete A Channel.
+                </h3>
+
+                <p className="mt-5 text-white/75 text-base sm:text-lg">
+                  But you can’t delete belief.
+                </p>
+
+                <p className="mt-2 text-lg sm:text-xl font-black text-red-400 drop-shadow-[0_0_12px_rgba(255,0,0,0.35)]">
+                  And $MAD doesn’t reset.
+                </p>
               </div>
             </div>
 
