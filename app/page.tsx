@@ -3,6 +3,7 @@
 
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
+import MadConfessions from "./components/MadConfessions";
 
 export default function Home() {
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
@@ -32,16 +33,18 @@ export default function Home() {
       <div className="absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
       <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
-        {/* HERO (make this relative so the sticker can anchor) */}
+        {/* HERO */}
         <div className="relative max-w-3xl animate-fadeUp">
           {/* GM sticker (desktop only) */}
-          <div className="pointer-events-none hidden lg:block absolute -right-66 top-6 w-[280px] h-[280px] opacity-95">
+          <div className="pointer-events-none hidden lg:block absolute right-[-260px] top-6 h-[280px] w-[280px] opacity-95">
             <Image
-              src="/stickers/sticker.webp%20Gm.webp"
+              // ✅ FIX: use a NORMAL filename with no spaces
+              // Put your file here: /public/stickers/gm.webp
+              src="/stickers/gm.webp"
               alt="GM Sticker"
               fill
               priority
-              className="object-contain drop-shadow-[0_25px_55px_rgba(0,0,0,0.65)] animate-float"
+              className="object-contain drop-shadow-[0_25px_55px_rgba(0,0,0,0.65)]"
             />
           </div>
 
@@ -115,6 +118,9 @@ export default function Home() {
               Not financial advice. Culture experiment. Wearable energy.
             </p>
           </div>
+
+          {/* ✅ MAD CONFESSIONS (right after contract) */}
+          <MadConfessions />
         </div>
 
         {/* CHART */}
