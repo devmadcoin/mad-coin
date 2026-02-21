@@ -30,7 +30,7 @@ type AccessoryItem = {
 
 function ensureLeadingSlash(p: string) {
   if (!p) return p;
-  return p.startsWith("/") ? p : /${p};
+  return p.startsWith("/") ? p : `/${p}`;
 }
 
 /**
@@ -49,11 +49,11 @@ function buildCandidates(originalPath: string): string[] {
   };
 
   for (const pre of prefixes) {
-    const p = ${pre}${raw}.replace(/\/{2,}/g, "/");
+    const p = `${pre}${raw}`.replace(/\/{2,}/g, "/");
     pushUnique(p);
 
     if (p.endsWith(".png.png")) pushUnique(p.replace(/\.png\.png$/, ".png"));
-    if (p.endsWith(".png")) pushUnique(${p}.png);
+    if (p.endsWith(".png")) pushUnique(`${p}.png`);
   }
 
   return out;
@@ -159,8 +159,8 @@ export default function Home() {
 
   const links = useMemo(
     () => ({
-      buy: https://jup.ag/swap/SOL-${addr},
-      chart: https://dexscreener.com/solana/${addr},
+      buy: `https://jup.ag/swap/SOL-${addr}`,
+      chart: `https://dexscreener.com/solana/${addr}`,
       x: "https://x.com/i/communities/2019256566248312879/",
       tg: "https://t.me/madtokenfam", // ✅ UPDATED
       game: "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD",
@@ -188,9 +188,9 @@ export default function Home() {
     "bg-gradient-to-r from-red-500/80 to-orange-500/80 hover:from-red-500 hover:to-orange-500",
     "shadow-[0_18px_70px_rgba(255,120,80,0.18)]",
   ].join(" ");
-  const btnGhost = ${btnBase} bg-white/10 hover:bg-white/15 text-white;
-  const btnWhite = ${btnBase} bg-white text-black hover:opacity-90;
-  const btnBlue = ${btnBase} bg-blue-500/90 hover:bg-blue-600 text-white;
+  const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
+  const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
+  const btnBlue = `${btnBase} bg-blue-500/90 hover:bg-blue-600 text-white`;
 
   // ====== Background + particles ======
   const bg = useMemo(() => {
@@ -325,7 +325,7 @@ export default function Home() {
 
   const ALL_ACCESSORIES: AccessoryItem[] = useMemo(() => {
     const tall = (y: number, scale = 1) => ({
-      cssTransform: translateY(${y}px) scale(${scale}),
+      cssTransform: `translateY(${y}px) scale(${scale})`,
       draw: { y, scale },
     });
 
@@ -412,23 +412,23 @@ export default function Home() {
 
   const [eyeSrc, setEyeSrc] = useState(selectedEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye.fallbacks);
-  const [eyeLabel, setEyeLabel] = useState(${selectedEye.label} • ${selectedEye.rarity.toUpperCase()});
+  const [eyeLabel, setEyeLabel] = useState(`${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}`);
 
   const [accSrc, setAccSrc] = useState(selectedAcc.primary);
   const [accFallbacks, setAccFallbacks] = useState<string[]>(selectedAcc.fallbacks);
-  const [accLabel, setAccLabel] = useState(${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()});
+  const [accLabel, setAccLabel] = useState(`${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}`);
 
   useEffect(() => {
     setEyeSrc(selectedEye.primary);
     setEyeFallbacks(selectedEye.fallbacks);
-    setEyeLabel(${selectedEye.label} • ${selectedEye.rarity.toUpperCase()});
+    setEyeLabel(`${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEye.id]);
 
   useEffect(() => {
     setAccSrc(selectedAcc.primary);
     setAccFallbacks(selectedAcc.fallbacks);
-    setAccLabel(${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()});
+    setAccLabel(`${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAcc.id]);
 
@@ -480,7 +480,7 @@ export default function Home() {
 
   const todayPrompt = useMemo(() => {
     const d = new Date();
-    const key = ${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")};
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     let h = 0;
     for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
     return ragePrompts[h % ragePrompts.length];
@@ -659,8 +659,8 @@ export default function Home() {
   }, [gateTaps]);
 
   const dexscreenerEmbedSrc = useMemo(() => {
-    const base = https://dexscreener.com/solana/${addr};
-    return ${base}?embed=1&theme=dark&trades=0&info=0;
+    const base = `https://dexscreener.com/solana/${addr}`;
+    return `${base}?embed=1&theme=dark&trades=0&info=0`;
   }, [addr]);
 
   const scrollToId = (id: string) => {
@@ -702,7 +702,7 @@ export default function Home() {
               <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-red-500 to-orange-500 transition-all"
-                  style={{ width: ${(gateTaps / 10) * 100}% }}
+                  style={{ width: `${(gateTaps / 10) * 100}%` }}
                 />
               </div>
 
@@ -729,7 +729,7 @@ export default function Home() {
         </div>
       )}
 
-      <style jsx global>{
+      <style jsx global>{`
         @keyframes madFloatUp {
           from {
             transform: translate3d(var(--drift), 20vh, 0) rotate(0deg);
@@ -834,12 +834,12 @@ export default function Home() {
             opacity: 0.26;
           }
         }
-      }</style>
+      `}</style>
 
       {/* ✅ RED CLOUD BACKGROUND */}
       <div className="fixed inset-0 -z-20">
         <img
-          key={bg-${renderNonce}}
+          key={`bg-${renderNonce}`}
           src={bg.primary}
           alt="Red storm background"
           className="h-full w-full object-cover"
@@ -880,12 +880,12 @@ export default function Home() {
             key={a.i}
             className="mad-emoji absolute select-none"
             style={{
-              left: ${a.x}%,
-              fontSize: ${a.size}px,
+              left: `${a.x}%`,
+              fontSize: `${a.size}px`,
               opacity: a.opacity,
-              animationDuration: ${a.dur}s,
-              animationDelay: ${a.delay}s,
-              ["--drift" as any]: ${a.drift}px,
+              animationDuration: `${a.dur}s`,
+              animationDelay: `${a.delay}s`,
+              ["--drift" as any]: `${a.drift}px`,
             }}
           >
             😡
@@ -1015,7 +1015,7 @@ export default function Home() {
           >
             {showBase && (
               <img
-                key={base-${renderNonce}}
+                key={`base-${renderNonce}`}
                 src={BASE.primary}
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="base"
@@ -1025,7 +1025,7 @@ export default function Home() {
             )}
 
             <img
-              key={eyes-${eyeId}-${renderNonce}}
+              key={`eyes-${eyeId}-${renderNonce}`}
               src={eyeSrc}
               className="absolute inset-0 w-full h-full object-cover"
               alt="eyes"
@@ -1035,7 +1035,7 @@ export default function Home() {
 
             {showAcc && (
               <img
-                key={acc-${accId}-${renderNonce}}
+                key={`acc-${accId}-${renderNonce}`}
                 src={accSrc}
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="accessory"
@@ -1111,7 +1111,7 @@ export default function Home() {
                 maxLength={240}
               />
               <div className="mt-2 flex items-center justify-between text-xs">
-                <div className="text-red-300/90">{confessionErr ? ⚠️ ${confessionErr} : ""}</div>
+                <div className="text-red-300/90">{confessionErr ? `⚠️ ${confessionErr}` : ""}</div>
                 <div className="text-white/40 tabular-nums">{confessionText.length}/240</div>
               </div>
             </div>
