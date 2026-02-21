@@ -1,7 +1,15 @@
 /* app/layout.tsx */
+import "./globals.css";
+
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
+
+export const metadata: Metadata = {
+  title: "$MAD",
+  description: "Digital emotion — refined",
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -12,7 +20,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
             {/* Left brand */}
             <Link href="/" className="flex items-center gap-3">
-              {/* Replaced $ with /public/mad.png */}
               <span className="relative inline-flex h-9 w-9 overflow-hidden rounded-xl border border-white/10 bg-white/5">
                 <Image
                   src="/mad.png"
@@ -42,8 +49,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </nav>
         </header>
 
-        {/* IMPORTANT: give content breathing room under sticky header */}
-        <main className="min-h-screen">{children}</main>
+        {/* Add spacing so content isn't hidden behind the sticky header */}
+        <main className="min-h-screen pt-6">{children}</main>
       </body>
     </html>
   );
