@@ -18,8 +18,18 @@ function clamp(n: number, min: number, max: number) {
 }
 
 function statusChip(status: Status) {
-  if (status === "complete") return { label: "Complete", cls: "bg-emerald-500/15 text-emerald-200 border-emerald-500/25" };
-  if (status === "in_progress") return { label: "In Progress", cls: "bg-white/10 text-white/75 border-white/10" };
+  if (status === "complete") {
+    return {
+      label: "Complete",
+      cls: "bg-emerald-500/15 text-emerald-200 border-emerald-500/25",
+    };
+  }
+  if (status === "in_progress") {
+    return {
+      label: "In Progress",
+      cls: "bg-white/10 text-white/75 border-white/10",
+    };
+  }
   return { label: "Planned", cls: "bg-white/5 text-white/60 border-white/10" };
 }
 
@@ -70,8 +80,8 @@ export default function RoadmapPage() {
   const completed = items.filter((x) => x.status === "complete").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
-  // Your filename includes spaces + the "sticker.webp " prefix
-  const chillSrc = "/stickers/sticker.webp%20Chill.webp";
+  // ✅ Clean filename (rename your file to: public/stickers/chill.webp)
+  const chillSrc = "/stickers/chill.webp";
 
   return (
     <div className="relative overflow-hidden">
@@ -87,7 +97,10 @@ export default function RoadmapPage() {
           </p>
 
           <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
-            <span className="text-white">$MAD</span> Roadmap
+            <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.65)]">
+              $MAD
+            </span>{" "}
+            Roadmap
           </h1>
 
           <p className="mt-5 max-w-xl text-white/70 leading-relaxed">
@@ -116,8 +129,7 @@ export default function RoadmapPage() {
                 alt="Chill sticker"
                 width={220}
                 height={220}
-                priority={false}
-                className="rounded-2xl"
+                className="object-contain drop-shadow-[0_16px_30px_rgba(0,0,0,0.45)]"
               />
             </div>
 
@@ -125,7 +137,10 @@ export default function RoadmapPage() {
             <div className="mt-6 w-full max-w-2xl mx-auto">
               <div className="flex items-center gap-4">
                 <div className="mad-progress-track flex-1">
-                  <div className="mad-progress-fill" style={{ width: `${pct}%` }} />
+                  <div
+                    className="mad-progress-fill"
+                    style={{ width: `${pct}%` }}
+                  />
                 </div>
 
                 <div className="shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-semibold text-white/90">
@@ -167,7 +182,12 @@ function RoadmapCard({ item }: { item: RoadmapItem }) {
             <p className="mt-3 text-white/70">{item.desc}</p>
           </div>
 
-          <div className={["shrink-0 rounded-full px-4 py-2 text-xs font-semibold border", chip.cls].join(" ")}>
+          <div
+            className={[
+              "shrink-0 rounded-full px-4 py-2 text-xs font-semibold border",
+              chip.cls,
+            ].join(" ")}
+          >
             {chip.label}
           </div>
         </div>
