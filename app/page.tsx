@@ -35,7 +35,7 @@ export default function Home() {
         {/* HERO (make this relative so the sticker can anchor) */}
         <div className="relative max-w-3xl animate-fadeUp">
           {/* GM sticker (desktop only) */}
-          <div className="pointer-events-none hidden lg:block absolute -right-46 top-6 w-[280px] h-[280px] opacity-95">
+          <div className="pointer-events-none hidden lg:block absolute -right-66 top-6 w-[280px] h-[280px] opacity-95">
             <Image
               src="/stickers/sticker.webp%20Gm.webp"
               alt="GM Sticker"
