@@ -1,6 +1,7 @@
 /* app/layout.tsx */
 import "./globals.css";
 import Link from "next/link";
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -12,12 +13,23 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
             {/* Left brand */}
             <Link href="/" className="flex items-center gap-3">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 font-black">
-                $
+              {/* Replaced $ with /public/mad.png */}
+              <span className="relative inline-flex h-9 w-9 overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                <Image
+                  src="/mad.png"
+                  alt="$MAD logo"
+                  fill
+                  priority
+                  sizes="36px"
+                  className="object-cover"
+                />
               </span>
+
               <div className="leading-tight">
                 <div className="text-sm font-black">$MAD</div>
-                <div className="text-[11px] text-white/50">Digital emotion — refined</div>
+                <div className="text-[11px] text-white/50">
+                  Digital emotion — refined
+                </div>
               </div>
             </Link>
 
