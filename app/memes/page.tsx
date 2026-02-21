@@ -1,4 +1,3 @@
-/* app/memes/page.tsx */
 "use client";
 
 import Image from "next/image";
@@ -24,6 +23,10 @@ function downloadNameFromSrc(src: string) {
 }
 
 export default function MemesPage() {
+  // ✅ Change this ONE path if your sticker filename is different
+  // Put the sticker in: /public/stickers/sticker-smash.webp
+  const stickerSrc = "/stickers/sticker-smash.webp";
+
   return (
     <div className="relative overflow-hidden">
       {/* background (matches your other pages) */}
@@ -32,7 +35,21 @@ export default function MemesPage() {
 
       <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
         {/* Header */}
-        <div className="mx-auto max-w-3xl animate-fadeUp">
+        <div className="relative mx-auto max-w-3xl animate-fadeUp">
+          {/* ✅ Sticker (desktop only, floats near the header) */}
+          <div className="pointer-events-none absolute right-[-90px] top-[-18px] hidden lg:block">
+            <div className="relative h-[140px] w-[140px] rotate-[-8deg] drop-shadow-[0_25px_45px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:rotate-0 hover:scale-105">
+              <Image
+                src={stickerSrc}
+                alt="Smash Sticker"
+                fill
+                sizes="140px"
+                className="object-contain"
+                priority={false}
+              />
+            </div>
+          </div>
+
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
             CULTURE
           </p>
@@ -90,7 +107,7 @@ export default function MemesPage() {
                 <a
                   href={m.src}
                   download={downloadNameFromSrc(m.src)}
-                  className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/90 transition hover:bg-white/10 hover:text-white"
+                  className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/90 transition hover:bg-white/10"
                 >
                   Download
                 </a>
