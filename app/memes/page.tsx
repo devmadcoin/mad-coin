@@ -20,8 +20,7 @@ const MEMES: MemeItem[] = [
 ];
 
 function downloadNameFromSrc(src: string) {
-  const name = src.split("/").pop() || "mad-meme.png";
-  return name;
+  return src.split("/").pop() || "mad-meme.png";
 }
 
 export default function MemesPage() {
@@ -39,11 +38,18 @@ export default function MemesPage() {
           </p>
 
           <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
-            Meme Vault
+            Meme{" "}
+            <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.65)]">
+              Vault
+            </span>
           </h1>
 
           <p className="mt-5 max-w-2xl text-white/65 leading-relaxed">
-            Your $MAD meme gallery — click any meme to open it, or hit download.
+            Your{" "}
+            <span className="text-red-500 drop-shadow-[0_0_10px_rgba(255,0,0,0.55)]">
+              $MAD
+            </span>{" "}
+            meme gallery — click any meme to open it, or hit download.
           </p>
         </div>
 
@@ -84,7 +90,7 @@ export default function MemesPage() {
                 <a
                   href={m.src}
                   download={downloadNameFromSrc(m.src)}
-                  className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/90 transition hover:bg-white/10"
+                  className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/90 transition hover:bg-white/10 hover:text-white"
                 >
                   Download
                 </a>
@@ -95,8 +101,9 @@ export default function MemesPage() {
 
         {/* Tiny debug helper */}
         <div className="mt-10 text-xs text-white/35">
-          If a tile is blank: the filename in <span className="text-white/60">/public/memes/</span>{" "}
-          must match the list exactly (no extra spaces, no uppercase .PNG).
+          If a tile is blank: the filename in{" "}
+          <span className="text-white/60">/public/memes/</span> must match the
+          list exactly (no extra spaces, no uppercase .PNG).
         </div>
       </div>
     </div>
