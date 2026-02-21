@@ -1,11 +1,12 @@
+/* app/globals.css */
 @import "tailwindcss";
-@import "tailwindcss/preflight";
-@tailwind utilities;
 
+/* Smooth scroll */
 html {
   scroll-behavior: smooth;
 }
 
+/* Anim */
 @keyframes fadeUp {
   from {
     opacity: 0;
