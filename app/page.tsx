@@ -10,9 +10,10 @@ export default function Home() {
 
   const links = useMemo(
     () => ({
-      buy: `https://jup.ag/swap/SOL-${addr}`,
       chartPage: `https://dexscreener.com/solana/${addr}`,
       tg: "https://t.me/madtokenfam",
+      x: "https://x.com/devmadcoin",
+      tiktok: "https://www.tiktok.com/@devmadcoin",
     }),
     [addr]
   );
@@ -81,38 +82,73 @@ export default function Home() {
             Emotion evolves. Born in volatility. Refined through discipline.
           </p>
 
-          {/* ACTION BUTTONS */}
+          {/* ✅ ACTION BUTTONS (UPDATED) */}
           <div className="mt-10 flex flex-wrap gap-3">
             <a
-              href="/forge"
+              href="#chart"
               className="rounded-full bg-white/10 px-6 py-3 text-sm font-black text-white transition border border-white/10 hover:bg-white/15"
             >
-              Forge Identity
+              Track Momentum
             </a>
 
             <a
-              href={links.buy}
+              href={links.x}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
+              aria-label="Open X"
+              title="X"
             >
-              Buy on Jupiter
-            </a>
-
-            <a
-              href="#chart"
-              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
-            >
-              Track Momentum
+              {/* X logo */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="currentColor"
+              >
+                <path d="M18.9 2H22l-6.8 7.8L23.3 22h-6.6l-5.1-6.6L5.8 22H2.7l7.3-8.4L.7 2h6.7l4.6 6.1L18.9 2zm-1.2 18h1.7L6.5 3.9H4.7L17.7 20z" />
+              </svg>
+              X
             </a>
 
             <a
               href={links.tg}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
+              aria-label="Open Telegram"
+              title="Telegram"
             >
+              {/* Telegram logo */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="currentColor"
+              >
+                <path d="M9.45 15.56 9.2 19.1c.46 0 .66-.2.9-.44l2.16-2.06 4.48 3.28c.82.45 1.41.21 1.62-.76l2.94-13.8h0c.26-1.2-.43-1.67-1.22-1.37L2.3 9.2c-1.15.45-1.13 1.09-.2 1.38l4.42 1.38 10.28-6.49c.48-.29.93-.13.56.16L9.45 15.56z" />
+              </svg>
               Telegram
+            </a>
+
+            <a
+              href={links.tiktok}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
+              aria-label="Open TikTok"
+              title="TikTok"
+            >
+              {/* TikTok logo (simple musical note mark) */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="currentColor"
+              >
+                <path d="M15 3c.6 2.9 2.7 5.1 5.5 5.5V12c-2 0-3.8-.6-5.5-1.8v6.2c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6c.4 0 .8 0 1.2.1v3.3c-.4-.2-.8-.3-1.2-.3-1.5 0-2.8 1.2-2.8 2.8S7.5 19 9 19s2.8-1.2 2.8-2.8V3H15z" />
+              </svg>
+              TikTok
             </a>
           </div>
 
@@ -140,48 +176,29 @@ export default function Home() {
             </p>
           </div>
 
-          {/* ✅ KEEP BUILDING sticker (between Contract and Confessions) */}
+          {/* KEEP BUILDING sticker */}
           <div className="my-10 flex justify-center">
-            <div className="relative h-[150px] w-[150px] rotate-[-4deg] transition-transform duration-300 hover:rotate-0 hover:scale-105 drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+            <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-transform duration-300 hover:rotate-0 hover:scale-105 drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
               <Image
                 src="/stickers/keep-building.webp"
                 alt="Keep Building"
                 fill
                 priority
-                sizes="150px"
+                sizes="140px"
                 className="object-contain"
               />
             </div>
           </div>
 
-          {/* ✅ MAD CONFESSIONS */}
+          {/* MAD CONFESSIONS */}
           <MadConfessions />
-        </div>
-
-        {/* ✅ BRIDGE (between Confessions and Track Momentum) */}
-        <div className="mt-24 mb-24 flex justify-center animate-fadeUp">
-          <div className="text-center">
-            <div className="relative w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] mx-auto transition-transform duration-300 hover:scale-105">
-              <Image
-                src="/stickers/dev-cooking.webp"
-                alt="Dev Cooking"
-                fill
-                sizes="(max-width: 640px) 200px, 240px"
-                className="object-contain pointer-events-none drop-shadow-[0_22px_45px_rgba(0,0,0,0.6)]"
-              />
-            </div>
-
-            <p className="mt-6 text-xs font-semibold uppercase tracking-[0.4em] text-white/45">
-              Emotion becomes action.
-            </p>
-          </div>
         </div>
 
         {/* CHART */}
         <section
           id="chart"
           ref={momentumRef}
-          className="mt-0 animate-fadeUp scroll-mt-24"
+          className="mt-16 animate-fadeUp scroll-mt-24"
         >
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
