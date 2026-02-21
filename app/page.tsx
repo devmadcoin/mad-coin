@@ -23,7 +23,7 @@ export default function Home() {
     if (typeof navigator === "undefined" || !navigator.clipboard) return;
     navigator.clipboard.writeText(addr).catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 1200);
+    window.setTimeout(() => setCopied(false), 1200);
   }
 
   // ✅ Track Momentum highlight on scroll
@@ -34,9 +34,21 @@ export default function Home() {
     const el = momentumRef.current;
     if (!el) return;
 
+    // If IntersectionObserver isn't supported (rare), just show it.
+    if (typeof IntersectionObserver === "undefined") {
+      setMomentumVisible(true);
+      return;
+    }
+
+    let hasTriggered = false;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setMomentumVisible(true);
+        if (!hasTriggered && entry.isIntersecting) {
+          hasTriggered = true;
+          setMomentumVisible(true);
+          observer.disconnect();
+        }
       },
       { threshold: 0.4 }
     );
@@ -142,12 +154,11 @@ export default function Home() {
 
           {/* ✅ KEEP BUILDING sticker (between Contract and Confessions) */}
           <div className="my-10 flex justify-center">
-            <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-transform duration-300 hover:rotate-0 hover:scale-105 drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+            <div className="pointer-events-none relative h-[140px] w-[140px] rotate-[-4deg] transition-transform duration-300 hover:rotate-0 hover:scale-105 drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
               <Image
                 src="/stickers/keep-building.webp"
                 alt="Keep Building"
                 fill
-                priority
                 sizes="140px"
                 className="object-contain"
               />
@@ -156,13 +167,30 @@ export default function Home() {
 
           {/* ✅ MAD CONFESSIONS */}
           <MadConfessions />
+
+          {/* ✅ BRIDGE (between Confessions and Track Momentum) */}
+          <div className="my-16 text-center animate-fadeUp">
+            <div className="flex justify-center mb-6">
+              <Image
+                src="/stickers/dev-cooking.webp"
+                alt="Dev Cooking"
+                width={150}
+                height={150}
+                className="pointer-events-none object-contain drop-shadow-[0_16px_34px_rgba(0,0,0,0.55)]"
+              />
+            </div>
+
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">
+              Emotion becomes action.
+            </p>
+          </div>
         </div>
 
         {/* CHART */}
         <section
           id="chart"
           ref={momentumRef}
-          className="mt-16 animate-fadeUp scroll-mt-24"
+          className="mt-6 animate-fadeUp scroll-mt-24"
         >
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
