@@ -38,12 +38,11 @@ export default function Home() {
           {/* GM sticker (desktop only) */}
           <div className="pointer-events-none hidden lg:block absolute right-[-260px] top-6 h-[280px] w-[280px] opacity-95">
             <Image
-              // ✅ FIX: use a NORMAL filename with no spaces
-              // Put your file here: /public/stickers/gm.webp
               src="/stickers/gm.webp"
               alt="GM Sticker"
               fill
               priority
+              sizes="280px"
               className="object-contain drop-shadow-[0_25px_55px_rgba(0,0,0,0.65)]"
             />
           </div>
@@ -119,7 +118,21 @@ export default function Home() {
             </p>
           </div>
 
-          {/* ✅ MAD CONFESSIONS (right after contract) */}
+          {/* ✅ KEEP BUILDING sticker (between Contract and Confessions) */}
+          <div className="my-10 flex justify-center">
+            <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-transform duration-300 hover:rotate-0 hover:scale-105 drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+              <Image
+                src="/stickers/keep-building.webp"
+                alt="Keep Building"
+                fill
+                sizes="140px"
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
+
+          {/* ✅ MAD CONFESSIONS */}
           <MadConfessions />
         </div>
 
@@ -130,7 +143,9 @@ export default function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
                 Live Chart
               </p>
-              <h2 className="mt-2 text-3xl sm:text-4xl font-black">Track Momentum</h2>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-black">
+                Track Momentum
+              </h2>
               <p className="mt-2 text-white/60">
                 A clean live view of price action — inside the site.
               </p>
