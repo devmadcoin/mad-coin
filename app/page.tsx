@@ -18,9 +18,7 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
 
   function copyAddr() {
-    // Guard so it never crashes in weird environments
     if (typeof navigator === "undefined" || !navigator.clipboard) return;
-
     navigator.clipboard.writeText(addr).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
@@ -32,14 +30,13 @@ export default function Home() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
       <div className="absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
-      {/* LUXURY SPACING */}
-      <div className="relative mx-auto max-w-5xl px-8 py-24">
+      <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
+        {/* HERO */}
         <div className="max-w-3xl animate-fadeUp">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/60">
             SOLANA • Digital emotion — refined
           </p>
 
-          {/* STRONGER HERO */}
           <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
             Welcome To <span className="text-white">$MAD</span>
           </h1>
@@ -48,11 +45,11 @@ export default function Home() {
             Emotion evolves. Born in volatility. Refined through discipline.
           </p>
 
-          {/* ACTION BUTTONS (not nav) */}
+          {/* ACTION BUTTONS */}
           <div className="mt-10 flex flex-wrap gap-3">
             <a
               href="/forge"
-              className="rounded-full bg-white/10 px-6 py-3 text-sm font-black text-white transition border border-white/10 hover:bg-white/15 hover:scale-[1.01]"
+              className="rounded-full bg-white/10 px-6 py-3 text-sm font-black text-white transition border border-white/10 hover:bg-white/15"
             >
               Forge Identity
             </a>
@@ -61,15 +58,14 @@ export default function Home() {
               href={links.buy}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white hover:scale-[1.01]"
+              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
             >
               Buy on Jupiter
             </a>
 
-            {/* Smooth jump to embedded chart section */}
             <a
               href="#chart"
-              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white hover:scale-[1.01]"
+              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
             >
               Track Momentum
             </a>
@@ -78,13 +74,13 @@ export default function Home() {
               href={links.tg}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white hover:scale-[1.01]"
+              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
             >
               Telegram
             </a>
           </div>
 
-          {/* Contract box */}
+          {/* CONTRACT */}
           <div className="mt-12 rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
               Contract
@@ -97,7 +93,7 @@ export default function Home() {
 
               <button
                 onClick={copyAddr}
-                className="rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black transition hover:bg-white/10 hover:scale-[1.01]"
+                className="rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black transition hover:bg-white/10"
               >
                 {copied ? "Copied!" : "Copy"}
               </button>
@@ -109,16 +105,14 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Embedded Chart */}
+        {/* CHART */}
         <section id="chart" className="mt-16 animate-fadeUp scroll-mt-24">
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
                 Live Chart
               </p>
-              <h2 className="mt-2 text-3xl sm:text-4xl font-black">
-                Track Momentum
-              </h2>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-black">Track Momentum</h2>
               <p className="mt-2 text-white/60">
                 A clean live view of price action — inside the site.
               </p>
@@ -128,13 +122,12 @@ export default function Home() {
               href={links.chartPage}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 hover:text-white hover:scale-[1.01]"
+              className="rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 hover:text-white"
             >
               Open on Dexscreener →
             </a>
           </div>
 
-          {/* LUXURY FRAME */}
           <div className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl">
             <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
               <iframe
