@@ -1,276 +1,173 @@
 /* app/roadmap/page.tsx */
+
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
+type RoadmapItem = {
+  phase: string;
+  title: string;
+  desc: string;
+  done?: boolean;
+};
+
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n));
+}
+
+function formatCompactUSD(n: number) {
+  if (!Number.isFinite(n)) return "$0";
+  const abs = Math.abs(n);
+  if (abs >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1)}B`;
+  if (abs >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (abs >= 1_000) return `$${(n / 1_000).toFixed(1)}K`;
+  return `$${Math.round(n).toString()}`;
+}
+
 export default function Page() {
-  // =========================
-  // EDIT THESE 2 NUMBERS ONLY
-  // =========================
-  const TARGET_MC = 100_000_000;
-  const CURRENT_MC = 2_400_000; // <- update this anytime
+  // --- EDIT THIS WHEN YOU WANT ---
+  const CURRENT_MCAP_USD = 0; // set your current market cap here
+  const GOAL_USD = 100_000_000;
 
-  // ====== Roadmap ======
-  const roadmap = useMemo(
-    () => [
-      {
-        phase: "Phase 1",
-        title: "Bond",
-        desc: "Establish the foundation. Lock in the culture. Build the core.",
-        done: true,
-      },
-      {
-        phase: "Phase 1.1",
-        title: "300M Burn (30%)",
-        desc: "Proof-of-signal. Big burn. Clear intent.",
-        done: true,
-      },
-      {
-        phase: "Phase 1.2",
-        title: "350M Burn (35%)",
-        desc: "Phase 1.2 complete — 350,000,000 tokens burned.",
-        done: true,
-      },
-      {
-        phase: "Phase 1.3",
-        title: "40% Supply Burned",
-        desc: "Target milestone — 40% of total supply burned.",
-        done: false,
-      },
-      { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible.", done: false },
-      { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit.", done: false },
-      { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive.", done: false },
-      { phase: "Phase 5", title: "$100M", desc: "The full thesis. The brand becomes gravity.", done: false },
-    ],
-    []
+  const progressPct = useMemo(
+    () => clamp((CURRENT_MCAP_USD / GOAL_USD) * 100, 0, 100),
+    [CURRENT_MCAP_USD, GOAL_USD]
   );
 
-  // ====== Milestones for the progress bar ======
-  const milestones = useMemo(
-    () => [
-      { label: "$1M", value: 1_000_000 },
-      { label: "$10M", value: 10_000_000 },
-      { label: "$25M", value: 25_000_000 },
-      { label: "$50M", value: 50_000_000 },
-      { label: "$75M", value: 75_000_000 },
-      { label: "$100M", value: 100_000_000 },
-    ],
-    []
-  );
-
-  const progressPercent = Math.min((CURRENT_MC / TARGET_MC) * 100, 100);
-
-  const currentMilestoneIndex = useMemo(() => {
-    let idx = -1;
-    for (let i = 0; i < milestones.length; i++) {
-      if (CURRENT_MC >= milestones[i].value) idx = i;
-    }
-    return idx;
-  }, [CURRENT_MC, milestones]);
-
-  // ====== (C) Glow burst when crossing a milestone ======
-  const prevMilestoneIndexRef = useRef<number>(-1);
-  const [milestoneBurst, setMilestoneBurst] = useState(false);
-  const [burstLabel, setBurstLabel] = useState<string>("");
+  // Animated width target (starts at 0 then animates to progressPct)
+  const [animatedPct, setAnimatedPct] = useState(0);
 
   useEffect(() => {
-    const prev = prevMilestoneIndexRef.current;
+    // reset then animate (works even if you later change CURRENT_MCAP_USD)
+    setAnimatedPct(0);
+    const t = window.setTimeout(() => setAnimatedPct(progressPct), 120);
+    return () => window.clearTimeout(t);
+  }, [progressPct]);
 
-    // initialize once
-    if (prev === -1) {
-      prevMilestoneIndexRef.current = currentMilestoneIndex;
-      return;
-    }
+  const roadmap: RoadmapItem[] = [
+    { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
+    { phase: "Phase 1.1", title: "300M Burn (30%)", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
+    { phase: "Phase 1.2", title: "350M Burn (35%)", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
+    { phase: "Phase 1.3", title: "40% Supply Burned", desc: "Target milestone — 40% of total supply burned.", done: false },
+    { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible.", done: false },
+    { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit.", done: false },
+    { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive.", done: false },
+    { phase: "Phase 5", title: "$100M", desc: "Full signal. The mission is obvious to everyone.", done: false },
+  ];
 
-    // crossed upward
-    if (currentMilestoneIndex > prev) {
-      setBurstLabel(milestones[currentMilestoneIndex]?.label ?? "");
-      setMilestoneBurst(true);
-      window.setTimeout(() => setMilestoneBurst(false), 900);
-      prevMilestoneIndexRef.current = currentMilestoneIndex;
-    } else {
-      prevMilestoneIndexRef.current = currentMilestoneIndex;
-    }
-  }, [currentMilestoneIndex, milestones]);
-
-  const btnBase =
-    "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-white/15";
-  const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
+  const milestones = [
+    { label: "$1M", value: 1_000_000 },
+    { label: "$10M", value: 10_000_000 },
+    { label: "$50M", value: 50_000_000 },
+    { label: "$100M", value: 100_000_000 },
+  ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="relative mx-auto w-full max-w-6xl px-6 py-14">
+    <main className="min-h-screen bg-black text-white">
+      <div className="mx-auto w-full max-w-5xl px-6 py-14">
         {/* Header */}
-        <div className="flex items-center gap-3">
-          <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
-            <Image src="/mad.png" alt="$MAD logo" width={48} height={48} priority />
+        <div className="flex items-center gap-4">
+          <div className="rounded-2xl bg-white/10 p-3 border border-white/10">
+            <Image src="/mad.png" alt="$MAD logo" width={44} height={44} priority />
           </div>
-          <div className="text-left">
+          <div>
             <div className="text-xs uppercase tracking-[0.35em] text-white/60">Roadmap</div>
-            <div className="text-2xl sm:text-3xl font-black leading-tight">Road to $100M</div>
+            <h1 className="text-3xl sm:text-4xl font-black leading-tight">To $100M.</h1>
+            <p className="mt-2 text-white/65 max-w-2xl leading-relaxed">
+              Simple milestones. Loud progress. No mystery math.
+            </p>
           </div>
         </div>
 
-        <p className="mt-6 text-white/65 leading-[1.9] max-w-2xl">
-          Structure first. Hype second. Expansion third.
-        </p>
-
-        {/* ====== Progress Meter ====== */}
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7 overflow-hidden">
-          <div className="flex items-start sm:items-center justify-between gap-4">
+        {/* Progress Meter */}
+        <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
             <div>
-              <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Progress</p>
-              <h3 className="mt-2 text-2xl sm:text-3xl font-black">Market Cap Milestones</h3>
-              <p className="mt-2 text-white/60 leading-[1.8]">
-                When the line is crossed, the UI celebrates.
-              </p>
-            </div>
-
-            <div
-              className={[
-                "shrink-0 rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-center transition",
-                milestoneBurst ? "milestone-burst" : "",
-              ].join(" ")}
-            >
-              <div className="text-xs uppercase tracking-[0.35em] text-white/50">Current</div>
-              <div className="mt-1 text-lg font-black text-white">
-                {currentMilestoneIndex >= 0 ? milestones[currentMilestoneIndex].label : "$0"}
+              <div className="text-sm font-black">Progress Meter</div>
+              <div className="text-xs text-white/55 mt-1">
+                Current: <span className="text-white/80">{formatCompactUSD(CURRENT_MCAP_USD)}</span> / Goal:{" "}
+                <span className="text-white/80">{formatCompactUSD(GOAL_USD)}</span>
+                <span className="ml-2 text-white/45">({Math.round(progressPct)}%)</span>
               </div>
-              {milestoneBurst && (
-                <div className="mt-1 text-xs font-black text-white/80">✅ Milestone hit: {burstLabel}</div>
-              )}
+            </div>
+            <div className="text-xs text-white/55">
+              Edit <span className="text-white/80">CURRENT_MCAP_USD</span> in this file whenever you want.
             </div>
           </div>
 
-          <div className="mt-7">
-            <div className="flex justify-between text-xs text-white/60 mb-2">
-              <span>$0</span>
-              <span>$100M</span>
-            </div>
-
-            <div className="relative w-full h-4 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className={["h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-700", milestoneBurst ? "bar-burst" : ""].join(
-                  " "
-                )}
-                style={{ width: `${progressPercent}%` }}
-              />
-
-              {milestones.map((m, i) => {
-                const left = (m.value / TARGET_MC) * 100;
-                const reached = CURRENT_MC >= m.value;
-                const isCurrent = i === currentMilestoneIndex;
-
-                return (
-                  <div key={m.label} className="absolute top-0 h-full flex items-center" style={{ left: `${left}%` }}>
-                    <div
-                      className={["w-[2px] h-6 -translate-x-1/2 rounded-full transition", reached ? "bg-white/70" : "bg-white/20", isCurrent ? "tick-glow" : ""].join(
-                        " "
-                      )}
-                      title={m.label}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-3 flex justify-between text-[11px] text-white/45">
-              <span>Start</span>
-              <span className="text-white/60 font-black">${(CURRENT_MC / 1_000_000).toFixed(2)}M now</span>
-              <span>Target</span>
-            </div>
-
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button className={btnGhost} onClick={() => navigator.clipboard.writeText(String(CURRENT_MC))}>
-                Copy Current MC #
-              </button>
-              <button className={btnGhost} onClick={() => navigator.clipboard.writeText(String(TARGET_MC))}>
-                Copy Target #
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* ====== Roadmap Cards ====== */}
-        <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          {roadmap.map((r) => (
+          {/* Animated Progress Bar */}
+          <div className="mt-4 h-4 w-full rounded-full bg-white/10 overflow-hidden border border-white/10">
             <div
-              key={r.phase}
-              className={[
-                "rounded-3xl border border-white/10 bg-white/5 p-6",
-                r.done ? "shadow-[0_0_80px_rgba(255,120,80,0.08)]" : "",
-              ].join(" ")}
+              className="relative h-full rounded-full bg-gradient-to-r from-red-500/80 to-orange-500/80 transition-[width] duration-1000 ease-out"
+              style={{ width: `${animatedPct}%` }}
+              aria-label="progress bar"
             >
+              {/* Shine sweep */}
+              <div className="absolute inset-0 opacity-35 pointer-events-none">
+                <div className="h-full w-1/3 bg-white/40 blur-md shine-sweep" />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {milestones.map((m) => {
+              const hit = CURRENT_MCAP_USD >= m.value && CURRENT_MCAP_USD > 0;
+              return (
+                <div
+                  key={m.label}
+                  className={`rounded-2xl border p-3 text-center ${
+                    hit ? "border-white/20 bg-white/10" : "border-white/10 bg-white/5"
+                  }`}
+                >
+                  <div className="text-xs text-white/60">Milestone</div>
+                  <div className="mt-1 font-black">{m.label}</div>
+                  <div className="mt-1 text-[11px] text-white/55">{hit ? "Cleared ✅" : "Pending"}</div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Roadmap Cards */}
+        <section className="mt-10 grid grid-cols-1 gap-4">
+          {roadmap.map((r) => (
+            <div key={r.phase} className="rounded-3xl border border-white/10 bg-white/5 p-6">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="text-xs uppercase tracking-[0.35em] text-white/55">{r.phase}</div>
-                  <div className="mt-2 text-xl font-black">{r.title}</div>
+                  <div className="text-xs uppercase tracking-[0.25em] text-white/55">{r.phase}</div>
+                  <div className="mt-1 text-xl font-black">{r.title}</div>
+                  <p className="mt-2 text-white/65 leading-relaxed">{r.desc}</p>
                 </div>
-                <div className="text-sm font-black">{r.done ? "✅" : "⏳"}</div>
+                <div
+                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-black border ${
+                    r.done ? "bg-white/10 border-white/20 text-white" : "bg-white/5 border-white/10 text-white/70"
+                  }`}
+                >
+                  {r.done ? "DONE" : "LOCKED"}
+                </div>
               </div>
-              <p className="mt-3 text-white/65 leading-[1.85]">{r.desc}</p>
             </div>
           ))}
-        </div>
+        </section>
 
-        <footer className="py-12 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
+        <footer className="mt-12 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
 
-        {/* animations */}
+        {/* Shine animation */}
         <style jsx global>{`
-          @keyframes burstGlow {
+          @keyframes shineSweep {
             0% {
-              transform: scale(1);
-              filter: saturate(1);
-              box-shadow: 0 0 0 rgba(255, 120, 80, 0);
-            }
-            35% {
-              transform: scale(1.03);
-              filter: saturate(1.25);
-              box-shadow: 0 0 70px rgba(255, 120, 80, 0.22);
+              transform: translateX(-120%);
             }
             100% {
-              transform: scale(1);
-              filter: saturate(1);
-              box-shadow: 0 0 0 rgba(255, 120, 80, 0);
+              transform: translateX(360%);
             }
           }
-
-          @keyframes barPulse {
-            0% {
-              filter: saturate(1);
-            }
-            40% {
-              filter: saturate(1.35) brightness(1.08);
-            }
-            100% {
-              filter: saturate(1);
-            }
-          }
-
-          @keyframes tickSpark {
-            0% {
-              box-shadow: 0 0 0 rgba(255, 120, 80, 0);
-            }
-            40% {
-              box-shadow: 0 0 30px rgba(255, 120, 80, 0.35);
-            }
-            100% {
-              box-shadow: 0 0 0 rgba(255, 120, 80, 0);
-            }
-          }
-
-          .milestone-burst {
-            animation: burstGlow 900ms ease-out;
-          }
-          .bar-burst {
-            animation: barPulse 900ms ease-out;
-          }
-          .tick-glow {
-            animation: tickSpark 900ms ease-out;
+          .shine-sweep {
+            animation: shineSweep 1.6s ease-in-out infinite;
           }
         `}</style>
       </div>
-    </div>
+    </main>
   );
 }
