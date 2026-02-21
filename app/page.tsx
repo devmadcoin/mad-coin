@@ -1,7 +1,7 @@
 /* app/page.tsx */
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import MadConfessions from "./components/MadConfessions";
 
@@ -25,6 +25,25 @@ export default function Home() {
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
   }
+
+  // ✅ Track Momentum highlight on scroll
+  const [momentumVisible, setMomentumVisible] = useState(false);
+  const momentumRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const el = momentumRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setMomentumVisible(true);
+      },
+      { threshold: 0.4 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="relative overflow-hidden">
@@ -52,7 +71,10 @@ export default function Home() {
           </p>
 
           <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
-            Welcome To <span className="text-white">$MAD</span>
+            Welcome To{" "}
+            <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.6)]">
+              $MAD
+            </span>
           </h1>
 
           <p className="mt-6 max-w-xl text-white/70 leading-relaxed">
@@ -125,9 +147,9 @@ export default function Home() {
                 src="/stickers/keep-building.webp"
                 alt="Keep Building"
                 fill
+                priority
                 sizes="140px"
                 className="object-contain"
-                priority
               />
             </div>
           </div>
@@ -137,15 +159,30 @@ export default function Home() {
         </div>
 
         {/* CHART */}
-        <section id="chart" className="mt-16 animate-fadeUp scroll-mt-24">
+        <section
+          id="chart"
+          ref={momentumRef}
+          className="mt-16 animate-fadeUp scroll-mt-24"
+        >
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
                 Live Chart
               </p>
+
               <h2 className="mt-2 text-3xl sm:text-4xl font-black">
-                Track Momentum
+                Track{" "}
+                <span
+                  className={`transition-colors duration-700 ${
+                    momentumVisible
+                      ? "text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.7)]"
+                      : "text-white"
+                  }`}
+                >
+                  Momentum
+                </span>
               </h2>
+
               <p className="mt-2 text-white/60">
                 A clean live view of price action — inside the site.
               </p>
