@@ -1,158 +1,181 @@
 /* app/roadmap/page.tsx */
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
+import Image from "next/image";
 
-type Phase = {
+type RoadmapItem = {
   phase: string;
   title: string;
   desc: string;
-  done?: boolean;
+  status: "complete" | "in_progress" | "planned";
 };
 
-export default function Roadmap() {
-  const phases: Phase[] = useMemo(
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n));
+}
+
+export default function RoadmapPage() {
+  const items: RoadmapItem[] = useMemo(
     () => [
       {
-        phase: "Phase 1",
+        phase: "PHASE 1",
         title: "Foundation",
         desc: "Launch $MAD. Establish identity. Deploy site.",
-        done: true,
+        status: "complete",
       },
       {
-        phase: "Phase 1.2",
+        phase: "PHASE 1.2",
         title: "Supply Burn",
         desc: "Burn 350,000,000 tokens to reinforce anti-rug structure.",
-        done: true,
+        status: "complete",
       },
       {
-        phase: "Phase 2",
+        phase: "PHASE 2",
         title: "Forge Expansion",
         desc: "Launch identity forge and expand digital emotion layer.",
-        done: false,
+        status: "in_progress",
       },
       {
-        phase: "Phase 3",
+        phase: "PHASE 3",
         title: "Cultural Expansion",
         desc: "Community campaigns, meme vault growth, ecosystem depth.",
-        done: false,
+        status: "in_progress",
       },
     ],
     []
   );
 
-  const doneCount = phases.filter((p) => p.done).length;
-  const totalCount = phases.length;
-  const pct = totalCount === 0 ? 0 : Math.round((doneCount / totalCount) * 100);
+  const total = items.length;
+  const completed = items.filter((x) => x.status === "complete").length;
+  const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
-  // triggers the “fill” animation after mount
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  // IMPORTANT: your filenames include spaces + the "sticker.webp " prefix.
+  // This path matches your current GitHub uploads exactly.
+  const chillSrc = "/stickers/sticker.webp%20Chill.webp";
 
   return (
     <div className="relative overflow-hidden">
-      {/* subtle bg */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.16),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.12),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.10),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-20 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
+      {/* background */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
-      <div className="relative mx-auto max-w-5xl px-6 pt-20 pb-24">
+      <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
         {/* Header */}
-        <div className="max-w-3xl animate-fadeUp">
+        <div className="mx-auto max-w-3xl animate-fadeUp">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/60">
-            Structure before hype.
+            STRUCTURE BEFORE HYPE.
           </p>
 
-          <h1 className="mt-6 text-5xl sm:text-6xl font-black tracking-tight">
-            $MAD Roadmap
+          <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
+            <span className="text-white">$MAD</span> Roadmap
           </h1>
 
-          <p className="mt-6 text-white/70">
+          <p className="mt-5 max-w-xl text-white/70 leading-relaxed">
             Anti-rug architecture. Controlled expansion. Disciplined growth.
           </p>
+        </div>
 
-          {/* Animated Progress Bar */}
-          <div className="mt-10 rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl">
-            <div className="flex items-center justify-between gap-4 flex-wrap">
+        {/* Overall progress card (with Chill sticker + bar underneath) */}
+        <div className="mt-10 animate-fadeUp">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
+            {/* Chill sticker */}
+            <div className="pointer-events-none absolute -right-10 -top-10 hidden md:block opacity-95">
+              <Image
+                src={chillSrc}
+                alt="Chill sticker"
+                width={260}
+                height={260}
+                priority={false}
+              />
+            </div>
+
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-white/50">
-                  Overall Progress
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
+                  OVERALL PROGRESS
                 </p>
-                <p className="mt-2 text-white/80">
-                  {doneCount} of {totalCount} phases complete
+                <p className="mt-2 text-sm text-white/70">
+                  {completed} of {total} phases complete
                 </p>
               </div>
 
-              <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/80">
+              <div className="shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80">
                 {pct}%
               </div>
             </div>
 
-            <div className="mt-5 h-3 overflow-hidden rounded-full border border-white/10 bg-white/5">
-              <div
-                className={[
-                  "h-full rounded-full",
-                  // looks “luxury” without neon
-                  "bg-gradient-to-r from-white/30 via-white/60 to-white/30",
-                  "shadow-[0_0_30px_rgba(255,255,255,0.10)]",
-                  "transition-[width] duration-1000 ease-out",
-                ].join(" ")}
-                style={{ width: mounted ? `${pct}%` : "0%" }}
-              />
+            {/* Progress bar moved UNDER the sticker row */}
+            <div className="mt-5">
+              <div className="mad-progress-track">
+                <div className="mad-progress-fill" style={{ width: `${pct}%` }} />
+              </div>
+              <p className="mt-2 text-xs text-white/40">
+                Progress updates as phases are marked complete.
+              </p>
             </div>
-
-            <p className="mt-3 text-xs text-white/45">
-              Progress updates as phases are marked complete.
-            </p>
           </div>
         </div>
 
-        {/* Phase Cards */}
-        <div className="mt-16 space-y-8">
-          {phases.map((item, i) => {
-            const isDone = !!item.done;
+        {/* Roadmap cards */}
+        <div className="mt-10 space-y-6">
+          {items.map((item) => (
+            <RoadmapCard key={item.phase} item={item} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
-            return (
-              <div
-                key={i}
-                className="rounded-3xl border border-white/10 bg-black/40 p-8 backdrop-blur-xl"
-              >
-                <div className="flex items-center justify-between flex-wrap gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.3em] text-white/50">
-                      {item.phase}
-                    </p>
-                    <h2 className="mt-2 text-2xl font-black">{item.title}</h2>
-                  </div>
+function RoadmapCard({ item }: { item: RoadmapItem }) {
+  const isDone = item.status === "complete";
+  const isProgress = item.status === "in_progress";
 
-                  <div
-                    className={[
-                      "rounded-full px-4 py-2 text-xs font-bold",
-                      isDone
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-white/10 text-white/60",
-                    ].join(" ")}
-                  >
-                    {isDone ? "Complete" : "In Progress"}
-                  </div>
-                </div>
+  const chip =
+    item.status === "complete"
+      ? "Complete"
+      : item.status === "in_progress"
+      ? "In Progress"
+      : "Planned";
 
-                <p className="mt-4 text-white/70">{item.desc}</p>
+  return (
+    <div className="animate-fadeUp">
+      <div className="rounded-3xl border border-white/10 bg-black/30 p-6 backdrop-blur-xl shadow-2xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
+              {item.phase}
+            </p>
+            <h3 className="mt-3 text-3xl font-black">{item.title}</h3>
+            <p className="mt-3 text-white/70">{item.desc}</p>
+          </div>
 
-                {/* Optional: tiny per-phase bar (animated too) */}
-                <div className="mt-6 h-2 overflow-hidden rounded-full border border-white/10 bg-white/5">
-                  <div
-                    className={[
-                      "h-full rounded-full transition-[width] duration-700 ease-out",
-                      isDone
-                        ? "bg-green-400/60"
-                        : "bg-white/20",
-                    ].join(" ")}
-                    style={{ width: mounted ? (isDone ? "100%" : "35%") : "0%" }}
-                  />
-                </div>
-              </div>
-            );
-          })}
+          <div
+            className={[
+              "shrink-0 rounded-full px-4 py-2 text-xs font-semibold border",
+              isDone
+                ? "bg-emerald-500/15 text-emerald-200 border-emerald-500/25"
+                : isProgress
+                ? "bg-white/10 text-white/75 border-white/10"
+                : "bg-white/5 text-white/60 border-white/10",
+            ].join(" ")}
+          >
+            {chip}
+          </div>
+        </div>
+
+        {/* Optional bottom bar per phase */}
+        <div className="mt-6">
+          <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden border border-white/10">
+            <div
+              className={[
+                "h-full rounded-full",
+                isDone ? "bg-emerald-400/70" : isProgress ? "bg-white/15" : "bg-white/10",
+              ].join(" ")}
+              style={{ width: isDone ? "100%" : isProgress ? "55%" : "15%" }}
+            />
+          </div>
         </div>
       </div>
     </div>
