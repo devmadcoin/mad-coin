@@ -106,10 +106,8 @@ function cycleFallback(e: React.SyntheticEvent<HTMLImageElement, Event>, fallbac
   const img = e.currentTarget;
   if (!fallbacks?.length) return;
 
-  // Some browsers don’t set currentSrc for normal <img>. Prefer src.
   const current = img.getAttribute("src") || img.currentSrc || "";
 
-  // Reset sequence whenever the src changes.
   if (img.dataset.lastTried !== current) {
     img.dataset.fallbackIndex = "0";
     img.dataset.lastTried = current;
@@ -154,6 +152,10 @@ function clampText(s: string, max = 240) {
 }
 
 export default function Home() {
+  // ✅ Fix hydration: wait until mounted before rendering anything non-deterministic
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   // ====== Token / Links ======
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
@@ -192,15 +194,20 @@ export default function Home() {
   const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
   const btnBlue = `${btnBase} bg-blue-500/90 hover:bg-blue-600 text-white`;
 
-  // ====== Background + particles ======
+  // ====== Background ======
   const bg = useMemo(() => {
     const c = buildCandidates("/pfp/bg/bg-redclouds.png");
     return { primary: c[0], fallbacks: c.slice(1) };
   }, []);
 
-  const angry = useMemo(() => {
+  // ✅ Fix hydration: generate random particles ONLY after mount
+  const [angry, setAngry] = useState<
+    { i: number; x: number; size: number; opacity: number; dur: number; delay: number; drift: number }[]
+  >([]);
+  useEffect(() => {
+    if (!mounted) return;
     const count = 18;
-    return Array.from({ length: count }, (_, i) => {
+    const next = Array.from({ length: count }, (_, i) => {
       const x = (i * 100) / count + (Math.random() * 6 - 3);
       const size = 18 + Math.floor(Math.random() * 26);
       const opacity = 0.1 + Math.random() * 0.2;
@@ -209,11 +216,13 @@ export default function Home() {
       const drift = Math.floor(Math.random() * 240 - 120);
       return { i, x, size, opacity, dur, delay, drift };
     });
-  }, []);
+    setAngry(next);
+  }, [mounted]);
 
   // ====== scroll-reactive glow intensity ======
   const [scrollGlow, setScrollGlow] = useState(0);
   useEffect(() => {
+    if (!mounted) return;
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -230,7 +239,7 @@ export default function Home() {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [mounted]);
 
   // ====== Meme Vault (✅ keep ROOT paths) ======
   const freshMemes = useMemo(
@@ -250,13 +259,17 @@ export default function Home() {
     []
   );
 
-  // ====== Roadmap ======
+  // ====== Roadmap ✅ added Phase 1.2 ======
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
       { phase: "Phase 1.1", title: "300M Burn", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
-      // ✅ ADDED
-      { phase: "Phase 1.2", title: "350M Burn", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
+      {
+        phase: "Phase 1.2",
+        title: "350M Burn",
+        desc: "Phase 1.2 complete — 350,000,000 tokens burned. Scarcity, on purpose.",
+        done: true,
+      },
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
       { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive." },
@@ -378,7 +391,10 @@ export default function Home() {
   const [showAcc, setShowAcc] = useState(true);
 
   // ====== stable initial picks ======
-  const initialEye = useMemo(() => ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon"), [ALL_EYES]);
+  const initialEye = useMemo(
+    () => ALL_EYES[0] ?? makeItem<EyeItem>("default-eye", "/pfp/eyes/eyes-01.png", "Eyes", "common", "cartoon"),
+    [ALL_EYES]
+  );
   const initialAcc = useMemo(
     () =>
       ALL_ACCESSORIES[0] ??
@@ -463,13 +479,16 @@ export default function Home() {
     []
   );
 
-  const todayPrompt = useMemo(() => {
+  // ✅ Fix hydration: compute prompt after mount
+  const [todayPrompt, setTodayPrompt] = useState<string>("");
+  useEffect(() => {
+    if (!mounted) return;
     const d = new Date();
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     let h = 0;
     for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
-    return ragePrompts[h % ragePrompts.length];
-  }, [ragePrompts]);
+    setTodayPrompt(ragePrompts[h % ragePrompts.length]);
+  }, [mounted, ragePrompts]);
 
   const [confessions, setConfessions] = useState<Confession[]>([]);
   const [confessionText, setConfessionText] = useState("");
@@ -529,17 +548,17 @@ export default function Home() {
   const pollRef = useRef<number | null>(null);
 
   useEffect(() => {
+    if (!mounted) return;
     loadReacted();
     fetchConfessions();
 
-    // ✅ safe polling (no stacking)
     pollRef.current = window.setInterval(fetchConfessions, 8000);
     return () => {
       if (pollRef.current) window.clearInterval(pollRef.current);
       pollRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mounted]);
 
   const submitConfession = async () => {
     setConfessionErr(null);
@@ -576,7 +595,6 @@ export default function Home() {
   const react = async (id: string, kind: "same" | "lol" | "handshake") => {
     const already = !!reactedMap?.[id]?.[kind];
 
-    // optimistic UI
     setConfessions((prev) =>
       prev.map((c) => {
         if (c.id !== id) return c;
@@ -600,23 +618,26 @@ export default function Home() {
   };
 
   // ====== Rage Tap Gate ======
-  const [gateUnlocked, setGateUnlocked] = useState(true);
+  // ✅ Fix hydration: don’t assume unlocked on initial render
+  const [gateUnlocked, setGateUnlocked] = useState<boolean | null>(null);
   const [gateTaps, setGateTaps] = useState(0);
 
   useEffect(() => {
+    if (!mounted) return;
     try {
       const saved = localStorage.getItem(LS_SITE_UNLOCK_KEY);
       const isUnlocked = saved === "1";
       setGateUnlocked(isUnlocked);
-      setGateTaps(0);
+      setGateTaps(isUnlocked ? 10 : 0);
     } catch {
       setGateUnlocked(false);
       setGateTaps(0);
     }
-  }, []);
+  }, [mounted]);
 
   const unlockGate = () => {
     setGateUnlocked(true);
+    setGateTaps(10);
     try {
       localStorage.setItem(LS_SITE_UNLOCK_KEY, "1");
     } catch {}
@@ -629,11 +650,6 @@ export default function Home() {
       return next;
     });
   };
-
-  useEffect(() => {
-    // ✅ ensure taps show full when unlocked, without recursion
-    if (gateUnlocked) setGateTaps(10);
-  }, [gateUnlocked]);
 
   const gateLine = useMemo(() => {
     if (gateTaps <= 0) return "Tap to enter. Emotion requires commitment.";
@@ -654,10 +670,13 @@ export default function Home() {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // ✅ Prevent rendering until mounted to avoid any remaining hydration edge cases
+  if (!mounted) return null;
+
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
       {/* ====== OPTIONAL RAGE TAP GATE (SKIPPABLE) ====== */}
-      {!gateUnlocked && (
+      {gateUnlocked === false && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
 
@@ -1072,7 +1091,7 @@ export default function Home() {
 
           <div className="mb-7 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
             <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s prompt</div>
-            <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
+            <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt || "Loading…"}”</div>
             <div className="mt-2 text-xs text-white/45">Anonymous. Public. Real.</div>
           </div>
 
@@ -1195,58 +1214,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* DETAILS */}
-        <section className="py-20 flex flex-col items-center text-center">
-          <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
-            <Image src="/mad.png" alt="$MAD logo" width={120} height={120} priority />
-          </div>
-
-          <h2 className="mt-10 text-4xl sm:text-6xl font-black tracking-tight">
-            Born in volatility.
-            <br />
-            Refined into culture.
-          </h2>
-
-          <p className="mt-6 max-w-2xl text-white/70 leading-[1.95] text-base sm:text-lg">
-            The market was brutal. People lost money.
-            <br />
-            The emotion was real — and shared.
-            <br />
-            Then it flips: the same emotion becomes the cost of fading.
-          </p>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
-              Buy on Jupiter
-            </a>
-            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
-              View Chart
-            </a>
-          </div>
-        </section>
-
-        {/* ROBLOX */}
-        <section className="pb-20 w-full max-w-4xl mx-auto">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center overflow-hidden">
-            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Universe</p>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-black">Roblox (Beta)</h2>
-            <p className="mt-4 text-white/65 leading-[1.9] max-w-2xl mx-auto">
-              The experiment has a playground: <span className="font-black text-white/85">Will You Get RICH… Or Stay MAD?</span>
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <a href={links.game} target="_blank" rel="noreferrer" className={btnPrimary}>
-                Play on Roblox
-              </a>
-              <a href={links.x} target="_blank" rel="noreferrer" className={btnGhost}>
-                Join X Community
-              </a>
-            </div>
-
-            <p className="mt-4 text-xs text-white/40">Roblox blocks most site embeds — this opens directly in Roblox.</p>
-          </div>
-        </section>
-
         {/* STATUS */}
         <section id="status" className="py-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
@@ -1286,6 +1253,9 @@ export default function Home() {
                   <p className="mt-2 text-white/70">
                     Burn rate: <span className="font-black text-white tabular-nums">{BURN_RATE}%</span>
                   </p>
+                  <div className="mt-3 inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-black text-white/75">
+                    Phase 1.2 Complete ✅
+                  </div>
                 </div>
               </div>
 
