@@ -39,19 +39,19 @@ const EVENTS: LoreEvent[] = [
   {
     date: "Feb 14, 2026",
     title: "RECLAMATION",
-    desc: "Telegram ownership was secured for $200 to retain members and avoid disruption. Not ego—responsibility.",
+    desc: "I realized I didn’t have ownership of the Telegram group. I paid $200 to secure ownership and retain the members—saving everyone the trouble.",
     accent: "neutral",
   },
   {
     date: "Feb 18, 2026 — 3:19 PM",
-    title: "THE RAID",
-    desc: "MAD was attacked and botted across Telegram and Dexscreener. Noise hit the system. The work stayed steady.",
+    title: "ATTACKED",
+    desc: "$MAD was targeted: botted on Telegram and hit on Dexscreener. Noise tried to rewrite the narrative.",
     accent: "amber",
   },
   {
     date: "Feb 20, 2026 — 11:32 AM",
-    title: "THE SECOND STRIKE",
-    desc: "I woke up to find we were attacked again—and our Telegram was deleted. But they can’t delete belief. MAD rose back up anyway.",
+    title: "THE RISE BACK",
+    desc: "I woke up and the Telegram was deleted again. But they can’t delete belief. $MAD rose back up anyway.",
     accent: "red",
   },
 ];
@@ -102,9 +102,9 @@ export default function LorePage() {
             over panic.
           </p>
 
-          {/* Sticker (swap to your new one) */}
+          {/* Sticker */}
           <div className="mt-10 flex justify-center">
-            <div className="relative h-[150px] w-[150px] rotate-[-3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+            <div className="relative h-[150px] w-[150px] rotate-[-2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
               <Image
                 src="/stickers/never-selling.webp"
                 alt="Never Selling"
@@ -125,13 +125,16 @@ export default function LorePage() {
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
                 DOCTRINE
               </p>
+
               <p className="mt-4 text-sm text-white/75 leading-relaxed">
                 One chain. One contract. One coin.
               </p>
+
               <p className="mt-4 text-sm text-white/70 leading-relaxed">
                 <AccentText>Emotion evolves.</AccentText> Born in volatility.
                 Refined through discipline.
               </p>
+
               <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-white/70">
                 No relaunch. No reset. No fragmentation.
               </div>
@@ -194,9 +197,10 @@ export default function LorePage() {
                 </h3>
 
                 <p className="mt-4 text-white/75 leading-relaxed max-w-3xl">
-                  When pressure hit, the easy path was a relaunch. But $MAD
-                  stayed. Because chasing resets always goes to zero. This was
-                  built for the people who stayed—and the dev who doesn’t run.
+                  On launch, a wallet held ~5% and everyone shouted “relaunch.”
+                  I didn’t. People always chase resets until they hit zero. I
+                  cared about the ones who supported this, and I refused to
+                  fragment into another coin. One chain. One contract. One coin.
                 </p>
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -208,6 +212,35 @@ export default function LorePage() {
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
                     One coin. No relaunch.
+                  </div>
+                </div>
+              </div>
+
+              {/* FINAL IMAGE (RELIEVE) */}
+              <div className="mt-10 animate-fadeUp">
+                <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl">
+                  <div className="relative w-full" style={{ aspectRatio: "3 / 4" }}>
+                    <Image
+                      src="/lore/relieve.webp"
+                      alt="Relieve"
+                      fill
+                      sizes="100vw"
+                      className="object-cover"
+                      priority={false}
+                    />
+                  </div>
+
+                  <div className="absolute inset-0 flex items-end justify-center p-8 bg-gradient-to-t from-black/80 via-black/35 to-transparent">
+                    <div className="text-center max-w-2xl">
+                      <h3 className="text-3xl sm:text-4xl font-black text-white drop-shadow-[0_0_15px_rgba(255,0,0,0.5)]">
+                        You Can Delete A Channel.
+                      </h3>
+                      <p className="mt-4 text-white/80 text-sm sm:text-base leading-relaxed">
+                        But you can’t delete belief. <br />
+                        And <span className="text-red-400 font-black">$MAD</span>{" "}
+                        doesn’t reset.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
