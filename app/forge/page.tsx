@@ -6,24 +6,30 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import MadShell from "@/app/_components/MadShell";
 
-import type { EyeItem, AccessoryItem } from "@/app/_lib/mad";
-import { pickWeightedAccessory, cycleFallback, resetFallbackIndex } from "@/app/_lib/mad";
-
-// ✅ If you created: app/_lib/forge-data.ts
-import { FORGE_EYES, FORGE_ACCESSORIES, FORGE_BASE } from "@/app/_lib/forge-data";
+import {
+  type EyeItem,
+  type AccessoryItem,
+  FORGE_EYES,
+  FORGE_ACCESSORIES,
+  FORGE_BASE,
+  pickWeightedAccessory,
+  cycleFallback,
+  resetFallbackIndex,
+} from "@/app/_lib/mad";
 
 export default function Page() {
   const btnBase =
     "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition border border-white/10 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-white/15";
+
   const btnPrimary = [
     btnBase,
     "text-white",
     "bg-gradient-to-r from-red-500/80 to-orange-500/80 hover:from-red-500 hover:to-orange-500",
     "shadow-[0_18px_70px_rgba(255,120,80,0.18)]",
   ].join(" ");
+
   const btnGhost = `${btnBase} bg-white/10 hover:bg-white/15 text-white`;
 
-  // ✅ Directly use the exported arrays (no need for useMemo wrappers)
   const ALL_EYES: EyeItem[] = FORGE_EYES;
   const ALL_ACCESSORIES: AccessoryItem[] = FORGE_ACCESSORIES;
   const BASE = FORGE_BASE;
@@ -31,35 +37,33 @@ export default function Page() {
   const [showBase, setShowBase] = useState(true);
   const [showAcc, setShowAcc] = useState(true);
 
-  // ✅ Safe initial IDs (no empty state needed)
   const [eyeId, setEyeId] = useState<string>(() => ALL_EYES[0]?.id ?? "");
   const [accId, setAccId] = useState<string>(() => ALL_ACCESSORIES[0]?.id ?? "");
 
-  // ✅ If lists ever change (hot reload), keep IDs valid
   useEffect(() => {
     if (!eyeId && ALL_EYES.length) setEyeId(ALL_EYES[0].id);
     if (!accId && ALL_ACCESSORIES.length) setAccId(ALL_ACCESSORIES[0].id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ALL_EYES.length, ALL_ACCESSORIES.length]);
+  }, [eyeId, accId, ALL_EYES, ALL_ACCESSORIES]);
 
   const selectedEye = useMemo(
     () => ALL_EYES.find((e) => e.id === eyeId) ?? ALL_EYES[0],
     [eyeId, ALL_EYES]
   );
+
   const selectedAcc = useMemo(
     () => ALL_ACCESSORIES.find((a) => a.id === accId) ?? ALL_ACCESSORIES[0],
     [accId, ALL_ACCESSORIES]
   );
 
-  const [eyeSrc, setEyeSrc] = useState<string>(selectedEye?.primary ?? "");
+  const [eyeSrc, setEyeSrc] = useState(selectedEye?.primary ?? "");
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye?.fallbacks ?? []);
-  const [eyeLabel, setEyeLabel] = useState<string>(
+  const [eyeLabel, setEyeLabel] = useState(
     selectedEye ? `${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}` : ""
   );
 
-  const [accSrc, setAccSrc] = useState<string>(selectedAcc?.primary ?? "");
+  const [accSrc, setAccSrc] = useState(selectedAcc?.primary ?? "");
   const [accFallbacks, setAccFallbacks] = useState<string[]>(selectedAcc?.fallbacks ?? []);
-  const [accLabel, setAccLabel] = useState<string>(
+  const [accLabel, setAccLabel] = useState(
     selectedAcc ? `${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}` : ""
   );
 
@@ -68,14 +72,14 @@ export default function Page() {
     setEyeSrc(selectedEye.primary);
     setEyeFallbacks(selectedEye.fallbacks);
     setEyeLabel(`${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}`);
-  }, [selectedEye?.id, selectedEye]);
+  }, [selectedEye]);
 
   useEffect(() => {
     if (!selectedAcc) return;
     setAccSrc(selectedAcc.primary);
     setAccFallbacks(selectedAcc.fallbacks);
     setAccLabel(`${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}`);
-  }, [selectedAcc?.id, selectedAcc]);
+  }, [selectedAcc]);
 
   const [forgeCount, setForgeCount] = useState(0);
   const [powerIndex, setPowerIndex] = useState(50);
@@ -86,7 +90,8 @@ export default function Page() {
     if (!ALL_EYES.length) return;
 
     setRevealing(true);
-    window.setTimeout(() => {
+
+    setTimeout(() => {
       const pickEye = ALL_EYES[Math.floor(Math.random() * ALL_EYES.length)];
       setEyeId(pickEye.id);
 
@@ -146,18 +151,16 @@ export default function Page() {
               />
             )}
 
-            {!!eyeSrc && (
-              <img
-                key={`eyes-${eyeId}-${renderNonce}`}
-                src={eyeSrc}
-                className="absolute inset-0 w-full h-full object-cover"
-                alt="eyes"
-                onLoad={resetFallbackIndex}
-                onError={(e) => cycleFallback(e, eyeFallbacks)}
-              />
-            )}
+            <img
+              key={`eyes-${eyeId}-${renderNonce}`}
+              src={eyeSrc}
+              className="absolute inset-0 w-full h-full object-cover"
+              alt="eyes"
+              onLoad={resetFallbackIndex}
+              onError={(e) => cycleFallback(e, eyeFallbacks)}
+            />
 
-            {showAcc && !!accSrc && (
+            {showAcc && (
               <img
                 key={`acc-${accId}-${renderNonce}`}
                 src={accSrc}
@@ -182,29 +185,22 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-8 flex justify-center">
             <button className={btnPrimary} onClick={forgeIdentity}>
               Forge Identity
             </button>
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD.</footer>
+        <footer className="py-10 text-center text-white/35 text-sm">
+          © {new Date().getFullYear()} $MAD.
+        </footer>
 
         <style jsx global>{`
           @keyframes forgePulse {
-            0% {
-              transform: scale(1);
-              filter: saturate(1);
-            }
-            50% {
-              transform: scale(1.02);
-              filter: saturate(1.2);
-            }
-            100% {
-              transform: scale(1);
-              filter: saturate(1);
-            }
+            0% { transform: scale(1); filter: saturate(1); }
+            50% { transform: scale(1.02); filter: saturate(1.2); }
+            100% { transform: scale(1); filter: saturate(1); }
           }
         `}</style>
       </div>
