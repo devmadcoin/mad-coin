@@ -161,7 +161,7 @@ export default function Home() {
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
       x: "https://x.com/i/communities/2019256566248312879/",
-      tg: "https://t.me/madtokenfam", // ✅ UPDATED
+      tg: "https://t.me/madtokenfam",
       game: "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD",
     }),
     [addr]
@@ -231,7 +231,7 @@ export default function Home() {
     };
   }, []);
 
-  // ====== Meme Vault (✅ keep ROOT paths) ======
+  // ====== Meme Vault ======
   const freshMemes = useMemo(
     () => [
       { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic" },
@@ -253,18 +253,9 @@ export default function Home() {
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
-
       { phase: "Phase 1.1", title: "300M Burn (30%)", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
-
       { phase: "Phase 1.2", title: "350M Burn (35%)", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
-
-      {
-        phase: "Phase 1.3",
-        title: "40% Supply Burned",
-        desc: "Target milestone — 40% of total supply burned.",
-        done: false,
-      },
-
+      { phase: "Phase 1.3", title: "40% Supply Burned", desc: "Target milestone — 40% of total supply burned.", done: false },
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
       { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive." },
@@ -365,7 +356,6 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
 
-      // Optional extras (won’t crash if missing because of fallbacks)
       makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
       makeItem<AccessoryItem>(
         "a-c-leg-halomadplush",
@@ -546,7 +536,6 @@ export default function Home() {
     }
   };
 
-  // ✅ Fix: interval typing + no stacking
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -620,7 +609,6 @@ export default function Home() {
   };
 
   // ====== Rage Tap Gate ======
-  // ✅ Fix: start locked by default to avoid “flash unlocked” on first paint
   const [gateUnlocked, setGateUnlocked] = useState(false);
   const [gateTaps, setGateTaps] = useState(0);
 
@@ -911,7 +899,8 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="hidden sm:flex items-center gap-2">
+              {/* ✅ FIX: show nav on mobile too */}
+              <div className="flex flex-wrap items-center justify-end gap-2">
                 <button className={btnGhost} onClick={() => scrollToId("confessions")}>
                   Confessions
                 </button>
@@ -920,6 +909,12 @@ export default function Home() {
                 </button>
                 <button className={btnGhost} onClick={() => scrollToId("status")}>
                   Status
+                </button>
+                <button className={btnGhost} onClick={() => scrollToId("roadmap")}>
+                  Roadmap
+                </button>
+                <button className={btnGhost} onClick={() => scrollToId("memes")}>
+                  Memes
                 </button>
               </div>
             </div>
@@ -983,6 +978,9 @@ export default function Home() {
               </button>
               <button className={btnGhost} onClick={() => scrollToId("roadmap")}>
                 See the roadmap
+              </button>
+              <button className={btnGhost} onClick={() => scrollToId("memes")}>
+                Meme Vault
               </button>
             </div>
           </div>
@@ -1063,6 +1061,9 @@ export default function Home() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <button className={btnPrimary} onClick={forgeIdentity}>
               Forge Identity
+            </button>
+            <button className={btnGhost} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+              ↑ Top
             </button>
           </div>
 
@@ -1356,7 +1357,10 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(" ")}
+                  className={[
+                    "rounded-3xl border border-white/10 bg-white/5 p-6 transition",
+                    done ? "opacity-80" : "hover:bg-white/10",
+                  ].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
@@ -1367,7 +1371,9 @@ export default function Home() {
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>
+                      {item.title}
+                    </h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
@@ -1379,7 +1385,7 @@ export default function Home() {
         </section>
 
         {/* MEME VAULT */}
-        <section className="py-24 w-full">
+        <section id="memes" className="py-24 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">Meme Vault</h2>
