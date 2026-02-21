@@ -168,8 +168,8 @@ export default function Home() {
           <MadConfessions />
 
           {/* ✅ BRIDGE (between Confessions and Track Momentum) */}
-          <div className="mt-24 mb-24 text-center animate-fadeUp">
-            <div className="flex justify-center">
+          <div className="mt-24 mb-24 animate-fadeUp">
+            <div className="flex justify-center lg:justify-end lg:pr-24">
               <div className="relative w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] transition-transform duration-300 hover:scale-105">
                 <Image
                   src="/stickers/dev-cooking.webp"
