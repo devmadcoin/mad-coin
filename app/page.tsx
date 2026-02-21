@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -152,10 +153,6 @@ function clampText(s: string, max = 240) {
 }
 
 export default function Home() {
-  // ✅ Fix hydration: detect client mount FIRST
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
   // ====== Token / Links ======
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
@@ -194,19 +191,15 @@ export default function Home() {
   const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
   const btnBlue = `${btnBase} bg-blue-500/90 hover:bg-blue-600 text-white`;
 
-  // ====== Background ======
+  // ====== Background + particles ======
   const bg = useMemo(() => {
     const c = buildCandidates("/pfp/bg/bg-redclouds.png");
     return { primary: c[0], fallbacks: c.slice(1) };
   }, []);
 
-  // ✅ Fix hydration: particles generated client-side only
-  type AngryParticle = { i: number; x: number; size: number; opacity: number; dur: number; delay: number; drift: number };
-  const [angry, setAngry] = useState<AngryParticle[]>([]);
-  useEffect(() => {
-    if (!mounted) return;
+  const angry = useMemo(() => {
     const count = 18;
-    const next = Array.from({ length: count }, (_, i) => {
+    return Array.from({ length: count }, (_, i) => {
       const x = (i * 100) / count + (Math.random() * 6 - 3);
       const size = 18 + Math.floor(Math.random() * 26);
       const opacity = 0.1 + Math.random() * 0.2;
@@ -215,13 +208,11 @@ export default function Home() {
       const drift = Math.floor(Math.random() * 240 - 120);
       return { i, x, size, opacity, dur, delay, drift };
     });
-    setAngry(next);
-  }, [mounted]);
+  }, []);
 
   // ====== scroll-reactive glow intensity ======
   const [scrollGlow, setScrollGlow] = useState(0);
   useEffect(() => {
-    if (!mounted) return;
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -238,9 +229,9 @@ export default function Home() {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
     };
-  }, [mounted]);
+  }, []);
 
-  // ====== Meme Vault ======
+  // ====== Meme Vault (✅ keep ROOT paths) ======
   const freshMemes = useMemo(
     () => [
       { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic" },
@@ -262,10 +253,17 @@ export default function Home() {
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
-      { phase: "Phase 1.1", title: "300M Burn", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
 
-      // ✅ ADDED
-      { phase: "Phase 1.2", title: "350M Burn", desc: "Burn extension complete. Scarcity tightened.", done: true },
+      { phase: "Phase 1.1", title: "300M Burn (30%)", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
+
+      { phase: "Phase 1.2", title: "350M Burn (35%)", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
+
+      {
+        phase: "Phase 1.3",
+        title: "40% Supply Burned",
+        desc: "Target milestone — 40% of total supply burned.",
+        done: false,
+      },
 
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
@@ -367,9 +365,16 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
 
-      // NOTE: if these 2 files don't exist, they'll fallback safely, but keep them only if you actually have them
+      // Optional extras (won’t crash if missing because of fallbacks)
       makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
-      makeItem<AccessoryItem>("a-c-leg-halomadplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png", "Pink Halo MAD Plush", "legendary", "cartoon", tall(26, 0.96)),
+      makeItem<AccessoryItem>(
+        "a-c-leg-halomadplush",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
+        "Pink Halo MAD Plush",
+        "legendary",
+        "cartoon",
+        tall(26, 0.96)
+      ),
     ];
   }, []);
 
@@ -405,7 +410,10 @@ export default function Home() {
   const [accId, setAccId] = useState(initialAcc.id);
 
   const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? initialEye, [eyeId, initialEye, ALL_EYES]);
-  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.id === accId) ?? initialAcc, [accId, initialAcc, ALL_ACCESSORIES]);
+  const selectedAcc = useMemo(
+    () => ALL_ACCESSORIES.find((a) => a.id === accId) ?? initialAcc,
+    [accId, initialAcc, ALL_ACCESSORIES]
+  );
 
   const [eyeSrc, setEyeSrc] = useState(selectedEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye.fallbacks);
@@ -455,7 +463,7 @@ export default function Home() {
   };
 
   // ====== Token Stats ======
-  const BURNED = 350_000_000; // ✅ matches Phase 1.2
+  const BURNED = 350_000_000;
   const BURN_RATE = 35;
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
@@ -475,16 +483,13 @@ export default function Home() {
     []
   );
 
-  // ✅ Fix hydration: compute prompt on client after mount
-  const [todayPrompt, setTodayPrompt] = useState<string>("Loading prompt...");
-  useEffect(() => {
-    if (!mounted) return;
+  const todayPrompt = useMemo(() => {
     const d = new Date();
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     let h = 0;
     for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
-    setTodayPrompt(ragePrompts[h % ragePrompts.length]);
-  }, [mounted, ragePrompts]);
+    return ragePrompts[h % ragePrompts.length];
+  }, [ragePrompts]);
 
   const [confessions, setConfessions] = useState<Confession[]>([]);
   const [confessionText, setConfessionText] = useState("");
@@ -541,15 +546,16 @@ export default function Home() {
     }
   };
 
-  const pollRef = useRef<number | null>(null);
+  // ✅ Fix: interval typing + no stacking
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     loadReacted();
     fetchConfessions();
 
-    pollRef.current = window.setInterval(fetchConfessions, 8000);
+    pollRef.current = setInterval(fetchConfessions, 8000);
     return () => {
-      if (pollRef.current) window.clearInterval(pollRef.current);
+      if (pollRef.current) clearInterval(pollRef.current);
       pollRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -590,6 +596,7 @@ export default function Home() {
   const react = async (id: string, kind: "same" | "lol" | "handshake") => {
     const already = !!reactedMap?.[id]?.[kind];
 
+    // optimistic UI
     setConfessions((prev) =>
       prev.map((c) => {
         if (c.id !== id) return c;
@@ -613,7 +620,8 @@ export default function Home() {
   };
 
   // ====== Rage Tap Gate ======
-  const [gateUnlocked, setGateUnlocked] = useState(true);
+  // ✅ Fix: start locked by default to avoid “flash unlocked” on first paint
+  const [gateUnlocked, setGateUnlocked] = useState(false);
   const [gateTaps, setGateTaps] = useState(0);
 
   useEffect(() => {
@@ -621,7 +629,7 @@ export default function Home() {
       const saved = localStorage.getItem(LS_SITE_UNLOCK_KEY);
       const isUnlocked = saved === "1";
       setGateUnlocked(isUnlocked);
-      setGateTaps(0);
+      setGateTaps(isUnlocked ? 10 : 0);
     } catch {
       setGateUnlocked(false);
       setGateTaps(0);
@@ -630,6 +638,7 @@ export default function Home() {
 
   const unlockGate = () => {
     setGateUnlocked(true);
+    setGateTaps(10);
     try {
       localStorage.setItem(LS_SITE_UNLOCK_KEY, "1");
     } catch {}
@@ -642,10 +651,6 @@ export default function Home() {
       return next;
     });
   };
-
-  useEffect(() => {
-    if (gateUnlocked) setGateTaps(10);
-  }, [gateUnlocked]);
 
   const gateLine = useMemo(() => {
     if (gateTaps <= 0) return "Tap to enter. Emotion requires commitment.";
@@ -665,13 +670,6 @@ export default function Home() {
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-
-  // ✅ Fix hydration: year set client-side (or fallback)
-  const [year, setYear] = useState<number>(2026);
-  useEffect(() => {
-    if (!mounted) return;
-    setYear(new Date().getFullYear());
-  }, [mounted]);
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
@@ -1358,28 +1356,22 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(
-                    " "
-                  )}
+                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
                       {item.phase}
                     </p>
 
-                    {done && <span className="text-xs font-black text-white/55">Completed</span>}
+                    <span className="text-xs font-black text-white/55">{done ? "Completed" : "Not Completed"}</span>
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>
-                      {item.title}
-                    </h3>
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>
-                    {item.desc}
-                  </p>
+                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>{item.desc}</p>
                 </div>
               );
             })}
@@ -1483,7 +1475,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">© {year} $MAD. Built by the community.</footer>
+        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
       </div>
     </main>
   );
