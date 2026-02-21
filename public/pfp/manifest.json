@@ -1,11 +1,100 @@
 {
-  "bg": ["bg-redclouds.png"],
-  "base": ["base-01.png"],
-  "eyes": ["eyes-black.png", "eyes-blue.png", "eyes-green.png", "eyes-orange.png", "eyes-pink.png", "eyes-red.png"],
-  "mouth": ["mouth-01.png"],
+  "bg": [
+    "bg/bg-redclouds.png"
+  ],
+
+  "base": [
+    "base/base-01.png"
+  ],
+
+  "eyes": [
+    "eyes/cartoon/common/cartoon-common-black.png",
+    "eyes/cartoon/common/cartoon-common-blue.png",
+    "eyes/cartoon/common/cartoon-common-green.png",
+    "eyes/cartoon/common/cartoon-common-orange.png",
+    "eyes/cartoon/common/cartoon-common-purple.png",
+    "eyes/cartoon/common/cartoon-common-red.png",
+
+    "eyes/cartoon/rare/cartoon-rare-neon-black.png",
+    "eyes/cartoon/rare/cartoon-rare-neon-blue.png",
+    "eyes/cartoon/rare/cartoon-rare-neon-green.png",
+    "eyes/cartoon/rare/cartoon-rare-neon-orange.png",
+    "eyes/cartoon/rare/cartoon-rare-neon-purple.png",
+    "eyes/cartoon/rare/cartoon-rare-neon-red.png",
+
+    "eyes/cartoon/legendary/cartoon-legendary-fire-red.png",
+    "eyes/cartoon/legendary/cartoon-legendary-fruity-orange.png",
+    "eyes/cartoon/legendary/cartoon-legendary-ice-blue.png",
+    "eyes/cartoon/legendary/cartoon-legendary-poison-green.png",
+    "eyes/cartoon/legendary/cartoon-legendary-void-black.png",
+
+    "eyes/pixel/common/pixel-common-black.png",
+    "eyes/pixel/common/pixel-common-blue.png",
+    "eyes/pixel/common/pixel-common-green.png",
+    "eyes/pixel/common/pixel-common-orange.png",
+    "eyes/pixel/common/pixel-common-pink.png",
+    "eyes/pixel/common/pixel-common-purple.png",
+
+    "eyes/pixel/rare/pixel-rare-crystal-black.png",
+    "eyes/pixel/rare/pixel-rare-crystal-blue.png",
+    "eyes/pixel/rare/pixel-rare-crystal-green.png",
+    "eyes/pixel/rare/pixel-rare-crystal-orange.png",
+    "eyes/pixel/rare/pixel-rare-crystal-pink.png",
+    "eyes/pixel/rare/pixel-rare-crystal-red.png",
+
+    "eyes/pixel/legendary/pixel-legendary-robot-black.png",
+    "eyes/pixel/legendary/pixel-legendary-robot-blue.png",
+    "eyes/pixel/legendary/pixel-legendary-robot-green.png",
+    "eyes/pixel/legendary/pixel-legendary-robot-orange.png",
+    "eyes/pixel/legendary/pixel-legendary-robot-pink.png",
+    "eyes/pixel/legendary/pixel-legendary-robot-yellow.png"
+  ],
+
+  "mouth": [
+    "mouth/mouth-01.png"
+  ],
+
   "accessories": [
+
+    "accessories/cartoon/common/cartoon-common-bandaid.png",
+    "accessories/cartoon/common/cartoon-common-baseballcap.png",
+    "accessories/cartoon/common/cartoon-common-beanie.png.png",
+    "accessories/cartoon/common/cartoon-common-chain.png.png",
+    "accessories/cartoon/common/cartoon-common-coffeemug.png.png",
+    "accessories/cartoon/common/cartoon-common-headband.png.png",
+    "accessories/cartoon/common/cartoon-common-hoodiecollar.png",
+    "accessories/cartoon/common/cartoon-common-lanyardbadge.png",
+    "accessories/cartoon/common/cartoon-common-paperreceipt.png",
+    "accessories/cartoon/common/cartoon-common-simpleblackshades.png",
+    "accessories/cartoon/common/cartoon-common-smallgoldhoopearing.png",
+
+    "accessories/cartoon/rare/cartoon-rare-cigarmoney.png",
+    "accessories/cartoon/rare/cartoon-rare-cowboyhat.png",
+    "accessories/cartoon/rare/cartoon-rare-energydrink.png",
+    "accessories/cartoon/rare/cartoon-rare-fierysunglasses.png",
+    "accessories/cartoon/rare/cartoon-rare-greencandle.png",
+    "accessories/cartoon/rare/cartoon-rare-icedchain.png",
+    "accessories/cartoon/rare/cartoon-rare-madmeter.png",
+    "accessories/cartoon/rare/cartoon-rare-madsword.png",
+    "accessories/cartoon/rare/cartoon-rare-ragekeyboard.png",
+    "accessories/cartoon/rare/cartoon-rare-scarf.png",
+    "accessories/cartoon/rare/cartoon-rare-spatula.png",
+    "accessories/cartoon/rare/cartoon-rare-warningtape.png",
+
+    "accessories/cartoon/legendary/cartoon-legendary-cigar.png",
     "accessories/cartoon/legendary/cartoon-legendary-crown.png",
+    "accessories/cartoon/legendary/cartoon-legendary-fieryaura.png",
+    "accessories/cartoon/legendary/cartoon-legendary-firegrills.png",
     "accessories/cartoon/legendary/cartoon-legendary-halo.png",
-    "accessories/cartoon/legendary/cartoon-legendary-jetpack.png"
+    "accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
+    "accessories/cartoon/legendary/cartoon-legendary-jetpack.png",
+    "accessories/cartoon/legendary/cartoon-legendary-lightninghorns.png",
+    "accessories/cartoon/legendary/cartoon-legendary-madchaininfinity.png",
+    "accessories/cartoon/legendary/cartoon-legendary-madplush.png",
+    "accessories/cartoon/legendary/cartoon-legendary-moneybag.png",
+    "accessories/cartoon/legendary/cartoon-legendary-pinkgrill.png",
+    "accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png",
+    "accessories/cartoon/legendary/cartoon-legendary-sash.png",
+    "accessories/cartoon/legendary/cartoon-legendary-void.png"
   ]
 }
