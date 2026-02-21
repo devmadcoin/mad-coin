@@ -45,8 +45,14 @@ const EVENTS: LoreEvent[] = [
   {
     date: "Feb 18, 2026 — 3:19 PM",
     title: "THE RAID",
-    desc: "MAD was attacked and botted across Telegram and Dexscreener. Instead of folding, we documented it, cleaned it up, and kept moving.",
+    desc: "MAD was attacked and botted across Telegram and Dexscreener. Noise hit the system. The work stayed steady.",
     accent: "amber",
+  },
+  {
+    date: "Feb 20, 2026 — 11:32 AM",
+    title: "THE SECOND STRIKE",
+    desc: "I woke up to find we were attacked again—and our Telegram was deleted. But they can’t delete belief. MAD rose back up anyway.",
+    accent: "red",
   },
 ];
 
@@ -96,9 +102,9 @@ export default function LorePage() {
             over panic.
           </p>
 
-          {/* Sticker (swapped) */}
+          {/* Sticker (swap to your new one) */}
           <div className="mt-10 flex justify-center">
-            <div className="relative h-[150px] w-[150px] rotate-[-2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+            <div className="relative h-[150px] w-[150px] rotate-[-3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
               <Image
                 src="/stickers/never-selling.webp"
                 alt="Never Selling"
