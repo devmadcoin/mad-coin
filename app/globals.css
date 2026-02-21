@@ -4,10 +4,41 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
+/* =========================================
+   Base defaults (prevents "raw HTML" vibes)
+   ========================================= */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #000;
+    color: #fff;
+  }
+
+  /* Makes images behave nicely in responsive layouts */
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Optional: cleaner text rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
 }
+
+/* ==========================
+   Animations / Utilities
+   ========================== */
 
 /* Fade-up animation */
 @keyframes fadeUp {
@@ -67,6 +98,9 @@ html {
 
 /* Optional: respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .animate-fadeUp {
     animation: none;
   }
