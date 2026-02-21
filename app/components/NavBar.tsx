@@ -1,9 +1,13 @@
-/* app/components/NavBar.tsx */
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 export default function NavBar() {
+  const pathname = usePathname();
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
@@ -30,21 +34,38 @@ export default function NavBar() {
 
         {/* Right nav pills */}
         <div className="flex items-center gap-2">
-          <NavPill href="/">Home</NavPill>
-          <NavPill href="/roadmap">Roadmap</NavPill>
-          <NavPill href="/forge">Forge</NavPill>
-          <NavPill href="/memes">Memes</NavPill>
+          <NavPill href="/" pathname={pathname}>Home</NavPill>
+          <NavPill href="/roadmap" pathname={pathname}>Roadmap</NavPill>
+          <NavPill href="/forge" pathname={pathname}>Forge</NavPill>
+          <NavPill href="/memes" pathname={pathname}>Memes</NavPill>
         </div>
       </nav>
     </header>
   );
 }
 
-function NavPill({ href, children }: { href: string; children: ReactNode }) {
+function NavPill({
+  href,
+  children,
+  pathname,
+}: {
+  href: string;
+  children: ReactNode;
+  pathname: string;
+}) {
+  const active = pathname === href;
+
   return (
     <Link
       href={href}
-      className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 hover:text-white"
+      className={`
+        relative rounded-full px-4 py-2 text-sm font-semibold transition
+        ${
+          active
+            ? "bg-red-500/15 text-red-400 border border-red-500/40 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
+            : "border border-white/10 bg-white/5 text-white/90 hover:bg-white/10 hover:text-white"
+        }
+      `}
     >
       {children}
     </Link>
