@@ -50,8 +50,7 @@ export default function RoadmapPage() {
   const completed = items.filter((x) => x.status === "complete").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
-  // IMPORTANT: your filenames include spaces + the "sticker.webp " prefix.
-  // This path matches your current GitHub uploads exactly.
+  // Your current uploaded filename has spaces + "sticker.webp " prefix.
   const chillSrc = "/stickers/sticker.webp%20Chill.webp";
 
   return (
@@ -76,20 +75,10 @@ export default function RoadmapPage() {
           </p>
         </div>
 
-        {/* Overall progress card (with Chill sticker + bar underneath) */}
+        {/* Overall progress card */}
         <div className="mt-10 animate-fadeUp">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
-            {/* Chill sticker */}
-            <div className="pointer-events-none absolute -right-10 -top-10 hidden md:block opacity-95">
-              <Image
-                src={chillSrc}
-                alt="Chill sticker"
-                width={260}
-                height={260}
-                priority={false}
-              />
-            </div>
-
+          <div className="rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
+            {/* Top row */}
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
@@ -105,12 +94,33 @@ export default function RoadmapPage() {
               </div>
             </div>
 
-            {/* Progress bar moved UNDER the sticker row */}
-            <div className="mt-5">
-              <div className="mad-progress-track">
-                <div className="mad-progress-fill" style={{ width: `${pct}%` }} />
+            {/* ✅ Chill sticker centered ABOVE the bar (NOT absolute) */}
+            <div className="mt-5 flex justify-center">
+              <div className="pointer-events-none opacity-95">
+                <Image
+                  src={chillSrc}
+                  alt="Chill sticker"
+                  width={220}
+                  height={220}
+                  priority={false}
+                />
               </div>
-              <p className="mt-2 text-xs text-white/40">
+            </div>
+
+            {/* ✅ Progress bar centered UNDER sticker */}
+            <div className="mt-4">
+              <div className="mx-auto w-full max-w-xl">
+                <div className="mad-progress-track">
+                  <div
+                    className={`mad-progress-fill ${
+                      pct === 100 ? "mad-progress-fill--full" : ""
+                    }`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
+
+              <p className="mt-2 text-center text-xs text-white/40">
                 Progress updates as phases are marked complete.
               </p>
             </div>
@@ -165,13 +175,14 @@ function RoadmapCard({ item }: { item: RoadmapItem }) {
           </div>
         </div>
 
-        {/* Optional bottom bar per phase */}
+        {/* bottom bar per phase */}
         <div className="mt-6">
           <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden border border-white/10">
             <div
               className={[
-                "h-full rounded-full",
+                "h-full",
                 isDone ? "bg-emerald-400/70" : isProgress ? "bg-white/15" : "bg-white/10",
+                isDone ? "rounded-full" : "rounded-l-full",
               ].join(" ")}
               style={{ width: isDone ? "100%" : isProgress ? "55%" : "15%" }}
             />
