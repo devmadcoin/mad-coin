@@ -1,11 +1,8 @@
 @import "tailwindcss";
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
-}
+/* (NO smooth scroll — this is what was making it feel weird/janky) */
 
-/* Fade-up animation (your existing class) */
+/* Fade-up animation (keep your luxury entrance) */
 @keyframes fadeUp {
   from {
     opacity: 0;
