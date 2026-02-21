@@ -1,1 +1,11 @@
-
+{
+  "bg": ["bg-redclouds.png"],
+  "base": ["base-01.png"],
+  "eyes": ["eyes-black.png", "eyes-blue.png", "eyes-green.png", "eyes-orange.png", "eyes-pink.png", "eyes-red.png"],
+  "mouth": ["mouth-01.png"],
+  "accessories": [
+    "accessories/cartoon/legendary/cartoon-legendary-crown.png",
+    "accessories/cartoon/legendary/cartoon-legendary-halo.png",
+    "accessories/cartoon/legendary/cartoon-legendary-jetpack.png"
+  ]
+}
