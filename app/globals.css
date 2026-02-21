@@ -1,12 +1,9 @@
-/* app/globals.css */
 @import "tailwindcss";
 
-/* Smooth scroll */
 html {
   scroll-behavior: smooth;
 }
 
-/* Anim */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -18,7 +15,6 @@ html {
   }
 }
 
-/* use as a class */
 .animate-fadeUp {
   animation: fadeUp 700ms ease-out both;
 }
