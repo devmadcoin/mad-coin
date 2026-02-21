@@ -158,29 +158,22 @@ export default function Home() {
           <MadConfessions />
         </div>
 
-       {/* ✅ BRIDGE (between Confessions and Track Momentum) */}
-<div className="mt-24 mb-24 flex justify-center animate-fadeUp">
-  <div className="text-center">
-    <div className="relative w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] mx-auto transition-transform duration-300 hover:scale-105">
-      <Image
-        src="/stickers/dev-cooking.webp"
-        alt="Dev Cooking"
-        fill
-        sizes="(max-width: 640px) 200px, 240px"
-        className="object-contain pointer-events-none drop-shadow-[0_22px_45px_rgba(0,0,0,0.6)]"
-      />
-    </div>
-
-    <p className="mt-6 text-xs font-semibold uppercase tracking-[0.4em] text-white/45">
-      Emotion becomes action.
-    </p>
-  </div>
-</div>
-
-              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.4em] text-white/45">
-                Emotion becomes action.
-              </p>
+        {/* ✅ BRIDGE (between Confessions and Track Momentum) */}
+        <div className="mt-24 mb-24 flex justify-center animate-fadeUp">
+          <div className="text-center">
+            <div className="relative w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] mx-auto transition-transform duration-300 hover:scale-105">
+              <Image
+                src="/stickers/dev-cooking.webp"
+                alt="Dev Cooking"
+                fill
+                sizes="(max-width: 640px) 200px, 240px"
+                className="object-contain pointer-events-none drop-shadow-[0_22px_45px_rgba(0,0,0,0.6)]"
+              />
             </div>
+
+            <p className="mt-6 text-xs font-semibold uppercase tracking-[0.4em] text-white/45">
+              Emotion becomes action.
+            </p>
           </div>
         </div>
 
@@ -188,7 +181,7 @@ export default function Home() {
         <section
           id="chart"
           ref={momentumRef}
-          className="mt-16 animate-fadeUp scroll-mt-24"
+          className="mt-0 animate-fadeUp scroll-mt-24"
         >
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
