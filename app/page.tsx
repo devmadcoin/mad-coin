@@ -8,10 +8,11 @@ import MadConfessions from "./components/MadConfessions";
 export default function Home() {
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
-  const links = useMemo(
+  // ✅ Keep links in ONE place (easy to edit later)
+  const LINKS = useMemo(
     () => ({
       chartPage: `https://dexscreener.com/solana/${addr}`,
-      tg: "https://t.me/madtokenfam",
+      telegram: "https://t.me/MadOfficalChannel", // ✅ UPDATED
       x: "https://x.com/devmadcoin",
       tiktok: "https://www.tiktok.com/@devmadcoin",
     }),
@@ -82,7 +83,7 @@ export default function Home() {
             Emotion evolves. Born in volatility. Refined through discipline.
           </p>
 
-          {/* ✅ ACTION BUTTONS (UPDATED) */}
+          {/* ✅ ACTION BUTTONS */}
           <div className="mt-10 flex flex-wrap gap-3">
             <a
               href="#chart"
@@ -92,7 +93,7 @@ export default function Home() {
             </a>
 
             <a
-              href={links.x}
+              href={LINKS.x}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
@@ -112,7 +113,7 @@ export default function Home() {
             </a>
 
             <a
-              href={links.tg}
+              href={LINKS.telegram}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
@@ -132,14 +133,14 @@ export default function Home() {
             </a>
 
             <a
-              href={links.tiktok}
+              href={LINKS.tiktok}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
               aria-label="Open TikTok"
               title="TikTok"
             >
-              {/* TikTok logo (simple musical note mark) */}
+              {/* TikTok logo */}
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -225,7 +226,7 @@ export default function Home() {
             </div>
 
             <a
-              href={links.chartPage}
+              href={LINKS.chartPage}
               target="_blank"
               rel="noreferrer"
               className="rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 hover:text-white"
