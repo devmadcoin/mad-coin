@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -135,6 +136,7 @@ type Confession = {
 };
 
 const LS_REACTED_KEY = "mad_confessions_reacted_v1";
+const LS_SITE_UNLOCK_KEY = "mad_site_unlocked_v1";
 
 function safeJsonParse<T>(raw: string | null, fallback: T): T {
   try {
@@ -151,13 +153,6 @@ function clampText(s: string, max = 240) {
 }
 
 export default function Home() {
-  // ✅ single-page “normal” build (no multi-page logic)
-  const scrollToId = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   // ====== Token / Links ======
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
@@ -166,7 +161,7 @@ export default function Home() {
       buy: `https://jup.ag/swap/SOL-${addr}`,
       chart: `https://dexscreener.com/solana/${addr}`,
       x: "https://x.com/i/communities/2019256566248312879/",
-      tg: "https://t.me/madtokenfam",
+      tg: "https://t.me/madtokenfam", // ✅ UPDATED
       game: "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD",
     }),
     [addr]
@@ -196,25 +191,15 @@ export default function Home() {
   const btnWhite = `${btnBase} bg-white text-black hover:opacity-90`;
   const btnBlue = `${btnBase} bg-blue-500/90 hover:bg-blue-600 text-white`;
 
-  // ✅ Fix hydration issues: mount flag
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  // ====== Background ======
+  // ====== Background + particles ======
   const bg = useMemo(() => {
     const c = buildCandidates("/pfp/bg/bg-redclouds.png");
     return { primary: c[0], fallbacks: c.slice(1) };
   }, []);
 
-  // ✅ Random emoji positions AFTER mount (fix deploy mismatch)
-  const [angry, setAngry] = useState<
-    { i: number; x: number; size: number; opacity: number; dur: number; delay: number; drift: number }[]
-  >([]);
-
-  useEffect(() => {
-    if (!mounted) return;
+  const angry = useMemo(() => {
     const count = 18;
-    const next = Array.from({ length: count }, (_, i) => {
+    return Array.from({ length: count }, (_, i) => {
       const x = (i * 100) / count + (Math.random() * 6 - 3);
       const size = 18 + Math.floor(Math.random() * 26);
       const opacity = 0.1 + Math.random() * 0.2;
@@ -223,16 +208,63 @@ export default function Home() {
       const drift = Math.floor(Math.random() * 240 - 120);
       return { i, x, size, opacity, dur, delay, drift };
     });
-    setAngry(next);
-  }, [mounted]);
+  }, []);
+
+  // ====== scroll-reactive glow intensity ======
+  const [scrollGlow, setScrollGlow] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY || 0;
+        const max = Math.max(600, document.body.scrollHeight - window.innerHeight);
+        const t = Math.min(1, y / max);
+        setScrollGlow(t);
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  // ====== Meme Vault (✅ keep ROOT paths) ======
+  const freshMemes = useMemo(
+    () => [
+      { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic" },
+      { src: "/memes/mad-meme-wifibuffer.png", tag: "Buffering" },
+      { src: "/memes/mad-meme-scamcall.png", tag: "Scam Call" },
+      { src: "/memes/mad-meme-forgotpassword.png", tag: "Locked Out" },
+      { src: "/memes/mad-meme-batterylow.png", tag: "1% Battery" },
+      { src: "/memes/mad-meme-groupmessage.png", tag: "Group Chat" },
+      { src: "/memes/mad-meme-coffeehot.png", tag: "Too Hot" },
+      { src: "/memes/mad-meme-lasttimebeingfarmed.png", tag: "Farmed" },
+      { src: "/memes/mad-meme-lipbalm.png", tag: "Lip Balm" },
+      { src: "/memes/mad-meme-toiletpaper.png", tag: "No Paper" },
+      { src: "/memes/mad-meme-whydidifade.png", tag: "Fade" },
+    ],
+    []
+  );
 
   // ====== Roadmap ======
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
+
       { phase: "Phase 1.1", title: "300M Burn (30%)", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
+
       { phase: "Phase 1.2", title: "350M Burn (35%)", desc: "Phase 1.2 complete — 350,000,000 tokens burned.", done: true },
-      { phase: "Phase 1.3", title: "40% Supply Burned", desc: "Target milestone — 40% of total supply burned.", done: false },
+
+      {
+        phase: "Phase 1.3",
+        title: "40% Supply Burned",
+        desc: "Target milestone — 40% of total supply burned.",
+        done: false,
+      },
+
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
       { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive." },
@@ -332,9 +364,17 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
-      // If these 2 files don’t exist yet, remove them or add the PNGs.
-      // makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
-      // makeItem<AccessoryItem>("a-c-leg-halomadplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png", "Pink Halo MAD Plush", "legendary", "cartoon", tall(26, 0.96)),
+
+      // Optional extras (won’t crash if missing because of fallbacks)
+      makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
+      makeItem<AccessoryItem>(
+        "a-c-leg-halomadplush",
+        "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png",
+        "Pink Halo MAD Plush",
+        "legendary",
+        "cartoon",
+        tall(26, 0.96)
+      ),
     ];
   }, []);
 
@@ -387,13 +427,15 @@ export default function Home() {
     setEyeSrc(selectedEye.primary);
     setEyeFallbacks(selectedEye.fallbacks);
     setEyeLabel(`${selectedEye.label} • ${selectedEye.rarity.toUpperCase()}`);
-  }, [selectedEye.id, selectedEye.primary, selectedEye.fallbacks, selectedEye.label, selectedEye.rarity]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedEye.id]);
 
   useEffect(() => {
     setAccSrc(selectedAcc.primary);
     setAccFallbacks(selectedAcc.fallbacks);
     setAccLabel(`${selectedAcc.label} • ${selectedAcc.rarity.toUpperCase()}`);
-  }, [selectedAcc.id, selectedAcc.primary, selectedAcc.fallbacks, selectedAcc.label, selectedAcc.rarity]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAcc.id]);
 
   const [forgeCount, setForgeCount] = useState(0);
   const [powerIndex, setPowerIndex] = useState(50);
@@ -426,7 +468,7 @@ export default function Home() {
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
 
-  // ====== Confessions (prompt) — fix hydration: compute after mount ======
+  // ====== $MAD Confessions ======
   const ragePrompts = useMemo(
     () => [
       "What small thing ruined your mood instantly?",
@@ -441,16 +483,13 @@ export default function Home() {
     []
   );
 
-  const [todayPrompt, setTodayPrompt] = useState<string>("");
-
-  useEffect(() => {
-    if (!mounted) return;
+  const todayPrompt = useMemo(() => {
     const d = new Date();
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     let h = 0;
     for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
-    setTodayPrompt(ragePrompts[h % ragePrompts.length]);
-  }, [mounted, ragePrompts]);
+    return ragePrompts[h % ragePrompts.length];
+  }, [ragePrompts]);
 
   const [confessions, setConfessions] = useState<Confession[]>([]);
   const [confessionText, setConfessionText] = useState("");
@@ -507,15 +546,16 @@ export default function Home() {
     }
   };
 
-  const pollRef = useRef<number | null>(null);
+  // ✅ Fix: interval typing + no stacking
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     loadReacted();
     fetchConfessions();
 
-    pollRef.current = window.setInterval(fetchConfessions, 8000);
+    pollRef.current = setInterval(fetchConfessions, 8000);
     return () => {
-      if (pollRef.current) window.clearInterval(pollRef.current);
+      if (pollRef.current) clearInterval(pollRef.current);
       pollRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -556,6 +596,7 @@ export default function Home() {
   const react = async (id: string, kind: "same" | "lol" | "handshake") => {
     const already = !!reactedMap?.[id]?.[kind];
 
+    // optimistic UI
     setConfessions((prev) =>
       prev.map((c) => {
         if (c.id !== id) return c;
@@ -578,31 +619,118 @@ export default function Home() {
     } catch {}
   };
 
+  // ====== Rage Tap Gate ======
+  // ✅ Fix: start locked by default to avoid “flash unlocked” on first paint
+  const [gateUnlocked, setGateUnlocked] = useState(false);
+  const [gateTaps, setGateTaps] = useState(0);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LS_SITE_UNLOCK_KEY);
+      const isUnlocked = saved === "1";
+      setGateUnlocked(isUnlocked);
+      setGateTaps(isUnlocked ? 10 : 0);
+    } catch {
+      setGateUnlocked(false);
+      setGateTaps(0);
+    }
+  }, []);
+
+  const unlockGate = () => {
+    setGateUnlocked(true);
+    setGateTaps(10);
+    try {
+      localStorage.setItem(LS_SITE_UNLOCK_KEY, "1");
+    } catch {}
+  };
+
+  const tapGate = () => {
+    setGateTaps((prev) => {
+      const next = Math.min(10, prev + 1);
+      if (next >= 10) unlockGate();
+      return next;
+    });
+  };
+
+  const gateLine = useMemo(() => {
+    if (gateTaps <= 0) return "Tap to enter. Emotion requires commitment.";
+    if (gateTaps <= 3) return "Warming up.";
+    if (gateTaps <= 6) return "Now we’re moving.";
+    if (gateTaps <= 9) return "Last one.";
+    return "Unlocked.";
+  }, [gateTaps]);
+
   const dexscreenerEmbedSrc = useMemo(() => {
     const base = `https://dexscreener.com/solana/${addr}`;
     return `${base}?embed=1&theme=dark&trades=0&info=0`;
   }, [addr]);
 
-  // ====== Meme Vault ======
-  const freshMemes = useMemo(
-    () => [
-      { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic" },
-      { src: "/memes/mad-meme-wifibuffer.png", tag: "Buffering" },
-      { src: "/memes/mad-meme-scamcall.png", tag: "Scam Call" },
-      { src: "/memes/mad-meme-forgotpassword.png", tag: "Locked Out" },
-      { src: "/memes/mad-meme-batterylow.png", tag: "1% Battery" },
-      { src: "/memes/mad-meme-groupmessage.png", tag: "Group Chat" },
-      { src: "/memes/mad-meme-coffeehot.png", tag: "Too Hot" },
-      { src: "/memes/mad-meme-lasttimebeingfarmed.png", tag: "Farmed" },
-      { src: "/memes/mad-meme-lipbalm.png", tag: "Lip Balm" },
-      { src: "/memes/mad-meme-toiletpaper.png", tag: "No Paper" },
-      { src: "/memes/mad-meme-whydidifade.png", tag: "Fade" },
-    ],
-    []
-  );
+  const scrollToId = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
+      {/* ====== OPTIONAL RAGE TAP GATE (SKIPPABLE) ====== */}
+      {!gateUnlocked && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
+
+          <div className="relative w-full max-w-lg rounded-[2rem] border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6 sm:p-8 shadow-[0_30px_120px_rgba(255,120,80,0.18)]">
+            <div className="flex items-center gap-4">
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-3">
+                <Image src="/mad.png" alt="$MAD" width={44} height={44} priority />
+              </div>
+              <div className="text-left">
+                <div className="text-xs uppercase tracking-[0.35em] text-white/60">Entry</div>
+                <div className="text-2xl sm:text-3xl font-black leading-tight">Tap to Enter</div>
+              </div>
+            </div>
+
+            <p className="mt-4 text-white/70 leading-[1.75]">
+              Tap the 😡 <span className="font-black text-white">10x</span> to unlock.
+              <br />
+              Or skip if you’re calm.
+            </p>
+
+            <div className="mt-6 rounded-2xl border border-white/10 bg-black/25 p-4">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-black text-white/85">{gateLine}</div>
+                <div className="text-xs text-white/60 tabular-nums">{gateTaps}/10</div>
+              </div>
+
+              <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-red-500 to-orange-500 transition-all"
+                  style={{ width: `${(gateTaps / 10) * 100}%` }}
+                />
+              </div>
+
+              <div className="mt-5 flex flex-col sm:flex-row gap-3">
+                <button
+                  className={btnPrimary}
+                  onClick={tapGate}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") tapGate();
+                  }}
+                  aria-label="Tap rage emoji to enter"
+                >
+                  😡 Tap ({gateTaps}/10)
+                </button>
+
+                <button className={btnGhost} onClick={unlockGate}>
+                  Skip →
+                </button>
+              </div>
+
+              <div className="mt-3 text-xs text-white/45 leading-[1.75]">You only do this once. Your rage is remembered.</div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style jsx global>{`
         @keyframes madFloatUp {
           from {
@@ -634,9 +762,83 @@ export default function Home() {
             filter: saturate(1);
           }
         }
+
+        @keyframes flameFlicker {
+          0% {
+            transform: translate3d(-6%, 2%, 0) scale(1);
+            opacity: 0.6;
+          }
+          25% {
+            transform: translate3d(4%, -2%, 0) scale(1.03);
+            opacity: 0.72;
+          }
+          50% {
+            transform: translate3d(-2%, -6%, 0) scale(1.06);
+            opacity: 0.66;
+          }
+          75% {
+            transform: translate3d(6%, 1%, 0) scale(1.02);
+            opacity: 0.78;
+          }
+          100% {
+            transform: translate3d(-6%, 2%, 0) scale(1);
+            opacity: 0.6;
+          }
+        }
+        @keyframes flameRise {
+          0% {
+            transform: translate3d(0, 18%, 0) scale(1);
+            opacity: 0.28;
+          }
+          50% {
+            transform: translate3d(0, -6%, 0) scale(1.05);
+            opacity: 0.45;
+          }
+          100% {
+            transform: translate3d(0, 18%, 0) scale(1);
+            opacity: 0.28;
+          }
+        }
+
+        @keyframes iceFlicker {
+          0% {
+            transform: translate3d(-5%, 2%, 0) scale(1);
+            opacity: 0.58;
+          }
+          25% {
+            transform: translate3d(4%, -2%, 0) scale(1.03);
+            opacity: 0.72;
+          }
+          50% {
+            transform: translate3d(-2%, -5%, 0) scale(1.06);
+            opacity: 0.64;
+          }
+          75% {
+            transform: translate3d(6%, 1%, 0) scale(1.02);
+            opacity: 0.78;
+          }
+          100% {
+            transform: translate3d(-5%, 2%, 0) scale(1);
+            opacity: 0.58;
+          }
+        }
+        @keyframes icePulse {
+          0% {
+            transform: translate3d(0, 14%, 0) scale(1);
+            opacity: 0.26;
+          }
+          50% {
+            transform: translate3d(0, -6%, 0) scale(1.06);
+            opacity: 0.46;
+          }
+          100% {
+            transform: translate3d(0, 14%, 0) scale(1);
+            opacity: 0.26;
+          }
+        }
       `}</style>
 
-      {/* Background */}
+      {/* ✅ RED CLOUD BACKGROUND */}
       <div className="fixed inset-0 -z-20">
         <img
           key={`bg-${renderNonce}`}
@@ -650,107 +852,146 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/45" />
       </div>
 
-      {/* Floating emojis (only after mount) */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        {mounted &&
-          angry.map((a) => (
-            <span
-              key={a.i}
-              className="mad-emoji absolute select-none"
-              style={{
-                left: `${a.x}%`,
-                fontSize: `${a.size}px`,
-                opacity: a.opacity,
-                animationDuration: `${a.dur}s`,
-                animationDelay: `${a.delay}s`,
-                ["--drift" as any]: `${a.drift}px`,
-              }}
-            >
-              😡
-            </span>
-          ))}
+      {/* ✅ SCROLL-REACTIVE SIDE GLOWS */}
+      <div className="pointer-events-none fixed inset-0" style={{ zIndex: -15 }}>
+        <div
+          className="absolute left-0 top-0 h-full w-[22vw] max-w-[360px] blur-3xl"
+          style={{
+            opacity: 0.08 + scrollGlow * 0.22,
+            background:
+              "radial-gradient(circle at 30% 50%, rgba(255,110,60,0.55), transparent 62%)," +
+              "radial-gradient(circle at 10% 70%, rgba(255,40,40,0.35), transparent 60%)",
+          }}
+        />
+        <div
+          className="absolute right-0 top-0 h-full w-[22vw] max-w-[360px] blur-3xl"
+          style={{
+            opacity: 0.08 + scrollGlow * 0.22,
+            background:
+              "radial-gradient(circle at 70% 50%, rgba(255,110,60,0.55), transparent 62%)," +
+              "radial-gradient(circle at 90% 70%, rgba(255,40,40,0.35), transparent 60%)",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-black/35" style={{ opacity: 0.35 }} />
       </div>
 
-      {/* Content */}
+      {/* 😡 FLOATING BACKGROUND */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        {angry.map((a) => (
+          <span
+            key={a.i}
+            className="mad-emoji absolute select-none"
+            style={{
+              left: `${a.x}%`,
+              fontSize: `${a.size}px`,
+              opacity: a.opacity,
+              animationDuration: `${a.dur}s`,
+              animationDelay: `${a.delay}s`,
+              ["--drift" as any]: `${a.drift}px`,
+            }}
+          >
+            😡
+          </span>
+        ))}
+      </div>
+
+      {/* CONTENT */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6">
-        {/* Top Nav */}
-        <header className="pt-10">
-          <div className="mx-auto max-w-5xl flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-white/10 p-3 border border-white/10">
-                <Image src="/mad.png" alt="$MAD" width={44} height={44} priority />
-              </div>
-              <div className="text-left">
-                <div className="text-xs uppercase tracking-[0.35em] text-white/60">Solana</div>
-                <div className="text-sm font-black text-white/80">Digital emotion — refined</div>
-              </div>
-            </div>
-
-            <div className="hidden sm:flex items-center gap-2">
-              <button className={btnGhost} onClick={() => scrollToId("forge")}>
-                Forge
-              </button>
-              <button className={btnGhost} onClick={() => scrollToId("confessions")}>
-                Confessions
-              </button>
-              <button className={btnGhost} onClick={() => scrollToId("roadmap")}>
-                Roadmap
-              </button>
-              <button className={btnGhost} onClick={() => scrollToId("memes")}>
-                Memes
-              </button>
-              <button className={btnGhost} onClick={() => scrollToId("socials")}>
-                Socials
-              </button>
-            </div>
-          </div>
-        </header>
-
         {/* HERO */}
-        <section className="pt-12 pb-16 w-full">
+        <section className="pt-16 pb-20 w-full">
           <div className="mx-auto max-w-5xl">
-            <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">Welcome To $MAD</h1>
-
-            <p className="mt-5 text-xl sm:text-2xl text-white/75 leading-[1.7] max-w-2xl">
-              Emotion evolves.
-              <br />
-              Born in volatility.
-              <br />
-              Refined through discipline.
-            </p>
-
-            <div className="mt-9 flex flex-wrap gap-3">
-              <button className={btnPrimary} onClick={() => scrollToId("forge")}>
-                Forge Identity
-              </button>
-              <a className={btnGhost} href={links.buy} target="_blank" rel="noreferrer">
-                Buy on Jupiter
-              </a>
-              <a className={btnGhost} href={links.chart} target="_blank" rel="noreferrer">
-                Track Momentum
-              </a>
-            </div>
-
-            <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
-              <div className="text-xs uppercase tracking-[0.35em] text-white/50">Contract</div>
-              <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
-                  {addr}
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+                  <Image src="/mad.png" alt="$MAD" width={52} height={52} priority />
                 </div>
-                <button onClick={copyCA} className={btnGhost}>
-                  {copied ? "Copied" : "Copy"}
+                <div className="text-left">
+                  <div className="text-xs uppercase tracking-[0.35em] text-white/60">Solana</div>
+                  <div className="text-sm font-black text-white/80">Digital emotion — refined</div>
+                </div>
+              </div>
+
+              <div className="hidden sm:flex items-center gap-2">
+                <button className={btnGhost} onClick={() => scrollToId("confessions")}>
+                  Confessions
+                </button>
+                <button className={btnGhost} onClick={() => scrollToId("forge")}>
+                  Forge
+                </button>
+                <button className={btnGhost} onClick={() => scrollToId("status")}>
+                  Status
                 </button>
               </div>
             </div>
 
-            <p className="mt-6 text-xs text-white/40 leading-[1.8]">Not financial advice. Culture experiment. Wearable energy.</p>
+            <div className="mt-12">
+              <h1 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[0.95]">Welcome To $MAD</h1>
+
+              <p className="mt-5 text-xl sm:text-2xl text-white/75 leading-[1.7] max-w-2xl">
+                Emotion evolves.
+                <br />
+                Born in volatility.
+                <br />
+                Refined through discipline.
+              </p>
+
+              <div className="mt-9 flex flex-wrap gap-3">
+                <button className={btnPrimary} onClick={() => scrollToId("forge")}>
+                  Forge Identity
+                </button>
+                <a className={btnGhost} href={links.buy} target="_blank" rel="noreferrer">
+                  Buy on Jupiter
+                </a>
+                <a className={btnGhost} href={links.chart} target="_blank" rel="noreferrer">
+                  Track Momentum
+                </a>
+              </div>
+
+              <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
+                <div className="text-xs uppercase tracking-[0.35em] text-white/50">Contract</div>
+                <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                  <div className="flex-1 rounded-2xl bg-white/10 border border-white/10 px-4 py-3 font-mono text-sm break-all">
+                    {addr}
+                  </div>
+                  <button onClick={copyCA} className={btnGhost}>
+                    {copied ? "Copied" : "Copy"}
+                  </button>
+                </div>
+              </div>
+
+              <p className="mt-6 text-xs text-white/40 leading-[1.8]">Not financial advice. Culture experiment. Wearable energy.</p>
+            </div>
           </div>
         </section>
 
-        {/* FORGE */}
+        {/* MANIFESTO */}
+        <section className="pb-20 w-full">
+          <div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 sm:p-10 text-center">
+            <div className="text-xs uppercase tracking-[0.35em] text-white/55">Statement</div>
+            <h2 className="mt-4 text-3xl sm:text-4xl font-black leading-tight">Quiet rebellion.</h2>
+            <p className="mt-5 text-white/70 leading-[1.9] text-base sm:text-lg max-w-3xl mx-auto">
+              The market tested conviction.
+              <br />
+              Most reacted. Some refined.
+              <br />
+              Not chaos — composure.
+            </p>
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <button className={btnGhost} onClick={() => scrollToId("confessions")}>
+                Share the emotion
+              </button>
+              <button className={btnGhost} onClick={() => scrollToId("roadmap")}>
+                See the roadmap
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* PFP GENERATOR */}
         <section id="forge" className="py-20 w-full max-w-xl mx-auto text-center">
           <div className="mb-10 flex items-center justify-center gap-3">
-            <div className="rounded-2xl bg-white/10 p-3 border border-white/10">
+            <div className="rounded-2xl bg-white/10 p-3 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
               <Image src="/mad.png" alt="$MAD logo" width={56} height={56} priority />
             </div>
             <div className="text-left">
@@ -771,7 +1012,7 @@ export default function Home() {
           </div>
 
           <div
-            className="mt-10 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border border-white/10 bg-white/5"
+            className="mt-10 relative w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full overflow-hidden border border-white/10 bg-white/5 shadow-[0_30px_120px_rgba(255,120,80,0.10)]"
             style={revealing ? { animation: "forgePulse 0.55s ease-in-out" } : undefined}
           >
             {showBase && (
@@ -848,7 +1089,7 @@ export default function Home() {
 
           <div className="mb-7 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
             <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s prompt</div>
-            <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt || "Loading prompt..."}”</div>
+            <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
             <div className="mt-2 text-xs text-white/45">Anonymous. Public. Real.</div>
           </div>
 
@@ -971,27 +1212,133 @@ export default function Home() {
           </div>
         </section>
 
-        {/* STATUS */}
-        <section className="py-20 w-full max-w-5xl mx-auto text-center">
-          <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
-          <h2 className="mt-3 text-4xl sm:text-5xl font-black">Burned & Locked</h2>
-          <p className="mt-4 text-white/65 leading-[1.9]">Scarcity is intentional.</p>
+        {/* DETAILS */}
+        <section className="py-20 flex flex-col items-center text-center">
+          <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+            <Image src="/mad.png" alt="$MAD logo" width={120} height={120} priority />
+          </div>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 text-left">
-            <div className="rounded-3xl border border-white/10 bg-black/25 p-6">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
-              <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
-              <p className="mt-2 text-white/70">
-                Burn rate: <span className="font-black text-white tabular-nums">{BURN_RATE}%</span>
-              </p>
+          <h2 className="mt-10 text-4xl sm:text-6xl font-black tracking-tight">
+            Born in volatility.
+            <br />
+            Refined into culture.
+          </h2>
+
+          <p className="mt-6 max-w-2xl text-white/70 leading-[1.95] text-base sm:text-lg">
+            The market was brutal. People lost money.
+            <br />
+            The emotion was real — and shared.
+            <br />
+            Then it flips: the same emotion becomes the cost of fading.
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+              Buy on Jupiter
+            </a>
+            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+              View Chart
+            </a>
+          </div>
+        </section>
+
+        {/* ROBLOX */}
+        <section className="pb-20 w-full max-w-4xl mx-auto">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center overflow-hidden">
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Universe</p>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-black">Roblox (Beta)</h2>
+            <p className="mt-4 text-white/65 leading-[1.9] max-w-2xl mx-auto">
+              The experiment has a playground: <span className="font-black text-white/85">Will You Get RICH… Or Stay MAD?</span>
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <a href={links.game} target="_blank" rel="noreferrer" className={btnPrimary}>
+                Play on Roblox
+              </a>
+              <a href={links.x} target="_blank" rel="noreferrer" className={btnGhost}>
+                Join X Community
+              </a>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-black/25 p-6">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
-              <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
-              <p className="mt-2 text-white/70">
-                Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
-              </p>
+            <p className="mt-4 text-xs text-white/40">Roblox blocks most site embeds — this opens directly in Roblox.</p>
+          </div>
+        </section>
+
+        {/* STATUS */}
+        <section id="status" className="py-20 w-full">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Token Status</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl font-black">Burned & Locked</h2>
+            <p className="mt-4 text-white/65 leading-[1.9]">Scarcity is intentional.</p>
+
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 text-left">
+              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
+                <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">🔥</div>
+
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 30% 70%, rgba(255,120,0,.38), transparent 55%)," +
+                      "radial-gradient(circle at 70% 70%, rgba(255,0,0,.28), transparent 60%)," +
+                      "radial-gradient(circle at 50% 95%, rgba(255,200,0,.24), transparent 55%)",
+                    filter: "blur(18px) saturate(1.15)",
+                    animation: "flameFlicker 1.7s ease-in-out infinite",
+                    opacity: 0.78,
+                  }}
+                />
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: "radial-gradient(circle at 50% 85%, rgba(255,160,0,.18), transparent 60%)",
+                    filter: "blur(22px)",
+                    animation: "flameRise 2.4s ease-in-out infinite",
+                    mixBlendMode: "screen",
+                  }}
+                />
+
+                <div className="relative">
+                  <p className="text-xs uppercase tracking-[0.35em] text-white/50">Burned</p>
+                  <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{BURNED.toLocaleString()}</div>
+                  <p className="mt-2 text-white/70">
+                    Burn rate: <span className="font-black text-white tabular-nums">{BURN_RATE}%</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/25 p-6">
+                <div className="absolute right-5 top-5 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-lg">🔒</div>
+
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 30% 70%, rgba(0,160,255,.34), transparent 55%)," +
+                      "radial-gradient(circle at 70% 70%, rgba(0,90,255,.24), transparent 60%)," +
+                      "radial-gradient(circle at 50% 95%, rgba(120,220,255,.20), transparent 55%)",
+                    filter: "blur(18px) saturate(1.2)",
+                    animation: "iceFlicker 1.8s ease-in-out infinite",
+                    opacity: 0.78,
+                  }}
+                />
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background: "radial-gradient(circle at 50% 85%, rgba(120,220,255,.18), transparent 60%)",
+                    filter: "blur(22px)",
+                    animation: "icePulse 2.6s ease-in-out infinite",
+                    mixBlendMode: "screen",
+                  }}
+                />
+
+                <div className="relative">
+                  <p className="text-xs uppercase tracking-[0.35em] text-white/50">Locked</p>
+                  <div className="mt-2 text-3xl sm:text-4xl font-black tabular-nums">{LOCKED.toLocaleString()}</div>
+                  <p className="mt-2 text-white/70">
+                    Locked until: <span className="font-black text-white">{LOCK_UNTIL}</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -1009,92 +1356,101 @@ export default function Home() {
               return (
                 <div
                   key={item.phase + item.title}
-                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(
-                    " "
-                  )}
+                  className={["rounded-3xl border border-white/10 bg-white/5 p-6 transition", done ? "opacity-80" : "hover:bg-white/10"].join(" ")}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <p className={["text-xs uppercase tracking-[0.35em] text-white/50", done ? "line-through decoration-white/30" : ""].join(" ")}>
                       {item.phase}
                     </p>
+
                     <span className="text-xs font-black text-white/55">{done ? "Completed" : "Not Completed"}</span>
                   </div>
 
                   <div className="mt-2 flex items-baseline gap-3">
-                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>
-                      {item.title}
-                    </h3>
+                    <h3 className={["text-2xl sm:text-3xl font-black", done ? "line-through decoration-white/25" : ""].join(" ")}>{item.title}</h3>
                     <span className="h-px flex-1 bg-white/10" />
                   </div>
 
-                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>
-                    {item.desc}
-                  </p>
+                  <p className={["text-white/65 mt-2 leading-[1.95]", done ? "line-through decoration-white/15" : ""].join(" ")}>{item.desc}</p>
                 </div>
               );
             })}
           </div>
         </section>
 
-        {/* MEMES */}
-        <section id="memes" className="py-24 w-full">
+        {/* MEME VAULT */}
+        <section className="py-24 w-full">
           <div className="text-center mb-14">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Culture</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">Meme Vault</h2>
             <p className="mt-4 text-white/65 leading-[1.9]">Archives. Signals. Receipts.</p>
           </div>
 
-          <div className="relative mx-auto w-full max-w-6xl">
-            <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6">
-              <div
-                className={[
-                  "flex gap-5 overflow-x-auto overflow-y-hidden pb-3",
-                  "snap-x snap-mandatory",
-                  "scroll-px-4",
-                  "[scrollbar-width:thin]",
-                ].join(" ")}
-                style={{ WebkitOverflowScrolling: "touch" }}
-              >
-                {freshMemes.map((m, idx) => {
-                  const candidates = buildCandidates(m.src);
-                  const primary = candidates[0];
-                  const fallbacks = candidates.slice(1);
+          {freshMemes.length === 0 ? (
+            <div className="text-center text-white/60">No memes yet.</div>
+          ) : (
+            <div className="relative mx-auto w-full max-w-6xl">
+              <div className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-white/10 blur-3xl" />
 
-                  return (
-                    <div
-                      key={m.src}
-                      className={[
-                        "snap-start shrink-0",
-                        "w-[85vw] sm:w-[520px] md:w-[560px] lg:w-[600px]",
-                        "rounded-3xl border border-white/10 bg-black/40 p-4",
-                        "transition hover:bg-white/10",
-                      ].join(" ")}
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="text-xs uppercase tracking-[0.35em] text-white/50">#{idx + 1}</div>
-                        <div className="text-sm font-black text-white/70">{m.tag}</div>
+              <div className="relative rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <div className="text-xs uppercase tracking-[0.35em] text-white/50">Swipe</div>
+                  <div className="text-xs text-white/40">({freshMemes.length} items)</div>
+                </div>
+
+                <div
+                  className={[
+                    "flex gap-5 overflow-x-auto overflow-y-hidden pb-3",
+                    "snap-x snap-mandatory",
+                    "scroll-px-4",
+                    "[scrollbar-width:thin]",
+                  ].join(" ")}
+                  style={{ WebkitOverflowScrolling: "touch" }}
+                >
+                  {freshMemes.map((m, idx) => {
+                    const candidates = buildCandidates(m.src);
+                    const primary = candidates[0];
+                    const fallbacks = candidates.slice(1);
+
+                    return (
+                      <div
+                        key={m.src}
+                        className={[
+                          "snap-start shrink-0",
+                          "w-[85vw] sm:w-[520px] md:w-[560px] lg:w-[600px]",
+                          "rounded-3xl border border-white/10 bg-black/40 p-4",
+                          "transition hover:bg-white/10",
+                        ].join(" ")}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="text-xs uppercase tracking-[0.35em] text-white/50">#{idx + 1}</div>
+                          <div className="text-sm font-black text-white/70">{m.tag}</div>
+                        </div>
+
+                        <img
+                          src={primary}
+                          alt={m.tag}
+                          className="rounded-2xl w-full h-auto"
+                          loading="lazy"
+                          onLoad={resetFallbackIndex}
+                          onError={(e) => cycleFallback(e, fallbacks)}
+                        />
+
+                        <div className="mt-3 text-xs text-white/40">Screenshot. Post. Tag $MAD.</div>
                       </div>
+                    );
+                  })}
+                </div>
 
-                      <img
-                        src={primary}
-                        alt={m.tag}
-                        className="rounded-2xl w-full h-auto"
-                        loading="lazy"
-                        onLoad={resetFallbackIndex}
-                        onError={(e) => cycleFallback(e, fallbacks)}
-                      />
-
-                      <div className="mt-3 text-xs text-white/40">Screenshot. Post. Tag $MAD.</div>
-                    </div>
-                  );
-                })}
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black/35 to-transparent rounded-l-3xl" />
+                <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black/35 to-transparent rounded-r-3xl" />
               </div>
             </div>
-          </div>
+          )}
         </section>
 
         {/* SOCIALS */}
-        <section id="socials" className="pb-24 w-full">
+        <section className="pb-24 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center">
             <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Connect</p>
             <h2 className="mt-3 text-4xl sm:text-5xl font-black">Socials</h2>
@@ -1112,9 +1468,6 @@ export default function Home() {
               </a>
               <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
                 Buy on Jupiter
-              </a>
-              <a href={links.game} target="_blank" rel="noreferrer" className={btnGhost}>
-                Play Roblox
               </a>
             </div>
 
