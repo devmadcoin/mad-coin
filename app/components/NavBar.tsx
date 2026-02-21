@@ -1,9 +1,13 @@
+/* app/components/NavBar.tsx */
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+
+const ROBLOX_GAME_URL =
+  "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD";
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -26,18 +30,27 @@ export default function NavBar() {
 
           <div className="leading-tight">
             <div className="text-sm font-black">$MAD</div>
-            <div className="text-[11px] text-white/50">
-              Digital emotion — refined
-            </div>
+            <div className="text-[11px] text-white/50">Digital emotion — refined</div>
           </div>
         </Link>
 
         {/* Right nav pills */}
         <div className="flex items-center gap-2">
-          <NavPill href="/" pathname={pathname}>Home</NavPill>
-          <NavPill href="/roadmap" pathname={pathname}>Roadmap</NavPill>
-          <NavPill href="/forge" pathname={pathname}>Forge</NavPill>
-          <NavPill href="/memes" pathname={pathname}>Memes</NavPill>
+          <NavPill href="/" pathname={pathname}>
+            Home
+          </NavPill>
+          <NavPill href="/roadmap" pathname={pathname}>
+            Roadmap
+          </NavPill>
+          <NavPill href="/forge" pathname={pathname}>
+            Forge
+          </NavPill>
+          <NavPill href="/memes" pathname={pathname}>
+            Memes
+          </NavPill>
+
+          {/* ✅ NEW: external Game tab */}
+          <ExternalPill href={ROBLOX_GAME_URL}>Game</ExternalPill>
         </div>
       </nav>
     </header>
@@ -53,21 +66,38 @@ function NavPill({
   children: ReactNode;
   pathname: string;
 }) {
-  const active = pathname === href;
+  // Handles exact match + nested routes like /roadmap/anything
+  const active = pathname === href || (href !== "/" && pathname.startsWith(href + "/"));
 
   return (
     <Link
       href={href}
-      className={`
-        relative rounded-full px-4 py-2 text-sm font-semibold transition
-        ${
-          active
-            ? "bg-red-500/15 text-red-400 border border-red-500/40 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
-            : "border border-white/10 bg-white/5 text-white/90 hover:bg-white/10 hover:text-white"
-        }
-      `}
+      className={[
+        "relative rounded-full px-4 py-2 text-sm font-semibold transition",
+        active
+          ? "bg-red-500/15 text-red-400 border border-red-500/40 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
+          : "border border-white/10 bg-white/5 text-white/90 hover:bg-white/10 hover:text-white",
+      ].join(" ")}
     >
       {children}
     </Link>
+  );
+}
+
+function ExternalPill({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className={[
+        "relative rounded-full px-4 py-2 text-sm font-semibold transition",
+        "border border-white/10 bg-white/5 text-white/90 hover:bg-white/10 hover:text-white",
+        "hover:border-red-500/30 hover:shadow-[0_0_12px_rgba(255,0,0,0.35)]",
+      ].join(" ")}
+      title="Open Roblox game"
+    >
+      {children}
+    </a>
   );
 }
