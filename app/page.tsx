@@ -152,7 +152,7 @@ function clampText(s: string, max = 240) {
 }
 
 export default function Home() {
-  // ✅ Fix hydration: wait until mounted before rendering anything non-deterministic
+  // ✅ Fix hydration: detect client mount FIRST
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -200,10 +200,9 @@ export default function Home() {
     return { primary: c[0], fallbacks: c.slice(1) };
   }, []);
 
-  // ✅ Fix hydration: generate random particles ONLY after mount
-  const [angry, setAngry] = useState<
-    { i: number; x: number; size: number; opacity: number; dur: number; delay: number; drift: number }[]
-  >([]);
+  // ✅ Fix hydration: particles generated client-side only
+  type AngryParticle = { i: number; x: number; size: number; opacity: number; dur: number; delay: number; drift: number };
+  const [angry, setAngry] = useState<AngryParticle[]>([]);
   useEffect(() => {
     if (!mounted) return;
     const count = 18;
@@ -241,7 +240,7 @@ export default function Home() {
     };
   }, [mounted]);
 
-  // ====== Meme Vault (✅ keep ROOT paths) ======
+  // ====== Meme Vault ======
   const freshMemes = useMemo(
     () => [
       { src: "/memes/mad-meme-trafficstuck.png", tag: "Traffic" },
@@ -259,17 +258,15 @@ export default function Home() {
     []
   );
 
-  // ====== Roadmap ✅ added Phase 1.2 ======
+  // ====== Roadmap ======
   const roadmap = useMemo(
     () => [
       { phase: "Phase 1", title: "Bond", desc: "Establish the foundation. Lock in the culture. Build the core.", done: true },
       { phase: "Phase 1.1", title: "300M Burn", desc: "Proof-of-signal. Big burn. Clear intent.", done: true },
-      {
-        phase: "Phase 1.2",
-        title: "350M Burn",
-        desc: "Phase 1.2 complete — 350,000,000 tokens burned. Scarcity, on purpose.",
-        done: true,
-      },
+
+      // ✅ ADDED
+      { phase: "Phase 1.2", title: "350M Burn", desc: "Burn extension complete. Scarcity tightened.", done: true },
+
       { phase: "Phase 2", title: "$1M", desc: "First major milestone. Momentum becomes visible." },
       { phase: "Phase 3", title: "$10M", desc: "Scale the culture. Expand the orbit." },
       { phase: "Phase 4", title: "$50M", desc: "The line gets crowded. The fade gets expensive." },
@@ -369,6 +366,8 @@ export default function Home() {
       makeItem<AccessoryItem>("a-c-leg-rugproofshield", "/pfp/accessories/cartoon/legendary/cartoon-legendary-rugproofshield.png", "Rugproof Shield", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-sash", "/pfp/accessories/cartoon/legendary/cartoon-legendary-sash.png", "Sash", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-void", "/pfp/accessories/cartoon/legendary/cartoon-legendary-void.png", "Void", "legendary", "cartoon", tall(20, 0.98)),
+
+      // NOTE: if these 2 files don't exist, they'll fallback safely, but keep them only if you actually have them
       makeItem<AccessoryItem>("a-c-leg-madplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-madplush.png", "MAD Plush", "legendary", "cartoon"),
       makeItem<AccessoryItem>("a-c-leg-halomadplush", "/pfp/accessories/cartoon/legendary/cartoon-legendary-halomadplush.png", "Pink Halo MAD Plush", "legendary", "cartoon", tall(26, 0.96)),
     ];
@@ -406,10 +405,7 @@ export default function Home() {
   const [accId, setAccId] = useState(initialAcc.id);
 
   const selectedEye = useMemo(() => ALL_EYES.find((e) => e.id === eyeId) ?? initialEye, [eyeId, initialEye, ALL_EYES]);
-  const selectedAcc = useMemo(
-    () => ALL_ACCESSORIES.find((a) => a.id === accId) ?? initialAcc,
-    [accId, initialAcc, ALL_ACCESSORIES]
-  );
+  const selectedAcc = useMemo(() => ALL_ACCESSORIES.find((a) => a.id === accId) ?? initialAcc, [accId, initialAcc, ALL_ACCESSORIES]);
 
   const [eyeSrc, setEyeSrc] = useState(selectedEye.primary);
   const [eyeFallbacks, setEyeFallbacks] = useState<string[]>(selectedEye.fallbacks);
@@ -459,7 +455,7 @@ export default function Home() {
   };
 
   // ====== Token Stats ======
-  const BURNED = 350_000_000;
+  const BURNED = 350_000_000; // ✅ matches Phase 1.2
   const BURN_RATE = 35;
   const LOCKED = 111_000_000;
   const LOCK_UNTIL = "6/1/2026";
@@ -479,8 +475,8 @@ export default function Home() {
     []
   );
 
-  // ✅ Fix hydration: compute prompt after mount
-  const [todayPrompt, setTodayPrompt] = useState<string>("");
+  // ✅ Fix hydration: compute prompt on client after mount
+  const [todayPrompt, setTodayPrompt] = useState<string>("Loading prompt...");
   useEffect(() => {
     if (!mounted) return;
     const d = new Date();
@@ -548,7 +544,6 @@ export default function Home() {
   const pollRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!mounted) return;
     loadReacted();
     fetchConfessions();
 
@@ -558,7 +553,7 @@ export default function Home() {
       pollRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted]);
+  }, []);
 
   const submitConfession = async () => {
     setConfessionErr(null);
@@ -618,26 +613,23 @@ export default function Home() {
   };
 
   // ====== Rage Tap Gate ======
-  // ✅ Fix hydration: don’t assume unlocked on initial render
-  const [gateUnlocked, setGateUnlocked] = useState<boolean | null>(null);
+  const [gateUnlocked, setGateUnlocked] = useState(true);
   const [gateTaps, setGateTaps] = useState(0);
 
   useEffect(() => {
-    if (!mounted) return;
     try {
       const saved = localStorage.getItem(LS_SITE_UNLOCK_KEY);
       const isUnlocked = saved === "1";
       setGateUnlocked(isUnlocked);
-      setGateTaps(isUnlocked ? 10 : 0);
+      setGateTaps(0);
     } catch {
       setGateUnlocked(false);
       setGateTaps(0);
     }
-  }, [mounted]);
+  }, []);
 
   const unlockGate = () => {
     setGateUnlocked(true);
-    setGateTaps(10);
     try {
       localStorage.setItem(LS_SITE_UNLOCK_KEY, "1");
     } catch {}
@@ -650,6 +642,10 @@ export default function Home() {
       return next;
     });
   };
+
+  useEffect(() => {
+    if (gateUnlocked) setGateTaps(10);
+  }, [gateUnlocked]);
 
   const gateLine = useMemo(() => {
     if (gateTaps <= 0) return "Tap to enter. Emotion requires commitment.";
@@ -670,13 +666,17 @@ export default function Home() {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // ✅ Prevent rendering until mounted to avoid any remaining hydration edge cases
-  if (!mounted) return null;
+  // ✅ Fix hydration: year set client-side (or fallback)
+  const [year, setYear] = useState<number>(2026);
+  useEffect(() => {
+    if (!mounted) return;
+    setYear(new Date().getFullYear());
+  }, [mounted]);
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
       {/* ====== OPTIONAL RAGE TAP GATE (SKIPPABLE) ====== */}
-      {gateUnlocked === false && (
+      {!gateUnlocked && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
 
@@ -1091,7 +1091,7 @@ export default function Home() {
 
           <div className="mb-7 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-7">
             <div className="text-xs uppercase tracking-[0.35em] text-white/50">Today’s prompt</div>
-            <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt || "Loading…"}”</div>
+            <div className="mt-2 text-lg sm:text-xl font-black text-white/85">“{todayPrompt}”</div>
             <div className="mt-2 text-xs text-white/45">Anonymous. Public. Real.</div>
           </div>
 
@@ -1214,6 +1214,58 @@ export default function Home() {
           </div>
         </section>
 
+        {/* DETAILS */}
+        <section className="py-20 flex flex-col items-center text-center">
+          <div className="rounded-2xl bg-white/10 p-4 border border-white/10 shadow-[0_0_80px_rgba(255,120,80,0.12)]">
+            <Image src="/mad.png" alt="$MAD logo" width={120} height={120} priority />
+          </div>
+
+          <h2 className="mt-10 text-4xl sm:text-6xl font-black tracking-tight">
+            Born in volatility.
+            <br />
+            Refined into culture.
+          </h2>
+
+          <p className="mt-6 max-w-2xl text-white/70 leading-[1.95] text-base sm:text-lg">
+            The market was brutal. People lost money.
+            <br />
+            The emotion was real — and shared.
+            <br />
+            Then it flips: the same emotion becomes the cost of fading.
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <a href={links.buy} target="_blank" rel="noreferrer" className={btnPrimary}>
+              Buy on Jupiter
+            </a>
+            <a href={links.chart} target="_blank" rel="noreferrer" className={btnGhost}>
+              View Chart
+            </a>
+          </div>
+        </section>
+
+        {/* ROBLOX */}
+        <section className="pb-20 w-full max-w-4xl mx-auto">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center overflow-hidden">
+            <p className="text-white/60 uppercase tracking-[0.35em] text-xs">Universe</p>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-black">Roblox (Beta)</h2>
+            <p className="mt-4 text-white/65 leading-[1.9] max-w-2xl mx-auto">
+              The experiment has a playground: <span className="font-black text-white/85">Will You Get RICH… Or Stay MAD?</span>
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <a href={links.game} target="_blank" rel="noreferrer" className={btnPrimary}>
+                Play on Roblox
+              </a>
+              <a href={links.x} target="_blank" rel="noreferrer" className={btnGhost}>
+                Join X Community
+              </a>
+            </div>
+
+            <p className="mt-4 text-xs text-white/40">Roblox blocks most site embeds — this opens directly in Roblox.</p>
+          </div>
+        </section>
+
         {/* STATUS */}
         <section id="status" className="py-20 w-full">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-10 text-center overflow-hidden">
@@ -1253,9 +1305,6 @@ export default function Home() {
                   <p className="mt-2 text-white/70">
                     Burn rate: <span className="font-black text-white tabular-nums">{BURN_RATE}%</span>
                   </p>
-                  <div className="mt-3 inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-black text-white/75">
-                    Phase 1.2 Complete ✅
-                  </div>
                 </div>
               </div>
 
@@ -1434,7 +1483,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="py-10 text-center text-white/35 text-sm">© {new Date().getFullYear()} $MAD. Built by the community.</footer>
+        <footer className="py-10 text-center text-white/35 text-sm">© {year} $MAD. Built by the community.</footer>
       </div>
     </main>
   );
