@@ -34,7 +34,6 @@ export default function Home() {
     const el = momentumRef.current;
     if (!el) return;
 
-    // If IntersectionObserver isn't supported (rare), just show it.
     if (typeof IntersectionObserver === "undefined") {
       setMomentumVisible(true);
       return;
@@ -169,18 +168,20 @@ export default function Home() {
           <MadConfessions />
 
           {/* ✅ BRIDGE (between Confessions and Track Momentum) */}
-          <div className="my-16 text-center animate-fadeUp">
-            <div className="flex justify-center mb-6">
-              <Image
-                src="/stickers/dev-cooking.webp"
-                alt="Dev Cooking"
-                width={150}
-                height={150}
-                className="pointer-events-none object-contain drop-shadow-[0_16px_34px_rgba(0,0,0,0.55)]"
-              />
+          <div className="mt-24 mb-24 text-center animate-fadeUp">
+            <div className="flex justify-center">
+              <div className="relative w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] transition-transform duration-300 hover:scale-105">
+                <Image
+                  src="/stickers/dev-cooking.webp"
+                  alt="Dev Cooking"
+                  fill
+                  sizes="(max-width: 640px) 200px, 240px"
+                  className="object-contain pointer-events-none drop-shadow-[0_22px_45px_rgba(0,0,0,0.6)]"
+                />
+              </div>
             </div>
 
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">
+            <p className="mt-6 text-xs font-semibold uppercase tracking-[0.4em] text-white/45">
               Emotion becomes action.
             </p>
           </div>
