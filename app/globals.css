@@ -3,7 +3,7 @@
 @import "tailwindcss";
 
 /* =========================================
-   Base defaults (prevents "raw HTML" vibes)
+   Base defaults
    ========================================= */
 @layer base {
   html {
@@ -15,22 +15,19 @@
     min-height: 100vh;
     background: #000;
     color: #fff;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  /* Makes images behave nicely in responsive layouts */
+  /* Makes media behave nicely in responsive layouts */
   img,
   svg,
   video,
   canvas {
     display: block;
     max-width: 100%;
-  }
-
-  /* Optional: cleaner text rendering */
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
   }
 }
 
@@ -94,14 +91,54 @@
   box-shadow: 0 0 24px rgba(255, 140, 0, 0.35);
 }
 
-/* Optional: respect reduced motion */
+/* ==========================
+   Mobile Nav helpers
+   ========================== */
+
+/* Hide scrollbar (for horizontally scrolling tabs) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE/Edge legacy */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Smooth iOS momentum scrolling for horizontal nav containers */
+.ios-momentum {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optional: makes horizontal swipe feel intentional (helps Safari) */
+.touch-pan-x {
+  touch-action: pan-x;
+}
+
+/* Optional: if you want pills to “snap” nicely as you swipe */
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+.snap-start {
+  scroll-snap-align: start;
+}
+
+/* iPhone notch / safe-area support (use class on header if you want) */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* ==========================
+   Reduced motion
+   ========================== */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+
   .animate-fadeUp {
     animation: none;
   }
+
   .mad-progress-fill {
     animation: none;
   }
