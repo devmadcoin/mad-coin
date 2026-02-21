@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import Image from "next/image";
 
 export default function Home() {
   const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
@@ -31,8 +32,19 @@ export default function Home() {
       <div className="absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
       <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
-        {/* HERO */}
-        <div className="max-w-3xl animate-fadeUp">
+        {/* HERO (make this relative so the sticker can anchor) */}
+        <div className="relative max-w-3xl animate-fadeUp">
+          {/* GM sticker (desktop only) */}
+          <div className="pointer-events-none hidden lg:block absolute -right-28 top-6 w-[280px] h-[280px] opacity-95">
+            <Image
+              src="/stickers/sticker.webp%20Gm.webp"
+              alt="GM Sticker"
+              fill
+              priority
+              className="object-contain drop-shadow-[0_25px_55px_rgba(0,0,0,0.65)] animate-float"
+            />
+          </div>
+
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/60">
             SOLANA • Digital emotion — refined
           </p>
