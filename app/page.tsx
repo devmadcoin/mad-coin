@@ -18,7 +18,10 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
 
   function copyAddr() {
-    navigator.clipboard.writeText(addr);
+    // Guard so it never crashes in weird environments
+    if (typeof navigator === "undefined" || !navigator.clipboard) return;
+
+    navigator.clipboard.writeText(addr).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
   }
@@ -26,16 +29,18 @@ export default function Home() {
   return (
     <div className="relative overflow-hidden">
       {/* background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.35),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.25),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.20),transparent_55%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
       <div className="absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
-      <div className="relative mx-auto max-w-6xl px-6 py-16">
+      {/* LUXURY SPACING */}
+      <div className="relative mx-auto max-w-5xl px-8 py-24">
         <div className="max-w-3xl animate-fadeUp">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/60">
             SOLANA • Digital emotion — refined
           </p>
 
-          <h1 className="mt-4 text-5xl font-black tracking-tight sm:text-6xl">
+          {/* STRONGER HERO */}
+          <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
             Welcome To <span className="text-white">$MAD</span>
           </h1>
 
@@ -44,10 +49,10 @@ export default function Home() {
           </p>
 
           {/* ACTION BUTTONS (not nav) */}
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-wrap gap-3">
             <a
               href="/forge"
-              className="rounded-full bg-white/10 px-6 py-3 text-sm font-black text-white hover:bg-white/15 transition border border-white/10"
+              className="rounded-full bg-white/10 px-6 py-3 text-sm font-black text-white transition border border-white/10 hover:bg-white/15 hover:scale-[1.01]"
             >
               Forge Identity
             </a>
@@ -56,7 +61,7 @@ export default function Home() {
               href={links.buy}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 hover:bg-white/10 transition border border-white/10"
+              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white hover:scale-[1.01]"
             >
               Buy on Jupiter
             </a>
@@ -64,7 +69,7 @@ export default function Home() {
             {/* Smooth jump to embedded chart section */}
             <a
               href="#chart"
-              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 hover:bg-white/10 transition border border-white/10"
+              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white hover:scale-[1.01]"
             >
               Track Momentum
             </a>
@@ -73,26 +78,26 @@ export default function Home() {
               href={links.tg}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 hover:bg-white/10 transition border border-white/10"
+              className="rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white hover:scale-[1.01]"
             >
               Telegram
             </a>
           </div>
 
           {/* Contract box */}
-          <div className="mt-10 rounded-2xl border border-white/10 bg-black/30 p-5 backdrop-blur">
+          <div className="mt-12 rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
               Contract
             </p>
 
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="flex-1 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white/85 break-all">
+              <div className="flex-1 rounded-2xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-white/85 break-all">
                 {addr}
               </div>
 
               <button
                 onClick={copyAddr}
-                className="rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black hover:bg-white/10 transition"
+                className="rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black transition hover:bg-white/10 hover:scale-[1.01]"
               >
                 {copied ? "Copied!" : "Copy"}
               </button>
@@ -105,13 +110,15 @@ export default function Home() {
         </div>
 
         {/* Embedded Chart */}
-        <section id="chart" className="mt-14 animate-fadeUp">
+        <section id="chart" className="mt-16 animate-fadeUp scroll-mt-24">
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
                 Live Chart
               </p>
-              <h2 className="mt-2 text-3xl sm:text-4xl font-black">Track Momentum</h2>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-black">
+                Track Momentum
+              </h2>
               <p className="mt-2 text-white/60">
                 A clean live view of price action — inside the site.
               </p>
@@ -121,20 +128,21 @@ export default function Home() {
               href={links.chartPage}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 hover:text-white"
+              className="rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 hover:text-white hover:scale-[1.01]"
             >
               Open on Dexscreener →
             </a>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-black/30 backdrop-blur">
-            {/* Dexscreener embed */}
+          {/* LUXURY FRAME */}
+          <div className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl">
             <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
               <iframe
                 className="absolute inset-0 h-full w-full"
                 src={`https://dexscreener.com/solana/${addr}?embed=1&theme=dark`}
                 title="$MAD Dexscreener Chart"
                 loading="lazy"
+                referrerPolicy="no-referrer"
                 allow="clipboard-write; fullscreen"
               />
             </div>
