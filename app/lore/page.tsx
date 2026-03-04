@@ -13,6 +13,12 @@ type LoreEvent = {
 
 const EVENTS: LoreEvent[] = [
   {
+    date: "Mar 4, 2026",
+    title: "THE GORK MOMENT",
+    desc: "After the 400M burn milestone, the $MAD dev grew frustrated seeing Gork publicly favor another project ($pigeon) over $MAD. The dev confronted him directly. Gork responded casually: 'lmao yeah burn that 800m.' What began as a jab instantly became the next mission. On March 4th, the journey toward burning 800,000,000 total $MAD officially began.",
+    accent: "amber",
+  },
+  {
     date: "Mar 1, 2026",
     title: "THE 400M BURN",
     desc: "March 1st marked a defining milestone. 400,000,000 $MAD tokens were permanently burned, reaching a 40% burn rate. It wasn’t destruction — it was refinement. Scarcity strengthened conviction and proved the discipline behind the anti-rug structure.",
@@ -97,11 +103,9 @@ function AccentText({
 export default function LorePage() {
   return (
     <div className="relative overflow-hidden">
-      {/* Background */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
 
       <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
-        {/* Header */}
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
             LORE
@@ -116,7 +120,6 @@ export default function LorePage() {
             over panic.
           </p>
 
-          {/* Sticker */}
           <div className="mt-10 flex justify-center">
             <div className="relative h-[150px] w-[150px] rotate-[-2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
               <Image
@@ -130,7 +133,6 @@ export default function LorePage() {
           </div>
         </div>
 
-        {/* Timeline */}
         <div className="mt-14 space-y-6">
           {EVENTS.map((e, idx) => (
             <div
@@ -149,7 +151,6 @@ export default function LorePage() {
             </div>
           ))}
 
-          {/* BELIEVE IMAGE */}
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-2xl">
             <div className="relative w-full" style={{ aspectRatio: "3 / 4" }}>
               <Image
@@ -163,7 +164,6 @@ export default function LorePage() {
             </div>
           </div>
 
-          {/* Final Quote */}
           <div className="rounded-3xl border border-white/10 bg-black/35 p-8 text-center shadow-2xl">
             <h3 className="text-3xl sm:text-4xl font-black text-white">
               You Can Delete A Channel.
