@@ -13,34 +13,22 @@ type LoreEvent = {
 
 const EVENTS: LoreEvent[] = [
   {
-    date: "Feb 4, 2026 — 6:27:24 PM",
-    title: "GENESIS",
-    desc: "$MAD was minted. Emotion became code. Not a reset. Not a test run. A beginning.",
+    date: "Mar 1, 2026",
+    title: "THE 400M BURN",
+    desc: "March 1st marked a defining milestone. 400,000,000 $MAD tokens were permanently burned, reaching a 40% burn rate. It wasn’t destruction — it was refinement. Scarcity strengthened conviction and proved the discipline behind the anti-rug structure.",
     accent: "red",
   },
   {
-    date: "Feb 5, 2026",
-    title: "COMMUNITY IGNITES",
-    desc: "Telegram launched (created by a helper). The first gathering formed. Momentum found a channel.",
-    accent: "neutral",
-  },
-  {
-    date: "Launch week",
-    title: "THE TRIAL — The 5% Wallet",
-    desc: "A wallet held ~5% of supply for about 3 days. Everyone demanded a relaunch. But $MAD did not reset. Discipline over panic.",
+    date: "Late Feb, 2026",
+    title: "THE SILENT BURN",
+    desc: "Before the major milestone, 33,000,000 tokens were quietly burned from a side wallet. There was no announcement and no spectacle. Observers were left wondering what happened. But the intention was simple: reduce supply and reinforce the long-term structure of $MAD.",
     accent: "amber",
   },
   {
-    date: "Feb 7, 2026 — 16:56",
-    title: "BONDING",
-    desc: "Liquidity bonded at ~35.06K MC (USD). Infrastructure hardened. Volatility met structure.",
+    date: "Feb 20, 2026 — 11:32 AM",
+    title: "THE COMEBACK",
+    desc: "I woke up and our Telegram had been deleted. But they can’t delete belief. $MAD rose back up again.",
     accent: "red",
-  },
-  {
-    date: "Feb 14, 2026",
-    title: "RECLAMATION",
-    desc: "Telegram ownership was secured for $200 to retain members and avoid disruption. Not ego—responsibility.",
-    accent: "neutral",
   },
   {
     date: "Feb 18, 2026 — 3:19 PM",
@@ -49,9 +37,33 @@ const EVENTS: LoreEvent[] = [
     accent: "amber",
   },
   {
-    date: "Feb 20, 2026 — 11:32 AM",
-    title: "THE COMEBACK",
-    desc: "I woke up and our Telegram had been deleted. But they can’t delete belief. $MAD rose back up again.",
+    date: "Feb 14, 2026",
+    title: "RECLAMATION",
+    desc: "Telegram ownership was secured for $200 to retain members and avoid disruption. Not ego—responsibility.",
+    accent: "neutral",
+  },
+  {
+    date: "Feb 7, 2026 — 16:56",
+    title: "BONDING",
+    desc: "Liquidity bonded at ~35.06K MC (USD). Infrastructure hardened. Volatility met structure.",
+    accent: "red",
+  },
+  {
+    date: "Launch week",
+    title: "THE TRIAL — The 5% Wallet",
+    desc: "A wallet held ~5% of supply for about 3 days. Everyone demanded a relaunch. But $MAD did not reset. Discipline over panic.",
+    accent: "amber",
+  },
+  {
+    date: "Feb 5, 2026",
+    title: "COMMUNITY IGNITES",
+    desc: "Telegram launched (created by a helper). The first gathering formed. Momentum found a channel.",
+    accent: "neutral",
+  },
+  {
+    date: "Feb 4, 2026 — 6:27:24 PM",
+    title: "GENESIS",
+    desc: "$MAD was minted. Emotion became code. Not a reset. Not a test run. A beginning.",
     accent: "red",
   },
 ];
@@ -70,7 +82,10 @@ function AccentText({
       </span>
     );
   }
-  if (tone === "neutral") return <span className="text-white">{children}</span>;
+
+  if (tone === "neutral") {
+    return <span className="text-white">{children}</span>;
+  }
 
   return (
     <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.65)]">
@@ -97,7 +112,8 @@ export default function LorePage() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-2xl text-white/65 leading-relaxed">
-            Not a dev log. A founder chronicle. Structure before hype. Discipline over panic.
+            Not a dev log. A founder chronicle. Structure before hype. Discipline
+            over panic.
           </p>
 
           {/* Sticker */}
@@ -129,9 +145,7 @@ export default function LorePage() {
                 <AccentText tone={e.accent}>{e.title}</AccentText>
               </h3>
 
-              <p className="mt-3 text-white/75 leading-relaxed">
-                {e.desc}
-              </p>
+              <p className="mt-3 text-white/75 leading-relaxed">{e.desc}</p>
             </div>
           ))}
 
@@ -158,7 +172,8 @@ export default function LorePage() {
             <p className="mt-4 text-white/70">
               But you can’t delete belief.
               <br />
-              And <span className="text-red-500 font-bold">$MAD</span> doesn’t reset.
+              And <span className="text-red-500 font-bold">$MAD</span> doesn’t
+              reset.
             </p>
           </div>
         </div>
