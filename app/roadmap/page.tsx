@@ -42,6 +42,7 @@ function phaseBarWidth(status: Status) {
 export default function RoadmapPage() {
   const items: RoadmapItem[] = useMemo(
     () => [
+      // ✅ COMPLETED
       {
         phase: "PHASE 1",
         title: "Foundation",
@@ -57,26 +58,68 @@ export default function RoadmapPage() {
       {
         phase: "PHASE 1.3",
         title: "400M Token Burn",
-        desc: "Burn 400,000,000 tokens to reach a 40% burn rate and strengthen the anti-rug structure.",
-        status: "planned",
+        desc: "Burned 400,000,000 tokens reaching a 40% burn rate and strengthening the anti-rug structure.",
+        status: "complete",
       },
       {
         phase: "PHASE 1.4",
         title: "Dev Wallet Hold",
-        desc: "Hold 8,000,000 supply in the dev wallet to maintain long-term alignment and execute future ecosystem plans.",
+        desc: "8,000,000 tokens secured in the dev wallet to maintain long-term alignment and future ecosystem execution.",
+        status: "complete",
+      },
+
+      // 🔜 NEXT
+      {
+        phase: "PHASE 1.5",
+        title: "Acquire + Support",
+        desc: "Acquire 8,000,000 supply and support 1 community through $MAD.",
+        status: "planned",
+      },
+
+      // 🚀 EXPANSION
+      {
+        phase: "PHASE 2",
+        title: "Physical Sticker Merchandise",
+        desc: "Launch physical $MAD sticker merch for the community.",
         status: "planned",
       },
       {
-        phase: "PHASE 2",
-        title: "Forge Expansion",
-        desc: "Launch identity forge and expand digital emotion layer.",
-        status: "in_progress",
+        phase: "PHASE 3",
+        title: "$MAD Roblox Game",
+        desc: "Build and release the official $MAD Roblox game.",
+        status: "planned",
+      },
+
+      // 📈 MARKET CAP MILESTONES
+      {
+        phase: "PHASE 4",
+        title: "Reach $1M Market Cap",
+        desc: "Hit a $1,000,000 market cap milestone through disciplined growth.",
+        status: "planned",
       },
       {
-        phase: "PHASE 3",
-        title: "Cultural Expansion",
-        desc: "Community campaigns, meme vault growth, ecosystem depth.",
-        status: "in_progress",
+        phase: "PHASE 5",
+        title: "Reach $25M + $MAD Tattoo",
+        desc: "Hit $25,000,000 market cap and get a $MAD tattoo.",
+        status: "planned",
+      },
+      {
+        phase: "PHASE 6",
+        title: "Reach $50M Market Cap",
+        desc: "Hit a $50,000,000 market cap milestone.",
+        status: "planned",
+      },
+      {
+        phase: "PHASE 7",
+        title: "Reach $75M Market Cap",
+        desc: "Hit a $75,000,000 market cap milestone.",
+        status: "planned",
+      },
+      {
+        phase: "PHASE 8",
+        title: "Reach $100M Market Cap",
+        desc: "Hit a $100,000,000 market cap milestone.",
+        status: "planned",
       },
     ],
     []
@@ -86,8 +129,8 @@ export default function RoadmapPage() {
   const completed = items.filter((x) => x.status === "complete").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
-  // ✅ If you don't have this file yet, either add it to /public/stickers/chill.webp
-  // or change to an image you know exists (e.g. "/mad.png")
+  // ✅ If you don't have this file, either add it to /public/stickers/chill.webp
+  // or change it to an image you know exists (example: "/mad.png")
   const chillSrc = "/stickers/chill.webp";
 
   return (
