@@ -42,7 +42,6 @@ function phaseBarWidth(status: Status) {
 export default function RoadmapPage() {
   const items: RoadmapItem[] = useMemo(
     () => [
-      // ✅ COMPLETED
       {
         phase: "PHASE 1",
         title: "Foundation",
@@ -63,20 +62,10 @@ export default function RoadmapPage() {
       },
       {
         phase: "PHASE 1.4",
-        title: "Dev Wallet Hold",
-        desc: "8,000,000 tokens secured in the dev wallet to maintain long-term alignment and future ecosystem execution.",
-        status: "complete",
-      },
-
-      // 🔜 NEXT
-      {
-        phase: "PHASE 1.5",
         title: "Acquire + Support",
         desc: "Acquire 8,000,000 supply and support 1 community through $MAD.",
         status: "planned",
       },
-
-      // 🚀 EXPANSION
       {
         phase: "PHASE 2",
         title: "Physical Sticker Merchandise",
@@ -89,8 +78,6 @@ export default function RoadmapPage() {
         desc: "Build and release the official $MAD Roblox game.",
         status: "planned",
       },
-
-      // 📈 MARKET CAP MILESTONES
       {
         phase: "PHASE 4",
         title: "Reach $1M Market Cap",
@@ -111,15 +98,15 @@ export default function RoadmapPage() {
       },
       {
         phase: "PHASE 7",
-        title: "Reach $75M Market Cap",
-        desc: "Hit a $75,000,000 market cap milestone.",
+        title: "Reach $100M Market Cap",
+        desc: "Hit a $100,000,000 market cap milestone.",
         status: "planned",
       },
       {
         phase: "PHASE 8",
-        title: "Reach $100M Market Cap",
-        desc: "Hit a $100,000,000 market cap milestone.",
-        status: "planned",
+        title: "Burn 800M Tokens",
+        desc: "The long-term mission. Push total tokens burned to 800,000,000 following the challenge issued during the Gork moment.",
+        status: "in_progress",
       },
     ],
     []
@@ -129,18 +116,13 @@ export default function RoadmapPage() {
   const completed = items.filter((x) => x.status === "complete").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
-  // ✅ If you don't have this file, either add it to /public/stickers/chill.webp
-  // or change it to an image you know exists (example: "/mad.png")
   const chillSrc = "/stickers/chill.webp";
 
   return (
     <div className="relative overflow-hidden">
-      {/* background */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
       <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
-        {/* Header */}
         <div className="mx-auto max-w-3xl animate-fadeUp">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/60">
             STRUCTURE BEFORE HYPE.
@@ -158,21 +140,16 @@ export default function RoadmapPage() {
           </p>
         </div>
 
-        {/* Overall progress card */}
         <div className="mt-10 animate-fadeUp">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
-                  OVERALL PROGRESS
-                </p>
-                <p className="mt-2 text-sm text-white/70">
-                  {completed} of {total} phases complete
-                </p>
-              </div>
-            </div>
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
+              OVERALL PROGRESS
+            </p>
 
-            {/* Sticker centered ABOVE bar */}
+            <p className="mt-2 text-sm text-white/70">
+              {completed} of {total} phases complete
+            </p>
+
             <div className="pointer-events-none mt-6 flex justify-center">
               <Image
                 src={chillSrc}
@@ -184,7 +161,6 @@ export default function RoadmapPage() {
               />
             </div>
 
-            {/* Progress bar centered + % on right */}
             <div className="mt-6 w-full max-w-2xl mx-auto">
               <div className="flex items-center gap-4">
                 <div className="mad-progress-track flex-1">
@@ -206,7 +182,6 @@ export default function RoadmapPage() {
           </div>
         </div>
 
-        {/* Roadmap cards */}
         <div className="mt-10 space-y-6">
           {items.map((item) => (
             <RoadmapCard key={item.phase} item={item} />
@@ -243,7 +218,6 @@ function RoadmapCard({ item }: { item: RoadmapItem }) {
           </div>
         </div>
 
-        {/* Bottom bar per phase */}
         <div className="mt-6">
           <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden border border-white/10">
             <div
