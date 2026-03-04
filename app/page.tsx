@@ -1,31 +1,62 @@
 /* app/page.tsx */
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import MadConfessions from "./components/MadConfessions";
 
+const ADDR = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
+
+const LINKS = {
+  chartPage: `https://dexscreener.com/solana/${ADDR}`,
+  telegram: "https://t.me/MadOfficalChannel",
+  x: "https://x.com/devmadcoin",
+  tiktok: "https://www.tiktok.com/@devmadcoin",
+} as const;
+
 export default function Home() {
-  const addr = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
-
-  // ✅ Keep links in ONE place (easy to edit later)
-  const LINKS = useMemo(
-    () => ({
-      chartPage: `https://dexscreener.com/solana/${addr}`,
-      telegram: "https://t.me/MadOfficalChannel", // ✅ UPDATED
-      x: "https://x.com/devmadcoin",
-      tiktok: "https://www.tiktok.com/@devmadcoin",
-    }),
-    [addr]
-  );
-
   const [copied, setCopied] = useState(false);
+  const [iframeReady, setIframeReady] = useState(false);
 
   function copyAddr() {
-    if (typeof navigator === "undefined" || !navigator.clipboard) return;
-    navigator.clipboard.writeText(addr).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1200);
+    const text = ADDR;
+
+    // 1) Modern clipboard
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 1200);
+        })
+        .catch(() => {
+          // fallback below
+          fallbackCopy(text);
+        });
+      return;
+    }
+
+    // 2) Fallback copy
+    fallbackCopy(text);
+  }
+
+  function fallbackCopy(text: string) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "true");
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1200);
+    } catch {
+      // If copying fails, do nothing (site still works)
+    }
   }
 
   // ✅ Track Momentum highlight on scroll
@@ -83,7 +114,7 @@ export default function Home() {
             Emotion evolves. Born in volatility. Refined through discipline.
           </p>
 
-          {/* ✅ ACTION BUTTONS */}
+          {/* ACTION BUTTONS */}
           <div className="mt-10 flex flex-wrap gap-3">
             <a
               href="#chart"
@@ -100,7 +131,6 @@ export default function Home() {
               aria-label="Open X"
               title="X"
             >
-              {/* X logo */}
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -120,7 +150,6 @@ export default function Home() {
               aria-label="Open Telegram"
               title="Telegram"
             >
-              {/* Telegram logo */}
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -140,7 +169,6 @@ export default function Home() {
               aria-label="Open TikTok"
               title="TikTok"
             >
-              {/* TikTok logo */}
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -161,7 +189,7 @@ export default function Home() {
 
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="flex-1 rounded-2xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-white/85 break-all">
-                {addr}
+                {ADDR}
               </div>
 
               <button
@@ -236,14 +264,23 @@ export default function Home() {
           </div>
 
           <div className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl">
-            <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+            <div className="relative w-full aspect-[16/10] sm:aspect-[16/9]">
+              {!iframeReady && (
+                <div className="absolute inset-0 grid place-items-center">
+                  <div className="rounded-2xl border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/70">
+                    Loading chart…
+                  </div>
+                </div>
+              )}
+
               <iframe
                 className="absolute inset-0 h-full w-full"
-                src={`https://dexscreener.com/solana/${addr}?embed=1&theme=dark`}
+                src={`https://dexscreener.com/solana/${ADDR}?embed=1&theme=dark`}
                 title="$MAD Dexscreener Chart"
                 loading="lazy"
                 referrerPolicy="no-referrer"
                 allow="clipboard-write; fullscreen"
+                onLoad={() => setIframeReady(true)}
               />
             </div>
           </div>
