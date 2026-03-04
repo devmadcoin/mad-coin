@@ -56,8 +56,14 @@ export default function RoadmapPage() {
       },
       {
         phase: "PHASE 1.3",
-        title: "Physical Stickers",
-        desc: "Release physical $MAD stickers for the community.",
+        title: "400M Token Burn",
+        desc: "Burn 400,000,000 tokens to reach a 40% burn rate and strengthen the anti-rug structure.",
+        status: "planned",
+      },
+      {
+        phase: "PHASE 1.4",
+        title: "Dev Wallet Hold",
+        desc: "Hold 8,000,000 supply in the dev wallet to maintain long-term alignment and execute future ecosystem plans.",
         status: "planned",
       },
       {
@@ -80,7 +86,8 @@ export default function RoadmapPage() {
   const completed = items.filter((x) => x.status === "complete").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
-  // ✅ Clean filename (rename your file to: public/stickers/chill.webp)
+  // ✅ If you don't have this file yet, either add it to /public/stickers/chill.webp
+  // or change to an image you know exists (e.g. "/mad.png")
   const chillSrc = "/stickers/chill.webp";
 
   return (
@@ -122,7 +129,7 @@ export default function RoadmapPage() {
               </div>
             </div>
 
-            {/* Chill sticker centered ABOVE bar */}
+            {/* Sticker centered ABOVE bar */}
             <div className="pointer-events-none mt-6 flex justify-center">
               <Image
                 src={chillSrc}
@@ -130,6 +137,7 @@ export default function RoadmapPage() {
                 width={220}
                 height={220}
                 className="object-contain drop-shadow-[0_16px_30px_rgba(0,0,0,0.45)]"
+                priority
               />
             </div>
 
