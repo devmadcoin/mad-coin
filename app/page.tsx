@@ -12,7 +12,8 @@ const LINKS = {
   telegram: "https://t.me/MadOfficalChannel",
   x: "https://x.com/devmadcoin",
   tiktok: "https://www.tiktok.com/@devmadcoin",
-  stickers: "https://notaveragestickers.com/collections/mad",
+  retailSticker:
+    "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-sticker",
 } as const;
 
 export default function Home() {
@@ -202,20 +203,20 @@ export default function Home() {
             </p>
           </div>
 
-          {/* KEEP BUILDING sticker */}
+          {/* MAD sticker retail link */}
           <div className="my-10 flex flex-col items-center justify-center">
             <Link
-              href={LINKS.stickers}
+              href={LINKS.retailSticker}
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-block"
-              aria-label="Shop MAD Stickers"
-              title="Shop MAD Stickers"
+              aria-label="MAD Stickers for Retail"
+              title="MAD Stickers for Retail"
             >
               <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
                 <Image
-                  src="/stickers/keep-building.webp"
-                  alt="Keep Building"
+                  src="/stickers/Mad-Sticker-logo.png"
+                  alt="MAD Stickers for Retail"
                   fill
                   priority
                   sizes="140px"
@@ -225,12 +226,12 @@ export default function Home() {
             </Link>
 
             <Link
-              href={LINKS.stickers}
+              href={LINKS.retailSticker}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 text-center text-xs text-white/50 transition hover:text-white/80"
+              className="mt-3 text-center text-sm font-semibold text-white/70 transition hover:text-white"
             >
-              Shop MAD Stickers →
+              MAD Stickers for Retail →
             </Link>
           </div>
 
