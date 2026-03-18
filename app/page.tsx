@@ -18,6 +18,8 @@ const LINKS = {
     "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-premium-embossed-card-wrap",
   richPremiumCard:
     "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-premium-embossed-card-wrap-copy",
+  peeker:
+    "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-peeker",
 } as const;
 
 export default function Home() {
@@ -208,9 +210,9 @@ export default function Home() {
           </div>
 
           {/* MAD product links */}
-          <div className="my-12 grid grid-cols-1 gap-10 sm:grid-cols-3">
+          <div className="my-12 grid grid-cols-2 gap-8 sm:grid-cols-4">
             {/* 1 — MAD Sticker */}
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-start">
               <Link
                 href={LINKS.retailSticker}
                 target="_blank"
@@ -235,14 +237,14 @@ export default function Home() {
                 href={LINKS.retailSticker}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 text-center text-lg font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+                className="mt-3 text-center text-base font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
               >
                 MAD Stickers →
               </Link>
             </div>
 
             {/* 2 — Premium Card Wrap */}
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-start">
               <Link
                 href={LINKS.premiumCard}
                 target="_blank"
@@ -267,14 +269,14 @@ export default function Home() {
                 href={LINKS.premiumCard}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 text-center text-lg font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+                className="mt-3 text-center text-base font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
               >
                 Card Wrap →
               </Link>
             </div>
 
             {/* 3 — Rich Premium Card Wrap */}
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-start">
               <Link
                 href={LINKS.richPremiumCard}
                 target="_blank"
@@ -299,9 +301,41 @@ export default function Home() {
                 href={LINKS.richPremiumCard}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 text-center text-lg font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+                className="mt-3 text-center text-base font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
               >
                 Rich Wrap →
+              </Link>
+            </div>
+
+            {/* 4 — Peeker */}
+            <div className="flex flex-col items-center justify-start">
+              <Link
+                href={LINKS.peeker}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-block"
+                aria-label="MAD Peeker"
+                title="MAD Peeker"
+              >
+                <div className="relative h-[140px] w-[140px] rotate-[2deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+                  <Image
+                    src="/stickers/Mad-Peeker.png"
+                    alt="MAD Peeker"
+                    fill
+                    priority
+                    sizes="140px"
+                    className="object-contain"
+                  />
+                </div>
+              </Link>
+
+              <Link
+                href={LINKS.peeker}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-center text-base font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+              >
+                Peeker →
               </Link>
             </div>
           </div>
