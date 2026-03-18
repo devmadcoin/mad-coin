@@ -1,8 +1,8 @@
-/* app/page.tsx */
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import MadConfessions from "./components/MadConfessions";
 
 const ADDR = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
@@ -12,16 +12,19 @@ const LINKS = {
   telegram: "https://t.me/MadOfficalChannel",
   x: "https://x.com/devmadcoin",
   tiktok: "https://www.tiktok.com/@devmadcoin",
+  stickers: "https://notaveragestickers.com/collections/mad",
 } as const;
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [iframeReady, setIframeReady] = useState(false);
+  const [momentumVisible, setMomentumVisible] = useState(false);
+
+  const momentumRef = useRef<HTMLElement | null>(null);
 
   function copyAddr() {
     const text = ADDR;
 
-    // 1) Modern clipboard
     if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
       navigator.clipboard
         .writeText(text)
@@ -30,13 +33,11 @@ export default function Home() {
           window.setTimeout(() => setCopied(false), 1200);
         })
         .catch(() => {
-          // fallback below
           fallbackCopy(text);
         });
       return;
     }
 
-    // 2) Fallback copy
     fallbackCopy(text);
   }
 
@@ -55,13 +56,9 @@ export default function Home() {
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1200);
     } catch {
-      // If copying fails, do nothing (site still works)
+      // If copying fails, do nothing
     }
   }
-
-  // ✅ Track Momentum highlight on scroll
-  const [momentumVisible, setMomentumVisible] = useState(false);
-  const momentumRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const el = momentumRef.current;
@@ -80,15 +77,15 @@ export default function Home() {
 
   return (
     <div className="relative overflow-hidden">
-      {/* background */}
+      {/* Background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
       <div className="absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
-      <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16">
         {/* HERO */}
         <div className="relative max-w-3xl animate-fadeUp">
           {/* GM sticker (desktop only) */}
-          <div className="pointer-events-none hidden lg:block absolute right-[-260px] top-6 h-[280px] w-[280px] opacity-95">
+          <div className="pointer-events-none absolute right-[-260px] top-6 hidden h-[280px] w-[280px] opacity-95 lg:block">
             <Image
               src="/stickers/gm.webp"
               alt="GM Sticker"
@@ -110,7 +107,7 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-white/70 leading-relaxed">
+          <p className="mt-6 max-w-xl leading-relaxed text-white/70">
             Emotion evolves. Born in volatility. Refined through discipline.
           </p>
 
@@ -118,7 +115,7 @@ export default function Home() {
           <div className="mt-10 flex flex-wrap gap-3">
             <a
               href="#chart"
-              className="rounded-full bg-white/10 px-6 py-3 text-sm font-black text-white transition border border-white/10 hover:bg-white/15"
+              className="rounded-full border border-white/10 bg-white/10 px-6 py-3 text-sm font-black text-white transition hover:bg-white/15"
             >
               Track Momentum
             </a>
@@ -127,7 +124,7 @@ export default function Home() {
               href={LINKS.x}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition hover:bg-white/10 hover:text-white"
               aria-label="Open X"
               title="X"
             >
@@ -146,7 +143,7 @@ export default function Home() {
               href={LINKS.telegram}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition hover:bg-white/10 hover:text-white"
               aria-label="Open Telegram"
               title="Telegram"
             >
@@ -165,7 +162,7 @@ export default function Home() {
               href={LINKS.tiktok}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition border border-white/10 hover:bg-white/10 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition hover:bg-white/10 hover:text-white"
               aria-label="Open TikTok"
               title="TikTok"
             >
@@ -182,13 +179,13 @@ export default function Home() {
           </div>
 
           {/* CONTRACT */}
-          <div className="mt-12 rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
+          <div className="mt-12 rounded-3xl border border-white/10 bg-black/35 p-6 shadow-2xl backdrop-blur-xl">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
               Contract
             </p>
 
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="flex-1 rounded-2xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-white/85 break-all">
+              <div className="flex-1 break-all rounded-2xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-white/85">
                 {ADDR}
               </div>
 
@@ -206,17 +203,35 @@ export default function Home() {
           </div>
 
           {/* KEEP BUILDING sticker */}
-          <div className="my-10 flex justify-center">
-            <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-transform duration-300 hover:rotate-0 hover:scale-105 drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
-              <Image
-                src="/stickers/keep-building.webp"
-                alt="Keep Building"
-                fill
-                priority
-                sizes="140px"
-                className="object-contain"
-              />
-            </div>
+          <div className="my-10 flex flex-col items-center justify-center">
+            <Link
+              href={LINKS.stickers}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-block"
+              aria-label="Shop MAD Stickers"
+              title="Shop MAD Stickers"
+            >
+              <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+                <Image
+                  src="/stickers/keep-building.webp"
+                  alt="Keep Building"
+                  fill
+                  priority
+                  sizes="140px"
+                  className="object-contain"
+                />
+              </div>
+            </Link>
+
+            <Link
+              href={LINKS.stickers}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 text-center text-xs text-white/50 transition hover:text-white/80"
+            >
+              Shop MAD Stickers →
+            </Link>
           </div>
 
           {/* MAD CONFESSIONS */}
@@ -229,13 +244,13 @@ export default function Home() {
           ref={momentumRef}
           className="mt-16 animate-fadeUp scroll-mt-24"
         >
-          <div className="flex items-end justify-between gap-4 flex-wrap">
+          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
                 Live Chart
               </p>
 
-              <h2 className="mt-2 text-3xl sm:text-4xl font-black">
+              <h2 className="mt-2 text-3xl font-black sm:text-4xl">
                 Track{" "}
                 <span
                   className={`transition-colors duration-700 ${
@@ -263,8 +278,8 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl">
-            <div className="relative w-full aspect-[16/10] sm:aspect-[16/9]">
+          <div className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-2xl backdrop-blur-xl">
+            <div className="relative aspect-[16/10] w-full sm:aspect-[16/9]">
               {!iframeReady && (
                 <div className="absolute inset-0 grid place-items-center">
                   <div className="rounded-2xl border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/70">
