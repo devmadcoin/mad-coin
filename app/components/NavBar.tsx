@@ -1,4 +1,3 @@
-/* app/components/NavBar.tsx */
 "use client";
 
 import Link from "next/link";
@@ -14,7 +13,7 @@ export default function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 py-3">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         {/* Left brand */}
         <Link href="/" className="flex shrink-0 items-center gap-3">
           <span className="relative inline-flex h-9 w-9 overflow-hidden rounded-xl border border-white/10 bg-white/5">
@@ -31,14 +30,14 @@ export default function NavBar() {
           <div className="leading-tight">
             <div className="text-sm font-black">$MAD</div>
             <div className="text-[11px] text-white/50">
-              Digital emotion — refined
+              Swipe left to see more →
             </div>
           </div>
         </Link>
 
         {/* Right nav pills (mobile: swipeable) */}
-        <div className="flex-1 overflow-x-auto no-scrollbar ios-momentum touch-pan-x">
-          <div className="flex w-max items-center gap-2 whitespace-nowrap pl-1 pr-10">
+        <div className="flex-1 overflow-x-auto whitespace-nowrap no-scrollbar [-webkit-overflow-scrolling:touch]">
+          <div className="flex w-max items-center gap-2 pl-1 pr-10">
             <NavPill href="/" pathname={pathname}>
               Home
             </NavPill>
@@ -55,7 +54,6 @@ export default function NavBar() {
               Lore
             </NavPill>
 
-            {/* ✅ External Game link */}
             <ExternalPill href={ROBLOX_GAME_URL}>Game</ExternalPill>
           </div>
         </div>
@@ -84,10 +82,10 @@ function NavPill({
     <Link
       href={href}
       className={[
-        "shrink-0 select-none rounded-full px-4 py-2 text-sm font-semibold transition",
+        "shrink-0 select-none rounded-full border px-4 py-2 text-sm font-semibold transition",
         active
-          ? "bg-red-500/15 text-red-400 border border-red-500/40 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
-          : "border border-white/10 bg-white/5 text-white/90 hover:bg-white/10 hover:text-white",
+          ? "border-red-500/40 bg-red-500/15 text-red-400 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
+          : "border-white/10 bg-white/5 text-white/90 hover:bg-white/10 hover:text-white",
       ].join(" ")}
     >
       {children}
@@ -95,18 +93,24 @@ function NavPill({
   );
 }
 
-function ExternalPill({ href, children }: { href: string; children: ReactNode }) {
+function ExternalPill({
+  href,
+  children,
+}: {
+  href: string;
+  children: ReactNode;
+}) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
+      title="Open Roblox game"
       className={[
-        "shrink-0 select-none rounded-full px-4 py-2 text-sm font-semibold transition",
-        "border border-white/10 bg-white/5 text-white/90 hover:bg-white/10 hover:text-white",
+        "shrink-0 select-none rounded-full border px-4 py-2 text-sm font-semibold transition",
+        "border-white/10 bg-white/5 text-white/90 hover:bg-white/10 hover:text-white",
         "hover:border-red-500/30 hover:shadow-[0_0_12px_rgba(255,0,0,0.35)]",
       ].join(" ")}
-      title="Open Roblox game"
     >
       {children}
     </a>
