@@ -8,6 +8,8 @@ import type { ReactNode } from "react";
 const ROBLOX_GAME_URL =
   "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD";
 
+const MERCH_URL = "https://notaveragestickers.com/collections/mad";
+
 export default function NavBar() {
   const pathname = usePathname();
 
@@ -47,6 +49,9 @@ export default function NavBar() {
             <NavPill href="/forge" pathname={pathname}>
               Forge
             </NavPill>
+
+            <ExternalPill href={MERCH_URL}>Merch</ExternalPill>
+
             <NavPill href="/memes" pathname={pathname}>
               Memes
             </NavPill>
@@ -105,7 +110,6 @@ function ExternalPill({
       href={href}
       target="_blank"
       rel="noreferrer"
-      title="Open Roblox game"
       className={[
         "shrink-0 select-none rounded-full border px-4 py-2 text-sm font-semibold transition",
         "border-white/10 bg-white/5 text-white/90 hover:bg-white/10 hover:text-white",
