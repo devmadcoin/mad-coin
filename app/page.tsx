@@ -14,6 +14,8 @@ const LINKS = {
   tiktok: "https://www.tiktok.com/@devmadcoin",
   retailSticker:
     "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-sticker",
+  premiumCard:
+    "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-premium-embossed-card-wrap",
 } as const;
 
 export default function Home() {
@@ -203,36 +205,71 @@ export default function Home() {
             </p>
           </div>
 
-          {/* MAD sticker link */}
-          <div className="my-10 flex flex-col items-center justify-center">
-            <Link
-              href={LINKS.retailSticker}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-block"
-              aria-label="MAD Stickers"
-              title="MAD Stickers"
-            >
-              <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
-                <Image
-                  src="/stickers/Mad-Sticker-logo.png"
-                  alt="MAD Stickers"
-                  fill
-                  priority
-                  sizes="140px"
-                  className="object-contain"
-                />
-              </div>
-            </Link>
+          {/* MAD product links */}
+          <div className="my-12 grid grid-cols-1 gap-10 sm:grid-cols-2">
+            {/* 1 — MAD Sticker */}
+            <div className="flex flex-col items-center justify-center">
+              <Link
+                href={LINKS.retailSticker}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-block"
+                aria-label="MAD Stickers"
+                title="MAD Stickers"
+              >
+                <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+                  <Image
+                    src="/stickers/Mad-Sticker-logo.png"
+                    alt="MAD Stickers"
+                    fill
+                    priority
+                    sizes="140px"
+                    className="object-contain"
+                  />
+                </div>
+              </Link>
 
-            <Link
-              href={LINKS.retailSticker}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 text-center text-lg font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
-            >
-              MAD Stickers →
-            </Link>
+              <Link
+                href={LINKS.retailSticker}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-center text-lg font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+              >
+                MAD Stickers →
+              </Link>
+            </div>
+
+            {/* 2 — Premium Card Wrap */}
+            <div className="flex flex-col items-center justify-center">
+              <Link
+                href={LINKS.premiumCard}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-block"
+                aria-label="MAD Premium Card Wrap"
+                title="MAD Premium Card Wrap"
+              >
+                <div className="relative h-[140px] w-[140px] rotate-[3deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+                  <Image
+                    src="/stickers/Mad-Premium-Embossed-Card-Wrap.png"
+                    alt="MAD Premium Card Wrap"
+                    fill
+                    priority
+                    sizes="140px"
+                    className="object-contain"
+                  />
+                </div>
+              </Link>
+
+              <Link
+                href={LINKS.premiumCard}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-center text-lg font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+              >
+                Card Wrap →
+              </Link>
+            </div>
           </div>
 
           {/* MAD CONFESSIONS */}
