@@ -16,6 +16,8 @@ const LINKS = {
     "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-sticker",
   premiumCard:
     "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-premium-embossed-card-wrap",
+  richPremiumCard:
+    "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-premium-embossed-card-wrap-copy",
 } as const;
 
 export default function Home() {
@@ -206,7 +208,7 @@ export default function Home() {
           </div>
 
           {/* MAD product links */}
-          <div className="my-12 grid grid-cols-1 gap-10 sm:grid-cols-2">
+          <div className="my-12 grid grid-cols-1 gap-10 sm:grid-cols-3">
             {/* 1 — MAD Sticker */}
             <div className="flex flex-col items-center justify-center">
               <Link
@@ -268,6 +270,38 @@ export default function Home() {
                 className="mt-3 text-center text-lg font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
               >
                 Card Wrap →
+              </Link>
+            </div>
+
+            {/* 3 — Rich Premium Card Wrap */}
+            <div className="flex flex-col items-center justify-center">
+              <Link
+                href={LINKS.richPremiumCard}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-block"
+                aria-label="MAD Rich Card Wrap"
+                title="MAD Rich Card Wrap"
+              >
+                <div className="relative h-[140px] w-[140px] rotate-[-3deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+                  <Image
+                    src="/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png"
+                    alt="MAD Rich Card Wrap"
+                    fill
+                    priority
+                    sizes="140px"
+                    className="object-contain"
+                  />
+                </div>
+              </Link>
+
+              <Link
+                href={LINKS.richPremiumCard}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-center text-lg font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+              >
+                Rich Wrap →
               </Link>
             </div>
           </div>
