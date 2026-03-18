@@ -203,20 +203,20 @@ export default function Home() {
             </p>
           </div>
 
-          {/* MAD sticker retail link */}
+          {/* MAD sticker link */}
           <div className="my-10 flex flex-col items-center justify-center">
             <Link
               href={LINKS.retailSticker}
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-block"
-              aria-label="MAD Stickers for Retail"
-              title="MAD Stickers for Retail"
+              aria-label="MAD Stickers"
+              title="MAD Stickers"
             >
               <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
                 <Image
                   src="/stickers/Mad-Sticker-logo.png"
-                  alt="MAD Stickers for Retail"
+                  alt="MAD Stickers"
                   fill
                   priority
                   sizes="140px"
@@ -229,9 +229,9 @@ export default function Home() {
               href={LINKS.retailSticker}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 text-center text-sm font-semibold text-white/70 transition hover:text-white"
+              className="mt-3 text-center text-lg font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
             >
-              MAD Stickers for Retail →
+              MAD Stickers →
             </Link>
           </div>
 
