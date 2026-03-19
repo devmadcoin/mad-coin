@@ -340,7 +340,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* SLIDING COINGECKO STRIP */}
+          {/* SLIDING ECOSYSTEM STRIP */}
           <section className="mt-12 overflow-hidden rounded-3xl border border-white/10 bg-black/25 py-6 shadow-2xl backdrop-blur-xl">
             <div className="mb-4 text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/40">
@@ -353,7 +353,7 @@ export default function Home() {
               <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-black/90 to-transparent" />
 
               <div className="logo-marquee flex w-max items-center gap-12 px-2">
-                {[...Array(6)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <React.Fragment key={i}>
                     <div className="flex h-16 items-center rounded-2xl border border-white/10 bg-white px-6 shadow-lg">
                       <Image
@@ -361,6 +361,16 @@ export default function Home() {
                         alt="CoinGecko"
                         width={170}
                         height={50}
+                        className="h-auto w-auto object-contain"
+                      />
+                    </div>
+
+                    <div className="flex h-16 items-center rounded-2xl border border-white/10 bg-black px-6 shadow-lg">
+                      <Image
+                        src="/logos/birdeye.png"
+                        alt="Birdeye"
+                        width={150}
+                        height={44}
                         className="h-auto w-auto object-contain"
                       />
                     </div>
