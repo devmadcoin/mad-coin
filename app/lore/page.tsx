@@ -43,6 +43,12 @@ const EVENTS: LoreEvent[] = [
     accent: "amber",
   },
   {
+    date: "Feb 15, 2026",
+    title: "THE MADNESS BECAME VISIBLE",
+    desc: "$MAD was officially listed on CoinGecko. What began as raw emotion and signal could now be tracked by the wider world. Visibility increased. The madness became impossible to ignore.",
+    accent: "amber",
+  },
+  {
     date: "Feb 14, 2026",
     title: "RECLAMATION",
     desc: "Telegram ownership was secured for $200 to retain members and avoid disruption. Not ego—responsibility.",
@@ -105,7 +111,7 @@ export default function LorePage() {
     <div className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
 
-      <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
             LORE
@@ -115,7 +121,7 @@ export default function LorePage() {
             The <AccentText>$MAD</AccentText> Chronicle
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl text-white/65 leading-relaxed">
+          <p className="mx-auto mt-5 max-w-2xl leading-relaxed text-white/65">
             Not a dev log. A founder chronicle. Structure before hype. Discipline
             over panic.
           </p>
@@ -137,7 +143,7 @@ export default function LorePage() {
           {EVENTS.map((e, idx) => (
             <div
               key={idx}
-              className="rounded-3xl border border-white/10 bg-black/30 p-6 backdrop-blur-xl shadow-2xl"
+              className="rounded-3xl border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur-xl"
             >
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
                 {e.date}
@@ -147,7 +153,7 @@ export default function LorePage() {
                 <AccentText tone={e.accent}>{e.title}</AccentText>
               </h3>
 
-              <p className="mt-3 text-white/75 leading-relaxed">{e.desc}</p>
+              <p className="mt-3 leading-relaxed text-white/75">{e.desc}</p>
             </div>
           ))}
 
@@ -165,14 +171,14 @@ export default function LorePage() {
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-black/35 p-8 text-center shadow-2xl">
-            <h3 className="text-3xl sm:text-4xl font-black text-white">
+            <h3 className="text-3xl font-black text-white sm:text-4xl">
               You Can Delete A Channel.
             </h3>
 
             <p className="mt-4 text-white/70">
               But you can’t delete belief.
               <br />
-              And <span className="text-red-500 font-bold">$MAD</span> doesn’t
+              And <span className="font-bold text-red-500">$MAD</span> doesn’t
               reset.
             </p>
           </div>
