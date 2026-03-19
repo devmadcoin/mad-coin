@@ -8,6 +8,27 @@ type ArtItem = {
 };
 
 const ART: ArtItem[] = [
+  // New $MAD art first
+  { src: "/memes/MAD-ARMY.png", title: "MAD Army" },
+  { src: "/memes/MAD-AT-BEARS.png", title: "MAD at Bears" },
+  { src: "/memes/MAD-BELIEVE.png", title: "MAD Believe" },
+  { src: "/memes/MAD-BELIEVING.png", title: "MAD Believing" },
+  { src: "/memes/MAD-COMMUNITY.png", title: "MAD Community" },
+  { src: "/memes/MAD-DOCTOR.png", title: "MAD Doctor" },
+  { src: "/memes/MAD-DOLLAR.png", title: "MAD Dollar" },
+  {
+    src: "/memes/MAD-HOLD-ON-DEAR-LIFE.png",
+    title: "MAD Hold On Dear Life",
+  },
+  { src: "/memes/MAD-MONTH.png", title: "MAD Month" },
+  { src: "/memes/MAD-RICH-OR-BROKE.png", title: "MAD Rich or Broke" },
+  { src: "/memes/MAD-SCHOOL.png", title: "MAD School" },
+  { src: "/memes/MAD-YOU-SIDELINED.png", title: "MAD You Sidelined" },
+  { src: "/memes/MAKE-MAD-GREAT-AGAIN.png", title: "Make MAD Great Again" },
+  { src: "/memes/YOU-MAKE-ME-MAD.png", title: "You Make Me MAD" },
+  { src: "/memes/YOU-WILL-BE-MAD.png", title: "You Will Be MAD" },
+
+  // Older pieces after
   { src: "/memes/mad-meme-alarm.png", title: "Alarm" },
   { src: "/memes/mad-meme-chipsbagofair.png", title: "Chips Bag of Air" },
   { src: "/memes/mad-meme-coffeehot.png", title: "Coffee Too Hot" },
@@ -82,7 +103,7 @@ export default function MemesPage() {
                 className="block"
                 title="Open full size"
               >
-                <div className="relative aspect-[16/9] w-full">
+                <div className="relative aspect-[4/5] w-full">
                   <Image
                     src={item.src}
                     alt={item.title}
