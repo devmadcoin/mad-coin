@@ -52,6 +52,25 @@
   animation: fadeUp 700ms ease-out both;
 }
 
+/* Sliding logo marquee */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.logo-marquee {
+  animation: scroll-left 22s linear infinite;
+  will-change: transform;
+}
+
+.logo-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* ================================
    $MAD Animated Orange Progress Bar
    ================================ */
@@ -114,7 +133,7 @@
   touch-action: pan-x;
 }
 
-/* Optional: if you want pills to “snap” nicely as you swipe */
+/* Optional: if you want pills to snap nicely as you swipe */
 .snap-x {
   scroll-snap-type: x mandatory;
 }
@@ -136,6 +155,10 @@
   }
 
   .animate-fadeUp {
+    animation: none;
+  }
+
+  .logo-marquee {
     animation: none;
   }
 
