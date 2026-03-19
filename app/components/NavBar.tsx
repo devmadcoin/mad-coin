@@ -38,14 +38,16 @@ export default function NavBar() {
         </Link>
 
         {/* Right nav pills (mobile: swipeable) */}
-        <div className="flex-1 overflow-x-auto whitespace-nowrap no-scrollbar [-webkit-overflow-scrolling:touch]">
+        <div className="no-scrollbar flex-1 overflow-x-auto whitespace-nowrap [-webkit-overflow-scrolling:touch]">
           <div className="flex w-max items-center gap-2 pl-1 pr-10">
             <NavPill href="/" pathname={pathname}>
               Home
             </NavPill>
+
             <NavPill href="/roadmap" pathname={pathname}>
               Roadmap
             </NavPill>
+
             <NavPill href="/forge" pathname={pathname}>
               Forge
             </NavPill>
@@ -53,8 +55,9 @@ export default function NavBar() {
             <ExternalPill href={MERCH_URL}>Merch</ExternalPill>
 
             <NavPill href="/memes" pathname={pathname}>
-              Memes
+              $MAD Art
             </NavPill>
+
             <NavPill href="/lore" pathname={pathname}>
               Lore
             </NavPill>
