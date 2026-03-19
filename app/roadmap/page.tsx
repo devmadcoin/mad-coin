@@ -24,13 +24,18 @@ function statusChip(status: Status) {
       cls: "bg-emerald-500/15 text-emerald-200 border-emerald-500/25",
     };
   }
+
   if (status === "in_progress") {
     return {
       label: "In Progress",
       cls: "bg-white/10 text-white/75 border-white/10",
     };
   }
-  return { label: "Planned", cls: "bg-white/5 text-white/60 border-white/10" };
+
+  return {
+    label: "Planned",
+    cls: "bg-white/5 text-white/60 border-white/10",
+  };
 }
 
 function phaseBarWidth(status: Status) {
@@ -56,20 +61,26 @@ export default function RoadmapPage() {
       },
       {
         phase: "PHASE 1.3",
-        title: "400M Token Burn",
-        desc: "Burned 400,000,000 tokens reaching a 40% burn rate and strengthening the anti-rug structure.",
+        title: "450M Token Burn",
+        desc: "Burned 450,000,000 tokens reaching a 45% burn rate and strengthening the anti-rug structure.",
         status: "complete",
       },
       {
         phase: "PHASE 1.4",
-        title: "Acquire + Support",
-        desc: "Acquire 8,000,000 supply and support 1 community through $MAD.",
-        status: "planned",
+        title: "Listed on CoinGecko",
+        desc: "$MAD became officially trackable on CoinGecko, increasing visibility and expanding signal beyond the core community.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 1.5",
+        title: "Physical Sticker Merchandise",
+        desc: "Launch physical $MAD sticker merch for the community.",
+        status: "complete",
       },
       {
         phase: "PHASE 2",
-        title: "Physical Sticker Merchandise",
-        desc: "Launch physical $MAD sticker merch for the community.",
+        title: "Acquire + Support",
+        desc: "Acquire 8,000,000 supply and support 1 community through $MAD.",
         status: "planned",
       },
       {
@@ -80,30 +91,6 @@ export default function RoadmapPage() {
       },
       {
         phase: "PHASE 4",
-        title: "Reach $1M Market Cap",
-        desc: "Hit a $1,000,000 market cap milestone through disciplined growth.",
-        status: "planned",
-      },
-      {
-        phase: "PHASE 5",
-        title: "Reach $25M + $MAD Tattoo",
-        desc: "Hit $25,000,000 market cap and get a $MAD tattoo.",
-        status: "planned",
-      },
-      {
-        phase: "PHASE 6",
-        title: "Reach $50M Market Cap",
-        desc: "Hit a $50,000,000 market cap milestone.",
-        status: "planned",
-      },
-      {
-        phase: "PHASE 7",
-        title: "Reach $100M Market Cap",
-        desc: "Hit a $100,000,000 market cap milestone.",
-        status: "planned",
-      },
-      {
-        phase: "PHASE 8",
         title: "Burn 800M Tokens",
         desc: "The long-term mission. Push total tokens burned to 800,000,000 following the challenge issued during the Gork moment.",
         status: "in_progress",
@@ -122,7 +109,7 @@ export default function RoadmapPage() {
     <div className="relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
 
-      <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-24">
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16">
         <div className="mx-auto max-w-3xl animate-fadeUp">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/60">
             STRUCTURE BEFORE HYPE.
@@ -135,13 +122,13 @@ export default function RoadmapPage() {
             Roadmap
           </h1>
 
-          <p className="mt-5 max-w-xl text-white/70 leading-relaxed">
+          <p className="mt-5 max-w-xl leading-relaxed text-white/70">
             Anti-rug architecture. Controlled expansion. Disciplined growth.
           </p>
         </div>
 
         <div className="mt-10 animate-fadeUp">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 backdrop-blur-xl shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 shadow-2xl backdrop-blur-xl">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
               OVERALL PROGRESS
             </p>
@@ -161,7 +148,7 @@ export default function RoadmapPage() {
               />
             </div>
 
-            <div className="mt-6 w-full max-w-2xl mx-auto">
+            <div className="mx-auto mt-6 w-full max-w-2xl">
               <div className="flex items-center gap-4">
                 <div className="mad-progress-track flex-1">
                   <div
@@ -198,19 +185,21 @@ function RoadmapCard({ item }: { item: RoadmapItem }) {
 
   return (
     <div className="animate-fadeUp">
-      <div className="rounded-3xl border border-white/10 bg-black/30 p-6 backdrop-blur-xl shadow-2xl">
+      <div className="rounded-3xl border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur-xl">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
               {item.phase}
             </p>
+
             <h3 className="mt-3 text-3xl font-black">{item.title}</h3>
+
             <p className="mt-3 text-white/70">{item.desc}</p>
           </div>
 
           <div
             className={[
-              "shrink-0 rounded-full px-4 py-2 text-xs font-semibold border",
+              "shrink-0 rounded-full border px-4 py-2 text-xs font-semibold",
               chip.cls,
             ].join(" ")}
           >
@@ -219,7 +208,7 @@ function RoadmapCard({ item }: { item: RoadmapItem }) {
         </div>
 
         <div className="mt-6">
-          <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden border border-white/10">
+          <div className="h-2 w-full overflow-hidden rounded-full border border-white/10 bg-white/5">
             <div
               className={[
                 "h-full rounded-full",
