@@ -12,6 +12,10 @@ const LINKS = {
   telegram: "https://t.me/MadOfficalChannel",
   x: "https://x.com/devmadcoin",
   tiktok: "https://www.tiktok.com/@devmadcoin",
+  coingecko:
+    "https://www.coingecko.com/en/coins/mad-coin",
+  birdeye: `https://birdeye.so/token/${ADDR}?chain=solana`,
+  jupiter: `https://jup.ag/swap/SOL-${ADDR}`,
   retailSticker:
     "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-sticker",
   premiumCard:
@@ -21,6 +25,49 @@ const LINKS = {
   peeker:
     "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-peeker",
 } as const;
+
+const ecosystemItems = [
+  {
+    name: "Dexscreener",
+    href: LINKS.chartPage,
+    src: "/logos/DEX-screener.png",
+    alt: "Dexscreener",
+    width: 170,
+    height: 50,
+    cardClass: "bg-black",
+    imageClass: "h-auto w-auto object-contain",
+  },
+  {
+    name: "CoinGecko",
+    href: LINKS.coingecko,
+    src: "/logos/coingecko.png",
+    alt: "CoinGecko",
+    width: 170,
+    height: 50,
+    cardClass: "bg-white",
+    imageClass: "h-auto w-auto object-contain",
+  },
+  {
+    name: "Birdeye",
+    href: LINKS.birdeye,
+    src: "/logos/birdeye.png",
+    alt: "Birdeye",
+    width: 150,
+    height: 44,
+    cardClass: "bg-black",
+    imageClass: "h-auto w-auto object-contain",
+  },
+  {
+    name: "Jupiter",
+    href: LINKS.jupiter,
+    src: "/logos/jupiter.png",
+    alt: "Jupiter",
+    width: 150,
+    height: 44,
+    cardClass: "bg-black",
+    imageClass: "h-auto w-auto object-contain",
+  },
+] as const;
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
@@ -355,35 +402,25 @@ export default function Home() {
               <div className="logo-marquee flex w-max items-center gap-12 px-2">
                 {[...Array(4)].map((_, i) => (
                   <React.Fragment key={i}>
-                    <div className="flex h-16 items-center rounded-2xl border border-white/10 bg-white px-6 shadow-lg">
-                      <Image
-                        src="/logos/coingecko.png"
-                        alt="CoinGecko"
-                        width={170}
-                        height={50}
-                        className="h-auto w-auto object-contain"
-                      />
-                    </div>
-
-                    <div className="flex h-16 items-center rounded-2xl border border-white/10 bg-black px-6 shadow-lg">
-                      <Image
-                        src="/logos/birdeye.png"
-                        alt="Birdeye"
-                        width={150}
-                        height={44}
-                        className="h-auto w-auto object-contain"
-                      />
-                    </div>
-
-                    <div className="flex h-16 items-center rounded-2xl border border-white/10 bg-black px-6 shadow-lg">
-                      <Image
-                        src="/logos/jupiter.png"
-                        alt="Jupiter"
-                        width={150}
-                        height={44}
-                        className="h-auto w-auto object-contain"
-                      />
-                    </div>
+                    {ecosystemItems.map((item) => (
+                      <a
+                        key={`${item.name}-${i}`}
+                        href={item.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Open ${item.name}`}
+                        title={item.name}
+                        className={`group flex h-16 items-center rounded-2xl border border-white/10 px-6 shadow-lg transition-transform duration-300 hover:scale-105 ${item.cardClass}`}
+                      >
+                        <Image
+                          src={item.src}
+                          alt={item.alt}
+                          width={item.width}
+                          height={item.height}
+                          className={item.imageClass}
+                        />
+                      </a>
+                    ))}
                   </React.Fragment>
                 ))}
               </div>
