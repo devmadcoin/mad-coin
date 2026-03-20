@@ -374,6 +374,16 @@ export default function Home() {
                         className="h-auto w-auto object-contain"
                       />
                     </div>
+
+                    <div className="flex h-16 items-center rounded-2xl border border-white/10 bg-black px-6 shadow-lg">
+                      <Image
+                        src="/logos/jupiter.png"
+                        alt="Jupiter"
+                        width={150}
+                        height={44}
+                        className="h-auto w-auto object-contain"
+                      />
+                    </div>
                   </React.Fragment>
                 ))}
               </div>
