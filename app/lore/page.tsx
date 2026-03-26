@@ -13,6 +13,12 @@ type LoreEvent = {
 
 const EVENTS: LoreEvent[] = [
   {
+    date: "Mar 19, 2026",
+    title: "VERIFIED BY JUPITER",
+    desc: "$MAD was officially verified on Jupiter. What began as chaos was now recognized by the system itself. Not because it changed—but because it became impossible to ignore.",
+    accent: "amber",
+  },
+  {
     date: "Mar 4, 2026",
     title: "THE GORK MOMENT",
     desc: "After the 400M burn milestone, the $MAD dev grew frustrated seeing Gork publicly favor another project ($pigeon) over $MAD. The dev confronted him directly. Gork responded casually: 'lmao yeah burn that 800m.' What began as a jab instantly became the next mission. On March 4th, the journey toward burning 800,000,000 total $MAD officially began.",
