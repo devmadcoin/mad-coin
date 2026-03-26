@@ -12,10 +12,10 @@ const LINKS = {
   telegram: "https://t.me/MadOfficalChannel",
   x: "https://x.com/devmadcoin",
   tiktok: "https://www.tiktok.com/@devmadcoin",
-  coingecko:
-    "https://www.coingecko.com/en/coins/mad-coin",
+  coingecko: "https://www.coingecko.com/en/coins/mad-coin",
   birdeye: `https://birdeye.so/token/${ADDR}?chain=solana`,
   jupiter: `https://jup.ag/swap/SOL-${ADDR}`,
+  solscan: `https://solscan.io/token/${ADDR}`,
   retailSticker:
     "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-sticker",
   premiumCard:
@@ -65,6 +65,16 @@ const ecosystemItems = [
     width: 150,
     height: 44,
     cardClass: "bg-black",
+    imageClass: "h-auto w-auto object-contain",
+  },
+  {
+    name: "Solscan",
+    href: LINKS.solscan,
+    src: "/logos/solscan.png",
+    alt: "Solscan",
+    width: 150,
+    height: 44,
+    cardClass: "bg-white",
     imageClass: "h-auto w-auto object-contain",
   },
 ] as const;
@@ -131,14 +141,11 @@ export default function Home() {
 
   return (
     <div className="relative overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
       <div className="absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
       <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16">
-        {/* HERO */}
         <div className="relative max-w-3xl animate-fadeUp">
-          {/* GM sticker (desktop only) */}
           <div className="pointer-events-none absolute right-[-260px] top-6 hidden h-[280px] w-[280px] opacity-95 lg:block">
             <Image
               src="/stickers/gm.webp"
@@ -165,7 +172,6 @@ export default function Home() {
             Emotion evolves. Born in volatility. Refined through discipline.
           </p>
 
-          {/* ACTION BUTTONS */}
           <div className="mt-10 flex flex-wrap gap-3">
             <a
               href="#chart"
@@ -232,7 +238,6 @@ export default function Home() {
             </a>
           </div>
 
-          {/* CONTRACT */}
           <div className="mt-12 rounded-3xl border border-white/10 bg-black/35 p-6 shadow-2xl backdrop-blur-xl">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
               Contract
@@ -256,9 +261,7 @@ export default function Home() {
             </p>
           </div>
 
-          {/* MAD product links */}
           <div className="my-12 grid grid-cols-2 gap-8 sm:grid-cols-4">
-            {/* 1 — MAD Sticker */}
             <div className="flex flex-col items-center justify-start">
               <Link
                 href={LINKS.retailSticker}
@@ -290,7 +293,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* 2 — Premium Card Wrap */}
             <div className="flex flex-col items-center justify-start">
               <Link
                 href={LINKS.premiumCard}
@@ -322,7 +324,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* 3 — Rich Premium Card Wrap */}
             <div className="flex flex-col items-center justify-start">
               <Link
                 href={LINKS.richPremiumCard}
@@ -354,7 +355,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* 4 — Peeker */}
             <div className="flex flex-col items-center justify-start">
               <Link
                 href={LINKS.peeker}
@@ -387,7 +387,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* SLIDING ECOSYSTEM STRIP */}
           <section className="mt-12 overflow-hidden rounded-3xl border border-white/10 bg-black/25 py-6 shadow-2xl backdrop-blur-xl">
             <div className="mb-4 text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/40">
@@ -427,11 +426,9 @@ export default function Home() {
             </div>
           </section>
 
-          {/* MAD CONFESSIONS */}
           <MadConfessions />
         </div>
 
-        {/* CHART */}
         <section
           id="chart"
           ref={momentumRef}
