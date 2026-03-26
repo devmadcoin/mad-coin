@@ -120,7 +120,7 @@ export default function Home() {
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1200);
     } catch {
-      // If copying fails, do nothing
+      // do nothing
     }
   }
 
@@ -144,7 +144,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
       <div className="absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16">
+      <div className="relative mx-auto max-w-6xl px-4 pb-24 pt-12 sm:px-6 sm:pt-16">
         <div className="relative max-w-3xl animate-fadeUp">
           <div className="pointer-events-none absolute right-[-260px] top-6 hidden h-[280px] w-[280px] opacity-95 lg:block">
             <Image
@@ -161,21 +161,21 @@ export default function Home() {
             SOLANA • Digital emotion — refined
           </p>
 
-          <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
+          <h1 className="mt-5 text-5xl font-black tracking-tight sm:mt-6 sm:text-7xl">
             Welcome To{" "}
             <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.6)]">
               $MAD
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl leading-relaxed text-white/70">
+          <p className="mt-5 max-w-xl leading-relaxed text-white/70 sm:mt-6">
             Emotion evolves. Born in volatility. Refined through discipline.
           </p>
 
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3 sm:mt-10">
             <a
               href="#chart"
-              className="rounded-full border border-white/10 bg-white/10 px-6 py-3 text-sm font-black text-white transition hover:bg-white/15"
+              className="rounded-full border border-white/10 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white/15 sm:px-6"
             >
               Track Momentum
             </a>
@@ -184,7 +184,7 @@ export default function Home() {
               href={LINKS.x}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition hover:bg-white/10 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-black text-white/90 transition hover:bg-white/10 hover:text-white sm:px-6"
               aria-label="Open X"
               title="X"
             >
@@ -203,7 +203,7 @@ export default function Home() {
               href={LINKS.telegram}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition hover:bg-white/10 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-black text-white/90 transition hover:bg-white/10 hover:text-white sm:px-6"
               aria-label="Open Telegram"
               title="Telegram"
             >
@@ -222,7 +222,7 @@ export default function Home() {
               href={LINKS.tiktok}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-black text-white/90 transition hover:bg-white/10 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-black text-white/90 transition hover:bg-white/10 hover:text-white sm:px-6"
               aria-label="Open TikTok"
               title="TikTok"
             >
@@ -238,7 +238,7 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="mt-12 rounded-3xl border border-white/10 bg-black/35 p-6 shadow-2xl backdrop-blur-xl">
+          <div className="mt-10 rounded-3xl border border-white/10 bg-black/35 p-5 shadow-2xl backdrop-blur-xl sm:mt-12 sm:p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
               Contract
             </p>
@@ -261,7 +261,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="my-12 grid grid-cols-2 gap-8 sm:grid-cols-4">
+          <div className="my-10 grid grid-cols-2 gap-6 sm:my-12 sm:grid-cols-4 sm:gap-8">
             <div className="flex flex-col items-center justify-start">
               <Link
                 href={LINKS.retailSticker}
@@ -271,13 +271,13 @@ export default function Home() {
                 aria-label="MAD Stickers"
                 title="MAD Stickers"
               >
-                <div className="relative h-[140px] w-[140px] rotate-[-4deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+                <div className="relative h-[120px] w-[120px] rotate-[-4deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] sm:h-[140px] sm:w-[140px]">
                   <Image
                     src="/stickers/Mad-Sticker-logo.png"
                     alt="MAD Stickers"
                     fill
                     priority
-                    sizes="140px"
+                    sizes="(max-width: 640px) 120px, 140px"
                     className="object-contain"
                   />
                 </div>
@@ -287,7 +287,7 @@ export default function Home() {
                 href={LINKS.retailSticker}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 text-center text-base font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+                className="mt-3 text-center text-sm font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] sm:text-base"
               >
                 MAD Stickers →
               </Link>
@@ -302,13 +302,13 @@ export default function Home() {
                 aria-label="MAD Premium Card Wrap"
                 title="MAD Premium Card Wrap"
               >
-                <div className="relative h-[140px] w-[140px] rotate-[3deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+                <div className="relative h-[120px] w-[120px] rotate-[3deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] sm:h-[140px] sm:w-[140px]">
                   <Image
                     src="/stickers/Mad-Premium-Embossed-Card-Wrap.png"
                     alt="MAD Premium Card Wrap"
                     fill
                     priority
-                    sizes="140px"
+                    sizes="(max-width: 640px) 120px, 140px"
                     className="object-contain"
                   />
                 </div>
@@ -318,7 +318,7 @@ export default function Home() {
                 href={LINKS.premiumCard}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 text-center text-base font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+                className="mt-3 text-center text-sm font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] sm:text-base"
               >
                 Card Wrap →
               </Link>
@@ -333,13 +333,13 @@ export default function Home() {
                 aria-label="MAD Rich Card Wrap"
                 title="MAD Rich Card Wrap"
               >
-                <div className="relative h-[140px] w-[140px] rotate-[-3deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+                <div className="relative h-[120px] w-[120px] rotate-[-3deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] sm:h-[140px] sm:w-[140px]">
                   <Image
                     src="/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png"
                     alt="MAD Rich Card Wrap"
                     fill
                     priority
-                    sizes="140px"
+                    sizes="(max-width: 640px) 120px, 140px"
                     className="object-contain"
                   />
                 </div>
@@ -349,7 +349,7 @@ export default function Home() {
                 href={LINKS.richPremiumCard}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 text-center text-base font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+                className="mt-3 text-center text-sm font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] sm:text-base"
               >
                 Rich Wrap →
               </Link>
@@ -364,13 +364,13 @@ export default function Home() {
                 aria-label="MAD Peeker"
                 title="MAD Peeker"
               >
-                <div className="relative h-[140px] w-[140px] rotate-[2deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
+                <div className="relative h-[120px] w-[120px] rotate-[2deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] sm:h-[140px] sm:w-[140px]">
                   <Image
                     src="/stickers/Mad-Peeker.png"
                     alt="MAD Peeker"
                     fill
                     priority
-                    sizes="140px"
+                    sizes="(max-width: 640px) 120px, 140px"
                     className="object-contain"
                   />
                 </div>
@@ -380,7 +380,7 @@ export default function Home() {
                 href={LINKS.peeker}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 text-center text-base font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)]"
+                className="mt-3 text-center text-sm font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] sm:text-base"
               >
                 Peeker →
               </Link>
@@ -394,11 +394,35 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="relative overflow-hidden">
+            <div className="sm:hidden">
+              <div className="flex gap-4 overflow-x-auto px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {ecosystemItems.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Open ${item.name}`}
+                    title={item.name}
+                    className={`flex h-12 shrink-0 items-center rounded-2xl border border-white/10 px-4 shadow-lg ${item.cardClass}`}
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      width={item.width}
+                      height={item.height}
+                      className="h-auto w-auto object-contain"
+                    />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative hidden overflow-hidden sm:block">
               <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-black/90 to-transparent" />
               <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-black/90 to-transparent" />
 
-              <div className="logo-marquee flex w-max items-center gap-12 px-2">
+              <div className="logo-marquee flex w-max items-center gap-8 px-2 lg:gap-12">
                 {[...Array(4)].map((_, i) => (
                   <React.Fragment key={i}>
                     {ecosystemItems.map((item) => (
@@ -409,7 +433,7 @@ export default function Home() {
                         rel="noreferrer"
                         aria-label={`Open ${item.name}`}
                         title={item.name}
-                        className={`group flex h-16 items-center rounded-2xl border border-white/10 px-6 shadow-lg transition-transform duration-300 hover:scale-105 ${item.cardClass}`}
+                        className={`group flex h-14 items-center rounded-2xl border border-white/10 px-5 shadow-lg transition-transform duration-300 hover:scale-105 lg:h-16 lg:px-6 ${item.cardClass}`}
                       >
                         <Image
                           src={item.src}
