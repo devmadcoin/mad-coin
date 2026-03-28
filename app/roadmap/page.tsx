@@ -1,4 +1,3 @@
-/* app/roadmap/page.tsx */
 "use client";
 
 import React, { useMemo } from "react";
@@ -73,6 +72,12 @@ export default function RoadmapPage() {
       },
       {
         phase: "PHASE 1.5",
+        title: "Listed on Jupiter",
+        desc: "$MAD became accessible on Jupiter, one of Solana’s core trading layers. The signal was no longer just visible — it became easier to enter and trade within the system.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 1.6",
         title: "Physical Sticker Merchandise",
         desc: "Launch physical $MAD sticker merch for the community.",
         status: "complete",
