@@ -1,4 +1,3 @@
-/* app/lore/page.tsx */
 "use client";
 
 import React from "react";
@@ -12,6 +11,12 @@ type LoreEvent = {
 };
 
 const EVENTS: LoreEvent[] = [
+  {
+    date: "Mar 2026",
+    title: "THE FIRST MAD GAMES",
+    desc: "The first MAD Games was held inside Roblox — a live experiment where chaos met competition. Players entered the arena for a chance to earn real SOL. 6 winners emerged from the madness, splitting a 3.5 SOL prize pool. First place secured 1 SOL, establishing the first hierarchy of skill, timing, and survival. This marked a shift: $MAD was no longer just a token… it had become a game.",
+    accent: "red",
+  },
   {
     date: "Mar 19, 2026",
     title: "VERIFIED BY JUPITER",
