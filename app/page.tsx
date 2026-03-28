@@ -243,7 +243,21 @@ export default function Home() {
               Contract
             </p>
 
-            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-5 flex justify-center">
+              <div className="relative overflow-hidden rounded-2xl border border-red-500/20 bg-black/30 p-2 shadow-[0_0_25px_rgba(255,0,0,0.15)]">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="h-20 w-auto rounded-xl object-contain sm:h-24"
+                >
+                  <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                </video>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="flex-1 break-all rounded-2xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-white/85">
                 {ADDR}
               </div>
