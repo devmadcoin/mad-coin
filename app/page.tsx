@@ -155,32 +155,48 @@ export default function Home() {
               SOLANA • MEME SIGNAL • CONTROLLED CHAOS
             </p>
 
-            <div className="mt-8 flex justify-center">
-              <div className="mad-ticker-stack">
-                <div className="mad-ticker-wrap">
-                  <div className="mad-ticker-icon" aria-hidden="true">
-                    <span className="mad-ticker-icon-glow" />
-                    <Image
-                      src="/icons/mad-icon.png"
-                      alt="$MAD icon"
-                      width={46}
-                      height={46}
-                      className="relative z-10 h-8 w-8 object-contain sm:h-11 sm:w-11"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                    />
-                    <span className="mad-fallback-icon relative z-10">😡</span>
-                  </div>
+            <div className="mt-8 flex flex-col items-center justify-center gap-5">
+              <div className="mad-hero-video-wrap">
+                <div className="relative overflow-hidden rounded-2xl border border-red-500/20 bg-black/30 p-2 shadow-[0_0_25px_rgba(255,0,0,0.15)]">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="h-20 w-auto rounded-xl object-contain sm:h-24"
+                  >
+                    <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                  </video>
+                </div>
+              </div>
 
-                  <div className="mad-wordmark" aria-label="$MAD">
-                    <span className="mad-wordmark-base">$MAD</span>
-                    <span className="mad-wordmark-glitch mad-wordmark-glitch-a">
-                      $MAD
-                    </span>
-                    <span className="mad-wordmark-glitch mad-wordmark-glitch-b">
-                      $MAD
-                    </span>
+              <div className="flex w-full justify-center">
+                <div className="mad-ticker-stack">
+                  <div className="mad-ticker-wrap">
+                    <div className="mad-ticker-icon" aria-hidden="true">
+                      <span className="mad-ticker-icon-glow" />
+                      <Image
+                        src="/icons/mad-icon.png"
+                        alt="$MAD icon"
+                        width={46}
+                        height={46}
+                        className="relative z-10 h-8 w-8 object-contain sm:h-11 sm:w-11"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                      <span className="mad-fallback-icon relative z-10">😡</span>
+                    </div>
+
+                    <div className="mad-wordmark" aria-label="$MAD">
+                      <span className="mad-wordmark-base">$MAD</span>
+                      <span className="mad-wordmark-glitch mad-wordmark-glitch-a">
+                        $MAD
+                      </span>
+                      <span className="mad-wordmark-glitch mad-wordmark-glitch-b">
+                        $MAD
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -266,33 +282,17 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-10 space-y-10 max-w-full">
+        <div className="mt-10 max-w-full space-y-10">
           <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">
-                  Fuel the Fire
-                </p>
-                <h2 className="mt-2 text-2xl font-black sm:text-3xl">
-                  You&apos;re <span className="text-red-500">$MAD</span>.
-                  <br />
-                  Grab Some Merch
-                </h2>
-              </div>
-
-              <div className="hidden sm:block">
-                <div className="relative overflow-hidden rounded-2xl border border-red-500/20 bg-black/30 p-2 shadow-[0_0_25px_rgba(255,0,0,0.15)]">
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="h-16 w-auto rounded-xl object-contain"
-                  >
-                    <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-                  </video>
-                </div>
-              </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">
+                Fuel the Fire
+              </p>
+              <h2 className="mt-2 text-2xl font-black sm:text-3xl">
+                You&apos;re <span className="text-red-500">$MAD</span>.
+                <br />
+                Grab Some Merch
+              </h2>
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-8">
@@ -600,6 +600,12 @@ export default function Home() {
           align-items: center;
           width: 100%;
           max-width: 100%;
+        }
+
+        .mad-hero-video-wrap {
+          display: flex;
+          justify-content: center;
+          width: 100%;
         }
 
         .mad-ticker-wrap {
