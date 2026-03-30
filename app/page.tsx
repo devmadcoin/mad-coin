@@ -170,7 +170,7 @@ export default function Home() {
                         e.currentTarget.style.display = "none";
                       }}
                     />
-                    <span className="mad-fallback-flame relative z-10">😡</span>
+                    <span className="mad-fallback-icon relative z-10">😡</span>
                   </div>
 
                   <div className="mad-wordmark" aria-label="$MAD">
@@ -266,305 +266,302 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-10 grid max-w-full gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <div className="space-y-10">
-            <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">
-                    Fuel the Fire
-                  </p>
-                  <h2 className="mt-2 text-2xl font-black sm:text-3xl">
-                    Enter the <span className="text-red-500">$MAD</span>{" "}
-                    Ecosystem
-                  </h2>
-                </div>
+        <div className="mt-10 space-y-10 max-w-full">
+          <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">
+                  Fuel the Fire
+                </p>
+                <h2 className="mt-2 text-2xl font-black sm:text-3xl">
+                  You&apos;re <span className="text-red-500">$MAD</span>.
+                  <br />
+                  Grab Some Merch
+                </h2>
+              </div>
 
-                <div className="hidden sm:block">
-                  <div className="relative overflow-hidden rounded-2xl border border-red-500/20 bg-black/30 p-2 shadow-[0_0_25px_rgba(255,0,0,0.15)]">
-                    <video
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="h-16 w-auto rounded-xl object-contain"
-                    >
-                      <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-                    </video>
+              <div className="hidden sm:block">
+                <div className="relative overflow-hidden rounded-2xl border border-red-500/20 bg-black/30 p-2 shadow-[0_0_25px_rgba(255,0,0,0.15)]">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="h-16 w-auto rounded-xl object-contain"
+                  >
+                    <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                  </video>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-8">
+              <div className="min-w-0 flex flex-col items-center justify-start">
+                <Link
+                  href={LINKS.retailSticker}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-block"
+                  aria-label="MAD Stickers"
+                  title="MAD Stickers"
+                >
+                  <div className="relative h-[96px] w-[96px] rotate-[-4deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
+                    <Image
+                      src="/stickers/Mad-Sticker-logo.png"
+                      alt="MAD Stickers"
+                      fill
+                      priority
+                      sizes="(max-width: 640px) 96px, 140px"
+                      className="object-contain"
+                    />
                   </div>
-                </div>
+                </Link>
+
+                <Link
+                  href={LINKS.retailSticker}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
+                >
+                  MAD Stickers →
+                </Link>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-8">
-                <div className="min-w-0 flex flex-col items-center justify-start">
-                  <Link
-                    href={LINKS.retailSticker}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-block"
-                    aria-label="MAD Stickers"
-                    title="MAD Stickers"
-                  >
-                    <div className="relative h-[96px] w-[96px] rotate-[-4deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
-                      <Image
-                        src="/stickers/Mad-Sticker-logo.png"
-                        alt="MAD Stickers"
-                        fill
-                        priority
-                        sizes="(max-width: 640px) 96px, 140px"
-                        className="object-contain"
-                      />
-                    </div>
-                  </Link>
+              <div className="min-w-0 flex flex-col items-center justify-start">
+                <Link
+                  href={LINKS.premiumCard}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-block"
+                  aria-label="MAD Premium Card Wrap"
+                  title="MAD Premium Card Wrap"
+                >
+                  <div className="relative h-[96px] w-[96px] rotate-[3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
+                    <Image
+                      src="/stickers/Mad-Premium-Embossed-Card-Wrap.png"
+                      alt="MAD Premium Card Wrap"
+                      fill
+                      priority
+                      sizes="(max-width: 640px) 96px, 140px"
+                      className="object-contain"
+                    />
+                  </div>
+                </Link>
 
-                  <Link
-                    href={LINKS.retailSticker}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
-                  >
-                    MAD Stickers →
-                  </Link>
-                </div>
-
-                <div className="min-w-0 flex flex-col items-center justify-start">
-                  <Link
-                    href={LINKS.premiumCard}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-block"
-                    aria-label="MAD Premium Card Wrap"
-                    title="MAD Premium Card Wrap"
-                  >
-                    <div className="relative h-[96px] w-[96px] rotate-[3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
-                      <Image
-                        src="/stickers/Mad-Premium-Embossed-Card-Wrap.png"
-                        alt="MAD Premium Card Wrap"
-                        fill
-                        priority
-                        sizes="(max-width: 640px) 96px, 140px"
-                        className="object-contain"
-                      />
-                    </div>
-                  </Link>
-
-                  <Link
-                    href={LINKS.premiumCard}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
-                  >
-                    Card Wrap →
-                  </Link>
-                </div>
-
-                <div className="min-w-0 flex flex-col items-center justify-start">
-                  <Link
-                    href={LINKS.richPremiumCard}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-block"
-                    aria-label="MAD Rich Card Wrap"
-                    title="MAD Rich Card Wrap"
-                  >
-                    <div className="relative h-[96px] w-[96px] rotate-[-3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
-                      <Image
-                        src="/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png"
-                        alt="MAD Rich Card Wrap"
-                        fill
-                        priority
-                        sizes="(max-width: 640px) 96px, 140px"
-                        className="object-contain"
-                      />
-                    </div>
-                  </Link>
-
-                  <Link
-                    href={LINKS.richPremiumCard}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
-                  >
-                    Rich Wrap →
-                  </Link>
-                </div>
-
-                <div className="min-w-0 flex flex-col items-center justify-start">
-                  <Link
-                    href={LINKS.peeker}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-block"
-                    aria-label="MAD Peeker"
-                    title="MAD Peeker"
-                  >
-                    <div className="relative h-[96px] w-[96px] rotate-[2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
-                      <Image
-                        src="/stickers/Mad-Peeker.png"
-                        alt="MAD Peeker"
-                        fill
-                        priority
-                        sizes="(max-width: 640px) 96px, 140px"
-                        className="object-contain"
-                      />
-                    </div>
-                  </Link>
-
-                  <Link
-                    href={LINKS.peeker}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
-                  >
-                    Peeker →
-                  </Link>
-                </div>
+                <Link
+                  href={LINKS.premiumCard}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
+                >
+                  Card Wrap →
+                </Link>
               </div>
-            </section>
 
-            <section className="overflow-hidden rounded-3xl border border-white/10 bg-black/25 py-6 shadow-2xl backdrop-blur-xl">
-              <div className="mb-4 text-center">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/40">
-                  Where $MAD Lives
+              <div className="min-w-0 flex flex-col items-center justify-start">
+                <Link
+                  href={LINKS.richPremiumCard}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-block"
+                  aria-label="MAD Rich Card Wrap"
+                  title="MAD Rich Card Wrap"
+                >
+                  <div className="relative h-[96px] w-[96px] rotate-[-3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
+                    <Image
+                      src="/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png"
+                      alt="MAD Rich Card Wrap"
+                      fill
+                      priority
+                      sizes="(max-width: 640px) 96px, 140px"
+                      className="object-contain"
+                    />
+                  </div>
+                </Link>
+
+                <Link
+                  href={LINKS.richPremiumCard}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
+                >
+                  Rich Wrap →
+                </Link>
+              </div>
+
+              <div className="min-w-0 flex flex-col items-center justify-start">
+                <Link
+                  href={LINKS.peeker}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-block"
+                  aria-label="MAD Peeker"
+                  title="MAD Peeker"
+                >
+                  <div className="relative h-[96px] w-[96px] rotate-[2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
+                    <Image
+                      src="/stickers/Mad-Peeker.png"
+                      alt="MAD Peeker"
+                      fill
+                      priority
+                      sizes="(max-width: 640px) 96px, 140px"
+                      className="object-contain"
+                    />
+                  </div>
+                </Link>
+
+                <Link
+                  href={LINKS.peeker}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
+                >
+                  Peeker →
+                </Link>
+              </div>
+            </div>
+          </section>
+
+          <section
+            id="chart"
+            ref={momentumRef}
+            className="scroll-mt-24 rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6"
+          >
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
+                  Live Chart
+                </p>
+
+                <h2 className="mt-2 text-3xl font-black sm:text-4xl">
+                  Track{" "}
+                  <span
+                    className={`transition-colors duration-700 ${
+                      momentumVisible
+                        ? "text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.7)]"
+                        : "text-white"
+                    }`}
+                  >
+                    Momentum
+                  </span>
+                </h2>
+
+                <p className="mt-2 text-white/60">
+                  A live view of price action — inside the site.
                 </p>
               </div>
 
-              <div className="sm:hidden">
-                <div className="flex gap-4 overflow-x-auto px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  {ecosystemItems.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`Open ${item.name}`}
-                      title={item.name}
-                      className={`flex h-12 shrink-0 items-center rounded-2xl border border-white/10 px-4 shadow-lg ${item.cardClass}`}
-                    >
-                      <Image
-                        src={item.src}
-                        alt={item.alt}
-                        width={item.width}
-                        height={item.height}
-                        className="h-auto w-auto object-contain"
-                      />
-                    </a>
-                  ))}
-                </div>
-              </div>
+              <a
+                href={LINKS.chartPage}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 hover:text-white"
+              >
+                Open on Dexscreener →
+              </a>
+            </div>
 
-              <div className="relative hidden overflow-hidden sm:block">
-                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-black/90 to-transparent" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-black/90 to-transparent" />
-
-                <div className="logo-marquee flex w-max items-center gap-8 px-2 lg:gap-12">
-                  {[...Array(4)].map((_, i) => (
-                    <React.Fragment key={i}>
-                      {ecosystemItems.map((item) => (
-                        <a
-                          key={`${item.name}-${i}`}
-                          href={item.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          aria-label={`Open ${item.name}`}
-                          title={item.name}
-                          className={`group flex h-14 items-center rounded-2xl border border-white/10 px-5 shadow-lg transition-transform duration-300 hover:scale-105 lg:h-16 lg:px-6 ${item.cardClass}`}
-                        >
-                          <Image
-                            src={item.src}
-                            alt={item.alt}
-                            width={item.width}
-                            height={item.height}
-                            className={item.imageClass}
-                          />
-                        </a>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            <MadConfessions />
-          </div>
-
-          <div className="space-y-10">
-            <section
-              id="chart"
-              ref={momentumRef}
-              className="scroll-mt-24 rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6"
-            >
-              <div className="flex flex-wrap items-end justify-between gap-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
-                    Live Chart
-                  </p>
-
-                  <h2 className="mt-2 text-3xl font-black sm:text-4xl">
-                    Track{" "}
-                    <span
-                      className={`transition-colors duration-700 ${
-                        momentumVisible
-                          ? "text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.7)]"
-                          : "text-white"
-                      }`}
-                    >
-                      Momentum
-                    </span>
-                  </h2>
-
-                  <p className="mt-2 text-white/60">
-                    A live view of price action — inside the site.
-                  </p>
-                </div>
-
-                <a
-                  href={LINKS.chartPage}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 hover:text-white"
-                >
-                  Open on Dexscreener →
-                </a>
-              </div>
-
-              <div className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-2xl">
-                <div className="relative aspect-[16/10] w-full sm:aspect-[16/9]">
-                  {!iframeReady && (
-                    <div className="absolute inset-0 grid place-items-center">
-                      <div className="rounded-2xl border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/70">
-                        Loading chart…
-                      </div>
+            <div className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-2xl">
+              <div className="relative h-[520px] w-full sm:h-[620px]">
+                {!iframeReady && (
+                  <div className="absolute inset-0 grid place-items-center">
+                    <div className="rounded-2xl border border-white/10 bg-black/50 px-4 py-2 text-sm text-white/70">
+                      Loading chart…
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  <iframe
-                    className="absolute inset-0 h-full w-full"
-                    src={`https://dexscreener.com/solana/${ADDR}?embed=1&theme=dark`}
-                    title="$MAD Dexscreener Chart"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                    allow="clipboard-write; fullscreen"
-                    onLoad={() => setIframeReady(true)}
-                  />
-                </div>
+                <iframe
+                  className="absolute inset-0 h-full w-full"
+                  src={`https://dexscreener.com/solana/${ADDR}?embed=1&theme=dark&trades=0&info=0`}
+                  title="$MAD Dexscreener Chart"
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  allow="clipboard-write; fullscreen"
+                  onLoad={() => setIframeReady(true)}
+                />
               </div>
-            </section>
+            </div>
+          </section>
 
-            <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
-                Signal
+          <section className="overflow-hidden rounded-3xl border border-white/10 bg-black/25 py-6 shadow-2xl backdrop-blur-xl">
+            <div className="mb-4 text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/40">
+                Where $MAD Lives
               </p>
-              <h3 className="mt-2 text-2xl font-black sm:text-3xl">
-                No guarantees.
-                <br />
-                No promises.
-              </h3>
-              <p className="mt-3 max-w-md text-white/65">
-                Only what people decide it becomes.
-              </p>
-            </section>
-          </div>
+            </div>
+
+            <div className="sm:hidden">
+              <div className="flex gap-4 overflow-x-auto px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {ecosystemItems.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Open ${item.name}`}
+                    title={item.name}
+                    className={`flex h-12 shrink-0 items-center rounded-2xl border border-white/10 px-4 shadow-lg ${item.cardClass}`}
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      width={item.width}
+                      height={item.height}
+                      className="h-auto w-auto object-contain"
+                    />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative hidden overflow-hidden sm:block">
+              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-black/90 to-transparent" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-black/90 to-transparent" />
+
+              <div className="logo-marquee flex w-max items-center gap-8 px-2 lg:gap-12">
+                {[...Array(4)].map((_, i) => (
+                  <React.Fragment key={i}>
+                    {ecosystemItems.map((item) => (
+                      <a
+                        key={`${item.name}-${i}`}
+                        href={item.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Open ${item.name}`}
+                        title={item.name}
+                        className={`group flex h-14 items-center rounded-2xl border border-white/10 px-5 shadow-lg transition-transform duration-300 hover:scale-105 lg:h-16 lg:px-6 ${item.cardClass}`}
+                      >
+                        <Image
+                          src={item.src}
+                          alt={item.alt}
+                          width={item.width}
+                          height={item.height}
+                          className={item.imageClass}
+                        />
+                      </a>
+                    ))}
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <MadConfessions />
+
+          <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
+              Signal
+            </p>
+            <h3 className="mt-2 text-2xl font-black sm:text-3xl">
+              No guarantees.
+              <br />
+              No promises.
+            </h3>
+            <p className="mt-3 max-w-md text-white/65">
+              Only what people decide it becomes.
+            </p>
+          </section>
         </div>
 
         <footer className="mt-16 border-t border-white/10 pt-8 text-center">
@@ -651,15 +648,15 @@ export default function Home() {
           animation: madPulseGlow 2.8s ease-in-out infinite;
         }
 
-        .mad-fallback-flame {
+        .mad-fallback-icon {
           display: none;
           font-size: 1.5rem;
           line-height: 1;
         }
 
-        .mad-ticker-icon img[style*="display: none"] + .mad-fallback-flame,
+        .mad-ticker-icon img[style*="display: none"] + .mad-fallback-icon,
         .mad-ticker-icon :global(img[style*="display: none"]) ~
-          .mad-fallback-flame {
+          .mad-fallback-icon {
           display: inline-block;
         }
 
@@ -846,7 +843,7 @@ export default function Home() {
             height: 2rem;
           }
 
-          .mad-fallback-flame {
+          .mad-fallback-icon {
             font-size: 1.15rem;
           }
 
