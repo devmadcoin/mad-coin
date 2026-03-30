@@ -157,21 +157,6 @@ export default function Home() {
 
             <div className="mt-8 flex justify-center">
               <div className="mad-ticker-stack">
-                <div className="mad-top-badge" aria-label="$MAD badge">
-                  <span className="mad-top-badge-glow" />
-                  <Image
-                    src="/icons/mad-icon.png"
-                    alt="$MAD badge"
-                    width={32}
-                    height={32}
-                    className="relative z-10 h-7 w-7 object-contain"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                  <span className="mad-top-badge-fallback relative z-10">😡</span>
-                </div>
-
                 <div className="mad-ticker-wrap">
                   <div className="mad-ticker-icon" aria-hidden="true">
                     <span className="mad-ticker-icon-glow" />
@@ -613,61 +598,11 @@ export default function Home() {
 
       <style jsx>{`
         .mad-ticker-stack {
-          position: relative;
           display: inline-flex;
           flex-direction: column;
           align-items: center;
           width: 100%;
           max-width: 100%;
-          padding-top: 1.5rem;
-        }
-
-        .mad-top-badge {
-          position: absolute;
-          top: 0;
-          z-index: 20;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-width: 68px;
-          height: 34px;
-          padding: 0 0.85rem;
-          border-radius: 999px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          background:
-            linear-gradient(
-              180deg,
-              rgba(255, 255, 255, 0.06),
-              rgba(255, 255, 255, 0.02)
-            ),
-            rgba(25, 0, 0, 0.88);
-          box-shadow:
-            0 8px 24px rgba(0, 0, 0, 0.35),
-            0 0 24px rgba(255, 59, 48, 0.14);
-          overflow: hidden;
-        }
-
-        .mad-top-badge-glow {
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(
-            circle,
-            rgba(255, 59, 48, 0.18),
-            transparent 70%
-          );
-          filter: blur(8px);
-        }
-
-        .mad-top-badge-fallback {
-          display: none;
-          font-size: 1rem;
-          line-height: 1;
-        }
-
-        .mad-top-badge img[style*="display: none"] + .mad-top-badge-fallback,
-        .mad-top-badge :global(img[style*="display: none"]) ~
-          .mad-top-badge-fallback {
-          display: inline-block;
         }
 
         .mad-ticker-wrap {
@@ -899,20 +834,6 @@ export default function Home() {
         }
 
         @media (max-width: 640px) {
-          .mad-ticker-stack {
-            padding-top: 1.3rem;
-          }
-
-          .mad-top-badge {
-            min-width: 60px;
-            height: 30px;
-            padding: 0 0.7rem;
-          }
-
-          .mad-top-badge-fallback {
-            font-size: 0.9rem;
-          }
-
           .mad-ticker-wrap {
             gap: 0.5rem;
             width: 100%;
