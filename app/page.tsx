@@ -140,13 +140,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative overflow-hidden bg-[#050505] text-white">
+    <div className="relative max-w-full overflow-x-hidden bg-[#050505] text-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.20),transparent_50%),radial-gradient(circle_at_80%_30%,rgba(255,60,0,0.16),transparent_52%),radial-gradient(circle_at_50%_100%,rgba(255,0,0,0.12),transparent_55%)]" />
       <div className="absolute inset-0 opacity-20 [background:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:44px_44px]" />
       <div className="absolute inset-0 bg-gradient-to-b from-red-950/10 via-transparent to-black/70" />
 
       <div className="relative mx-auto max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pt-14">
-        <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-black/35 px-4 py-10 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:px-8 sm:py-14">
+        <section className="relative max-w-full overflow-hidden rounded-[32px] border border-white/10 bg-black/35 px-4 py-10 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:px-8 sm:py-14">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.10),transparent_45%)]" />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
 
@@ -169,9 +169,7 @@ export default function Home() {
                       e.currentTarget.style.display = "none";
                     }}
                   />
-                  <span className="mad-top-badge-fallback relative z-10">
-                    $MAD
-                  </span>
+                  <span className="mad-top-badge-fallback relative z-10">😡</span>
                 </div>
 
                 <div className="mad-ticker-wrap">
@@ -187,7 +185,7 @@ export default function Home() {
                         e.currentTarget.style.display = "none";
                       }}
                     />
-                    <span className="mad-fallback-flame relative z-10">🔥</span>
+                    <span className="mad-fallback-flame relative z-10">😡</span>
                   </div>
 
                   <div className="mad-wordmark" aria-label="$MAD">
@@ -283,7 +281,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+        <div className="mt-10 grid max-w-full gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
           <div className="space-y-10">
             <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
               <div className="flex items-center justify-between gap-3">
@@ -312,8 +310,8 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4 sm:gap-8">
-                <div className="flex flex-col items-center justify-start">
+              <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-8">
+                <div className="min-w-0 flex flex-col items-center justify-start">
                   <Link
                     href={LINKS.retailSticker}
                     target="_blank"
@@ -322,13 +320,13 @@ export default function Home() {
                     aria-label="MAD Stickers"
                     title="MAD Stickers"
                   >
-                    <div className="relative h-[120px] w-[120px] rotate-[-4deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
+                    <div className="relative h-[96px] w-[96px] rotate-[-4deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
                       <Image
                         src="/stickers/Mad-Sticker-logo.png"
                         alt="MAD Stickers"
                         fill
                         priority
-                        sizes="(max-width: 640px) 120px, 140px"
+                        sizes="(max-width: 640px) 96px, 140px"
                         className="object-contain"
                       />
                     </div>
@@ -338,13 +336,13 @@ export default function Home() {
                     href={LINKS.retailSticker}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 text-center text-sm font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
+                    className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
                   >
                     MAD Stickers →
                   </Link>
                 </div>
 
-                <div className="flex flex-col items-center justify-start">
+                <div className="min-w-0 flex flex-col items-center justify-start">
                   <Link
                     href={LINKS.premiumCard}
                     target="_blank"
@@ -353,13 +351,13 @@ export default function Home() {
                     aria-label="MAD Premium Card Wrap"
                     title="MAD Premium Card Wrap"
                   >
-                    <div className="relative h-[120px] w-[120px] rotate-[3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
+                    <div className="relative h-[96px] w-[96px] rotate-[3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
                       <Image
                         src="/stickers/Mad-Premium-Embossed-Card-Wrap.png"
                         alt="MAD Premium Card Wrap"
                         fill
                         priority
-                        sizes="(max-width: 640px) 120px, 140px"
+                        sizes="(max-width: 640px) 96px, 140px"
                         className="object-contain"
                       />
                     </div>
@@ -369,13 +367,13 @@ export default function Home() {
                     href={LINKS.premiumCard}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 text-center text-sm font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
+                    className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
                   >
                     Card Wrap →
                   </Link>
                 </div>
 
-                <div className="flex flex-col items-center justify-start">
+                <div className="min-w-0 flex flex-col items-center justify-start">
                   <Link
                     href={LINKS.richPremiumCard}
                     target="_blank"
@@ -384,13 +382,13 @@ export default function Home() {
                     aria-label="MAD Rich Card Wrap"
                     title="MAD Rich Card Wrap"
                   >
-                    <div className="relative h-[120px] w-[120px] rotate-[-3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
+                    <div className="relative h-[96px] w-[96px] rotate-[-3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
                       <Image
                         src="/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png"
                         alt="MAD Rich Card Wrap"
                         fill
                         priority
-                        sizes="(max-width: 640px) 120px, 140px"
+                        sizes="(max-width: 640px) 96px, 140px"
                         className="object-contain"
                       />
                     </div>
@@ -400,13 +398,13 @@ export default function Home() {
                     href={LINKS.richPremiumCard}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 text-center text-sm font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
+                    className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
                   >
                     Rich Wrap →
                   </Link>
                 </div>
 
-                <div className="flex flex-col items-center justify-start">
+                <div className="min-w-0 flex flex-col items-center justify-start">
                   <Link
                     href={LINKS.peeker}
                     target="_blank"
@@ -415,13 +413,13 @@ export default function Home() {
                     aria-label="MAD Peeker"
                     title="MAD Peeker"
                   >
-                    <div className="relative h-[120px] w-[120px] rotate-[2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
+                    <div className="relative h-[96px] w-[96px] rotate-[2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
                       <Image
                         src="/stickers/Mad-Peeker.png"
                         alt="MAD Peeker"
                         fill
                         priority
-                        sizes="(max-width: 640px) 120px, 140px"
+                        sizes="(max-width: 640px) 96px, 140px"
                         className="object-contain"
                       />
                     </div>
@@ -431,7 +429,7 @@ export default function Home() {
                     href={LINKS.peeker}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 text-center text-sm font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
+                    className="mt-3 max-w-full text-center text-xs font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
                   >
                     Peeker →
                   </Link>
@@ -662,11 +660,8 @@ export default function Home() {
 
         .mad-top-badge-fallback {
           display: none;
-          font-size: 0.72rem;
-          font-weight: 900;
-          letter-spacing: 0.08em;
-          color: #fff5f5;
-          text-transform: uppercase;
+          font-size: 1rem;
+          line-height: 1;
         }
 
         .mad-top-badge img[style*="display: none"] + .mad-top-badge-fallback,
@@ -723,7 +718,7 @@ export default function Home() {
 
         .mad-fallback-flame {
           display: none;
-          font-size: 1.6rem;
+          font-size: 1.5rem;
           line-height: 1;
         }
 
@@ -915,7 +910,7 @@ export default function Home() {
           }
 
           .mad-top-badge-fallback {
-            font-size: 0.65rem;
+            font-size: 0.9rem;
           }
 
           .mad-ticker-wrap {
@@ -931,7 +926,7 @@ export default function Home() {
           }
 
           .mad-fallback-flame {
-            font-size: 1.3rem;
+            font-size: 1.15rem;
           }
 
           .mad-wordmark {
