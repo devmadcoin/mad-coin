@@ -80,28 +80,56 @@ const ecosystemItems = [
 ] as const;
 
 const artCards = [
-  { src: "/stickers/Mad-Sticker-logo.png", alt: "MAD art 1", rotate: "-rotate-6" },
   {
-    src: "/stickers/Mad-Premium-Embossed-Card-Wrap.png",
-    alt: "MAD art 2",
+    src: "/stickers/he-sold-pump-it.webp",
+    alt: "He Sold Pump It",
+    rotate: "-rotate-6",
+  },
+  {
+    src: "/stickers/keep-building.webp",
+    alt: "Keep Building",
     rotate: "rotate-6",
   },
   {
-    src: "/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png",
-    alt: "MAD art 3",
+    src: "/stickers/never-selling.webp",
+    alt: "Never Selling",
     rotate: "-rotate-3",
   },
-  { src: "/stickers/Mad-Peeker.png", alt: "MAD art 4", rotate: "rotate-3" },
+  {
+    src: "/stickers/sticker-smash.webp",
+    alt: "Sticker Smash",
+    rotate: "rotate-3",
+  },
+  {
+    src: "/stickers/sticker.webp Buy More.webp",
+    alt: "Buy More",
+    rotate: "-rotate-6",
+  },
+  {
+    src: "/stickers/sticker.webp Buy The Dip.webp",
+    alt: "Buy The Dip",
+    rotate: "rotate-6",
+  },
+  {
+    src: "/stickers/sticker.webp Raid.webp",
+    alt: "Raid",
+    rotate: "-rotate-3",
+  },
+  {
+    src: "/stickers/sticker.webp Uno Reverse.webp",
+    alt: "Uno Reverse",
+    rotate: "rotate-3",
+  },
 ] as const;
 
 function DecorativeArtRow() {
   return (
     <section className="pointer-events-none flex justify-center">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+      <div className="flex max-w-full gap-4 overflow-x-auto px-1 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-4 sm:gap-6 sm:overflow-visible">
         {artCards.map((card, index) => (
           <div
             key={`${card.alt}-${index}`}
-            className={`relative h-24 w-24 overflow-hidden rounded-2xl border border-white/10 bg-black/30 shadow-[0_18px_38px_rgba(0,0,0,0.45)] ${card.rotate} sm:h-28 sm:w-28`}
+            className={`relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/30 shadow-[0_18px_38px_rgba(0,0,0,0.45)] ${card.rotate} sm:h-28 sm:w-28`}
           >
             <Image
               src={card.src}
