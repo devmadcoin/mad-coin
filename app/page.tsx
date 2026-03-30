@@ -79,6 +79,43 @@ const ecosystemItems = [
   },
 ] as const;
 
+const artCards = [
+  { src: "/stickers/Mad-Sticker-logo.png", alt: "MAD art 1", rotate: "-rotate-6" },
+  {
+    src: "/stickers/Mad-Premium-Embossed-Card-Wrap.png",
+    alt: "MAD art 2",
+    rotate: "rotate-6",
+  },
+  {
+    src: "/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png",
+    alt: "MAD art 3",
+    rotate: "-rotate-3",
+  },
+  { src: "/stickers/Mad-Peeker.png", alt: "MAD art 4", rotate: "rotate-3" },
+] as const;
+
+function DecorativeArtRow() {
+  return (
+    <section className="pointer-events-none flex justify-center">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+        {artCards.map((card, index) => (
+          <div
+            key={`${card.alt}-${index}`}
+            className={`relative h-24 w-24 overflow-hidden rounded-2xl border border-white/10 bg-black/30 shadow-[0_18px_38px_rgba(0,0,0,0.45)] ${card.rotate} sm:h-28 sm:w-28`}
+          >
+            <Image
+              src={card.src}
+              alt={card.alt}
+              fill
+              className="object-contain p-2"
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [iframeReady, setIframeReady] = useState(false);
@@ -283,6 +320,8 @@ export default function Home() {
         </div>
 
         <div className="mt-10 max-w-full space-y-10">
+          <DecorativeArtRow />
+
           <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/45">
@@ -422,6 +461,8 @@ export default function Home() {
             </div>
           </section>
 
+          <DecorativeArtRow />
+
           <section
             id="chart"
             ref={momentumRef}
@@ -483,6 +524,8 @@ export default function Home() {
               </div>
             </div>
           </section>
+
+          <DecorativeArtRow />
 
           <section className="overflow-hidden rounded-3xl border border-white/10 bg-black/25 py-6 shadow-2xl backdrop-blur-xl">
             <div className="mb-4 text-center">
@@ -547,7 +590,11 @@ export default function Home() {
             </div>
           </section>
 
+          <DecorativeArtRow />
+
           <MadConfessions />
+
+          <DecorativeArtRow />
 
           <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
