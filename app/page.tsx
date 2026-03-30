@@ -122,23 +122,20 @@ const artCards = [
   },
 ] as const;
 
-function DecorativeArtRow() {
+function DecorativeArtRow({ index }: { index: number }) {
+  const card = artCards[index % artCards.length];
+
   return (
     <section className="pointer-events-none flex justify-center">
-      <div className="flex max-w-full gap-4 overflow-x-auto px-1 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-4 sm:gap-6 sm:overflow-visible">
-        {artCards.map((card, index) => (
-          <div
-            key={`${card.alt}-${index}`}
-            className={`relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/30 shadow-[0_18px_38px_rgba(0,0,0,0.45)] ${card.rotate} sm:h-28 sm:w-28`}
-          >
-            <Image
-              src={card.src}
-              alt={card.alt}
-              fill
-              className="object-contain p-2"
-            />
-          </div>
-        ))}
+      <div
+        className={`relative h-28 w-28 overflow-hidden rounded-2xl border border-white/10 bg-black/30 shadow-[0_18px_38px_rgba(0,0,0,0.45)] ${card.rotate} sm:h-32 sm:w-32`}
+      >
+        <Image
+          src={card.src}
+          alt={card.alt}
+          fill
+          className="object-contain p-2"
+        />
       </div>
     </section>
   );
@@ -348,7 +345,7 @@ export default function Home() {
         </div>
 
         <div className="mt-10 max-w-full space-y-10">
-          <DecorativeArtRow />
+          <DecorativeArtRow index={0} />
 
           <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
             <div>
@@ -489,7 +486,7 @@ export default function Home() {
             </div>
           </section>
 
-          <DecorativeArtRow />
+          <DecorativeArtRow index={1} />
 
           <section
             id="chart"
@@ -553,7 +550,7 @@ export default function Home() {
             </div>
           </section>
 
-          <DecorativeArtRow />
+          <DecorativeArtRow index={2} />
 
           <section className="overflow-hidden rounded-3xl border border-white/10 bg-black/25 py-6 shadow-2xl backdrop-blur-xl">
             <div className="mb-4 text-center">
@@ -618,11 +615,9 @@ export default function Home() {
             </div>
           </section>
 
-          <DecorativeArtRow />
-
           <MadConfessions />
 
-          <DecorativeArtRow />
+          <DecorativeArtRow index={3} />
 
           <section className="rounded-3xl border border-white/10 bg-black/30 p-5 shadow-2xl backdrop-blur-xl sm:p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
