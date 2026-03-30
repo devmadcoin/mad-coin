@@ -86,25 +86,6 @@ export default function Home() {
 
   const momentumRef = useRef<HTMLElement | null>(null);
 
-  function copyAddr() {
-    const text = ADDR;
-
-    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-      navigator.clipboard
-        .writeText(text)
-        .then(() => {
-          setCopied(true);
-          window.setTimeout(() => setCopied(false), 1200);
-        })
-        .catch(() => {
-          fallbackCopy(text);
-        });
-      return;
-    }
-
-    fallbackCopy(text);
-  }
-
   function fallbackCopy(text: string) {
     try {
       const ta = document.createElement("textarea");
@@ -122,6 +103,25 @@ export default function Home() {
     } catch {
       // do nothing
     }
+  }
+
+  function copyAddr() {
+    const text = ADDR;
+
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 1200);
+        })
+        .catch(() => {
+          fallbackCopy(text);
+        });
+      return;
+    }
+
+    fallbackCopy(text);
   }
 
   useEffect(() => {
@@ -528,6 +528,34 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <footer className="mt-16 border-t border-white/10 pt-8 text-center">
+          <p className="mx-auto max-w-3xl text-xs leading-7 text-white/45 sm:text-sm sm:leading-8">
+            $MAD is not about value.
+            <br />
+            It’s about belief.
+            <br />
+            <br />
+            That’s why you stop trading…
+            <br />
+            and start being{" "}
+            <span className="font-semibold text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+              $MAD
+            </span>{" "}
+            at everything.
+            <br />
+            <br />
+            No guarantees. No promises.
+            <br />
+            Only what people decide it becomes.
+            <br />
+            <br />
+            Do not risk money you cannot afford to lose.
+            <br />
+            <br />
+            © 2026 $MAD // Built on Solana
+          </p>
+        </footer>
       </div>
     </div>
   );
