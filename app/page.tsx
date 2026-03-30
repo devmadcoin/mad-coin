@@ -146,46 +146,67 @@ export default function Home() {
       <div className="absolute inset-0 bg-gradient-to-b from-red-950/10 via-transparent to-black/70" />
 
       <div className="relative mx-auto max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pt-14">
-        <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-black/35 px-5 py-10 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:px-8 sm:py-14">
+        <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-black/35 px-4 py-10 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:px-8 sm:py-14">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.10),transparent_45%)]" />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
 
           <div className="relative mx-auto max-w-4xl">
-            <p className="text-center text-[10px] font-semibold uppercase tracking-[0.42em] text-white/45 sm:text-xs">
+            <p className="text-center text-[9px] font-semibold uppercase tracking-[0.24em] text-white/45 sm:text-xs sm:tracking-[0.42em]">
               SOLANA • MEME SIGNAL • CONTROLLED CHAOS
             </p>
 
             <div className="mt-8 flex justify-center">
-              <div className="mad-ticker-wrap">
-                <div className="mad-ticker-icon" aria-hidden="true">
-                  <span className="mad-ticker-icon-glow" />
+              <div className="mad-ticker-stack">
+                <div className="mad-top-badge" aria-label="$MAD badge">
+                  <span className="mad-top-badge-glow" />
                   <Image
                     src="/icons/mad-icon.png"
-                    alt="$MAD icon"
-                    width={46}
-                    height={46}
-                    className="relative z-10 h-9 w-9 object-contain sm:h-11 sm:w-11"
+                    alt="$MAD badge"
+                    width={32}
+                    height={32}
+                    className="relative z-10 h-7 w-7 object-contain"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
                     }}
                   />
-                  <span className="mad-fallback-flame relative z-10">🔥</span>
+                  <span className="mad-top-badge-fallback relative z-10">
+                    $MAD
+                  </span>
                 </div>
 
-                <div className="mad-wordmark" aria-label="$MAD">
-                  <span className="mad-wordmark-base">$MAD</span>
-                  <span className="mad-wordmark-glitch mad-wordmark-glitch-a">
-                    $MAD
-                  </span>
-                  <span className="mad-wordmark-glitch mad-wordmark-glitch-b">
-                    $MAD
-                  </span>
+                <div className="mad-ticker-wrap">
+                  <div className="mad-ticker-icon" aria-hidden="true">
+                    <span className="mad-ticker-icon-glow" />
+                    <Image
+                      src="/icons/mad-icon.png"
+                      alt="$MAD icon"
+                      width={46}
+                      height={46}
+                      className="relative z-10 h-8 w-8 object-contain sm:h-11 sm:w-11"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                    <span className="mad-fallback-flame relative z-10">🔥</span>
+                  </div>
+
+                  <div className="mad-wordmark" aria-label="$MAD">
+                    <span className="mad-wordmark-base">$MAD</span>
+                    <span className="mad-wordmark-glitch mad-wordmark-glitch-a">
+                      $MAD
+                    </span>
+                    <span className="mad-wordmark-glitch mad-wordmark-glitch-b">
+                      $MAD
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
             <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-7 text-white/65 sm:text-base">
-              Stop trading noise. Start being <span className="text-red-500 font-semibold">$MAD</span> at everything.
+              Stop trading noise. Start being{" "}
+              <span className="font-semibold text-red-500">$MAD</span> at
+              everything.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -248,13 +269,16 @@ export default function Home() {
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-black to-transparent" />
           <div className="mad-warning-marquee whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.28em] text-red-200/80 sm:text-xs">
             <span className="mx-6">
-              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT AFFORD TO LOSE
+              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT
+              AFFORD TO LOSE
             </span>
             <span className="mx-6">
-              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT AFFORD TO LOSE
+              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT
+              AFFORD TO LOSE
             </span>
             <span className="mx-6">
-              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT AFFORD TO LOSE
+              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT
+              AFFORD TO LOSE
             </span>
           </div>
         </div>
@@ -268,7 +292,8 @@ export default function Home() {
                     Fuel the Fire
                   </p>
                   <h2 className="mt-2 text-2xl font-black sm:text-3xl">
-                    Enter the <span className="text-red-500">$MAD</span> Ecosystem
+                    Enter the <span className="text-red-500">$MAD</span>{" "}
+                    Ecosystem
                   </h2>
                 </div>
 
@@ -297,7 +322,7 @@ export default function Home() {
                     aria-label="MAD Stickers"
                     title="MAD Stickers"
                   >
-                    <div className="relative h-[120px] w-[120px] rotate-[-4deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] sm:h-[140px] sm:w-[140px]">
+                    <div className="relative h-[120px] w-[120px] rotate-[-4deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
                       <Image
                         src="/stickers/Mad-Sticker-logo.png"
                         alt="MAD Stickers"
@@ -313,7 +338,7 @@ export default function Home() {
                     href={LINKS.retailSticker}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 text-center text-sm font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] sm:text-base"
+                    className="mt-3 text-center text-sm font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
                   >
                     MAD Stickers →
                   </Link>
@@ -328,7 +353,7 @@ export default function Home() {
                     aria-label="MAD Premium Card Wrap"
                     title="MAD Premium Card Wrap"
                   >
-                    <div className="relative h-[120px] w-[120px] rotate-[3deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] sm:h-[140px] sm:w-[140px]">
+                    <div className="relative h-[120px] w-[120px] rotate-[3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
                       <Image
                         src="/stickers/Mad-Premium-Embossed-Card-Wrap.png"
                         alt="MAD Premium Card Wrap"
@@ -344,7 +369,7 @@ export default function Home() {
                     href={LINKS.premiumCard}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 text-center text-sm font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] sm:text-base"
+                    className="mt-3 text-center text-sm font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
                   >
                     Card Wrap →
                   </Link>
@@ -359,7 +384,7 @@ export default function Home() {
                     aria-label="MAD Rich Card Wrap"
                     title="MAD Rich Card Wrap"
                   >
-                    <div className="relative h-[120px] w-[120px] rotate-[-3deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] sm:h-[140px] sm:w-[140px]">
+                    <div className="relative h-[120px] w-[120px] rotate-[-3deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
                       <Image
                         src="/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png"
                         alt="MAD Rich Card Wrap"
@@ -375,7 +400,7 @@ export default function Home() {
                     href={LINKS.richPremiumCard}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 text-center text-sm font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] sm:text-base"
+                    className="mt-3 text-center text-sm font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
                   >
                     Rich Wrap →
                   </Link>
@@ -390,7 +415,7 @@ export default function Home() {
                     aria-label="MAD Peeker"
                     title="MAD Peeker"
                   >
-                    <div className="relative h-[120px] w-[120px] rotate-[2deg] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] sm:h-[140px] sm:w-[140px]">
+                    <div className="relative h-[120px] w-[120px] rotate-[2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)] transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,0,0,0.45)] sm:h-[140px] sm:w-[140px]">
                       <Image
                         src="/stickers/Mad-Peeker.png"
                         alt="MAD Peeker"
@@ -406,7 +431,7 @@ export default function Home() {
                     href={LINKS.peeker}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 text-center text-sm font-black text-red-500 transition hover:text-red-400 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] sm:text-base"
+                    className="mt-3 text-center text-sm font-black text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.8)] transition hover:text-red-400 sm:text-base"
                   >
                     Peeker →
                   </Link>
@@ -589,27 +614,96 @@ export default function Home() {
       </div>
 
       <style jsx>{`
+        .mad-ticker-stack {
+          position: relative;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          max-width: 100%;
+          padding-top: 1.5rem;
+        }
+
+        .mad-top-badge {
+          position: absolute;
+          top: 0;
+          z-index: 20;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 68px;
+          height: 34px;
+          padding: 0 0.85rem;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background:
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.06),
+              rgba(255, 255, 255, 0.02)
+            ),
+            rgba(25, 0, 0, 0.88);
+          box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.35),
+            0 0 24px rgba(255, 59, 48, 0.14);
+          overflow: hidden;
+        }
+
+        .mad-top-badge-glow {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            circle,
+            rgba(255, 59, 48, 0.18),
+            transparent 70%
+          );
+          filter: blur(8px);
+        }
+
+        .mad-top-badge-fallback {
+          display: none;
+          font-size: 0.72rem;
+          font-weight: 900;
+          letter-spacing: 0.08em;
+          color: #fff5f5;
+          text-transform: uppercase;
+        }
+
+        .mad-top-badge img[style*="display: none"] + .mad-top-badge-fallback,
+        .mad-top-badge :global(img[style*="display: none"]) ~
+          .mad-top-badge-fallback {
+          display: inline-block;
+        }
+
         .mad-ticker-wrap {
           display: inline-flex;
           align-items: center;
-          gap: 0.9rem;
-          padding: 0.9rem 1.1rem;
+          justify-content: center;
+          gap: 0.7rem;
+          width: min(100%, 680px);
+          max-width: 100%;
+          padding: 1.15rem 1rem 1rem;
           border-radius: 1.5rem;
           border: 1px solid rgba(255, 255, 255, 0.08);
           background:
-            linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.03),
+              rgba(255, 255, 255, 0.01)
+            ),
             rgba(0, 0, 0, 0.45);
           box-shadow:
             0 12px 40px rgba(0, 0, 0, 0.35),
             inset 0 1px 0 rgba(255, 255, 255, 0.04);
+          overflow: hidden;
         }
 
         .mad-ticker-icon {
           position: relative;
           display: grid;
           place-items: center;
-          width: 3rem;
-          height: 3rem;
+          width: 2.5rem;
+          height: 2.5rem;
           border-radius: 999px;
           flex-shrink: 0;
         }
@@ -618,19 +712,24 @@ export default function Home() {
           position: absolute;
           inset: 0;
           border-radius: 999px;
-          background: radial-gradient(circle, rgba(255, 59, 48, 0.28), transparent 70%);
+          background: radial-gradient(
+            circle,
+            rgba(255, 59, 48, 0.28),
+            transparent 70%
+          );
           filter: blur(8px);
           animation: madPulseGlow 2.8s ease-in-out infinite;
         }
 
         .mad-fallback-flame {
           display: none;
-          font-size: 1.8rem;
+          font-size: 1.6rem;
           line-height: 1;
         }
 
         .mad-ticker-icon img[style*="display: none"] + .mad-fallback-flame,
-        .mad-ticker-icon :global(img[style*="display: none"]) ~ .mad-fallback-flame {
+        .mad-ticker-icon :global(img[style*="display: none"]) ~
+          .mad-fallback-flame {
           display: inline-block;
         }
 
@@ -638,15 +737,17 @@ export default function Home() {
           position: relative;
           display: inline-block;
           font-weight: 900;
-          letter-spacing: 0.04em;
-          line-height: 1;
-          font-size: clamp(2.6rem, 10vw, 5.8rem);
+          letter-spacing: 0.03em;
+          line-height: 0.95;
+          font-size: clamp(2.2rem, 14vw, 5.8rem);
           color: #f8f7f3;
           text-transform: uppercase;
           text-shadow:
             0 1px 0 rgba(255, 255, 255, 0.16),
             0 0 18px rgba(255, 255, 255, 0.08),
             0 0 28px rgba(255, 59, 48, 0.12);
+          word-break: keep-all;
+          white-space: nowrap;
         }
 
         .mad-wordmark-base {
@@ -682,7 +783,8 @@ export default function Home() {
         }
 
         @keyframes madPulseGlow {
-          0%, 100% {
+          0%,
+          100% {
             transform: scale(0.96);
             opacity: 0.75;
           }
@@ -693,7 +795,9 @@ export default function Home() {
         }
 
         @keyframes madGlitchBase {
-          0%, 87%, 100% {
+          0%,
+          87%,
+          100% {
             transform: translate(0, 0);
             filter: none;
           }
@@ -721,7 +825,9 @@ export default function Home() {
         }
 
         @keyframes madGlitchRed {
-          0%, 87%, 100% {
+          0%,
+          87%,
+          100% {
             opacity: 0;
             transform: translate(0, 0);
           }
@@ -733,7 +839,8 @@ export default function Home() {
             opacity: 1;
             transform: translate(-2px, 0);
           }
-          90%, 96% {
+          90%,
+          96% {
             opacity: 0;
             transform: translate(0, 0);
           }
@@ -745,14 +852,17 @@ export default function Home() {
             opacity: 1;
             transform: translate(2px, -1px);
           }
-          99%, 100% {
+          99%,
+          100% {
             opacity: 0;
             transform: translate(0, 0);
           }
         }
 
         @keyframes madGlitchBlue {
-          0%, 87%, 100% {
+          0%,
+          87%,
+          100% {
             opacity: 0;
             transform: translate(0, 0);
           }
@@ -764,7 +874,8 @@ export default function Home() {
             opacity: 1;
             transform: translate(2px, 0);
           }
-          90%, 96% {
+          90%,
+          96% {
             opacity: 0;
             transform: translate(0, 0);
           }
@@ -776,7 +887,8 @@ export default function Home() {
             opacity: 1;
             transform: translate(-2px, 1px);
           }
-          99%, 100% {
+          99%,
+          100% {
             opacity: 0;
             transform: translate(0, 0);
           }
@@ -788,6 +900,43 @@ export default function Home() {
           }
           100% {
             transform: translateX(-33.333%);
+          }
+        }
+
+        @media (max-width: 640px) {
+          .mad-ticker-stack {
+            padding-top: 1.3rem;
+          }
+
+          .mad-top-badge {
+            min-width: 60px;
+            height: 30px;
+            padding: 0 0.7rem;
+          }
+
+          .mad-top-badge-fallback {
+            font-size: 0.65rem;
+          }
+
+          .mad-ticker-wrap {
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.95rem 0.8rem 0.85rem;
+            border-radius: 1.25rem;
+          }
+
+          .mad-ticker-icon {
+            width: 2rem;
+            height: 2rem;
+          }
+
+          .mad-fallback-flame {
+            font-size: 1.3rem;
+          }
+
+          .mad-wordmark {
+            font-size: clamp(1.85rem, 13vw, 3.1rem);
+            letter-spacing: 0.02em;
           }
         }
       `}</style>
