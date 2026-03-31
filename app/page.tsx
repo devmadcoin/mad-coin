@@ -238,16 +238,28 @@ export default function Home() {
             </div>
 
             <nav className="hidden items-center gap-2 md:flex">
-              <a href="#merch" className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white">
+              <a
+                href="#merch"
+                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
+              >
                 Merch
               </a>
-              <a href="#chart" className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white">
+              <a
+                href="#chart"
+                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
+              >
                 Chart
               </a>
-              <a href="#ecosystem" className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white">
+              <a
+                href="#ecosystem"
+                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
+              >
                 Ecosystem
               </a>
-              <a href="#confessions" className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white">
+              <a
+                href="#confessions"
+                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
+              >
                 Confessions
               </a>
             </nav>
@@ -294,14 +306,9 @@ export default function Home() {
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
                 <InfoCard
                   label="Contract"
-                  value={
-                    <span className="break-all text-white/82">{ADDR}</span>
-                  }
+                  value={<span className="break-all text-white/82">{ADDR}</span>}
                 />
-                <InfoCard
-                  label="Network"
-                  value={<span>Solana</span>}
-                />
+                <InfoCard label="Network" value={<span>Solana</span>} />
                 <InfoCard
                   label="Positioning"
                   value={<span>Meme signal / cultural volatility</span>}
@@ -320,41 +327,37 @@ export default function Home() {
 
             <div className="relative min-h-[340px] border-t border-white/10 bg-gradient-to-br from-red-500/10 via-transparent to-transparent lg:min-h-full lg:border-l lg:border-t-0">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.16),transparent_42%)]" />
+
               <div className="relative flex h-full items-center justify-center px-6 py-12">
-                <div className="relative w-full max-w-[500px]">
-                  <div className="absolute -inset-5 rounded-[34px] bg-red-500/10 blur-3xl" />
-                  <div className="relative rounded-[32px] border border-white/10 bg-black/55 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
-                    <div className="rounded-[26px] border border-white/10 bg-[#0a0a0a] p-4">
-                      <div className="flex items-center justify-between">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/38">
-                          Live Signal
-                        </p>
-                        <span className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-red-300">
-                          $MAD
-                        </span>
-                      </div>
+                <div className="relative w-full max-w-[520px]">
+                  <div className="absolute -inset-6 rounded-[40px] bg-red-500/10 blur-3xl" />
 
-                      <div className="mt-6 flex items-center justify-center">
-                        <div className="relative grid h-32 w-32 place-items-center rounded-full border border-white/10 bg-white/[0.03] sm:h-40 sm:w-40">
-                          <span className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,59,48,0.22),transparent_62%)] animate-pulse" />
-                          <Image
-                            src="/mad.png"
-                            alt="$MAD icon"
-                            width={94}
-                            height={94}
-                            className="relative z-10 h-20 w-20 object-contain sm:h-24 sm:w-24"
-                          />
+                  <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-black/55 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+                    <div className="relative overflow-hidden rounded-[26px] border border-white/10 bg-[#0a0a0a] p-6 sm:p-8">
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,59,48,0.12),transparent_50%)]" />
+
+                      <div className="relative flex flex-col items-center justify-center">
+                        <div className="flex items-center justify-center rounded-[28px] border border-red-500/15 bg-black/30 p-4 shadow-[0_0_30px_rgba(255,0,0,0.08)]">
+                          <video
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            className="h-[180px] w-auto object-contain sm:h-[240px] lg:h-[280px]"
+                          >
+                            <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                          </video>
                         </div>
-                      </div>
 
-                      <div className="mt-6 text-center">
-                        <p className="text-[11px] uppercase tracking-[0.28em] text-white/38">
+                        <p className="mt-6 text-[11px] uppercase tracking-[0.28em] text-white/38">
                           Belief Layer
                         </p>
+
                         <p className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
                           $MAD
                         </p>
-                        <p className="mt-3 text-sm leading-7 text-white/58">
+
+                        <p className="mt-3 max-w-md text-center text-sm leading-7 text-white/58">
                           No promises. No guarantees. Only what people decide it becomes.
                         </p>
                       </div>
