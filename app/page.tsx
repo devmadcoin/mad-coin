@@ -222,7 +222,7 @@ export default function Home() {
               <div className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-red-500/20 bg-white/[0.04]">
                 <span className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,59,48,0.2),transparent_70%)]" />
                 <Image
-                  src="/icons/mad-icon.png"
+                  src="/mad.png"
                   alt="$MAD icon"
                   width={28}
                   height={28}
@@ -338,7 +338,7 @@ export default function Home() {
                         <div className="relative grid h-32 w-32 place-items-center rounded-full border border-white/10 bg-white/[0.03] sm:h-40 sm:w-40">
                           <span className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,59,48,0.22),transparent_62%)] animate-pulse" />
                           <Image
-                            src="/icons/mad-icon.png"
+                            src="/mad.png"
                             alt="$MAD icon"
                             width={94}
                             height={94}
