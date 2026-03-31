@@ -291,8 +291,7 @@ export default function Home() {
               </h1>
 
               <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                A sharper, cleaner front door for the ecosystem. Less clutter.
-                More pressure. More identity. More conviction.
+                Built for the ones who feel the pressure, watch the charts, and move with conviction.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -398,7 +397,7 @@ export default function Home() {
                   Wear it like you mean it.
                 </>
               }
-              body="This section is cleaner on purpose. The products should feel like collectibles, not random floating objects."
+              body="Collect the pieces that carry the signal."
             />
             <div className="shrink-0">
               <PillButton href={LINKS.retailSticker}>View Retail</PillButton>
@@ -454,7 +453,7 @@ export default function Home() {
                   <span className="text-red-500"> momentum</span>.
                 </>
               }
-              body="The chart is now framed like a premium dashboard instead of just being dropped into the page."
+              body="A live look at the momentum behind $MAD."
             />
             <PillButton href={LINKS.chartPage}>Open on Dexscreener</PillButton>
           </div>
@@ -489,7 +488,7 @@ export default function Home() {
           <SectionHeader
             eyebrow="Where $MAD Lives"
             title={<>The ecosystem, in one lane.</>}
-            body="Instead of many competing mini-elements, this keeps the external proof and platforms in one clean strip."
+            body="Explore the platforms, tools, and signals behind $MAD."
             align="center"
           />
 
@@ -534,7 +533,7 @@ export default function Home() {
             <SectionHeader
               eyebrow="Community"
               title={<>Confessions from the culture.</>}
-              body="This works better when it feels embedded into a premium frame instead of floating between decorative separators."
+              body="Raw thoughts from the community, straight from the culture."
             />
           </div>
           <MadConfessions />
@@ -557,7 +556,7 @@ export default function Home() {
 
             <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
               <p className="text-sm leading-7 text-white/62">
-                This redesign makes the site feel more premium because every section now has one job. Hero for identity. Merch for collectible energy. Chart for proof. Ecosystem for legitimacy. Confessions for community.
+                Built on conviction, carried by culture, and driven by the people who choose to be $MAD.
               </p>
             </div>
           </div>
