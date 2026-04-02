@@ -6,6 +6,7 @@ import Image from "next/image";
 const TUTORIAL_VIDEO = "https://www.youtube.com/embed/V0LBY-ZiklY";
 const GAME_LINK =
   "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD";
+const SPECIAL_GUEST_URL = "https://x.com/Kubo100x";
 
 export default function GamePage() {
   return (
@@ -75,6 +76,19 @@ export default function GamePage() {
                 allowFullScreen
               />
             </div>
+          </div>
+
+          {/* SPECIAL GUEST CREDIT */}
+          <div className="mt-6 text-sm text-white/60">
+            Special Guest:{" "}
+            <a
+              href={SPECIAL_GUEST_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-red-400 underline underline-offset-2 transition hover:text-red-300"
+            >
+              Kubo
+            </a>
           </div>
 
           {/* CTA UNDER VIDEO */}
