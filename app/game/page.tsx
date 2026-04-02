@@ -3,6 +3,10 @@
 
 import Image from "next/image";
 
+const TUTORIAL_VIDEO = "https://www.youtube.com/embed/V0LBY-ZiklY";
+const GAME_LINK =
+  "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD";
+
 export default function GamePage() {
   return (
     <div className="relative overflow-hidden">
@@ -26,12 +30,11 @@ export default function GamePage() {
         </h1>
 
         <p className="mt-5 max-w-2xl text-white/70">
-          Prototype is live — we’ll revamp this page later with trailers,
-          updates, and rewards.
+          New to Roblox? Start here first, then jump into MAD Games.
         </p>
 
-        {/* 🔥 IMAGE SECTION */}
-        <div className="mt-10 rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(255,0,0,0.25)]">
+        {/* HERO IMAGE */}
+        <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 shadow-[0_0_40px_rgba(255,0,0,0.25)]">
           <div className="relative aspect-[16/9] w-full">
             <Image
               src="/game/rich-or-mad-banner.png"
@@ -44,16 +47,51 @@ export default function GamePage() {
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="mt-10">
-          <a
-            href="https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 shadow-[0_0_12px_rgba(255,0,0,0.35)] transition hover:bg-red-500/25"
-          >
-            Play on Roblox →
-          </a>
+        {/* TUTORIAL SECTION */}
+        <div className="mt-14 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-red-300/80">
+            Quick Start
+          </p>
+
+          <h2 className="mt-3 text-2xl sm:text-4xl font-black leading-tight text-white">
+            Tutorial on How to Make a Roblox Account to Play MAD Games
+          </h2>
+
+          <p className="mt-4 max-w-3xl text-white/70">
+            If you do not have a Roblox account yet, watch this quick tutorial
+            first. Once you are done, use the button below to jump straight into
+            the game.
+          </p>
+
+          {/* VIDEO EMBED */}
+          <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-black shadow-[0_0_24px_rgba(255,0,0,0.14)]">
+            <div className="relative aspect-video w-full">
+              <iframe
+                src={TUTORIAL_VIDEO}
+                title="Tutorial on how to make a Roblox account to play MAD Games"
+                className="absolute inset-0 h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
+          </div>
+
+          {/* CTA UNDER VIDEO */}
+          <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+            <a
+              href={GAME_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 shadow-[0_0_12px_rgba(255,0,0,0.35)] transition hover:bg-red-500/25"
+            >
+              Play MAD Games on Roblox →
+            </a>
+
+            <p className="text-sm text-white/50">
+              Watch the tutorial above first if you are new to Roblox.
+            </p>
+          </div>
         </div>
       </div>
     </div>
