@@ -5,9 +5,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
-const ROBLOX_GAME_URL =
-  "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD";
-
 const MERCH_URL = "https://notaveragestickers.com/collections/mad";
 
 export default function NavBar() {
@@ -62,7 +59,9 @@ export default function NavBar() {
               Lore
             </NavPill>
 
-            <ExternalPill href={ROBLOX_GAME_URL}>Game</ExternalPill>
+            <NavPill href="/game" pathname={pathname}>
+              Game
+            </NavPill>
           </div>
         </div>
       </nav>
