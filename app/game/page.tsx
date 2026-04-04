@@ -26,118 +26,45 @@ export default function GamePage() {
             </p>
 
             <h1 className="mt-5 text-5xl font-black tracking-tight sm:text-6xl lg:text-7xl">
-              Enter The{" "}
+              Start Your{" "}
               <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
                 $MAD
               </span>{" "}
-              Arena
+              Run
             </h1>
 
             <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/68 sm:text-lg">
-              Start here, learn the basics, and jump straight into the official
-              Roblox experience.
+              Start here, get set up, then jump into the official Roblox
+              experience.
             </p>
 
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-200">
-                Roblox Game
+                New Player Friendly
               </div>
               <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                Quick Start
+                Tutorial First
               </div>
               <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                Tutorial Included
+                Direct Game Link
               </div>
             </div>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
-                href={GAME_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 shadow-[0_0_14px_rgba(255,0,0,0.32)] transition hover:bg-red-500/25"
-              >
-                Play MAD Games →
-              </a>
-
-              <a
                 href="#quick-start"
-                className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/85 transition hover:bg-white/[0.08]"
+                className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 shadow-[0_0_14px_rgba(255,0,0,0.32)] transition hover:bg-red-500/25"
               >
                 Watch Tutorial First
               </a>
-            </div>
-          </div>
-        </section>
 
-        {/* FEATURED GAME */}
-        <section className="mt-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-            <div className="relative aspect-[16/9] w-full">
-              <Image
-                src="/game/rich-or-mad-banner.png"
-                alt="Will You Get RICH Or Stay $MAD"
-                fill
-                sizes="(max-width: 1024px) 100vw, 900px"
-                className="object-cover"
-                priority
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-            </div>
-          </div>
-
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
-              FEATURED GAME
-            </p>
-
-            <h2 className="mt-4 text-3xl font-black leading-tight sm:text-4xl">
-              Will You Get{" "}
-              <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.5)]">
-                RICH
-              </span>{" "}
-              Or Stay{" "}
-              <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.5)]">
-                $MAD
-              </span>
-            </h2>
-
-            <p className="mt-4 text-white/68 leading-relaxed">
-              The official $MAD Roblox experience. Jump in, survive the chaos,
-              and see whether your path leads to riches or madness.
-            </p>
-
-            <div className="mt-6 grid gap-3">
-              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
-                  WHY THIS PAGE EXISTS
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-white/65">
-                  This page is your launch point — not just the poster again.
-                  Start here if you need the tutorial, want the direct game link,
-                  or want a cleaner path into MAD Games.
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
-                  BEST FOR
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-white/65">
-                  New Roblox players, first-time visitors, and anyone who wants
-                  the fastest route from website to gameplay.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6">
               <a
                 href={GAME_LINK}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 shadow-[0_0_12px_rgba(255,0,0,0.35)] transition hover:bg-red-500/25"
+                className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/85 transition hover:bg-white/[0.08]"
               >
-                Open Official Roblox Game →
+                Skip to Game
               </a>
             </div>
           </div>
@@ -154,12 +81,12 @@ export default function GamePage() {
             </p>
 
             <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">
-              New to Roblox? Watch this first.
+              New to Roblox? Get set up here first.
             </h2>
 
             <p className="mt-4 text-white/70 leading-relaxed">
               If you do not have a Roblox account yet, start with this quick
-              tutorial. Once you are set up, use the button below to jump
+              tutorial. Once you are set up, use the game button below to jump
               straight into MAD Games.
             </p>
           </div>
@@ -201,7 +128,79 @@ export default function GamePage() {
           </div>
         </section>
 
-        {/* BOTTOM STRIP */}
+        {/* GAME FEATURE */}
+        <section className="mt-10 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
+              FEATURED GAME
+            </p>
+
+            <h2 className="mt-4 text-3xl font-black leading-tight sm:text-5xl">
+              Will You Get{" "}
+              <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.5)]">
+                RICH
+              </span>{" "}
+              Or Stay{" "}
+              <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.5)]">
+                $MAD
+              </span>
+            </h2>
+
+            <p className="mt-4 text-white/68 leading-relaxed">
+              The official $MAD Roblox experience. Jump in, survive the chaos,
+              and see whether your path leads to riches or madness.
+            </p>
+
+            <div className="mt-6 grid gap-3">
+              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
+                  WHAT TO EXPECT
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-white/65">
+                  Fast decisions, chaotic energy, and a direct entry into the
+                  $MAD universe through Roblox gameplay.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
+                  BEST FOR
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-white/65">
+                  First-time visitors, Roblox players, and anyone who wants the
+                  fastest route from website to action.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <a
+                href={GAME_LINK}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 shadow-[0_0_12px_rgba(255,0,0,0.35)] transition hover:bg-red-500/25"
+              >
+                Open Official Roblox Game →
+              </a>
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+            <div className="relative aspect-[16/10] w-full">
+              <Image
+                src="/game/rich-or-mad-banner.png"
+                alt="Will You Get RICH Or Stay $MAD"
+                fill
+                sizes="(max-width: 1024px) 100vw, 700px"
+                className="object-cover"
+                priority
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+            </div>
+          </div>
+        </section>
+
+        {/* STEPS */}
         <section className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
@@ -217,7 +216,7 @@ export default function GamePage() {
               STEP 2
             </p>
             <p className="mt-3 text-sm leading-relaxed text-white/68">
-              Watch the quick tutorial if you are brand new.
+              Watch the tutorial if you are brand new to Roblox.
             </p>
           </div>
 
@@ -226,7 +225,7 @@ export default function GamePage() {
               STEP 3
             </p>
             <p className="mt-3 text-sm leading-relaxed text-white/68">
-              Enter MAD Games and choose your path.
+              Enter MAD Games and choose whether you get rich or stay mad.
             </p>
           </div>
         </section>
