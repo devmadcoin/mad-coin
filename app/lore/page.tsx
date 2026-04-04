@@ -14,104 +14,50 @@ const EVENTS: LoreEvent[] = [
   {
     date: "Mar 2026",
     title: "THE FIRST MAD GAMES",
-    desc: "The first MAD Games was held inside Roblox — a live experiment where chaos met competition. Players entered the arena for a chance to earn real SOL. 6 winners emerged from the madness, splitting a 3.5 SOL prize pool. First place secured 1 SOL, establishing the first hierarchy of skill, timing, and survival. This marked a shift: $MAD was no longer just a token… it had become a game.",
+    desc: "The first MAD Games was held inside Roblox — chaos met competition. Real SOL rewards. 6 winners. A system was born. $MAD became more than a token.",
     accent: "red",
   },
   {
     date: "Mar 19, 2026",
     title: "VERIFIED BY JUPITER",
-    desc: "$MAD was officially verified on Jupiter. What began as chaos was now recognized by the system itself. Not because it changed—but because it became impossible to ignore.",
+    desc: "$MAD was officially recognized by the system itself. Not because it changed — but because it became impossible to ignore.",
     accent: "amber",
   },
   {
     date: "Mar 4, 2026",
     title: "THE GORK MOMENT",
-    desc: "After the 400M burn milestone, the $MAD dev grew frustrated seeing Gork publicly favor another project ($pigeon) over $MAD. The dev confronted him directly. Gork responded casually: 'lmao yeah burn that 800m.' What began as a jab instantly became the next mission. On March 4th, the journey toward burning 800,000,000 total $MAD officially began.",
+    desc: "A challenge became a mission. Burn 800M. The next phase of $MAD began.",
     accent: "amber",
   },
   {
     date: "Mar 1, 2026",
     title: "THE 400M BURN",
-    desc: "March 1st marked a defining milestone. 400,000,000 $MAD tokens were permanently burned, reaching a 40% burn rate. It wasn’t destruction — it was refinement. Scarcity strengthened conviction and proved the discipline behind the anti-rug structure.",
+    desc: "40% of supply removed. Not destruction — refinement. Conviction strengthened.",
     accent: "red",
   },
   {
-    date: "Late Feb, 2026",
-    title: "THE SILENT BURN",
-    desc: "Before the major milestone, 33,000,000 tokens were quietly burned from a side wallet. There was no announcement and no spectacle. Observers were left wondering what happened. But the intention was simple: reduce supply and reinforce the long-term structure of $MAD.",
-    accent: "amber",
-  },
-  {
-    date: "Feb 20, 2026 — 11:32 AM",
+    date: "Feb 20, 2026",
     title: "THE COMEBACK",
-    desc: "I woke up and our Telegram had been deleted. But they can’t delete belief. $MAD rose back up again.",
+    desc: "Telegram deleted. Community didn’t break. $MAD rose again.",
     accent: "red",
   },
   {
-    date: "Feb 18, 2026 — 3:19 PM",
-    title: "THE ATTACK",
-    desc: "Telegram and Dexscreener were botted. Noise attempted to bury signal. $MAD continued forward.",
-    accent: "amber",
-  },
-  {
-    date: "Feb 15, 2026",
-    title: "THE MADNESS BECAME VISIBLE",
-    desc: "$MAD was officially listed on CoinGecko. What began as raw emotion and signal could now be tracked by the wider world. Visibility increased. The madness became impossible to ignore.",
-    accent: "amber",
-  },
-  {
-    date: "Feb 14, 2026",
-    title: "RECLAMATION",
-    desc: "Telegram ownership was secured for $200 to retain members and avoid disruption. Not ego—responsibility.",
-    accent: "neutral",
-  },
-  {
-    date: "Feb 7, 2026 — 16:56",
-    title: "BONDING",
-    desc: "Liquidity bonded at ~35.06K MC (USD). Infrastructure hardened. Volatility met structure.",
-    accent: "red",
-  },
-  {
-    date: "Launch week",
-    title: "THE TRIAL — The 5% Wallet",
-    desc: "A wallet held ~5% of supply for about 3 days. Everyone demanded a relaunch. But $MAD did not reset. Discipline over panic.",
-    accent: "amber",
-  },
-  {
-    date: "Feb 5, 2026",
-    title: "COMMUNITY IGNITES",
-    desc: "Telegram launched (created by a helper). The first gathering formed. Momentum found a channel.",
-    accent: "neutral",
-  },
-  {
-    date: "Feb 4, 2026 — 6:27:24 PM",
+    date: "Feb 4, 2026",
     title: "GENESIS",
-    desc: "$MAD was minted. Emotion became code. Not a reset. Not a test run. A beginning.",
+    desc: "$MAD was minted. Emotion became code.",
     accent: "red",
   },
 ];
 
-function AccentText({
-  children,
-  tone = "red",
-}: {
-  children: React.ReactNode;
-  tone?: "red" | "amber" | "neutral";
-}) {
+function Accent({ children, tone = "red" }: any) {
   if (tone === "amber") {
-    return (
-      <span className="text-amber-300 drop-shadow-[0_0_12px_rgba(255,170,0,0.45)]">
-        {children}
-      </span>
-    );
+    return <span className="text-amber-300">{children}</span>;
   }
-
   if (tone === "neutral") {
     return <span className="text-white">{children}</span>;
   }
-
   return (
-    <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.65)]">
+    <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.6)]">
       {children}
     </span>
   );
@@ -119,81 +65,84 @@ function AccentText({
 
 export default function LorePage() {
   return (
-    <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
+    <div className="relative overflow-hidden bg-black text-white">
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
-            LORE
+      {/* BACKGROUND */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.18),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.12),transparent_60%)]" />
+
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-20">
+
+        {/* HERO */}
+        <div className="text-center max-w-3xl mx-auto">
+          <p className="text-xs tracking-[0.4em] text-white/40 uppercase">
+            ARCHIVE
           </p>
 
-          <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
-            The <AccentText>$MAD</AccentText> Chronicle
+          <h1 className="mt-6 text-5xl sm:text-7xl font-black">
+            The <Accent>$MAD</Accent> Chronicle
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl leading-relaxed text-white/65">
-            Not a dev log. A founder chronicle. Structure before hype. Discipline
-            over panic.
+          <p className="mt-4 text-white/60">
+            Not updates. Not marketing.  
+            A record of decisions, pressure, and survival.
           </p>
 
           <div className="mt-10 flex justify-center">
-            <div className="relative h-[150px] w-[150px] rotate-[-2deg] drop-shadow-[0_18px_38px_rgba(0,0,0,0.55)]">
-              <Image
-                src="/stickers/never-selling.webp"
-                alt="Never Selling"
-                fill
-                sizes="150px"
-                className="object-contain"
-              />
-            </div>
+            <Image
+              src="/stickers/never-selling.webp"
+              alt="Never Selling"
+              width={140}
+              height={140}
+              className="drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+            />
           </div>
         </div>
 
-        <div className="mt-14 space-y-6">
-          {EVENTS.map((e, idx) => (
-            <div
-              key={idx}
-              className="rounded-3xl border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur-xl"
-            >
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
-                {e.date}
-              </p>
+        {/* TIMELINE */}
+        <div className="mt-16 relative">
 
-              <h3 className="mt-3 text-2xl font-black">
-                <AccentText tone={e.accent}>{e.title}</AccentText>
-              </h3>
+          {/* Vertical Line */}
+          <div className="absolute left-4 top-0 bottom-0 w-[2px] bg-white/10" />
 
-              <p className="mt-3 leading-relaxed text-white/75">{e.desc}</p>
-            </div>
-          ))}
+          <div className="space-y-10">
+            {EVENTS.map((e, i) => (
+              <div key={i} className="relative pl-12">
 
-          <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-2xl">
-            <div className="relative w-full" style={{ aspectRatio: "3 / 4" }}>
-              <Image
-                src="/lore/believe.webp"
-                alt="Believe"
-                fill
-                sizes="(max-width: 1024px) 100vw, 900px"
-                className="object-cover"
-                priority
-              />
-            </div>
-          </div>
+                {/* Dot */}
+                <div className="absolute left-[6px] top-2 h-3 w-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(255,0,0,0.7)]" />
 
-          <div className="rounded-3xl border border-white/10 bg-black/35 p-8 text-center shadow-2xl">
-            <h3 className="text-3xl font-black text-white sm:text-4xl">
-              You Can Delete A Channel.
-            </h3>
+                {/* Card */}
+                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl transition hover:border-red-500/30">
 
-            <p className="mt-4 text-white/70">
-              But you can’t delete belief.
-              <br />
-              And <span className="font-bold text-red-500">$MAD</span> doesn’t
-              reset.
-            </p>
+                  <p className="text-xs text-white/40 uppercase tracking-[0.3em]">
+                    {e.date}
+                  </p>
+
+                  <h3 className="mt-2 text-xl font-bold">
+                    <Accent tone={e.accent}>{e.title}</Accent>
+                  </h3>
+
+                  <p className="mt-3 text-white/65 text-sm leading-relaxed">
+                    {e.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+
+        {/* FINAL STATEMENT */}
+        <div className="mt-20 text-center border border-white/10 rounded-3xl p-10 bg-white/[0.03]">
+          <h2 className="text-3xl font-black">
+            You Can Delete A Channel.
+          </h2>
+
+          <p className="mt-4 text-white/60">
+            But you can’t delete belief.  
+            And <span className="text-red-500 font-bold">$MAD</span> doesn’t reset.
+          </p>
+        </div>
+
       </div>
     </div>
   );
