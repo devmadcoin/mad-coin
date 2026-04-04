@@ -267,6 +267,64 @@ export default function MerchPage() {
           </div>
         </section>
 
+        <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
+          <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+                Apparel Drop
+              </p>
+
+              <h2 className="mt-4 text-3xl font-black leading-[0.95] tracking-tight text-white sm:text-4xl md:text-5xl">
+                <span className="text-red-500">$MAD</span> isn’t just held.
+                <br />
+                It’s worn.
+              </h2>
+
+              <p className="mt-5 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
+                The first official apparel pieces are on the way. Built for the
+                people who want to carry the signal beyond the screen and into
+                real life.
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                <span className="inline-flex items-center rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-red-300">
+                  Coming Soon
+                </span>
+
+                <PillLink href="#products">Shop Current Merch</PillLink>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-[30px] border border-white/10">
+              <div className="relative h-[420px] w-full sm:h-[560px]">
+                <Image
+                  src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
+                  alt="$MAD apparel coming soon"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+
+                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/55">
+                      Drop 001
+                    </p>
+                    <p className="mt-2 text-2xl font-black text-white sm:text-3xl">
+                      MAD RICH.
+                    </p>
+                  </div>
+
+                  <span className="shrink-0 rounded-full border border-white/15 bg-black/45 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/85 backdrop-blur">
+                    Apparel Preview
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section
           id="products"
           className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
@@ -295,7 +353,7 @@ export default function MerchPage() {
                 rel="noopener noreferrer"
                 className="group rounded-[28px] border border-white/10 bg-white/[0.03] p-5 transition duration-300 hover:-translate-y-1 hover:border-red-500/30 hover:bg-white/[0.05]"
               >
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between gap-3">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/40">
                     {item.subtitle}
                   </p>
@@ -356,7 +414,8 @@ export default function MerchPage() {
               label="Style"
               value={
                 <span>
-                  Premium presentation with a sharp, minimal, high-contrast look.
+                  Premium presentation with a sharp, minimal, high-contrast
+                  look.
                 </span>
               }
             />
