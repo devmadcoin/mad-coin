@@ -20,27 +20,27 @@ function statusChip(status: Status) {
   if (status === "complete") {
     return {
       label: "Complete",
-      cls: "bg-emerald-500/15 text-emerald-200 border-emerald-500/25",
+      cls: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
     };
   }
 
   if (status === "in_progress") {
     return {
       label: "In Progress",
-      cls: "bg-white/10 text-white/75 border-white/10",
+      cls: "bg-red-500/15 text-red-300 border-red-500/30",
     };
   }
 
   return {
-    label: "Planned",
-    cls: "bg-white/5 text-white/60 border-white/10",
+    label: "Locked",
+    cls: "bg-white/5 text-white/50 border-white/10",
   };
 }
 
 function phaseBarWidth(status: Status) {
   if (status === "complete") return "100%";
-  if (status === "in_progress") return "55%";
-  return "15%";
+  if (status === "in_progress") return "60%";
+  return "10%";
 }
 
 export default function RoadmapPage() {
@@ -49,55 +49,55 @@ export default function RoadmapPage() {
       {
         phase: "PHASE 1",
         title: "Foundation",
-        desc: "Launch $MAD. Establish identity. Deploy site.",
+        desc: "Launch $MAD. Establish identity. Deploy system.",
         status: "complete",
       },
       {
         phase: "PHASE 1.2",
-        title: "Lock Tokens",
-        desc: "Lock 111,000,000 tokens until 6/1/26 to reinforce anti-rug structure.",
+        title: "Token Lock",
+        desc: "111M tokens locked → anti-rug architecture activated.",
         status: "complete",
       },
       {
         phase: "PHASE 1.3",
-        title: "450M Token Burn",
-        desc: "Burned 450,000,000 tokens reaching a 45% burn rate and strengthening the anti-rug structure.",
+        title: "Supply Burn",
+        desc: "450M tokens burned → scarcity engine engaged.",
         status: "complete",
       },
       {
         phase: "PHASE 1.4",
-        title: "Listed on CoinGecko",
-        desc: "$MAD became officially trackable on CoinGecko, increasing visibility and expanding signal beyond the core community.",
+        title: "Signal Expansion",
+        desc: "Listed on CoinGecko → visibility unlocked.",
         status: "complete",
       },
       {
         phase: "PHASE 1.5",
-        title: "Listed on Jupiter",
-        desc: "$MAD became accessible on Jupiter, one of Solana’s core trading layers. The signal was no longer just visible — it became easier to enter and trade within the system.",
+        title: "Liquidity Access",
+        desc: "Live on Jupiter → frictionless entry.",
         status: "complete",
       },
       {
         phase: "PHASE 1.6",
-        title: "Physical Sticker Merchandise",
-        desc: "Launch physical $MAD sticker merch for the community.",
+        title: "Physical Layer",
+        desc: "$MAD merch enters real world.",
         status: "complete",
       },
       {
         phase: "PHASE 2",
-        title: "Acquire + Support",
-        desc: "Acquire 8,000,000 supply and support 1 community through $MAD.",
+        title: "Acquisition Engine",
+        desc: "Acquire supply + support community growth.",
         status: "planned",
       },
       {
         phase: "PHASE 3",
-        title: "$MAD Roblox Game",
-        desc: "Build and release the official $MAD Roblox game.",
+        title: "Game Integration",
+        desc: "$MAD Roblox experience launches.",
         status: "planned",
       },
       {
         phase: "PHASE 4",
-        title: "Burn 800M Tokens",
-        desc: "The long-term mission. Push total tokens burned to 800,000,000 following the challenge issued during the Gork moment.",
+        title: "Final Burn",
+        desc: "Push total burn to 800M supply.",
         status: "in_progress",
       },
     ],
@@ -108,73 +108,56 @@ export default function RoadmapPage() {
   const completed = items.filter((x) => x.status === "complete").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
-  const chillSrc = "/stickers/chill.webp";
-
   return (
-    <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
+    <div className="relative overflow-hidden bg-black text-white">
+      
+      {/* Background glow */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.25),transparent_60%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%)]" />
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16">
-        <div className="mx-auto max-w-3xl animate-fadeUp">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/60">
-            STRUCTURE BEFORE HYPE.
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-20">
+
+        {/* HEADER */}
+        <div className="max-w-3xl">
+          <p className="text-xs tracking-[0.4em] text-white/50 uppercase">
+            SYSTEM PROGRESSION
           </p>
 
-          <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
-            <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.65)]">
+          <h1 className="mt-6 text-6xl sm:text-7xl font-black">
+            <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.8)]">
               $MAD
             </span>{" "}
             Roadmap
           </h1>
 
-          <p className="mt-5 max-w-xl leading-relaxed text-white/70">
-            Anti-rug architecture. Controlled expansion. Disciplined growth.
+          <p className="mt-4 text-white/60 max-w-lg">
+            Not hype. Not promises.  
+            A system expanding in real time.
           </p>
         </div>
 
-        <div className="mt-10 animate-fadeUp">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 shadow-2xl backdrop-blur-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
-              OVERALL PROGRESS
+        {/* PROGRESS PANEL */}
+        <div className="mt-12 rounded-3xl border border-white/10 bg-black/40 p-8 backdrop-blur-xl">
+
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-white/60">
+              {completed} / {total} Phases Complete
             </p>
 
-            <p className="mt-2 text-sm text-white/70">
-              {completed} of {total} phases complete
-            </p>
-
-            <div className="pointer-events-none mt-6 flex justify-center">
-              <Image
-                src={chillSrc}
-                alt="Chill sticker"
-                width={220}
-                height={220}
-                className="object-contain drop-shadow-[0_16px_30px_rgba(0,0,0,0.45)]"
-                priority
-              />
+            <div className="text-xl font-bold text-white">
+              {pct}%
             </div>
+          </div>
 
-            <div className="mx-auto mt-6 w-full max-w-2xl">
-              <div className="flex items-center gap-4">
-                <div className="mad-progress-track flex-1">
-                  <div
-                    className="mad-progress-fill"
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-
-                <div className="shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-semibold text-white/90">
-                  {pct}%
-                </div>
-              </div>
-
-              <p className="mt-3 text-center text-xs text-white/40">
-                Progress updates as phases are marked complete.
-              </p>
-            </div>
+          <div className="mt-6 h-3 w-full rounded-full bg-white/5 overflow-hidden border border-white/10">
+            <div
+              className="h-full bg-red-500 transition-all duration-700"
+              style={{ width: `${pct}%` }}
+            />
           </div>
         </div>
 
-        <div className="mt-10 space-y-6">
+        {/* ROADMAP CARDS */}
+        <div className="mt-12 space-y-6">
           {items.map((item) => (
             <RoadmapCard key={item.phase} item={item} />
           ))}
@@ -189,44 +172,40 @@ function RoadmapCard({ item }: { item: RoadmapItem }) {
   const barWidth = phaseBarWidth(item.status);
 
   return (
-    <div className="animate-fadeUp">
-      <div className="rounded-3xl border border-white/10 bg-black/30 p-6 shadow-2xl backdrop-blur-xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
-              {item.phase}
-            </p>
+    <div className="group rounded-3xl border border-white/10 bg-black/30 p-6 backdrop-blur-xl transition hover:border-red-500/30 hover:scale-[1.01]">
 
-            <h3 className="mt-3 text-3xl font-black">{item.title}</h3>
+      <div className="flex justify-between items-start gap-4">
+        <div>
+          <p className="text-xs tracking-[0.3em] text-white/40 uppercase">
+            {item.phase}
+          </p>
 
-            <p className="mt-3 text-white/70">{item.desc}</p>
-          </div>
+          <h3 className="mt-2 text-2xl font-bold group-hover:text-red-400 transition">
+            {item.title}
+          </h3>
 
-          <div
-            className={[
-              "shrink-0 rounded-full border px-4 py-2 text-xs font-semibold",
-              chip.cls,
-            ].join(" ")}
-          >
-            {chip.label}
-          </div>
+          <p className="mt-2 text-white/60 text-sm max-w-md">
+            {item.desc}
+          </p>
         </div>
 
-        <div className="mt-6">
-          <div className="h-2 w-full overflow-hidden rounded-full border border-white/10 bg-white/5">
-            <div
-              className={[
-                "h-full rounded-full",
-                item.status === "complete"
-                  ? "bg-emerald-400/70"
-                  : item.status === "in_progress"
-                  ? "bg-white/15"
-                  : "bg-white/10",
-              ].join(" ")}
-              style={{ width: barWidth }}
-            />
-          </div>
+        <div className={`rounded-full border px-3 py-1 text-xs ${chip.cls}`}>
+          {chip.label}
         </div>
+      </div>
+
+      {/* PROGRESS BAR */}
+      <div className="mt-5 h-2 w-full bg-white/5 rounded-full overflow-hidden">
+        <div
+          className={`h-full ${
+            item.status === "complete"
+              ? "bg-emerald-400"
+              : item.status === "in_progress"
+              ? "bg-red-400"
+              : "bg-white/20"
+          }`}
+          style={{ width: barWidth }}
+        />
       </div>
     </div>
   );
