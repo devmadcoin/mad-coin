@@ -7,12 +7,6 @@ const ADDR = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
 const LINKS = {
   home: "/",
-  roadmap: "/roadmap",
-  forge: "/forge",
-  merch: "/merch",
-  art: "/memes",
-  lore: "/lore",
-  game: "/game",
   jupiter: `https://jup.ag/swap/SOL-${ADDR}`,
   retailSticker:
     "https://notaveragestickers.com/products/mad-%F0%9F%98%A1-sticker",
@@ -74,6 +68,8 @@ function PillLink({
   primary?: boolean;
   external?: boolean;
 }) {
+  const isHash = href.startsWith("#");
+
   const className = [
     "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition duration-200",
     primary
@@ -81,12 +77,12 @@ function PillLink({
       : "border border-white/12 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]",
   ].join(" ");
 
-  if (external) {
+  if (external || isHash) {
     return (
       <a
         href={href}
-        target="_blank"
-        rel="noreferrer"
+        target={external ? "_blank" : undefined}
+        rel={external ? "noreferrer" : undefined}
         className={className}
       >
         {children}
@@ -96,30 +92,6 @@ function PillLink({
 
   return (
     <Link href={href} className={className}>
-      {children}
-    </Link>
-  );
-}
-
-function NavPill({
-  href,
-  children,
-  active = false,
-}: {
-  href: string;
-  children: React.ReactNode;
-  active?: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={[
-        "rounded-full px-4 py-2 text-sm font-semibold transition",
-        active
-          ? "border border-red-500/35 bg-red-500/15 text-red-300 shadow-[0_0_24px_rgba(255,0,0,0.18)]"
-          : "text-white/68 hover:bg-white/[0.05] hover:text-white",
-      ].join(" ")}
-    >
       {children}
     </Link>
   );
@@ -186,52 +158,7 @@ export default function MerchPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-5 sm:px-6 lg:px-8">
-        <header className="mb-5 rounded-full border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-xl sm:px-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <Link href="/" className="flex items-center gap-3">
-                <div className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-red-500/20 bg-white/[0.04]">
-                  <span className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,59,48,0.2),transparent_70%)]" />
-                  <Image
-                    src="/mad.png"
-                    alt="$MAD icon"
-                    width={28}
-                    height={28}
-                    className="relative z-10 h-7 w-7 object-contain"
-                  />
-                </div>
-                <div>
-                  <p className="text-xs font-black tracking-[0.28em] text-white">
-                    $MAD
-                  </p>
-                  <p className="text-[10px] uppercase tracking-[0.24em] text-white/45">
-                    Solana • Culture • Chaos
-                  </p>
-                </div>
-              </Link>
-            </div>
-
-            <nav className="hidden items-center gap-2 md:flex">
-              <NavPill href={LINKS.home}>Home</NavPill>
-              <NavPill href={LINKS.roadmap}>Roadmap</NavPill>
-              <NavPill href={LINKS.forge}>Forge</NavPill>
-              <NavPill href={LINKS.merch} active>
-                Merch
-              </NavPill>
-              <NavPill href={LINKS.art}>$MAD Art</NavPill>
-              <NavPill href={LINKS.lore}>Lore</NavPill>
-              <NavPill href={LINKS.game}>Game</NavPill>
-            </nav>
-
-            <div className="flex items-center gap-2">
-              <PillLink href={LINKS.jupiter} primary external>
-                Buy on Jupiter
-              </PillLink>
-            </div>
-          </div>
-        </header>
-
+      <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
         <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
           <div className="grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="relative px-5 py-12 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
@@ -265,9 +192,18 @@ export default function MerchPage() {
               </div>
 
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
-                <InfoCard label="Category" value={<span>Merch / Signal Pieces</span>} />
-                <InfoCard label="Aesthetic" value={<span>Luxury meme chaos</span>} />
-                <InfoCard label="Built For" value={<span>Holders, collectors, believers</span>} />
+                <InfoCard
+                  label="Category"
+                  value={<span>Merch / Signal Pieces</span>}
+                />
+                <InfoCard
+                  label="Aesthetic"
+                  value={<span>Luxury meme chaos</span>}
+                />
+                <InfoCard
+                  label="Built For"
+                  value={<span>Holders, collectors, believers</span>}
+                />
               </div>
             </div>
 
@@ -398,7 +334,8 @@ export default function MerchPage() {
             eyebrow="Why a Merch Page"
             title={
               <>
-                Keep people in the <span className="text-red-500">$MAD</span> world longer.
+                Keep people in the <span className="text-red-500">$MAD</span>{" "}
+                world longer.
               </>
             }
             body="Instead of instantly ejecting visitors to an outside store, this page gives the brand its own retail layer first."
