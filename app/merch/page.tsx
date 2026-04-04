@@ -331,42 +331,40 @@ export default function MerchPage() {
 
         <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
           <SectionHeader
-            eyebrow="Why a Merch Page"
+            eyebrow="Built for the Culture"
             title={
               <>
-                Keep people in the <span className="text-red-500">$MAD</span>{" "}
-                world longer.
+                More than merch.
+                <br />
+                It’s <span className="text-red-500">$MAD</span> you can wear.
               </>
             }
-            body="Instead of instantly ejecting visitors to an outside store, this page gives the brand its own retail layer first."
+            body="Every piece is designed to carry the signal beyond the chart. Clean, bold, collectible, and made for the people who want the brand to live in the real world."
             align="center"
           />
 
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             <InfoCard
-              label="Brand"
+              label="Signal"
               value={
                 <span>
-                  Makes the project feel more like a real ecosystem and less
-                  like a single outbound link.
+                  Clean pieces that instantly read as part of the $MAD universe.
                 </span>
               }
             />
             <InfoCard
-              label="Experience"
+              label="Style"
               value={
                 <span>
-                  Lets visitors browse, compare, and understand what each piece
-                  is before leaving.
+                  Premium presentation with a sharp, minimal, high-contrast look.
                 </span>
               }
             />
             <InfoCard
-              label="Conversion"
+              label="Collectible"
               value={
                 <span>
-                  Gives your merch a cleaner storefront presentation with more
-                  premium energy.
+                  Built to feel like more than merch—something worth keeping.
                 </span>
               }
             />
