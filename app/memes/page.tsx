@@ -3,12 +3,11 @@
 import Image from "next/image";
 
 type ArtItem = {
-  src: string; // must match /public/memes/*
+  src: string;
   title: string;
 };
 
 const ART: ArtItem[] = [
-  // New $MAD art first
   { src: "/memes/MAD-ARMY.png", title: "MAD Army" },
   { src: "/memes/MAD-AT-BEARS.png", title: "MAD at Bears" },
   { src: "/memes/MAD-BELIEVE.png", title: "MAD Believe" },
@@ -28,7 +27,6 @@ const ART: ArtItem[] = [
   { src: "/memes/YOU-MAKE-ME-MAD.png", title: "You Make Me MAD" },
   { src: "/memes/YOU-WILL-BE-MAD.png", title: "You Will Be MAD" },
 
-  // Older pieces after
   { src: "/memes/mad-meme-alarm.png", title: "Alarm" },
   { src: "/memes/mad-meme-chipsbagofair.png", title: "Chips Bag of Air" },
   { src: "/memes/mad-meme-coffeehot.png", title: "Coffee Too Hot" },
@@ -45,101 +43,141 @@ function downloadNameFromSrc(src: string) {
 
 export default function MemesPage() {
   const stickerSrc = "/stickers/sticker-smash.webp";
+  const featuredCount = Math.min(ART.length, 24);
 
   return (
-    <div className="relative overflow-hidden">
-      {/* background */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.22),transparent_55%),radial-gradient(circle_at_80%_40%,rgba(255,80,0,0.18),transparent_60%),radial-gradient(circle_at_50%_90%,rgba(255,0,0,0.14),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-25 [background:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
+    <div className="relative overflow-hidden bg-black text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,0,60,0.18),transparent_38%),radial-gradient(circle_at_82%_22%,rgba(255,90,0,0.12),transparent_34%),radial-gradient(circle_at_50%_100%,rgba(120,0,0,0.18),transparent_45%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.03),transparent_18%,transparent_82%,rgba(255,255,255,0.02))]" />
 
-      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16">
-        {/* Header */}
-        <div className="relative mx-auto max-w-3xl animate-fadeUp">
-          {/* Sticker */}
-          <div className="pointer-events-none absolute right-[-90px] top-[-18px] hidden lg:block">
-            <div className="relative h-[140px] w-[140px] rotate-[-8deg] drop-shadow-[0_25px_45px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:rotate-0 hover:scale-105">
-              <Image
-                src={stickerSrc}
-                alt="$MAD Art Sticker"
-                fill
-                sizes="140px"
-                className="object-contain"
-                priority={false}
-              />
+      <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-16 sm:px-8 lg:px-10">
+        <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-7 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,0,60,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,60,0,0.08),transparent_25%)]" />
+
+          <div className="relative flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-3xl animate-fadeUp">
+              <p className="text-xs font-semibold uppercase tracking-[0.38em] text-white/45">
+                CULTURE ARCHIVE
+              </p>
+
+              <h1 className="mt-5 text-5xl font-black tracking-tight sm:text-6xl lg:text-7xl">
+                <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
+                  $MAD
+                </span>{" "}
+                Art
+              </h1>
+
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
+                A curated gallery of{" "}
+                <span className="text-white/90">community energy</span>, signal,
+                and visual identity. Open any piece in full size or download it
+                below.
+              </p>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-200">
+                  Premium Gallery
+                </div>
+                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
+                  {ART.length} Pieces
+                </div>
+                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
+                  Download Ready
+                </div>
+              </div>
+            </div>
+
+            <div className="relative mx-auto h-[120px] w-[120px] shrink-0 sm:h-[150px] sm:w-[150px] lg:mx-0 lg:mt-1">
+              <div className="absolute inset-0 rounded-full bg-red-500/10 blur-2xl" />
+              <div className="relative h-full w-full rotate-[-7deg] drop-shadow-[0_20px_40px_rgba(0,0,0,0.55)]">
+                <Image
+                  src={stickerSrc}
+                  alt="$MAD Art Sticker"
+                  fill
+                  sizes="150px"
+                  className="object-contain"
+                  priority={false}
+                />
+              </div>
             </div>
           </div>
+        </section>
 
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/50">
-            CULTURE
-          </p>
+        <section className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.025] px-5 py-4 backdrop-blur-xl">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
+              EXHIBITION STATUS
+            </p>
+            <p className="mt-2 text-sm text-white/65">
+              The newest pieces lead the gallery, with earlier classics archived
+              below in the same flow.
+            </p>
+          </div>
 
-          <h1 className="mt-6 text-6xl font-black tracking-tight sm:text-7xl">
-            <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.65)]">
-              $MAD
-            </span>{" "}
-            Art
-          </h1>
+          <div className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm font-semibold text-white/80">
+            Featured: {featuredCount}
+          </div>
+        </section>
 
-          <p className="mt-5 max-w-2xl leading-relaxed text-white/65">
-            Not memes. Expressions of{" "}
-            <span className="text-red-500 drop-shadow-[0_0_10px_rgba(255,0,0,0.55)]">
-              $MAD
-            </span>
-            . Click any piece to open it, or download it below.
-          </p>
-        </div>
-
-        {/* Grid */}
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {ART.map((item) => (
-            <div
+        <section className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {ART.map((item, index) => (
+            <article
               key={item.src}
-              className="group overflow-hidden rounded-3xl border border-white/10 bg-black/30 shadow-2xl backdrop-blur-xl"
+              className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-red-500/25 hover:shadow-[0_24px_70px_rgba(120,0,0,0.28)]"
             >
               <a
                 href={item.src}
                 target="_blank"
                 rel="noreferrer"
                 className="block"
-                title="Open full size"
+                title={`Open ${item.title}`}
               >
-                <div className="relative aspect-[4/5] w-full">
+                <div className="relative aspect-[4/5] w-full overflow-hidden">
                   <Image
                     src={item.src}
                     alt={item.title}
                     fill
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                    priority={false}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    className="object-cover transition duration-500 group-hover:scale-[1.04]"
+                    priority={index < 6}
                   />
+
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent opacity-90" />
+
+                  <div className="absolute left-4 top-4">
+                    <div className="rounded-full border border-white/10 bg-black/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/70 backdrop-blur-md">
+                      $MAD Archive
+                    </div>
+                  </div>
                 </div>
               </a>
 
-              <div className="flex items-center justify-between gap-3 p-4">
+              <div className="flex items-center justify-between gap-4 p-5">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-black text-white/90">
+                  <h3 className="truncate text-lg font-black text-white/95">
                     {item.title}
+                  </h3>
+                  <p className="mt-1 truncate text-xs text-white/35">
+                    {downloadNameFromSrc(item.src)}
                   </p>
-                  <p className="truncate text-xs text-white/40">{item.src}</p>
                 </div>
 
                 <a
                   href={item.src}
                   download={downloadNameFromSrc(item.src)}
-                  className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/90 transition hover:bg-white/10"
+                  className="shrink-0 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-semibold text-white/90 transition hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-100"
                 >
                   Download
                 </a>
               </div>
-            </div>
+            </article>
           ))}
-        </div>
+        </section>
 
-        {/* Tiny helper */}
-        <div className="mt-10 text-xs text-white/35">
-          If a tile is blank: the filename in{" "}
-          <span className="text-white/60">/public/memes/</span> must match the
-          list exactly.
+        <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.025] px-5 py-4 text-xs leading-relaxed text-white/38 backdrop-blur-xl">
+          If a tile appears blank, check that the filename inside{" "}
+          <span className="text-white/60">/public/memes/</span> matches the
+          source exactly, including capitalization.
         </div>
       </div>
     </div>
