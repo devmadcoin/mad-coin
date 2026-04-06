@@ -20,9 +20,36 @@ type ArtItem = {
 };
 
 const NEW_ART: ArtItem[] = [
-  // ADD YOUR NEWEST ART HERE FIRST
-  // Example:
-  // { src: "/memes/NEW-FILE.png", title: "MAD New File", category: "New Drop", featured: true },
+  {
+    src: "/memes/WE-MAD-ZOOMIN.png",
+    title: "We MAD Zoomin",
+    category: "Signal",
+    featured: true,
+  },
+  {
+    src: "/memes/MAD-2-MONTHS.png",
+    title: "MAD 2 Months",
+    category: "Signal",
+    featured: true,
+  },
+  {
+    src: "/memes/MAD-KINGS-ONLY.png",
+    title: "MAD Kings Only",
+    category: "Signal",
+    featured: true,
+  },
+  {
+    src: "/memes/MAD-NEPTUNE.png",
+    title: "MAD Neptune",
+    category: "Philosophy",
+    featured: false,
+  },
+  {
+    src: "/memes/MAD-RICH-IN-THE-TUB.png",
+    title: "MAD Rich in the Tub",
+    category: "Meme",
+    featured: true,
+  },
 ];
 
 const ARCHIVE_ART: ArtItem[] = [
@@ -147,15 +174,13 @@ export default function MemesPage() {
   const stickerSrc = "/stickers/sticker-smash.webp";
 
   const featuredCount = ALL_ART.filter((item) => item.featured).length;
+
   const visibleArt = useMemo(
     () => getVisibleArt(activeFilter, ALL_ART),
     [activeFilter]
   );
 
-  const visibleNewArt = useMemo(
-    () => getVisibleArt("New Drop", ALL_ART),
-    []
-  );
+  const visibleNewArt = useMemo(() => NEW_ART, []);
 
   return (
     <div className="relative overflow-hidden bg-black text-white">
