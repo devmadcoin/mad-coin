@@ -41,18 +41,16 @@ export default function NavBar() {
               </div>
             </Link>
 
-            <div className="no-scrollbar flex-1 overflow-x-auto whitespace-nowrap [-webkit-overflow-scrolling:touch]">
-              <div className="flex w-max items-center gap-2 pl-1">
-                {NAV_ITEMS.map((item) => (
-                  <NavPill
-                    key={item.href}
-                    href={item.href}
-                    pathname={pathname}
-                  >
-                    {item.label}
-                  </NavPill>
-                ))}
-              </div>
+            <div className="flex flex-1 flex-wrap items-center justify-end gap-2">
+              {NAV_ITEMS.map((item) => (
+                <NavPill
+                  key={item.href}
+                  href={item.href}
+                  pathname={pathname}
+                >
+                  {item.label}
+                </NavPill>
+              ))}
             </div>
           </div>
 
@@ -75,18 +73,17 @@ export default function NavBar() {
               </div>
             </Link>
 
-            <div className="mt-3 overflow-x-auto [-webkit-overflow-scrolling:touch]">
-              <div className="no-scrollbar flex min-w-max items-center gap-2 pb-1">
-                {NAV_ITEMS.map((item) => (
-                  <NavPill
-                    key={item.href}
-                    href={item.href}
-                    pathname={pathname}
-                  >
-                    {item.mobileLabel ?? item.label}
-                  </NavPill>
-                ))}
-              </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {NAV_ITEMS.map((item) => (
+                <NavPill
+                  key={item.href}
+                  href={item.href}
+                  pathname={pathname}
+                  mobile
+                >
+                  {item.mobileLabel ?? item.label}
+                </NavPill>
+              ))}
             </div>
           </div>
         </nav>
@@ -104,10 +101,12 @@ function NavPill({
   href,
   children,
   pathname,
+  mobile = false,
 }: {
   href: string;
   children: ReactNode;
   pathname: string;
+  mobile?: boolean;
 }) {
   const active = isActive(pathname, href);
 
@@ -115,7 +114,10 @@ function NavPill({
     <Link
       href={href}
       className={[
-        "shrink-0 select-none rounded-full border px-4 py-2 text-sm font-semibold transition",
+        "select-none rounded-full border font-semibold transition",
+        mobile
+          ? "px-3 py-2 text-[13px]"
+          : "px-4 py-2 text-sm",
         active
           ? "border-red-500/40 bg-red-500/15 text-red-400 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
           : "border-white/10 bg-white/5 text-white/90 hover:border-red-500/30 hover:bg-white/10 hover:text-white hover:shadow-[0_0_12px_rgba(255,0,0,0.35)]",
