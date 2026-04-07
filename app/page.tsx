@@ -276,12 +276,18 @@ export default function Home() {
               </p>
 
               <h1 className="mt-5 max-w-4xl text-[2.5rem] font-black leading-[0.9] tracking-[-0.04em] text-white sm:text-[4rem] lg:text-[5.2rem]">
-                STOP TRADING
+                <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.55)]">
+                  STOP
+                </span>{" "}
+                TRADING
                 <br />
                 NOISE.
                 <br />
                 START BEING{" "}
-                <span className="text-red-500">$MAD</span>.
+                <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.55)]">
+                  $MAD
+                </span>
+                .
               </h1>
 
               <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
