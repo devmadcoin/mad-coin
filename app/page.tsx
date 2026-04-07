@@ -263,12 +263,6 @@ export default function Home() {
                 Confessions
               </a>
             </nav>
-
-            <div className="flex items-center gap-2">
-              <PillButton href={LINKS.jupiter} primary>
-                Buy on Jupiter
-              </PillButton>
-            </div>
           </div>
         </header>
 
@@ -479,6 +473,17 @@ export default function Home() {
               />
             </div>
           </div>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <PillButton href={LINKS.chartPage}>View Full Dexscreener</PillButton>
+            <PillButton href={LINKS.jupiter} primary>
+              Buy on Jupiter
+            </PillButton>
+          </div>
+
+          <p className="mt-4 text-sm leading-7 text-white/52">
+            Watch the chart first. If the signal makes sense to you, Jupiter is right below.
+          </p>
         </section>
 
         <section
