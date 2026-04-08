@@ -103,10 +103,10 @@ const ecosystemItems = [
 ] as const;
 
 const HOME_SECTIONS = [
+  { href: "#connect", label: "Connect" },
   { href: "#merch", label: "Merch" },
   { href: "#ecosystem", label: "Verified" },
   { href: "#confessions", label: "Confessions" },
-  { href: "#connect", label: "Connect" },
 ] as const;
 
 function PillButton({
@@ -203,37 +203,6 @@ function InfoCard({
         {value}
       </div>
     </div>
-  );
-}
-
-function ConnectLogo({
-  href,
-  src,
-  alt,
-  size = 40,
-}: {
-  href: string;
-  src: string;
-  alt: string;
-  size?: number;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="group flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] transition hover:-translate-y-1 hover:border-red-500/40 hover:bg-white/[0.06]"
-      aria-label={alt}
-      title={alt}
-    >
-      <Image
-        src={src}
-        alt={alt}
-        width={size}
-        height={size}
-        className="opacity-80 transition duration-200 group-hover:opacity-100"
-      />
-    </a>
   );
 }
 
@@ -336,10 +305,10 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <PillButton href="#merch" primary>
-                  Shop Merch
+                <PillButton href="#connect" primary>
+                  Connect
                 </PillButton>
-                <PillButton href={LINKS.chartPage}>View Chart</PillButton>
+                <PillButton href="#merch">Shop Merch</PillButton>
                 <PillButton href={LINKS.jupiter}>Open Jupiter</PillButton>
               </div>
 
@@ -406,6 +375,34 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section
+          id="connect"
+          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
+        >
+          <div className="text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+              Connect
+            </p>
+
+            <h3 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
+              Where the signal lives.
+            </h3>
+
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
+              The signal doesn’t come to you. You step into it.
+            </p>
+          </div>
+
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <PillButton href={LINKS.telegram} primary>
+              Join Telegram
+            </PillButton>
+            <PillButton href={LINKS.x}>Follow on X</PillButton>
+            <PillButton href={LINKS.instagram}>Instagram</PillButton>
+            <PillButton href={LINKS.tiktok}>TikTok</PillButton>
           </div>
         </section>
 
@@ -540,55 +537,6 @@ export default function Home() {
             />
           </div>
           <MadConfessions />
-        </section>
-
-        <section
-          id="connect"
-          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
-        >
-          <div className="text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-              Connect
-            </p>
-
-            <h3 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
-              Where the signal lives.
-            </h3>
-
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-              The signal doesn’t come to you. You step into it.
-            </p>
-          </div>
-
-          <div className="mt-10 flex flex-wrap justify-center gap-6">
-            <ConnectLogo
-              href={LINKS.telegram}
-              src="/logos/telegram.png"
-              alt="Telegram"
-              size={40}
-            />
-
-            <ConnectLogo
-              href={LINKS.x}
-              src="/logos/x.png"
-              alt="X"
-              size={36}
-            />
-
-            <ConnectLogo
-              href={LINKS.instagram}
-              src="/logos/instagram.png"
-              alt="Instagram"
-              size={36}
-            />
-
-            <ConnectLogo
-              href={LINKS.tiktok}
-              src="/logos/tiktok.png"
-              alt="TikTok"
-              size={36}
-            />
-          </div>
         </section>
 
         <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
