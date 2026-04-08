@@ -8,15 +8,16 @@ import type { ReactNode } from "react";
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
 
-  // PRIMARY STORY (highlighted)
-  { href: "/roadmap", label: "The Mad Path", variant: "primary" },
+  // Primary story destination
+  { href: "/roadmap", label: "The Mad Path", mobileLabel: "Mad Path", variant: "primary" as const },
 
+  // Experience flow
   { href: "/game", label: "Game" },
   { href: "/memes", label: "$MAD Art", mobileLabel: "Art" },
   { href: "/forge", label: "Forge" },
 
-  // FINAL CONVERSION (special styling)
-  { href: "/merch", label: "Merch", variant: "cta" },
+  // Final conversion
+  { href: "/merch", label: "Merch", variant: "cta" as const },
 ];
 
 export default function NavBar() {
@@ -119,24 +120,20 @@ function NavPill({
       href={href}
       className={[
         "relative select-none rounded-full border font-semibold transition-all duration-300",
-
         mobile ? "px-3 py-2 text-[13px]" : "px-4 py-2 text-sm",
 
-        // 🎯 PRIMARY (The Mad Path)
         variant === "primary"
           ? active
             ? "border-red-500 bg-red-500/20 text-red-400 shadow-[0_0_18px_rgba(255,0,0,0.6)]"
             : "border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20 hover:shadow-[0_0_20px_rgba(255,0,0,0.5)]"
           : "",
 
-        // 🧨 CTA (Merch)
         variant === "cta"
           ? active
             ? "border-white bg-white text-black shadow-[0_0_18px_rgba(255,255,255,0.4)]"
             : "border-white/20 bg-white/10 text-white hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]"
           : "",
 
-        // Default
         !variant &&
           (active
             ? "border-red-500/40 bg-red-500/15 text-red-400 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
