@@ -10,8 +10,9 @@ const ADDR = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 const LINKS = {
   chartPage: `https://dexscreener.com/solana/${ADDR}`,
   telegram: "https://t.me/MadOfficalChannel",
-  x: "https://x.com/devmadcoin",
-  tiktok: "https://www.tiktok.com/@devmadcoin",
+  x: "https://x.com/madrichclub_",
+  instagram: "https://www.instagram.com/madrichclub/",
+  tiktok: "https://www.tiktok.com/@madrichclub",
   coingecko: "https://www.coingecko.com/en/coins/mad-coin",
   birdeye: `https://birdeye.so/token/${ADDR}?chain=solana`,
   jupiter: `https://jup.ag/swap/SOL-${ADDR}`,
@@ -105,6 +106,7 @@ const HOME_SECTIONS = [
   { href: "#merch", label: "Merch" },
   { href: "#ecosystem", label: "Verified" },
   { href: "#confessions", label: "Confessions" },
+  { href: "#connect", label: "Connect" },
 ] as const;
 
 function PillButton({
@@ -201,6 +203,37 @@ function InfoCard({
         {value}
       </div>
     </div>
+  );
+}
+
+function ConnectLogo({
+  href,
+  src,
+  alt,
+  size = 40,
+}: {
+  href: string;
+  src: string;
+  alt: string;
+  size?: number;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="group flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] transition hover:-translate-y-1 hover:border-red-500/40 hover:bg-white/[0.06]"
+      aria-label={alt}
+      title={alt}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        width={size}
+        height={size}
+        className="opacity-80 transition duration-200 group-hover:opacity-100"
+      />
+    </a>
   );
 }
 
@@ -507,6 +540,55 @@ export default function Home() {
             />
           </div>
           <MadConfessions />
+        </section>
+
+        <section
+          id="connect"
+          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
+        >
+          <div className="text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+              Connect
+            </p>
+
+            <h3 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
+              Where the signal lives.
+            </h3>
+
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
+              The signal doesn’t come to you. You step into it.
+            </p>
+          </div>
+
+          <div className="mt-10 flex flex-wrap justify-center gap-6">
+            <ConnectLogo
+              href={LINKS.telegram}
+              src="/logos/telegram.png"
+              alt="Telegram"
+              size={40}
+            />
+
+            <ConnectLogo
+              href={LINKS.x}
+              src="/logos/x.png"
+              alt="X"
+              size={36}
+            />
+
+            <ConnectLogo
+              href={LINKS.instagram}
+              src="/logos/instagram.png"
+              alt="Instagram"
+              size={36}
+            />
+
+            <ConnectLogo
+              href={LINKS.tiktok}
+              src="/logos/tiktok.png"
+              alt="TikTok"
+              size={36}
+            />
+          </div>
         </section>
 
         <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
