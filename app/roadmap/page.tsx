@@ -4,10 +4,11 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type Status = "complete" | "in_progress" | "planned";
 
-type RoadmapItem = {
+type PathItem = {
   phase: string;
   title: string;
-  desc: string;
+  action: string;
+  meaning: string;
   status: Status;
 };
 
@@ -48,21 +49,21 @@ function statusDot(status: Status) {
 
 function phaseBarWidth(status: Status) {
   if (status === "complete") return "100%";
-  if (status === "in_progress") return "60%";
+  if (status === "in_progress") return "68%";
   return "10%";
 }
 
 function pointY(status: Status, index: number) {
   if (status === "complete") {
-    return [68, 56, 44, 36, 28, 22][index] ?? 28;
+    return [72, 64, 56, 48, 40, 32, 26, 21][index] ?? 24;
   }
   if (status === "in_progress") {
-    return 18;
+    return 16;
   }
-  return [26, 20, 14][index % 3] ?? 18;
+  return [24, 18][index % 2] ?? 18;
 }
 
-export default function RoadmapPage() {
+export default function MadPathPage() {
   const [animateIn, setAnimateIn] = useState(false);
   const [zoom, setZoom] = useState(1.2);
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -72,60 +73,126 @@ export default function RoadmapPage() {
     return () => window.clearTimeout(t);
   }, []);
 
-  const items: RoadmapItem[] = useMemo(
+  const items: PathItem[] = useMemo(
     () => [
       {
         phase: "PHASE 1",
-        title: "Foundation",
-        desc: "Launch $MAD. Establish identity. Deploy system.",
+        title: "Genesis",
+        action: "$MAD was minted. Emotion became code.",
+        meaning:
+          "This wasn’t a test run or a reset button. From the first moment, $MAD had to survive in real conditions.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 1.1",
+        title: "Community Ignition",
+        action: "Telegram launched. The first gathering formed.",
+        meaning:
+          "Signal needs a channel. This is where belief stopped being individual and became collective.",
         status: "complete",
       },
       {
         phase: "PHASE 1.2",
-        title: "Token Lock",
-        desc: "111M tokens locked → anti-rug architecture activated.",
+        title: "The Trial",
+        action: "A 5% wallet tested the system during launch week.",
+        meaning:
+          "Most projects restart under pressure. $MAD didn’t. Discipline over panic became the standard.",
         status: "complete",
       },
       {
         phase: "PHASE 1.3",
-        title: "Supply Burn",
-        desc: "450M tokens burned → scarcity engine engaged.",
+        title: "Bonding",
+        action: "Liquidity bonded. Structure hardened.",
+        meaning:
+          "Volatility met foundation. This was the moment chaos started becoming controlled.",
         status: "complete",
       },
       {
         phase: "PHASE 1.4",
-        title: "Signal Expansion",
-        desc: "Listed on CoinGecko → visibility unlocked.",
+        title: "The Attack",
+        action: "Telegram and Dexscreener were botted.",
+        meaning:
+          "Noise tried to bury signal. It didn’t work. Pressure revealed resilience.",
         status: "complete",
       },
       {
         phase: "PHASE 1.5",
-        title: "Liquidity Access",
-        desc: "Live on Jupiter → frictionless entry.",
+        title: "The Comeback",
+        action: "Telegram was deleted, but belief rebuilt the path.",
+        meaning:
+          "Platforms can be removed. Belief cannot. This became one of the defining identity moments for $MAD.",
         status: "complete",
       },
       {
         phase: "PHASE 1.6",
-        title: "Physical Layer",
-        desc: "$MAD merch enters real world.",
+        title: "Silent Discipline",
+        action: "33M tokens were quietly burned with no spectacle.",
+        meaning:
+          "No announcement. No hype. Just structure. This proved intent over attention.",
         status: "complete",
       },
       {
-        phase: "PHASE 2",
-        title: "Acquisition Engine",
-        desc: "Acquire supply + support community growth.",
-        status: "planned",
+        phase: "PHASE 1.7",
+        title: "The 400M Burn",
+        action: "400,000,000 $MAD tokens were permanently burned.",
+        meaning:
+          "This wasn’t destruction. It was refinement. Scarcity strengthened conviction and sharpened identity.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 1.8",
+        title: "The Gork Moment",
+        action: "A challenge became the mission: burn 800M.",
+        meaning:
+          "What started as a jab became direction. This is where the path stopped moving forward and started aiming upward.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 1.9",
+        title: "Visibility",
+        action: "$MAD was listed on CoinGecko.",
+        meaning:
+          "The signal left the underground. Now it could be tracked, watched, and judged by the wider world.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 2.0",
+        title: "System Recognition",
+        action: "$MAD was officially verified by Jupiter.",
+        meaning:
+          "The system didn’t change $MAD. It acknowledged it. Recognition followed persistence.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 2.1",
+        title: "MAD Games",
+        action: "The first MAD Games happened inside Roblox with real SOL rewards.",
+        meaning:
+          "$MAD became interactive. Not just watched — experienced. The signal became a game.",
+        status: "complete",
       },
       {
         phase: "PHASE 3",
-        title: "Game Integration",
-        desc: "$MAD Roblox experience launches.",
+        title: "Acquisition Engine",
+        action: "Acquire supply and support community growth.",
+        meaning:
+          "This is where conviction starts organizing itself. Not random movement — directed expansion.",
         status: "planned",
       },
       {
         phase: "PHASE 4",
-        title: "Final Burn",
-        desc: "Push total burn to 800M supply.",
+        title: "Game Integration",
+        action: "Expand the $MAD experience deeper into gaming.",
+        meaning:
+          "The signal keeps moving from chart to culture to interaction.",
+        status: "planned",
+      },
+      {
+        phase: "FINAL PHASE",
+        title: "The Sky Burn",
+        action: "Push toward 800M total $MAD burned.",
+        meaning:
+          "This is the vertical move — the defining contraction that marks the next level of the story.",
         status: "in_progress",
       },
     ],
@@ -160,7 +227,7 @@ export default function RoadmapPage() {
 
   const candleTarget = {
     x: Math.min(97, (currentPoint?.x ?? 93) + 1.5),
-    y: 3.5,
+    y: 3.2,
   };
 
   function zoomIn() {
@@ -176,7 +243,7 @@ export default function RoadmapPage() {
     scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" });
   }
 
-  const chartMinWidth = `${Math.round(1100 * zoom)}px`;
+  const chartMinWidth = `${Math.round(1320 * zoom)}px`;
 
   return (
     <div className="relative overflow-hidden bg-[#050505] text-white">
@@ -187,38 +254,40 @@ export default function RoadmapPage() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-20">
-        <div className="max-w-3xl">
+        <div className="max-w-4xl">
           <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-white/45">
-            SIGNAL PATH
+            THE MAD PATH
           </p>
 
           <h1 className="mt-5 text-5xl font-black leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl">
+            Follow the
             <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.7)]">
-              $MAD
-            </span>{" "}
-            Roadmap
+              {" "}Mad Path
+            </span>
+            .
           </h1>
 
-          <p className="mt-5 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-            Not hype. Not promises. A system expanding in real time. Track the
-            signal, watch the movement, and see where the next phase begins.
+          <p className="mt-5 max-w-3xl text-sm leading-7 text-white/62 sm:text-base">
+            Not everyone will understand it. Only the ones who feel it will follow it.
+            This is not a checklist. It is a record of pressure, survival, discipline,
+            and upward movement.
           </p>
         </div>
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
-          <StatCard label="Complete" value={`${completed}`} />
-          <StatCard label="Active" value={`${inProgress}`} accent />
-          <StatCard label="Progress" value={`${pct}%`} />
+          <StatCard label="Chapters Complete" value={`${completed}`} />
+          <StatCard label="Current Phase" value={`${inProgress}`} accent />
+          <StatCard label="Path Progress" value={`${pct}%`} />
         </div>
 
         <section className="mt-10 overflow-hidden rounded-[36px] border border-white/10 bg-black/35 p-5 shadow-[0_24px_100px_rgba(0,0,0,0.42)] backdrop-blur-xl sm:p-7 lg:p-8">
           <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/42">
-                Momentum Map
+                The Climb
               </p>
               <h2 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
-                Charting the climb.
+                Pressure. Response. Evolution.
               </h2>
             </div>
 
@@ -317,7 +386,7 @@ export default function RoadmapPage() {
 
                       <line
                         x1={candleTarget.x}
-                        y1={currentPoint?.y ?? 18}
+                        y1={currentPoint?.y ?? 16}
                         x2={candleTarget.x}
                         y2={candleTarget.y}
                         stroke="url(#madCandleGlow)"
@@ -362,7 +431,7 @@ export default function RoadmapPage() {
 
                           <div
                             className={[
-                              "absolute top-7 w-[165px] rounded-2xl border px-3 py-2 backdrop-blur-xl transition duration-300 sm:w-[185px]",
+                              "absolute top-7 w-[180px] rounded-2xl border px-3 py-2 backdrop-blur-xl transition duration-300 sm:w-[210px]",
                               isFirst
                                 ? "left-0 translate-x-0"
                                 : isLast
@@ -403,9 +472,9 @@ export default function RoadmapPage() {
                         <span className="absolute inline-flex h-12 w-12 animate-pulse rounded-full bg-red-500/15" />
                       </div>
 
-                      <div className="absolute bottom-8 left-1/2 w-[170px] -translate-x-1/2 rounded-2xl border border-red-500/30 bg-red-500/[0.10] px-3 py-2 backdrop-blur-xl sm:w-[190px]">
+                      <div className="absolute bottom-8 left-1/2 w-[180px] -translate-x-1/2 rounded-2xl border border-red-500/30 bg-red-500/[0.10] px-3 py-2 backdrop-blur-xl sm:w-[210px]">
                         <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-300/80">
-                          Sky Target
+                          The Summit
                         </p>
                         <p className="mt-1 text-xs font-bold text-white sm:text-sm">
                           800M Burn
@@ -415,7 +484,7 @@ export default function RoadmapPage() {
                   </div>
 
                   <div className="pointer-events-none absolute bottom-4 left-4 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/45 backdrop-blur">
-                    Live roadmap signal
+                    Live path signal
                   </div>
                 </div>
               </div>
@@ -435,7 +504,7 @@ export default function RoadmapPage() {
             </div>
 
             <p className="mt-3 text-sm text-white/52">
-              {completed} of {total} roadmap phases completed.
+              {completed} of {total} chapters completed.
             </p>
           </div>
         </section>
@@ -443,16 +512,16 @@ export default function RoadmapPage() {
         <section className="mt-12">
           <div className="mb-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/42">
-              Phase Details
+              The Path
             </p>
             <h2 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
-              Every signal point, explained.
+              Every chapter, and why it mattered.
             </h2>
           </div>
 
           <div className="grid gap-5 lg:grid-cols-2">
             {items.map((item) => (
-              <RoadmapCard key={item.phase} item={item} />
+              <MadPathCard key={item.phase} item={item} />
             ))}
           </div>
         </section>
@@ -513,7 +582,7 @@ function StatCard({
   );
 }
 
-function RoadmapCard({ item }: { item: RoadmapItem }) {
+function MadPathCard({ item }: { item: PathItem }) {
   const chip = statusChip(item.status);
   const barWidth = phaseBarWidth(item.status);
 
@@ -528,15 +597,29 @@ function RoadmapCard({ item }: { item: RoadmapItem }) {
           <h3 className="mt-2 text-2xl font-black text-white transition group-hover:text-red-400">
             {item.title}
           </h3>
-
-          <p className="mt-3 max-w-md text-sm leading-7 text-white/60">
-            {item.desc}
-          </p>
         </div>
 
         <div className={`rounded-full border px-3 py-1 text-xs font-semibold ${chip.cls}`}>
           {chip.label}
         </div>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/42">
+          Action
+        </p>
+        <p className="mt-2 text-sm leading-7 text-white/72">
+          {item.action}
+        </p>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-red-500/15 bg-red-500/[0.05] p-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-300/80">
+          Why It Mattered
+        </p>
+        <p className="mt-2 text-sm leading-7 text-white/76">
+          {item.meaning}
+        </p>
       </div>
 
       <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-white/5">
