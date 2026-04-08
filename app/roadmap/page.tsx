@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 type Status = "complete" | "in_progress" | "planned";
 
@@ -62,6 +68,54 @@ function pointY(status: Status, index: number) {
     return 11;
   }
   return [19, 15][index % 2] ?? 15;
+}
+
+function RevealOnScroll({
+  children,
+  delay = 0,
+}: {
+  children: ReactNode;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.unobserve(node);
+        }
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={[
+        "transition-all duration-700 ease-out will-change-transform",
+        visible
+          ? "translate-y-0 opacity-100 blur-0"
+          : "translate-y-8 opacity-0 blur-[2px]",
+      ].join(" ")}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
 }
 
 export default function MadPathPage() {
@@ -564,7 +618,9 @@ export default function MadPathPage() {
 
             <div className="space-y-5">
               {items.map((item, index) => (
-                <MadPathCard key={item.phase} item={item} index={index} />
+                <RevealOnScroll key={item.phase} delay={Math.min(index * 45, 220)}>
+                  <MadPathCard item={item} />
+                </RevealOnScroll>
               ))}
             </div>
           </div>
@@ -593,17 +649,6 @@ export default function MadPathPage() {
         @keyframes candleDraw {
           to {
             stroke-dashoffset: 0;
-          }
-        }
-
-        @keyframes pathCardIn {
-          0% {
-            opacity: 0;
-            transform: translateY(18px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
           }
         }
       `}</style>
@@ -637,26 +682,12 @@ function StatCard({
   );
 }
 
-function MadPathCard({
-  item,
-  index,
-}: {
-  item: PathItem;
-  index: number;
-}) {
+function MadPathCard({ item }: { item: PathItem }) {
   const chip = statusChip(item.status);
   const barWidth = phaseBarWidth(item.status);
 
   return (
-    <article
-      className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-black/30 p-6 backdrop-blur-xl transition duration-500 hover:border-red-500/25 hover:bg-black/35 md:ml-10"
-      style={{
-        animation: `pathCardIn 0.65s ease-out forwards`,
-        animationDelay: `${index * 120}ms`,
-        opacity: 0,
-        transform: "translateY(18px)",
-      }}
-    >
+    <article className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-black/30 p-6 backdrop-blur-xl transition duration-500 hover:border-red-500/25 hover:bg-black/35 md:ml-10">
       <div className="absolute left-[-30px] top-8 hidden md:block">
         <div className="flex h-8 w-8 items-center justify-center rounded-full border border-red-500/25 bg-black shadow-[0_0_25px_rgba(255,0,0,0.12)]">
           <div
