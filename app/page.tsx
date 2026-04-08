@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import MadConfessions from "./components/MadConfessions";
@@ -108,6 +108,54 @@ const HOME_SECTIONS = [
   { href: "#ecosystem", label: "Ecosystem" },
   { href: "#confessions", label: "Confessions" },
 ] as const;
+
+function RevealOnScroll({
+  children,
+  delay = 0,
+}: {
+  children: ReactNode;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.unobserve(node);
+        }
+      },
+      {
+        threshold: 0.14,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={[
+        "transition-all duration-700 ease-out will-change-transform",
+        visible
+          ? "translate-y-0 opacity-100 blur-0"
+          : "translate-y-6 opacity-0 blur-[2px]",
+      ].join(" ")}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+}
 
 function PillButton({
   href,
@@ -394,59 +442,6 @@ export default function Home() {
         </section>
 
         <section
-          id="merch"
-          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
-        >
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <SectionHeader
-              eyebrow="Retail"
-              title={
-                <>
-                  You’re <span className="text-red-500">$MAD</span>.
-                  <br />
-                  Wear it like you mean it.
-                </>
-              }
-              body="Collect the pieces that carry the signal."
-            />
-            <div className="shrink-0">
-              <PillButton href={LINKS.retailSticker}>View Retail</PillButton>
-            </div>
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            {merchItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group rounded-[28px] border border-white/10 bg-white/[0.03] p-5 transition duration-300 hover:-translate-y-1 hover:border-red-500/30 hover:bg-white/[0.05]"
-              >
-                <div className="relative flex h-[220px] items-center justify-center overflow-hidden rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,59,48,0.12),transparent_45%)] opacity-0 transition duration-300 group-hover:opacity-100" />
-                  <Image
-                    src={item.src}
-                    alt={item.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                    className="object-contain p-6 transition duration-300 group-hover:scale-[1.04]"
-                  />
-                </div>
-
-                <div className="mt-5">
-                  <p className="text-xs uppercase tracking-[0.24em] text-white/42">
-                    {item.subtitle}
-                  </p>
-                  <h3 className="mt-2 text-xl font-black text-white">{item.name}</h3>
-                  <p className="mt-3 text-sm font-bold text-red-400">Open Product →</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section
           id="chart"
           className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
         >
@@ -498,217 +493,289 @@ export default function Home() {
           </p>
         </section>
 
-        <section
-          id="signal"
-          className="mt-12 overflow-hidden rounded-[38px] border border-white/10 bg-black/28 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-        >
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,40,40,0.14),transparent_35%),radial-gradient(circle_at_85%_70%,rgba(255,80,0,0.10),transparent_30%)]" />
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02),transparent,rgba(255,255,255,0.02))]" />
-
-            <div className="relative grid max-w-7xl grid-cols-1 gap-10 px-5 py-12 sm:px-8 sm:py-14 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14 lg:px-10">
-              <div className="max-w-3xl">
-                <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.35em] text-white/45">
-                  The Signal
-                </p>
-
-                <h2 className="max-w-4xl text-4xl font-black uppercase leading-[0.95] text-white sm:text-5xl lg:text-6xl">
-                  <span className="text-[#ff3b30] drop-shadow-[0_0_18px_rgba(255,59,48,0.35)]">
-                    Stop
-                  </span>{" "}
-                  Trading Noise.
-                  <br />
-                  Start Being $MAD.
-                </h2>
-
-                <p className="mt-6 max-w-2xl text-base leading-7 text-white/72 sm:text-lg">
-                  $MAD is more than a token. It is a philosophy of control under pressure.
-                  Most people chase hype, panic in red, and react without thinking.
-                  $MAD stands for something different.
-                </p>
-
-                <div className="mt-8 space-y-4 text-sm leading-7 text-white/75 sm:text-base">
-                  <p>
-                    <span className="font-bold text-white">RIC</span> — control your emotions
-                  </p>
-                  <p>
-                    <span className="font-bold text-white">WEAL</span> — build something that grows
-                  </p>
-                  <p>
-                    Every pump tests your ego. Every dip tests your discipline. Every decision reveals who you are.
-                  </p>
-                </div>
-
-                <div className="mt-8 rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
-                    True Definition
-                  </p>
-                  <h3 className="mt-3 text-2xl font-black leading-tight text-white sm:text-3xl">
-                    MAD is not just emotion.
+        <RevealOnScroll delay={0}>
+          <section
+            id="merch"
+            className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
+          >
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <SectionHeader
+                eyebrow="Retail"
+                title={
+                  <>
+                    You’re <span className="text-red-500">$MAD</span>.
                     <br />
-                    It is the force that creates change.
-                  </h3>
-                  <p className="mt-4 max-w-2xl text-sm leading-7 text-white/66 sm:text-base">
-                    Most people hear mad and think chaos. But pressure is only the beginning.
-                    $MAD is the moment reaction becomes direction — when emotion,
-                    conviction, and intensity turn into movement.
-                  </p>
-                </div>
+                    Wear it like you mean it.
+                  </>
+                }
+                body="Collect the pieces that carry the signal."
+              />
+              <div className="shrink-0">
+                <PillButton href={LINKS.retailSticker}>View Retail</PillButton>
+              </div>
+            </div>
 
-                <div className="mt-6 rounded-[30px] border border-red-500/20 bg-red-500/[0.06] p-6 sm:p-7">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-red-400">
-                    The MAD Method
-                  </p>
-                  <h3 className="mt-3 text-2xl font-black leading-tight text-white sm:text-3xl">
-                    M.A.D. is a system.
-                  </h3>
+            <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+              {merchItems.map((item, index) => (
+                <RevealOnScroll key={item.name} delay={Math.min(index * 70, 210)}>
+                  <Link
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block rounded-[28px] border border-white/10 bg-white/[0.03] p-5 transition duration-300 hover:-translate-y-1 hover:border-red-500/30 hover:bg-white/[0.05]"
+                  >
+                    <div className="relative flex h-[220px] items-center justify-center overflow-hidden rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]">
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,59,48,0.12),transparent_45%)] opacity-0 transition duration-300 group-hover:opacity-100" />
+                      <Image
+                        src={item.src}
+                        alt={item.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                        className="object-contain p-6 transition duration-300 group-hover:scale-[1.04]"
+                      />
+                    </div>
 
-                  <div className="mt-5 space-y-3 text-sm leading-7 text-white/75 sm:text-base">
+                    <div className="mt-5">
+                      <p className="text-xs uppercase tracking-[0.24em] text-white/42">
+                        {item.subtitle}
+                      </p>
+                      <h3 className="mt-2 text-xl font-black text-white">{item.name}</h3>
+                      <p className="mt-3 text-sm font-bold text-red-400">Open Product →</p>
+                    </div>
+                  </Link>
+                </RevealOnScroll>
+              ))}
+            </div>
+          </section>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={40}>
+          <section
+            id="signal"
+            className="mt-12 overflow-hidden rounded-[38px] border border-white/10 bg-black/28 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+          >
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,40,40,0.14),transparent_35%),radial-gradient(circle_at_85%_70%,rgba(255,80,0,0.10),transparent_30%)]" />
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02),transparent,rgba(255,255,255,0.02))]" />
+
+              <div className="relative grid max-w-7xl grid-cols-1 gap-10 px-5 py-12 sm:px-8 sm:py-14 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14 lg:px-10">
+                <div className="max-w-3xl">
+                  <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.35em] text-white/45">
+                    The Signal
+                  </p>
+
+                  <h2 className="max-w-4xl text-4xl font-black uppercase leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+                    <span className="text-[#ff3b30] drop-shadow-[0_0_18px_rgba(255,59,48,0.35)]">
+                      Stop
+                    </span>{" "}
+                    Trading Noise.
+                    <br />
+                    Start Being $MAD.
+                  </h2>
+
+                  <p className="mt-6 max-w-2xl text-base leading-7 text-white/72 sm:text-lg">
+                    $MAD is more than a token. It is a philosophy of control under pressure.
+                    Most people chase hype, panic in red, and react without thinking.
+                    $MAD stands for something different.
+                  </p>
+
+                  <div className="mt-8 space-y-4 text-sm leading-7 text-white/75 sm:text-base">
                     <p>
-                      <span className="font-bold text-white">Measure</span> — Why am I mad?
+                      <span className="font-bold text-white">RIC</span> — control your emotions
                     </p>
                     <p>
-                      <span className="font-bold text-white">Aim</span> — What’s my real target?
+                      <span className="font-bold text-white">WEAL</span> — build something that grows
                     </p>
                     <p>
-                      <span className="font-bold text-white">Do</span> — Take controlled action.
+                      Every pump tests your ego. Every dip tests your discipline. Every decision reveals who you are.
                     </p>
+                  </div>
+
+                  <RevealOnScroll delay={20}>
+                    <div className="mt-8 rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
+                        True Definition
+                      </p>
+                      <h3 className="mt-3 text-2xl font-black leading-tight text-white sm:text-3xl">
+                        MAD is not just emotion.
+                        <br />
+                        It is the force that creates change.
+                      </h3>
+                      <p className="mt-4 max-w-2xl text-sm leading-7 text-white/66 sm:text-base">
+                        Most people hear mad and think chaos. But pressure is only the beginning.
+                        $MAD is the moment reaction becomes direction — when emotion,
+                        conviction, and intensity turn into movement.
+                      </p>
+                    </div>
+                  </RevealOnScroll>
+
+                  <RevealOnScroll delay={80}>
+                    <div className="mt-6 rounded-[30px] border border-red-500/20 bg-red-500/[0.06] p-6 sm:p-7">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-red-400">
+                        The MAD Method
+                      </p>
+                      <h3 className="mt-3 text-2xl font-black leading-tight text-white sm:text-3xl">
+                        M.A.D. is a system.
+                      </h3>
+
+                      <div className="mt-5 space-y-3 text-sm leading-7 text-white/75 sm:text-base">
+                        <p>
+                          <span className="font-bold text-white">Measure</span> — Why am I mad?
+                        </p>
+                        <p>
+                          <span className="font-bold text-white">Aim</span> — What’s my real target?
+                        </p>
+                        <p>
+                          <span className="font-bold text-white">Do</span> — Take controlled action.
+                        </p>
+                      </div>
+                    </div>
+                  </RevealOnScroll>
+
+                  <div className="mt-8 flex flex-wrap gap-4">
+                    <PillButton href={LINKS.chartPage} primary>
+                      Track The Signal
+                    </PillButton>
+                    <PillButton href={LINKS.jupiter}>Route on Jupiter</PillButton>
                   </div>
                 </div>
 
-                <div className="mt-8 flex flex-wrap gap-4">
-                  <PillButton href={LINKS.chartPage} primary>
-                    Track The Signal
-                  </PillButton>
-                  <PillButton href={LINKS.jupiter}>Route on Jupiter</PillButton>
-                </div>
-              </div>
-
-              <div className="grid gap-4 self-start">
-                <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
-                    RIC
-                  </p>
-                  <h3 className="mt-3 text-2xl font-bold text-white">Control</h3>
-                  <p className="mt-2 text-sm leading-6 text-white/68">
-                    Hold your center when the market tries to move your mind for you.
-                  </p>
-                </div>
-
-                <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
-                    WEAL
-                  </p>
-                  <h3 className="mt-3 text-2xl font-bold text-white">Growth</h3>
-                  <p className="mt-2 text-sm leading-6 text-white/68">
-                    Build what lasts. Not just hype, not just noise, not just a moment.
-                  </p>
-                </div>
-
-                <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
-                    The Test
-                  </p>
-                  <h3 className="mt-3 text-2xl font-bold text-white">Stay $MAD</h3>
-                  <p className="mt-2 text-sm leading-6 text-white/68">
-                    Anyone can cheer in green. Identity is revealed when conviction gets tested.
-                  </p>
-                </div>
-
-                <div className="rounded-3xl border border-red-500/20 bg-red-500/[0.06] p-6 backdrop-blur-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
-                    Change
-                  </p>
-                  <h3 className="mt-3 text-2xl font-bold text-white">Transformation</h3>
-                  <p className="mt-2 text-sm leading-6 text-white/68">
-                    To be $MAD is not to lose control. It is to be moved enough to change.
-                  </p>
+                <div className="grid gap-4 self-start">
+                  {[
+                    {
+                      eyebrow: "RIC",
+                      title: "Control",
+                      body: "Hold your center when the market tries to move your mind for you.",
+                      special: false,
+                    },
+                    {
+                      eyebrow: "WEAL",
+                      title: "Growth",
+                      body: "Build what lasts. Not just hype, not just noise, not just a moment.",
+                      special: false,
+                    },
+                    {
+                      eyebrow: "The Test",
+                      title: "Stay $MAD",
+                      body: "Anyone can cheer in green. Identity is revealed when conviction gets tested.",
+                      special: false,
+                    },
+                    {
+                      eyebrow: "Change",
+                      title: "Transformation",
+                      body: "To be $MAD is not to lose control. It is to be moved enough to change.",
+                      special: true,
+                    },
+                  ].map((card, index) => (
+                    <RevealOnScroll key={card.title} delay={Math.min(index * 70, 210)}>
+                      <div
+                        className={[
+                          "rounded-3xl p-6 backdrop-blur-sm",
+                          card.special
+                            ? "border border-red-500/20 bg-red-500/[0.06]"
+                            : "border border-white/10 bg-white/[0.04]",
+                        ].join(" ")}
+                      >
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
+                          {card.eyebrow}
+                        </p>
+                        <h3 className="mt-3 text-2xl font-bold text-white">{card.title}</h3>
+                        <p className="mt-2 text-sm leading-6 text-white/68">{card.body}</p>
+                      </div>
+                    </RevealOnScroll>
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </RevealOnScroll>
 
-        <section
-          id="ecosystem"
-          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
-        >
-          <SectionHeader
-            eyebrow="Where $MAD Lives"
-            title={<>The ecosystem, in one lane.</>}
-            body="Explore the platforms, tools, and signals behind $MAD."
-            align="center"
-          />
-
-          <div className="relative mt-8 overflow-hidden">
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#050505] to-transparent sm:w-24" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#050505] to-transparent sm:w-24" />
-
-            <div className="mad-logo-marquee flex w-max items-center gap-4 sm:gap-6">
-              {marqueeItems.map((item, index) => (
-                <a
-                  key={`${item.name}-${index}`}
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={[
-                    "flex h-16 items-center rounded-[22px] border px-5 shadow-lg transition hover:-translate-y-0.5",
-                    item.light
-                      ? "border-white/10 bg-white"
-                      : "border-white/10 bg-black",
-                  ].join(" ")}
-                  aria-label={`Open ${item.name}`}
-                  title={item.name}
-                >
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    width={item.width}
-                    height={item.height}
-                    className="h-auto w-auto object-contain"
-                  />
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="confessions"
-          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-        >
-          <div className="px-4 pb-2 pt-6 sm:px-6">
+        <RevealOnScroll delay={30}>
+          <section
+            id="ecosystem"
+            className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
+          >
             <SectionHeader
-              eyebrow="Community"
-              title={<>Confessions from the culture.</>}
-              body="Raw thoughts from the community, straight from the culture."
+              eyebrow="Where $MAD Lives"
+              title={<>The ecosystem, in one lane.</>}
+              body="Explore the platforms, tools, and signals behind $MAD."
+              align="center"
             />
-          </div>
-          <MadConfessions />
-        </section>
 
-        <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
-          <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr]">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-                Final Signal
-              </p>
-              <h3 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
-                No guarantees.
-                <br />
-                No promises.
-                <br />
-                Only belief.
-              </h3>
-            </div>
+            <div className="relative mt-8 overflow-hidden">
+              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#050505] to-transparent sm:w-24" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#050505] to-transparent sm:w-24" />
 
-            <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
-              <p className="text-sm leading-7 text-white/62">
-                Built on conviction, carried by culture, and driven by the people who choose to be $MAD.
-              </p>
+              <div className="mad-logo-marquee flex w-max items-center gap-4 sm:gap-6">
+                {marqueeItems.map((item, index) => (
+                  <a
+                    key={`${item.name}-${index}`}
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={[
+                      "flex h-16 items-center rounded-[22px] border px-5 shadow-lg transition hover:-translate-y-0.5",
+                      item.light
+                        ? "border-white/10 bg-white"
+                        : "border-white/10 bg-black",
+                    ].join(" ")}
+                    aria-label={`Open ${item.name}`}
+                    title={item.name}
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      width={item.width}
+                      height={item.height}
+                      className="h-auto w-auto object-contain"
+                    />
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={20}>
+          <section
+            id="confessions"
+            className="mt-12 rounded-[38px] border border-white/10 bg-black/28 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+          >
+            <div className="px-4 pb-2 pt-6 sm:px-6">
+              <SectionHeader
+                eyebrow="Community"
+                title={<>Confessions from the culture.</>}
+                body="Raw thoughts from the community, straight from the culture."
+              />
+            </div>
+            <MadConfessions />
+          </section>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={10}>
+          <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
+            <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr]">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+                  Final Signal
+                </p>
+                <h3 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
+                  No guarantees.
+                  <br />
+                  No promises.
+                  <br />
+                  Only belief.
+                </h3>
+              </div>
+
+              <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
+                <p className="text-sm leading-7 text-white/62">
+                  Built on conviction, carried by culture, and driven by the people who choose to be $MAD.
+                </p>
+              </div>
+            </div>
+          </section>
+        </RevealOnScroll>
 
         <footer className="mt-14 border-t border-white/10 pt-8 text-center">
           <p className="mx-auto max-w-3xl text-xs leading-7 text-white/42 sm:text-sm sm:leading-8">
