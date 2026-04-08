@@ -135,8 +135,13 @@ export default function RoadmapPage() {
   const inProgress = items.filter((x) => x.status === "in_progress").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
+  const leftPad = 5;
+  const rightPad = 5;
+  const usableWidth = 100 - leftPad - rightPad;
+
   const points = items.map((item, index) => {
-    const x = (index / (items.length - 1)) * 100;
+    const x =
+      leftPad + (index / Math.max(1, items.length - 1)) * usableWidth;
     const y = pointY(item.status, index);
     return { ...item, x, y, index };
   });
@@ -151,6 +156,12 @@ export default function RoadmapPage() {
       : completed - 1;
 
   const currentPoint = points[Math.max(0, currentIndex)];
+
+  // Visual "candle up" target for the 800M burn
+  const candleTarget = {
+    x: currentPoint?.x ?? 95,
+    y: 8,
+  };
 
   return (
     <div className="relative overflow-hidden bg-[#050505] text-white">
@@ -227,6 +238,12 @@ export default function RoadmapPage() {
                       <stop offset="55%" stopColor="rgba(255,59,48,1)" />
                       <stop offset="100%" stopColor="rgba(255,180,120,0.55)" />
                     </linearGradient>
+
+                    <linearGradient id="madCandleGlow" x1="0%" y1="100%" x2="0%" y2="0%">
+                      <stop offset="0%" stopColor="rgba(255,90,90,0.35)" />
+                      <stop offset="60%" stopColor="rgba(255,59,48,1)" />
+                      <stop offset="100%" stopColor="rgba(255,210,180,0.9)" />
+                    </linearGradient>
                   </defs>
 
                   <path
@@ -247,6 +264,18 @@ export default function RoadmapPage() {
                     strokeLinecap="round"
                     className={animateIn ? "roadmap-draw" : "opacity-0"}
                   />
+
+                  {/* Vertical candle-up projection for 800M burn */}
+                  <line
+                    x1={candleTarget.x}
+                    y1={currentPoint?.y ?? 18}
+                    x2={candleTarget.x}
+                    y2={candleTarget.y}
+                    stroke="url(#madCandleGlow)"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    className={animateIn ? "candle-draw" : "opacity-0"}
+                  />
                 </svg>
               </div>
 
@@ -255,6 +284,8 @@ export default function RoadmapPage() {
                   const active = index === currentIndex;
                   const isComplete = point.status === "complete";
                   const isPlanned = point.status === "planned";
+                  const isFirst = index === 0;
+                  const isLast = index === points.length - 1;
 
                   return (
                     <button
@@ -282,7 +313,12 @@ export default function RoadmapPage() {
 
                       <div
                         className={[
-                          "absolute left-1/2 top-7 w-[150px] -translate-x-1/2 rounded-2xl border px-3 py-2 backdrop-blur-xl transition duration-300 sm:w-[170px]",
+                          "absolute top-7 w-[150px] rounded-2xl border px-3 py-2 backdrop-blur-xl transition duration-300 sm:w-[170px]",
+                          isFirst
+                            ? "left-0 translate-x-0"
+                            : isLast
+                            ? "right-0 translate-x-0"
+                            : "left-1/2 -translate-x-1/2",
                           isComplete
                             ? "border-emerald-500/20 bg-emerald-500/[0.06]"
                             : active
@@ -301,11 +337,34 @@ export default function RoadmapPage() {
                     </button>
                   );
                 })}
+
+                {/* Top candle target label */}
+                <div
+                  className="absolute -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                    left: `${candleTarget.x}%`,
+                    top: `${candleTarget.y}%`,
+                  }}
+                >
+                  <div
+                    className={[
+                      "relative flex h-5 w-5 items-center justify-center rounded-full border-2 border-red-300 bg-white shadow-[0_0_26px_rgba(255,120,120,0.75)] transition-all duration-700",
+                      animateIn ? "scale-100 opacity-100" : "scale-75 opacity-0",
+                    ].join(" ")}
+                  />
+
+                  <div className="absolute right-0 top-7 w-[150px] rounded-2xl border border-red-500/30 bg-red-500/[0.10] px-3 py-2 backdrop-blur-xl sm:w-[170px]">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-300/80">
+                      Target
+                    </p>
+                    <p className="mt-1 text-xs font-bold text-white sm:text-sm">
+                      800M Burn
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div
-                className="pointer-events-none absolute bottom-4 left-4 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/45 backdrop-blur"
-              >
+              <div className="pointer-events-none absolute bottom-4 left-4 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/45 backdrop-blur">
                 Live roadmap signal
               </div>
             </div>
@@ -349,7 +408,19 @@ export default function RoadmapPage() {
           animation: roadmapDraw 1.6s ease-out forwards;
         }
 
+        .candle-draw {
+          stroke-dasharray: 40;
+          stroke-dashoffset: 40;
+          animation: candleDraw 0.9s ease-out 1.2s forwards;
+        }
+
         @keyframes roadmapDraw {
+          to {
+            stroke-dashoffset: 0;
+          }
+        }
+
+        @keyframes candleDraw {
           to {
             stroke-dashoffset: 0;
           }
