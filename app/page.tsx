@@ -102,8 +102,6 @@ const ecosystemItems = [
 ] as const;
 
 const HOME_SECTIONS = [
-  { href: "#chart", label: "Chart" },
-  { href: "#signal", label: "The Signal" },
   { href: "#merch", label: "Merch" },
   { href: "#ecosystem", label: "Ecosystem" },
   { href: "#confessions", label: "Confessions" },
@@ -256,7 +254,6 @@ function InfoCard({
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
-  const [iframeReady, setIframeReady] = useState(false);
 
   async function copyAddr() {
     try {
@@ -350,15 +347,15 @@ export default function Home() {
               </h1>
 
               <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                Built for the ones who feel pressure, read the signal, and move with control.
+                Built for the ones who feel pressure, carry conviction, and move with control.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <PillButton href="#chart" primary>
-                  Track Momentum
+                <PillButton href="#merch" primary>
+                  Shop Merch
                 </PillButton>
-                <PillButton href="#signal">Read The Signal</PillButton>
-                <PillButton href="#merch">Shop Merch</PillButton>
+                <PillButton href={LINKS.chartPage}>View Chart</PillButton>
+                <PillButton href={LINKS.jupiter}>Open Jupiter</PillButton>
               </div>
 
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
@@ -441,58 +438,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section
-          id="chart"
-          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
-        >
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <SectionHeader
-              eyebrow="Live Chart"
-              title={
-                <>
-                  Track the
-                  <span className="text-red-500"> momentum</span>.
-                </>
-              }
-              body="A live look at the momentum behind $MAD."
-            />
-            <PillButton href={LINKS.chartPage}>Open on Dexscreener</PillButton>
-          </div>
-
-          <div className="mt-8 overflow-hidden rounded-[30px] border border-white/10 bg-black/45">
-            <div className="relative h-[420px] w-full sm:h-[560px] lg:h-[680px]">
-              {!iframeReady && (
-                <div className="absolute inset-0 grid place-items-center">
-                  <div className="rounded-2xl border border-white/10 bg-black/60 px-4 py-2 text-sm text-white/70">
-                    Loading chart…
-                  </div>
-                </div>
-              )}
-
-              <iframe
-                className="absolute inset-0 h-full w-full"
-                src={`https://dexscreener.com/solana/${ADDR}?embed=1&theme=dark&trades=0&info=0`}
-                title="$MAD Dexscreener Chart"
-                loading="lazy"
-                referrerPolicy="no-referrer"
-                allow="clipboard-write; fullscreen"
-                onLoad={() => setIframeReady(true)}
-              />
-            </div>
-          </div>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <PillButton href={LINKS.chartPage}>View Full Dexscreener</PillButton>
-            <PillButton href={LINKS.jupiter} primary>
-              Open on Jupiter
-            </PillButton>
-          </div>
-
-          <p className="mt-4 text-sm leading-7 text-white/52">
-            Watch the chart first. Read the signal second. If it makes sense to you, the route is right here.
-          </p>
-        </section>
-
         <RevealOnScroll delay={0}>
           <section
             id="merch"
@@ -549,147 +494,6 @@ export default function Home() {
           </section>
         </RevealOnScroll>
 
-        <RevealOnScroll delay={40}>
-          <section
-            id="signal"
-            className="mt-12 overflow-hidden rounded-[38px] border border-white/10 bg-black/28 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-          >
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,40,40,0.14),transparent_35%),radial-gradient(circle_at_85%_70%,rgba(255,80,0,0.10),transparent_30%)]" />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02),transparent,rgba(255,255,255,0.02))]" />
-
-              <div className="relative grid max-w-7xl grid-cols-1 gap-10 px-5 py-12 sm:px-8 sm:py-14 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14 lg:px-10">
-                <div className="max-w-3xl">
-                  <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.35em] text-white/45">
-                    The Signal
-                  </p>
-
-                  <h2 className="max-w-4xl text-4xl font-black uppercase leading-[0.95] text-white sm:text-5xl lg:text-6xl">
-                    <span className="text-[#ff3b30] drop-shadow-[0_0_18px_rgba(255,59,48,0.35)]">
-                      Stop
-                    </span>{" "}
-                    Trading Noise.
-                    <br />
-                    Start Being $MAD.
-                  </h2>
-
-                  <p className="mt-6 max-w-2xl text-base leading-7 text-white/72 sm:text-lg">
-                    $MAD is more than a token. It is a philosophy of control under pressure.
-                    Most people chase hype, panic in red, and react without thinking.
-                    $MAD stands for something different.
-                  </p>
-
-                  <div className="mt-8 space-y-4 text-sm leading-7 text-white/75 sm:text-base">
-                    <p>
-                      <span className="font-bold text-white">RIC</span> — control your emotions
-                    </p>
-                    <p>
-                      <span className="font-bold text-white">WEAL</span> — build something that grows
-                    </p>
-                    <p>
-                      Every pump tests your ego. Every dip tests your discipline. Every decision reveals who you are.
-                    </p>
-                  </div>
-
-                  <RevealOnScroll delay={20}>
-                    <div className="mt-8 rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
-                        True Definition
-                      </p>
-                      <h3 className="mt-3 text-2xl font-black leading-tight text-white sm:text-3xl">
-                        MAD is not just emotion.
-                        <br />
-                        It is the force that creates change.
-                      </h3>
-                      <p className="mt-4 max-w-2xl text-sm leading-7 text-white/66 sm:text-base">
-                        Most people hear mad and think chaos. But pressure is only the beginning.
-                        $MAD is the moment reaction becomes direction — when emotion,
-                        conviction, and intensity turn into movement.
-                      </p>
-                    </div>
-                  </RevealOnScroll>
-
-                  <RevealOnScroll delay={80}>
-                    <div className="mt-6 rounded-[30px] border border-red-500/20 bg-red-500/[0.06] p-6 sm:p-7">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-red-400">
-                        The MAD Method
-                      </p>
-                      <h3 className="mt-3 text-2xl font-black leading-tight text-white sm:text-3xl">
-                        M.A.D. is a system.
-                      </h3>
-
-                      <div className="mt-5 space-y-3 text-sm leading-7 text-white/75 sm:text-base">
-                        <p>
-                          <span className="font-bold text-white">Measure</span> — Why am I mad?
-                        </p>
-                        <p>
-                          <span className="font-bold text-white">Aim</span> — What’s my real target?
-                        </p>
-                        <p>
-                          <span className="font-bold text-white">Do</span> — Take controlled action.
-                        </p>
-                      </div>
-                    </div>
-                  </RevealOnScroll>
-
-                  <div className="mt-8 flex flex-wrap gap-4">
-                    <PillButton href={LINKS.chartPage} primary>
-                      Track The Signal
-                    </PillButton>
-                    <PillButton href={LINKS.jupiter}>Route on Jupiter</PillButton>
-                  </div>
-                </div>
-
-                <div className="grid gap-4 self-start">
-                  {[
-                    {
-                      eyebrow: "RIC",
-                      title: "Control",
-                      body: "Hold your center when the market tries to move your mind for you.",
-                      special: false,
-                    },
-                    {
-                      eyebrow: "WEAL",
-                      title: "Growth",
-                      body: "Build what lasts. Not just hype, not just noise, not just a moment.",
-                      special: false,
-                    },
-                    {
-                      eyebrow: "The Test",
-                      title: "Stay $MAD",
-                      body: "Anyone can cheer in green. Identity is revealed when conviction gets tested.",
-                      special: false,
-                    },
-                    {
-                      eyebrow: "Change",
-                      title: "Transformation",
-                      body: "To be $MAD is not to lose control. It is to be moved enough to change.",
-                      special: true,
-                    },
-                  ].map((card, index) => (
-                    <RevealOnScroll key={card.title} delay={Math.min(index * 70, 210)}>
-                      <div
-                        className={[
-                          "rounded-3xl p-6 backdrop-blur-sm",
-                          card.special
-                            ? "border border-red-500/20 bg-red-500/[0.06]"
-                            : "border border-white/10 bg-white/[0.04]",
-                        ].join(" ")}
-                      >
-                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
-                          {card.eyebrow}
-                        </p>
-                        <h3 className="mt-3 text-2xl font-bold text-white">{card.title}</h3>
-                        <p className="mt-2 text-sm leading-6 text-white/68">{card.body}</p>
-                      </div>
-                    </RevealOnScroll>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-        </RevealOnScroll>
-
         <RevealOnScroll delay={30}>
           <section
             id="ecosystem"
@@ -702,7 +506,21 @@ export default function Home() {
               align="center"
             />
 
-            <div className="relative mt-8 overflow-hidden">
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              <InfoCard label="Verified" value={<span>Jupiter • CoinGecko • Birdeye</span>} />
+              <InfoCard label="Access" value={<span>Chart, routing, and on-chain visibility</span>} />
+              <InfoCard label="Contract" value={<span className="break-all">{ADDR}</span>} />
+            </div>
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <PillButton href={LINKS.chartPage}>Open Dexscreener</PillButton>
+              <PillButton href={LINKS.jupiter} primary>
+                Open Jupiter
+              </PillButton>
+              <PillButton href={LINKS.solscan}>View Solscan</PillButton>
+            </div>
+
+            <div className="relative mt-10 overflow-hidden">
               <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#050505] to-transparent sm:w-24" />
               <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#050505] to-transparent sm:w-24" />
 
