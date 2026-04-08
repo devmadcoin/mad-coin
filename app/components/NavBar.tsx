@@ -7,16 +7,10 @@ import type { ReactNode } from "react";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
-
-  // Primary story destination
   { href: "/roadmap", label: "The Mad Path", mobileLabel: "Mad Path", variant: "primary" as const },
-
-  // Experience flow
   { href: "/game", label: "Game" },
   { href: "/memes", label: "$MAD Art", mobileLabel: "Art" },
   { href: "/forge", label: "Forge" },
-
-  // Final conversion
   { href: "/merch", label: "Merch", variant: "cta" as const },
 ];
 
@@ -122,18 +116,21 @@ function NavPill({
         "relative select-none rounded-full border font-semibold transition-all duration-300",
         mobile ? "px-3 py-2 text-[13px]" : "px-4 py-2 text-sm",
 
+        // The Mad Path: premium but not red unless active
         variant === "primary"
           ? active
-            ? "border-red-500 bg-red-500/20 text-red-400 shadow-[0_0_18px_rgba(255,0,0,0.6)]"
-            : "border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20 hover:shadow-[0_0_20px_rgba(255,0,0,0.5)]"
+            ? "border-red-500/40 bg-red-500/15 text-red-400 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
+            : "border-white/15 bg-white/[0.06] text-white hover:border-white/25 hover:bg-white/10 hover:text-white"
           : "",
 
+        // Merch: soft CTA
         variant === "cta"
           ? active
             ? "border-white bg-white text-black shadow-[0_0_18px_rgba(255,255,255,0.4)]"
             : "border-white/20 bg-white/10 text-white hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]"
           : "",
 
+        // Default nav items
         !variant &&
           (active
             ? "border-red-500/40 bg-red-500/15 text-red-400 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
