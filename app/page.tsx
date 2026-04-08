@@ -535,6 +535,22 @@ export default function Home() {
                   </p>
                 </div>
 
+                <div className="mt-8 rounded-[30px] border border-white/10 bg-white/[0.03] p-6 sm:p-7">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/42">
+                    True Definition
+                  </p>
+                  <h3 className="mt-3 text-2xl font-black leading-tight text-white sm:text-3xl">
+                    MAD is not just emotion.
+                    <br />
+                    It is the force that creates change.
+                  </h3>
+                  <p className="mt-4 max-w-2xl text-sm leading-7 text-white/66 sm:text-base">
+                    Most people hear mad and think chaos. But pressure is only the beginning.
+                    $MAD is the moment reaction becomes direction — when emotion,
+                    conviction, and intensity turn into movement.
+                  </p>
+                </div>
+
                 <div className="mt-8 flex flex-wrap gap-4">
                   <PillButton href={LINKS.chartPage} primary>
                     Track The Signal
@@ -543,7 +559,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="grid gap-4 self-center">
+              <div className="grid gap-4 self-start">
                 <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
                     RIC
@@ -571,6 +587,16 @@ export default function Home() {
                   <h3 className="mt-3 text-2xl font-bold text-white">Stay $MAD</h3>
                   <p className="mt-2 text-sm leading-6 text-white/68">
                     Anyone can cheer in green. Identity is revealed when conviction gets tested.
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-red-500/20 bg-red-500/[0.06] p-6 backdrop-blur-sm">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
+                    Change
+                  </p>
+                  <h3 className="mt-3 text-2xl font-bold text-white">Transformation</h3>
+                  <p className="mt-2 text-sm leading-6 text-white/68">
+                    To be $MAD is not to lose control. It is to be moved enough to change.
                   </p>
                 </div>
               </div>
