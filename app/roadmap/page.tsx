@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 type Status = "complete" | "in_progress" | "planned";
 
@@ -64,6 +64,8 @@ function pointY(status: Status, index: number) {
 
 export default function RoadmapPage() {
   const [animateIn, setAnimateIn] = useState(false);
+  const [zoom, setZoom] = useState(1.2);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const t = window.setTimeout(() => setAnimateIn(true), 120);
@@ -135,13 +137,12 @@ export default function RoadmapPage() {
   const inProgress = items.filter((x) => x.status === "in_progress").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
 
-  const leftPad = 5;
-  const rightPad = 5;
+  const leftPad = 6;
+  const rightPad = 7;
   const usableWidth = 100 - leftPad - rightPad;
 
   const points = items.map((item, index) => {
-    const x =
-      leftPad + (index / Math.max(1, items.length - 1)) * usableWidth;
+    const x = leftPad + (index / Math.max(1, items.length - 1)) * usableWidth;
     const y = pointY(item.status, index);
     return { ...item, x, y, index };
   });
@@ -157,11 +158,25 @@ export default function RoadmapPage() {
 
   const currentPoint = points[Math.max(0, currentIndex)];
 
-  // Visual "candle up" target for the 800M burn
   const candleTarget = {
-    x: currentPoint?.x ?? 95,
-    y: 8,
+    x: Math.min(97, (currentPoint?.x ?? 93) + 1.5),
+    y: 3.5,
   };
+
+  function zoomIn() {
+    setZoom((z) => clamp(Number((z + 0.2).toFixed(2)), 1, 2.2));
+  }
+
+  function zoomOut() {
+    setZoom((z) => clamp(Number((z - 0.2).toFixed(2)), 1, 2.2));
+  }
+
+  function resetZoom() {
+    setZoom(1.2);
+    scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" });
+  }
+
+  const chartMinWidth = `${Math.round(1100 * zoom)}px`;
 
   return (
     <div className="relative overflow-hidden bg-[#050505] text-white">
@@ -207,179 +222,221 @@ export default function RoadmapPage() {
               </h2>
             </div>
 
-            <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-red-300/80">
-                You Are Here
-              </p>
-              <p className="mt-1 text-sm font-bold text-white">
-                {currentPoint?.phase} — {currentPoint?.title}
-              </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="rounded-full border border-white/10 bg-black/45 p-1 backdrop-blur">
+                <button
+                  type="button"
+                  onClick={zoomOut}
+                  className="rounded-full px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/5 hover:text-white"
+                >
+                  Zoom Out
+                </button>
+                <button
+                  type="button"
+                  onClick={resetZoom}
+                  className="rounded-full px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/5 hover:text-white"
+                >
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  onClick={zoomIn}
+                  className="rounded-full px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/5 hover:text-white"
+                >
+                  Zoom In
+                </button>
+              </div>
+
+              <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3">
+                <p className="text-[11px] uppercase tracking-[0.24em] text-red-300/80">
+                  You Are Here
+                </p>
+                <p className="mt-1 text-sm font-bold text-white">
+                  {currentPoint?.phase} — {currentPoint?.title}
+                </p>
+              </div>
             </div>
           </div>
 
           <div className="rounded-[30px] border border-white/10 bg-[#080808] p-4 sm:p-6">
-            <div className="relative h-[300px] w-full overflow-hidden rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] sm:h-[360px]">
-              <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:linear-gradient(to_right,rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:56px_56px]" />
+            <div
+              ref={scrollRef}
+              className="overflow-x-auto overflow-y-hidden rounded-[24px]"
+            >
+              <div
+                className="relative h-[340px] min-w-full sm:h-[390px]"
+                style={{ minWidth: chartMinWidth }}
+              >
+                <div className="relative h-full w-full overflow-hidden rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]">
+                  <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:linear-gradient(to_right,rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:56px_56px]" />
 
-              <div className="pointer-events-none absolute left-0 right-0 top-[18%] border-t border-white/8" />
-              <div className="pointer-events-none absolute left-0 right-0 top-[38%] border-t border-white/8" />
-              <div className="pointer-events-none absolute left-0 right-0 top-[58%] border-t border-white/8" />
-              <div className="pointer-events-none absolute left-0 right-0 top-[78%] border-t border-white/8" />
+                  <div className="pointer-events-none absolute left-0 right-0 top-[16%] border-t border-white/8" />
+                  <div className="pointer-events-none absolute left-0 right-0 top-[34%] border-t border-white/8" />
+                  <div className="pointer-events-none absolute left-0 right-0 top-[52%] border-t border-white/8" />
+                  <div className="pointer-events-none absolute left-0 right-0 top-[70%] border-t border-white/8" />
+                  <div className="pointer-events-none absolute left-0 right-0 top-[88%] border-t border-white/8" />
 
-              <div className="absolute inset-0">
-                <svg
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="none"
-                  className="h-full w-full"
-                >
-                  <defs>
-                    <linearGradient id="madPathGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="rgba(255,80,80,0.35)" />
-                      <stop offset="55%" stopColor="rgba(255,59,48,1)" />
-                      <stop offset="100%" stopColor="rgba(255,180,120,0.55)" />
-                    </linearGradient>
+                  <div className="absolute inset-0">
+                    <svg
+                      viewBox="0 0 100 100"
+                      preserveAspectRatio="none"
+                      className="h-full w-full"
+                    >
+                      <defs>
+                        <linearGradient id="madPathGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="rgba(255,80,80,0.35)" />
+                          <stop offset="55%" stopColor="rgba(255,59,48,1)" />
+                          <stop offset="100%" stopColor="rgba(255,180,120,0.55)" />
+                        </linearGradient>
 
-                    <linearGradient id="madCandleGlow" x1="0%" y1="100%" x2="0%" y2="0%">
-                      <stop offset="0%" stopColor="rgba(255,90,90,0.35)" />
-                      <stop offset="60%" stopColor="rgba(255,59,48,1)" />
-                      <stop offset="100%" stopColor="rgba(255,210,180,0.9)" />
-                    </linearGradient>
-                  </defs>
+                        <linearGradient id="madCandleGlow" x1="0%" y1="100%" x2="0%" y2="0%">
+                          <stop offset="0%" stopColor="rgba(255,90,90,0.35)" />
+                          <stop offset="60%" stopColor="rgba(255,59,48,1)" />
+                          <stop offset="100%" stopColor="rgba(255,230,210,1)" />
+                        </linearGradient>
+                      </defs>
 
-                  <path
-                    d={pathD}
-                    fill="none"
-                    stroke="rgba(255,255,255,0.08)"
-                    strokeWidth="1.8"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                  />
+                      <path
+                        d={pathD}
+                        fill="none"
+                        stroke="rgba(255,255,255,0.08)"
+                        strokeWidth="1.8"
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                      />
 
-                  <path
-                    d={pathD}
-                    fill="none"
-                    stroke="url(#madPathGlow)"
-                    strokeWidth="2.4"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                    className={animateIn ? "roadmap-draw" : "opacity-0"}
-                  />
+                      <path
+                        d={pathD}
+                        fill="none"
+                        stroke="url(#madPathGlow)"
+                        strokeWidth="2.4"
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                        className={animateIn ? "roadmap-draw" : "opacity-0"}
+                      />
 
-                  {/* Vertical candle-up projection for 800M burn */}
-                  <line
-                    x1={candleTarget.x}
-                    y1={currentPoint?.y ?? 18}
-                    x2={candleTarget.x}
-                    y2={candleTarget.y}
-                    stroke="url(#madCandleGlow)"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    className={animateIn ? "candle-draw" : "opacity-0"}
-                  />
-                </svg>
-              </div>
+                      <line
+                        x1={candleTarget.x}
+                        y1={currentPoint?.y ?? 18}
+                        x2={candleTarget.x}
+                        y2={candleTarget.y}
+                        stroke="url(#madCandleGlow)"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        className={animateIn ? "candle-draw" : "opacity-0"}
+                      />
+                    </svg>
+                  </div>
 
-              <div className="absolute inset-0">
-                {points.map((point, index) => {
-                  const active = index === currentIndex;
-                  const isComplete = point.status === "complete";
-                  const isPlanned = point.status === "planned";
-                  const isFirst = index === 0;
-                  const isLast = index === points.length - 1;
+                  <div className="absolute inset-0">
+                    {points.map((point, index) => {
+                      const active = index === currentIndex;
+                      const isComplete = point.status === "complete";
+                      const isPlanned = point.status === "planned";
+                      const isFirst = index === 0;
+                      const isLast = index === points.length - 1;
 
-                  return (
-                    <button
-                      key={point.phase}
-                      type="button"
-                      className="group absolute -translate-x-1/2 -translate-y-1/2 text-left"
+                      return (
+                        <button
+                          key={point.phase}
+                          type="button"
+                          className="group absolute -translate-x-1/2 -translate-y-1/2 text-left"
+                          style={{
+                            left: `${point.x}%`,
+                            top: `${point.y}%`,
+                            transitionDelay: `${150 + index * 90}ms`,
+                          }}
+                        >
+                          <div
+                            className={[
+                              "relative flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-500",
+                              statusDot(point.status),
+                              animateIn ? "scale-100 opacity-100" : "scale-75 opacity-0",
+                              active ? "ring-8 ring-red-500/10" : "",
+                            ].join(" ")}
+                          >
+                            {active ? (
+                              <span className="absolute inline-flex h-10 w-10 animate-ping rounded-full bg-red-500/20" />
+                            ) : null}
+                          </div>
+
+                          <div
+                            className={[
+                              "absolute top-7 w-[165px] rounded-2xl border px-3 py-2 backdrop-blur-xl transition duration-300 sm:w-[185px]",
+                              isFirst
+                                ? "left-0 translate-x-0"
+                                : isLast
+                                ? "right-0 translate-x-0"
+                                : "left-1/2 -translate-x-1/2",
+                              isComplete
+                                ? "border-emerald-500/20 bg-emerald-500/[0.06]"
+                                : active
+                                ? "border-red-500/25 bg-red-500/[0.08]"
+                                : "border-white/10 bg-black/55",
+                              isPlanned ? "opacity-90" : "",
+                            ].join(" ")}
+                          >
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/45">
+                              {point.phase}
+                            </p>
+                            <p className="mt-1 text-xs font-bold text-white sm:text-sm">
+                              {point.title}
+                            </p>
+                          </div>
+                        </button>
+                      );
+                    })}
+
+                    <div
+                      className="absolute -translate-x-1/2 -translate-y-1/2"
                       style={{
-                        left: `${point.x}%`,
-                        top: `${point.y}%`,
-                        transitionDelay: `${150 + index * 90}ms`,
+                        left: `${candleTarget.x}%`,
+                        top: `${candleTarget.y}%`,
                       }}
                     >
                       <div
                         className={[
-                          "relative flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-500",
-                          statusDot(point.status),
+                          "relative flex h-5 w-5 items-center justify-center rounded-full border-2 border-red-300 bg-white shadow-[0_0_30px_rgba(255,120,120,0.82)] transition-all duration-700",
                           animateIn ? "scale-100 opacity-100" : "scale-75 opacity-0",
-                          active ? "ring-8 ring-red-500/10" : "",
                         ].join(" ")}
                       >
-                        {active ? (
-                          <span className="absolute inline-flex h-10 w-10 animate-ping rounded-full bg-red-500/20" />
-                        ) : null}
+                        <span className="absolute inline-flex h-12 w-12 animate-pulse rounded-full bg-red-500/15" />
                       </div>
 
-                      <div
-                        className={[
-                          "absolute top-7 w-[150px] rounded-2xl border px-3 py-2 backdrop-blur-xl transition duration-300 sm:w-[170px]",
-                          isFirst
-                            ? "left-0 translate-x-0"
-                            : isLast
-                            ? "right-0 translate-x-0"
-                            : "left-1/2 -translate-x-1/2",
-                          isComplete
-                            ? "border-emerald-500/20 bg-emerald-500/[0.06]"
-                            : active
-                            ? "border-red-500/25 bg-red-500/[0.08]"
-                            : "border-white/10 bg-black/55",
-                          isPlanned ? "opacity-90" : "",
-                        ].join(" ")}
-                      >
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                          {point.phase}
+                      <div className="absolute bottom-8 left-1/2 w-[170px] -translate-x-1/2 rounded-2xl border border-red-500/30 bg-red-500/[0.10] px-3 py-2 backdrop-blur-xl sm:w-[190px]">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-300/80">
+                          Sky Target
                         </p>
                         <p className="mt-1 text-xs font-bold text-white sm:text-sm">
-                          {point.title}
+                          800M Burn
                         </p>
                       </div>
-                    </button>
-                  );
-                })}
+                    </div>
+                  </div>
 
-                {/* Top candle target label */}
-                <div
-                  className="absolute -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                    left: `${candleTarget.x}%`,
-                    top: `${candleTarget.y}%`,
-                  }}
-                >
-                  <div
-                    className={[
-                      "relative flex h-5 w-5 items-center justify-center rounded-full border-2 border-red-300 bg-white shadow-[0_0_26px_rgba(255,120,120,0.75)] transition-all duration-700",
-                      animateIn ? "scale-100 opacity-100" : "scale-75 opacity-0",
-                    ].join(" ")}
-                  />
-
-                  <div className="absolute right-0 top-7 w-[150px] rounded-2xl border border-red-500/30 bg-red-500/[0.10] px-3 py-2 backdrop-blur-xl sm:w-[170px]">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-300/80">
-                      Target
-                    </p>
-                    <p className="mt-1 text-xs font-bold text-white sm:text-sm">
-                      800M Burn
-                    </p>
+                  <div className="pointer-events-none absolute bottom-4 left-4 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/45 backdrop-blur">
+                    Live roadmap signal
                   </div>
                 </div>
               </div>
-
-              <div className="pointer-events-none absolute bottom-4 left-4 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/45 backdrop-blur">
-                Live roadmap signal
-              </div>
             </div>
 
-            <div className="mt-5">
-              <div className="h-3 w-full overflow-hidden rounded-full border border-white/10 bg-white/5">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="h-3 w-full overflow-hidden rounded-full border border-white/10 bg-white/5 sm:max-w-[calc(100%-180px)]">
                 <div
                   className="h-full rounded-full bg-red-500 transition-all duration-1000"
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <p className="mt-3 text-sm text-white/52">
-                {completed} of {total} roadmap phases completed.
+
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">
+                Zoom {Math.round(zoom * 100)}%
               </p>
             </div>
+
+            <p className="mt-3 text-sm text-white/52">
+              {completed} of {total} roadmap phases completed.
+            </p>
           </div>
         </section>
 
@@ -409,9 +466,9 @@ export default function RoadmapPage() {
         }
 
         .candle-draw {
-          stroke-dasharray: 40;
-          stroke-dashoffset: 40;
-          animation: candleDraw 0.9s ease-out 1.2s forwards;
+          stroke-dasharray: 52;
+          stroke-dashoffset: 52;
+          animation: candleDraw 0.95s ease-out 1.2s forwards;
         }
 
         @keyframes roadmapDraw {
