@@ -6,6 +6,7 @@ type Status = "complete" | "in_progress" | "planned";
 
 type PathItem = {
   phase: string;
+  date: string;
   title: string;
   action: string;
   meaning: string;
@@ -55,12 +56,12 @@ function phaseBarWidth(status: Status) {
 
 function pointY(status: Status, index: number) {
   if (status === "complete") {
-    return [72, 64, 56, 48, 40, 32, 26, 21][index] ?? 24;
+    return [72, 66, 60, 53, 46, 39, 33, 28, 24, 20, 17, 15][index] ?? 15;
   }
   if (status === "in_progress") {
-    return 16;
+    return 12;
   }
-  return [24, 18][index % 2] ?? 18;
+  return [20, 16][index % 2] ?? 16;
 }
 
 export default function MadPathPage() {
@@ -77,6 +78,7 @@ export default function MadPathPage() {
     () => [
       {
         phase: "PHASE 1",
+        date: "Feb 4, 2026 — 6:27:24 PM",
         title: "Genesis",
         action: "$MAD was minted. Emotion became code.",
         meaning:
@@ -85,6 +87,7 @@ export default function MadPathPage() {
       },
       {
         phase: "PHASE 1.1",
+        date: "Feb 5, 2026",
         title: "Community Ignition",
         action: "Telegram launched. The first gathering formed.",
         meaning:
@@ -93,6 +96,7 @@ export default function MadPathPage() {
       },
       {
         phase: "PHASE 1.2",
+        date: "Launch Week",
         title: "The Trial",
         action: "A 5% wallet tested the system during launch week.",
         meaning:
@@ -101,6 +105,7 @@ export default function MadPathPage() {
       },
       {
         phase: "PHASE 1.3",
+        date: "Feb 7, 2026 — 16:56",
         title: "Bonding",
         action: "Liquidity bonded. Structure hardened.",
         meaning:
@@ -109,6 +114,25 @@ export default function MadPathPage() {
       },
       {
         phase: "PHASE 1.4",
+        date: "Feb 14, 2026",
+        title: "Reclamation",
+        action: "Telegram ownership was secured to protect the channel and avoid disruption.",
+        meaning:
+          "Not ego — responsibility. This was a quiet act of preservation before the next wave of pressure.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 1.5",
+        date: "Feb 15, 2026",
+        title: "Visibility",
+        action: "$MAD was officially listed on CoinGecko.",
+        meaning:
+          "The signal left the underground. Now it could be tracked, watched, and judged by the wider world.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 1.6",
+        date: "Feb 18, 2026 — 3:19 PM",
         title: "The Attack",
         action: "Telegram and Dexscreener were botted.",
         meaning:
@@ -116,7 +140,8 @@ export default function MadPathPage() {
         status: "complete",
       },
       {
-        phase: "PHASE 1.5",
+        phase: "PHASE 1.7",
+        date: "Feb 20, 2026 — 11:32 AM",
         title: "The Comeback",
         action: "Telegram was deleted, but belief rebuilt the path.",
         meaning:
@@ -124,7 +149,8 @@ export default function MadPathPage() {
         status: "complete",
       },
       {
-        phase: "PHASE 1.6",
+        phase: "PHASE 1.8",
+        date: "Late Feb, 2026",
         title: "Silent Discipline",
         action: "33M tokens were quietly burned with no spectacle.",
         meaning:
@@ -132,7 +158,8 @@ export default function MadPathPage() {
         status: "complete",
       },
       {
-        phase: "PHASE 1.7",
+        phase: "PHASE 1.9",
+        date: "Mar 1, 2026",
         title: "The 400M Burn",
         action: "400,000,000 $MAD tokens were permanently burned.",
         meaning:
@@ -140,7 +167,8 @@ export default function MadPathPage() {
         status: "complete",
       },
       {
-        phase: "PHASE 1.8",
+        phase: "PHASE 2.0",
+        date: "Mar 4, 2026",
         title: "The Gork Moment",
         action: "A challenge became the mission: burn 800M.",
         meaning:
@@ -148,15 +176,8 @@ export default function MadPathPage() {
         status: "complete",
       },
       {
-        phase: "PHASE 1.9",
-        title: "Visibility",
-        action: "$MAD was listed on CoinGecko.",
-        meaning:
-          "The signal left the underground. Now it could be tracked, watched, and judged by the wider world.",
-        status: "complete",
-      },
-      {
-        phase: "PHASE 2.0",
+        phase: "PHASE 2.1",
+        date: "Mar 19, 2026",
         title: "System Recognition",
         action: "$MAD was officially verified by Jupiter.",
         meaning:
@@ -164,7 +185,8 @@ export default function MadPathPage() {
         status: "complete",
       },
       {
-        phase: "PHASE 2.1",
+        phase: "PHASE 2.2",
+        date: "Mar 2026",
         title: "MAD Games",
         action: "The first MAD Games happened inside Roblox with real SOL rewards.",
         meaning:
@@ -173,6 +195,7 @@ export default function MadPathPage() {
       },
       {
         phase: "PHASE 3",
+        date: "Next Signal",
         title: "Acquisition Engine",
         action: "Acquire supply and support community growth.",
         meaning:
@@ -181,6 +204,7 @@ export default function MadPathPage() {
       },
       {
         phase: "PHASE 4",
+        date: "After Expansion",
         title: "Game Integration",
         action: "Expand the $MAD experience deeper into gaming.",
         meaning:
@@ -189,6 +213,7 @@ export default function MadPathPage() {
       },
       {
         phase: "FINAL PHASE",
+        date: "The Summit Ahead",
         title: "The Sky Burn",
         action: "Push toward 800M total $MAD burned.",
         meaning:
@@ -269,8 +294,8 @@ export default function MadPathPage() {
 
           <p className="mt-5 max-w-3xl text-sm leading-7 text-white/62 sm:text-base">
             Not everyone will understand it. Only the ones who feel it will follow it.
-            This is not a checklist. It is a record of pressure, survival, discipline,
-            and upward movement.
+            This is not a checklist. It is a dated record of pressure, survival,
+            discipline, and upward movement.
           </p>
         </div>
 
@@ -386,7 +411,7 @@ export default function MadPathPage() {
 
                       <line
                         x1={candleTarget.x}
-                        y1={currentPoint?.y ?? 16}
+                        y1={currentPoint?.y ?? 12}
                         x2={candleTarget.x}
                         y2={candleTarget.y}
                         stroke="url(#madCandleGlow)"
@@ -431,7 +456,7 @@ export default function MadPathPage() {
 
                           <div
                             className={[
-                              "absolute top-7 w-[180px] rounded-2xl border px-3 py-2 backdrop-blur-xl transition duration-300 sm:w-[210px]",
+                              "absolute top-7 w-[190px] rounded-2xl border px-3 py-2 backdrop-blur-xl transition duration-300 sm:w-[220px]",
                               isFirst
                                 ? "left-0 translate-x-0"
                                 : isLast
@@ -450,6 +475,9 @@ export default function MadPathPage() {
                             </p>
                             <p className="mt-1 text-xs font-bold text-white sm:text-sm">
                               {point.title}
+                            </p>
+                            <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/35">
+                              {point.date}
                             </p>
                           </div>
                         </button>
@@ -515,14 +543,21 @@ export default function MadPathPage() {
               The Path
             </p>
             <h2 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
-              Every chapter, and why it mattered.
+              Every chapter, in order.
             </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/58 sm:text-base">
+              The story reads better when it moves forward one signal at a time.
+            </p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-2">
-            {items.map((item) => (
-              <MadPathCard key={item.phase} item={item} />
-            ))}
+          <div className="relative">
+            <div className="absolute bottom-0 left-4 top-0 hidden w-px bg-gradient-to-b from-red-500/25 via-white/10 to-transparent md:block" />
+
+            <div className="space-y-5">
+              {items.map((item, index) => (
+                <MadPathCard key={item.phase} item={item} index={index} />
+              ))}
+            </div>
           </div>
         </section>
       </div>
@@ -549,6 +584,17 @@ export default function MadPathPage() {
         @keyframes candleDraw {
           to {
             stroke-dashoffset: 0;
+          }
+        }
+
+        @keyframes pathCardIn {
+          0% {
+            opacity: 0;
+            transform: translateY(18px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
       `}</style>
@@ -582,19 +628,50 @@ function StatCard({
   );
 }
 
-function MadPathCard({ item }: { item: PathItem }) {
+function MadPathCard({
+  item,
+  index,
+}: {
+  item: PathItem;
+  index: number;
+}) {
   const chip = statusChip(item.status);
   const barWidth = phaseBarWidth(item.status);
 
   return (
-    <div className="group rounded-[30px] border border-white/10 bg-black/30 p-6 backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-red-500/25">
+    <article
+      className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-black/30 p-6 backdrop-blur-xl transition duration-500 hover:border-red-500/25 hover:bg-black/35 md:ml-10"
+      style={{
+        animation: `pathCardIn 0.65s ease-out forwards`,
+        animationDelay: `${index * 120}ms`,
+        opacity: 0,
+        transform: "translateY(18px)",
+      }}
+    >
+      <div className="absolute left-[-30px] top-8 hidden md:block">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full border border-red-500/25 bg-black shadow-[0_0_25px_rgba(255,0,0,0.12)]">
+          <div
+            className={`h-2.5 w-2.5 rounded-full ${
+              item.status === "complete"
+                ? "bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.75)]"
+                : item.status === "in_progress"
+                ? "bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.75)]"
+                : "bg-white/35"
+            }`}
+          />
+        </div>
+      </div>
+
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
             {item.phase}
           </p>
+          <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/32">
+            {item.date}
+          </p>
 
-          <h3 className="mt-2 text-2xl font-black text-white transition group-hover:text-red-400">
+          <h3 className="mt-3 text-2xl font-black text-white transition group-hover:text-red-400 sm:text-3xl">
             {item.title}
           </h3>
         </div>
@@ -604,22 +681,24 @@ function MadPathCard({ item }: { item: PathItem }) {
         </div>
       </div>
 
-      <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/42">
-          Action
-        </p>
-        <p className="mt-2 text-sm leading-7 text-white/72">
-          {item.action}
-        </p>
-      </div>
+      <div className="mt-5 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/42">
+            Action
+          </p>
+          <p className="mt-2 text-sm leading-7 text-white/72 sm:text-base">
+            {item.action}
+          </p>
+        </div>
 
-      <div className="mt-4 rounded-2xl border border-red-500/15 bg-red-500/[0.05] p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-300/80">
-          Why It Mattered
-        </p>
-        <p className="mt-2 text-sm leading-7 text-white/76">
-          {item.meaning}
-        </p>
+        <div className="rounded-2xl border border-red-500/15 bg-red-500/[0.05] p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-300/80">
+            Why It Mattered
+          </p>
+          <p className="mt-2 text-sm leading-7 text-white/76 sm:text-base">
+            {item.meaning}
+          </p>
+        </div>
       </div>
 
       <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-white/5">
@@ -634,6 +713,6 @@ function MadPathCard({ item }: { item: PathItem }) {
           style={{ width: barWidth }}
         />
       </div>
-    </div>
+    </article>
   );
 }
