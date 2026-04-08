@@ -101,6 +101,14 @@ const ecosystemItems = [
   },
 ] as const;
 
+const HOME_SECTIONS = [
+  { href: "#chart", label: "Chart" },
+  { href: "#signal", label: "The Signal" },
+  { href: "#merch", label: "Merch" },
+  { href: "#ecosystem", label: "Ecosystem" },
+  { href: "#confessions", label: "Confessions" },
+] as const;
+
 function PillButton({
   href,
   children,
@@ -123,6 +131,23 @@ function PillButton({
           ? "border border-red-500/30 bg-red-500 text-white hover:scale-[1.01] hover:bg-red-400"
           : "border border-white/12 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]",
       ].join(" ")}
+    >
+      {children}
+    </a>
+  );
+}
+
+function HomeJumpPill({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white/78 transition hover:border-red-500/30 hover:bg-white/[0.08] hover:text-white"
     >
       {children}
     </a>
@@ -238,40 +263,19 @@ export default function Home() {
               </div>
             </div>
 
-            <nav className="hidden items-center gap-2 md:flex">
-              <a
-                href="#merch"
-                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
-              >
-                Merch
-              </a>
-              <a
-                href="#chart"
-                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
-              >
-                Chart
-              </a>
-              <a
-                href="#signal"
-                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
-              >
-                The Signal
-              </a>
-              <a
-                href="#ecosystem"
-                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
-              >
-                Ecosystem
-              </a>
-              <a
-                href="#confessions"
-                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
-              >
-                Confessions
-              </a>
-            </nav>
+            <div className="hidden text-[11px] font-semibold uppercase tracking-[0.28em] text-white/32 md:block">
+              Home Signal
+            </div>
           </div>
         </header>
+
+        <div className="mb-5 flex flex-wrap gap-2">
+          {HOME_SECTIONS.map((section) => (
+            <HomeJumpPill key={section.href} href={section.href}>
+              {section.label}
+            </HomeJumpPill>
+          ))}
+        </div>
 
         <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
           <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
@@ -298,7 +302,7 @@ export default function Home() {
               </h1>
 
               <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                Built for the ones who feel pressure, read the signal, and move with conviction.
+                Built for the ones who feel pressure, read the signal, and move with control.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
