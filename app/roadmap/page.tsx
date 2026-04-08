@@ -56,12 +56,12 @@ function phaseBarWidth(status: Status) {
 
 function pointY(status: Status, index: number) {
   if (status === "complete") {
-    return [72, 66, 60, 53, 46, 39, 33, 28, 24, 20, 17, 15][index] ?? 15;
+    return [74, 69, 64, 58, 52, 46, 40, 34, 29, 24, 20, 17, 14][index] ?? 14;
   }
   if (status === "in_progress") {
-    return 12;
+    return 11;
   }
-  return [20, 16][index % 2] ?? 16;
+  return [19, 15][index % 2] ?? 15;
 }
 
 export default function MadPathPage() {
@@ -177,6 +177,15 @@ export default function MadPathPage() {
       },
       {
         phase: "PHASE 2.1",
+        date: "Mar 18, 2026",
+        title: "Physical Layer",
+        action: "$MAD sticker merch officially launched.",
+        meaning:
+          "The signal left the screen. $MAD became something people could hold, wear, and bring into everyday life.",
+        status: "complete",
+      },
+      {
+        phase: "PHASE 2.2",
         date: "Mar 19, 2026",
         title: "System Recognition",
         action: "$MAD was officially verified by Jupiter.",
@@ -185,7 +194,7 @@ export default function MadPathPage() {
         status: "complete",
       },
       {
-        phase: "PHASE 2.2",
+        phase: "PHASE 2.3",
         date: "Mar 28, 2026",
         title: "MAD Games",
         action: "The first MAD Games happened inside Roblox with real SOL rewards.",
@@ -268,7 +277,7 @@ export default function MadPathPage() {
     scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" });
   }
 
-  const chartMinWidth = `${Math.round(1320 * zoom)}px`;
+  const chartMinWidth = `${Math.round(1360 * zoom)}px`;
 
   return (
     <div className="relative overflow-hidden bg-[#050505] text-white">
@@ -411,7 +420,7 @@ export default function MadPathPage() {
 
                       <line
                         x1={candleTarget.x}
-                        y1={currentPoint?.y ?? 12}
+                        y1={currentPoint?.y ?? 11}
                         x2={candleTarget.x}
                         y2={candleTarget.y}
                         stroke="url(#madCandleGlow)"
