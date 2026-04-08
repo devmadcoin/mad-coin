@@ -184,15 +184,15 @@ export default function MadPathPage() {
           "The system didn’t change $MAD. It acknowledged it. Recognition followed persistence.",
         status: "complete",
       },
-    {
-  phase: "PHASE 2.2",
-  date: "Mar 28, 2026",
-  title: "MAD Games",
-  action: "The first MAD Games happened inside Roblox with real SOL rewards.",
-  meaning:
-    "$MAD became interactive. Not just watched — experienced. The signal became a game.",
-  status: "complete",
-},
+      {
+        phase: "PHASE 2.2",
+        date: "Mar 28, 2026",
+        title: "MAD Games",
+        action: "The first MAD Games happened inside Roblox with real SOL rewards.",
+        meaning:
+          "$MAD became interactive. Not just watched — experienced. The signal became a game.",
+        status: "complete",
+      },
       {
         phase: "PHASE 3",
         date: "Next Signal",
