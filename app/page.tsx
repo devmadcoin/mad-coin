@@ -551,6 +551,27 @@ export default function Home() {
                   </p>
                 </div>
 
+                <div className="mt-6 rounded-[30px] border border-red-500/20 bg-red-500/[0.06] p-6 sm:p-7">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-red-400">
+                    The MAD Method
+                  </p>
+                  <h3 className="mt-3 text-2xl font-black leading-tight text-white sm:text-3xl">
+                    M.A.D. is a system.
+                  </h3>
+
+                  <div className="mt-5 space-y-3 text-sm leading-7 text-white/75 sm:text-base">
+                    <p>
+                      <span className="font-bold text-white">Measure</span> — Why am I mad?
+                    </p>
+                    <p>
+                      <span className="font-bold text-white">Aim</span> — What’s my real target?
+                    </p>
+                    <p>
+                      <span className="font-bold text-white">Do</span> — Take controlled action.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="mt-8 flex flex-wrap gap-4">
                   <PillButton href={LINKS.chartPage} primary>
                     Track The Signal
