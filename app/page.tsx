@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import MadConfessions from "./components/MadConfessions";
@@ -229,6 +229,7 @@ export default function Home() {
                   className="relative z-10 h-7 w-7 object-contain"
                 />
               </div>
+
               <div>
                 <p className="text-xs font-black tracking-[0.28em] text-white">$MAD</p>
                 <p className="text-[10px] uppercase tracking-[0.24em] text-white/45">
@@ -249,6 +250,12 @@ export default function Home() {
                 className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
               >
                 Chart
+              </a>
+              <a
+                href="#signal"
+                className="rounded-full px-4 py-2 text-sm text-white/68 transition hover:bg-white/[0.05] hover:text-white"
+              >
+                The Signal
               </a>
               <a
                 href="#ecosystem"
@@ -291,15 +298,15 @@ export default function Home() {
               </h1>
 
               <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                Built for the ones who feel the pressure, watch the charts, and move with conviction.
+                Built for the ones who feel pressure, read the signal, and move with conviction.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <PillButton href="#chart" primary>
                   Track Momentum
                 </PillButton>
+                <PillButton href="#signal">Read The Signal</PillButton>
                 <PillButton href="#merch">Shop Merch</PillButton>
-                <PillButton href={LINKS.chartPage}>Open Dexscreener</PillButton>
               </div>
 
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
@@ -310,7 +317,7 @@ export default function Home() {
                 <InfoCard label="Network" value={<span>Solana</span>} />
                 <InfoCard
                   label="Positioning"
-                  value={<span>Meme signal / cultural volatility</span>}
+                  value={<span>Culture, identity, and controlled chaos</span>}
                 />
               </div>
 
@@ -369,7 +376,6 @@ export default function Home() {
         </section>
 
         <section className="mt-5 overflow-hidden rounded-[26px] border border-white/10 bg-black/25 py-3">
-          <div className="pointer-events-none absolute left-0 right-0" />
           <div className="mad-marquee whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.28em] text-red-200/65">
             <span className="mx-6">
               HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT AFFORD TO LOSE
@@ -428,12 +434,8 @@ export default function Home() {
                   <p className="text-xs uppercase tracking-[0.24em] text-white/42">
                     {item.subtitle}
                   </p>
-                  <h3 className="mt-2 text-xl font-black text-white">
-                    {item.name}
-                  </h3>
-                  <p className="mt-3 text-sm font-bold text-red-400">
-                    Open Product →
-                  </p>
+                  <h3 className="mt-2 text-xl font-black text-white">{item.name}</h3>
+                  <p className="mt-3 text-sm font-bold text-red-400">Open Product →</p>
                 </div>
               </Link>
             ))}
@@ -483,13 +485,97 @@ export default function Home() {
           <div className="mt-6 flex flex-wrap gap-3">
             <PillButton href={LINKS.chartPage}>View Full Dexscreener</PillButton>
             <PillButton href={LINKS.jupiter} primary>
-              Buy on Jupiter
+              Open on Jupiter
             </PillButton>
           </div>
 
           <p className="mt-4 text-sm leading-7 text-white/52">
-            Watch the chart first. If the signal makes sense to you, Jupiter is right below.
+            Watch the chart first. Read the signal second. If it makes sense to you, the route is right here.
           </p>
+        </section>
+
+        <section
+          id="signal"
+          className="mt-12 overflow-hidden rounded-[38px] border border-white/10 bg-black/28 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+        >
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,40,40,0.14),transparent_35%),radial-gradient(circle_at_85%_70%,rgba(255,80,0,0.10),transparent_30%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02),transparent,rgba(255,255,255,0.02))]" />
+
+            <div className="relative grid max-w-7xl grid-cols-1 gap-10 px-5 py-12 sm:px-8 sm:py-14 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14 lg:px-10">
+              <div className="max-w-3xl">
+                <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.35em] text-white/45">
+                  The Signal
+                </p>
+
+                <h2 className="max-w-4xl text-4xl font-black uppercase leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+                  <span className="text-[#ff3b30] drop-shadow-[0_0_18px_rgba(255,59,48,0.35)]">
+                    Stop
+                  </span>{" "}
+                  Trading Noise.
+                  <br />
+                  Start Being $MAD.
+                </h2>
+
+                <p className="mt-6 max-w-2xl text-base leading-7 text-white/72 sm:text-lg">
+                  $MAD is more than a token. It is a philosophy of control under pressure.
+                  Most people chase hype, panic in red, and react without thinking.
+                  $MAD stands for something different.
+                </p>
+
+                <div className="mt-8 space-y-4 text-sm leading-7 text-white/75 sm:text-base">
+                  <p>
+                    <span className="font-bold text-white">RIC</span> — control your emotions
+                  </p>
+                  <p>
+                    <span className="font-bold text-white">WEAL</span> — build something that grows
+                  </p>
+                  <p>
+                    Every pump tests your ego. Every dip tests your discipline. Every decision reveals who you are.
+                  </p>
+                </div>
+
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <PillButton href={LINKS.chartPage} primary>
+                    Track The Signal
+                  </PillButton>
+                  <PillButton href={LINKS.jupiter}>Route on Jupiter</PillButton>
+                </div>
+              </div>
+
+              <div className="grid gap-4 self-center">
+                <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
+                    RIC
+                  </p>
+                  <h3 className="mt-3 text-2xl font-bold text-white">Control</h3>
+                  <p className="mt-2 text-sm leading-6 text-white/68">
+                    Hold your center when the market tries to move your mind for you.
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
+                    WEAL
+                  </p>
+                  <h3 className="mt-3 text-2xl font-bold text-white">Growth</h3>
+                  <p className="mt-2 text-sm leading-6 text-white/68">
+                    Build what lasts. Not just hype, not just noise, not just a moment.
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#ff3b30]">
+                    The Test
+                  </p>
+                  <h3 className="mt-3 text-2xl font-bold text-white">Stay $MAD</h3>
+                  <p className="mt-2 text-sm leading-6 text-white/68">
+                    Anyone can cheer in green. Identity is revealed when conviction gets tested.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section
