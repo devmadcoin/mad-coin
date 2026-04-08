@@ -7,11 +7,10 @@ import type { ReactNode } from "react";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
-  { href: "/roadmap", label: "Roadmap" },
+  { href: "/roadmap", label: "The Mad Path", mobileLabel: "Mad Path" },
   { href: "/forge", label: "Forge" },
   { href: "/merch", label: "Merch" },
   { href: "/memes", label: "$MAD Art", mobileLabel: "Art" },
-  { href: "/lore", label: "Lore" },
   { href: "/game", label: "Game" },
 ];
 
