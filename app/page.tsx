@@ -277,104 +277,79 @@ export default function Home() {
         </div>
 
         <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-          <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="relative px-5 py-12 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
+          <div className="grid gap-0 lg:grid-cols-2">
+            <div className="relative flex flex-col justify-center px-6 py-16 sm:px-10 lg:px-14">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
 
-              <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/42">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/40">
                 CONTROLLED CHAOS
               </p>
 
-              <h1 className="mt-5 max-w-4xl text-[2.5rem] font-black leading-[0.9] tracking-[-0.04em] text-white sm:text-[4rem] lg:text-[5.2rem]">
-                <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.55)]">
+              <h1 className="mt-6 text-[3rem] font-black leading-[0.9] tracking-[-0.04em] text-white sm:text-[4.5rem] lg:text-[5.5rem]">
+                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   STOP
-                </span>{" "}
+                </span>
+                <br />
                 TRADING
                 <br />
                 NOISE.
                 <br />
                 START BEING{" "}
-                <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.55)]">
+                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   $MAD
                 </span>
                 .
               </h1>
 
-              <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                Built for the ones who feel pressure, carry conviction, and move with control.
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-10">
                 <PillButton href="#connect" primary>
-                  Connect
+                  Enter Signal
                 </PillButton>
-                <PillButton href="#merch">Shop Merch</PillButton>
-                <PillButton href={LINKS.jupiter}>Open Jupiter</PillButton>
-              </div>
-
-              <div className="mt-10 grid gap-4 sm:grid-cols-3">
-                <InfoCard
-                  label="Contract"
-                  value={<span className="break-all text-white/82">{ADDR}</span>}
-                />
-                <InfoCard label="Network" value={<span>Solana</span>} />
-                <InfoCard
-                  label="Positioning"
-                  value={<span>Culture, identity, and controlled chaos</span>}
-                />
-              </div>
-
-              <div className="mt-5">
-                <button
-                  onClick={copyAddr}
-                  className="rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-black text-white transition hover:bg-white/[0.07]"
-                >
-                  {copied ? "Copied!" : "Copy Contract"}
-                </button>
               </div>
             </div>
 
-            <div className="relative min-h-[340px] border-t border-white/10 bg-gradient-to-br from-red-500/10 via-transparent to-transparent lg:min-h-full lg:border-l lg:border-t-0">
+            <div className="relative flex items-center justify-center border-t border-white/10 bg-gradient-to-br from-red-500/10 via-transparent to-transparent p-6 sm:p-8 lg:border-l lg:border-t-0">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.16),transparent_42%)]" />
 
-              <div className="relative flex h-full items-center justify-center px-6 py-12">
-                <div className="relative w-full max-w-[520px]">
-                  <div className="absolute -inset-6 rounded-[40px] bg-red-500/10 blur-3xl" />
+              <div className="relative w-full max-w-[520px]">
+                <div className="absolute -inset-8 rounded-[40px] bg-red-500/10 blur-3xl" />
 
-                  <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-black/55 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
-                    <div className="relative overflow-hidden rounded-[26px] border border-white/10 bg-[#0a0a0a] p-6 sm:p-8">
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,59,48,0.12),transparent_50%)]" />
-
-                      <div className="relative flex flex-col items-center justify-center">
-                        <div className="flex items-center justify-center rounded-[28px] border border-red-500/15 bg-black/30 p-4 shadow-[0_0_30px_rgba(255,0,0,0.08)]">
-                          <video
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            className="h-[180px] w-auto object-contain sm:h-[240px] lg:h-[280px]"
-                          >
-                            <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-                          </video>
-                        </div>
-
-                        <p className="mt-6 text-[11px] uppercase tracking-[0.28em] text-white/38">
-                          Belief Layer
-                        </p>
-
-                        <p className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
-                          $MAD
-                        </p>
-
-                        <p className="mt-3 max-w-md text-center text-sm leading-7 text-white/58">
-                          No promises. No guarantees. Only what people decide it becomes.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                <div className="relative rounded-[32px] border border-white/10 bg-black/60 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.6)] sm:p-6">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full rounded-[20px] object-contain"
+                  >
+                    <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                  </video>
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="mt-8">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <InfoCard
+              label="Contract"
+              value={<span className="break-all text-white/82">{ADDR}</span>}
+            />
+            <InfoCard label="Network" value={<span>Solana</span>} />
+            <InfoCard
+              label="Positioning"
+              value={<span>Culture. Identity. Controlled chaos.</span>}
+            />
+          </div>
+
+          <div className="mt-5">
+            <button
+              onClick={copyAddr}
+              className="rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-black text-white transition hover:bg-white/[0.07]"
+            >
+              {copied ? "Copied!" : "Copy Contract"}
+            </button>
           </div>
         </section>
 
@@ -392,7 +367,7 @@ export default function Home() {
             </h3>
 
             <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-              The signal doesn’t come to you. You step into it.
+              Tap in with the channels building the culture.
             </p>
           </div>
 
