@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import MadConfessions from "./components/MadConfessions";
@@ -56,33 +55,6 @@ const merchItems = [
 
 const ecosystemItems = [
   {
-    name: "Dexscreener",
-    href: LINKS.chartPage,
-    src: "/logos/DEX-screener.png",
-    alt: "Dexscreener",
-    width: 160,
-    height: 46,
-    light: false,
-  },
-  {
-    name: "CoinGecko",
-    href: LINKS.coingecko,
-    src: "/logos/coingecko.png",
-    alt: "CoinGecko",
-    width: 160,
-    height: 46,
-    light: true,
-  },
-  {
-    name: "Birdeye",
-    href: LINKS.birdeye,
-    src: "/logos/birdeye.png",
-    alt: "Birdeye",
-    width: 145,
-    height: 42,
-    light: false,
-  },
-  {
     name: "Jupiter",
     href: LINKS.jupiter,
     src: "/logos/jupiter.png",
@@ -99,6 +71,33 @@ const ecosystemItems = [
     width: 145,
     height: 42,
     light: true,
+  },
+  {
+    name: "CoinGecko",
+    href: LINKS.coingecko,
+    src: "/logos/coingecko.png",
+    alt: "CoinGecko",
+    width: 160,
+    height: 46,
+    light: true,
+  },
+  {
+    name: "Dexscreener",
+    href: LINKS.chartPage,
+    src: "/logos/DEX-screener.png",
+    alt: "Dexscreener",
+    width: 160,
+    height: 46,
+    light: false,
+  },
+  {
+    name: "Birdeye",
+    href: LINKS.birdeye,
+    src: "/logos/birdeye.png",
+    alt: "Birdeye",
+    width: 145,
+    height: 42,
+    light: false,
   },
 ] as const;
 
@@ -164,8 +163,6 @@ function SectionHeader({
 }
 
 export default function Home() {
-  const marqueeItems = useMemo(() => [...ecosystemItems, ...ecosystemItems], []);
-
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
       <div className="pointer-events-none absolute inset-0">
@@ -339,44 +336,31 @@ export default function Home() {
             align="center"
           />
 
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <PillButton href={LINKS.chartPage}>Open Dexscreener</PillButton>
-            <PillButton href={LINKS.jupiter} primary>
-              Open Jupiter
-            </PillButton>
-            <PillButton href={LINKS.solscan}>View Solscan</PillButton>
-          </div>
-
-          <div className="relative mt-10 overflow-hidden">
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#050505] to-transparent sm:w-24" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#050505] to-transparent sm:w-24" />
-
-            <div className="mad-logo-marquee flex w-max items-center gap-4 sm:gap-6">
-              {marqueeItems.map((item, index) => (
-                <a
-                  key={`${item.name}-${index}`}
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={[
-                    "flex h-16 items-center rounded-[22px] border px-5 shadow-lg transition hover:-translate-y-0.5",
-                    item.light
-                      ? "border-white/10 bg-white"
-                      : "border-white/10 bg-black",
-                  ].join(" ")}
-                  aria-label={`Open ${item.name}`}
-                  title={item.name}
-                >
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    width={item.width}
-                    height={item.height}
-                    className="h-auto w-auto object-contain"
-                  />
-                </a>
-              ))}
-            </div>
+          <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {ecosystemItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                className={[
+                  "flex h-24 items-center justify-center rounded-[24px] border px-4 shadow-lg transition hover:-translate-y-0.5",
+                  item.light
+                    ? "border-white/10 bg-white"
+                    : "border-white/10 bg-black",
+                ].join(" ")}
+                aria-label={`Open ${item.name}`}
+                title={item.name}
+              >
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  width={item.width}
+                  height={item.height}
+                  className="h-auto max-h-10 w-auto object-contain"
+                />
+              </a>
+            ))}
           </div>
         </section>
 
@@ -411,7 +395,8 @@ export default function Home() {
 
             <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
               <p className="text-sm leading-7 text-white/62">
-                Built on conviction, carried by culture, and driven by the people who choose to be $MAD.
+                Built on conviction, carried by culture, and driven by the
+                people who choose to be $MAD.
               </p>
             </div>
           </div>
@@ -427,7 +412,8 @@ export default function Home() {
             That’s why you stop trading…
             <br />
             and start being{" "}
-            <span className="font-semibold text-red-500">$MAD</span> at everything.
+            <span className="font-semibold text-red-500">$MAD</span> at
+            everything.
             <br />
             <br />
             Do not risk money you cannot afford to lose.
@@ -444,25 +430,12 @@ export default function Home() {
           animation: madMarquee 22s linear infinite;
         }
 
-        .mad-logo-marquee {
-          animation: logoMarquee 26s linear infinite;
-        }
-
         @keyframes madMarquee {
           0% {
             transform: translateX(0);
           }
           100% {
             transform: translateX(-33.333%);
-          }
-        }
-
-        @keyframes logoMarquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
           }
         }
       `}</style>
