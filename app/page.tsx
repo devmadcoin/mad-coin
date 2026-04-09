@@ -195,6 +195,9 @@ export default function Home() {
                 BEING{" "}
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   $MAD
+                </span>{" "}
+                <span className="text-green-400 drop-shadow-[0_0_18px_rgba(0,255,120,0.6)]">
+                  RICH
                 </span>
                 .
               </h1>
