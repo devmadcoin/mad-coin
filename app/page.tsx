@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import MadConfessions from "./components/MadConfessions";
@@ -102,13 +102,6 @@ const ecosystemItems = [
   },
 ] as const;
 
-const HOME_SECTIONS = [
-  { href: "#connect", label: "Connect" },
-  { href: "#merch", label: "Merch" },
-  { href: "#ecosystem", label: "Verified" },
-  { href: "#confessions", label: "Confessions" },
-] as const;
-
 function PillButton({
   href,
   children,
@@ -131,23 +124,6 @@ function PillButton({
           ? "border border-red-500/30 bg-red-500 text-white hover:scale-[1.01] hover:bg-red-400"
           : "border border-white/12 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]",
       ].join(" ")}
-    >
-      {children}
-    </a>
-  );
-}
-
-function HomeJumpPill({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <a
-      href={href}
-      className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white/78 transition hover:border-red-500/30 hover:bg-white/[0.08] hover:text-white"
     >
       {children}
     </a>
@@ -187,48 +163,7 @@ function SectionHeader({
   );
 }
 
-function InfoCard({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/40">
-        {label}
-      </p>
-      <div className="mt-2 text-sm font-medium text-white/88 sm:text-base">
-        {value}
-      </div>
-    </div>
-  );
-}
-
 export default function Home() {
-  const [copied, setCopied] = useState(false);
-
-  async function copyAddr() {
-    try {
-      await navigator.clipboard.writeText(ADDR);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1200);
-    } catch {
-      const ta = document.createElement("textarea");
-      ta.value = ADDR;
-      ta.setAttribute("readonly", "true");
-      ta.style.position = "absolute";
-      ta.style.left = "-9999px";
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1200);
-    }
-  }
-
   const marqueeItems = useMemo(() => [...ecosystemItems, ...ecosystemItems], []);
 
   return (
@@ -239,53 +174,17 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-5 sm:px-6 lg:px-8">
-        <header className="mb-5 rounded-full border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-xl sm:px-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-red-500/20 bg-white/[0.04]">
-                <span className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,59,48,0.2),transparent_70%)]" />
-                <Image
-                  src="/mad.png"
-                  alt="$MAD icon"
-                  width={28}
-                  height={28}
-                  className="relative z-10 h-7 w-7 object-contain"
-                />
-              </div>
-
-              <div>
-                <p className="text-xs font-black tracking-[0.28em] text-white">$MAD</p>
-                <p className="text-[10px] uppercase tracking-[0.24em] text-white/45">
-                  Solana • Culture • Chaos
-                </p>
-              </div>
-            </div>
-
-            <div className="hidden text-[11px] font-semibold uppercase tracking-[0.28em] text-white/32 md:block">
-              Home Signal
-            </div>
-          </div>
-        </header>
-
-        <div className="mb-5 flex flex-wrap gap-2">
-          {HOME_SECTIONS.map((section) => (
-            <HomeJumpPill key={section.href} href={section.href}>
-              {section.label}
-            </HomeJumpPill>
-          ))}
-        </div>
-
+      <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10">
         <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-          <div className="grid gap-0 lg:grid-cols-2">
-            <div className="relative flex flex-col justify-center px-6 py-16 sm:px-10 lg:px-14">
+          <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="relative flex flex-col justify-center px-6 py-16 sm:px-10 lg:px-12 lg:py-20">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
 
               <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/40">
                 CONTROLLED CHAOS
               </p>
 
-              <h1 className="mt-6 text-[3rem] font-black leading-[0.9] tracking-[-0.04em] text-white sm:text-[4.5rem] lg:text-[5.5rem]">
+              <h1 className="mt-6 text-[3.2rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.7rem] lg:text-[6rem]">
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   STOP
                 </span>
@@ -294,7 +193,9 @@ export default function Home() {
                 <br />
                 NOISE.
                 <br />
-                START BEING{" "}
+                START
+                <br />
+                BEING{" "}
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   $MAD
                 </span>
@@ -308,48 +209,27 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="relative flex items-center justify-center border-t border-white/10 bg-gradient-to-br from-red-500/10 via-transparent to-transparent p-6 sm:p-8 lg:border-l lg:border-t-0">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.16),transparent_42%)]" />
+            <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-6 sm:p-8 lg:p-10">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.14),transparent_44%)]" />
 
-              <div className="relative w-full max-w-[520px]">
-                <div className="absolute -inset-8 rounded-[40px] bg-red-500/10 blur-3xl" />
+              <div className="relative w-full max-w-[620px]">
+                <div className="absolute -inset-8 rounded-[42px] bg-red-500/10 blur-3xl" />
 
-                <div className="relative rounded-[32px] border border-white/10 bg-black/60 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.6)] sm:p-6">
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="w-full rounded-[20px] object-contain"
-                  >
-                    <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-                  </video>
+                <div className="relative rounded-[34px] border border-white/10 bg-black/60 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.6)] sm:p-5">
+                  <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black">
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="aspect-[16/10] w-full object-cover"
+                    >
+                      <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                    </video>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        <section className="mt-8">
-          <div className="grid gap-4 sm:grid-cols-3">
-            <InfoCard
-              label="Contract"
-              value={<span className="break-all text-white/82">{ADDR}</span>}
-            />
-            <InfoCard label="Network" value={<span>Solana</span>} />
-            <InfoCard
-              label="Positioning"
-              value={<span>Culture. Identity. Controlled chaos.</span>}
-            />
-          </div>
-
-          <div className="mt-5">
-            <button
-              onClick={copyAddr}
-              className="rounded-full border border-white/12 bg-white/[0.04] px-5 py-3 text-sm font-black text-white transition hover:bg-white/[0.07]"
-            >
-              {copied ? "Copied!" : "Copy Contract"}
-            </button>
           </div>
         </section>
 
