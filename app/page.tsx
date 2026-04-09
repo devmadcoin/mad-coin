@@ -133,12 +133,10 @@ function SocialIcon({
   href,
   src,
   alt,
-  size = 22,
 }: {
   href: string;
   src: string;
   alt: string;
-  size?: number;
 }) {
   return (
     <a
@@ -147,14 +145,14 @@ function SocialIcon({
       rel="noreferrer"
       aria-label={alt}
       title={alt}
-      className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/10 transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white/20 hover:shadow-[0_0_18px_rgba(255,255,255,0.35)]"
+      className="block h-14 w-14 shrink-0 transition-transform duration-300 hover:scale-110"
     >
       <Image
         src={src}
         alt={alt}
-        width={size}
-        height={size}
-        className="object-contain"
+        width={56}
+        height={56}
+        className="h-full w-full object-contain"
       />
     </a>
   );
@@ -238,30 +236,26 @@ export default function Home() {
                   Enter Signal
                 </PillButton>
 
-                <div className="flex w-full items-center justify-between opacity-90 transition hover:opacity-100">
+                <div className="flex w-full max-w-md items-center justify-between">
                   <SocialIcon
                     href={LINKS.telegram}
                     src="/logos/MAD-TELEGRAM.png"
                     alt="Telegram"
-                    size={22}
                   />
                   <SocialIcon
                     href={LINKS.x}
                     src="/logos/MAD-X-LOGO.png"
                     alt="X"
-                    size={20}
                   />
                   <SocialIcon
                     href={LINKS.instagram}
                     src="/logos/MAD-INSTAGRAM-LOGO.png"
                     alt="Instagram"
-                    size={22}
                   />
                   <SocialIcon
                     href={LINKS.tiktok}
                     src="/logos/MAD-TIKTOK-LOGO.png"
                     alt="TikTok"
-                    size={22}
                   />
                 </div>
               </div>
