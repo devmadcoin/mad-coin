@@ -423,22 +423,32 @@ export default function Home() {
         <section className="mt-8 rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(38,0,0,0.82),rgba(18,0,0,0.95))] p-4 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6">
           <div className="mb-6 text-center">
             <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-              Community Proof
+              MAD Community
             </p>
 
             <h3 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl">
-              Proof the signal landed.
+              <span className="text-green-400 drop-shadow-[0_0_10px_rgba(0,255,120,0.5)]">
+                Proof
+              </span>{" "}
+              Everyone’s{" "}
+              <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.6)]">
+                MAD
+              </span>
             </h3>
 
             <p className="mt-3 text-sm text-white/60">
-              Real people. Real orders. Real $MAD.
+              Real people. Real orders. Real energy.
             </p>
           </div>
 
           <div className="proof-slider-mask">
             <div className="proof-slider-track">
               {slidingProofItems.map((item, i) => (
-                <ProofCard key={`${item.src}-${i}`} src={item.src} alt={item.alt} />
+                <ProofCard
+                  key={`${item.src}-${i}`}
+                  src={item.src}
+                  alt={item.alt}
+                />
               ))}
             </div>
           </div>
