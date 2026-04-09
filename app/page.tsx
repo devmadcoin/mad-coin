@@ -242,11 +242,7 @@ export default function Home() {
                     src="/logos/MAD-TELEGRAM.png"
                     alt="Telegram"
                   />
-                  <SocialIcon
-                    href={LINKS.x}
-                    src="/logos/MAD-X-LOGO.png"
-                    alt="X"
-                  />
+                  <SocialIcon href={LINKS.x} src="/logos/MAD-X-LOGO.png" alt="X" />
                   <SocialIcon
                     href={LINKS.instagram}
                     src="/logos/MAD-INSTAGRAM-LOGO.png"
@@ -288,13 +284,16 @@ export default function Home() {
         <section className="mt-5 overflow-hidden rounded-[26px] border border-white/10 bg-black/25 py-3">
           <div className="mad-marquee whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.28em] text-red-200/65">
             <span className="mx-6">
-              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT AFFORD TO LOSE
+              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT
+              AFFORD TO LOSE
             </span>
             <span className="mx-6">
-              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT AFFORD TO LOSE
+              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT
+              AFFORD TO LOSE
             </span>
             <span className="mx-6">
-              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT AFFORD TO LOSE
+              HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT
+              AFFORD TO LOSE
             </span>
           </div>
         </section>
@@ -344,8 +343,12 @@ export default function Home() {
                   <p className="text-xs uppercase tracking-[0.24em] text-white/42">
                     {item.subtitle}
                   </p>
-                  <h3 className="mt-2 text-xl font-black text-white">{item.name}</h3>
-                  <p className="mt-3 text-sm font-bold text-red-400">Open Product →</p>
+                  <h3 className="mt-2 text-xl font-black text-white">
+                    {item.name}
+                  </h3>
+                  <p className="mt-3 text-sm font-bold text-red-400">
+                    Open Product →
+                  </p>
                 </div>
               </Link>
             ))}
@@ -402,16 +405,19 @@ export default function Home() {
 
         <section
           id="confessions"
-          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 p-2 sm:p-3 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl"
         >
-          <div className="px-4 pb-2 pt-6 sm:px-6">
+          <div className="px-3 pb-2 pt-6 sm:px-6">
             <SectionHeader
               eyebrow="Community"
               title={<>Confessions from the culture.</>}
               body="Raw thoughts from the community, straight from the culture."
             />
           </div>
-          <MadConfessions />
+
+          <div className="min-w-0 px-1 sm:px-0">
+            <MadConfessions />
+          </div>
         </section>
 
         <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
