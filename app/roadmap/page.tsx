@@ -100,63 +100,160 @@ function RevealOnScroll({
 
 function GrowthVisual({
   animateIn,
-  pct,
+  items,
+  completed,
   currentTitle,
+  pct,
 }: {
   animateIn: boolean;
-  pct: number;
+  items: PathItem[];
+  completed: number;
   currentTitle: string;
+  pct: number;
 }) {
-  const barHeights = [18, 28, 40, 53, 68, 86, 108, 136];
-  const activeBars = Math.max(1, Math.round((pct / 100) * barHeights.length));
+  const blocks = items.map((item, index) => {
+    const progress = (index + 1) / items.length;
+    const height = 42 + Math.round(progress * 138);
+
+    return {
+      ...item,
+      height,
+      isComplete: item.status === "complete",
+      isCurrent: item.status === "in_progress",
+      isFuture: item.status === "planned",
+    };
+  });
+
+  const currentIndex =
+    items.findIndex((item) => item.status === "in_progress") !== -1
+      ? items.findIndex((item) => item.status === "in_progress")
+      : Math.max(0, completed - 1);
 
   return (
-    <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[#060606] p-5 sm:p-6">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_90%,rgba(0,255,120,0.08),transparent_28%),radial-gradient(circle_at_90%_10%,rgba(255,0,0,0.08),transparent_25%)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,rgba(255,255,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.07)_1px,transparent_1px)] [background-size:46px_46px]" />
-
-      <div className="relative">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/42">
-              The Climb
-            </p>
-            <h2 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
-              Pressure. Response. Evolution.
-            </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/58 sm:text-base">
-              A cleaner read of the journey: pressure converted into structure,
-              structure into belief, and belief into upward momentum.
-            </p>
-          </div>
-
-          <div className="hidden rounded-2xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3 md:block">
-            <p className="text-[11px] uppercase tracking-[0.24em] text-red-300/80">
-              You Are Here
-            </p>
-            <p className="mt-1 text-sm font-bold text-white">{currentTitle}</p>
-          </div>
+    <div className="overflow-hidden rounded-[36px] border border-white/10 bg-black/35 p-5 shadow-[0_24px_100px_rgba(0,0,0,0.42)] backdrop-blur-xl sm:p-7 lg:p-8">
+      <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/42">
+            The Climb
+          </p>
+          <h2 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
+            Pressure. Response. Evolution.
+          </h2>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/58 sm:text-base">
+            From the beginning up to now — every step stacking into the next.
+            The path rises in order, not by accident.
+          </p>
         </div>
 
-        <div className="mt-8">
-          <div className="relative h-[260px] rounded-[26px] border border-white/8 bg-black/40 px-4 pb-6 pt-4 sm:h-[320px] sm:px-6">
+        <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-red-300/80">
+            You Are Here
+          </p>
+          <p className="mt-1 text-sm font-bold text-white">{currentTitle}</p>
+        </div>
+      </div>
+
+      <div className="rounded-[30px] border border-white/10 bg-[#080808] p-4 sm:p-6">
+        <div className="relative overflow-hidden rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] px-4 pb-6 pt-4 sm:px-6">
+          <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:52px_52px]" />
+          <div className="pointer-events-none absolute left-0 right-0 top-[22%] border-t border-white/8" />
+          <div className="pointer-events-none absolute left-0 right-0 top-[46%] border-t border-white/8" />
+          <div className="pointer-events-none absolute left-0 right-0 top-[70%] border-t border-white/8" />
+
+          <div className="relative flex h-[360px] items-end gap-2 overflow-x-auto overflow-y-hidden pb-4 sm:gap-3">
+            {blocks.map((block, index) => {
+              const labelTone = block.isComplete
+                ? "text-emerald-300"
+                : block.isCurrent
+                ? "text-red-300"
+                : "text-white/45";
+
+              const barTone = block.isComplete
+                ? "from-emerald-500 to-emerald-400"
+                : block.isCurrent
+                ? "from-red-500 to-red-400"
+                : "from-white/20 to-white/10";
+
+              const glowTone = block.isComplete
+                ? "shadow-[0_0_24px_rgba(52,211,153,0.28)]"
+                : block.isCurrent
+                ? "shadow-[0_0_26px_rgba(248,113,113,0.35)]"
+                : "";
+
+              return (
+                <div
+                  key={block.phase}
+                  className="relative flex min-w-[88px] flex-col items-center justify-end sm:min-w-[96px]"
+                >
+                  <div className="mb-3 flex min-h-[64px] items-end justify-center text-center">
+                    <div
+                      className={[
+                        "rounded-xl border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] backdrop-blur",
+                        block.isComplete
+                          ? "border-emerald-500/20 bg-emerald-500/[0.07]"
+                          : block.isCurrent
+                          ? "border-red-500/25 bg-red-500/[0.08]"
+                          : "border-white/10 bg-white/[0.03]",
+                        labelTone,
+                      ].join(" ")}
+                    >
+                      {block.phase}
+                    </div>
+                  </div>
+
+                  <div className="relative flex h-[220px] items-end">
+                    <div
+                      className={[
+                        "w-[54px] rounded-t-[10px] bg-gradient-to-t transition-all duration-700 ease-out sm:w-[58px]",
+                        barTone,
+                        glowTone,
+                        animateIn ? "opacity-100" : "opacity-0",
+                      ].join(" ")}
+                      style={{
+                        height: `${block.height}px`,
+                        transitionDelay: `${index * 110}ms`,
+                      }}
+                    />
+
+                    {index === currentIndex ? (
+                      <>
+                        <div className="pointer-events-none absolute left-1/2 top-0 h-full -translate-x-1/2">
+                          <div className="absolute bottom-full left-1/2 mb-3 -translate-x-1/2 whitespace-nowrap rounded-full border border-red-500/25 bg-red-500/[0.08] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-red-300">
+                            Now
+                          </div>
+                        </div>
+                        <div className="pointer-events-none absolute left-1/2 top-[-16px] h-5 w-5 -translate-x-1/2 rounded-full border-2 border-red-300 bg-white shadow-[0_0_24px_rgba(255,120,120,0.85)]">
+                          <span className="absolute inset-0 animate-ping rounded-full bg-red-500/25" />
+                        </div>
+                      </>
+                    ) : null}
+                  </div>
+
+                  <div className="mt-3 max-w-[92px] text-center sm:max-w-[100px]">
+                    <p className="line-clamp-2 text-xs font-bold text-white">
+                      {block.title}
+                    </p>
+                    <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-white/35">
+                      {block.date}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+
             <svg
-              viewBox="0 0 1000 420"
-              className="absolute inset-0 h-full w-full"
+              viewBox="0 0 1000 240"
               preserveAspectRatio="none"
+              className="pointer-events-none absolute bottom-[82px] left-0 right-0 h-[220px] w-full"
               aria-hidden="true"
             >
               <defs>
-                <linearGradient id="growthBars" x1="0%" y1="100%" x2="0%" y2="0%">
-                  <stop offset="0%" stopColor="#16a34a" />
-                  <stop offset="100%" stopColor="#4ade80" />
-                </linearGradient>
-                <linearGradient id="growthArrow" x1="0%" y1="100%" x2="100%" y2="0%">
+                <linearGradient id="orderedGrowthArrow" x1="0%" y1="100%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#16a34a" />
                   <stop offset="100%" stopColor="#22c55e" />
                 </linearGradient>
-                <filter id="greenGlow">
-                  <feGaussianBlur stdDeviation="6" result="blur" />
+                <filter id="orderedGrowthGlow">
+                  <feGaussianBlur stdDeviation="4.5" result="blur" />
                   <feMerge>
                     <feMergeNode in="blur" />
                     <feMergeNode in="SourceGraphic" />
@@ -164,90 +261,40 @@ function GrowthVisual({
                 </filter>
               </defs>
 
-              {[80, 160, 240, 320].map((y) => (
-                <line
-                  key={y}
-                  x1="40"
-                  x2="960"
-                  y1={y}
-                  y2={y}
-                  stroke="rgba(255,255,255,0.08)"
-                  strokeWidth="1"
-                />
-              ))}
-
-              {barHeights.map((h, i) => {
-                const x = 110 + i * 95;
-                const y = 360 - h * 2;
-                const isActive = i < activeBars;
-                return (
-                  <g
-                    key={i}
-                    className={animateIn ? "bar-rise" : "opacity-0"}
-                    style={{ animationDelay: `${120 + i * 90}ms` }}
-                  >
-                    <rect
-                      x={x}
-                      y={y}
-                      width="46"
-                      height={h * 2}
-                      rx="2"
-                      fill={isActive ? "url(#growthBars)" : "rgba(255,255,255,0.16)"}
-                    />
-                    <polygon
-                      points={`${x},${y} ${x + 16},${y - 16} ${x + 62},${y - 16} ${x + 46},${y}`}
-                      fill={isActive ? "#4ade80" : "rgba(255,255,255,0.22)"}
-                    />
-                    <polygon
-                      points={`${x + 46},${y} ${x + 62},${y - 16} ${x + 62},${y + h * 2 - 16} ${x + 46},${y + h * 2}`}
-                      fill={isActive ? "#16a34a" : "rgba(255,255,255,0.12)"}
-                    />
-                  </g>
-                );
-              })}
-
-              <g
-                className={animateIn ? "arrow-rise" : "opacity-0"}
-                filter="url(#greenGlow)"
-              >
-                <path
-                  d="M 140 300 C 280 270, 420 238, 560 185 C 700 132, 820 92, 900 42"
-                  fill="none"
-                  stroke="url(#growthArrow)"
-                  strokeWidth="18"
-                  strokeLinecap="round"
-                />
-                <polygon
-                  points="900,42 845,58 875,88"
-                  fill="#22c55e"
-                />
-              </g>
-            </svg>
-
-            <div className="relative flex h-full items-end justify-between gap-2 px-4 pb-2 sm:px-8">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35">
-                Launch
-              </div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35">
-                Expansion
-              </div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35">
-                Summit
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="h-3 w-full overflow-hidden rounded-full border border-white/10 bg-white/5 sm:max-w-[calc(100%-160px)]">
-              <div
-                className="h-full rounded-full bg-red-500 transition-all duration-1000"
-                style={{ width: `${pct}%` }}
+              <path
+                d="M 70 195 C 210 178, 360 158, 500 128 C 640 98, 780 66, 915 20"
+                fill="none"
+                stroke="url(#orderedGrowthArrow)"
+                strokeWidth="12"
+                strokeLinecap="round"
+                className={animateIn ? "arrow-path-draw" : "opacity-0"}
+                filter="url(#orderedGrowthGlow)"
               />
-            </div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">
-              Path progress {pct}%
-            </p>
+              <polygon
+                points="915,20 880,28 898,53"
+                fill="#22c55e"
+                className={animateIn ? "arrow-head-pop" : "opacity-0"}
+              />
+            </svg>
           </div>
+
+          <div className="mt-3 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35">
+            <span>Beginning</span>
+            <span>Now</span>
+          </div>
+        </div>
+
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="h-3 w-full overflow-hidden rounded-full border border-white/10 bg-white/5 sm:max-w-[calc(100%-180px)]">
+            <div
+              className="h-full rounded-full bg-red-500 transition-all duration-1000"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">
+            {completed} of {items.length} completed
+          </p>
         </div>
       </div>
     </div>
@@ -535,8 +582,10 @@ export default function MadPathPage() {
         <section className="mt-10">
           <GrowthVisual
             animateIn={animateIn}
-            pct={pct}
+            items={items}
+            completed={completed}
             currentTitle={`${currentItem.phase} — ${currentItem.title}`}
+            pct={pct}
           />
         </section>
 
@@ -571,34 +620,32 @@ export default function MadPathPage() {
       </div>
 
       <style jsx>{`
-        .bar-rise {
-          animation: barRise 0.8s ease-out forwards;
-          transform-origin: bottom;
+        .arrow-path-draw {
+          stroke-dasharray: 1200;
+          stroke-dashoffset: 1200;
+          animation: arrowPathDraw 1.6s ease-out 0.6s forwards;
         }
 
-        .arrow-rise {
-          animation: arrowRise 1.1s ease-out 0.5s forwards;
+        .arrow-head-pop {
+          animation: arrowHeadPop 0.55s ease-out 1.7s forwards;
         }
 
-        @keyframes barRise {
+        @keyframes arrowPathDraw {
+          to {
+            stroke-dashoffset: 0;
+          }
+        }
+
+        @keyframes arrowHeadPop {
           0% {
             opacity: 0;
-            transform: translateY(24px) scaleY(0.6);
+            transform: scale(0.7);
+            transform-origin: center;
           }
           100% {
             opacity: 1;
-            transform: translateY(0) scaleY(1);
-          }
-        }
-
-        @keyframes arrowRise {
-          0% {
-            opacity: 0;
-            transform: translateY(18px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
+            transform: scale(1);
+            transform-origin: center;
           }
         }
       `}</style>
