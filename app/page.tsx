@@ -133,7 +133,7 @@ function SocialIcon({
   href,
   src,
   alt,
-  size = 20,
+  size = 22,
 }: {
   href: string;
   src: string;
@@ -147,9 +147,15 @@ function SocialIcon({
       rel="noreferrer"
       aria-label={alt}
       title={alt}
-      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/10 transition hover:scale-110 hover:border-white/25 hover:bg-white/20"
+      className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/10 transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white/20 hover:shadow-[0_0_18px_rgba(255,255,255,0.35)]"
     >
-      <Image src={src} alt={alt} width={size} height={size} className="h-auto w-auto object-contain" />
+      <Image
+        src={src}
+        alt={alt}
+        width={size}
+        height={size}
+        className="object-contain"
+      />
     </a>
   );
 }
@@ -227,35 +233,35 @@ export default function Home() {
                 .
               </h1>
 
-              <div className="mt-10 flex flex-col items-start gap-4">
-                <PillButton href="#connect" primary>
+              <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
+                <PillButton href={LINKS.telegram} primary>
                   Enter Signal
                 </PillButton>
 
-                <div className="flex items-center gap-3">
+                <div className="flex w-full items-center justify-between opacity-90 transition hover:opacity-100">
                   <SocialIcon
                     href={LINKS.telegram}
                     src="/logos/MAD-TELEGRAM.png"
                     alt="Telegram"
-                    size={20}
+                    size={22}
                   />
                   <SocialIcon
                     href={LINKS.x}
                     src="/logos/MAD-X-LOGO.png"
                     alt="X"
-                    size={18}
+                    size={20}
                   />
                   <SocialIcon
                     href={LINKS.instagram}
                     src="/logos/MAD-INSTAGRAM-LOGO.png"
                     alt="Instagram"
-                    size={20}
+                    size={22}
                   />
                   <SocialIcon
                     href={LINKS.tiktok}
                     src="/logos/MAD-TIKTOK-LOGO.png"
                     alt="TikTok"
-                    size={20}
+                    size={22}
                   />
                 </div>
               </div>
@@ -282,31 +288,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        <section
-          id="connect"
-          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
-        >
-          <div className="text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-              Connect
-            </p>
-
-            <h3 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
-              Where the signal lives.
-            </h3>
-
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-              Tap in with the channels building the culture.
-            </p>
-          </div>
-
-          <div className="mt-8 flex justify-center">
-            <PillButton href={LINKS.telegram} primary>
-              Join Telegram
-            </PillButton>
           </div>
         </section>
 
@@ -390,7 +371,9 @@ export default function Home() {
 
           <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {ecosystemItems.map((item, index) => {
-              const isLastOddItem = ecosystemItems.length % 2 === 1 && index === ecosystemItems.length - 1;
+              const isLastOddItem =
+                ecosystemItems.length % 2 === 1 &&
+                index === ecosystemItems.length - 1;
 
               return (
                 <a
@@ -400,8 +383,12 @@ export default function Home() {
                   rel="noreferrer"
                   className={[
                     "flex h-24 items-center justify-center rounded-[24px] border px-4 shadow-lg transition hover:-translate-y-0.5",
-                    item.light ? "border-white/10 bg-white" : "border-white/10 bg-black",
-                    isLastOddItem ? "col-span-2 md:col-span-2 lg:col-span-1" : "",
+                    item.light
+                      ? "border-white/10 bg-white"
+                      : "border-white/10 bg-black",
+                    isLastOddItem
+                      ? "col-span-2 md:col-span-2 lg:col-span-1"
+                      : "",
                   ].join(" ")}
                   aria-label={`Open ${item.name}`}
                   title={item.name}
@@ -450,7 +437,8 @@ export default function Home() {
 
             <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
               <p className="text-sm leading-7 text-white/62">
-                Built on conviction, carried by culture, and driven by the people who choose to be $MAD.
+                Built on conviction, carried by culture, and driven by the
+                people who choose to be $MAD.
               </p>
             </div>
           </div>
@@ -466,7 +454,8 @@ export default function Home() {
             That’s why you stop trading…
             <br />
             and start being{" "}
-            <span className="font-semibold text-red-500">$MAD</span> at everything.
+            <span className="font-semibold text-red-500">$MAD</span> at
+            everything.
             <br />
             <br />
             Do not risk money you cannot afford to lose.
