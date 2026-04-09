@@ -121,8 +121,8 @@ function RevealOnScroll({
 export default function MadPathPage() {
   const [animateIn, setAnimateIn] = useState(false);
   const [zoom, setZoom] = useState(1.2);
-  const [showVideoControls, setShowVideoControls] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const t = window.setTimeout(() => setAnimateIn(true), 120);
@@ -130,12 +130,30 @@ export default function MadPathPage() {
   }, []);
 
   useEffect(() => {
-    const ua = navigator.userAgent || "";
-    const isIOS =
-      /iPad|iPhone|iPod/.test(ua) ||
-      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const video = videoRef.current;
+    if (!video) return;
 
-    setShowVideoControls(isIOS);
+    const tryPlay = () => {
+      video.play().catch(() => {
+        // Safari may block autoplay until user interaction.
+      });
+    };
+
+    tryPlay();
+
+    const unlock = () => {
+      tryPlay();
+      window.removeEventListener("touchstart", unlock);
+      window.removeEventListener("click", unlock);
+    };
+
+    window.addEventListener("touchstart", unlock, { passive: true });
+    window.addEventListener("click", unlock);
+
+    return () => {
+      window.removeEventListener("touchstart", unlock);
+      window.removeEventListener("click", unlock);
+    };
   }, []);
 
   const items: PathItem[] = useMemo(
@@ -389,12 +407,10 @@ export default function MadPathPage() {
               ones who move… become.
             </p>
 
-            {showVideoControls ? (
-              <p className="mt-4 text-xs leading-6 text-white/40">
-                iPhone Safari may block autoplay. Tap play to view the motion
-                signal.
-              </p>
-            ) : null}
+            <p className="mt-4 text-xs leading-6 text-white/40">
+              The motion signal should start automatically. On some phones,
+              Safari may wait until the first touch before allowing playback.
+            </p>
           </div>
 
           <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-black/40 p-3 shadow-[0_18px_70px_rgba(0,0,0,0.35)]">
@@ -402,10 +418,10 @@ export default function MadPathPage() {
 
             <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-black">
               <video
-                autoPlay={!showVideoControls}
-                controls={showVideoControls}
+                ref={videoRef}
+                autoPlay
                 muted
-                loop={!showVideoControls}
+                loop
                 playsInline
                 preload="auto"
                 className="block aspect-[4/3] w-full object-cover sm:aspect-[16/10]"
