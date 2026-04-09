@@ -7,7 +7,12 @@ import type { ReactNode } from "react";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
-  { href: "/roadmap", label: "The Mad Path", mobileLabel: "Mad Path", variant: "primary" as const },
+  {
+    href: "/roadmap",
+    label: "The Mad Path",
+    mobileLabel: "Mad Path",
+    variant: "primary" as const,
+  },
   { href: "/game", label: "Game" },
   { href: "/memes", label: "$MAD Art", mobileLabel: "Art" },
   { href: "/forge", label: "Forge" },
@@ -18,7 +23,7 @@ export default function NavBar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
+    <header className="relative z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl md:sticky md:top-0">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <nav className="py-3">
           {/* Desktop */}
@@ -116,21 +121,18 @@ function NavPill({
         "relative select-none rounded-full border font-semibold transition-all duration-300",
         mobile ? "px-3 py-2 text-[13px]" : "px-4 py-2 text-sm",
 
-        // The Mad Path: premium but not red unless active
         variant === "primary"
           ? active
             ? "border-red-500/40 bg-red-500/15 text-red-400 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
             : "border-white/15 bg-white/[0.06] text-white hover:border-white/25 hover:bg-white/10 hover:text-white"
           : "",
 
-        // Merch: soft CTA
         variant === "cta"
           ? active
             ? "border-white bg-white text-black shadow-[0_0_18px_rgba(255,255,255,0.4)]"
             : "border-white/20 bg-white/10 text-white hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]"
           : "",
 
-        // Default nav items
         !variant &&
           (active
             ? "border-red-500/40 bg-red-500/15 text-red-400 shadow-[0_0_12px_rgba(255,0,0,0.5)]"
