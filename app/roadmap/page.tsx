@@ -170,7 +170,8 @@ export default function MadPathPage() {
         phase: "PHASE 1.4",
         date: "Feb 14, 2026",
         title: "Reclamation",
-        action: "Telegram ownership was secured to protect the channel and avoid disruption.",
+        action:
+          "Telegram ownership was secured to protect the channel and avoid disruption.",
         meaning:
           "Not ego — responsibility. This was a quiet act of preservation before the next wave of pressure.",
         status: "complete",
@@ -382,15 +383,18 @@ export default function MadPathPage() {
           <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-black/40 p-3 shadow-[0_18px_70px_rgba(0,0,0,0.35)]">
             <div className="absolute -inset-6 rounded-[40px] bg-red-500/10 blur-2xl" />
 
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="relative h-full w-full rounded-[22px] object-cover"
-            >
-              <source src="/loops/mad-dancing.mp4" type="video/mp4" />
-            </video>
+            <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-black">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                className="block aspect-[4/3] w-full object-cover sm:aspect-[16/10]"
+              >
+                <source src="/loops/mad-dancing.mp4" type="video/mp4" />
+              </video>
+            </div>
           </div>
         </section>
 
@@ -479,15 +483,9 @@ export default function MadPathPage() {
                           x2="100%"
                           y2="0%"
                         >
-                          <stop
-                            offset="0%"
-                            stopColor="rgba(255,80,80,0.35)"
-                          />
+                          <stop offset="0%" stopColor="rgba(255,80,80,0.35)" />
                           <stop offset="55%" stopColor="rgba(255,59,48,1)" />
-                          <stop
-                            offset="100%"
-                            stopColor="rgba(255,180,120,0.55)"
-                          />
+                          <stop offset="100%" stopColor="rgba(255,180,120,0.55)" />
                         </linearGradient>
 
                         <linearGradient
@@ -497,15 +495,9 @@ export default function MadPathPage() {
                           x2="0%"
                           y2="0%"
                         >
-                          <stop
-                            offset="0%"
-                            stopColor="rgba(255,90,90,0.35)"
-                          />
+                          <stop offset="0%" stopColor="rgba(255,90,90,0.35)" />
                           <stop offset="60%" stopColor="rgba(255,59,48,1)" />
-                          <stop
-                            offset="100%"
-                            stopColor="rgba(255,230,210,1)"
-                          />
+                          <stop offset="100%" stopColor="rgba(255,230,210,1)" />
                         </linearGradient>
                       </defs>
 
