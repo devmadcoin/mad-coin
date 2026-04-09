@@ -44,30 +44,10 @@ function statusChip(status: Status) {
   };
 }
 
-function statusDot(status: Status) {
-  if (status === "complete") {
-    return "border-emerald-400 bg-emerald-400 shadow-[0_0_22px_rgba(52,211,153,0.55)]";
-  }
-  if (status === "in_progress") {
-    return "border-red-400 bg-red-400 shadow-[0_0_22px_rgba(248,113,113,0.65)]";
-  }
-  return "border-white/25 bg-[#101010]";
-}
-
 function phaseBarWidth(status: Status) {
   if (status === "complete") return "100%";
   if (status === "in_progress") return "68%";
   return "10%";
-}
-
-function pointY(status: Status, index: number) {
-  if (status === "complete") {
-    return [74, 69, 64, 58, 52, 46, 40, 34, 29, 24, 20, 17, 14][index] ?? 14;
-  }
-  if (status === "in_progress") {
-    return 11;
-  }
-  return [19, 15][index % 2] ?? 15;
 }
 
 function RevealOnScroll({
@@ -118,10 +98,164 @@ function RevealOnScroll({
   );
 }
 
+function GrowthVisual({
+  animateIn,
+  pct,
+  currentTitle,
+}: {
+  animateIn: boolean;
+  pct: number;
+  currentTitle: string;
+}) {
+  const barHeights = [18, 28, 40, 53, 68, 86, 108, 136];
+  const activeBars = Math.max(1, Math.round((pct / 100) * barHeights.length));
+
+  return (
+    <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[#060606] p-5 sm:p-6">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_90%,rgba(0,255,120,0.08),transparent_28%),radial-gradient(circle_at_90%_10%,rgba(255,0,0,0.08),transparent_25%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,rgba(255,255,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.07)_1px,transparent_1px)] [background-size:46px_46px]" />
+
+      <div className="relative">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/42">
+              The Climb
+            </p>
+            <h2 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
+              Pressure. Response. Evolution.
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/58 sm:text-base">
+              A cleaner read of the journey: pressure converted into structure,
+              structure into belief, and belief into upward momentum.
+            </p>
+          </div>
+
+          <div className="hidden rounded-2xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3 md:block">
+            <p className="text-[11px] uppercase tracking-[0.24em] text-red-300/80">
+              You Are Here
+            </p>
+            <p className="mt-1 text-sm font-bold text-white">{currentTitle}</p>
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <div className="relative h-[260px] rounded-[26px] border border-white/8 bg-black/40 px-4 pb-6 pt-4 sm:h-[320px] sm:px-6">
+            <svg
+              viewBox="0 0 1000 420"
+              className="absolute inset-0 h-full w-full"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient id="growthBars" x1="0%" y1="100%" x2="0%" y2="0%">
+                  <stop offset="0%" stopColor="#16a34a" />
+                  <stop offset="100%" stopColor="#4ade80" />
+                </linearGradient>
+                <linearGradient id="growthArrow" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#16a34a" />
+                  <stop offset="100%" stopColor="#22c55e" />
+                </linearGradient>
+                <filter id="greenGlow">
+                  <feGaussianBlur stdDeviation="6" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {[80, 160, 240, 320].map((y) => (
+                <line
+                  key={y}
+                  x1="40"
+                  x2="960"
+                  y1={y}
+                  y2={y}
+                  stroke="rgba(255,255,255,0.08)"
+                  strokeWidth="1"
+                />
+              ))}
+
+              {barHeights.map((h, i) => {
+                const x = 110 + i * 95;
+                const y = 360 - h * 2;
+                const isActive = i < activeBars;
+                return (
+                  <g
+                    key={i}
+                    className={animateIn ? "bar-rise" : "opacity-0"}
+                    style={{ animationDelay: `${120 + i * 90}ms` }}
+                  >
+                    <rect
+                      x={x}
+                      y={y}
+                      width="46"
+                      height={h * 2}
+                      rx="2"
+                      fill={isActive ? "url(#growthBars)" : "rgba(255,255,255,0.16)"}
+                    />
+                    <polygon
+                      points={`${x},${y} ${x + 16},${y - 16} ${x + 62},${y - 16} ${x + 46},${y}`}
+                      fill={isActive ? "#4ade80" : "rgba(255,255,255,0.22)"}
+                    />
+                    <polygon
+                      points={`${x + 46},${y} ${x + 62},${y - 16} ${x + 62},${y + h * 2 - 16} ${x + 46},${y + h * 2}`}
+                      fill={isActive ? "#16a34a" : "rgba(255,255,255,0.12)"}
+                    />
+                  </g>
+                );
+              })}
+
+              <g
+                className={animateIn ? "arrow-rise" : "opacity-0"}
+                filter="url(#greenGlow)"
+              >
+                <path
+                  d="M 140 300 C 280 270, 420 238, 560 185 C 700 132, 820 92, 900 42"
+                  fill="none"
+                  stroke="url(#growthArrow)"
+                  strokeWidth="18"
+                  strokeLinecap="round"
+                />
+                <polygon
+                  points="900,42 845,58 875,88"
+                  fill="#22c55e"
+                />
+              </g>
+            </svg>
+
+            <div className="relative flex h-full items-end justify-between gap-2 px-4 pb-2 sm:px-8">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35">
+                Launch
+              </div>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35">
+                Expansion
+              </div>
+              <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35">
+                Summit
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="h-3 w-full overflow-hidden rounded-full border border-white/10 bg-white/5 sm:max-w-[calc(100%-160px)]">
+              <div
+                className="h-full rounded-full bg-red-500 transition-all duration-1000"
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">
+              Path progress {pct}%
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MadPathPage() {
   const [animateIn, setAnimateIn] = useState(false);
-  const [zoom, setZoom] = useState(1.2);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
@@ -134,9 +268,7 @@ export default function MadPathPage() {
     if (!video) return;
 
     const tryPlay = () => {
-      video.play().catch(() => {
-        // Safari may block autoplay until user interaction.
-      });
+      video.play().catch(() => {});
     };
 
     tryPlay();
@@ -320,47 +452,9 @@ export default function MadPathPage() {
   const completed = items.filter((x) => x.status === "complete").length;
   const inProgress = items.filter((x) => x.status === "in_progress").length;
   const pct = clamp(Math.round((completed / total) * 100), 0, 100);
-
-  const leftPad = 6;
-  const rightPad = 7;
-  const usableWidth = 100 - leftPad - rightPad;
-
-  const points = items.map((item, index) => {
-    const x = leftPad + (index / Math.max(1, items.length - 1)) * usableWidth;
-    const y = pointY(item.status, index);
-    return { ...item, x, y, index };
-  });
-
-  const pathD = points
-    .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
-    .join(" ");
-
-  const currentIndex =
-    items.findIndex((item) => item.status === "in_progress") !== -1
-      ? items.findIndex((item) => item.status === "in_progress")
-      : completed - 1;
-
-  const currentPoint = points[Math.max(0, currentIndex)];
-
-  const candleTarget = {
-    x: Math.min(97, (currentPoint?.x ?? 93) + 1.5),
-    y: 3.2,
-  };
-
-  function zoomIn() {
-    setZoom((z) => clamp(Number((z + 0.2).toFixed(2)), 1, 2.2));
-  }
-
-  function zoomOut() {
-    setZoom((z) => clamp(Number((z - 0.2).toFixed(2)), 1, 2.2));
-  }
-
-  function resetZoom() {
-    setZoom(1.2);
-    scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" });
-  }
-
-  const chartMinWidth = `${Math.round(1360 * zoom)}px`;
+  const currentItem =
+    items.find((item) => item.status === "in_progress") ??
+    items[Math.max(0, completed - 1)];
 
   return (
     <div className="relative overflow-hidden bg-[#050505] text-white">
@@ -438,252 +532,12 @@ export default function MadPathPage() {
           <StatCard label="Path Progress" value={`${pct}%`} />
         </div>
 
-        <section className="mt-10 overflow-hidden rounded-[36px] border border-white/10 bg-black/35 p-5 shadow-[0_24px_100px_rgba(0,0,0,0.42)] backdrop-blur-xl sm:p-7 lg:p-8">
-          <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-white/42">
-                The Climb
-              </p>
-              <h2 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
-                Pressure. Response. Evolution.
-              </h2>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="rounded-full border border-white/10 bg-black/45 p-1 backdrop-blur">
-                <button
-                  type="button"
-                  onClick={zoomOut}
-                  className="rounded-full px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/5 hover:text-white"
-                >
-                  Zoom Out
-                </button>
-                <button
-                  type="button"
-                  onClick={resetZoom}
-                  className="rounded-full px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/5 hover:text-white"
-                >
-                  Reset
-                </button>
-                <button
-                  type="button"
-                  onClick={zoomIn}
-                  className="rounded-full px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/5 hover:text-white"
-                >
-                  Zoom In
-                </button>
-              </div>
-
-              <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3">
-                <p className="text-[11px] uppercase tracking-[0.24em] text-red-300/80">
-                  You Are Here
-                </p>
-                <p className="mt-1 text-sm font-bold text-white">
-                  {currentPoint?.phase} — {currentPoint?.title}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-[30px] border border-white/10 bg-[#080808] p-4 sm:p-6">
-            <div
-              ref={scrollRef}
-              className="overflow-x-auto overflow-y-hidden rounded-[24px]"
-            >
-              <div
-                className="relative h-[340px] min-w-full sm:h-[390px]"
-                style={{ minWidth: chartMinWidth }}
-              >
-                <div className="relative h-full w-full overflow-hidden rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]">
-                  <div className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:linear-gradient(to_right,rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:56px_56px]" />
-
-                  <div className="pointer-events-none absolute left-0 right-0 top-[16%] border-t border-white/8" />
-                  <div className="pointer-events-none absolute left-0 right-0 top-[34%] border-t border-white/8" />
-                  <div className="pointer-events-none absolute left-0 right-0 top-[52%] border-t border-white/8" />
-                  <div className="pointer-events-none absolute left-0 right-0 top-[70%] border-t border-white/8" />
-                  <div className="pointer-events-none absolute left-0 right-0 top-[88%] border-t border-white/8" />
-
-                  <div className="absolute inset-0">
-                    <svg
-                      viewBox="0 0 100 100"
-                      preserveAspectRatio="none"
-                      className="h-full w-full"
-                    >
-                      <defs>
-                        <linearGradient
-                          id="madPathGlow"
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="0%"
-                        >
-                          <stop offset="0%" stopColor="rgba(255,80,80,0.35)" />
-                          <stop offset="55%" stopColor="rgba(255,59,48,1)" />
-                          <stop offset="100%" stopColor="rgba(255,180,120,0.55)" />
-                        </linearGradient>
-
-                        <linearGradient
-                          id="madCandleGlow"
-                          x1="0%"
-                          y1="100%"
-                          x2="0%"
-                          y2="0%"
-                        >
-                          <stop offset="0%" stopColor="rgba(255,90,90,0.35)" />
-                          <stop offset="60%" stopColor="rgba(255,59,48,1)" />
-                          <stop offset="100%" stopColor="rgba(255,230,210,1)" />
-                        </linearGradient>
-                      </defs>
-
-                      <path
-                        d={pathD}
-                        fill="none"
-                        stroke="rgba(255,255,255,0.08)"
-                        strokeWidth="1.8"
-                        strokeLinejoin="round"
-                        strokeLinecap="round"
-                      />
-
-                      <path
-                        d={pathD}
-                        fill="none"
-                        stroke="url(#madPathGlow)"
-                        strokeWidth="2.4"
-                        strokeLinejoin="round"
-                        strokeLinecap="round"
-                        className={animateIn ? "roadmap-draw" : "opacity-0"}
-                      />
-
-                      <line
-                        x1={candleTarget.x}
-                        y1={currentPoint?.y ?? 11}
-                        x2={candleTarget.x}
-                        y2={candleTarget.y}
-                        stroke="url(#madCandleGlow)"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        className={animateIn ? "candle-draw" : "opacity-0"}
-                      />
-                    </svg>
-                  </div>
-
-                  <div className="absolute inset-0">
-                    {points.map((point, index) => {
-                      const active = index === currentIndex;
-                      const isComplete = point.status === "complete";
-                      const isPlanned = point.status === "planned";
-                      const isFirst = index === 0;
-                      const isLast = index === points.length - 1;
-
-                      return (
-                        <button
-                          key={point.phase}
-                          type="button"
-                          className="group absolute -translate-x-1/2 -translate-y-1/2 text-left"
-                          style={{
-                            left: `${point.x}%`,
-                            top: `${point.y}%`,
-                            transitionDelay: `${150 + index * 90}ms`,
-                          }}
-                        >
-                          <div
-                            className={[
-                              "relative flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-500",
-                              statusDot(point.status),
-                              animateIn
-                                ? "scale-100 opacity-100"
-                                : "scale-75 opacity-0",
-                              active ? "ring-8 ring-red-500/10" : "",
-                            ].join(" ")}
-                          >
-                            {active ? (
-                              <span className="absolute inline-flex h-10 w-10 animate-ping rounded-full bg-red-500/20" />
-                            ) : null}
-                          </div>
-
-                          <div
-                            className={[
-                              "absolute top-7 w-[190px] rounded-2xl border px-3 py-2 backdrop-blur-xl transition duration-300 sm:w-[220px]",
-                              isFirst
-                                ? "left-0 translate-x-0"
-                                : isLast
-                                ? "right-0 translate-x-0"
-                                : "left-1/2 -translate-x-1/2",
-                              isComplete
-                                ? "border-emerald-500/20 bg-emerald-500/[0.06]"
-                                : active
-                                ? "border-red-500/25 bg-red-500/[0.08]"
-                                : "border-white/10 bg-black/55",
-                              isPlanned ? "opacity-90" : "",
-                            ].join(" ")}
-                          >
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                              {point.phase}
-                            </p>
-                            <p className="mt-1 text-xs font-bold text-white sm:text-sm">
-                              {point.title}
-                            </p>
-                            <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/35">
-                              {point.date}
-                            </p>
-                          </div>
-                        </button>
-                      );
-                    })}
-
-                    <div
-                      className="absolute -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        left: `${candleTarget.x}%`,
-                        top: `${candleTarget.y}%`,
-                      }}
-                    >
-                      <div
-                        className={[
-                          "relative flex h-5 w-5 items-center justify-center rounded-full border-2 border-red-300 bg-white shadow-[0_0_30px_rgba(255,120,120,0.82)] transition-all duration-700",
-                          animateIn
-                            ? "scale-100 opacity-100"
-                            : "scale-75 opacity-0",
-                        ].join(" ")}
-                      >
-                        <span className="absolute inline-flex h-12 w-12 animate-pulse rounded-full bg-red-500/15" />
-                      </div>
-
-                      <div className="absolute bottom-8 left-1/2 w-[180px] -translate-x-1/2 rounded-2xl border border-red-500/30 bg-red-500/[0.10] px-3 py-2 backdrop-blur-xl sm:w-[210px]">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-red-300/80">
-                          The Summit
-                        </p>
-                        <p className="mt-1 text-xs font-bold text-white sm:text-sm">
-                          800M Burn
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pointer-events-none absolute bottom-4 left-4 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/45 backdrop-blur">
-                    Live path signal
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="h-3 w-full overflow-hidden rounded-full border border-white/10 bg-white/5 sm:max-w-[calc(100%-180px)]">
-                <div
-                  className="h-full rounded-full bg-red-500 transition-all duration-1000"
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40">
-                Zoom {Math.round(zoom * 100)}%
-              </p>
-            </div>
-
-            <p className="mt-3 text-sm text-white/52">
-              {completed} of {total} chapters completed.
-            </p>
-          </div>
+        <section className="mt-10">
+          <GrowthVisual
+            animateIn={animateIn}
+            pct={pct}
+            currentTitle={`${currentItem.phase} — ${currentItem.title}`}
+          />
         </section>
 
         <section className="mt-12">
@@ -717,27 +571,34 @@ export default function MadPathPage() {
       </div>
 
       <style jsx>{`
-        .roadmap-draw {
-          stroke-dasharray: 220;
-          stroke-dashoffset: 220;
-          animation: roadmapDraw 1.6s ease-out forwards;
+        .bar-rise {
+          animation: barRise 0.8s ease-out forwards;
+          transform-origin: bottom;
         }
 
-        .candle-draw {
-          stroke-dasharray: 52;
-          stroke-dashoffset: 52;
-          animation: candleDraw 0.95s ease-out 1.2s forwards;
+        .arrow-rise {
+          animation: arrowRise 1.1s ease-out 0.5s forwards;
         }
 
-        @keyframes roadmapDraw {
-          to {
-            stroke-dashoffset: 0;
+        @keyframes barRise {
+          0% {
+            opacity: 0;
+            transform: translateY(24px) scaleY(0.6);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scaleY(1);
           }
         }
 
-        @keyframes candleDraw {
-          to {
-            stroke-dashoffset: 0;
+        @keyframes arrowRise {
+          0% {
+            opacity: 0;
+            transform: translateY(18px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
       `}</style>
