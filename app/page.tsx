@@ -53,6 +53,21 @@ const merchItems = [
   },
 ] as const;
 
+const proofItems = [
+  {
+    src: "/proof/mad-sticker-1.png",
+    alt: "$MAD sticker proof 1",
+  },
+  {
+    src: "/proof/mad-sticker-2.png",
+    alt: "$MAD sticker proof 2",
+  },
+  {
+    src: "/proof/mad-sticker-3.png",
+    alt: "$MAD sticker proof 3",
+  },
+] as const;
+
 const ecosystemItems = [
   {
     name: "Jupiter",
@@ -191,7 +206,44 @@ function SectionHeader({
   );
 }
 
+function ProofCard({
+  src,
+  alt,
+}: {
+  src: string;
+  alt: string;
+}) {
+  return (
+    <div className="group relative w-[260px] shrink-0 overflow-hidden rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(52,8,8,0.96),rgba(24,4,4,0.98))] p-3 sm:w-[300px]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,70,70,0.10),transparent_38%),radial-gradient(circle_at_bottom,rgba(120,0,0,0.18),transparent_42%)] opacity-80" />
+
+      <div className="relative overflow-hidden rounded-[18px] border border-white/10 bg-black/40">
+        <div className="relative aspect-[4/5] w-full">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="(max-width: 768px) 70vw, 300px"
+            className="object-cover transition duration-300 group-hover:scale-[1.03]"
+          />
+        </div>
+      </div>
+
+      <div className="relative mt-3 flex items-center justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/45">
+          Community post
+        </p>
+        <div className="flex items-center gap-2 text-[11px] text-white/55">
+          <span className="rounded-full bg-red-500/20 px-2 py-1">🔥 proof</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
+  const slidingProofItems = [...proofItems, ...proofItems];
+
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
       <div className="pointer-events-none absolute inset-0">
@@ -368,6 +420,30 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="mt-8 rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(38,0,0,0.82),rgba(18,0,0,0.95))] p-4 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6">
+          <div className="mb-6 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+              Community Proof
+            </p>
+
+            <h3 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl">
+              Proof the signal landed.
+            </h3>
+
+            <p className="mt-3 text-sm text-white/60">
+              Real people. Real orders. Real $MAD.
+            </p>
+          </div>
+
+          <div className="proof-slider-mask">
+            <div className="proof-slider-track">
+              {slidingProofItems.map((item, i) => (
+                <ProofCard key={`${item.src}-${i}`} src={item.src} alt={item.alt} />
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section
           id="ecosystem"
           className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
@@ -485,12 +561,37 @@ export default function Home() {
           animation: madMarquee 22s linear infinite;
         }
 
+        .proof-slider-mask {
+          overflow: hidden;
+          width: 100%;
+        }
+
+        .proof-slider-track {
+          display: flex;
+          width: max-content;
+          gap: 1rem;
+          animation: proofScroll 22s linear infinite;
+        }
+
+        .proof-slider-mask:hover .proof-slider-track {
+          animation-play-state: paused;
+        }
+
         @keyframes madMarquee {
           0% {
             transform: translateX(0);
           }
           100% {
             transform: translateX(-33.333%);
+          }
+        }
+
+        @keyframes proofScroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(calc(-50% - 0.5rem));
           }
         }
       `}</style>
