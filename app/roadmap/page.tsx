@@ -350,17 +350,49 @@ export default function MadPathPage() {
           <h1 className="mt-5 text-5xl font-black leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl">
             Follow the
             <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.7)]">
-              {" "}Mad Path
+              {" "}
+              Mad Path
             </span>
             .
           </h1>
 
           <p className="mt-5 max-w-3xl text-sm leading-7 text-white/62 sm:text-base">
-            Not everyone will understand it. Only the ones who feel it will follow it.
-            This is not a checklist. It is a dated record of pressure, survival,
-            discipline, and upward movement.
+            Not everyone will understand it. Only the ones who feel it will
+            follow it. This is not a checklist. It is a dated record of
+            pressure, survival, discipline, and upward movement.
           </p>
         </div>
+
+        <section className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="rounded-[30px] border border-white/10 bg-black/25 p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+              PATH SIGNAL
+            </p>
+
+            <h3 className="mt-3 text-2xl font-black text-white sm:text-3xl">
+              Motion creates belief.
+            </h3>
+
+            <p className="mt-3 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
+              This isn’t just progress. It’s energy turning into identity. The
+              ones who move… become.
+            </p>
+          </div>
+
+          <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-black/40 p-3 shadow-[0_18px_70px_rgba(0,0,0,0.35)]">
+            <div className="absolute -inset-6 rounded-[40px] bg-red-500/10 blur-2xl" />
+
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="relative h-full w-full rounded-[22px] object-cover"
+            >
+              <source src="/loops/mad-dancing.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </section>
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           <StatCard label="Chapters Complete" value={`${completed}`} />
@@ -440,16 +472,40 @@ export default function MadPathPage() {
                       className="h-full w-full"
                     >
                       <defs>
-                        <linearGradient id="madPathGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="rgba(255,80,80,0.35)" />
+                        <linearGradient
+                          id="madPathGlow"
+                          x1="0%"
+                          y1="0%"
+                          x2="100%"
+                          y2="0%"
+                        >
+                          <stop
+                            offset="0%"
+                            stopColor="rgba(255,80,80,0.35)"
+                          />
                           <stop offset="55%" stopColor="rgba(255,59,48,1)" />
-                          <stop offset="100%" stopColor="rgba(255,180,120,0.55)" />
+                          <stop
+                            offset="100%"
+                            stopColor="rgba(255,180,120,0.55)"
+                          />
                         </linearGradient>
 
-                        <linearGradient id="madCandleGlow" x1="0%" y1="100%" x2="0%" y2="0%">
-                          <stop offset="0%" stopColor="rgba(255,90,90,0.35)" />
+                        <linearGradient
+                          id="madCandleGlow"
+                          x1="0%"
+                          y1="100%"
+                          x2="0%"
+                          y2="0%"
+                        >
+                          <stop
+                            offset="0%"
+                            stopColor="rgba(255,90,90,0.35)"
+                          />
                           <stop offset="60%" stopColor="rgba(255,59,48,1)" />
-                          <stop offset="100%" stopColor="rgba(255,230,210,1)" />
+                          <stop
+                            offset="100%"
+                            stopColor="rgba(255,230,210,1)"
+                          />
                         </linearGradient>
                       </defs>
 
@@ -508,7 +564,9 @@ export default function MadPathPage() {
                             className={[
                               "relative flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-500",
                               statusDot(point.status),
-                              animateIn ? "scale-100 opacity-100" : "scale-75 opacity-0",
+                              animateIn
+                                ? "scale-100 opacity-100"
+                                : "scale-75 opacity-0",
                               active ? "ring-8 ring-red-500/10" : "",
                             ].join(" ")}
                           >
@@ -557,7 +615,9 @@ export default function MadPathPage() {
                       <div
                         className={[
                           "relative flex h-5 w-5 items-center justify-center rounded-full border-2 border-red-300 bg-white shadow-[0_0_30px_rgba(255,120,120,0.82)] transition-all duration-700",
-                          animateIn ? "scale-100 opacity-100" : "scale-75 opacity-0",
+                          animateIn
+                            ? "scale-100 opacity-100"
+                            : "scale-75 opacity-0",
                         ].join(" ")}
                       >
                         <span className="absolute inline-flex h-12 w-12 animate-pulse rounded-full bg-red-500/15" />
@@ -618,7 +678,10 @@ export default function MadPathPage() {
 
             <div className="space-y-5">
               {items.map((item, index) => (
-                <RevealOnScroll key={item.phase} delay={Math.min(index * 45, 220)}>
+                <RevealOnScroll
+                  key={item.phase}
+                  delay={Math.min(index * 45, 220)}
+                >
                   <MadPathCard item={item} />
                 </RevealOnScroll>
               ))}
@@ -716,7 +779,9 @@ function MadPathCard({ item }: { item: PathItem }) {
           </h3>
         </div>
 
-        <div className={`rounded-full border px-3 py-1 text-xs font-semibold ${chip.cls}`}>
+        <div
+          className={`rounded-full border px-3 py-1 text-xs font-semibold ${chip.cls}`}
+        >
           {chip.label}
         </div>
       </div>
