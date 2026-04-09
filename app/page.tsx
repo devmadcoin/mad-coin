@@ -460,7 +460,18 @@ export default function Home() {
         >
           <SectionHeader
             eyebrow="Verified Presence"
-            title={<>Verified and trusted on these platforms.</>}
+            title={
+              <>
+                <span className="text-green-400 drop-shadow-[0_0_12px_rgba(0,255,120,0.5)]">
+                  Verified
+                </span>{" "}
+                and{" "}
+                <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.6)]">
+                  trusted
+                </span>{" "}
+                on these platforms.
+              </>
+            }
             body="Explore where $MAD is visible, recognized, and easy to verify."
             align="center"
           />
@@ -506,12 +517,18 @@ export default function Home() {
           id="confessions"
           className="mt-12 rounded-[38px] border border-white/10 bg-black/28 p-2 sm:p-3 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl"
         >
-          <div className="px-3 pb-2 pt-6 sm:px-6">
-            <SectionHeader
-              eyebrow="Community"
-              title={<>Confessions from the culture.</>}
-              body="Raw thoughts from the community, straight from the culture."
-            />
+          <div className="px-4 pt-6 pb-4 sm:px-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+              MAD CONFESSIONS
+            </p>
+
+            <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl">
+              Say it. Don’t hold it.
+            </h2>
+
+            <p className="mt-3 text-sm text-white/60">
+              Short. Anonymous. Pure $MAD energy.
+            </p>
           </div>
 
           <div className="min-w-0 px-1 sm:px-0">
