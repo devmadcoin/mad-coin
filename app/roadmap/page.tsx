@@ -121,11 +121,21 @@ function RevealOnScroll({
 export default function MadPathPage() {
   const [animateIn, setAnimateIn] = useState(false);
   const [zoom, setZoom] = useState(1.2);
+  const [showVideoControls, setShowVideoControls] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const t = window.setTimeout(() => setAnimateIn(true), 120);
     return () => window.clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const ua = navigator.userAgent || "";
+    const isIOS =
+      /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    setShowVideoControls(isIOS);
   }, []);
 
   const items: PathItem[] = useMemo(
@@ -378,6 +388,13 @@ export default function MadPathPage() {
               This isn’t just progress. It’s energy turning into identity. The
               ones who move… become.
             </p>
+
+            {showVideoControls ? (
+              <p className="mt-4 text-xs leading-6 text-white/40">
+                iPhone Safari may block autoplay. Tap play to view the motion
+                signal.
+              </p>
+            ) : null}
           </div>
 
           <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-black/40 p-3 shadow-[0_18px_70px_rgba(0,0,0,0.35)]">
@@ -385,9 +402,10 @@ export default function MadPathPage() {
 
             <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-black">
               <video
-                autoPlay
+                autoPlay={!showVideoControls}
+                controls={showVideoControls}
                 muted
-                loop
+                loop={!showVideoControls}
                 playsInline
                 preload="auto"
                 className="block aspect-[4/3] w-full object-cover sm:aspect-[16/10]"
