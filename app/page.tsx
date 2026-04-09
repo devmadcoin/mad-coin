@@ -121,7 +121,7 @@ function PillButton({
         "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition duration-200",
         primary
           ? "border border-red-500/30 bg-red-500 text-white hover:scale-[1.01] hover:bg-red-400"
-          : "border border-white/12 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]",
+          : "border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] text-white hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]",
       ].join(" ")}
     >
       {children}
@@ -242,7 +242,11 @@ export default function Home() {
                     src="/logos/MAD-TELEGRAM.png"
                     alt="Telegram"
                   />
-                  <SocialIcon href={LINKS.x} src="/logos/MAD-X-LOGO.png" alt="X" />
+                  <SocialIcon
+                    href={LINKS.x}
+                    src="/logos/MAD-X-LOGO.png"
+                    alt="X"
+                  />
                   <SocialIcon
                     href={LINKS.instagram}
                     src="/logos/MAD-INSTAGRAM-LOGO.png"
@@ -300,7 +304,7 @@ export default function Home() {
 
         <section
           id="merch"
-          className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
+          className="mt-12 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(45,0,0,0.78),rgba(20,0,0,0.92))] px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10"
         >
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <SectionHeader
@@ -309,7 +313,11 @@ export default function Home() {
                 <>
                   You’re <span className="text-red-500">$MAD</span>.
                   <br />
-                  Wear it like you mean it.
+                  Wear it like you{" "}
+                  <span className="text-green-400 drop-shadow-[0_0_14px_rgba(0,255,120,0.45)]">
+                    mean
+                  </span>{" "}
+                  it.
                 </>
               }
               body="Collect the pieces that carry the signal."
@@ -326,20 +334,25 @@ export default function Home() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block rounded-[28px] border border-white/10 bg-white/[0.03] p-5 transition duration-300 hover:-translate-y-1 hover:border-red-500/30 hover:bg-white/[0.05]"
+                className="group relative block overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(52,8,8,0.95),rgba(28,4,4,0.98))] p-5 transition duration-300 hover:-translate-y-1 hover:border-red-500/30"
               >
-                <div className="relative flex h-[220px] items-center justify-center overflow-hidden rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,59,48,0.12),transparent_45%)] opacity-0 transition duration-300 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,70,70,0.10),transparent_38%),radial-gradient(circle_at_bottom,rgba(120,0,0,0.18),transparent_42%)] opacity-80" />
+
+                <div className="relative flex h-[220px] items-center justify-center overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(70,16,16,0.9),rgba(36,8,8,0.95))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,80,80,0.12),transparent_48%)] opacity-70 transition duration-300 group-hover:opacity-100" />
+
+                  <div className="absolute inset-[16px] rounded-[18px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.005))]" />
+
                   <Image
                     src={item.src}
                     alt={item.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                    className="object-contain p-6 transition duration-300 group-hover:scale-[1.04]"
+                    className="object-contain p-10 transition duration-300 group-hover:scale-[1.04]"
                   />
                 </div>
 
-                <div className="mt-5">
+                <div className="relative mt-5">
                   <p className="text-xs uppercase tracking-[0.24em] text-white/42">
                     {item.subtitle}
                   </p>
