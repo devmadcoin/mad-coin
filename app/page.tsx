@@ -365,11 +365,7 @@ export default function Home() {
                 <>
                   You’re <span className="text-red-500">$MAD</span>.
                   <br />
-                  Wear it like you{" "}
-                  <span className="text-green-400 drop-shadow-[0_0_14px_rgba(0,255,120,0.45)]">
-                    mean
-                  </span>{" "}
-                  it.
+                  Wear it like you mean it.
                 </>
               }
               body="Collect the pieces that carry the signal."
@@ -430,10 +426,7 @@ export default function Home() {
               <span className="text-green-400 drop-shadow-[0_0_10px_rgba(0,255,120,0.5)]">
                 Proof
               </span>{" "}
-              Everyone’s{" "}
-              <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.6)]">
-                MAD
-              </span>
+              Everyone’s MAD
             </h3>
 
             <p className="mt-3 text-sm text-white/60">
@@ -462,14 +455,11 @@ export default function Home() {
             eyebrow="Verified Presence"
             title={
               <>
-                <span className="text-green-400 drop-shadow-[0_0_12px_rgba(0,255,120,0.5)]">
-                  Verified
-                </span>{" "}
-                and{" "}
-                <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.6)]">
-                  trusted
-                </span>{" "}
-                on these platforms.
+                Verified and trusted on these{" "}
+                <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.4)]">
+                  platforms
+                </span>
+                .
               </>
             }
             body="Explore where $MAD is visible, recognized, and easy to verify."
