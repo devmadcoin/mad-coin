@@ -174,17 +174,17 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10">
+      <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8">
         <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
           <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="relative flex flex-col justify-center px-6 py-16 sm:px-10 lg:px-12 lg:py-20">
+            <div className="relative flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
 
               <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/40">
                 CONTROLLED CHAOS
               </p>
 
-              <h1 className="mt-6 text-[3.2rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.7rem] lg:text-[6rem]">
+              <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.5rem] lg:text-[6rem]">
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   STOP
                 </span>
@@ -209,7 +209,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-6 sm:p-8 lg:p-10">
+            <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-5 sm:p-7 lg:p-10">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.14),transparent_44%)]" />
 
               <div className="relative w-full max-w-[620px]">
