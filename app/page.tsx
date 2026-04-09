@@ -129,6 +129,31 @@ function PillButton({
   );
 }
 
+function SocialIcon({
+  href,
+  src,
+  alt,
+  size = 20,
+}: {
+  href: string;
+  src: string;
+  alt: string;
+  size?: number;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={alt}
+      title={alt}
+      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/10 transition hover:scale-110 hover:border-white/25 hover:bg-white/20"
+    >
+      <Image src={src} alt={alt} width={size} height={size} className="h-auto w-auto object-contain" />
+    </a>
+  );
+}
+
 function SectionHeader({
   eyebrow,
   title,
@@ -202,10 +227,37 @@ export default function Home() {
                 .
               </h1>
 
-              <div className="mt-10">
+              <div className="mt-10 flex flex-col items-start gap-4">
                 <PillButton href="#connect" primary>
                   Enter Signal
                 </PillButton>
+
+                <div className="flex items-center gap-3">
+                  <SocialIcon
+                    href={LINKS.telegram}
+                    src="/logos/MAD-TELEGRAM.png"
+                    alt="Telegram"
+                    size={20}
+                  />
+                  <SocialIcon
+                    href={LINKS.x}
+                    src="/logos/MAD-X-LOGO.png"
+                    alt="X"
+                    size={18}
+                  />
+                  <SocialIcon
+                    href={LINKS.instagram}
+                    src="/logos/MAD-INSTAGRAM-LOGO.png"
+                    alt="Instagram"
+                    size={20}
+                  />
+                  <SocialIcon
+                    href={LINKS.tiktok}
+                    src="/logos/MAD-TIKTOK-LOGO.png"
+                    alt="TikTok"
+                    size={20}
+                  />
+                </div>
               </div>
             </div>
 
@@ -251,13 +303,10 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-8 flex justify-center">
             <PillButton href={LINKS.telegram} primary>
               Join Telegram
             </PillButton>
-            <PillButton href={LINKS.x}>Follow on X</PillButton>
-            <PillButton href={LINKS.instagram}>Instagram</PillButton>
-            <PillButton href={LINKS.tiktok}>TikTok</PillButton>
           </div>
         </section>
 
@@ -340,30 +389,33 @@ export default function Home() {
           />
 
           <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {ecosystemItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                className={[
-                  "flex h-24 items-center justify-center rounded-[24px] border px-4 shadow-lg transition hover:-translate-y-0.5",
-                  item.light
-                    ? "border-white/10 bg-white"
-                    : "border-white/10 bg-black",
-                ].join(" ")}
-                aria-label={`Open ${item.name}`}
-                title={item.name}
-              >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  width={item.width}
-                  height={item.height}
-                  className="h-auto max-h-10 w-auto object-contain"
-                />
-              </a>
-            ))}
+            {ecosystemItems.map((item, index) => {
+              const isLastOddItem = ecosystemItems.length % 2 === 1 && index === ecosystemItems.length - 1;
+
+              return (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={[
+                    "flex h-24 items-center justify-center rounded-[24px] border px-4 shadow-lg transition hover:-translate-y-0.5",
+                    item.light ? "border-white/10 bg-white" : "border-white/10 bg-black",
+                    isLastOddItem ? "col-span-2 md:col-span-2 lg:col-span-1" : "",
+                  ].join(" ")}
+                  aria-label={`Open ${item.name}`}
+                  title={item.name}
+                >
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    width={item.width}
+                    height={item.height}
+                    className="h-auto max-h-10 w-auto object-contain"
+                  />
+                </a>
+              );
+            })}
           </div>
         </section>
 
@@ -398,8 +450,7 @@ export default function Home() {
 
             <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
               <p className="text-sm leading-7 text-white/62">
-                Built on conviction, carried by culture, and driven by the
-                people who choose to be $MAD.
+                Built on conviction, carried by culture, and driven by the people who choose to be $MAD.
               </p>
             </div>
           </div>
@@ -415,8 +466,7 @@ export default function Home() {
             That’s why you stop trading…
             <br />
             and start being{" "}
-            <span className="font-semibold text-red-500">$MAD</span> at
-            everything.
+            <span className="font-semibold text-red-500">$MAD</span> at everything.
             <br />
             <br />
             Do not risk money you cannot afford to lose.
