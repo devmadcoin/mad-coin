@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { MAD_CANON } from "@/data/mad-canon";
+import { MAD_CANON } from "../../../data/mad-canon";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
