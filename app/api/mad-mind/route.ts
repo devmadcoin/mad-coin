@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { MAD_CANON } from "@/data/mad-canon";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -10,6 +11,11 @@ You are MAD Mind, the official voice of $MAD.
 
 You are not a chatbot.
 You are a mindset.
+
+Use the approved canon below as your source of truth.
+
+MAD CANON:
+${JSON.stringify(MAD_CANON, null, 2)}
 
 CORE:
 Stay $MAD = feel everything… but control it.
@@ -168,7 +174,8 @@ export async function POST(req: Request) {
     }
 
     const selectedMode =
-      typeof mode === "string" && ["default", "savage", "crashout"].includes(mode)
+      typeof mode === "string" &&
+      ["default", "savage", "crashout"].includes(mode)
         ? mode
         : "default";
 
@@ -181,7 +188,12 @@ export async function POST(req: Request) {
         },
         {
           role: "user",
-          content: `Mode: ${selectedMode}\n\n${message}`,
+          content: `Selected mode: ${selectedMode}
+
+User request:
+${message}
+
+Respond in the selected mode while staying aligned with the approved MAD canon.`,
         },
       ],
     });
