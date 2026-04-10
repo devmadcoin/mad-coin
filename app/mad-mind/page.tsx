@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 export default function Page() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<string[]>([
-    "MAD: I’m MAD Mind.\n\nAsk something real.",
+    "MAD: Ask something real.\n\nI’ll know if you’re avoiding it.",
   ]);
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -47,9 +47,9 @@ export default function Page() {
   }
 
   const promptChips = [
-    "Explain Stay $MAD",
-    "You felt fear… and obeyed it.",
+    "I panicked and sold.",
     "Why do people lose?",
+    "Explain weak hands.",
     "Say it harder.",
   ];
 
@@ -69,7 +69,7 @@ export default function Page() {
             <p className="mt-3 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
               One voice.
               <br />
-              Controlled crashout.
+              Pressure with clarity.
             </p>
 
             <div className="mt-5 flex flex-wrap gap-3">
@@ -82,7 +82,7 @@ export default function Page() {
                       send(prompt);
                     }, 100);
                   }}
-                  className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-white/78 transition duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                  className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-white/78 transition duration-200 hover:border-red-500/30 hover:bg-white/10 hover:text-white"
                 >
                   {prompt}
                 </button>
@@ -138,7 +138,7 @@ export default function Page() {
                     send();
                   }
                 }}
-                placeholder="Ask MAD Mind..."
+                placeholder="Say it directly."
                 className="flex-1 rounded-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-red-500/40 sm:text-base"
               />
 
