@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Page() {
   const [input, setInput] = useState("");
+  const [mode, setMode] = useState<"default" | "savage" | "crashout">("default");
   const [messages, setMessages] = useState<string[]>([
     "MAD: I’m MAD Mind. Ask me about the philosophy, captions, signal, or what it means to Stay $MAD.",
   ]);
@@ -14,11 +15,11 @@ export default function Page() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
-  async function send() {
-    const trimmed = input.trim();
+  async function send(customMessage?: string) {
+    const trimmed = (customMessage ?? input).trim();
     if (!trimmed || loading) return;
 
-    setMessages((prev) => [...prev, "You: " + trimmed]);
+    setMessages((prev) => [...prev, `You (${mode}): ` + trimmed]);
     setInput("");
     setLoading(true);
 
@@ -28,7 +29,10 @@ export default function Page() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: trimmed }),
+        body: JSON.stringify({
+          message: trimmed,
+          mode,
+        }),
       });
 
       const data = await res.json();
@@ -44,31 +48,62 @@ export default function Page() {
     }
   }
 
+  const promptChips = [
+    "Explain Stay $MAD",
+    "Write a savage caption",
+    "Write a CRASHOUT caption 😈",
+    "Turn this into chaos",
+  ];
+
   return (
     <main className="min-h-screen bg-[#050505] text-white">
-      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-black/40 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
           <div className="border-b border-white/10 px-5 py-5 sm:px-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
               MAD Signal
             </p>
+
             <h1 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
               MAD Mind
             </h1>
+
             <p className="mt-3 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
               Talk to the mind behind the movement. Ask about philosophy, brand
               voice, captions, or how to turn chaos into signal.
             </p>
 
+            <div className="mt-5 flex flex-wrap gap-2">
+              {(["default", "savage", "crashout"] as const).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setMode(m)}
+                  className={[
+                    "rounded-full px-4 py-2 text-sm font-black transition duration-200",
+                    mode === m
+                      ? "border border-red-500/30 bg-red-500 text-white"
+                      : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white",
+                  ].join(" ")}
+                >
+                  {m === "default"
+                    ? "Default"
+                    : m === "savage"
+                    ? "Savage"
+                    : "Crashout"}
+                </button>
+              ))}
+            </div>
+
             <div className="mt-5 flex flex-wrap gap-3">
-              {[
-                "What does Stay $MAD mean?",
-                "Write a savage caption",
-                "Explain $MAD simply",
-              ].map((prompt) => (
+              {promptChips.map((prompt) => (
                 <button
                   key={prompt}
-                  onClick={() => setInput(prompt)}
+                  onClick={() => {
+                    setInput(prompt);
+                    setTimeout(() => {
+                      send(prompt);
+                    }, 100);
+                  }}
                   className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-white/78 transition duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white"
                 >
                   {prompt}
@@ -80,7 +115,7 @@ export default function Page() {
           <div className="h-[55vh] overflow-y-auto px-5 py-5 sm:px-6">
             <div className="space-y-4">
               {messages.map((m, i) => {
-                const isUser = m.startsWith("You:");
+                const isUser = m.startsWith("You ");
 
                 return (
                   <div
@@ -125,12 +160,12 @@ export default function Page() {
                     send();
                   }
                 }}
-                placeholder="Ask MAD Mind..."
+                placeholder={`Ask MAD Mind in ${mode} mode...`}
                 className="flex-1 rounded-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-red-500/40 sm:text-base"
               />
 
               <button
-                onClick={send}
+                onClick={() => send()}
                 disabled={loading}
                 className="rounded-full border border-red-500/30 bg-red-500 px-5 py-3 text-sm font-black text-white transition duration-200 hover:scale-[1.01] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
               >
