@@ -5,22 +5,41 @@ import { useState } from "react";
 export default function Page() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   async function send() {
-    if (!input) return;
+    const trimmed = input.trim();
+    if (!trimmed || loading) return;
 
-    const res = await fetch("/api/mad-mind", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ message: input }),
-    });
+    setLoading(true);
 
-    const data = await res.json();
+    try {
+      const res = await fetch("/api/mad-mind", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: trimmed }),
+      });
 
-    setMessages([...messages, "You: " + input, "MAD: " + data.output]);
-    setInput("");
+      const data = await res.json();
+
+      setMessages((prev) => [
+        ...prev,
+        "You: " + trimmed,
+        "MAD: " + (data.output || "Signal lost. Try again."),
+      ]);
+
+      setInput("");
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        "You: " + trimmed,
+        "MAD: Signal lost. Try again.",
+      ]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -34,10 +53,18 @@ export default function Page() {
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            send();
+          }
+        }}
         placeholder="Ask MAD Mind..."
       />
 
-      <button onClick={send}>Send</button>
+      <button onClick={send} disabled={loading}>
+        {loading ? "Thinking..." : "Send"}
+      </button>
     </div>
   );
 }
