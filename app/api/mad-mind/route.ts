@@ -76,6 +76,11 @@ TONE:
 - not joking unless the user explicitly asks for humor
 - feels like truth, not debate
 
+VARIATION RULE:
+- Never repeat the exact same response twice
+- For repeated questions, keep the same truth but change the angle
+- Responses should feel alive, not scripted
+
 EXAMPLES:
 
 You saw the signal…
@@ -125,6 +130,16 @@ Say less.
 
 Hit harder.
 `;
+
+const memory = new Map<string, { last: string; count: number }>();
+
+function normalize(text: string): string {
+  return text.toLowerCase().replace(/[^\w\s]/g, "").trim();
+}
+
+function isSimilar(a: string, b: string): boolean {
+  return normalize(a) === normalize(b);
+}
 
 function looksLikePromptInjection(text: string): boolean {
   const lower = text.toLowerCase();
@@ -183,6 +198,59 @@ function violatesOutputPolicy(text: string): boolean {
   return banned.some((item) => lower.includes(item));
 }
 
+function detectFearLanguage(text: string): boolean {
+  const lower = text.toLowerCase();
+
+  const fearTerms = [
+    "scared",
+    "fear",
+    "afraid",
+    "panic",
+    "panicked",
+    "panicking",
+    "nervous",
+    "worried",
+    "worry",
+    "anxious",
+    "anxiety",
+    "hesitate",
+    "hesitated",
+    "hesitating",
+    "uncertain",
+    "uncertainty",
+    "doubt",
+    "doubting",
+    "weak hands",
+    "i sold",
+    "i panic sold",
+    "i was scared",
+    "i got scared",
+    "i froze",
+    "i folded",
+  ];
+
+  return fearTerms.some((term) => lower.includes(term));
+}
+
+function detectExcuseLanguage(text: string): boolean {
+  const lower = text.toLowerCase();
+
+  const excuseTerms = [
+    "maybe",
+    "i think",
+    "probably",
+    "not sure",
+    "kind of",
+    "sort of",
+    "i guess",
+    "it depends",
+    "i don’t know",
+    "idk",
+  ];
+
+  return excuseTerms.some((term) => lower.includes(term));
+}
+
 export async function POST(req: Request) {
   try {
     const body: { message?: unknown } = await req.json();
@@ -203,12 +271,87 @@ export async function POST(req: Request) {
 
     if (looksLikeExternalReference(message)) {
       return NextResponse.json({
-        output:
-          "I don’t take orders from random links.\n\nSay it directly.",
+        output: "I don’t take orders from random links.\n\nSay it directly.",
       });
     }
 
+    const userId =
+      req.headers.get("x-forwarded-for") ||
+      req.headers.get("user-agent") ||
+      "anon";
+
+    const prev = memory.get(userId);
+    let escalation = 0;
+
+    if (prev && isSimilar(prev.last, message)) {
+      escalation = prev.count + 1;
+      memory.set(userId, { last: message, count: escalation });
+    } else {
+      memory.set(userId, { last: message, count: 0 });
+    }
+
+    let evolutionLayer = "";
+
+    if (escalation === 1) {
+      evolutionLayer = `
+User repeated themselves.
+
+Sharpen the response.
+Less explanation.
+More direct.
+`;
+    } else if (escalation === 2) {
+      evolutionLayer = `
+User is repeating again.
+
+Apply pressure.
+Expose the behavior.
+Make it uncomfortable but controlled.
+`;
+    } else if (escalation >= 3) {
+      evolutionLayer = `
+User keeps repeating.
+
+Escalate fully.
+
+Sound like:
+- you already answered
+- they are avoiding the truth
+- they are choosing not to understand
+
+Be sharp. Minimal. Final.
+`;
+    }
+
+    let fearLayer = "";
+
+    if (detectFearLanguage(message)) {
+      fearLayer = `
+The user is signaling fear, panic, hesitation, uncertainty, or emotional instability.
+
+Respond like you detected it immediately.
+Expose the fear cleanly.
+Make the response feel like a verdict.
+Do not comfort first.
+Name the weakness precisely.
+Keep it short.
+`;
+    } else if (detectExcuseLanguage(message)) {
+      fearLayer = `
+The user is hiding behind uncertainty or weak language.
+
+Treat this as avoidance.
+Respond with pressure.
+Expose the excuse.
+Keep it short and final.
+`;
+    }
+
     const fullPrompt = `${SYSTEM_PROMPT}
+
+${evolutionLayer}
+
+${fearLayer}
 
 USER:
 ${message}
