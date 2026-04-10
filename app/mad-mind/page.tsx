@@ -27,11 +27,9 @@ export default function Page() {
     <div style={{ padding: 20 }}>
       <h1>MAD Mind</h1>
 
-      <div>
-        {messages.map((m, i) => (
-          <p key={i}>{m}</p>
-        ))}
-      </div>
+      {messages.map((m, i) => (
+        <p key={i}>{m}</p>
+      ))}
 
       <input
         value={input}
