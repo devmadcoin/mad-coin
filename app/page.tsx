@@ -144,6 +144,30 @@ function PillButton({
   );
 }
 
+function InternalPillButton({
+  href,
+  children,
+  primary = false,
+}: {
+  href: string;
+  children: React.ReactNode;
+  primary?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={[
+        "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition duration-200",
+        primary
+          ? "border border-red-500/30 bg-red-500 text-white hover:scale-[1.01] hover:bg-red-400"
+          : "border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] text-white hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]",
+      ].join(" ")}
+    >
+      {children}
+    </Link>
+  );
+}
+
 function SocialIcon({
   href,
   src,
@@ -284,9 +308,15 @@ export default function Home() {
               </h1>
 
               <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
-                <PillButton href={LINKS.telegram} primary>
-                  Enter Signal
-                </PillButton>
+                <div className="flex flex-wrap gap-3">
+                  <InternalPillButton href="/mad-mind" primary>
+                    Enter MAD Mind
+                  </InternalPillButton>
+
+                  <PillButton href={LINKS.telegram}>
+                    Join Telegram
+                  </PillButton>
+                </div>
 
                 <div className="flex w-full max-w-md items-center justify-between">
                   <SocialIcon
