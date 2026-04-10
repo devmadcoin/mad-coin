@@ -398,36 +398,52 @@ export default function Home() {
         </section>
 
         <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.85),rgba(10,0,0,0.95))] px-6 py-12 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-10 lg:px-12">
-          <div className="flex flex-col items-center text-center">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-              MAD Signal
-            </p>
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div className="text-center lg:text-left">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+                MAD Signal
+              </p>
 
-            <h2 className="mt-4 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-              Talk to the mind behind the movement.
-            </h2>
+              <h2 className="mt-4 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+                Talk to the mind behind the movement.
+              </h2>
 
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-              Ask MAD Mind about the philosophy, generate captions in brand
-              voice, or turn chaos into signal.
-            </p>
+              <p className="mt-4 max-w-xl text-sm leading-7 text-white/62 sm:text-base lg:max-w-2xl">
+                Ask MAD Mind about the philosophy, generate captions in brand
+                voice, or turn chaos into signal.
+              </p>
 
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <PromptChip href="/mad-mind">
-                What does Stay $MAD mean?
-              </PromptChip>
-              <PromptChip href="/mad-mind">
-                Write a savage caption
-              </PromptChip>
-              <PromptChip href="/mad-mind">
-                Explain $MAD simply
-              </PromptChip>
+              <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
+                <PromptChip href="/mad-mind">
+                  What does Stay $MAD mean?
+                </PromptChip>
+                <PromptChip href="/mad-mind">
+                  Write a savage caption
+                </PromptChip>
+                <PromptChip href="/mad-mind">
+                  Explain $MAD simply
+                </PromptChip>
+              </div>
+
+              <div className="mt-8 flex justify-center lg:justify-start">
+                <InternalPillButton href="/mad-mind" primary>
+                  Enter MAD Mind
+                </InternalPillButton>
+              </div>
             </div>
 
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <InternalPillButton href="/mad-mind" primary>
-                Enter MAD Mind
-              </InternalPillButton>
+            <div className="relative flex justify-center">
+              <div className="absolute -inset-10 rounded-full bg-red-500/20 blur-3xl animate-pulse" />
+
+              <div className="relative animate-spin-slow hover:[animation-duration:5s]">
+                <Image
+                  src="/MAD-MIND-HEAD.png"
+                  alt="MAD Mind"
+                  width={420}
+                  height={420}
+                  className="object-contain drop-shadow-[0_0_40px_rgba(255,0,0,0.6)]"
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -658,6 +674,10 @@ export default function Home() {
           animation-play-state: paused;
         }
 
+        .animate-spin-slow {
+          animation: spinSlow 20s linear infinite;
+        }
+
         @keyframes madMarquee {
           0% {
             transform: translateX(0);
@@ -673,6 +693,15 @@ export default function Home() {
           }
           100% {
             transform: translateX(calc(-50% - 0.5rem));
+          }
+        }
+
+        @keyframes spinSlow {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
           }
         }
       `}</style>
