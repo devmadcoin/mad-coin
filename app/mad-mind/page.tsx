@@ -4,9 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Page() {
   const [input, setInput] = useState("");
-  const [mode, setMode] = useState<"default" | "savage" | "crashout">("default");
   const [messages, setMessages] = useState<string[]>([
-    "MAD: I’m MAD Mind. Ask me about the philosophy, captions, signal, or what it means to Stay $MAD.",
+    "MAD: I’m MAD Mind.\n\nAsk something real.",
   ]);
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -19,7 +18,7 @@ export default function Page() {
     const trimmed = (customMessage ?? input).trim();
     if (!trimmed || loading) return;
 
-    setMessages((prev) => [...prev, `You (${mode}): ` + trimmed]);
+    setMessages((prev) => [...prev, "You: " + trimmed]);
     setInput("");
     setLoading(true);
 
@@ -31,7 +30,6 @@ export default function Page() {
         },
         body: JSON.stringify({
           message: trimmed,
-          mode,
         }),
       });
 
@@ -39,10 +37,10 @@ export default function Page() {
 
       setMessages((prev) => [
         ...prev,
-        "MAD: " + (data.output || "Signal lost. Try again."),
+        "MAD: " + (data.output || "Signal lost.\n\nTry again."),
       ]);
     } catch {
-      setMessages((prev) => [...prev, "MAD: Signal lost. Try again."]);
+      setMessages((prev) => [...prev, "MAD: Signal lost.\n\nTry again."]);
     } finally {
       setLoading(false);
     }
@@ -50,9 +48,9 @@ export default function Page() {
 
   const promptChips = [
     "Explain Stay $MAD",
-    "Write a savage caption",
-    "Write a CRASHOUT caption 😈",
-    "Turn this into chaos",
+    "You felt fear… and obeyed it.",
+    "Why do people lose?",
+    "Say it harder.",
   ];
 
   return (
@@ -69,30 +67,10 @@ export default function Page() {
             </h1>
 
             <p className="mt-3 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-              Talk to the mind behind the movement. Ask about philosophy, brand
-              voice, captions, or how to turn chaos into signal.
+              One voice.
+              <br />
+              Controlled crashout.
             </p>
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              {(["default", "savage", "crashout"] as const).map((m) => (
-                <button
-                  key={m}
-                  onClick={() => setMode(m)}
-                  className={[
-                    "rounded-full px-4 py-2 text-sm font-black transition duration-200",
-                    mode === m
-                      ? "border border-red-500/30 bg-red-500 text-white"
-                      : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white",
-                  ].join(" ")}
-                >
-                  {m === "default"
-                    ? "Default"
-                    : m === "savage"
-                    ? "Savage"
-                    : "Crashout"}
-                </button>
-              ))}
-            </div>
 
             <div className="mt-5 flex flex-wrap gap-3">
               {promptChips.map((prompt) => (
@@ -115,7 +93,7 @@ export default function Page() {
           <div className="h-[55vh] overflow-y-auto px-5 py-5 sm:px-6">
             <div className="space-y-4">
               {messages.map((m, i) => {
-                const isUser = m.startsWith("You ");
+                const isUser = m.startsWith("You:");
 
                 return (
                   <div
@@ -124,13 +102,13 @@ export default function Page() {
                   >
                     <div
                       className={[
-                        "max-w-[85%] rounded-[22px] px-4 py-3 text-sm leading-7 sm:text-base",
+                        "max-w-[85%] rounded-[22px] px-4 py-3 text-sm sm:text-base",
                         isUser
                           ? "bg-red-500 text-white"
                           : "border border-white/10 bg-white/5 text-white/88",
                       ].join(" ")}
                     >
-                      <p className="whitespace-pre-wrap">{m}</p>
+                      <p className="whitespace-pre-wrap leading-7">{m}</p>
                     </div>
                   </div>
                 );
@@ -139,7 +117,7 @@ export default function Page() {
               {loading ? (
                 <div className="flex justify-start">
                   <div className="max-w-[85%] rounded-[22px] border border-white/10 bg-white/5 px-4 py-3 text-sm leading-7 text-white/70 sm:text-base">
-                    MAD: MAD Mind is thinking...
+                    MAD: Thinking...
                   </div>
                 </div>
               ) : null}
@@ -160,7 +138,7 @@ export default function Page() {
                     send();
                   }
                 }}
-                placeholder={`Ask MAD Mind in ${mode} mode...`}
+                placeholder="Ask MAD Mind..."
                 className="flex-1 rounded-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-red-500/40 sm:text-base"
               />
 
