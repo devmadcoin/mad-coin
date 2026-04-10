@@ -1,16 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Page() {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<string[]>([
+    "MAD: I’m MAD Mind. Ask me about the philosophy, captions, signal, or what it means to Stay $MAD.",
+  ]);
   const [loading, setLoading] = useState(false);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
   async function send() {
     const trimmed = input.trim();
     if (!trimmed || loading) return;
 
+    setMessages((prev) => [...prev, "You: " + trimmed]);
+    setInput("");
     setLoading(true);
 
     try {
@@ -26,45 +35,111 @@ export default function Page() {
 
       setMessages((prev) => [
         ...prev,
-        "You: " + trimmed,
         "MAD: " + (data.output || "Signal lost. Try again."),
       ]);
-
-      setInput("");
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        "You: " + trimmed,
-        "MAD: Signal lost. Try again.",
-      ]);
+      setMessages((prev) => [...prev, "MAD: Signal lost. Try again."]);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>MAD Mind</h1>
+    <main className="min-h-screen bg-[#050505] text-white">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-[32px] border border-white/10 bg-black/40 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+          <div className="border-b border-white/10 px-5 py-5 sm:px-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+              MAD Signal
+            </p>
+            <h1 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
+              MAD Mind
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+              Talk to the mind behind the movement. Ask about philosophy, brand
+              voice, captions, or how to turn chaos into signal.
+            </p>
 
-      {messages.map((m, i) => (
-        <p key={i}>{m}</p>
-      ))}
+            <div className="mt-5 flex flex-wrap gap-3">
+              {[
+                "What does Stay $MAD mean?",
+                "Write a savage caption",
+                "Explain $MAD simply",
+              ].map((prompt) => (
+                <button
+                  key={prompt}
+                  onClick={() => setInput(prompt)}
+                  className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-white/78 transition duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </div>
 
-      <input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            send();
-          }
-        }}
-        placeholder="Ask MAD Mind..."
-      />
+          <div className="h-[55vh] overflow-y-auto px-5 py-5 sm:px-6">
+            <div className="space-y-4">
+              {messages.map((m, i) => {
+                const isUser = m.startsWith("You:");
 
-      <button onClick={send} disabled={loading}>
-        {loading ? "Thinking..." : "Send"}
-      </button>
-    </div>
+                return (
+                  <div
+                    key={i}
+                    className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={[
+                        "max-w-[85%] rounded-[22px] px-4 py-3 text-sm leading-7 sm:text-base",
+                        isUser
+                          ? "bg-red-500 text-white"
+                          : "border border-white/10 bg-white/5 text-white/88",
+                      ].join(" ")}
+                    >
+                      <p className="whitespace-pre-wrap">{m}</p>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {loading ? (
+                <div className="flex justify-start">
+                  <div className="max-w-[85%] rounded-[22px] border border-white/10 bg-white/5 px-4 py-3 text-sm leading-7 text-white/70 sm:text-base">
+                    MAD: MAD Mind is thinking...
+                  </div>
+                </div>
+              ) : null}
+
+              <div ref={bottomRef} />
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 px-5 py-4 sm:px-6">
+            <div className="flex gap-3">
+              <input
+                autoFocus
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    send();
+                  }
+                }}
+                placeholder="Ask MAD Mind..."
+                className="flex-1 rounded-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-red-500/40 sm:text-base"
+              />
+
+              <button
+                onClick={send}
+                disabled={loading}
+                className="rounded-full border border-red-500/30 bg-red-500 px-5 py-3 text-sm font-black text-white transition duration-200 hover:scale-[1.01] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
+              >
+                {loading ? "Thinking..." : "Send"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
