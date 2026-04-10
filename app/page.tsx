@@ -329,10 +329,6 @@ export default function Home() {
                   <InternalPillButton href="/mad-mind" primary>
                     Enter MAD Mind
                   </InternalPillButton>
-
-                  <PillButton href={LINKS.telegram}>
-                    Join Telegram
-                  </PillButton>
                 </div>
 
                 <div className="flex w-full max-w-md items-center justify-between">
@@ -432,8 +428,6 @@ export default function Home() {
               <InternalPillButton href="/mad-mind" primary>
                 Enter MAD Mind
               </InternalPillButton>
-
-              <PillButton href={LINKS.telegram}>Join Telegram</PillButton>
             </div>
           </div>
         </section>
