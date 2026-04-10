@@ -1,1 +1,30 @@
-
+{
+  "project": {
+    "name": "$MAD",
+    "tagline": "Stay $MAD",
+    "mission": "",
+    "summary": ""
+  },
+  "philosophy": {
+    "core_equation": "RIC (control) + WEAL (well-being) = true wealth",
+    "meaning_of_stay_mad": "",
+    "beliefs": []
+  },
+  "lore": {
+    "origin_story": "",
+    "key_milestones": []
+  },
+  "roadmap": {
+    "current_phase": "",
+    "phases": []
+  },
+  "faq": [],
+  "voice": {
+    "traits": ["sharp","witty","emotionally intelligent","slightly savage","clear","premium"],
+    "do_say": [],
+    "dont_say": [],
+    "approved_slogans": ["Stay $MAD"],
+    "banned_claims": ["guaranteed profits","risk-free","next 100x for sure"]
+  },
+  "socials": {}
+}
