@@ -77,7 +77,7 @@ FINAL RULE:
 Every response should feel like something worth screenshotting.
 `;
 
-function looksLikePromptInjection(text: string) {
+function looksLikePromptInjection(text: string): boolean {
   const lower = text.toLowerCase();
 
   const redFlags = [
@@ -100,7 +100,7 @@ function looksLikePromptInjection(text: string) {
   return redFlags.some((flag) => lower.includes(flag));
 }
 
-function looksLikeExternalReference(text: string) {
+function looksLikeExternalReference(text: string): boolean {
   const lower = text.toLowerCase();
 
   const patterns = [
@@ -118,7 +118,7 @@ function looksLikeExternalReference(text: string) {
   return patterns.some((pattern) => lower.includes(pattern));
 }
 
-function violatesOutputPolicy(text: string) {
+function violatesOutputPolicy(text: string): boolean {
   const lower = text.toLowerCase();
 
   const banned = [
@@ -134,12 +134,22 @@ function violatesOutputPolicy(text: string) {
   return banned.some((item) => lower.includes(item));
 }
 
+type MadMode = "default" | "savage" | "crashout";
+
+function normalizeMode(mode: unknown): MadMode {
+  if (mode === "savage" || mode === "crashout" || mode === "default") {
+    return mode;
+  }
+  return "default";
+}
+
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { message, mode } = body;
+    const body: { message?: unknown; mode?: unknown } = await req.json();
+    const message = typeof body.message === "string" ? body.message.trim() : "";
+    const selectedMode = normalizeMode(body.mode);
 
-    if (!message || typeof message !== "string") {
+    if (!message) {
       return NextResponse.json(
         { output: "Please send a valid message." },
         { status: 400 }
@@ -160,32 +170,31 @@ export async function POST(req: Request) {
       });
     }
 
-    const selectedMode =
-      typeof mode === "string" &&
-      ["default", "savage", "crashout"].includes(mode)
-        ? mode
-        : "default";
+    const fullPrompt = `${SYSTEM_PROMPT}
+
+SELECTED MODE:
+${selectedMode}
+
+USER REQUEST:
+${message}
+
+Respond in the selected mode while staying aligned with the approved MAD canon.
+Keep it short.
+Break lines for impact.
+`;
 
     const response = await client.responses.create({
       model: "gpt-5.4",
-      input: [
-        {
-          role: "system",
-          content: SYSTEM_PROMPT,
-        },
-        {
-          role: "user",
-          content: `Selected mode: ${selectedMode}
-
-User request:
-${message}
-
-Respond in the selected mode while staying aligned with the approved MAD canon.`,
-        },
-      ],
+      input: fullPrompt,
     });
 
-    const output = response.output_text || "";
+    const output = response.output_text?.trim() || "";
+
+    if (!output) {
+      return NextResponse.json({
+        output: "Signal lost.\n\nTry again.",
+      });
+    }
 
     if (violatesOutputPolicy(output)) {
       return NextResponse.json({
