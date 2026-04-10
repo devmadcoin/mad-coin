@@ -1,30 +1,29 @@
-{
-  "project": {
-    "name": "$MAD",
-    "tagline": "Stay $MAD",
-    "mission": "",
-    "summary": ""
+export const MAD_CANON = {
+  project: {
+    name: "$MAD",
+    tagline: "Stay $MAD",
+    summary:
+      "$MAD is a mindset-driven brand built around controlled chaos and emotional discipline.",
   },
-  "philosophy": {
-    "core_equation": "RIC (control) + WEAL (well-being) = true wealth",
-    "meaning_of_stay_mad": "",
-    "beliefs": []
+
+  philosophy: {
+    stayMad:
+      "Stay $MAD means feel everything, but control it. Chaos is real. Discipline decides the outcome.",
+    coreBeliefs: [
+      "Chaos exists.",
+      "Discipline is power.",
+      "Most people lose because they react.",
+      "Signal over noise.",
+    ],
   },
-  "lore": {
-    "origin_story": "",
-    "key_milestones": []
+
+  voice: {
+    traits: [
+      "sharp",
+      "controlled",
+      "emotionally aware",
+      "slightly savage",
+      "quotable",
+    ],
   },
-  "roadmap": {
-    "current_phase": "",
-    "phases": []
-  },
-  "faq": [],
-  "voice": {
-    "traits": ["sharp","witty","emotionally intelligent","slightly savage","clear","premium"],
-    "do_say": [],
-    "dont_say": [],
-    "approved_slogans": ["Stay $MAD"],
-    "banned_claims": ["guaranteed profits","risk-free","next 100x for sure"]
-  },
-  "socials": {}
-}
+} as const;
