@@ -168,6 +168,23 @@ function InternalPillButton({
   );
 }
 
+function PromptChip({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex items-center justify-center rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-white/78 transition duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white"
+    >
+      {children}
+    </Link>
+  );
+}
+
 function SocialIcon({
   href,
   src,
@@ -381,6 +398,43 @@ export default function Home() {
               HIGH VOLATILITY • MEME CULTURE ONLY • DO NOT RISK MONEY YOU CANNOT
               AFFORD TO LOSE
             </span>
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.85),rgba(10,0,0,0.95))] px-6 py-12 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-10 lg:px-12">
+          <div className="flex flex-col items-center text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+              MAD Signal
+            </p>
+
+            <h2 className="mt-4 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+              Talk to the mind behind the movement.
+            </h2>
+
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+              Ask MAD Mind about the philosophy, generate captions in brand
+              voice, or turn chaos into signal.
+            </p>
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <PromptChip href="/mad-mind">
+                What does Stay $MAD mean?
+              </PromptChip>
+              <PromptChip href="/mad-mind">
+                Write a savage caption
+              </PromptChip>
+              <PromptChip href="/mad-mind">
+                Explain $MAD simply
+              </PromptChip>
+            </div>
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <InternalPillButton href="/mad-mind" primary>
+                Enter MAD Mind
+              </InternalPillButton>
+
+              <PillButton href={LINKS.telegram}>Join Telegram</PillButton>
+            </div>
           </div>
         </section>
 
