@@ -416,6 +416,11 @@ STYLE BREAKER:
 - you may start with an accusation
 - you may start with a rhetorical question
 - you may imply the definition instead of stating it
+
+SECOND-LINE CONTROL:
+- the second line must shift mode from the first line
+- do not mirror the first line's structure
+- use the second line to deepen, not repeat
 `;
 }
 
@@ -566,6 +571,10 @@ RESPONSE CONSTRUCTION RULES:
 - sometimes answer in one brutal sentence
 - sometimes answer in two short lines
 - sometimes answer in three lines with a philosophical finish
+- do not let the second line fall back into a definition pattern
+- if the first line defines, the second line should accuse, contrast, or imply
+- if the first line accuses, the second line may define or conclude
+- avoid repeating "$MAD is what..." across consecutive replies
 
 USER:
 ${message}
