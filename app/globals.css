@@ -8,6 +8,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    height: 100%;
+    background: #000;
   }
 
   body {
@@ -15,10 +17,19 @@
     min-height: 100vh;
     background: #000;
     color: #fff;
+    overflow-x: hidden;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+  }
+
+  #__next {
+    min-height: 100%;
+  }
+
+  * {
+    box-sizing: border-box;
   }
 
   /* Makes media behave nicely in responsive layouts */
@@ -29,13 +40,33 @@
     display: block;
     max-width: 100%;
   }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+/* ==========================
+   Layout safety helpers
+   ========================== */
+
+.page-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+}
+
+.overscroll-none {
+  overscroll-behavior: none;
 }
 
 /* ==========================
    Animations / Utilities
    ========================== */
 
-/* Fade-up animation */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -47,7 +78,6 @@
   }
 }
 
-/* use as a class */
 .animate-fadeUp {
   animation: fadeUp 700ms ease-out both;
 }
@@ -71,9 +101,9 @@
   animation-play-state: paused;
 }
 
-/* ================================
+/* =================================
    $MAD Animated Orange Progress Bar
-   ================================ */
+   ================================= */
 
 @keyframes madShimmer {
   0% {
@@ -84,7 +114,6 @@
   }
 }
 
-/* Track */
 .mad-progress-track {
   height: 10px;
   border-radius: 9999px;
@@ -93,7 +122,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Fill */
 .mad-progress-fill {
   height: 100%;
   border-radius: 9999px;
@@ -114,41 +142,48 @@
    Mobile Nav helpers
    ========================== */
 
-/* Hide scrollbar (for horizontally scrolling tabs) */
 .no-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
-}
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE/Edge legacy */
-  scrollbar-width: none; /* Firefox */
+  display: none;
 }
 
-/* Smooth iOS momentum scrolling for horizontal nav containers */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .ios-momentum {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Optional: makes horizontal swipe feel intentional (helps Safari) */
 .touch-pan-x {
   touch-action: pan-x;
 }
 
-/* Optional: if you want pills to snap nicely as you swipe */
 .snap-x {
   scroll-snap-type: x mandatory;
 }
+
 .snap-start {
   scroll-snap-align: start;
 }
 
-/* iPhone notch / safe-area support (use class on header if you want) */
 .safe-top {
   padding-top: env(safe-area-inset-top);
 }
 
 /* ==========================
+   Selection
+   ========================== */
+
+::selection {
+  background: rgba(255, 60, 60, 0.35);
+  color: #fff;
+}
+
+/* ==========================
    Reduced motion
    ========================== */
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
