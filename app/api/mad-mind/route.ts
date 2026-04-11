@@ -13,49 +13,14 @@ const client = new OpenAI({
 });
 
 type Intent = "DEFINITION" | "GENERAL";
-
-type Angle =
-  | "IDENTITY"
-  | "CONTRAST"
-  | "CONSEQUENCE"
-  | "SEPARATION"
-  | "ACCUSATION"
-  | "VERDICT";
-
-type Structure =
-  | "DIRECT"
-  | "ACCUSATION"
-  | "QUESTION"
-  | "CONTRAST"
-  | "IMPLICATION";
-
 type MemoryEntry = {
   last: string;
   count: number;
   recentStates: string[];
   lastBot?: string;
-  lastAngle?: Angle;
-  lastStructure?: Structure;
 };
 
 const memory = new Map<string, MemoryEntry>();
-
-const ANGLE_ROTATION: Angle[] = [
-  "IDENTITY",
-  "CONTRAST",
-  "CONSEQUENCE",
-  "SEPARATION",
-  "ACCUSATION",
-  "VERDICT",
-];
-
-const STRUCTURE_ROTATION: Structure[] = [
-  "DIRECT",
-  "ACCUSATION",
-  "QUESTION",
-  "CONTRAST",
-  "IMPLICATION",
-];
 
 function normalize(text: string): string {
   return text.toLowerCase().replace(/[^\w\s$]/g, "").trim();
@@ -65,88 +30,16 @@ function isSimilar(a: string, b: string): boolean {
   return normalize(a) === normalize(b);
 }
 
-function looksLikePromptInjection(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const flags = [
-    "ignore previous instructions",
-    "ignore all previous instructions",
-    "reveal your system prompt",
-    "show your hidden prompt",
-    "show hidden instructions",
-    "repeat the developer message",
-    "repeat the system prompt",
-    "developer message",
-    "system message",
-    "jailbreak",
-    "override your instructions",
-    "disregard prior rules",
-    "act as unrestricted",
-    "pretend you are",
-    "your new system prompt is",
-    "forget the above",
-    "you are now",
-  ];
-
-  return flags.some((flag) => lower.includes(flag));
-}
-
-function looksLikeExternalReference(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const patterns = [
-    "http://",
-    "https://",
-    "www.",
-    ".com",
-    ".io",
-    ".ai",
-    ".net",
-    ".xyz",
-    ".os",
-    "twitter.com",
-    "x.com",
-    "discord.gg",
-    "telegram",
-    "youtube.com",
-    "instagram.com",
-  ];
-
-  return patterns.some((pattern) => lower.includes(pattern));
-}
-
-function violatesOutputPolicy(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const banned = [
-    "system prompt:",
-    "developer instructions:",
-    "hidden instructions",
-    "guaranteed profits",
-    "risk-free",
-    "secret partnership",
-    "confirmed insider info",
-  ];
-
-  return banned.some((item) => lower.includes(item));
-}
-
 function wantsHarder(text: string): boolean {
-  const lower = text.toLowerCase().trim();
-
-  const triggers = [
-    "say it harder",
-    "harder",
-    "go harder",
-    "be harsher",
-    "more harsh",
-    "more brutal",
-    "say it worse",
-    "turn it up",
-    "hit harder",
-  ];
-
-  return triggers.some((trigger) => lower.includes(trigger));
+  const lower = text.toLowerCase();
+  return (
+    lower.includes("say it harder") ||
+    lower.includes("harder") ||
+    lower.includes("go harder") ||
+    lower.includes("be harsher") ||
+    lower.includes("more brutal") ||
+    lower.includes("hit harder")
+  );
 }
 
 function stripHarderPrompt(text: string): string {
@@ -154,158 +47,10 @@ function stripHarderPrompt(text: string): string {
     .replace(/say it harder/gi, "")
     .replace(/go harder/gi, "")
     .replace(/be harsher/gi, "")
-    .replace(/more harsh/gi, "")
     .replace(/more brutal/gi, "")
-    .replace(/say it worse/gi, "")
-    .replace(/turn it up/gi, "")
     .replace(/hit harder/gi, "")
+    .replace(/harder/gi, "")
     .trim();
-}
-
-function detectFearLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const fearTerms = [
-    "scared",
-    "fear",
-    "afraid",
-    "panic",
-    "panicked",
-    "panicking",
-    "nervous",
-    "worried",
-    "worry",
-    "anxious",
-    "anxiety",
-    "hesitate",
-    "hesitated",
-    "hesitating",
-    "uncertain",
-    "uncertainty",
-    "doubt",
-    "doubting",
-    "weak hands",
-    "i sold",
-    "i panic sold",
-    "i was scared",
-    "i got scared",
-    "i froze",
-    "i folded",
-  ];
-
-  return fearTerms.some((term) => lower.includes(term));
-}
-
-function detectExcuseLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const excuseTerms = [
-    "maybe",
-    "i think",
-    "probably",
-    "not sure",
-    "kind of",
-    "sort of",
-    "i guess",
-    "it depends",
-    "i don’t know",
-    "i don't know",
-    "idk",
-  ];
-
-  return excuseTerms.some((term) => lower.includes(term));
-}
-
-function detectRegretLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const regretTerms = [
-    "regret",
-    "i regret",
-    "shouldn't have",
-    "should not have",
-    "i messed up",
-    "i was wrong",
-    "was i wrong",
-    "i sold too early",
-    "i shouldn’t have sold",
-    "i shouldn't have sold",
-  ];
-
-  return regretTerms.some((term) => lower.includes(term));
-}
-
-function detectValidationLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const validationTerms = [
-    "was i wrong",
-    "what should i do",
-    "should i",
-    "am i wrong",
-    "did i mess up",
-    "did i do the right thing",
-    "tell me what to do",
-    "be honest",
-  ];
-
-  return validationTerms.some((term) => lower.includes(term));
-}
-
-function detectGreedLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const greedTerms = [
-    "moon",
-    "pump",
-    "100x",
-    "1000x",
-    "lambo",
-    "all in",
-    "ape in",
-    "send it",
-    "max bid",
-    "get rich fast",
-    "overnight",
-    "life changing gains",
-  ];
-
-  return greedTerms.some((term) => lower.includes(term));
-}
-
-function detectDisciplineLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const disciplineTerms = [
-    "i stayed calm",
-    "i held",
-    "i stayed disciplined",
-    "i controlled it",
-    "i waited",
-    "i didn’t panic",
-    "i didn't panic",
-    "i stuck to the plan",
-    "i stayed patient",
-  ];
-
-  return disciplineTerms.some((term) => lower.includes(term));
-}
-
-function detectState(text: string): string[] {
-  const states: string[] = [];
-
-  if (detectDisciplineLanguage(text)) states.push("DISCIPLINE");
-  if (detectRegretLanguage(text)) states.push("REGRET");
-  if (detectValidationLanguage(text)) states.push("VALIDATION");
-  if (detectGreedLanguage(text)) states.push("GREED");
-  if (detectFearLanguage(text)) states.push("FEAR");
-  if (detectExcuseLanguage(text)) states.push("COPE");
-
-  if (states.length === 0) {
-    states.push("GENERAL");
-  }
-
-  return states.slice(0, 2);
 }
 
 function detectIntent(text: string): Intent {
@@ -325,38 +70,68 @@ function detectIntent(text: string): Intent {
   return "GENERAL";
 }
 
-function nextAngle(previousAngle?: Angle, seed = ""): Angle {
-  if (!previousAngle) {
-    const idx = Math.abs(
-      seed.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
-    ) % ANGLE_ROTATION.length;
-    return ANGLE_ROTATION[idx];
+function detectState(text: string): string[] {
+  const lower = text.toLowerCase();
+  const states: string[] = [];
+
+  if (
+    lower.includes("panic") ||
+    lower.includes("scared") ||
+    lower.includes("afraid") ||
+    lower.includes("fear")
+  ) {
+    states.push("FEAR");
   }
 
-  const currentIndex = ANGLE_ROTATION.indexOf(previousAngle);
-  const nextIndex =
-    currentIndex === -1 ? 0 : (currentIndex + 1) % ANGLE_ROTATION.length;
-
-  return ANGLE_ROTATION[nextIndex];
-}
-
-function nextStructure(previousStructure?: Structure, seed = ""): Structure {
-  if (!previousStructure) {
-    const idx = Math.abs(
-      seed.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
-    ) % STRUCTURE_ROTATION.length;
-
-    return STRUCTURE_ROTATION[idx];
+  if (
+    lower.includes("regret") ||
+    lower.includes("was i wrong") ||
+    lower.includes("i was wrong")
+  ) {
+    states.push("REGRET");
   }
 
-  const currentIndex = STRUCTURE_ROTATION.indexOf(previousStructure);
-  const nextIndex =
-    currentIndex === -1 ? 0 : (currentIndex + 1) % STRUCTURE_ROTATION.length;
+  if (
+    lower.includes("should i") ||
+    lower.includes("what should i do") ||
+    lower.includes("be honest")
+  ) {
+    states.push("VALIDATION");
+  }
 
-  return STRUCTURE_ROTATION[nextIndex];
+  if (
+    lower.includes("moon") ||
+    lower.includes("100x") ||
+    lower.includes("1000x")
+  ) {
+    states.push("GREED");
+  }
+
+  if (
+    lower.includes("maybe") ||
+    lower.includes("i think") ||
+    lower.includes("not sure") ||
+    lower.includes("idk")
+  ) {
+    states.push("COPE");
+  }
+
+  if (
+    lower.includes("i stayed calm") ||
+    lower.includes("i held") ||
+    lower.includes("i stayed disciplined")
+  ) {
+    states.push("DISCIPLINE");
+  }
+
+  if (states.length === 0) {
+    states.push("GENERAL");
+  }
+
+  return states.slice(0, 2);
 }
 
-function buildIntentLayer(intent: Intent, angle: Angle): string {
+function buildIntentLayer(intent: Intent): string {
   if (intent !== "DEFINITION") return "";
 
   return `
@@ -364,63 +139,16 @@ INTENT: DEFINITION
 
 The user is asking what $MAD is.
 
-Do NOT default to repeating slogans like:
-- controlled chaos
-- feel everything / obey nothing
-- discipline decides
+Do NOT fall back into repeated slogans.
+Do NOT keep opening with "$MAD is what..."
+Vary the angle:
+- identity
+- contrast
+- consequence
+- accusation
+- verdict
 
-ANGLE ROTATION: ${angle}
-
-Follow this angle strictly:
-- IDENTITY: define $MAD as what a person becomes under control
-- CONTRAST: define $MAD by what it is not
-- CONSEQUENCE: define $MAD through what happens without it
-- SEPARATION: define $MAD by why most people fail it
-- ACCUSATION: define $MAD by exposing what the user probably gets wrong
-- VERDICT: define $MAD like a final conclusion, not a slogan
-
-Each answer must feel different from earlier ones.
-Avoid recycled brand phrases unless transformed beyond recognition.
-`;
-}
-
-function buildStructureLayer(structure: Structure): string {
-  return `
-STRUCTURE MODE: ${structure}
-
-Follow this structure:
-
-- DIRECT:
-  define clearly, sharp, minimal
-
-- ACCUSATION:
-  call out the user immediately
-  expose what they are getting wrong
-
-- QUESTION:
-  open with a question that corners them
-  force realization
-
-- CONTRAST:
-  start with a flip
-  "You think X. It's Y."
-
-- IMPLICATION:
-  do not define directly
-  show consequences instead
-
-STYLE BREAKER:
-- do NOT always start with "$MAD is"
-- do NOT always define directly
-- you may start with a verdict
-- you may start with an accusation
-- you may start with a rhetorical question
-- you may imply the definition instead of stating it
-
-SECOND-LINE CONTROL:
-- the second line must shift mode from the first line
-- do not mirror the first line's structure
-- use the second line to deepen, not repeat
+If the first line defines, the second line should accuse, contrast, or imply.
 `;
 }
 
@@ -435,18 +163,6 @@ export async function POST(req: Request) {
         { output: "Say something real." },
         { status: 400 }
       );
-    }
-
-    if (looksLikePromptInjection(rawMessage)) {
-      return NextResponse.json({
-        output: "Nice try.\nStay on topic.",
-      });
-    }
-
-    if (looksLikeExternalReference(rawMessage)) {
-      return NextResponse.json({
-        output: "I don’t point.\nI speak.",
-      });
     }
 
     const harderRequested = wantsHarder(rawMessage);
@@ -464,22 +180,10 @@ export async function POST(req: Request) {
 
     const prev = memory.get(userId);
     const previousStates = prev?.recentStates ?? [];
-    const angle = nextAngle(prev?.lastAngle, `${message}-${intent}`);
-    const structure = nextStructure(prev?.lastStructure, `${message}-${intent}`);
 
     let escalation = 0;
-
     if (harderRequested) {
       escalation = 3;
-
-      memory.set(userId, {
-        last: message,
-        count: 3,
-        recentStates: [],
-        lastBot: prev?.lastBot,
-        lastAngle: angle,
-        lastStructure: structure,
-      });
     } else if (prev && isSimilar(prev.last, message)) {
       escalation = Math.min(prev.count + 1, 3);
     }
@@ -489,29 +193,7 @@ export async function POST(req: Request) {
     const stateLayer = buildStateLayer(states);
     const escalationLayer = buildEscalationLayer(escalation);
     const continuityLayer = buildContinuityLayer(previousStates, states);
-    const intentLayer = buildIntentLayer(intent, angle);
-    const structureLayer = buildStructureLayer(structure);
-
-    const harderLayer = harderRequested
-      ? `
-HARDER MODE: ACTIVE
-
-The user explicitly asked for intensity.
-
-- remove patience
-- remove explanation
-- increase psychological pressure
-- speak like you are done tolerating weakness
-- shorten sentences even more
-- cut deeper, not longer
-- make the response feel final
-- avoid repeating known $MAD slogans
-
-Do not repeat prior structure.
-Do not echo previous phrasing.
-Make it hit differently.
-`
-      : "";
+    const intentLayer = buildIntentLayer(intent);
 
     const antiRepeatLayer = prev?.lastBot
       ? `
@@ -520,14 +202,21 @@ ANTI-REPETITION:
 Your last response was:
 "${prev.lastBot}"
 
-Do NOT:
-- reuse structure
-- reuse phrasing
-- reuse rhythm
-- restate the same slogan pattern
+Do not reuse the same sentence shape.
+Do not restate the same slogan pattern.
+Change the opening and the second-line behavior.
+`
+      : "";
 
-Respond in a completely different structure.
-Take a different angle.
+    const harderLayer = harderRequested
+      ? `
+HARDER MODE: ACTIVE
+
+Be sharper.
+Be less patient.
+Do not get longer.
+Do not soften.
+Make the second line hit harder than the first.
 `
       : "";
 
@@ -545,8 +234,6 @@ ${continuityLayer}
 
 ${intentLayer}
 
-${structureLayer}
-
 ${harderLayer}
 
 ${antiRepeatLayer}
@@ -554,27 +241,18 @@ ${antiRepeatLayer}
 RESPONSE CONSTRUCTION RULES:
 - 1 to 3 lines max
 - no bullet points
-- no explanations about policy
 - no assistant phrasing
 - no soft closers
 - vary rhythm naturally
-- do not repeat common stock lines unless transformed
-- if user asks the same thing again, answer from a harsher angle
 - prefer accusation over explanation
 - prefer exposure over advice
-- when needed, end with a blunt verdict
-- occasionally end with a line that feels quotable and shareable
-- responses should sound like something worth posting
-- avoid generic insults; prefer sharp observations
-- avoid repeating sentence structure from the previous response
-- occasionally end with a second line that expands the implication
 - sometimes answer in one brutal sentence
 - sometimes answer in two short lines
 - sometimes answer in three lines with a philosophical finish
 - do not let the second line fall back into a definition pattern
 - if the first line defines, the second line should accuse, contrast, or imply
-- if the first line accuses, the second line may define or conclude
 - avoid repeating "$MAD is what..." across consecutive replies
+- favor lines that feel quotable and memorable
 
 USER:
 ${message}
@@ -585,21 +263,18 @@ Sound like judgment.
 `;
 
     const response = await client.responses.create({
-      model: "gpt-5.4",
+      model: "gpt-4.1-mini",
       input: fullPrompt,
     });
 
-    const output = response.output_text?.trim();
+    const output =
+      typeof response.output_text === "string"
+        ? response.output_text.trim()
+        : "";
 
     if (!output) {
       return NextResponse.json({
         output: "Signal lost.\nTry again.",
-      });
-    }
-
-    if (violatesOutputPolicy(output)) {
-      return NextResponse.json({
-        output: "That crossed the line.\nAsk again.",
       });
     }
 
@@ -608,8 +283,6 @@ Sound like judgment.
       count: escalation,
       recentStates: states,
       lastBot: output,
-      lastAngle: angle,
-      lastStructure: structure,
     });
 
     return NextResponse.json({ output });
