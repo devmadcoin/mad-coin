@@ -1,6 +1,39 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+type ChatMessage = {
+  id: string;
+  role: "user" | "bot";
+  text: string;
+};
+
+const STARTER_MESSAGE = `Ask something real.
+
+I’ll know if you’re avoiding it.`;
+
+const QUICK_PROMPTS = [
+  "What is $MAD?",
+  "Why do people lose?",
+  "i panic sold, what should i do?",
+  "What should i do?",
+];
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function buildShareText(text: string) {
+  return `MAD Mind just said:
+
+"${text}"
+
+Stay $MAD.`;
+}
+
+function makeId() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
 
 type TrackEvent =
   | "message_sent"
@@ -8,300 +41,306 @@ type TrackEvent =
   | "share_x_clicked"
   | "say_it_harder_clicked";
 
-type TrackItem = {
-  event: TrackEvent;
-  payload: Record<string, string | number | boolean | null>;
-  timestamp: string;
-};
+function trackEvent(
+  event: TrackEvent,
+  payload: Record<string, string | number | boolean>
+) {
+  const body = {
+    event,
+    payload,
+    timestamp: new Date().toISOString(),
+  };
 
-type TrackResponse = {
-  ok: boolean;
-  count: number;
-  events: TrackItem[];
-};
+  console.log("[MAD TRACK]", body);
 
-function formatTimestamp(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString();
+  void fetch("/api/mad-track", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  }).catch((error) => {
+    console.error("MAD tracking failed:", error);
+  });
 }
 
-export default function MadTrackPage() {
-  const [data, setData] = useState<TrackResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+export default function MadMindPage() {
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { id: makeId(), role: "bot", text: STARTER_MESSAGE },
+  ]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  async function loadData() {
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
+
+  function getLastUserMessage(): string {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === "user") return messages[i].text;
+    }
+    return "";
+  }
+
+  async function typeBotMessage(finalText: string) {
+    setIsTyping(true);
+
+    let current = "";
+    const botId = makeId();
+
+    setMessages((prev) => [...prev, { id: botId, role: "bot", text: "" }]);
+
+    for (let i = 0; i < finalText.length; i++) {
+      current += finalText[i];
+
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === botId ? { ...msg, text: current } : msg
+        )
+      );
+
+      const char = finalText[i];
+      const delay =
+        char === "\n" ? 38 : char === "." || char === "," || char === "—" ? 20 : 10;
+
+      await wait(delay);
+    }
+
+    setIsTyping(false);
+  }
+
+  async function sendMessage(rawMessage?: string) {
+    const message = (rawMessage ?? input).trim();
+
+    if (!message || isLoading || isTyping) return;
+
+    const userMessageId = makeId();
+
+    setMessages((prev) => [
+      ...prev,
+      { id: userMessageId, role: "user", text: message },
+    ]);
+    setInput("");
     setIsLoading(true);
-    setError("");
+
+    trackEvent("message_sent", {
+      text: message,
+      length: message.length,
+      source: rawMessage ? "quick_or_action" : "input",
+    });
 
     try {
-      const res = await fetch("/api/mad-track", {
-        method: "GET",
-        cache: "no-store",
+      const res = await fetch("/api/mad-mind", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
       });
 
-      const json: TrackResponse = await res.json();
+      const data = await res.json();
 
-      if (!json.ok) {
-        throw new Error("Tracking data failed to load.");
-      }
+      const output =
+        typeof data?.output === "string" && data.output.trim().length > 0
+          ? data.output.trim()
+          : "Signal lost.\nTry again.";
 
-      setData(json);
-    } catch (err) {
-      console.error("MAD track page error:", err);
-      setError("Failed to load tracking data.");
+      await wait(220);
+      await typeBotMessage(output);
+    } catch (error) {
+      console.error("MAD Mind frontend error:", error);
+      await typeBotMessage("Signal broke.\nTry again.");
     } finally {
       setIsLoading(false);
+      inputRef.current?.focus();
     }
   }
 
-  useEffect(() => {
-    void loadData();
-  }, []);
+  async function handleCopy(message: ChatMessage) {
+    const prompt = getLastUserMessage();
 
-  const eventCounts = useMemo(() => {
-    const counts: Record<TrackEvent, number> = {
-      message_sent: 0,
-      copy_clicked: 0,
-      share_x_clicked: 0,
-      say_it_harder_clicked: 0,
-    };
+    try {
+      await navigator.clipboard.writeText(buildShareText(message.text));
+      setCopiedId(message.id);
 
-    for (const item of data?.events ?? []) {
-      counts[item.event] += 1;
+      trackEvent("copy_clicked", {
+        messageId: message.id,
+        text: message.text,
+        textLength: message.text.length,
+        prompt,
+      });
+
+      window.setTimeout(() => {
+        setCopiedId((current) => (current === message.id ? null : current));
+      }, 1500);
+    } catch (error) {
+      console.error("Copy failed:", error);
     }
+  }
 
-    return counts;
-  }, [data]);
+  function handleShareToX(message: ChatMessage) {
+    const prompt = getLastUserMessage();
+    const shareText = buildShareText(message.text);
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      shareText
+    )}`;
 
-  const topCopied = useMemo(() => {
-    const map = new Map<string, number>();
+    trackEvent("share_x_clicked", {
+      messageId: message.id,
+      text: message.text,
+      textLength: message.text.length,
+      prompt,
+    });
 
-    for (const item of data?.events ?? []) {
-      if (item.event === "copy_clicked") {
-        const text = String(item.payload.text || "");
-        if (!text) continue;
-        map.set(text, (map.get(text) || 0) + 1);
-      }
-    }
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
 
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
-  }, [data]);
+  function handleSayItHarder(message: ChatMessage) {
+    const lastUserMessage = getLastUserMessage();
+    if (!lastUserMessage || isLoading || isTyping) return;
 
-  const topShared = useMemo(() => {
-    const map = new Map<string, number>();
+    trackEvent("say_it_harder_clicked", {
+      messageId: message.id,
+      originalBotText: message.text,
+      lastUserMessage,
+    });
 
-    for (const item of data?.events ?? []) {
-      if (item.event === "share_x_clicked") {
-        const text = String(item.payload.text || "");
-        if (!text) continue;
-        map.set(text, (map.get(text) || 0) + 1);
-      }
-    }
-
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
-  }, [data]);
-
-  const topHarder = useMemo(() => {
-    const map = new Map<string, number>();
-
-    for (const item of data?.events ?? []) {
-      if (item.event === "say_it_harder_clicked") {
-        const text = String(item.payload.originalBotText || "");
-        if (!text) continue;
-        map.set(text, (map.get(text) || 0) + 1);
-      }
-    }
-
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
-  }, [data]);
+    void sendMessage(`${lastUserMessage} say it harder`);
+  }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-              MAD Track
+    <div className="relative isolate min-h-screen overflow-hidden bg-black text-white">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,45,45,0.14),transparent_28%),radial-gradient(circle_at_bottom,rgba(255,45,45,0.08),transparent_36%)]" />
+
+      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-3 py-4 sm:px-6 sm:py-6">
+        <div className="flex min-h-[calc(100vh-2rem)] flex-col rounded-[28px] border border-white/10 bg-black/90 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
+          <div className="border-b border-white/10 px-4 py-6 sm:px-6">
+            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+              MAD Mind
             </h1>
-            <p className="mt-3 text-white/65">
-              Live interaction tracking for MAD Mind.
-            </p>
-          </div>
 
-          <button
-            type="button"
-            onClick={() => void loadData()}
-            className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/5"
-          >
-            Refresh
-          </button>
-        </div>
-
-        {isLoading && (
-          <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-6 text-white/65">
-            Loading tracking data...
-          </div>
-        )}
-
-        {!isLoading && error && (
-          <div className="rounded-[24px] border border-red-500/30 bg-red-500/10 p-6 text-red-200">
-            {error}
-          </div>
-        )}
-
-        {!isLoading && !error && data && (
-          <>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Total Events</div>
-                <div className="mt-2 text-3xl font-bold">{data.count}</div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Messages Sent</div>
-                <div className="mt-2 text-3xl font-bold">
-                  {eventCounts.message_sent}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Copied</div>
-                <div className="mt-2 text-3xl font-bold">
-                  {eventCounts.copy_clicked}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Shared on X</div>
-                <div className="mt-2 text-3xl font-bold">
-                  {eventCounts.share_x_clicked}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Say It Harder</div>
-                <div className="mt-2 text-3xl font-bold">
-                  {eventCounts.say_it_harder_clicked}
-                </div>
-              </div>
+            <div className="mt-4 space-y-2 text-lg text-white/75">
+              <p>One voice.</p>
+              <p>Pressure with clarity.</p>
             </div>
 
-            <div className="mt-8 grid gap-6 xl:grid-cols-3">
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <h2 className="text-xl font-bold">Top Copied</h2>
-
-                <div className="mt-4 space-y-3">
-                  {topCopied.length === 0 && (
-                    <div className="text-sm text-white/50">
-                      No copied responses yet.
-                    </div>
-                  )}
-
-                  {topCopied.map(([text, count], i) => (
-                    <div key={i} className="rounded-xl border border-white/10 p-3">
-                      <div className="text-xs text-white/40">Copied {count}x</div>
-                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                        {text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <h2 className="text-xl font-bold">Top Shared</h2>
-
-                <div className="mt-4 space-y-3">
-                  {topShared.length === 0 && (
-                    <div className="text-sm text-white/50">
-                      No shared responses yet.
-                    </div>
-                  )}
-
-                  {topShared.map(([text, count], i) => (
-                    <div key={i} className="rounded-xl border border-white/10 p-3">
-                      <div className="text-xs text-white/40">Shared {count}x</div>
-                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                        {text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <h2 className="text-xl font-bold">Most Pushed Harder</h2>
-
-                <div className="mt-4 space-y-3">
-                  {topHarder.length === 0 && (
-                    <div className="text-sm text-white/50">
-                      No “Say it harder” events yet.
-                    </div>
-                  )}
-
-                  {topHarder.map(([text, count], i) => (
-                    <div key={i} className="rounded-xl border border-white/10 p-3">
-                      <div className="text-xs text-white/40">Harder {count}x</div>
-                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                        {text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {QUICK_PROMPTS.map((prompt) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  onClick={() => void sendMessage(prompt)}
+                  disabled={isLoading || isTyping}
+                  className="rounded-full border border-white/10 bg-transparent px-5 py-3 text-sm font-semibold text-white transition hover:border-white/20 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50 sm:text-base"
+                >
+                  {prompt}
+                </button>
+              ))}
             </div>
+          </div>
 
-            <div className="mt-8 rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-              <h2 className="text-2xl font-bold">Recent Events</h2>
+          <div className="flex-1 overflow-y-auto overscroll-none px-4 py-6 sm:px-6">
+            <div className="space-y-10">
+              {messages.map((message, index) => {
+                const isUser = message.role === "user";
+                const isStarter = !isUser && index === 0;
 
-              <div className="mt-5 space-y-4">
-                {data.events.length === 0 && (
-                  <div className="text-white/50">No events yet.</div>
-                )}
-
-                {data.events.map((item, index) => (
+                return (
                   <div
-                    key={`${item.timestamp}-${item.event}-${index}`}
-                    className="rounded-[20px] border border-white/10 bg-black/60 p-4"
+                    key={message.id}
+                    className={`flex ${isUser ? "justify-end" : "justify-start"}`}
                   >
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/75">
-                        {item.event}
+                    <div
+                      className={[
+                        "max-w-[86%] rounded-[28px] border px-5 py-4 text-[15px] leading-8 sm:max-w-[72%] sm:text-[16px]",
+                        isUser
+                          ? "border-white/30 bg-black text-white"
+                          : "border-white/30 bg-black text-white",
+                      ].join(" ")}
+                    >
+                      <div className="whitespace-pre-wrap break-words">
+                        {isUser
+                          ? `You: ${message.text}`
+                          : `MAD Mind: ${message.text}`}
                       </div>
-                      <div className="text-sm text-white/45">
-                        {formatTimestamp(item.timestamp)}
-                      </div>
-                    </div>
 
-                    <div className="mt-4 grid gap-2">
-                      {Object.entries(item.payload).map(([key, value]) => (
-                        <div
-                          key={key}
-                          className="flex flex-col gap-1 rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2 sm:flex-row sm:items-start"
-                        >
-                          <div className="min-w-[140px] text-xs font-semibold uppercase tracking-wide text-white/40">
-                            {key}
-                          </div>
-                          <div className="break-words text-sm text-white/85">
-                            {String(value)}
-                          </div>
+                      {!isUser && !isStarter && message.text && (
+                        <div className="mt-3 flex flex-wrap items-center gap-4 text-xs">
+                          <button
+                            type="button"
+                            onClick={() => void handleCopy(message)}
+                            className="text-white/45 transition hover:text-white"
+                          >
+                            {copiedId === message.id ? "Copied" : "Copy this"}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleShareToX(message)}
+                            className="text-white/45 transition hover:text-white"
+                          >
+                            Share on X
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleSayItHarder(message)}
+                            disabled={isLoading || isTyping}
+                            className="text-red-400 transition hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            Say it harder
+                          </button>
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
+                );
+              })}
+
+              {(isLoading || isTyping) && (
+                <div className="flex justify-start">
+                  <div className="max-w-[86%] rounded-[28px] border border-white/10 bg-[#0b0b0f] px-5 py-4 text-[15px] text-white/65 sm:max-w-[72%] sm:text-[16px]">
+                    MAD Mind is thinking...
+                  </div>
+                </div>
+              )}
+
+              <div ref={bottomRef} />
             </div>
-          </>
-        )}
+          </div>
+
+          <div className="border-t border-white/10 p-4 sm:p-5">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void sendMessage();
+              }}
+              className="flex items-center gap-3"
+            >
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Say it directly."
+                disabled={isLoading || isTyping}
+                className="h-16 flex-1 rounded-full border border-red-500/40 bg-black px-6 text-lg text-white outline-none placeholder:text-white/35 focus:border-red-500"
+              />
+
+              <button
+                type="submit"
+                disabled={!input.trim() || isLoading || isTyping}
+                className="h-16 rounded-full bg-red-500 px-8 text-lg font-bold text-white transition hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Send
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );
