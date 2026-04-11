@@ -8,9 +8,11 @@ type TrackEvent =
   | "share_x_clicked"
   | "say_it_harder_clicked";
 
+type TrackValue = string | number | boolean | null;
+
 type TrackItem = {
   event: TrackEvent;
-  payload: Record<string, string | number | boolean | null>;
+  payload: Record<string, TrackValue>;
   timestamp: string;
 };
 
@@ -24,6 +26,29 @@ function formatTimestamp(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return date.toLocaleString();
+}
+
+function aggregateTop(
+  events: TrackItem[],
+  eventName: TrackEvent,
+  payloadKey: string
+): Array<[string, number]> {
+  const map = new Map<string, number>();
+
+  for (const item of events) {
+    if (item.event !== eventName) continue;
+
+    const raw = item.payload[payloadKey];
+    const text = typeof raw === "string" ? raw.trim() : "";
+
+    if (!text) continue;
+
+    map.set(text, (map.get(text) || 0) + 1);
+  }
+
+  return Array.from(map.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
 }
 
 export default function MadTrackPage() {
@@ -41,7 +66,7 @@ export default function MadTrackPage() {
         cache: "no-store",
       });
 
-      const json: TrackResponse = await res.json();
+      const json = (await res.json()) as TrackResponse;
 
       if (!json.ok) {
         throw new Error("Tracking data failed to load.");
@@ -76,83 +101,27 @@ export default function MadTrackPage() {
   }, [data]);
 
   const topCopied = useMemo(() => {
-    const map = new Map<string, number>();
-
-    for (const item of data?.events ?? []) {
-      if (item.event === "copy_clicked") {
-        const text = String(item.payload.text || "");
-        if (!text) continue;
-        map.set(text, (map.get(text) || 0) + 1);
-      }
-    }
-
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
+    return aggregateTop(data?.events ?? [], "copy_clicked", "text");
   }, [data]);
 
   const topShared = useMemo(() => {
-    const map = new Map<string, number>();
-
-    for (const item of data?.events ?? []) {
-      if (item.event === "share_x_clicked") {
-        const text = String(item.payload.text || "");
-        if (!text) continue;
-        map.set(text, (map.get(text) || 0) + 1);
-      }
-    }
-
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
+    return aggregateTop(data?.events ?? [], "share_x_clicked", "text");
   }, [data]);
 
   const topHarder = useMemo(() => {
-    const map = new Map<string, number>();
-
-    for (const item of data?.events ?? []) {
-      if (item.event === "say_it_harder_clicked") {
-        const text = String(item.payload.originalBotText || "");
-        if (!text) continue;
-        map.set(text, (map.get(text) || 0) + 1);
-      }
-    }
-
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
+    return aggregateTop(
+      data?.events ?? [],
+      "say_it_harder_clicked",
+      "originalBotText"
+    );
   }, [data]);
 
   const topPromptsLeadingToShares = useMemo(() => {
-    const map = new Map<string, number>();
-
-    for (const item of data?.events ?? []) {
-      if (item.event === "share_x_clicked") {
-        const prompt = String(item.payload.prompt || "");
-        if (!prompt) continue;
-        map.set(prompt, (map.get(prompt) || 0) + 1);
-      }
-    }
-
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
+    return aggregateTop(data?.events ?? [], "share_x_clicked", "prompt");
   }, [data]);
 
   const topPromptsLeadingToCopies = useMemo(() => {
-    const map = new Map<string, number>();
-
-    for (const item of data?.events ?? []) {
-      if (item.event === "copy_clicked") {
-        const prompt = String(item.payload.prompt || "");
-        if (!prompt) continue;
-        map.set(prompt, (map.get(prompt) || 0) + 1);
-      }
-    }
-
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
+    return aggregateTop(data?.events ?? [], "copy_clicked", "prompt");
   }, [data]);
 
   return (
@@ -229,64 +198,61 @@ export default function MadTrackPage() {
             <div className="mt-8 grid gap-6 xl:grid-cols-3">
               <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
                 <h2 className="text-xl font-bold">Top Copied</h2>
-
                 <div className="mt-4 space-y-3">
-                  {topCopied.length === 0 && (
+                  {topCopied.length === 0 ? (
                     <div className="text-sm text-white/50">
                       No copied responses yet.
                     </div>
-                  )}
-
-                  {topCopied.map(([text, count], i) => (
-                    <div key={i} className="rounded-xl border border-white/10 p-3">
-                      <div className="text-xs text-white/40">Copied {count}x</div>
-                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                        {text}
+                  ) : (
+                    topCopied.map(([text, count], i) => (
+                      <div key={i} className="rounded-xl border border-white/10 p-3">
+                        <div className="text-xs text-white/40">Copied {count}x</div>
+                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                          {text}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
 
               <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
                 <h2 className="text-xl font-bold">Top Shared</h2>
-
                 <div className="mt-4 space-y-3">
-                  {topShared.length === 0 && (
+                  {topShared.length === 0 ? (
                     <div className="text-sm text-white/50">
                       No shared responses yet.
                     </div>
-                  )}
-
-                  {topShared.map(([text, count], i) => (
-                    <div key={i} className="rounded-xl border border-white/10 p-3">
-                      <div className="text-xs text-white/40">Shared {count}x</div>
-                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                        {text}
+                  ) : (
+                    topShared.map(([text, count], i) => (
+                      <div key={i} className="rounded-xl border border-white/10 p-3">
+                        <div className="text-xs text-white/40">Shared {count}x</div>
+                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                          {text}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
 
               <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
                 <h2 className="text-xl font-bold">Most Pushed Harder</h2>
-
                 <div className="mt-4 space-y-3">
-                  {topHarder.length === 0 && (
+                  {topHarder.length === 0 ? (
                     <div className="text-sm text-white/50">
                       No “Say it harder” events yet.
                     </div>
-                  )}
-
-                  {topHarder.map(([text, count], i) => (
-                    <div key={i} className="rounded-xl border border-white/10 p-3">
-                      <div className="text-xs text-white/40">Harder {count}x</div>
-                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                        {text}
+                  ) : (
+                    topHarder.map(([text, count], i) => (
+                      <div key={i} className="rounded-xl border border-white/10 p-3">
+                        <div className="text-xs text-white/40">Harder {count}x</div>
+                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                          {text}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -294,43 +260,41 @@ export default function MadTrackPage() {
             <div className="mt-8 grid gap-6 xl:grid-cols-2">
               <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
                 <h2 className="text-xl font-bold">Top Prompts Leading to Shares</h2>
-
                 <div className="mt-4 space-y-3">
-                  {topPromptsLeadingToShares.length === 0 && (
+                  {topPromptsLeadingToShares.length === 0 ? (
                     <div className="text-sm text-white/50">
                       No share-linked prompts yet.
                     </div>
-                  )}
-
-                  {topPromptsLeadingToShares.map(([prompt, count], i) => (
-                    <div key={i} className="rounded-xl border border-white/10 p-3">
-                      <div className="text-xs text-white/40">Led to shares {count}x</div>
-                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                        {prompt}
+                  ) : (
+                    topPromptsLeadingToShares.map(([prompt, count], i) => (
+                      <div key={i} className="rounded-xl border border-white/10 p-3">
+                        <div className="text-xs text-white/40">Led to shares {count}x</div>
+                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                          {prompt}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
 
               <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
                 <h2 className="text-xl font-bold">Top Prompts Leading to Copies</h2>
-
                 <div className="mt-4 space-y-3">
-                  {topPromptsLeadingToCopies.length === 0 && (
+                  {topPromptsLeadingToCopies.length === 0 ? (
                     <div className="text-sm text-white/50">
                       No copy-linked prompts yet.
                     </div>
-                  )}
-
-                  {topPromptsLeadingToCopies.map(([prompt, count], i) => (
-                    <div key={i} className="rounded-xl border border-white/10 p-3">
-                      <div className="text-xs text-white/40">Led to copies {count}x</div>
-                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                        {prompt}
+                  ) : (
+                    topPromptsLeadingToCopies.map(([prompt, count], i) => (
+                      <div key={i} className="rounded-xl border border-white/10 p-3">
+                        <div className="text-xs text-white/40">Led to copies {count}x</div>
+                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                          {prompt}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </div>
@@ -339,41 +303,41 @@ export default function MadTrackPage() {
               <h2 className="text-2xl font-bold">Recent Events</h2>
 
               <div className="mt-5 space-y-4">
-                {data.events.length === 0 && (
+                {data.events.length === 0 ? (
                   <div className="text-white/50">No events yet.</div>
-                )}
-
-                {data.events.map((item, index) => (
-                  <div
-                    key={`${item.timestamp}-${item.event}-${index}`}
-                    className="rounded-[20px] border border-white/10 bg-black/60 p-4"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/75">
-                        {item.event}
-                      </div>
-                      <div className="text-sm text-white/45">
-                        {formatTimestamp(item.timestamp)}
-                      </div>
-                    </div>
-
-                    <div className="mt-4 grid gap-2">
-                      {Object.entries(item.payload).map(([key, value]) => (
-                        <div
-                          key={key}
-                          className="flex flex-col gap-1 rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2 sm:flex-row sm:items-start"
-                        >
-                          <div className="min-w-[140px] text-xs font-semibold uppercase tracking-wide text-white/40">
-                            {key}
-                          </div>
-                          <div className="break-words text-sm text-white/85">
-                            {String(value)}
-                          </div>
+                ) : (
+                  data.events.map((item, index) => (
+                    <div
+                      key={`${item.timestamp}-${item.event}-${index}`}
+                      className="rounded-[20px] border border-white/10 bg-black/60 p-4"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/75">
+                          {item.event}
                         </div>
-                      ))}
+                        <div className="text-sm text-white/45">
+                          {formatTimestamp(item.timestamp)}
+                        </div>
+                      </div>
+
+                      <div className="mt-4 grid gap-2">
+                        {Object.entries(item.payload).map(([key, value]) => (
+                          <div
+                            key={key}
+                            className="flex flex-col gap-1 rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2 sm:flex-row sm:items-start"
+                          >
+                            <div className="min-w-[140px] text-xs font-semibold uppercase tracking-wide text-white/40">
+                              {key}
+                            </div>
+                            <div className="break-words text-sm text-white/85">
+                              {String(value)}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </>
