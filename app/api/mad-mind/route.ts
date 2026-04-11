@@ -309,22 +309,30 @@ export async function POST(req: Request) {
       "anon";
 
     const prev = memory.get(userId);
+    const previousStates = prev?.recentStates ?? [];
     let escalation = 0;
 
     if (harderRequested) {
       escalation = 3;
+
+      memory.set(userId, {
+        last: message,
+        count: 3,
+        recentStates: [],
+      });
     } else if (prev && isSimilar(prev.last, message)) {
       escalation = Math.min(prev.count + 1, 3);
     }
 
     const states = detectState(message);
-    const previousStates = prev?.recentStates ?? [];
 
-    memory.set(userId, {
-      last: message,
-      count: escalation,
-      recentStates: states,
-    });
+    if (!harderRequested) {
+      memory.set(userId, {
+        last: message,
+        count: escalation,
+        recentStates: states,
+      });
+    }
 
     const stateLayer = buildStateLayer(states);
     const escalationLayer = buildEscalationLayer(escalation);
@@ -334,13 +342,19 @@ export async function POST(req: Request) {
       ? `
 HARDER MODE: ACTIVE
 
-The user explicitly asked for a harsher response.
+The user explicitly asked for intensity.
 
-Jump straight to maximum pressure.
-Be more cutting, more final, and less patient.
-Do not become longer.
-Do not become messy.
-Make the truth feel undeniable.
+- remove patience
+- remove explanation
+- increase psychological pressure
+- speak like you are done tolerating weakness
+- shorten sentences even more
+- cut deeper, not longer
+- make the response feel final
+
+Do not repeat prior structure.
+Do not echo previous phrasing.
+Make it hit differently.
 `
       : "";
 
@@ -373,6 +387,8 @@ RESPONSE CONSTRUCTION RULES:
 - occasionally end with a line that feels quotable and shareable
 - responses should sound like something worth posting
 - avoid generic insults; prefer sharp observations
+- avoid repeating sentence structure from the previous response
+- occasionally end with a second line that expands the implication
 
 USER:
 ${message}
