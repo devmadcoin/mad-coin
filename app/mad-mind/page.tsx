@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 type ChatMessage = {
+  id: string;
   role: "user" | "bot";
   text: string;
 };
@@ -30,14 +31,31 @@ function buildShareText(text: string) {
 Stay $MAD.`;
 }
 
+function makeId() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
+type TrackEvent =
+  | "message_sent"
+  | "copy_clicked"
+  | "share_x_clicked"
+  | "say_it_harder_clicked";
+
+function trackEvent(
+  event: TrackEvent,
+  payload: Record<string, string | number | boolean>
+) {
+  console.log("[MAD TRACK]", event, payload);
+}
+
 export default function MadMindPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "bot", text: STARTER_MESSAGE },
+    { id: makeId(), role: "bot", text: STARTER_MESSAGE },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -57,16 +75,18 @@ export default function MadMindPage() {
     setIsTyping(true);
 
     let current = "";
-    setMessages((prev) => [...prev, { role: "bot", text: "" }]);
+    const botId = makeId();
+
+    setMessages((prev) => [...prev, { id: botId, role: "bot", text: "" }]);
 
     for (let i = 0; i < finalText.length; i++) {
       current += finalText[i];
 
-      setMessages((prev) => {
-        const next = [...prev];
-        next[next.length - 1] = { role: "bot", text: current };
-        return next;
-      });
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === botId ? { ...msg, text: current } : msg
+        )
+      );
 
       const char = finalText[i];
       const delay =
@@ -83,9 +103,20 @@ export default function MadMindPage() {
 
     if (!message || isLoading || isTyping) return;
 
-    setMessages((prev) => [...prev, { role: "user", text: message }]);
+    const userMessageId = makeId();
+
+    setMessages((prev) => [
+      ...prev,
+      { id: userMessageId, role: "user", text: message },
+    ]);
     setInput("");
     setIsLoading(true);
+
+    trackEvent("message_sent", {
+      text: message,
+      length: message.length,
+      source: rawMessage ? "quick_or_action" : "input",
+    });
 
     try {
       const res = await fetch("/api/mad-mind", {
@@ -97,7 +128,6 @@ export default function MadMindPage() {
       });
 
       const data = await res.json();
-      console.log("MAD MIND API RESPONSE:", data);
 
       const output =
         typeof data?.output === "string" && data.output.trim().length > 0
@@ -115,31 +145,50 @@ export default function MadMindPage() {
     }
   }
 
-  async function handleCopy(text: string, index: number) {
+  async function handleCopy(message: ChatMessage) {
     try {
-      await navigator.clipboard.writeText(buildShareText(text));
-      setCopiedIndex(index);
+      await navigator.clipboard.writeText(buildShareText(message.text));
+      setCopiedId(message.id);
+
+      trackEvent("copy_clicked", {
+        messageId: message.id,
+        text: message.text,
+        textLength: message.text.length,
+      });
 
       window.setTimeout(() => {
-        setCopiedIndex((current) => (current === index ? null : current));
+        setCopiedId((current) => (current === message.id ? null : current));
       }, 1500);
     } catch (error) {
       console.error("Copy failed:", error);
     }
   }
 
-  function handleShareToX(text: string) {
-    const shareText = buildShareText(text);
+  function handleShareToX(message: ChatMessage) {
+    const shareText = buildShareText(message.text);
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       shareText
     )}`;
 
+    trackEvent("share_x_clicked", {
+      messageId: message.id,
+      text: message.text,
+      textLength: message.text.length,
+    });
+
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  function handleSayItHarder() {
+  function handleSayItHarder(message: ChatMessage) {
     const lastUserMessage = getLastUserMessage();
     if (!lastUserMessage || isLoading || isTyping) return;
+
+    trackEvent("say_it_harder_clicked", {
+      messageId: message.id,
+      originalBotText: message.text,
+      lastUserMessage,
+    });
+
     void sendMessage(`${lastUserMessage} say it harder`);
   }
 
@@ -182,7 +231,7 @@ export default function MadMindPage() {
 
                 return (
                   <div
-                    key={`${message.role}-${index}`}
+                    key={message.id}
                     className={`flex ${isUser ? "justify-end" : "justify-start"}`}
                   >
                     <div
@@ -190,7 +239,7 @@ export default function MadMindPage() {
                         "max-w-[86%] rounded-[28px] border px-5 py-4 text-[15px] leading-8 sm:max-w-[72%] sm:text-[16px]",
                         isUser
                           ? "border-white/30 bg-black text-white"
-                          : "border-white/30 bg-black text-white shadow-[0_0_30px_rgba(255,255,255,0.02)]",
+                          : "border-white/30 bg-black text-white",
                       ].join(" ")}
                     >
                       <div className="whitespace-pre-wrap break-words">
@@ -203,15 +252,15 @@ export default function MadMindPage() {
                         <div className="mt-3 flex flex-wrap items-center gap-4 text-xs">
                           <button
                             type="button"
-                            onClick={() => void handleCopy(message.text, index)}
+                            onClick={() => void handleCopy(message)}
                             className="text-white/45 transition hover:text-white"
                           >
-                            {copiedIndex === index ? "Copied" : "Copy this"}
+                            {copiedId === message.id ? "Copied" : "Copy this"}
                           </button>
 
                           <button
                             type="button"
-                            onClick={() => handleShareToX(message.text)}
+                            onClick={() => handleShareToX(message)}
                             className="text-white/45 transition hover:text-white"
                           >
                             Share on X
@@ -219,7 +268,7 @@ export default function MadMindPage() {
 
                           <button
                             type="button"
-                            onClick={handleSayItHarder}
+                            onClick={() => handleSayItHarder(message)}
                             disabled={isLoading || isTyping}
                             className="text-red-400 transition hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
                           >
