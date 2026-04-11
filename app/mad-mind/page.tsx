@@ -317,9 +317,10 @@ function updateProfileFromInput(prev: UserProfile, input: string): UserProfile {
   const repeated = prev.lastInputs.includes(normalized);
   const weakSpot = buildWeakSpotLabel(input);
 
-  const nextWeakSpots = Array.from(
-    new Set([weakSpot, ...prev.learnedWeakSpots]),
-  ).slice(0, MAX_LEARNED_WEAKSPOTS);
+  const nextWeakSpots = Array.from(new Set([weakSpot, ...prev.learnedWeakSpots])).slice(
+    0,
+    MAX_LEARNED_WEAKSPOTS,
+  );
 
   const nextLastInputs = [normalized, ...prev.lastInputs].slice(0, MAX_LAST_INPUTS);
 
@@ -442,7 +443,7 @@ function updateDailyProgress(
   );
   next.progress.demon_survive_3 =
     cookLevel === "demon"
-      ? Math.max(next.progress.demon_survive_3, next.progress.demon_survive_3 + 1)
+      ? next.progress.demon_survive_3 + 1
       : next.progress.demon_survive_3;
   next.progress.score_250 = Math.max(next.progress.score_250, score);
 
@@ -691,7 +692,9 @@ export default function MadMindPage() {
     const archetypeNow = deriveArchetype(nextProfileBase);
     const sessionId = getRuntimeSessionId();
 
-    setMessages((prev) => [...prev, userMsg]);
+    const currentMessages = [...messages, userMsg];
+
+    setMessages(currentMessages);
     setProfile(nextProfileBase);
     setInput("");
     setIsThinking(true);
@@ -758,7 +761,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
       scoreValue: roastCardScore(replyText, respected),
     };
 
-    const nextMessages = [...messages, userMsg, botMsg];
+    const nextMessages = [...currentMessages, botMsg];
     const nextScore = calcSurvivorScore(finalProfile, cookLevel);
     const nextDaily = updateDailyProgress(
       ensureDailyState(dailyState),
@@ -769,7 +772,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
     );
 
     setProfile(finalProfile);
-    setMessages((prev) => [...prev, botMsg]);
+    setMessages(nextMessages);
     setDailyState(nextDaily);
     setIsThinking(false);
 
@@ -787,7 +790,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
       setLeaderboard(rows);
     }
 
-    const newTop = [...nextMessages]
+    const newTop = nextMessages
       .filter((m) => m.role === "bot")
       .map((m) => ({ ...m, scoreValue: roastCardScore(m.text, m.respected) }))
       .sort((a, b) => (b.scoreValue ?? 0) - (a.scoreValue ?? 0))[0];
@@ -800,7 +803,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      void handleSend();
     }
   }
 
@@ -865,13 +868,13 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
               <div className="flex gap-2">
                 <button
-                  onClick={() => saveIdentity(username)}
+                  onClick={() => void saveIdentity(username)}
                   className="flex-1 rounded-2xl bg-red-500 px-4 py-3 text-sm font-bold text-white hover:bg-red-400"
                 >
                   Save name
                 </button>
                 <button
-                  onClick={shareScore}
+                  onClick={() => void shareScore()}
                   className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm font-bold text-white/90 hover:bg-black/50"
                 >
                   Share
@@ -972,7 +975,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                       {message.role === "bot" && (
                         <div className="mt-2 flex max-w-[88%] flex-wrap gap-2">
                           <button
-                            onClick={() => copyText(message.text)}
+                            onClick={() => void copyText(message.text)}
                             className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
                           >
                             Copy roast
@@ -984,7 +987,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                             Roast card
                           </button>
                           <button
-                            onClick={shareScore}
+                            onClick={() => void shareScore()}
                             className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
                           >
                             Share score
@@ -1019,7 +1022,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <p className="text-xs text-white/35">Enter = send · Shift + Enter = new line</p>
                   <button
-                    onClick={handleSend}
+                    onClick={() => void handleSend()}
                     disabled={!input.trim() || isThinking}
                     className="rounded-2xl bg-red-500 px-5 py-2.5 text-sm font-bold text-white transition hover:scale-[1.01] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-40"
                   >
@@ -1173,13 +1176,13 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
               <div className="mt-5 flex flex-wrap gap-2">
                 <button
-                  onClick={() => copyRoastCard(selectedRoast)}
+                  onClick={() => void copyRoastCard(selectedRoast)}
                   className="rounded-2xl bg-red-500 px-4 py-2 text-sm font-bold text-white hover:bg-red-400"
                 >
                   Copy card
                 </button>
                 <button
-                  onClick={() => copyText(selectedRoast.text)}
+                  onClick={() => void copyText(selectedRoast.text)}
                   className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/90 hover:bg-white/10"
                 >
                   Copy roast only
