@@ -29,6 +29,7 @@ export default function MadMindPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -101,6 +102,25 @@ export default function MadMindPage() {
     }
   }
 
+  async function handleCopy(messageText: string, index: number) {
+    try {
+      const shareText = `MAD Mind just called me out:
+
+"${messageText}"
+
+Stay $MAD.`;
+
+      await navigator.clipboard.writeText(shareText);
+      setCopiedIndex(index);
+
+      setTimeout(() => {
+        setCopiedIndex((current) => (current === index ? null : current));
+      }, 1500);
+    } catch (error) {
+      console.error("Copy failed:", error);
+    }
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-black text-white">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,50,50,0.14),transparent_28%),radial-gradient(circle_at_bottom,rgba(255,50,50,0.08),transparent_36%)]" />
@@ -153,6 +173,27 @@ export default function MadMindPage() {
                       <div className="whitespace-pre-wrap break-words">
                         {isUser ? `You: ${message.text}` : `MAD: ${message.text}`}
                       </div>
+
+                      {!isUser && message.text && index !== 0 && (
+                        <div className="mt-4 flex flex-wrap gap-4 text-xs">
+                          <button
+                            type="button"
+                            onClick={() => void handleCopy(message.text, index)}
+                            className="text-white/50 transition hover:text-white"
+                          >
+                            {copiedIndex === index ? "Copied" : "Copy this"}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => void sendMessage(`${message.text} say it harder`)}
+                            disabled={isLoading || isTyping}
+                            className="text-red-400 transition hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            Say it harder
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
