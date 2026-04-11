@@ -75,6 +75,54 @@ export default function MadTrackPage() {
     return counts;
   }, [data]);
 
+  const topCopied = useMemo(() => {
+    const map = new Map<string, number>();
+
+    for (const item of data?.events ?? []) {
+      if (item.event === "copy_clicked") {
+        const text = String(item.payload.text || "");
+        if (!text) continue;
+        map.set(text, (map.get(text) || 0) + 1);
+      }
+    }
+
+    return Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+  }, [data]);
+
+  const topShared = useMemo(() => {
+    const map = new Map<string, number>();
+
+    for (const item of data?.events ?? []) {
+      if (item.event === "share_x_clicked") {
+        const text = String(item.payload.text || "");
+        if (!text) continue;
+        map.set(text, (map.get(text) || 0) + 1);
+      }
+    }
+
+    return Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+  }, [data]);
+
+  const topHarder = useMemo(() => {
+    const map = new Map<string, number>();
+
+    for (const item of data?.events ?? []) {
+      if (item.event === "say_it_harder_clicked") {
+        const text = String(item.payload.originalBotText || "");
+        if (!text) continue;
+        map.set(text, (map.get(text) || 0) + 1);
+      }
+    }
+
+    return Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+  }, [data]);
+
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -142,6 +190,71 @@ export default function MadTrackPage() {
                 <div className="text-sm text-white/45">Say It Harder</div>
                 <div className="mt-2 text-3xl font-bold">
                   {eventCounts.say_it_harder_clicked}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-6 xl:grid-cols-3">
+              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
+                <h2 className="text-xl font-bold">Top Copied</h2>
+
+                <div className="mt-4 space-y-3">
+                  {topCopied.length === 0 && (
+                    <div className="text-sm text-white/50">
+                      No copied responses yet.
+                    </div>
+                  )}
+
+                  {topCopied.map(([text, count], i) => (
+                    <div key={i} className="rounded-xl border border-white/10 p-3">
+                      <div className="text-xs text-white/40">Copied {count}x</div>
+                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                        {text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
+                <h2 className="text-xl font-bold">Top Shared</h2>
+
+                <div className="mt-4 space-y-3">
+                  {topShared.length === 0 && (
+                    <div className="text-sm text-white/50">
+                      No shared responses yet.
+                    </div>
+                  )}
+
+                  {topShared.map(([text, count], i) => (
+                    <div key={i} className="rounded-xl border border-white/10 p-3">
+                      <div className="text-xs text-white/40">Shared {count}x</div>
+                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                        {text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
+                <h2 className="text-xl font-bold">Most Pushed Harder</h2>
+
+                <div className="mt-4 space-y-3">
+                  {topHarder.length === 0 && (
+                    <div className="text-sm text-white/50">
+                      No “Say it harder” events yet.
+                    </div>
+                  )}
+
+                  {topHarder.map(([text, count], i) => (
+                    <div key={i} className="rounded-xl border border-white/10 p-3">
+                      <div className="text-xs text-white/40">Harder {count}x</div>
+                      <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                        {text}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
