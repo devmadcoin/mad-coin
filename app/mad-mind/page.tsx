@@ -547,7 +547,7 @@ export default function MadMindPage() {
     setMounted(true);
 
     if (hasSupabase) {
-      fetchLeaderboard()
+      void fetchLeaderboard()
         .then((rows) => {
           setLeaderboard(rows);
           setSupabaseStatus("Supabase live leaderboard");
