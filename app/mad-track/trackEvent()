@@ -1,22 +1,84 @@
-function trackEvent(
-  event: "message_sent" | "copy_clicked" | "share_x_clicked" | "say_it_harder_clicked",
-  payload: Record<string, string | number | boolean>
-) {
-  const body = {
-    event,
-    payload,
-    timestamp: new Date().toISOString(),
-  };
+type TrackEvent =
+  | "message_sent"
+  | "copy_clicked"
+  | "share_x_clicked"
+  | "say_it_harder_clicked"
+  | "cook_level_changed"
+  | "respect_mode_hit"
+  | "roast_card_opened"
+  | "roast_card_copied"
+  | "challenge_completed"
+  | "archetype_revealed"
+  | "leaderboard_submitted"
+  | "session_best_roast_selected"
+  | "share_score_clicked"
+  | "challenge_friend_clicked";
 
-  console.log("[MAD TRACK]", body);
+type TrackValue = string | number | boolean | null;
 
-  void fetch("/api/mad-track", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  }).catch((error) => {
-    console.error("MAD tracking failed:", error);
+type TrackPayload = Record<string, TrackValue>;
+
+const MAX_STRING_LENGTH = 500;
+
+// optional: session id for grouping user activity
+const sessionId =
+  typeof window !== "undefined"
+    ? (localStorage.getItem("mad_session_id") ||
+        (() => {
+          const id = `session_${Date.now()}_${Math.random()
+            .toString(36)
+            .slice(2, 8)}`;
+          localStorage.setItem("mad_session_id", id);
+          return id;
+        })())
+    : "server";
+
+// sanitize payload (prevents huge logs / bad values)
+function sanitizePayload(payload: TrackPayload): TrackPayload {
+  const result: TrackPayload = {};
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value === null) {
+      result[key] = null;
+    } else if (typeof value === "string") {
+      result[key] = value.slice(0, MAX_STRING_LENGTH);
+    } else if (typeof value === "number" || typeof value === "boolean") {
+      result[key] = value;
+    }
   });
+
+  return result;
+}
+
+export function trackEvent(
+  event: TrackEvent,
+  payload: TrackPayload = {}
+) {
+  try {
+    const body = {
+      event,
+      payload: sanitizePayload({
+        ...payload,
+        sessionId,
+        url:
+          typeof window !== "undefined" ? window.location.pathname : "server",
+      }),
+      timestamp: new Date().toISOString(),
+    };
+
+    console.log("[MAD TRACK]", body);
+
+    void fetch("/api/mad-track", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      keepalive: true, // important for tracking on page exit
+    }).catch((error) => {
+      console.error("MAD tracking failed:", error);
+    });
+  } catch (err) {
+    console.error("MAD trackEvent crash:", err);
+  }
 }
