@@ -16,6 +16,7 @@ type MemoryEntry = {
   last: string;
   count: number;
   recentStates: string[];
+  lastBot?: string;
 };
 
 const memory = new Map<string, MemoryEntry>();
@@ -319,20 +320,13 @@ export async function POST(req: Request) {
         last: message,
         count: 3,
         recentStates: [],
+        lastBot: prev?.lastBot,
       });
     } else if (prev && isSimilar(prev.last, message)) {
       escalation = Math.min(prev.count + 1, 3);
     }
 
     const states = detectState(message);
-
-    if (!harderRequested) {
-      memory.set(userId, {
-        last: message,
-        count: escalation,
-        recentStates: states,
-      });
-    }
 
     const stateLayer = buildStateLayer(states);
     const escalationLayer = buildEscalationLayer(escalation);
@@ -351,10 +345,29 @@ The user explicitly asked for intensity.
 - shorten sentences even more
 - cut deeper, not longer
 - make the response feel final
+- avoid repeating known $MAD slogans
 
 Do not repeat prior structure.
 Do not echo previous phrasing.
 Make it hit differently.
+`
+      : "";
+
+    const antiRepeatLayer = prev?.lastBot
+      ? `
+ANTI-REPETITION:
+
+Your last response was:
+"${prev.lastBot}"
+
+Do NOT:
+- reuse structure
+- reuse phrasing
+- reuse rhythm
+- restate the same slogan pattern
+
+Respond in a completely different structure.
+Take a different angle.
 `
       : "";
 
@@ -371,6 +384,8 @@ ${escalationLayer}
 ${continuityLayer}
 
 ${harderLayer}
+
+${antiRepeatLayer}
 
 RESPONSE CONSTRUCTION RULES:
 - 1 to 3 lines max
@@ -389,6 +404,9 @@ RESPONSE CONSTRUCTION RULES:
 - avoid generic insults; prefer sharp observations
 - avoid repeating sentence structure from the previous response
 - occasionally end with a second line that expands the implication
+- sometimes answer in one brutal sentence
+- sometimes answer in two short lines
+- sometimes answer in three lines with a philosophical finish
 
 USER:
 ${message}
@@ -416,6 +434,13 @@ Sound like judgment.
         output: "That crossed the line.\nAsk again.",
       });
     }
+
+    memory.set(userId, {
+      last: message,
+      count: escalation,
+      recentStates: states,
+      lastBot: output,
+    });
 
     return NextResponse.json({ output });
   } catch (error) {
