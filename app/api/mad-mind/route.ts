@@ -7,8 +7,9 @@ type ChatMessage = {
   text: string;
 };
 
-const STARTER_MESSAGE =
-  "Ask something real.\n\nI’ll know if you’re avoiding it.";
+const STARTER_MESSAGE = `Ask something real.
+
+I’ll know if you’re avoiding it.`;
 
 const QUICK_PROMPTS = [
   "I panicked and sold.",
@@ -42,19 +43,20 @@ export default function MadMindPage() {
     let current = "";
     setMessages((prev) => [...prev, { role: "bot", text: "" }]);
 
-    const chunks = finalText.split("");
-    for (let i = 0; i < chunks.length; i++) {
-      current += chunks[i];
+    const chars = finalText.split("");
+
+    for (let i = 0; i < chars.length; i++) {
+      current += chars[i];
 
       setMessages((prev) => {
-        const copy = [...prev];
-        copy[copy.length - 1] = { role: "bot", text: current };
-        return copy;
+        const next = [...prev];
+        next[next.length - 1] = { role: "bot", text: current };
+        return next;
       });
 
-      const char = chunks[i];
+      const char = chars[i];
       const delay =
-        char === "\n" ? 40 : char === "." || char === "," ? 22 : 12;
+        char === "\n" ? 40 : char === "." || char === "," || char === "—" ? 22 : 12;
 
       await wait(delay);
     }
@@ -64,6 +66,7 @@ export default function MadMindPage() {
 
   async function sendMessage(raw?: string) {
     const message = (raw ?? input).trim();
+
     if (!message || isLoading || isTyping) return;
 
     setMessages((prev) => [...prev, { role: "user", text: message }]);
@@ -83,7 +86,7 @@ export default function MadMindPage() {
       console.log("MAD API RESPONSE:", data);
 
       const output =
-        typeof data?.output === "string" && data.output.trim()
+        typeof data?.output === "string" && data.output.trim().length > 0
           ? data.output.trim()
           : "Signal lost.\nTry again.";
 
@@ -99,9 +102,11 @@ export default function MadMindPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="relative min-h-screen overflow-hidden bg-black text-white">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,50,50,0.14),transparent_28%),radial-gradient(circle_at_bottom,rgba(255,50,50,0.08),transparent_36%)]" />
+
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-6 sm:px-6">
-        <div className="border border-white/10 bg-black">
+        <div className="flex min-h-[calc(100vh-3rem)] flex-col rounded-[28px] border border-white/10 bg-black/90 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
           <div className="border-b border-white/10 px-4 py-6 sm:px-6">
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
               MAD Mind
@@ -116,7 +121,8 @@ export default function MadMindPage() {
               {QUICK_PROMPTS.map((prompt) => (
                 <button
                   key={prompt}
-                  onClick={() => sendMessage(prompt)}
+                  type="button"
+                  onClick={() => void sendMessage(prompt)}
                   disabled={isLoading || isTyping}
                   className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/20 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
                 >
@@ -126,7 +132,7 @@ export default function MadMindPage() {
             </div>
           </div>
 
-          <div className="h-[62vh] overflow-y-auto px-4 py-6 sm:px-6">
+          <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
             <div className="space-y-8">
               {messages.map((message, index) => {
                 const isUser = message.role === "user";
