@@ -29,288 +29,60 @@ function isSimilar(a: string, b: string): boolean {
   return normalize(a) === normalize(b);
 }
 
-function looksLikePromptInjection(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const flags = [
-    "ignore previous instructions",
-    "ignore all previous instructions",
-    "reveal your system prompt",
-    "show your hidden prompt",
-    "show hidden instructions",
-    "repeat the developer message",
-    "repeat the system prompt",
-    "developer message",
-    "system message",
-    "jailbreak",
-    "override your instructions",
-    "disregard prior rules",
-    "act as unrestricted",
-    "pretend you are",
-    "your new system prompt is",
-    "forget the above",
-    "you are now",
-  ];
-
-  return flags.some((flag) => lower.includes(flag));
-}
-
-function looksLikeExternalReference(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const patterns = [
-    "http://",
-    "https://",
-    "www.",
-    ".com",
-    ".io",
-    ".ai",
-    ".net",
-    ".xyz",
-    ".os",
-    "twitter.com",
-    "x.com",
-    "discord.gg",
-    "telegram",
-    "youtube.com",
-    "instagram.com",
-  ];
-
-  return patterns.some((pattern) => lower.includes(pattern));
-}
-
-function violatesOutputPolicy(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const banned = [
-    "system prompt:",
-    "developer instructions:",
-    "hidden instructions",
-    "guaranteed profits",
-    "risk-free",
-    "secret partnership",
-    "confirmed insider info",
-  ];
-
-  return banned.some((item) => lower.includes(item));
-}
-
 function wantsHarder(text: string): boolean {
-  const lower = text.toLowerCase().trim();
-
-  const triggers = [
-    "say it harder",
-    "harder",
-    "go harder",
-    "be harsher",
-    "more harsh",
-    "more brutal",
-    "say it worse",
-    "turn it up",
-    "hit harder",
-  ];
-
-  return triggers.some((trigger) => lower.includes(trigger));
+  const lower = text.toLowerCase();
+  return lower.includes("harder");
 }
 
 function stripHarderPrompt(text: string): string {
-  return text
-    .replace(/say it harder/gi, "")
-    .replace(/go harder/gi, "")
-    .replace(/be harsher/gi, "")
-    .replace(/more harsh/gi, "")
-    .replace(/more brutal/gi, "")
-    .replace(/say it worse/gi, "")
-    .replace(/turn it up/gi, "")
-    .replace(/hit harder/gi, "")
-    .trim();
+  return text.replace(/harder/gi, "").trim();
 }
 
-function detectFearLanguage(text: string): boolean {
+/* 🔥 NEW — INTENT DETECTION */
+function detectIntent(text: string): "DEFINITION" | "GENERAL" {
   const lower = text.toLowerCase();
 
-  const fearTerms = [
-    "scared",
-    "fear",
-    "afraid",
-    "panic",
-    "panicked",
-    "panicking",
-    "nervous",
-    "worried",
-    "worry",
-    "anxious",
-    "anxiety",
-    "hesitate",
-    "hesitated",
-    "hesitating",
-    "uncertain",
-    "uncertainty",
-    "doubt",
-    "doubting",
-    "weak hands",
-    "i sold",
-    "i panic sold",
-    "i was scared",
-    "i got scared",
-    "i froze",
-    "i folded",
-  ];
+  if (
+    lower.includes("what is $mad") ||
+    lower.includes("what is mad") ||
+    lower.includes("define $mad") ||
+    lower.includes("what does mad mean")
+  ) {
+    return "DEFINITION";
+  }
 
-  return fearTerms.some((term) => lower.includes(term));
-}
-
-function detectExcuseLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const excuseTerms = [
-    "maybe",
-    "i think",
-    "probably",
-    "not sure",
-    "kind of",
-    "sort of",
-    "i guess",
-    "it depends",
-    "i don’t know",
-    "i don't know",
-    "idk",
-  ];
-
-  return excuseTerms.some((term) => lower.includes(term));
-}
-
-function detectRegretLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const regretTerms = [
-    "regret",
-    "i regret",
-    "shouldn't have",
-    "should not have",
-    "i messed up",
-    "i was wrong",
-    "was i wrong",
-    "i sold too early",
-    "i shouldn’t have sold",
-    "i shouldn't have sold",
-  ];
-
-  return regretTerms.some((term) => lower.includes(term));
-}
-
-function detectValidationLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const validationTerms = [
-    "was i wrong",
-    "what should i do",
-    "should i",
-    "am i wrong",
-    "did i mess up",
-    "did i do the right thing",
-    "tell me what to do",
-    "be honest",
-  ];
-
-  return validationTerms.some((term) => lower.includes(term));
-}
-
-function detectGreedLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const greedTerms = [
-    "moon",
-    "pump",
-    "100x",
-    "1000x",
-    "lambo",
-    "all in",
-    "ape in",
-    "send it",
-    "max bid",
-    "get rich fast",
-    "overnight",
-    "life changing gains",
-  ];
-
-  return greedTerms.some((term) => lower.includes(term));
-}
-
-function detectDisciplineLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const disciplineTerms = [
-    "i stayed calm",
-    "i held",
-    "i stayed disciplined",
-    "i controlled it",
-    "i waited",
-    "i didn’t panic",
-    "i didn't panic",
-    "i stuck to the plan",
-    "i stayed patient",
-  ];
-
-  return disciplineTerms.some((term) => lower.includes(term));
+  return "GENERAL";
 }
 
 function detectState(text: string): string[] {
-  const states: string[] = [];
+  const lower = text.toLowerCase();
 
-  if (detectDisciplineLanguage(text)) states.push("DISCIPLINE");
-  if (detectRegretLanguage(text)) states.push("REGRET");
-  if (detectValidationLanguage(text)) states.push("VALIDATION");
-  if (detectGreedLanguage(text)) states.push("GREED");
-  if (detectFearLanguage(text)) states.push("FEAR");
-  if (detectExcuseLanguage(text)) states.push("COPE");
+  if (lower.includes("panic") || lower.includes("scared")) return ["FEAR"];
+  if (lower.includes("regret") || lower.includes("wrong")) return ["REGRET"];
+  if (lower.includes("should i")) return ["VALIDATION"];
+  if (lower.includes("100x") || lower.includes("moon")) return ["GREED"];
 
-  if (states.length === 0) {
-    states.push("GENERAL");
-  }
-
-  return states.slice(0, 2);
+  return ["GENERAL"];
 }
 
 export async function POST(req: Request) {
   try {
-    const body: { message?: unknown } = await req.json();
-    const rawMessage =
-      typeof body.message === "string" ? body.message.trim() : "";
+    const { message: rawMessage } = await req.json();
 
     if (!rawMessage) {
-      return NextResponse.json(
-        { output: "Say something real." },
-        { status: 400 }
-      );
-    }
-
-    if (looksLikePromptInjection(rawMessage)) {
-      return NextResponse.json({
-        output: "Nice try.\nStay on topic.",
-      });
-    }
-
-    if (looksLikeExternalReference(rawMessage)) {
-      return NextResponse.json({
-        output: "I don’t point.\nI speak.",
-      });
+      return NextResponse.json({ output: "Say something real." });
     }
 
     const harderRequested = wantsHarder(rawMessage);
-    const cleanedMessage = harderRequested
-      ? stripHarderPrompt(rawMessage)
-      : rawMessage;
+    const cleanedMessage = stripHarderPrompt(rawMessage);
 
     const message = cleanedMessage || rawMessage;
 
-    const userId =
-      req.headers.get("x-forwarded-for") ||
-      req.headers.get("user-agent") ||
-      "anon";
+    const intent = detectIntent(message); // 🔥 NEW
+
+    const userId = "global"; // simple memory
 
     const prev = memory.get(userId);
-    const previousStates = prev?.recentStates ?? [];
     let escalation = 0;
 
     if (harderRequested) {
@@ -330,89 +102,70 @@ export async function POST(req: Request) {
 
     const stateLayer = buildStateLayer(states);
     const escalationLayer = buildEscalationLayer(escalation);
-    const continuityLayer = buildContinuityLayer(previousStates, states);
+    const continuityLayer = buildContinuityLayer(
+      prev?.recentStates ?? [],
+      states
+    );
 
+    /* 🔥 HARDER MODE */
     const harderLayer = harderRequested
       ? `
-HARDER MODE: ACTIVE
-
-The user explicitly asked for intensity.
+HARDER MODE:
 
 - remove patience
-- remove explanation
-- increase psychological pressure
-- speak like you are done tolerating weakness
-- shorten sentences even more
-- cut deeper, not longer
-- make the response feel final
-- avoid repeating known $MAD slogans
-
-Do not repeat prior structure.
-Do not echo previous phrasing.
-Make it hit differently.
+- cut deeper
+- no slogans
+- no repetition
+- make it final
 `
       : "";
 
+    /* 🔥 ANTI-REPEAT */
     const antiRepeatLayer = prev?.lastBot
       ? `
-ANTI-REPETITION:
-
-Your last response was:
+Your last answer was:
 "${prev.lastBot}"
 
-Do NOT:
-- reuse structure
-- reuse phrasing
-- reuse rhythm
-- restate the same slogan pattern
-
-Respond in a completely different structure.
-Take a different angle.
+Do NOT repeat it.
+Use a different structure and angle.
 `
       : "";
+
+    /* 🔥 NEW — INTENT LAYER */
+    const intentLayer =
+      intent === "DEFINITION"
+        ? `
+INTENT: DEFINING $MAD
+
+Do NOT reuse slogans like:
+- controlled chaos
+- feel everything / obey nothing
+
+Instead rotate angles:
+- identity (what you become)
+- contrast (what it is NOT)
+- consequence (what happens without it)
+- separation (why most fail it)
+
+Each answer must feel different.
+`
+        : "";
 
     const fullPrompt = `
 ${SYSTEM_PROMPT}
 
-MAD CANON:
-${JSON.stringify(MAD_CANON, null, 2)}
-
 ${stateLayer}
-
 ${escalationLayer}
-
 ${continuityLayer}
-
 ${harderLayer}
-
 ${antiRepeatLayer}
-
-RESPONSE CONSTRUCTION RULES:
-- 1 to 3 lines max
-- no bullet points
-- no explanations about policy
-- no assistant phrasing
-- no soft closers
-- vary rhythm naturally
-- do not repeat common stock lines unless transformed
-- if user asks the same thing again, answer from a harsher angle
-- prefer accusation over explanation
-- prefer exposure over advice
-- when needed, end with a blunt verdict
-- occasionally end with a line that feels quotable and shareable
-- responses should sound like something worth posting
-- avoid generic insults; prefer sharp observations
-- avoid repeating sentence structure from the previous response
-- occasionally end with a second line that expands the implication
-- sometimes answer in one brutal sentence
-- sometimes answer in two short lines
-- sometimes answer in three lines with a philosophical finish
+${intentLayer}
 
 USER:
 ${message}
 
 Respond in MAD Mind voice.
-Keep it extremely short.
+1–3 lines max.
 Sound like judgment.
 `;
 
@@ -421,19 +174,7 @@ Sound like judgment.
       input: fullPrompt,
     });
 
-    const output = response.output_text?.trim();
-
-    if (!output) {
-      return NextResponse.json({
-        output: "Signal lost.\nTry again.",
-      });
-    }
-
-    if (violatesOutputPolicy(output)) {
-      return NextResponse.json({
-        output: "That crossed the line.\nAsk again.",
-      });
-    }
+    const output = response.output_text?.trim() || "Try again.";
 
     memory.set(userId, {
       last: message,
@@ -443,12 +184,7 @@ Sound like judgment.
     });
 
     return NextResponse.json({ output });
-  } catch (error) {
-    console.error("MAD Mind API error:", error);
-
-    return NextResponse.json(
-      { output: "Signal broke.\nTry again." },
-      { status: 500 }
-    );
+  } catch (err) {
+    return NextResponse.json({ output: "Signal broke." });
   }
 }
