@@ -23,16 +23,16 @@ function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function makeId() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
 function buildShareText(text: string) {
   return `MAD Mind just said:
 
 "${text}"
 
 Stay $MAD.`;
-}
-
-function makeId() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
 type TrackEvent =
@@ -51,9 +51,7 @@ function trackEvent(
     timestamp: new Date().toISOString(),
   };
 
-  console.log("[MAD TRACK]", body);
-
-  void fetch("/api/mad-track", {
+  fetch("/api/mad-track", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -77,7 +75,9 @@ export default function MadMindPage() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages, isTyping]);
 
   function getLastUserMessage(): string {
@@ -99,14 +99,12 @@ export default function MadMindPage() {
       current += finalText[i];
 
       setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === botId ? { ...msg, text: current } : msg
-        )
+        prev.map((msg) => (msg.id === botId ? { ...msg, text: current } : msg))
       );
 
       const char = finalText[i];
       const delay =
-        char === "\n" ? 38 : char === "." || char === "," || char === "—" ? 20 : 10;
+        char === "\n" ? 35 : char === "." || char === "," || char === "—" ? 18 : 10;
 
       await wait(delay);
     }
@@ -125,6 +123,7 @@ export default function MadMindPage() {
       ...prev,
       { id: userMessageId, role: "user", text: message },
     ]);
+
     setInput("");
     setIsLoading(true);
 
@@ -157,7 +156,9 @@ export default function MadMindPage() {
       await typeBotMessage("Signal broke.\nTry again.");
     } finally {
       setIsLoading(false);
-      inputRef.current?.focus();
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   }
 
@@ -210,7 +211,7 @@ export default function MadMindPage() {
       lastUserMessage,
     });
 
-    void sendMessage(`${lastUserMessage} say it harder`);
+    sendMessage(`${lastUserMessage} say it harder`);
   }
 
   return (
@@ -234,7 +235,9 @@ export default function MadMindPage() {
                 <button
                   key={prompt}
                   type="button"
-                  onClick={() => void sendMessage(prompt)}
+                  onClick={() => {
+                    sendMessage(prompt);
+                  }}
                   disabled={isLoading || isTyping}
                   className="rounded-full border border-white/10 bg-transparent px-5 py-3 text-sm font-semibold text-white transition hover:border-white/20 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50 sm:text-base"
                 >
@@ -258,22 +261,20 @@ export default function MadMindPage() {
                     <div
                       className={[
                         "max-w-[86%] rounded-[28px] border px-5 py-4 text-[15px] leading-8 sm:max-w-[72%] sm:text-[16px]",
-                        isUser
-                          ? "border-white/30 bg-black text-white"
-                          : "border-white/30 bg-black text-white",
+                        "border-white/30 bg-black text-white",
                       ].join(" ")}
                     >
                       <div className="whitespace-pre-wrap break-words">
-                        {isUser
-                          ? `You: ${message.text}`
-                          : `MAD Mind: ${message.text}`}
+                        {isUser ? `You: ${message.text}` : `MAD Mind: ${message.text}`}
                       </div>
 
                       {!isUser && !isStarter && message.text && (
                         <div className="mt-3 flex flex-wrap items-center gap-4 text-xs">
                           <button
                             type="button"
-                            onClick={() => void handleCopy(message)}
+                            onClick={() => {
+                              handleCopy(message);
+                            }}
                             className="text-white/45 transition hover:text-white"
                           >
                             {copiedId === message.id ? "Copied" : "Copy this"}
@@ -281,7 +282,9 @@ export default function MadMindPage() {
 
                           <button
                             type="button"
-                            onClick={() => handleShareToX(message)}
+                            onClick={() => {
+                              handleShareToX(message);
+                            }}
                             className="text-white/45 transition hover:text-white"
                           >
                             Share on X
@@ -289,7 +292,9 @@ export default function MadMindPage() {
 
                           <button
                             type="button"
-                            onClick={() => handleSayItHarder(message)}
+                            onClick={() => {
+                              handleSayItHarder(message);
+                            }}
                             disabled={isLoading || isTyping}
                             className="text-red-400 transition hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
                           >
@@ -318,7 +323,7 @@ export default function MadMindPage() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                void sendMessage();
+                sendMessage();
               }}
               className="flex items-center gap-3"
             >
