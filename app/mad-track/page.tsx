@@ -22,8 +22,6 @@ type TrackResponse = {
   events: TrackItem[];
 };
 
-type FilterValue = "all" | TrackEvent;
-
 function formatTimestamp(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
@@ -44,7 +42,6 @@ function aggregateTop(
     const text = typeof raw === "string" ? raw.trim() : "";
 
     if (!text) continue;
-
     map.set(text, (map.get(text) || 0) + 1);
   }
 
@@ -53,34 +50,16 @@ function aggregateTop(
     .slice(0, 5);
 }
 
-function matchesSearch(item: TrackItem, query: string) {
-  if (!query.trim()) return true;
-
-  const q = query.toLowerCase();
-
-  if (item.event.toLowerCase().includes(q)) return true;
-  if (item.timestamp.toLowerCase().includes(q)) return true;
-
-  for (const [key, value] of Object.entries(item.payload)) {
-    if (key.toLowerCase().includes(q)) return true;
-    if (String(value).toLowerCase().includes(q)) return true;
-  }
-
-  return false;
-}
-
 export default function MadTrackPage() {
   const [data, setData] = useState<TrackResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [filter, setFilter] = useState<FilterValue>("all");
-  const [search, setSearch] = useState("");
 
   async function loadData() {
-    setIsLoading(true);
-    setError("");
-
     try {
+      setIsLoading(true);
+      setError("");
+
       const res = await fetch("/api/mad-track", {
         method: "GET",
         cache: "no-store",
@@ -102,66 +81,44 @@ export default function MadTrackPage() {
   }
 
   useEffect(() => {
-    void loadData();
+    loadData();
   }, []);
 
-  const eventCounts = useMemo(() => {
-    const counts: Record<TrackEvent, number> = {
-      message_sent: 0,
-      copy_clicked: 0,
-      share_x_clicked: 0,
-      say_it_harder_clicked: 0,
-    };
+  const topCopied = useMemo(
+    () => aggregateTop(data?.events ?? [], "copy_clicked", "text"),
+    [data]
+  );
 
-    for (const item of data?.events ?? []) {
-      counts[item.event] += 1;
-    }
+  const topShared = useMemo(
+    () => aggregateTop(data?.events ?? [], "share_x_clicked", "text"),
+    [data]
+  );
 
-    return counts;
-  }, [data]);
+  const topHarder = useMemo(
+    () => aggregateTop(data?.events ?? [], "say_it_harder_clicked", "originalBotText"),
+    [data]
+  );
 
-  const filteredEvents = useMemo(() => {
-    const events = data?.events ?? [];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black p-8 text-white">
+        Loading tracking data...
+      </div>
+    );
+  }
 
-    return events.filter((item) => {
-      const filterMatch = filter === "all" ? true : item.event === filter;
-      const searchMatch = matchesSearch(item, search);
-      return filterMatch && searchMatch;
-    });
-  }, [data, filter, search]);
-
-  const filteredCount = filteredEvents.length;
-
-  const topCopied = useMemo(() => {
-    const source = filter === "all" || filter === "copy_clicked" ? filteredEvents : [];
-    return aggregateTop(source, "copy_clicked", "text");
-  }, [filteredEvents, filter]);
-
-  const topShared = useMemo(() => {
-    const source = filter === "all" || filter === "share_x_clicked" ? filteredEvents : [];
-    return aggregateTop(source, "share_x_clicked", "text");
-  }, [filteredEvents, filter]);
-
-  const topHarder = useMemo(() => {
-    const source =
-      filter === "all" || filter === "say_it_harder_clicked" ? filteredEvents : [];
-    return aggregateTop(source, "say_it_harder_clicked", "originalBotText");
-  }, [filteredEvents, filter]);
-
-  const topPromptsLeadingToShares = useMemo(() => {
-    const source = filter === "all" || filter === "share_x_clicked" ? filteredEvents : [];
-    return aggregateTop(source, "share_x_clicked", "prompt");
-  }, [filteredEvents, filter]);
-
-  const topPromptsLeadingToCopies = useMemo(() => {
-    const source = filter === "all" || filter === "copy_clicked" ? filteredEvents : [];
-    return aggregateTop(source, "copy_clicked", "prompt");
-  }, [filteredEvents, filter]);
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black p-8 text-red-300">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="mb-8 flex items-center justify-between gap-4">
           <div>
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
               MAD Track
@@ -174,7 +131,7 @@ export default function MadTrackPage() {
           <button
             type="button"
             onClick={() => {
-              void loadData();
+              loadData();
             }}
             className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/5"
           >
@@ -182,251 +139,103 @@ export default function MadTrackPage() {
           </button>
         </div>
 
-        <div className="mb-8 grid gap-4 xl:grid-cols-[1fr_auto]">
-          <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-4">
-            <div className="mb-3 text-sm font-semibold text-white/55">
-              Filter Events
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              {(
-                [
-                  { label: "All", value: "all" },
-                  { label: "Messages", value: "message_sent" },
-                  { label: "Copied", value: "copy_clicked" },
-                  { label: "Shared", value: "share_x_clicked" },
-                  { label: "Harder", value: "say_it_harder_clicked" },
-                ] as Array<{ label: string; value: FilterValue }>
-              ).map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  onClick={() => setFilter(item.value)}
-                  className={[
-                    "rounded-full border px-4 py-2 text-sm font-semibold transition",
-                    filter === item.value
-                      ? "border-red-500 bg-red-500 text-white"
-                      : "border-white/10 text-white hover:border-white/20 hover:bg-white/5",
-                  ].join(" ")}
-                >
-                  {item.label}
-                </button>
-              ))}
+        <div className="grid gap-6 xl:grid-cols-3">
+          <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
+            <h2 className="text-xl font-bold">Top Copied</h2>
+            <div className="mt-4 space-y-3">
+              {topCopied.length === 0 ? (
+                <div className="text-sm text-white/50">No copied responses yet.</div>
+              ) : (
+                topCopied.map(([text, count], i) => (
+                  <div key={i} className="rounded-xl border border-white/10 p-3">
+                    <div className="text-xs text-white/40">Copied {count}x</div>
+                    <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                      {text}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-4">
-            <div className="mb-3 text-sm font-semibold text-white/55">Search</div>
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search prompts, replies, or payload..."
-              className="w-full min-w-[280px] rounded-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 focus:border-red-500"
-            />
+          <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
+            <h2 className="text-xl font-bold">Top Shared</h2>
+            <div className="mt-4 space-y-3">
+              {topShared.length === 0 ? (
+                <div className="text-sm text-white/50">No shared responses yet.</div>
+              ) : (
+                topShared.map(([text, count], i) => (
+                  <div key={i} className="rounded-xl border border-white/10 p-3">
+                    <div className="text-xs text-white/40">Shared {count}x</div>
+                    <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                      {text}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
+            <h2 className="text-xl font-bold">Most Pushed Harder</h2>
+            <div className="mt-4 space-y-3">
+              {topHarder.length === 0 ? (
+                <div className="text-sm text-white/50">No harder events yet.</div>
+              ) : (
+                topHarder.map(([text, count], i) => (
+                  <div key={i} className="rounded-xl border border-white/10 p-3">
+                    <div className="text-xs text-white/40">Harder {count}x</div>
+                    <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
+                      {text}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
 
-        {isLoading && (
-          <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-6 text-white/65">
-            Loading tracking data...
+        <div className="mt-8 rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
+          <h2 className="text-2xl font-bold">Recent Events</h2>
+
+          <div className="mt-5 space-y-4">
+            {(data?.events ?? []).length === 0 ? (
+              <div className="text-white/50">No events yet.</div>
+            ) : (
+              (data?.events ?? []).map((item, index) => (
+                <div
+                  key={`${item.timestamp}-${item.event}-${index}`}
+                  className="rounded-[20px] border border-white/10 bg-black/60 p-4"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/75">
+                      {item.event}
+                    </div>
+                    <div className="text-sm text-white/45">
+                      {formatTimestamp(item.timestamp)}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 grid gap-2">
+                    {Object.entries(item.payload).map(([key, value]) => (
+                      <div
+                        key={key}
+                        className="flex flex-col gap-1 rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2 sm:flex-row sm:items-start"
+                      >
+                        <div className="min-w-[140px] text-xs font-semibold uppercase tracking-wide text-white/40">
+                          {key}
+                        </div>
+                        <div className="break-words text-sm text-white/85">
+                          {String(value)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-        )}
-
-        {!isLoading && error && (
-          <div className="rounded-[24px] border border-red-500/30 bg-red-500/10 p-6 text-red-200">
-            {error}
-          </div>
-        )}
-
-        {!isLoading && !error && data && (
-          <>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Total Events</div>
-                <div className="mt-2 text-3xl font-bold">{data.count}</div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Filtered Events</div>
-                <div className="mt-2 text-3xl font-bold">{filteredCount}</div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Messages Sent</div>
-                <div className="mt-2 text-3xl font-bold">
-                  {eventCounts.message_sent}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Copied</div>
-                <div className="mt-2 text-3xl font-bold">
-                  {eventCounts.copy_clicked}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Shared on X</div>
-                <div className="mt-2 text-3xl font-bold">
-                  {eventCounts.share_x_clicked}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <div className="text-sm text-white/45">Say It Harder</div>
-                <div className="mt-2 text-3xl font-bold">
-                  {eventCounts.say_it_harder_clicked}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 grid gap-6 xl:grid-cols-3">
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <h2 className="text-xl font-bold">Top Copied</h2>
-                <div className="mt-4 space-y-3">
-                  {topCopied.length === 0 ? (
-                    <div className="text-sm text-white/50">
-                      No copied responses in this filter.
-                    </div>
-                  ) : (
-                    topCopied.map(([text, count], i) => (
-                      <div key={i} className="rounded-xl border border-white/10 p-3">
-                        <div className="text-xs text-white/40">Copied {count}x</div>
-                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                          {text}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <h2 className="text-xl font-bold">Top Shared</h2>
-                <div className="mt-4 space-y-3">
-                  {topShared.length === 0 ? (
-                    <div className="text-sm text-white/50">
-                      No shared responses in this filter.
-                    </div>
-                  ) : (
-                    topShared.map(([text, count], i) => (
-                      <div key={i} className="rounded-xl border border-white/10 p-3">
-                        <div className="text-xs text-white/40">Shared {count}x</div>
-                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                          {text}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <h2 className="text-xl font-bold">Most Pushed Harder</h2>
-                <div className="mt-4 space-y-3">
-                  {topHarder.length === 0 ? (
-                    <div className="text-sm text-white/50">
-                      No “Say it harder” events in this filter.
-                    </div>
-                  ) : (
-                    topHarder.map(([text, count], i) => (
-                      <div key={i} className="rounded-xl border border-white/10 p-3">
-                        <div className="text-xs text-white/40">Harder {count}x</div>
-                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                          {text}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 grid gap-6 xl:grid-cols-2">
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <h2 className="text-xl font-bold">Top Prompts Leading to Shares</h2>
-                <div className="mt-4 space-y-3">
-                  {topPromptsLeadingToShares.length === 0 ? (
-                    <div className="text-sm text-white/50">
-                      No share-linked prompts in this filter.
-                    </div>
-                  ) : (
-                    topPromptsLeadingToShares.map(([prompt, count], i) => (
-                      <div key={i} className="rounded-xl border border-white/10 p-3">
-                        <div className="text-xs text-white/40">Led to shares {count}x</div>
-                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                          {prompt}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-                <h2 className="text-xl font-bold">Top Prompts Leading to Copies</h2>
-                <div className="mt-4 space-y-3">
-                  {topPromptsLeadingToCopies.length === 0 ? (
-                    <div className="text-sm text-white/50">
-                      No copy-linked prompts in this filter.
-                    </div>
-                  ) : (
-                    topPromptsLeadingToCopies.map(([prompt, count], i) => (
-                      <div key={i} className="rounded-xl border border-white/10 p-3">
-                        <div className="text-xs text-white/40">Led to copies {count}x</div>
-                        <div className="mt-1 whitespace-pre-wrap text-sm text-white/90">
-                          {prompt}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
-              <h2 className="text-2xl font-bold">Recent Events</h2>
-
-              <div className="mt-5 space-y-4">
-                {filteredEvents.length === 0 ? (
-                  <div className="text-white/50">No events match this filter.</div>
-                ) : (
-                  filteredEvents.map((item, index) => (
-                    <div
-                      key={`${item.timestamp}-${item.event}-${index}`}
-                      className="rounded-[20px] border border-white/10 bg-black/60 p-4"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/75">
-                          {item.event}
-                        </div>
-                        <div className="text-sm text-white/45">
-                          {formatTimestamp(item.timestamp)}
-                        </div>
-                      </div>
-
-                      <div className="mt-4 grid gap-2">
-                        {Object.entries(item.payload).map(([key, value]) => (
-                          <div
-                            key={key}
-                            className="flex flex-col gap-1 rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2 sm:flex-row sm:items-start"
-                          >
-                            <div className="min-w-[140px] text-xs font-semibold uppercase tracking-wide text-white/40">
-                              {key}
-                            </div>
-                            <div className="break-words text-sm text-white/85">
-                              {String(value)}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </>
-        )}
+        </div>
       </div>
     </div>
   );
