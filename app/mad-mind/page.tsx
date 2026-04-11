@@ -1,14 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { hasSupabase, supabase } from "@/lib/supabase/client";
 
 type MessageRole = "user" | "bot";
 
+type CookLevel = "mild" | "mean" | "crashout" | "demon";
+
 type ChatMessage = {
   id: string;
- role: MessageRole;
+  role: MessageRole;
   text: string;
   ts: number;
+  copied?: boolean;
+  respected?: boolean;
 };
 
 type UserProfile = {
@@ -24,6 +29,7 @@ type UserProfile = {
   streak: number;
   bestStreak: number;
   survivedResponses: number;
+  respectCount: number;
   lastInputs: string[];
   learnedWeakSpots: string[];
   customInsults: string[];
@@ -31,49 +37,80 @@ type UserProfile = {
 
 type LeaderboardEntry = {
   id: string;
-  name: string;
+  player_name: string;
   score: number;
-  survivedResponses: number;
-  bestStreak: number;
-  updatedAt: number;
+  survived_responses: number;
+  best_streak: number;
+  cook_level: CookLevel;
+  respect_count: number;
+  updated_at?: string;
 };
 
 const STORAGE_KEYS = {
-  messages: "madbot_messages_v4",
-  profile: "madbot_profile_v4",
-  leaderboard: "madbot_leaderboard_v4",
-  session: "madbot_session_v4",
+  messages: "madbot_messages_v6",
+  profile: "madbot_profile_v6",
+  session: "madbot_session_v6",
+  cookLevel: "madbot_cook_level_v6",
 };
 
-const MAX_HISTORY = 40;
-const MAX_LAST_INPUTS = 8;
-const MAX_LEARNED_WEAKSPOTS = 10;
-const MAX_CUSTOM_INSULTS = 16;
-const MAX_LEADERBOARD = 10;
+const MAX_HISTORY = 50;
+const MAX_LAST_INPUTS = 10;
+const MAX_LEARNED_WEAKSPOTS = 12;
+const MAX_CUSTOM_INSULTS = 18;
 
-const OPENERS = [
-  "That’s the question you walked in with?",
-  "I almost respected your curiosity until I read that.",
-  "You typed that with confidence too. Incredible.",
-  "That wasn’t a question. That was a public confession.",
-  "You really pressed send on that?",
-  "You ask like consequences are optional.",
-  "That input had the energy of someone dodging accountability.",
-  "You came for answers while leaking weakness all over the floor.",
-];
+const OPENERS = {
+  mild: [
+    "That’s what you came in with?",
+    "You really wanted help with that?",
+    "That question is already losing points.",
+    "Interesting. Not good. But interesting.",
+  ],
+  mean: [
+    "You typed that like confidence was included for free.",
+    "That question looks undercooked.",
+    "I’ve seen stronger thinking from people half-awake.",
+    "You really hit send on that?",
+  ],
+  crashout: [
+    "That’s the question you walked in with?",
+    "I almost respected your curiosity until I read that.",
+    "That wasn’t a question. That was a confession.",
+    "You ask like consequences are optional.",
+  ],
+  demon: [
+    "You dragged that thought out into public on purpose?",
+    "That input had the structural integrity of wet cardboard.",
+    "I can already tell your habits are allergic to execution.",
+    "That message smells like hesitation and bad timing.",
+  ],
+} as const;
 
-const REPEAT_OPENERS = [
-  "You already asked this. Repeating yourself won’t turn confusion into intelligence.",
-  "Same question again? So the issue isn’t information. It’s retention.",
-  "You’re looping. That’s what happens when panic tries to cosplay as strategy.",
-  "You brought the same problem back like it aged into wisdom. It didn’t.",
-];
+const REPEAT_OPENERS = {
+  mild: [
+    "You already asked this.",
+    "Same question again?",
+  ],
+  mean: [
+    "You asked this already. Repetition is not depth.",
+    "Same loop, different minute.",
+  ],
+  crashout: [
+    "You already asked this. Repeating yourself won’t turn confusion into intelligence.",
+    "Same question again? So the issue isn’t information. It’s retention.",
+    "You’re looping. That’s what panic does when it wants to feel strategic.",
+  ],
+  demon: [
+    "Same question again? Your memory and your momentum are both unemployed.",
+    "You brought the same problem back like it aged into wisdom. It didn’t.",
+    "You loop because action scares you more than embarrassment.",
+  ],
+} as const;
 
 const DIAGNOSES = {
   hesitation: [
     "You don’t have a knowledge problem. You have a hesitation addiction.",
     "You stall so long the opportunity dies of old age.",
-    "Your favorite strategy is waiting until courage becomes impossible.",
+    "You wait for clarity the way cowards wait for permission.",
   ],
   ego: [
     "You want the result without surviving the embarrassment of being bad first.",
@@ -83,7 +120,7 @@ const DIAGNOSES = {
   cope: [
     "That’s not analysis. That’s emotional wallpaper over bad habits.",
     "You keep decorating your excuses and calling it self-awareness.",
-    "You’re not confused. You’re attached to the story that protects your comfort.",
+    "You’re attached to the story that protects your comfort.",
   ],
   greed: [
     "You don’t want mastery. You want a shortcut dressed like destiny.",
@@ -92,47 +129,86 @@ const DIAGNOSES = {
   ],
   fear: [
     "Fear is driving and you’re pretending you’re navigating.",
-    "You keep calling it caution because ‘cowardice’ would hurt too much.",
-    "You want certainty before movement. That’s fear in a business suit.",
+    "You keep calling it caution because the real word would hurt more.",
+    "You want certainty before movement. That’s fear in nice clothes.",
   ],
   discipline: [
     "Execution keeps ghosting you because you only flirt with effort.",
-    "You collect plans like trophies and abandon them like chores.",
-    "Your ambition is loud. Your habits are unemployed.",
+    "You collect plans and abandon them like chores.",
+    "Your ambition is loud. Your habits are missing.",
   ],
-};
+} as const;
 
-const INSULTS = [
-  "Even your potential is tired of waiting for you.",
-  "You’ve mistaken overthinking for depth.",
-  "You move like someone outsourcing their spine.",
-  "If avoidance burned calories, you’d be elite.",
-  "Your confidence has never met your consistency. That’s why they don’t recognize each other.",
-  "You keep asking for a map while actively romantically involved with being lost.",
-  "At this point your biggest talent is delaying your own progress with premium excuses.",
-  "You want a breakthrough with the work ethic of a buffering video.",
-];
+const INSULTS = {
+  mild: [
+    "Even your potential is asking for a clearer plan.",
+    "You’ve mistaken overthinking for progress.",
+    "You move like someone waiting for life to blink first.",
+  ],
+  mean: [
+    "Even your potential is tired of waiting for you.",
+    "You’ve mistaken overthinking for depth.",
+    "You move like someone outsourcing their spine.",
+    "You want a breakthrough with the work ethic of a buffering video.",
+  ],
+  crashout: [
+    "Even your potential is tired of waiting for you.",
+    "You’ve mistaken overthinking for depth.",
+    "You move like someone outsourcing their spine.",
+    "If avoidance burned calories, you’d be elite.",
+    "Your confidence has never met your consistency.",
+    "At this point your biggest talent is delaying your own progress with premium excuses.",
+  ],
+  demon: [
+    "Your future keeps knocking and you keep answering with excuses.",
+    "Your consistency is so absent it should file a missing persons report.",
+    "You keep asking for a map while actively dating confusion.",
+    "At this point your excuses have more reps than your discipline.",
+    "You want elite outcomes with habits that belong in clearance.",
+  ],
+} as const;
 
 const INSIGHT_LINES = [
-  "Read this carefully: the bottleneck is not the world. It’s your pattern.",
+  "The bottleneck is not the world. It’s your pattern.",
   "Truth hurts less when you stop negotiating with it.",
   "Momentum is ugly before it becomes impressive.",
   "You do not need more motivation. You need fewer exits.",
-  "Most people don’t fail because they’re weak. They fail because they rehearse weakness.",
-  "The version of you that wins is built from repeated boring decisions you keep disrespecting.",
+  "The version of you that wins is built from boring decisions you keep disrespecting.",
 ];
 
-const CLOSERS = [
-  "Stay $MAD.",
-  "Stay $MAD or stay average.",
-  "Stay $MAD or stay decorative.",
-  "Stay $MAD or stay forgettable.",
-  "Your move. Stay $MAD.",
+const RESPECT_LINES = [
+  "For once, that didn’t sound pathetic.",
+  "Good. That answer had a spine.",
+  "Rare. Accountability. Keep that.",
+  "That actually sounded disciplined.",
+  "You might be worth watching after all.",
 ];
+
+const CLOSERS = {
+  mild: [
+    "Do better.",
+    "Your move.",
+    "Lock in.",
+  ],
+  mean: [
+    "Lock in.",
+    "Your move.",
+    "Fix it.",
+  ],
+  crashout: [
+    "Stay $MAD.",
+    "Stay $MAD or stay average.",
+    "Your move. Stay $MAD.",
+  ],
+  demon: [
+    "Stay $MAD or stay forgettable.",
+    "Stay $MAD or stay decorative.",
+    "Stay $MAD. Or keep rotting in hesitation.",
+  ],
+} as const;
 
 const CHAOS_LINES = [
   "YoU FeLt DoUbT... aNd CaLlEd It LoGiC.",
-  "ThAt WaSn’T a QuEsTiOn. ThAt WaS a SpIrItUaL cOlLaPsE iN lOw ReSoLuTiOn.",
   "YoU DoN’t NeEd a SiGn. YoU nEeD a BaCkBoNe.",
   "EvEn YoUr ExCuSeS aRe RuNnInG oUt Of ChArGe.",
 ];
@@ -144,8 +220,6 @@ const SAFE_GUARD_PATTERNS = [
   /i want to die/i,
   /hurt myself/i,
   /cut myself/i,
-  /anorexia/i,
-  /bulimia/i,
   /overdose/i,
 ];
 
@@ -198,6 +272,7 @@ function defaultProfile(): UserProfile {
     streak: 0,
     bestStreak: 0,
     survivedResponses: 0,
+    respectCount: 0,
     lastInputs: [],
     learnedWeakSpots: [],
     customInsults: [],
@@ -214,36 +289,32 @@ function scoreInput(input: string) {
   let discipline = 0;
   let fear = 0;
 
-  if (
-    /should i|what if|not sure|maybe|i think|i guess|can i|could i|do you think/i.test(
-      text,
-    )
-  ) {
+  if (/should i|what if|not sure|maybe|i think|i guess|can i|could i|do you think/.test(text)) {
     hesitation += 2;
   }
 
-  if (/rich|get rich|money fast|viral|blow up|win big|moon|100x/i.test(text)) {
+  if (/rich|get rich|money fast|viral|blow up|win big|moon|100x|pump|profit/.test(text)) {
     greed += 2;
   }
 
-  if (/why me|unfair|they|everyone else|nobody|always happens/i.test(text)) {
+  if (/why me|unfair|they|everyone else|nobody|always happens/.test(text)) {
     cope += 2;
   }
 
-  if (/best|greatest|smart|genius|perfect|i know|obviously/i.test(text)) {
+  if (/best|greatest|smart|genius|perfect|i know|obviously/.test(text)) {
     ego += 1;
   }
 
-  if (/scared|afraid|fear|nervous|anxious|panic|worried/i.test(text)) {
+  if (/scared|afraid|fear|nervous|anxious|panic|worried/.test(text)) {
     fear += 2;
   }
 
-  if (/start tomorrow|later|eventually|someday|when i'm ready/i.test(text)) {
+  if (/start tomorrow|later|eventually|someday|when i'm ready/.test(text)) {
     discipline += 2;
     hesitation += 1;
   }
 
-  if (/lazy|procrastinat|stuck|repeat|again|same/i.test(text)) {
+  if (/lazy|procrastinat|stuck|repeat|again|same/.test(text)) {
     discipline += 2;
   }
 
@@ -266,36 +337,48 @@ function dominantTrait(profile: UserProfile) {
 function buildWeakSpotLabel(input: string) {
   const text = normalizeInput(input);
 
-  if (/rich|money|profit|100x|moon|investment|token/i.test(text)) {
+  if (/rich|money|profit|100x|moon|investment|token|pump/.test(text)) {
     return "chases upside faster than mastery";
   }
-  if (/same|again|repeat/i.test(text)) {
+  if (/same|again|repeat/.test(text)) {
     return "loops instead of learning";
   }
-  if (/should i|maybe|not sure|guess/i.test(text)) {
+  if (/should i|maybe|not sure|guess/.test(text)) {
     return "hesitates until momentum dies";
   }
-  if (/afraid|fear|panic|worried/i.test(text)) {
+  if (/afraid|fear|panic|worried/.test(text)) {
     return "lets fear wear the crown";
   }
-  if (/later|tomorrow|eventually/i.test(text)) {
+  if (/later|tomorrow|eventually/.test(text)) {
     return "romanticizes delay";
   }
-  if (/why me|unfair|they/i.test(text)) {
+  if (/why me|unfair|they/.test(text)) {
     return "outsources blame";
   }
 
   return "asks for answers while dodging action";
 }
 
-function makeCustomInsultFromWeakSpot(weakSpot: string) {
-  const templates = [
-    `You still ${weakSpot}. That’s not bad luck. That’s identity.`,
-    `Every time you speak, I can hear that you ${weakSpot}.`,
-    `Your whole pattern screams that you ${weakSpot}.`,
-    `The tragic part is you don’t even notice how often you ${weakSpot}.`,
-    `You keep proving that you ${weakSpot}, then act shocked by the result.`,
-  ];
+function makeCustomInsultFromWeakSpot(weakSpot: string, cookLevel: CookLevel) {
+  const templates =
+    cookLevel === "mild"
+      ? [
+          `You still ${weakSpot}. That’s the leak.`,
+          `I can already tell you ${weakSpot}.`,
+          `Your pattern says you ${weakSpot}.`,
+        ]
+      : cookLevel === "mean"
+        ? [
+            `You still ${weakSpot}. That’s not bad luck. That’s pattern.`,
+            `Every time you speak, I can hear that you ${weakSpot}.`,
+            `Your whole pattern screams that you ${weakSpot}.`,
+          ]
+        : [
+            `You still ${weakSpot}. That’s not bad luck. That’s identity.`,
+            `Every time you speak, I can hear that you ${weakSpot}.`,
+            `The tragic part is you don’t even notice how often you ${weakSpot}.`,
+            `You keep proving that you ${weakSpot}, then act shocked by the result.`,
+          ];
 
   return pick(templates);
 }
@@ -307,35 +390,65 @@ function isSensitiveInput(input: string) {
 function buildSafeResponse(input: string) {
   const lower = normalizeInput(input);
 
-  if (
-    /suicide|kill myself|i want to die|hurt myself|self harm|cut myself|overdose/i.test(
-      lower,
-    )
-  ) {
-    return `I’m not going to roast you on this one.
+  if (/suicide|kill myself|i want to die|hurt myself|self harm|cut myself|overdose/.test(lower)) {
+    return `I’m not doing roast mode on this.
 
-This sounds serious, and I want to be direct: you deserve immediate support right now, not an insult bot.
+This sounds serious. Please contact emergency services now if you might act on this, or call or text 988 right now if you’re in the U.S. or Canada.
 
-Please contact emergency services now if you might act on this, or reach out to a crisis line right away. If you’re in the U.S. or Canada, call or text 988. If you’re elsewhere, contact your local emergency number now and go where other people are.
-
-Tell one real person near you immediately: “I am not safe alone right now.”`;
+Tell one real person near you immediately: "I am not safe alone right now."`;
   }
 
-  return `Not doing insult mode on this topic.
-
-Ask me again in roast mode about business, discipline, mindset, branding, content, or decisions and I’ll go back to breaking ankles.`;
+  return `Not doing insult mode on this topic.`;
 }
 
-function buildBotReply(input: string, profile: UserProfile) {
+function shouldRespect(input: string) {
+  const text = normalizeInput(input);
+
+  const accountable =
+    /i will|i did|i'm doing|i am doing|i took action|i shipped|i posted|i learned|i was wrong|my fault|i need discipline|i need to focus/.test(
+      text,
+    );
+
+  const lessVictim =
+    !/why me|unfair|they|everyone else|nobody/.test(text);
+
+  return accountable && lessVictim;
+}
+
+function buildBotReply(
+  input: string,
+  profile: UserProfile,
+  cookLevel: CookLevel,
+) {
   if (isSensitiveInput(input)) {
-    return buildSafeResponse(input);
+    return { text: buildSafeResponse(input), respected: false };
   }
 
   const normalized = normalizeInput(input);
   const isRepeat = profile.lastInputs.includes(normalized);
-
   const trait = dominantTrait(profile);
-  const opener = isRepeat ? pick(REPEAT_OPENERS) : pick(OPENERS);
+
+  const respectChance =
+    shouldRespect(input)
+      ? cookLevel === "mild"
+        ? 0.18
+        : cookLevel === "mean"
+          ? 0.12
+          : cookLevel === "crashout"
+            ? 0.08
+            : 0.06
+      : 0;
+
+  if (respectChance > 0 && maybe(respectChance)) {
+    return {
+      text: `${pick(RESPECT_LINES)}\n\n${pick(INSIGHT_LINES)}\n\n${pick(CLOSERS[cookLevel])}`,
+      respected: true,
+    };
+  }
+
+  const opener = isRepeat
+    ? pick(REPEAT_OPENERS[cookLevel])
+    : pick(OPENERS[cookLevel]);
 
   const diagnosisPool =
     trait === "hesitation"
@@ -350,55 +463,65 @@ function buildBotReply(input: string, profile: UserProfile) {
               ? DIAGNOSES.fear
               : DIAGNOSES.discipline;
 
-  const diagnosis = pick(diagnosisPool);
-
   const learnedInsert =
     profile.customInsults.length > 0 && maybe(0.45)
       ? pick(profile.customInsults)
-      : pick(INSULTS);
+      : pick(INSULTS[cookLevel]);
 
-  const insight = maybe(0.75) ? pick(INSIGHT_LINES) : "";
-  const chaos = maybe(0.14) ? `\n\n${pick(CHAOS_LINES)}` : "";
-  const closer = pick(CLOSERS);
+  const insight = maybe(0.72) ? pick(INSIGHT_LINES) : "";
+  const chaos =
+    (cookLevel === "crashout" || cookLevel === "demon") && maybe(cookLevel === "demon" ? 0.2 : 0.12)
+      ? `\n\n${pick(CHAOS_LINES)}`
+      : "";
 
-  const shortMode = maybe(0.22);
+  const closer = pick(CLOSERS[cookLevel]);
+  const shortMode =
+    cookLevel === "mild"
+      ? maybe(0.28)
+      : cookLevel === "mean"
+        ? maybe(0.24)
+        : maybe(0.2);
 
   if (shortMode) {
-    return `${opener}\n\n${learnedInsert}\n\n${closer}`;
+    return {
+      text: `${opener}\n\n${learnedInsert}\n\n${closer}`,
+      respected: false,
+    };
   }
 
-  return `${opener}
+  return {
+    text: `${opener}
 
-${diagnosis}
+${pick(diagnosisPool)}
 
 ${learnedInsert}
 
-${insight}${chaos ? chaos : ""}
+${insight}${chaos}
 
-${closer}`;
+${closer}`,
+    respected: false,
+  };
 }
 
-function updateProfileFromInput(prev: UserProfile, input: string): UserProfile {
+function updateProfileFromInput(prev: UserProfile, input: string, cookLevel: CookLevel): UserProfile {
   const normalized = normalizeInput(input);
   const scores = scoreInput(input);
   const repeated = prev.lastInputs.includes(normalized);
   const weakSpot = buildWeakSpotLabel(input);
 
-  const nextWeakSpots = Array.from(
-    new Set([weakSpot, ...prev.learnedWeakSpots]),
-  ).slice(0, MAX_LEARNED_WEAKSPOTS);
-
-  const generatedInsult = makeCustomInsultFromWeakSpot(weakSpot);
-
-  const nextCustomInsults = Array.from(
-    new Set([generatedInsult, ...prev.customInsults]),
-  ).slice(0, MAX_CUSTOM_INSULTS);
-
-  const nextLastInputs = [normalized, ...prev.lastInputs].slice(
+  const nextWeakSpots = Array.from(new Set([weakSpot, ...prev.learnedWeakSpots])).slice(
     0,
-    MAX_LAST_INPUTS,
+    MAX_LEARNED_WEAKSPOTS,
   );
 
+  const generatedInsult = makeCustomInsultFromWeakSpot(weakSpot, cookLevel);
+
+  const nextCustomInsults = Array.from(new Set([generatedInsult, ...prev.customInsults])).slice(
+    0,
+    MAX_CUSTOM_INSULTS,
+  );
+
+  const nextLastInputs = [normalized, ...prev.lastInputs].slice(0, MAX_LAST_INPUTS);
   const survivedResponses = prev.survivedResponses + 1;
   const streak = prev.streak + 1;
 
@@ -421,7 +544,7 @@ function updateProfileFromInput(prev: UserProfile, input: string): UserProfile {
   };
 }
 
-function calcSurvivorScore(profile: UserProfile) {
+function calcSurvivorScore(profile: UserProfile, cookLevel: CookLevel) {
   const traitPressure =
     profile.hesitationScore +
     profile.egoScore +
@@ -430,23 +553,68 @@ function calcSurvivorScore(profile: UserProfile) {
     profile.disciplineScore +
     profile.fearScore;
 
+  const levelBonus =
+    cookLevel === "mild" ? 0 : cookLevel === "mean" ? 20 : cookLevel === "crashout" ? 45 : 80;
+
   return (
     profile.survivedResponses * 12 +
     profile.bestStreak * 18 -
     profile.repeatedQuestions * 7 +
-    Math.floor(traitPressure * 1.4)
+    Math.floor(traitPressure * 1.4) +
+    profile.respectCount * 35 +
+    levelBonus
   );
 }
 
-function upsertLeaderboard(entry: LeaderboardEntry) {
-  const current = loadJSON<LeaderboardEntry[]>(STORAGE_KEYS.leaderboard, []);
-  const filtered = current.filter((item) => item.id !== entry.id);
-  const merged = [...filtered, entry]
-    .sort((a, b) => b.score - a.score || b.bestStreak - a.bestStreak)
-    .slice(0, MAX_LEADERBOARD);
+async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("mad_bot_scores")
+    .select("*")
+    .order("score", { ascending: false })
+    .order("best_streak", { ascending: false })
+    .limit(10);
 
-  saveJSON(STORAGE_KEYS.leaderboard, merged);
-  return merged;
+  if (error || !data) return [];
+  return data as LeaderboardEntry[];
+}
+
+async function upsertRemoteScore(entry: Omit<LeaderboardEntry, "id">) {
+  if (!supabase) return;
+
+  const { data: existing } = await supabase
+    .from("mad_bot_scores")
+    .select("id, score, best_streak, survived_responses, respect_count")
+    .eq("player_name", entry.player_name)
+    .maybeSingle();
+
+  if (existing?.id) {
+    const mergedScore = Math.max(existing.score ?? 0, entry.score);
+    const mergedBestStreak = Math.max(existing.best_streak ?? 0, entry.best_streak);
+    const mergedSurvived = Math.max(existing.survived_responses ?? 0, entry.survived_responses);
+    const mergedRespect = Math.max(existing.respect_count ?? 0, entry.respect_count);
+
+    await supabase
+      .from("mad_bot_scores")
+      .update({
+        score: mergedScore,
+        best_streak: mergedBestStreak,
+        survived_responses: mergedSurvived,
+        respect_count: mergedRespect,
+        cook_level: entry.cook_level,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", existing.id);
+  } else {
+    await supabase.from("mad_bot_scores").insert({
+      player_name: entry.player_name,
+      score: entry.score,
+      survived_responses: entry.survived_responses,
+      best_streak: entry.best_streak,
+      cook_level: entry.cook_level,
+      respect_count: entry.respect_count,
+    });
+  }
 }
 
 export default function MadMindPage() {
@@ -456,30 +624,37 @@ export default function MadMindPage() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [input, setInput] = useState("");
   const [username, setUsername] = useState("Anonymous Survivor");
+  const [cookLevel, setCookLevel] = useState<CookLevel>("crashout");
   const [isThinking, setIsThinking] = useState(false);
+  const [copyToast, setCopyToast] = useState("");
+  const [supabaseStatus, setSupabaseStatus] = useState(
+    hasSupabase ? "Supabase connected" : "Local mode only",
+  );
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const savedMessages = loadJSON<ChatMessage[]>(STORAGE_KEYS.messages, []);
-    const savedProfile = loadJSON<UserProfile>(
-      STORAGE_KEYS.profile,
-      defaultProfile(),
-    );
-    const savedLeaderboard = loadJSON<LeaderboardEntry[]>(
-      STORAGE_KEYS.leaderboard,
-      [],
-    );
-    const session = loadJSON<{ id: string; name: string } | null>(
-      STORAGE_KEYS.session,
-      null,
-    );
+    const savedProfile = loadJSON<UserProfile>(STORAGE_KEYS.profile, defaultProfile());
+    const savedSession = loadJSON<{ name: string } | null>(STORAGE_KEYS.session, null);
+    const savedCookLevel = loadJSON<CookLevel>(STORAGE_KEYS.cookLevel, "crashout");
 
     setMessages(savedMessages);
     setProfile(savedProfile);
-    setLeaderboard(savedLeaderboard);
-    setUsername(session?.name || savedProfile.name || "Anonymous Survivor");
+    setUsername(savedSession?.name || savedProfile.name || "Anonymous Survivor");
+    setCookLevel(savedCookLevel);
     setMounted(true);
+
+    if (hasSupabase) {
+      fetchLeaderboard()
+        .then((rows) => {
+          setLeaderboard(rows);
+          setSupabaseStatus("Supabase live leaderboard");
+        })
+        .catch(() => {
+          setSupabaseStatus("Supabase unavailable");
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -493,29 +668,43 @@ export default function MadMindPage() {
   }, [profile, mounted]);
 
   useEffect(() => {
+    if (!mounted) return;
+    saveJSON(STORAGE_KEYS.cookLevel, cookLevel);
+  }, [cookLevel, mounted]);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isThinking]);
 
-  const score = useMemo(() => calcSurvivorScore(profile), [profile]);
+  useEffect(() => {
+    if (!copyToast) return;
+    const t = setTimeout(() => setCopyToast(""), 1400);
+    return () => clearTimeout(t);
+  }, [copyToast]);
 
-  function saveIdentity(name: string) {
+  const score = useMemo(() => calcSurvivorScore(profile, cookLevel), [profile, cookLevel]);
+
+  async function saveIdentity(name: string) {
     const cleaned = name.trim() || "Anonymous Survivor";
     setUsername(cleaned);
 
     const nextProfile = { ...profile, name: cleaned };
     setProfile(nextProfile);
-    saveJSON(STORAGE_KEYS.session, { id: "local-user", name: cleaned });
+    saveJSON(STORAGE_KEYS.session, { name: cleaned });
 
-    const updated = upsertLeaderboard({
-      id: "local-user",
-      name: cleaned,
-      score: calcSurvivorScore(nextProfile),
-      survivedResponses: nextProfile.survivedResponses,
-      bestStreak: nextProfile.bestStreak,
-      updatedAt: Date.now(),
-    });
+    if (hasSupabase) {
+      await upsertRemoteScore({
+        player_name: cleaned,
+        score: calcSurvivorScore(nextProfile, cookLevel),
+        survived_responses: nextProfile.survivedResponses,
+        best_streak: nextProfile.bestStreak,
+        cook_level: cookLevel,
+        respect_count: nextProfile.respectCount,
+      });
 
-    setLeaderboard(updated);
+      const rows = await fetchLeaderboard();
+      setLeaderboard(rows);
+    }
   }
 
   function resetSession() {
@@ -525,6 +714,30 @@ export default function MadMindPage() {
     setMessages([]);
     saveJSON(STORAGE_KEYS.profile, fresh);
     saveJSON(STORAGE_KEYS.messages, []);
+  }
+
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyToast("Copied");
+    } catch {
+      setCopyToast("Copy failed");
+    }
+  }
+
+  async function shareScore() {
+    const text = `${username} survived the $MAD Bot in ${cookLevel.toUpperCase()} mode with score ${score}.`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ text });
+        return;
+      } catch {
+        // ignore
+      }
+    }
+
+    await copyText(text);
   }
 
   async function handleSend() {
@@ -538,38 +751,50 @@ export default function MadMindPage() {
       ts: Date.now(),
     };
 
-    const nextProfile = updateProfileFromInput(profile, trimmed);
+    const nextProfileBase = updateProfileFromInput(profile, trimmed, cookLevel);
 
     setMessages((prev) => [...prev, userMsg]);
-    setProfile(nextProfile);
+    setProfile(nextProfileBase);
     setInput("");
     setIsThinking(true);
 
-    const delay = 350 + Math.floor(Math.random() * 450);
+    const delay = 280 + Math.floor(Math.random() * 420);
     await new Promise((resolve) => setTimeout(resolve, delay));
 
-    const reply = buildBotReply(trimmed, nextProfile);
+    const reply = buildBotReply(trimmed, nextProfileBase, cookLevel);
+
+    const finalProfile = reply.respected
+      ? {
+          ...nextProfileBase,
+          respectCount: nextProfileBase.respectCount + 1,
+        }
+      : nextProfileBase;
 
     const botMsg: ChatMessage = {
       id: uid(),
       role: "bot",
-      text: reply,
+      text: reply.text,
       ts: Date.now(),
+      respected: reply.respected,
     };
 
+    setProfile(finalProfile);
     setMessages((prev) => [...prev, botMsg]);
     setIsThinking(false);
 
-    const updatedLeaderboard = upsertLeaderboard({
-      id: "local-user",
-      name: nextProfile.name || username || "Anonymous Survivor",
-      score: calcSurvivorScore(nextProfile),
-      survivedResponses: nextProfile.survivedResponses,
-      bestStreak: nextProfile.bestStreak,
-      updatedAt: Date.now(),
-    });
+    if (hasSupabase) {
+      await upsertRemoteScore({
+        player_name: (finalProfile.name || username || "Anonymous Survivor").trim(),
+        score: calcSurvivorScore(finalProfile, cookLevel),
+        survived_responses: finalProfile.survivedResponses,
+        best_streak: finalProfile.bestStreak,
+        cook_level: cookLevel,
+        respect_count: finalProfile.respectCount,
+      });
 
-    setLeaderboard(updatedLeaderboard);
+      const rows = await fetchLeaderboard();
+      setLeaderboard(rows);
+    }
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -582,50 +807,53 @@ export default function MadMindPage() {
   if (!mounted) {
     return (
       <div className="min-h-screen bg-black text-white">
-        <div className="mx-auto max-w-6xl px-6 py-20">Loading $MAD Mind…</div>
+        <div className="mx-auto max-w-6xl px-6 py-20">Loading $MAD Mind...</div>
       </div>
     );
   }
 
   const dominant = dominantTrait(profile);
-  const dominantLabel =
-    dominant.charAt(0).toUpperCase() + dominant.slice(1);
+  const dominantLabel = dominant.charAt(0).toUpperCase() + dominant.slice(1);
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(255,0,60,0.16),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(255,120,0,0.10),transparent_28%)]" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(255,0,60,0.18),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,120,0,0.14),transparent_28%)]" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="mb-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="mb-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.35em] text-red-400/80">
-                  $MAD Mind
-                </p>
-                <h1 className="mt-2 text-3xl font-black sm:text-4xl">
-                  Crashout Survivor Chamber
-                </h1>
-                <p className="mt-2 max-w-2xl text-sm text-white/65 sm:text-base">
-                  Sharper memory. More variation. Better pressure. Repeats get punished.
-                </p>
-              </div>
+            <p className="text-xs uppercase tracking-[0.35em] text-red-400/80">$MAD Mind</p>
+            <h1 className="mt-2 text-3xl font-black sm:text-4xl">Cook Chamber</h1>
+            <p className="mt-2 max-w-2xl text-sm text-white/65">
+              Cook levels, rare respect mode, copy/share actions, and a live leaderboard.
+            </p>
 
-              <div className="flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap gap-2">
+              {(["mild", "mean", "crashout", "demon"] as CookLevel[]).map((level) => (
                 <button
-                  onClick={resetSession}
-                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10"
+                  key={level}
+                  onClick={() => setCookLevel(level)}
+                  className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
+                    cookLevel === level
+                      ? "bg-red-500 text-white"
+                      : "border border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
+                  }`}
                 >
-                  Reset session
+                  {level.toUpperCase()}
                 </button>
-              </div>
+              ))}
+
+              <button
+                onClick={resetSession}
+                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white/85 hover:bg-white/10"
+              >
+                Reset
+              </button>
             </div>
           </div>
 
           <div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-5">
-            <p className="text-xs uppercase tracking-[0.35em] text-red-300/80">
-              Identity
-            </p>
+            <p className="text-xs uppercase tracking-[0.35em] text-red-300/80">Identity</p>
 
             <div className="mt-3 flex flex-col gap-3">
               <input
@@ -634,12 +862,24 @@ export default function MadMindPage() {
                 placeholder="Enter survivor name"
                 className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm outline-none placeholder:text-white/35 focus:border-red-400/50"
               />
-              <button
-                onClick={() => saveIdentity(username)}
-                className="rounded-2xl bg-red-500 px-4 py-3 text-sm font-bold text-white transition hover:scale-[1.01] hover:bg-red-400"
-              >
-                Save survivor name
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => saveIdentity(username)}
+                  className="flex-1 rounded-2xl bg-red-500 px-4 py-3 text-sm font-bold text-white hover:bg-red-400"
+                >
+                  Save name
+                </button>
+                <button
+                  onClick={shareScore}
+                  className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm font-bold text-white/90 hover:bg-black/50"
+                >
+                  Share score
+                </button>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-xs text-white/60">
+                {supabaseStatus}
+              </div>
             </div>
           </div>
         </div>
@@ -649,21 +889,22 @@ export default function MadMindPage() {
             <div className="border-b border-white/10 px-4 py-4 sm:px-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-white/45">
-                    Live Chamber
-                  </p>
+                  <p className="text-xs uppercase tracking-[0.35em] text-white/45">Live Chamber</p>
                   <h2 className="mt-1 text-xl font-bold">Talk to the bot</h2>
                 </div>
 
                 <div className="flex flex-wrap gap-2 text-xs">
                   <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/70">
-                    Survivor Score: {score}
+                    Score: {score}
                   </span>
                   <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/70">
                     Best Streak: {profile.bestStreak}
                   </span>
                   <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/70">
-                    Dominant Weakness: {dominantLabel}
+                    Weakness: {dominantLabel}
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/70">
+                    Respect: {profile.respectCount}
                   </span>
                 </div>
               </div>
@@ -672,42 +913,59 @@ export default function MadMindPage() {
             <div className="h-[58vh] overflow-y-auto px-4 py-4 sm:px-6">
               {messages.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-white/10 bg-black/20 p-6 text-white/55">
-                  <p className="text-lg font-semibold text-white">
-                    Enter the chamber.
-                  </p>
+                  <p className="text-lg font-semibold text-white">Enter the chamber.</p>
                   <p className="mt-2 text-sm">
-                    Ask about money, focus, mindset, branding, discipline, virality,
-                    content, fear, hesitation, or execution.
+                    Ask about money, discipline, virality, hesitation, fear, branding, or execution.
                   </p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`max-w-[88%] rounded-3xl px-4 py-3 whitespace-pre-wrap ${
-                        message.role === "user"
-                          ? "ml-auto border border-white/10 bg-white/10 text-white"
-                          : "border border-red-500/20 bg-red-500/10 text-red-50"
-                      }`}
-                    >
-                      <div className="mb-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
-                        {message.role === "user" ? "Survivor" : "$MAD Bot"}
+                    <div key={message.id}>
+                      <div
+                        className={`max-w-[88%] rounded-3xl px-4 py-3 whitespace-pre-wrap ${
+                          message.role === "user"
+                            ? "ml-auto border border-white/10 bg-white/10 text-white"
+                            : message.respected
+                              ? "border border-emerald-400/30 bg-emerald-500/10 text-emerald-50"
+                              : "border border-red-500/20 bg-red-500/10 text-red-50"
+                        }`}
+                      >
+                        <div className="mb-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
+                          {message.role === "user" ? "Survivor" : message.respected ? "Respect Mode" : "$MAD Bot"}
+                        </div>
+                        <div className="text-sm leading-7 sm:text-[15px]">{message.text}</div>
                       </div>
-                      <div className="text-sm leading-7 sm:text-[15px]">
-                        {message.text}
-                      </div>
+
+                      {message.role === "bot" && (
+                        <div className="mt-2 flex max-w-[88%] gap-2">
+                          <button
+                            onClick={() => copyText(message.text)}
+                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                          >
+                            Copy roast
+                          </button>
+                          <button
+                            onClick={shareScore}
+                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                          >
+                            Share score
+                          </button>
+                          <button
+                            onClick={() => copyText(`I survived ${cookLevel.toUpperCase()} mode with score ${score}. Beat that.`)}
+                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                          >
+                            Challenge friend
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ))}
 
                   {isThinking && (
                     <div className="max-w-[88%] rounded-3xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-red-50">
-                      <div className="mb-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
-                        $MAD Bot
-                      </div>
-                      <div className="text-sm leading-7 sm:text-[15px]">
-                        analyzing weakness...
-                      </div>
+                      <div className="mb-2 text-[11px] uppercase tracking-[0.3em] text-white/45">$MAD Bot</div>
+                      <div className="text-sm leading-7 sm:text-[15px]">analyzing weakness...</div>
                     </div>
                   )}
 
@@ -727,15 +985,13 @@ export default function MadMindPage() {
                   className="w-full resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-white/30"
                 />
                 <div className="mt-3 flex items-center justify-between gap-3">
-                  <p className="text-xs text-white/35">
-                    Enter = send · Shift + Enter = new line
-                  </p>
+                  <p className="text-xs text-white/35">Enter = send · Shift + Enter = new line</p>
                   <button
                     onClick={handleSend}
                     disabled={!input.trim() || isThinking}
                     className="rounded-2xl bg-red-500 px-5 py-2.5 text-sm font-bold text-white transition hover:scale-[1.01] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Send to chamber
+                    Send
                   </button>
                 </div>
               </div>
@@ -744,27 +1000,13 @@ export default function MadMindPage() {
 
           <aside className="space-y-4">
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/45">
-                Learned Profile
-              </p>
+              <p className="text-xs uppercase tracking-[0.35em] text-white/45">Learned Profile</p>
 
               <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                  <div className="text-white/45">Messages</div>
-                  <div className="mt-1 text-xl font-black">{profile.totalMessages}</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                  <div className="text-white/45">Repeats</div>
-                  <div className="mt-1 text-xl font-black">{profile.repeatedQuestions}</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                  <div className="text-white/45">Survived</div>
-                  <div className="mt-1 text-xl font-black">{profile.survivedResponses}</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                  <div className="text-white/45">Best Streak</div>
-                  <div className="mt-1 text-xl font-black">{profile.bestStreak}</div>
-                </div>
+                <Stat label="Messages" value={profile.totalMessages} />
+                <Stat label="Repeats" value={profile.repeatedQuestions} />
+                <Stat label="Survived" value={profile.survivedResponses} />
+                <Stat label="Respect" value={profile.respectCount} />
               </div>
 
               <div className="mt-4 space-y-3">
@@ -778,10 +1020,7 @@ export default function MadMindPage() {
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/45">
-                Learned Weak Spots
-              </p>
-
+              <p className="text-xs uppercase tracking-[0.35em] text-white/45">Learned Weak Spots</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {profile.learnedWeakSpots.length === 0 ? (
                   <span className="text-sm text-white/45">No weakness profile yet.</span>
@@ -799,30 +1038,27 @@ export default function MadMindPage() {
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/45">
-                Top Survivors
-              </p>
-
+              <p className="text-xs uppercase tracking-[0.35em] text-white/45">Top Survivors</p>
               <div className="mt-4 space-y-3">
                 {leaderboard.length === 0 ? (
-                  <p className="text-sm text-white/45">No survivors ranked yet.</p>
+                  <p className="text-sm text-white/45">
+                    {hasSupabase ? "No scores yet." : "Connect Supabase for a global leaderboard."}
+                  </p>
                 ) : (
                   leaderboard.map((entry, index) => (
                     <div
-                      key={entry.id}
+                      key={`${entry.player_name}-${index}`}
                       className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-3 py-3"
                     >
                       <div>
                         <div className="text-sm font-bold">
-                          #{index + 1} {entry.name}
+                          #{index + 1} {entry.player_name}
                         </div>
                         <div className="mt-1 text-xs text-white/45">
-                          Survived: {entry.survivedResponses} · Best streak: {entry.bestStreak}
+                          {entry.cook_level.toUpperCase()} · Survived: {entry.survived_responses} · Streak: {entry.best_streak}
                         </div>
                       </div>
-                      <div className="text-right text-sm font-black text-red-300">
-                        {entry.score}
-                      </div>
+                      <div className="text-right text-sm font-black text-red-300">{entry.score}</div>
                     </div>
                   ))
                 )}
@@ -830,7 +1066,22 @@ export default function MadMindPage() {
             </div>
           </aside>
         </div>
+
+        {copyToast ? (
+          <div className="fixed bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/80 px-4 py-2 text-xs text-white/90 backdrop-blur">
+            {copyToast}
+          </div>
+        ) : null}
       </div>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+      <div className="text-white/45">{label}</div>
+      <div className="mt-1 text-xl font-black">{value}</div>
     </div>
   );
 }
