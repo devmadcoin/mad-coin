@@ -82,7 +82,7 @@ export default function MadTrackPage() {
   }
 
   useEffect(() => {
-    void loadData();
+    loadData();
   }, []);
 
   const eventCounts = useMemo(() => {
@@ -139,7 +139,9 @@ export default function MadTrackPage() {
 
           <button
             type="button"
-            onClick={() => void loadData()}
+            onClick={() => {
+              loadData();
+            }}
             className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/5"
           >
             Refresh
