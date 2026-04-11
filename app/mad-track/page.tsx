@@ -22,6 +22,8 @@ type TrackResponse = {
   events: TrackItem[];
 };
 
+type FilterValue = "all" | TrackEvent;
+
 function formatTimestamp(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
@@ -51,10 +53,28 @@ function aggregateTop(
     .slice(0, 5);
 }
 
+function matchesSearch(item: TrackItem, query: string) {
+  if (!query.trim()) return true;
+
+  const q = query.toLowerCase();
+
+  if (item.event.toLowerCase().includes(q)) return true;
+  if (item.timestamp.toLowerCase().includes(q)) return true;
+
+  for (const [key, value] of Object.entries(item.payload)) {
+    if (key.toLowerCase().includes(q)) return true;
+    if (String(value).toLowerCase().includes(q)) return true;
+  }
+
+  return false;
+}
+
 export default function MadTrackPage() {
   const [data, setData] = useState<TrackResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [filter, setFilter] = useState<FilterValue>("all");
+  const [search, setSearch] = useState("");
 
   async function loadData() {
     setIsLoading(true);
@@ -82,7 +102,7 @@ export default function MadTrackPage() {
   }
 
   useEffect(() => {
-    loadData();
+    void loadData();
   }, []);
 
   const eventCounts = useMemo(() => {
@@ -100,29 +120,43 @@ export default function MadTrackPage() {
     return counts;
   }, [data]);
 
+  const filteredEvents = useMemo(() => {
+    const events = data?.events ?? [];
+
+    return events.filter((item) => {
+      const filterMatch = filter === "all" ? true : item.event === filter;
+      const searchMatch = matchesSearch(item, search);
+      return filterMatch && searchMatch;
+    });
+  }, [data, filter, search]);
+
+  const filteredCount = filteredEvents.length;
+
   const topCopied = useMemo(() => {
-    return aggregateTop(data?.events ?? [], "copy_clicked", "text");
-  }, [data]);
+    const source = filter === "all" || filter === "copy_clicked" ? filteredEvents : [];
+    return aggregateTop(source, "copy_clicked", "text");
+  }, [filteredEvents, filter]);
 
   const topShared = useMemo(() => {
-    return aggregateTop(data?.events ?? [], "share_x_clicked", "text");
-  }, [data]);
+    const source = filter === "all" || filter === "share_x_clicked" ? filteredEvents : [];
+    return aggregateTop(source, "share_x_clicked", "text");
+  }, [filteredEvents, filter]);
 
   const topHarder = useMemo(() => {
-    return aggregateTop(
-      data?.events ?? [],
-      "say_it_harder_clicked",
-      "originalBotText"
-    );
-  }, [data]);
+    const source =
+      filter === "all" || filter === "say_it_harder_clicked" ? filteredEvents : [];
+    return aggregateTop(source, "say_it_harder_clicked", "originalBotText");
+  }, [filteredEvents, filter]);
 
   const topPromptsLeadingToShares = useMemo(() => {
-    return aggregateTop(data?.events ?? [], "share_x_clicked", "prompt");
-  }, [data]);
+    const source = filter === "all" || filter === "share_x_clicked" ? filteredEvents : [];
+    return aggregateTop(source, "share_x_clicked", "prompt");
+  }, [filteredEvents, filter]);
 
   const topPromptsLeadingToCopies = useMemo(() => {
-    return aggregateTop(data?.events ?? [], "copy_clicked", "prompt");
-  }, [data]);
+    const source = filter === "all" || filter === "copy_clicked" ? filteredEvents : [];
+    return aggregateTop(source, "copy_clicked", "prompt");
+  }, [filteredEvents, filter]);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -140,12 +174,56 @@ export default function MadTrackPage() {
           <button
             type="button"
             onClick={() => {
-              loadData();
+              void loadData();
             }}
             className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/25 hover:bg-white/5"
           >
             Refresh
           </button>
+        </div>
+
+        <div className="mb-8 grid gap-4 xl:grid-cols-[1fr_auto]">
+          <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-4">
+            <div className="mb-3 text-sm font-semibold text-white/55">
+              Filter Events
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              {(
+                [
+                  { label: "All", value: "all" },
+                  { label: "Messages", value: "message_sent" },
+                  { label: "Copied", value: "copy_clicked" },
+                  { label: "Shared", value: "share_x_clicked" },
+                  { label: "Harder", value: "say_it_harder_clicked" },
+                ] as Array<{ label: string; value: FilterValue }>
+              ).map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  onClick={() => setFilter(item.value)}
+                  className={[
+                    "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                    filter === item.value
+                      ? "border-red-500 bg-red-500 text-white"
+                      : "border-white/10 text-white hover:border-white/20 hover:bg-white/5",
+                  ].join(" ")}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-4">
+            <div className="mb-3 text-sm font-semibold text-white/55">Search</div>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search prompts, replies, or payload..."
+              className="w-full min-w-[280px] rounded-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 focus:border-red-500"
+            />
+          </div>
         </div>
 
         {isLoading && (
@@ -162,10 +240,15 @@ export default function MadTrackPage() {
 
         {!isLoading && !error && data && (
           <>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
               <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
                 <div className="text-sm text-white/45">Total Events</div>
                 <div className="mt-2 text-3xl font-bold">{data.count}</div>
+              </div>
+
+              <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
+                <div className="text-sm text-white/45">Filtered Events</div>
+                <div className="mt-2 text-3xl font-bold">{filteredCount}</div>
               </div>
 
               <div className="rounded-[24px] border border-white/10 bg-[#0b0b0f] p-5">
@@ -203,7 +286,7 @@ export default function MadTrackPage() {
                 <div className="mt-4 space-y-3">
                   {topCopied.length === 0 ? (
                     <div className="text-sm text-white/50">
-                      No copied responses yet.
+                      No copied responses in this filter.
                     </div>
                   ) : (
                     topCopied.map(([text, count], i) => (
@@ -223,7 +306,7 @@ export default function MadTrackPage() {
                 <div className="mt-4 space-y-3">
                   {topShared.length === 0 ? (
                     <div className="text-sm text-white/50">
-                      No shared responses yet.
+                      No shared responses in this filter.
                     </div>
                   ) : (
                     topShared.map(([text, count], i) => (
@@ -243,7 +326,7 @@ export default function MadTrackPage() {
                 <div className="mt-4 space-y-3">
                   {topHarder.length === 0 ? (
                     <div className="text-sm text-white/50">
-                      No “Say it harder” events yet.
+                      No “Say it harder” events in this filter.
                     </div>
                   ) : (
                     topHarder.map(([text, count], i) => (
@@ -265,7 +348,7 @@ export default function MadTrackPage() {
                 <div className="mt-4 space-y-3">
                   {topPromptsLeadingToShares.length === 0 ? (
                     <div className="text-sm text-white/50">
-                      No share-linked prompts yet.
+                      No share-linked prompts in this filter.
                     </div>
                   ) : (
                     topPromptsLeadingToShares.map(([prompt, count], i) => (
@@ -285,7 +368,7 @@ export default function MadTrackPage() {
                 <div className="mt-4 space-y-3">
                   {topPromptsLeadingToCopies.length === 0 ? (
                     <div className="text-sm text-white/50">
-                      No copy-linked prompts yet.
+                      No copy-linked prompts in this filter.
                     </div>
                   ) : (
                     topPromptsLeadingToCopies.map(([prompt, count], i) => (
@@ -305,10 +388,10 @@ export default function MadTrackPage() {
               <h2 className="text-2xl font-bold">Recent Events</h2>
 
               <div className="mt-5 space-y-4">
-                {data.events.length === 0 ? (
-                  <div className="text-white/50">No events yet.</div>
+                {filteredEvents.length === 0 ? (
+                  <div className="text-white/50">No events match this filter.</div>
                 ) : (
-                  data.events.map((item, index) => (
+                  filteredEvents.map((item, index) => (
                     <div
                       key={`${item.timestamp}-${item.event}-${index}`}
                       className="rounded-[20px] border border-white/10 bg-black/60 p-4"
