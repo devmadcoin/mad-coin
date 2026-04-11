@@ -46,7 +46,6 @@ type UserProfile = {
   respectCount: number;
   lastInputs: string[];
   learnedWeakSpots: string[];
-  customInsults: string[];
   noRepeatStreak: number;
 };
 
@@ -79,161 +78,17 @@ type DailyChallengeState = {
 };
 
 const STORAGE_KEYS = {
-  messages: "madbot_messages_v7",
-  profile: "madbot_profile_v7",
-  session: "madbot_session_v7",
-  cookLevel: "madbot_cook_level_v7",
-  daily: "madbot_daily_v7",
+  messages: "madbot_messages_v8",
+  profile: "madbot_profile_v8",
+  session: "madbot_session_v8",
+  cookLevel: "madbot_cook_level_v8",
+  daily: "madbot_daily_v8",
+  runtimeSessionId: "madbot_runtime_session_id_v8",
 };
 
 const MAX_HISTORY = 60;
 const MAX_LAST_INPUTS = 10;
 const MAX_LEARNED_WEAKSPOTS = 12;
-const MAX_CUSTOM_INSULTS = 18;
-
-const OPENERS = {
-  mild: [
-    "That’s what you came in with?",
-    "You really wanted help with that?",
-    "That question is already losing points.",
-    "Interesting. Not good. But interesting.",
-  ],
-  mean: [
-    "You typed that like confidence was included for free.",
-    "That question looks undercooked.",
-    "I’ve seen stronger thinking from people half-awake.",
-    "You really hit send on that?",
-  ],
-  crashout: [
-    "That’s the question you walked in with?",
-    "I almost respected your curiosity until I read that.",
-    "That wasn’t a question. That was a confession.",
-    "You ask like consequences are optional.",
-  ],
-  demon: [
-    "You dragged that thought out into public on purpose?",
-    "That input had the structural integrity of wet cardboard.",
-    "I can already tell your habits are allergic to execution.",
-    "That message smells like hesitation and bad timing.",
-  ],
-} as const;
-
-const REPEAT_OPENERS = {
-  mild: ["You already asked this.", "Same question again?"],
-  mean: [
-    "You asked this already. Repetition is not depth.",
-    "Same loop, different minute.",
-  ],
-  crashout: [
-    "You already asked this. Repeating yourself won’t turn confusion into intelligence.",
-    "Same question again? So the issue isn’t information. It’s retention.",
-    "You’re looping. That’s what panic does when it wants to feel strategic.",
-  ],
-  demon: [
-    "Same question again? Your memory and your momentum are both unemployed.",
-    "You brought the same problem back like it aged into wisdom. It didn’t.",
-    "You loop because action scares you more than embarrassment.",
-  ],
-} as const;
-
-const DIAGNOSES = {
-  hesitation: [
-    "You don’t have a knowledge problem. You have a hesitation addiction.",
-    "You stall so long the opportunity dies of old age.",
-    "You wait for clarity the way cowards wait for permission.",
-  ],
-  ego: [
-    "You want the result without surviving the embarrassment of being bad first.",
-    "Your ego keeps writing checks your discipline can’t cash.",
-    "You protect your image harder than your future.",
-  ],
-  cope: [
-    "That’s not analysis. That’s emotional wallpaper over bad habits.",
-    "You keep decorating your excuses and calling it self-awareness.",
-    "You’re attached to the story that protects your comfort.",
-  ],
-  greed: [
-    "You don’t want mastery. You want a shortcut dressed like destiny.",
-    "You keep sniffing for instant upside like consequences won’t invoice you later.",
-    "Greed made you impatient, and impatience made you predictable.",
-  ],
-  fear: [
-    "Fear is driving and you’re pretending you’re navigating.",
-    "You keep calling it caution because the real word would hurt more.",
-    "You want certainty before movement. That’s fear in nice clothes.",
-  ],
-  discipline: [
-    "Execution keeps ghosting you because you only flirt with effort.",
-    "You collect plans and abandon them like chores.",
-    "Your ambition is loud. Your habits are missing.",
-  ],
-} as const;
-
-const INSULTS = {
-  mild: [
-    "Even your potential is asking for a clearer plan.",
-    "You’ve mistaken overthinking for progress.",
-    "You move like someone waiting for life to blink first.",
-  ],
-  mean: [
-    "Even your potential is tired of waiting for you.",
-    "You’ve mistaken overthinking for depth.",
-    "You move like someone outsourcing their spine.",
-    "You want a breakthrough with the work ethic of a buffering video.",
-  ],
-  crashout: [
-    "Even your potential is tired of waiting for you.",
-    "You’ve mistaken overthinking for depth.",
-    "You move like someone outsourcing their spine.",
-    "If avoidance burned calories, you’d be elite.",
-    "Your confidence has never met your consistency.",
-    "At this point your biggest talent is delaying your own progress with premium excuses.",
-  ],
-  demon: [
-    "Your future keeps knocking and you keep answering with excuses.",
-    "Your consistency is so absent it should file a missing persons report.",
-    "You keep asking for a map while actively dating confusion.",
-    "At this point your excuses have more reps than your discipline.",
-    "You want elite outcomes with habits that belong in clearance.",
-  ],
-} as const;
-
-const INSIGHT_LINES = [
-  "The bottleneck is not the world. It’s your pattern.",
-  "Truth hurts less when you stop negotiating with it.",
-  "Momentum is ugly before it becomes impressive.",
-  "You do not need more motivation. You need fewer exits.",
-  "The version of you that wins is built from boring decisions you keep disrespecting.",
-];
-
-const RESPECT_LINES = [
-  "For once, that didn’t sound pathetic.",
-  "Good. That answer had a spine.",
-  "Rare. Accountability. Keep that.",
-  "That actually sounded disciplined.",
-  "You might be worth watching after all.",
-];
-
-const CLOSERS = {
-  mild: ["Do better.", "Your move.", "Lock in."],
-  mean: ["Lock in.", "Your move.", "Fix it."],
-  crashout: [
-    "Stay $MAD.",
-    "Stay $MAD or stay average.",
-    "Your move. Stay $MAD.",
-  ],
-  demon: [
-    "Stay $MAD or stay forgettable.",
-    "Stay $MAD or stay decorative.",
-    "Stay $MAD. Or keep rotting in hesitation.",
-  ],
-} as const;
-
-const CHAOS_LINES = [
-  "YoU FeLt DoUbT... aNd CaLlEd It LoGiC.",
-  "YoU DoN’t NeEd a SiGn. YoU nEeD a BaCkBoNe.",
-  "EvEn YoUr ExCuSeS aRe RuNnInG oUt Of ChArGe.",
-];
 
 const SAFE_GUARD_PATTERNS = [
   /suicide/i,
@@ -261,7 +116,7 @@ const CHALLENGE_DEFINITIONS: Record<ChallengeKey, ChallengeDefinition> = {
   earn_respect_1: {
     key: "earn_respect_1",
     title: "Earn Respect",
-    description: "Trigger 1 rare respect reply.",
+    description: "Trigger 1 rare respect-flavored moment.",
     target: 1,
   },
   demon_survive_3: {
@@ -280,14 +135,6 @@ const CHALLENGE_DEFINITIONS: Record<ChallengeKey, ChallengeDefinition> = {
 
 function normalizeInput(input: string) {
   return input.toLowerCase().trim().replace(/\s+/g, " ");
-}
-
-function pick<T>(arr: T[]) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function maybe(probability: number) {
-  return Math.random() < probability;
 }
 
 function clamp(num: number, min: number, max: number) {
@@ -313,6 +160,15 @@ function saveJSON<T>(key: string, value: T) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function getRuntimeSessionId() {
+  const existing = loadJSON<string>(STORAGE_KEYS.runtimeSessionId, "");
+  if (existing) return existing;
+
+  const id = `session_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  saveJSON(STORAGE_KEYS.runtimeSessionId, id);
+  return id;
+}
+
 function defaultProfile(): UserProfile {
   return {
     name: "Anonymous Survivor",
@@ -330,7 +186,6 @@ function defaultProfile(): UserProfile {
     respectCount: 0,
     lastInputs: [],
     learnedWeakSpots: [],
-    customInsults: [],
     noRepeatStreak: 0,
   };
 }
@@ -393,7 +248,11 @@ function dominantTrait(profile: UserProfile) {
 function deriveArchetype(profile: UserProfile): Archetype {
   const trait = dominantTrait(profile);
 
-  if (profile.survivedResponses >= 12 && profile.respectCount >= 2 && profile.repeatedQuestions <= 2) {
+  if (
+    profile.survivedResponses >= 12 &&
+    profile.respectCount >= 2 &&
+    profile.repeatedQuestions <= 2
+  ) {
     return "The Survivor";
   }
 
@@ -448,168 +307,19 @@ function buildWeakSpotLabel(input: string) {
   return "asks for answers while dodging action";
 }
 
-function makeCustomInsultFromWeakSpot(weakSpot: string, cookLevel: CookLevel) {
-  const templates =
-    cookLevel === "mild"
-      ? [
-          `You still ${weakSpot}. That’s the leak.`,
-          `I can already tell you ${weakSpot}.`,
-          `Your pattern says you ${weakSpot}.`,
-        ]
-      : cookLevel === "mean"
-        ? [
-            `You still ${weakSpot}. That’s not bad luck. That’s pattern.`,
-            `Every time you speak, I can hear that you ${weakSpot}.`,
-            `Your whole pattern screams that you ${weakSpot}.`,
-          ]
-        : [
-            `You still ${weakSpot}. That’s not bad luck. That’s identity.`,
-            `Every time you speak, I can hear that you ${weakSpot}.`,
-            `The tragic part is you don’t even notice how often you ${weakSpot}.`,
-            `You keep proving that you ${weakSpot}, then act shocked by the result.`,
-          ];
-
-  return pick(templates);
-}
-
 function isSensitiveInput(input: string) {
   return SAFE_GUARD_PATTERNS.some((pattern) => pattern.test(input));
 }
 
-function buildSafeResponse(input: string) {
-  const lower = normalizeInput(input);
-
-  if (/suicide|kill myself|i want to die|hurt myself|self harm|cut myself|overdose/.test(lower)) {
-    return `I’m not doing roast mode on this.
-
-This sounds serious. Please contact emergency services now if you might act on this, or call or text 988 right now if you’re in the U.S. or Canada.
-
-Tell one real person near you immediately: "I am not safe alone right now."`;
-  }
-
-  return `Not doing insult mode on this topic.`;
-}
-
-function shouldRespect(input: string) {
-  const text = normalizeInput(input);
-
-  const accountable =
-    /i will|i did|i'm doing|i am doing|i took action|i shipped|i posted|i learned|i was wrong|my fault|i need discipline|i need to focus/.test(
-      text,
-    );
-
-  const lessVictim = !/why me|unfair|they|everyone else|nobody/.test(text);
-
-  return accountable && lessVictim;
-}
-
-function buildBotReply(input: string, profile: UserProfile, cookLevel: CookLevel) {
-  if (isSensitiveInput(input)) {
-    return { text: buildSafeResponse(input), respected: false };
-  }
-
-  const normalized = normalizeInput(input);
-  const isRepeat = profile.lastInputs.includes(normalized);
-  const trait = dominantTrait(profile);
-
-  const respectChance =
-    shouldRespect(input)
-      ? cookLevel === "mild"
-        ? 0.18
-        : cookLevel === "mean"
-          ? 0.12
-          : cookLevel === "crashout"
-            ? 0.08
-            : 0.06
-      : 0;
-
-  if (respectChance > 0 && maybe(respectChance)) {
-    return {
-      text: `${pick(RESPECT_LINES)}
-
-${pick(INSIGHT_LINES)}
-
-${pick(CLOSERS[cookLevel])}`,
-      respected: true,
-    };
-  }
-
-  const opener = isRepeat ? pick(REPEAT_OPENERS[cookLevel]) : pick(OPENERS[cookLevel]);
-
-  const diagnosisPool =
-    trait === "hesitation"
-      ? DIAGNOSES.hesitation
-      : trait === "ego"
-        ? DIAGNOSES.ego
-        : trait === "cope"
-          ? DIAGNOSES.cope
-          : trait === "greed"
-            ? DIAGNOSES.greed
-            : trait === "fear"
-              ? DIAGNOSES.fear
-              : DIAGNOSES.discipline;
-
-  const learnedInsert =
-    profile.customInsults.length > 0 && maybe(0.45)
-      ? pick(profile.customInsults)
-      : pick(INSULTS[cookLevel]);
-
-  const insight = maybe(0.72) ? pick(INSIGHT_LINES) : "";
-  const chaos =
-    (cookLevel === "crashout" || cookLevel === "demon") && maybe(cookLevel === "demon" ? 0.2 : 0.12)
-      ? `\n\n${pick(CHAOS_LINES)}`
-      : "";
-
-  const closer = pick(CLOSERS[cookLevel]);
-  const shortMode =
-    cookLevel === "mild"
-      ? maybe(0.28)
-      : cookLevel === "mean"
-        ? maybe(0.24)
-        : maybe(0.2);
-
-  if (shortMode) {
-    return {
-      text: `${opener}
-
-${learnedInsert}
-
-${closer}`,
-      respected: false,
-    };
-  }
-
-  return {
-    text: `${opener}
-
-${pick(diagnosisPool)}
-
-${learnedInsert}
-
-${insight}${chaos}
-
-${closer}`,
-    respected: false,
-  };
-}
-
-function updateProfileFromInput(prev: UserProfile, input: string, cookLevel: CookLevel): UserProfile {
+function updateProfileFromInput(prev: UserProfile, input: string): UserProfile {
   const normalized = normalizeInput(input);
   const scores = scoreInput(input);
   const repeated = prev.lastInputs.includes(normalized);
   const weakSpot = buildWeakSpotLabel(input);
 
-  const nextWeakSpots = Array.from(new Set([weakSpot, ...prev.learnedWeakSpots])).slice(
-    0,
-    MAX_LEARNED_WEAKSPOTS,
-  );
-
-  const generatedInsult = makeCustomInsultFromWeakSpot(weakSpot, cookLevel);
-
-  const nextCustomInsults = Array.from(new Set([generatedInsult, ...prev.customInsults])).slice(
-    0,
-    MAX_CUSTOM_INSULTS,
-  );
+  const nextWeakSpots = Array.from(
+    new Set([weakSpot, ...prev.learnedWeakSpots]),
+  ).slice(0, MAX_LEARNED_WEAKSPOTS);
 
   const nextLastInputs = [normalized, ...prev.lastInputs].slice(0, MAX_LAST_INPUTS);
 
@@ -628,7 +338,6 @@ function updateProfileFromInput(prev: UserProfile, input: string, cookLevel: Coo
     survivedResponses: prev.survivedResponses + 1,
     lastInputs: nextLastInputs,
     learnedWeakSpots: nextWeakSpots,
-    customInsults: nextCustomInsults,
     noRepeatStreak: repeated ? 0 : prev.noRepeatStreak + 1,
   };
 }
@@ -978,19 +687,62 @@ export default function MadMindPage() {
       ts: Date.now(),
     };
 
-    const nextProfileBase = updateProfileFromInput(profile, trimmed, cookLevel);
+    const nextProfileBase = updateProfileFromInput(profile, trimmed);
+    const archetypeNow = deriveArchetype(nextProfileBase);
+    const sessionId = getRuntimeSessionId();
 
     setMessages((prev) => [...prev, userMsg]);
     setProfile(nextProfileBase);
     setInput("");
     setIsThinking(true);
 
-    const delay = 280 + Math.floor(Math.random() * 420);
+    const delay = 220 + Math.floor(Math.random() * 280);
     await new Promise((resolve) => setTimeout(resolve, delay));
 
-    const reply = buildBotReply(trimmed, nextProfileBase, cookLevel);
+    let replyText = "Signal lost.";
+    let respected = false;
 
-    const finalProfile = reply.respected
+    if (isSensitiveInput(trimmed)) {
+      replyText = `I’m not doing roast mode on this.
+
+This sounds serious. Please contact emergency services now if you might act on this, or call or text 988 right now if you’re in the U.S. or Canada.
+
+Tell one real person near you immediately: "I am not safe alone right now."`;
+    } else {
+      try {
+        const res = await fetch("/api/mad-mind", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: trimmed,
+            cookLevel,
+            archetype: archetypeNow,
+            sessionId,
+            username: (nextProfileBase.name || username || "Anonymous Survivor").trim(),
+          }),
+        });
+
+        const json = (await res.json()) as { output?: string };
+
+        if (typeof json?.output === "string" && json.output.trim()) {
+          replyText = json.output.trim();
+        } else {
+          replyText = "Signal lost.";
+        }
+      } catch (error) {
+        console.error("MAD Mind fetch failed:", error);
+        replyText = "Signal broke.";
+      }
+
+      respected =
+        /rare\. accountability|that answer had a spine|that actually sounded disciplined|worth watching/i.test(
+          replyText.toLowerCase(),
+        );
+    }
+
+    const finalProfile = respected
       ? {
           ...nextProfileBase,
           respectCount: nextProfileBase.respectCount + 1,
@@ -1000,10 +752,10 @@ export default function MadMindPage() {
     const botMsg: ChatMessage = {
       id: uid(),
       role: "bot",
-      text: reply.text,
+      text: replyText,
       ts: Date.now(),
-      respected: reply.respected,
-      scoreValue: roastCardScore(reply.text, reply.respected),
+      respected,
+      scoreValue: roastCardScore(replyText, respected),
     };
 
     const nextMessages = [...messages, userMsg, botMsg];
@@ -1013,7 +765,7 @@ export default function MadMindPage() {
       finalProfile,
       nextScore,
       cookLevel,
-      reply.respected,
+      respected,
     );
 
     setProfile(finalProfile);
@@ -1414,7 +1166,7 @@ export default function MadMindPage() {
                     : "border-red-500/20 bg-red-500/10"
                 }`}
               >
-                <p className="text-sm leading-7 text-white/95 whitespace-pre-wrap">
+                <p className="whitespace-pre-wrap text-sm leading-7 text-white/95">
                   {selectedRoast.text}
                 </p>
               </div>
