@@ -8,6 +8,12 @@ import type { ReactNode } from "react";
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
   {
+    href: "/mad-mind",
+    label: "MAD AI",
+    mobileLabel: "MAD AI",
+    variant: "primary" as const,
+  },
+  {
     href: "/roadmap",
     label: "The Mad Path",
     mobileLabel: "Mad Path",
