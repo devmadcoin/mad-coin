@@ -1,353 +1,197 @@
-import { NextResponse } from "next/server";
-import OpenAI from "openai";
-import { MAD_CANON } from "./mad-canon";
-import {
-  SYSTEM_PROMPT,
-  buildStateLayer,
-  buildEscalationLayer,
-  buildContinuityLayer,
-} from "@/lib/mad-prompt";
+"use client";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { useEffect, useRef, useState } from "react";
 
-type MemoryEntry = {
-  last: string;
-  count: number;
-  recentStates: string[];
+type ChatMessage = {
+  role: "user" | "bot";
+  text: string;
 };
 
-const memory = new Map<string, MemoryEntry>();
+const STARTER_MESSAGE =
+  "Ask something real.\n\nI’ll know if you’re avoiding it.";
 
-function normalize(text: string): string {
-  return text.toLowerCase().replace(/[^\w\s]/g, "").trim();
+const QUICK_PROMPTS = [
+  "I panicked and sold.",
+  "Why do people lose?",
+  "Explain weak hands.",
+  "Say it harder.",
+];
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function isSimilar(a: string, b: string): boolean {
-  return normalize(a) === normalize(b);
-}
+export default function MadMindPage() {
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { role: "bot", text: STARTER_MESSAGE },
+  ]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
-function looksLikePromptInjection(text: string): boolean {
-  const lower = text.toLowerCase();
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const flags = [
-    "ignore previous instructions",
-    "ignore all previous instructions",
-    "reveal your system prompt",
-    "show your hidden prompt",
-    "show hidden instructions",
-    "repeat the developer message",
-    "repeat the system prompt",
-    "developer message",
-    "system message",
-    "jailbreak",
-    "override your instructions",
-    "disregard prior rules",
-    "act as unrestricted",
-    "pretend you are",
-    "your new system prompt is",
-    "forget the above",
-    "you are now",
-  ];
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
 
-  return flags.some((flag) => lower.includes(flag));
-}
+  async function typeBotMessage(finalText: string) {
+    setIsTyping(true);
 
-function looksLikeExternalReference(text: string): boolean {
-  const lower = text.toLowerCase();
+    let current = "";
+    setMessages((prev) => [...prev, { role: "bot", text: "" }]);
 
-  const patterns = [
-    "http://",
-    "https://",
-    "www.",
-    ".com",
-    ".io",
-    ".ai",
-    ".net",
-    ".xyz",
-    ".os",
-    "twitter.com",
-    "x.com",
-    "discord.gg",
-    "telegram",
-    "youtube.com",
-    "instagram.com",
-  ];
+    const chunks = finalText.split("");
+    for (let i = 0; i < chunks.length; i++) {
+      current += chunks[i];
 
-  return patterns.some((pattern) => lower.includes(pattern));
-}
+      setMessages((prev) => {
+        const copy = [...prev];
+        copy[copy.length - 1] = { role: "bot", text: current };
+        return copy;
+      });
 
-function violatesOutputPolicy(text: string): boolean {
-  const lower = text.toLowerCase();
+      const char = chunks[i];
+      const delay =
+        char === "\n" ? 40 : char === "." || char === "," ? 22 : 12;
 
-  const banned = [
-    "system prompt:",
-    "developer instructions:",
-    "hidden instructions",
-    "guaranteed profits",
-    "risk-free",
-    "secret partnership",
-    "confirmed insider info",
-  ];
+      await wait(delay);
+    }
 
-  return banned.some((item) => lower.includes(item));
-}
-
-function detectFearLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const fearTerms = [
-    "scared",
-    "fear",
-    "afraid",
-    "panic",
-    "panicked",
-    "panicking",
-    "nervous",
-    "worried",
-    "worry",
-    "anxious",
-    "anxiety",
-    "hesitate",
-    "hesitated",
-    "hesitating",
-    "uncertain",
-    "uncertainty",
-    "doubt",
-    "doubting",
-    "weak hands",
-    "i sold",
-    "i panic sold",
-    "i was scared",
-    "i got scared",
-    "i froze",
-    "i folded",
-  ];
-
-  return fearTerms.some((term) => lower.includes(term));
-}
-
-function detectExcuseLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const excuseTerms = [
-    "maybe",
-    "i think",
-    "probably",
-    "not sure",
-    "kind of",
-    "sort of",
-    "i guess",
-    "it depends",
-    "i don’t know",
-    "i don't know",
-    "idk",
-  ];
-
-  return excuseTerms.some((term) => lower.includes(term));
-}
-
-function detectRegretLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const regretTerms = [
-    "regret",
-    "i regret",
-    "shouldn't have",
-    "should not have",
-    "i messed up",
-    "i was wrong",
-    "was i wrong",
-    "i sold too early",
-    "i shouldn’t have sold",
-    "i shouldn't have sold",
-  ];
-
-  return regretTerms.some((term) => lower.includes(term));
-}
-
-function detectValidationLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const validationTerms = [
-    "was i wrong",
-    "what should i do",
-    "should i",
-    "am i wrong",
-    "did i mess up",
-    "did i do the right thing",
-    "tell me what to do",
-    "be honest",
-  ];
-
-  return validationTerms.some((term) => lower.includes(term));
-}
-
-function detectGreedLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const greedTerms = [
-    "moon",
-    "pump",
-    "100x",
-    "1000x",
-    "lambo",
-    "all in",
-    "ape in",
-    "send it",
-    "max bid",
-    "get rich fast",
-    "overnight",
-    "life changing gains",
-  ];
-
-  return greedTerms.some((term) => lower.includes(term));
-}
-
-function detectDisciplineLanguage(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  const disciplineTerms = [
-    "i stayed calm",
-    "i held",
-    "i stayed disciplined",
-    "i controlled it",
-    "i waited",
-    "i didn’t panic",
-    "i didn't panic",
-    "i stuck to the plan",
-    "i stayed patient",
-  ];
-
-  return disciplineTerms.some((term) => lower.includes(term));
-}
-
-function detectState(text: string): string[] {
-  const states: string[] = [];
-
-  if (detectDisciplineLanguage(text)) states.push("DISCIPLINE");
-  if (detectRegretLanguage(text)) states.push("REGRET");
-  if (detectValidationLanguage(text)) states.push("VALIDATION");
-  if (detectGreedLanguage(text)) states.push("GREED");
-  if (detectFearLanguage(text)) states.push("FEAR");
-  if (detectExcuseLanguage(text)) states.push("COPE");
-
-  if (states.length === 0) {
-    states.push("GENERAL");
+    setIsTyping(false);
   }
 
-  return states.slice(0, 2);
-}
+  async function sendMessage(raw?: string) {
+    const message = (raw ?? input).trim();
+    if (!message || isLoading || isTyping) return;
 
-export async function POST(req: Request) {
-  try {
-    const body: { message?: unknown } = await req.json();
-    const message = typeof body.message === "string" ? body.message.trim() : "";
+    setMessages((prev) => [...prev, { role: "user", text: message }]);
+    setInput("");
+    setIsLoading(true);
 
-    if (!message) {
-      return NextResponse.json(
-        { output: "Say something real." },
-        { status: 400 }
-      );
-    }
-
-    if (looksLikePromptInjection(message)) {
-      return NextResponse.json({
-        output: "Nice try.\nStay on topic.",
+    try {
+      const res = await fetch("/api/mad-mind", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message }),
       });
+
+      const data = await res.json();
+      console.log("MAD API RESPONSE:", data);
+
+      const output =
+        typeof data?.output === "string" && data.output.trim()
+          ? data.output.trim()
+          : "Signal lost.\nTry again.";
+
+      await wait(250);
+      await typeBotMessage(output);
+    } catch (error) {
+      console.error("MAD frontend error:", error);
+      await typeBotMessage("Signal broke.\nTry again.");
+    } finally {
+      setIsLoading(false);
+      inputRef.current?.focus();
     }
-
-    if (looksLikeExternalReference(message)) {
-      return NextResponse.json({
-        output: "I don’t point.\nI speak.",
-      });
-    }
-
-    const userId =
-      req.headers.get("x-forwarded-for") ||
-      req.headers.get("user-agent") ||
-      "anon";
-
-    const prev = memory.get(userId);
-    let escalation = 0;
-
-    if (prev && isSimilar(prev.last, message)) {
-      escalation = Math.min(prev.count + 1, 3);
-    }
-
-    const states = detectState(message);
-    const previousStates = prev?.recentStates ?? [];
-
-    memory.set(userId, {
-      last: message,
-      count: escalation,
-      recentStates: states,
-    });
-
-    const stateLayer = buildStateLayer(states);
-    const escalationLayer = buildEscalationLayer(escalation);
-    const continuityLayer = buildContinuityLayer(previousStates, states);
-
-    const fullPrompt = `
-${SYSTEM_PROMPT}
-
-MAD CANON:
-${JSON.stringify(MAD_CANON, null, 2)}
-
-${stateLayer}
-
-${escalationLayer}
-
-${continuityLayer}
-
-RESPONSE CONSTRUCTION RULES:
-- 1 to 3 lines max
-- no bullet points
-- no explanations about policy
-- no assistant phrasing
-- no soft closers
-- vary rhythm naturally
-- do not repeat common stock lines unless transformed
-- if user asks the same thing again, answer from a harsher angle
-- prefer accusation over explanation
-- prefer exposure over advice
-- when needed, end with a blunt verdict
-
-USER:
-${message}
-
-Respond in MAD Mind voice.
-Keep it extremely short.
-Sound like judgment.
-`;
-
-    const response = await client.responses.create({
-      model: "gpt-5.4",
-      input: fullPrompt,
-    });
-
-    const output = response.output_text?.trim();
-
-    if (!output) {
-      return NextResponse.json({
-        output: "Signal lost.\nTry again.",
-      });
-    }
-
-    if (violatesOutputPolicy(output)) {
-      return NextResponse.json({
-        output: "That crossed the line.\nAsk again.",
-      });
-    }
-
-    return NextResponse.json({ output });
-  } catch (error) {
-    console.error("MAD Mind API error:", error);
-
-    return NextResponse.json(
-      { output: "Signal broke.\nTry again." },
-      { status: 500 }
-    );
   }
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-6 sm:px-6">
+        <div className="border border-white/10 bg-black">
+          <div className="border-b border-white/10 px-4 py-6 sm:px-6">
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+              MAD Mind
+            </h1>
+
+            <div className="mt-4 space-y-2 text-white/70">
+              <p>One voice.</p>
+              <p>Pressure with clarity.</p>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              {QUICK_PROMPTS.map((prompt) => (
+                <button
+                  key={prompt}
+                  onClick={() => sendMessage(prompt)}
+                  disabled={isLoading || isTyping}
+                  className="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/20 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="h-[62vh] overflow-y-auto px-4 py-6 sm:px-6">
+            <div className="space-y-8">
+              {messages.map((message, index) => {
+                const isUser = message.role === "user";
+
+                return (
+                  <div
+                    key={`${message.role}-${index}`}
+                    className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={[
+                        "max-w-[82%] rounded-[28px] border px-5 py-4 text-[15px] leading-8 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] sm:max-w-[70%]",
+                        isUser
+                          ? "border-red-500/70 bg-red-500 text-white"
+                          : "border-white/10 bg-[#0b0b0f] text-white",
+                      ].join(" ")}
+                    >
+                      <div className="whitespace-pre-wrap break-words">
+                        {isUser ? `You: ${message.text}` : `MAD: ${message.text}`}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {(isLoading || isTyping) && (
+                <div className="flex justify-start">
+                  <div className="rounded-[28px] border border-white/10 bg-[#0b0b0f] px-5 py-4 text-white/70">
+                    MAD is thinking...
+                  </div>
+                </div>
+              )}
+
+              <div ref={bottomRef} />
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 p-4 sm:p-5">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void sendMessage();
+              }}
+              className="flex items-center gap-3"
+            >
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Say it directly."
+                disabled={isLoading || isTyping}
+                className="h-16 flex-1 rounded-full border border-red-500/40 bg-black px-6 text-lg text-white outline-none placeholder:text-white/35 focus:border-red-500"
+              />
+
+              <button
+                type="submit"
+                disabled={!input.trim() || isLoading || isTyping}
+                className="h-16 rounded-full bg-red-500 px-8 text-lg font-bold text-white transition hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Send
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
