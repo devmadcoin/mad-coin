@@ -13,12 +13,33 @@ const client = new OpenAI({
 });
 
 type Intent = "DEFINITION" | "GENERAL";
+type CookLevel = "mild" | "mean" | "crashout" | "demon";
+
+type RequestBody = {
+  message?: unknown;
+  cookLevel?: unknown;
+  username?: unknown;
+  archetype?: unknown;
+  sessionId?: unknown;
+};
+
 type MemoryEntry = {
   last: string;
-  count: number;
+  repeatCount: number;
   recentStates: string[];
   lastBot?: string;
+  lastIntent?: Intent;
+  lastCookLevel?: CookLevel;
+  lastArchetype?: string;
 };
+
+type TrackEvent =
+  | "message_sent"
+  | "respect_mode_hit"
+  | "say_it_harder_clicked"
+  | "session_best_roast_selected";
+
+type TrackValue = string | number | boolean | null;
 
 const memory = new Map<string, MemoryEntry>();
 
@@ -49,7 +70,7 @@ function stripHarderPrompt(text: string): string {
     .replace(/be harsher/gi, "")
     .replace(/more brutal/gi, "")
     .replace(/hit harder/gi, "")
-    .replace(/harder/gi, "")
+    .replace(/\bharder\b/gi, "")
     .trim();
 }
 
@@ -119,7 +140,10 @@ function detectState(text: string): string[] {
   if (
     lower.includes("i stayed calm") ||
     lower.includes("i held") ||
-    lower.includes("i stayed disciplined")
+    lower.includes("i stayed disciplined") ||
+    lower.includes("i shipped") ||
+    lower.includes("i posted") ||
+    lower.includes("i took action")
   ) {
     states.push("DISCIPLINE");
   }
@@ -129,6 +153,30 @@ function detectState(text: string): string[] {
   }
 
   return states.slice(0, 2);
+}
+
+function detectRespect(text: string): boolean {
+  const lower = text.toLowerCase();
+
+  const accountable =
+    lower.includes("i shipped") ||
+    lower.includes("i posted") ||
+    lower.includes("i took action") ||
+    lower.includes("i was wrong") ||
+    lower.includes("my fault") ||
+    lower.includes("i need discipline") ||
+    lower.includes("i need to focus") ||
+    lower.includes("i'm fixing it") ||
+    lower.includes("im fixing it");
+
+  const victimTone =
+    lower.includes("why me") ||
+    lower.includes("unfair") ||
+    lower.includes("everyone else") ||
+    lower.includes("nobody") ||
+    lower.includes("they did this");
+
+  return accountable && !victimTone;
 }
 
 function buildIntentLayer(intent: Intent): string {
@@ -152,11 +200,105 @@ If the first line defines, the second line should accuse, contrast, or imply.
 `;
 }
 
+function buildCookLayer(cookLevel: CookLevel): string {
+  if (cookLevel === "mild") {
+    return `
+COOK LEVEL: MILD
+
+Be sharp, but controlled.
+Prioritize cold judgment over cruelty.
+`;
+  }
+
+  if (cookLevel === "mean") {
+    return `
+COOK LEVEL: MEAN
+
+Be dismissive.
+Punch cleanly.
+Keep it quotable.
+`;
+  }
+
+  if (cookLevel === "demon") {
+    return `
+COOK LEVEL: DEMON
+
+Be severe.
+Use colder contempt.
+Make the reply feel dangerous, compact, and memorable.
+`;
+  }
+
+  return `
+COOK LEVEL: CRASHOUT
+
+Be harsh, fast, and judgmental.
+Favor exposure over comfort.
+`;
+}
+
+function sanitizeCookLevel(value: unknown): CookLevel {
+  if (
+    value === "mild" ||
+    value === "mean" ||
+    value === "crashout" ||
+    value === "demon"
+  ) {
+    return value;
+  }
+
+  return "crashout";
+}
+
+function sanitizeText(value: unknown, fallback = ""): string {
+  return typeof value === "string" ? value.trim().slice(0, 500) : fallback;
+}
+
+function makeMemoryKey(req: Request, sessionId: string): string {
+  if (sessionId) return sessionId;
+
+  const forwardedFor = req.headers.get("x-forwarded-for") ?? "";
+  const userAgent = req.headers.get("user-agent") ?? "";
+  return `${forwardedFor}::${userAgent}` || "anon";
+}
+
+async function trackServerEvent(
+  req: Request,
+  event: TrackEvent,
+  payload: Record<string, TrackValue>
+) {
+  try {
+    const origin =
+      req.headers.get("origin") ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      "http://localhost:3000";
+
+    await fetch(`${origin}/api/mad-track`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        event,
+        payload,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+  } catch (error) {
+    console.error("MAD server tracking failed:", error);
+  }
+}
+
 export async function POST(req: Request) {
   try {
-    const body: { message?: unknown } = await req.json();
-    const rawMessage =
-      typeof body.message === "string" ? body.message.trim() : "";
+    const body: RequestBody = await req.json();
+
+    const rawMessage = sanitizeText(body.message);
+    const cookLevel = sanitizeCookLevel(body.cookLevel);
+    const username = sanitizeText(body.username, "Anonymous Survivor");
+    const archetype = sanitizeText(body.archetype, "Unknown");
+    const sessionId = sanitizeText(body.sessionId);
 
     if (!rawMessage) {
       return NextResponse.json(
@@ -172,28 +314,25 @@ export async function POST(req: Request) {
 
     const message = cleanedMessage || rawMessage;
     const intent = detectIntent(message);
+    const states = detectState(message);
+    const respectCandidate = detectRespect(message);
 
-    const userId =
-      req.headers.get("x-forwarded-for") ||
-      req.headers.get("user-agent") ||
-      "anon";
-
-    const prev = memory.get(userId);
+    const memoryKey = makeMemoryKey(req, sessionId);
+    const prev = memory.get(memoryKey);
     const previousStates = prev?.recentStates ?? [];
 
     let escalation = 0;
     if (harderRequested) {
       escalation = 3;
     } else if (prev && isSimilar(prev.last, message)) {
-      escalation = Math.min(prev.count + 1, 3);
+      escalation = Math.min(prev.repeatCount + 1, 3);
     }
-
-    const states = detectState(message);
 
     const stateLayer = buildStateLayer(states);
     const escalationLayer = buildEscalationLayer(escalation);
     const continuityLayer = buildContinuityLayer(previousStates, states);
     const intentLayer = buildIntentLayer(intent);
+    const cookLayer = buildCookLayer(cookLevel);
 
     const antiRepeatLayer = prev?.lastBot
       ? `
@@ -204,7 +343,7 @@ Your last response was:
 
 Do not reuse the same sentence shape.
 Do not restate the same slogan pattern.
-Change the opening and the second-line behavior.
+Change the opening and second-line behavior.
 `
       : "";
 
@@ -220,9 +359,14 @@ Make the second line hit harder than the first.
 `
       : "";
 
-    const fullPrompt = `
-${SYSTEM_PROMPT}
+    const identityLayer = `
+IDENTITY CONTEXT:
+- username: ${username || "Anonymous Survivor"}
+- archetype: ${archetype || "Unknown"}
+- cook level: ${cookLevel}
+`;
 
+    const promptBody = `
 MAD CANON:
 ${JSON.stringify(MAD_CANON, null, 2)}
 
@@ -234,9 +378,13 @@ ${continuityLayer}
 
 ${intentLayer}
 
+${cookLayer}
+
 ${harderLayer}
 
 ${antiRepeatLayer}
+
+${identityLayer}
 
 RESPONSE CONSTRUCTION RULES:
 - 1 to 3 lines max
@@ -264,7 +412,14 @@ Sound like judgment.
 
     const response = await client.responses.create({
       model: "gpt-4.1-mini",
-      input: fullPrompt,
+      instructions: SYSTEM_PROMPT,
+      input: promptBody,
+      metadata: {
+        app: "mad-mind",
+        cook_level: cookLevel,
+        intent,
+      },
+      safety_identifier: sessionId || memoryKey,
     });
 
     const output =
@@ -278,12 +433,52 @@ Sound like judgment.
       });
     }
 
-    memory.set(userId, {
+    memory.set(memoryKey, {
       last: message,
-      count: escalation,
+      repeatCount: escalation,
       recentStates: states,
       lastBot: output,
+      lastIntent: intent,
+      lastCookLevel: cookLevel,
+      lastArchetype: archetype,
     });
+
+    await trackServerEvent(req, "message_sent", {
+      username,
+      archetype,
+      cookLevel,
+      intent,
+      message,
+      botText: output,
+      respected: respectCandidate,
+      escalation,
+      harderRequested,
+      statePrimary: states[0] ?? "GENERAL",
+      stateSecondary: states[1] ?? null,
+      sessionId: sessionId || null,
+    });
+
+    if (harderRequested) {
+      await trackServerEvent(req, "say_it_harder_clicked", {
+        username,
+        archetype,
+        cookLevel,
+        originalMessage: rawMessage,
+        cleanedMessage: message,
+        sessionId: sessionId || null,
+      });
+    }
+
+    if (respectCandidate) {
+      await trackServerEvent(req, "respect_mode_hit", {
+        username,
+        archetype,
+        cookLevel,
+        message,
+        botText: output,
+        sessionId: sessionId || null,
+      });
+    }
 
     return NextResponse.json({ output });
   } catch (error) {
