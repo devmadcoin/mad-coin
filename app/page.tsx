@@ -327,7 +327,7 @@ export default function Home() {
               <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
                 <div className="flex flex-wrap gap-3">
                   <InternalPillButton href="/mad-mind" primary>
-                    Enter MAD Mind
+                    Enter MAD AI
                   </InternalPillButton>
                 </div>
 
@@ -401,15 +401,15 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div className="text-center lg:text-left">
               <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-                MAD Signal
+                MAD AI
               </p>
 
               <h2 className="mt-4 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-                Talk to the mind behind the movement.
+                Talk to the AI behind the movement.
               </h2>
 
               <p className="mt-4 max-w-xl text-sm leading-7 text-white/62 sm:text-base lg:max-w-2xl">
-                Ask MAD Mind about the philosophy, generate captions in brand
+                Ask MAD AI about the philosophy, generate captions in brand
                 voice, or turn chaos into signal.
               </p>
 
@@ -427,7 +427,7 @@ export default function Home() {
 
               <div className="mt-8 flex justify-center lg:justify-start">
                 <InternalPillButton href="/mad-mind" primary>
-                  Enter MAD Mind
+                  Enter MAD AI
                 </InternalPillButton>
               </div>
             </div>
@@ -438,7 +438,7 @@ export default function Home() {
               <div className="relative animate-spin-slow hover:[animation-duration:5s]">
                 <Image
                   src="/MAD-MIND-HEAD.png"
-                  alt="MAD Mind"
+                  alt="MAD AI"
                   width={420}
                   height={420}
                   className="object-contain drop-shadow-[0_0_40px_rgba(255,0,0,0.6)]"
