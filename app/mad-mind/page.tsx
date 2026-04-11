@@ -22,6 +22,14 @@ function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function buildShareText(text: string) {
+  return `MAD Mind just said:
+
+"${text}"
+
+Stay $MAD.`;
+}
+
 export default function MadMindPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "bot", text: STARTER_MESSAGE },
@@ -109,13 +117,7 @@ export default function MadMindPage() {
 
   async function handleCopy(text: string, index: number) {
     try {
-      const shareText = `MAD Mind just called me out:
-
-"${text}"
-
-Stay $MAD.`;
-
-      await navigator.clipboard.writeText(shareText);
+      await navigator.clipboard.writeText(buildShareText(text));
       setCopiedIndex(index);
 
       window.setTimeout(() => {
@@ -124,6 +126,15 @@ Stay $MAD.`;
     } catch (error) {
       console.error("Copy failed:", error);
     }
+  }
+
+  function handleShareToX(text: string) {
+    const shareText = buildShareText(text);
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      shareText
+    )}`;
+
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   function handleSayItHarder() {
@@ -196,6 +207,14 @@ Stay $MAD.`;
                             className="text-white/45 transition hover:text-white"
                           >
                             {copiedIndex === index ? "Copied" : "Copy this"}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleShareToX(message.text)}
+                            className="text-white/45 transition hover:text-white"
+                          >
+                            Share on X
                           </button>
 
                           <button
