@@ -6,6 +6,11 @@ import {
   buildStateLayer,
   buildEscalationLayer,
   buildContinuityLayer,
+  buildCookLayer,
+  buildArchetypeLayer,
+  buildRespectLayer,
+  buildAntiRepetitionLayer,
+  buildDefinitionLayer,
 } from "@/lib/mad-prompt";
 
 const client = new OpenAI({
@@ -36,12 +41,28 @@ type MemoryEntry = {
 type TrackEvent =
   | "message_sent"
   | "respect_mode_hit"
-  | "say_it_harder_clicked"
-  | "session_best_roast_selected";
+  | "say_it_harder_clicked";
 
 type TrackValue = string | number | boolean | null;
 
 const memory = new Map<string, MemoryEntry>();
+
+function sanitizeText(value: unknown, fallback = ""): string {
+  return typeof value === "string" ? value.trim().slice(0, 1000) : fallback;
+}
+
+function sanitizeCookLevel(value: unknown): CookLevel {
+  if (
+    value === "mild" ||
+    value === "mean" ||
+    value === "crashout" ||
+    value === "demon"
+  ) {
+    return value;
+  }
+
+  return "crashout";
+}
 
 function normalize(text: string): string {
   return text.toLowerCase().replace(/[^\w\s$]/g, "").trim();
@@ -148,11 +169,31 @@ function detectState(text: string): string[] {
     states.push("DISCIPLINE");
   }
 
+  if (
+    lower.includes("ego") ||
+    lower.includes("i know") ||
+    lower.includes("obviously") ||
+    lower.includes("i'm better") ||
+    lower.includes("im better")
+  ) {
+    states.push("EGO");
+  }
+
+  if (
+    lower.includes("hesitate") ||
+    lower.includes("not ready") ||
+    lower.includes("later") ||
+    lower.includes("tomorrow") ||
+    lower.includes("eventually")
+  ) {
+    states.push("HESITATION");
+  }
+
   if (states.length === 0) {
     states.push("GENERAL");
   }
 
-  return states.slice(0, 2);
+  return Array.from(new Set(states)).slice(0, 2);
 }
 
 function detectRespect(text: string): boolean {
@@ -167,7 +208,10 @@ function detectRespect(text: string): boolean {
     lower.includes("i need discipline") ||
     lower.includes("i need to focus") ||
     lower.includes("i'm fixing it") ||
-    lower.includes("im fixing it");
+    lower.includes("im fixing it") ||
+    lower.includes("i stayed calm") ||
+    lower.includes("i held") ||
+    lower.includes("i stayed disciplined");
 
   const victimTone =
     lower.includes("why me") ||
@@ -179,88 +223,14 @@ function detectRespect(text: string): boolean {
   return accountable && !victimTone;
 }
 
-function buildIntentLayer(intent: Intent): string {
-  if (intent !== "DEFINITION") return "";
-
-  return `
-INTENT: DEFINITION
-
-The user is asking what $MAD is.
-
-Do NOT fall back into repeated slogans.
-Do NOT keep opening with "$MAD is what..."
-Vary the angle:
-- identity
-- contrast
-- consequence
-- accusation
-- verdict
-
-If the first line defines, the second line should accuse, contrast, or imply.
-`;
-}
-
-function buildCookLayer(cookLevel: CookLevel): string {
-  if (cookLevel === "mild") {
-    return `
-COOK LEVEL: MILD
-
-Be sharp, but controlled.
-Prioritize cold judgment over cruelty.
-`;
-  }
-
-  if (cookLevel === "mean") {
-    return `
-COOK LEVEL: MEAN
-
-Be dismissive.
-Punch cleanly.
-Keep it quotable.
-`;
-  }
-
-  if (cookLevel === "demon") {
-    return `
-COOK LEVEL: DEMON
-
-Be severe.
-Use colder contempt.
-Make the reply feel dangerous, compact, and memorable.
-`;
-  }
-
-  return `
-COOK LEVEL: CRASHOUT
-
-Be harsh, fast, and judgmental.
-Favor exposure over comfort.
-`;
-}
-
-function sanitizeCookLevel(value: unknown): CookLevel {
-  if (
-    value === "mild" ||
-    value === "mean" ||
-    value === "crashout" ||
-    value === "demon"
-  ) {
-    return value;
-  }
-
-  return "crashout";
-}
-
-function sanitizeText(value: unknown, fallback = ""): string {
-  return typeof value === "string" ? value.trim().slice(0, 500) : fallback;
-}
-
 function makeMemoryKey(req: Request, sessionId: string): string {
   if (sessionId) return sessionId;
 
   const forwardedFor = req.headers.get("x-forwarded-for") ?? "";
   const userAgent = req.headers.get("user-agent") ?? "";
-  return `${forwardedFor}::${userAgent}` || "anon";
+  const combined = `${forwardedFor}::${userAgent}`.trim();
+
+  return combined || "anon";
 }
 
 async function trackServerEvent(
@@ -297,8 +267,8 @@ export async function POST(req: Request) {
     const rawMessage = sanitizeText(body.message);
     const cookLevel = sanitizeCookLevel(body.cookLevel);
     const username = sanitizeText(body.username, "Anonymous Survivor");
-    const archetype = sanitizeText(body.archetype, "Unknown");
-    const sessionId = sanitizeText(body.sessionId);
+    const archetype = sanitizeText(body.archetype, "");
+    const sessionId = sanitizeText(body.sessionId, "");
 
     if (!rawMessage) {
       return NextResponse.json(
@@ -331,21 +301,11 @@ export async function POST(req: Request) {
     const stateLayer = buildStateLayer(states);
     const escalationLayer = buildEscalationLayer(escalation);
     const continuityLayer = buildContinuityLayer(previousStates, states);
-    const intentLayer = buildIntentLayer(intent);
     const cookLayer = buildCookLayer(cookLevel);
-
-    const antiRepeatLayer = prev?.lastBot
-      ? `
-ANTI-REPETITION:
-
-Your last response was:
-"${prev.lastBot}"
-
-Do not reuse the same sentence shape.
-Do not restate the same slogan pattern.
-Change the opening and second-line behavior.
-`
-      : "";
+    const archetypeLayer = buildArchetypeLayer(archetype || undefined);
+    const respectLayer = buildRespectLayer(respectCandidate);
+    const antiRepetitionLayer = buildAntiRepetitionLayer(prev?.lastBot);
+    const definitionLayer = buildDefinitionLayer(intent === "DEFINITION");
 
     const harderLayer = harderRequested
       ? `
@@ -361,12 +321,12 @@ Make the second line hit harder than the first.
 
     const identityLayer = `
 IDENTITY CONTEXT:
-- username: ${username || "Anonymous Survivor"}
+- username: ${username}
 - archetype: ${archetype || "Unknown"}
 - cook level: ${cookLevel}
 `;
 
-    const promptBody = `
+    const input = `
 MAD CANON:
 ${JSON.stringify(MAD_CANON, null, 2)}
 
@@ -376,13 +336,17 @@ ${escalationLayer}
 
 ${continuityLayer}
 
-${intentLayer}
-
 ${cookLayer}
 
-${harderLayer}
+${archetypeLayer}
 
-${antiRepeatLayer}
+${respectLayer}
+
+${definitionLayer}
+
+${antiRepetitionLayer}
+
+${harderLayer}
 
 ${identityLayer}
 
@@ -399,7 +363,7 @@ RESPONSE CONSTRUCTION RULES:
 - sometimes answer in three lines with a philosophical finish
 - do not let the second line fall back into a definition pattern
 - if the first line defines, the second line should accuse, contrast, or imply
-- avoid repeating "$MAD is what..." across consecutive replies
+- avoid repeating "$MAD is..." across consecutive replies
 - favor lines that feel quotable and memorable
 
 USER:
@@ -413,7 +377,7 @@ Sound like judgment.
     const response = await client.responses.create({
       model: "gpt-4.1-mini",
       instructions: SYSTEM_PROMPT,
-      input: promptBody,
+      input,
       metadata: {
         app: "mad-mind",
         cook_level: cookLevel,
@@ -440,12 +404,12 @@ Sound like judgment.
       lastBot: output,
       lastIntent: intent,
       lastCookLevel: cookLevel,
-      lastArchetype: archetype,
+      lastArchetype: archetype || undefined,
     });
 
     await trackServerEvent(req, "message_sent", {
       username,
-      archetype,
+      archetype: archetype || "Unknown",
       cookLevel,
       intent,
       message,
@@ -461,7 +425,7 @@ Sound like judgment.
     if (harderRequested) {
       await trackServerEvent(req, "say_it_harder_clicked", {
         username,
-        archetype,
+        archetype: archetype || "Unknown",
         cookLevel,
         originalMessage: rawMessage,
         cleanedMessage: message,
@@ -472,7 +436,7 @@ Sound like judgment.
     if (respectCandidate) {
       await trackServerEvent(req, "respect_mode_hit", {
         username,
-        archetype,
+        archetype: archetype || "Unknown",
         cookLevel,
         message,
         botText: output,
