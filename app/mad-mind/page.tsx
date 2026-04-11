@@ -4,16 +4,30 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { hasSupabase, supabase } from "@/lib/supabase/client";
 
 type MessageRole = "user" | "bot";
-
 type CookLevel = "mild" | "mean" | "crashout" | "demon";
+
+type Archetype =
+  | "The Hesitator"
+  | "The Shortcut Addict"
+  | "The Excuse Architect"
+  | "The Panic Trader"
+  | "The Faker"
+  | "The Survivor";
+
+type ChallengeKey =
+  | "no_repeats_5"
+  | "survive_7"
+  | "earn_respect_1"
+  | "demon_survive_3"
+  | "score_250";
 
 type ChatMessage = {
   id: string;
   role: MessageRole;
   text: string;
   ts: number;
-  copied?: boolean;
   respected?: boolean;
+  scoreValue?: number;
 };
 
 type UserProfile = {
@@ -33,6 +47,7 @@ type UserProfile = {
   lastInputs: string[];
   learnedWeakSpots: string[];
   customInsults: string[];
+  noRepeatStreak: number;
 };
 
 type LeaderboardEntry = {
@@ -46,14 +61,32 @@ type LeaderboardEntry = {
   updated_at?: string;
 };
 
-const STORAGE_KEYS = {
-  messages: "madbot_messages_v6",
-  profile: "madbot_profile_v6",
-  session: "madbot_session_v6",
-  cookLevel: "madbot_cook_level_v6",
+type ChallengeDefinition = {
+  key: ChallengeKey;
+  title: string;
+  description: string;
+  target: number;
 };
 
-const MAX_HISTORY = 50;
+type ChallengeProgress = Record<ChallengeKey, number>;
+type ChallengeCompletion = Record<ChallengeKey, boolean>;
+
+type DailyChallengeState = {
+  dateKey: string;
+  activeKeys: ChallengeKey[];
+  progress: ChallengeProgress;
+  completed: ChallengeCompletion;
+};
+
+const STORAGE_KEYS = {
+  messages: "madbot_messages_v7",
+  profile: "madbot_profile_v7",
+  session: "madbot_session_v7",
+  cookLevel: "madbot_cook_level_v7",
+  daily: "madbot_daily_v7",
+};
+
+const MAX_HISTORY = 60;
 const MAX_LAST_INPUTS = 10;
 const MAX_LEARNED_WEAKSPOTS = 12;
 const MAX_CUSTOM_INSULTS = 18;
@@ -86,10 +119,7 @@ const OPENERS = {
 } as const;
 
 const REPEAT_OPENERS = {
-  mild: [
-    "You already asked this.",
-    "Same question again?",
-  ],
+  mild: ["You already asked this.", "Same question again?"],
   mean: [
     "You asked this already. Repetition is not depth.",
     "Same loop, different minute.",
@@ -185,16 +215,8 @@ const RESPECT_LINES = [
 ];
 
 const CLOSERS = {
-  mild: [
-    "Do better.",
-    "Your move.",
-    "Lock in.",
-  ],
-  mean: [
-    "Lock in.",
-    "Your move.",
-    "Fix it.",
-  ],
+  mild: ["Do better.", "Your move.", "Lock in."],
+  mean: ["Lock in.", "Your move.", "Fix it."],
   crashout: [
     "Stay $MAD.",
     "Stay $MAD or stay average.",
@@ -222,6 +244,39 @@ const SAFE_GUARD_PATTERNS = [
   /cut myself/i,
   /overdose/i,
 ];
+
+const CHALLENGE_DEFINITIONS: Record<ChallengeKey, ChallengeDefinition> = {
+  no_repeats_5: {
+    key: "no_repeats_5",
+    title: "No Echoes",
+    description: "Send 5 messages without repeating yourself.",
+    target: 5,
+  },
+  survive_7: {
+    key: "survive_7",
+    title: "Steel Stomach",
+    description: "Survive 7 bot replies in one day.",
+    target: 7,
+  },
+  earn_respect_1: {
+    key: "earn_respect_1",
+    title: "Earn Respect",
+    description: "Trigger 1 rare respect reply.",
+    target: 1,
+  },
+  demon_survive_3: {
+    key: "demon_survive_3",
+    title: "Demon Shift",
+    description: "Survive 3 replies in Demon mode.",
+    target: 3,
+  },
+  score_250: {
+    key: "score_250",
+    title: "Quarter Kilo Rage",
+    description: "Reach a score of 250.",
+    target: 250,
+  },
+};
 
 function normalizeInput(input: string) {
   return input.toLowerCase().trim().replace(/\s+/g, " ");
@@ -276,6 +331,7 @@ function defaultProfile(): UserProfile {
     lastInputs: [],
     learnedWeakSpots: [],
     customInsults: [],
+    noRepeatStreak: 0,
   };
 }
 
@@ -332,6 +388,39 @@ function dominantTrait(profile: UserProfile) {
   ] as const;
 
   return pairs.sort((a, b) => b[1] - a[1])[0][0];
+}
+
+function deriveArchetype(profile: UserProfile): Archetype {
+  const trait = dominantTrait(profile);
+
+  if (profile.survivedResponses >= 12 && profile.respectCount >= 2 && profile.repeatedQuestions <= 2) {
+    return "The Survivor";
+  }
+
+  if (trait === "hesitation") return "The Hesitator";
+  if (trait === "greed") return "The Shortcut Addict";
+  if (trait === "cope") return "The Excuse Architect";
+  if (trait === "fear") return "The Panic Trader";
+  if (trait === "ego") return "The Faker";
+
+  return "The Survivor";
+}
+
+function archetypeDescription(archetype: Archetype) {
+  switch (archetype) {
+    case "The Hesitator":
+      return "Waits for certainty until momentum dies.";
+    case "The Shortcut Addict":
+      return "Wants upside faster than mastery.";
+    case "The Excuse Architect":
+      return "Builds clean stories around bad habits.";
+    case "The Panic Trader":
+      return "Lets fear hold the steering wheel.";
+    case "The Faker":
+      return "Protects image harder than progress.";
+    case "The Survivor":
+      return "Still flawed, but actually moving.";
+  }
 }
 
 function buildWeakSpotLabel(input: string) {
@@ -409,17 +498,12 @@ function shouldRespect(input: string) {
       text,
     );
 
-  const lessVictim =
-    !/why me|unfair|they|everyone else|nobody/.test(text);
+  const lessVictim = !/why me|unfair|they|everyone else|nobody/.test(text);
 
   return accountable && lessVictim;
 }
 
-function buildBotReply(
-  input: string,
-  profile: UserProfile,
-  cookLevel: CookLevel,
-) {
+function buildBotReply(input: string, profile: UserProfile, cookLevel: CookLevel) {
   if (isSensitiveInput(input)) {
     return { text: buildSafeResponse(input), respected: false };
   }
@@ -441,14 +525,16 @@ function buildBotReply(
 
   if (respectChance > 0 && maybe(respectChance)) {
     return {
-      text: `${pick(RESPECT_LINES)}\n\n${pick(INSIGHT_LINES)}\n\n${pick(CLOSERS[cookLevel])}`,
+      text: `${pick(RESPECT_LINES)}
+
+${pick(INSIGHT_LINES)}
+
+${pick(CLOSERS[cookLevel])}`,
       respected: true,
     };
   }
 
-  const opener = isRepeat
-    ? pick(REPEAT_OPENERS[cookLevel])
-    : pick(OPENERS[cookLevel]);
+  const opener = isRepeat ? pick(REPEAT_OPENERS[cookLevel]) : pick(OPENERS[cookLevel]);
 
   const diagnosisPool =
     trait === "hesitation"
@@ -484,7 +570,11 @@ function buildBotReply(
 
   if (shortMode) {
     return {
-      text: `${opener}\n\n${learnedInsert}\n\n${closer}`,
+      text: `${opener}
+
+${learnedInsert}
+
+${closer}`,
       respected: false,
     };
   }
@@ -522,8 +612,6 @@ function updateProfileFromInput(prev: UserProfile, input: string, cookLevel: Coo
   );
 
   const nextLastInputs = [normalized, ...prev.lastInputs].slice(0, MAX_LAST_INPUTS);
-  const survivedResponses = prev.survivedResponses + 1;
-  const streak = prev.streak + 1;
 
   return {
     ...prev,
@@ -535,12 +623,13 @@ function updateProfileFromInput(prev: UserProfile, input: string, cookLevel: Coo
     greedScore: prev.greedScore + scores.greed,
     disciplineScore: prev.disciplineScore + scores.discipline,
     fearScore: prev.fearScore + scores.fear,
-    streak,
-    bestStreak: Math.max(prev.bestStreak, streak),
-    survivedResponses,
+    streak: prev.streak + 1,
+    bestStreak: Math.max(prev.bestStreak, prev.streak + 1),
+    survivedResponses: prev.survivedResponses + 1,
     lastInputs: nextLastInputs,
     learnedWeakSpots: nextWeakSpots,
     customInsults: nextCustomInsults,
+    noRepeatStreak: repeated ? 0 : prev.noRepeatStreak + 1,
   };
 }
 
@@ -564,6 +653,104 @@ function calcSurvivorScore(profile: UserProfile, cookLevel: CookLevel) {
     profile.respectCount * 35 +
     levelBonus
   );
+}
+
+function todayKey() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = `${now.getMonth() + 1}`.padStart(2, "0");
+  const dd = `${now.getDate()}`.padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function seededIndex(seed: string, mod: number, offset = 0) {
+  let hash = 0;
+  const src = `${seed}-${offset}`;
+  for (let i = 0; i < src.length; i += 1) {
+    hash = (hash * 31 + src.charCodeAt(i)) % 2147483647;
+  }
+  return Math.abs(hash) % mod;
+}
+
+function createDailyState(dateKey: string): DailyChallengeState {
+  const allKeys = Object.keys(CHALLENGE_DEFINITIONS) as ChallengeKey[];
+  const chosen = new Set<ChallengeKey>();
+
+  let salt = 0;
+  while (chosen.size < 3) {
+    chosen.add(allKeys[seededIndex(dateKey, allKeys.length, salt)]);
+    salt += 1;
+  }
+
+  const progress: ChallengeProgress = {
+    no_repeats_5: 0,
+    survive_7: 0,
+    earn_respect_1: 0,
+    demon_survive_3: 0,
+    score_250: 0,
+  };
+
+  const completed: ChallengeCompletion = {
+    no_repeats_5: false,
+    survive_7: false,
+    earn_respect_1: false,
+    demon_survive_3: false,
+    score_250: false,
+  };
+
+  return {
+    dateKey,
+    activeKeys: Array.from(chosen),
+    progress,
+    completed,
+  };
+}
+
+function ensureDailyState(state: DailyChallengeState | null) {
+  const key = todayKey();
+  if (!state || state.dateKey !== key) return createDailyState(key);
+  return state;
+}
+
+function updateDailyProgress(
+  current: DailyChallengeState,
+  profile: UserProfile,
+  score: number,
+  cookLevel: CookLevel,
+  respectedThisTurn: boolean,
+) {
+  const next: DailyChallengeState = {
+    ...current,
+    progress: { ...current.progress },
+    completed: { ...current.completed },
+  };
+
+  next.progress.no_repeats_5 = Math.max(next.progress.no_repeats_5, profile.noRepeatStreak);
+  next.progress.survive_7 = Math.max(next.progress.survive_7, profile.survivedResponses);
+  next.progress.earn_respect_1 = Math.max(
+    next.progress.earn_respect_1,
+    respectedThisTurn ? 1 : profile.respectCount,
+  );
+  next.progress.demon_survive_3 =
+    cookLevel === "demon"
+      ? Math.max(next.progress.demon_survive_3, next.progress.demon_survive_3 + 1)
+      : next.progress.demon_survive_3;
+  next.progress.score_250 = Math.max(next.progress.score_250, score);
+
+  for (const key of next.activeKeys) {
+    const def = CHALLENGE_DEFINITIONS[key];
+    next.completed[key] = next.progress[key] >= def.target;
+  }
+
+  return next;
+}
+
+function roastCardScore(text: string, respected?: boolean) {
+  const lengthValue = Math.min(text.length, 280);
+  const punctuationBonus = (text.match(/[.!?]/g) ?? []).length * 3;
+  const capsChaosBonus = /[A-Z]{3,}/.test(text) ? 18 : 0;
+  const respectBonus = respected ? 20 : 0;
+  return lengthValue + punctuationBonus + capsChaosBonus + respectBonus;
 }
 
 async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
@@ -630,6 +817,8 @@ export default function MadMindPage() {
   const [supabaseStatus, setSupabaseStatus] = useState(
     hasSupabase ? "Supabase connected" : "Local mode only",
   );
+  const [dailyState, setDailyState] = useState<DailyChallengeState>(createDailyState(todayKey()));
+  const [selectedRoast, setSelectedRoast] = useState<ChatMessage | null>(null);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -638,11 +827,13 @@ export default function MadMindPage() {
     const savedProfile = loadJSON<UserProfile>(STORAGE_KEYS.profile, defaultProfile());
     const savedSession = loadJSON<{ name: string } | null>(STORAGE_KEYS.session, null);
     const savedCookLevel = loadJSON<CookLevel>(STORAGE_KEYS.cookLevel, "crashout");
+    const savedDaily = loadJSON<DailyChallengeState | null>(STORAGE_KEYS.daily, null);
 
     setMessages(savedMessages);
     setProfile(savedProfile);
     setUsername(savedSession?.name || savedProfile.name || "Anonymous Survivor");
     setCookLevel(savedCookLevel);
+    setDailyState(ensureDailyState(savedDaily));
     setMounted(true);
 
     if (hasSupabase) {
@@ -673,6 +864,11 @@ export default function MadMindPage() {
   }, [cookLevel, mounted]);
 
   useEffect(() => {
+    if (!mounted) return;
+    saveJSON(STORAGE_KEYS.daily, dailyState);
+  }, [dailyState, mounted]);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isThinking]);
 
@@ -683,6 +879,18 @@ export default function MadMindPage() {
   }, [copyToast]);
 
   const score = useMemo(() => calcSurvivorScore(profile, cookLevel), [profile, cookLevel]);
+  const archetype = useMemo(() => deriveArchetype(profile), [profile]);
+
+  const topRoast = useMemo(() => {
+    const botMessages = messages.filter((m) => m.role === "bot");
+    if (botMessages.length === 0) return null;
+
+    return [...botMessages]
+      .map((m) => ({ ...m, scoreValue: roastCardScore(m.text, m.respected) }))
+      .sort((a, b) => (b.scoreValue ?? 0) - (a.scoreValue ?? 0))[0];
+  }, [messages]);
+
+  const activeChallenges = dailyState.activeKeys.map((key) => CHALLENGE_DEFINITIONS[key]);
 
   async function saveIdentity(name: string) {
     const cleaned = name.trim() || "Anonymous Survivor";
@@ -712,6 +920,7 @@ export default function MadMindPage() {
     fresh.name = username || "Anonymous Survivor";
     setProfile(fresh);
     setMessages([]);
+    setSelectedRoast(null);
     saveJSON(STORAGE_KEYS.profile, fresh);
     saveJSON(STORAGE_KEYS.messages, []);
   }
@@ -726,7 +935,7 @@ export default function MadMindPage() {
   }
 
   async function shareScore() {
-    const text = `${username} survived the $MAD Bot in ${cookLevel.toUpperCase()} mode with score ${score}.`;
+    const text = `${username} survived the $MAD Bot in ${cookLevel.toUpperCase()} mode with score ${score} as ${archetype}.`;
 
     if (navigator.share) {
       try {
@@ -738,6 +947,24 @@ export default function MadMindPage() {
     }
 
     await copyText(text);
+  }
+
+  async function copyRoastCard(message: ChatMessage) {
+    const card = [
+      "━━━━━━━━━━━━━━━━━━",
+      "$MAD BOT ROAST CARD",
+      "━━━━━━━━━━━━━━━━━━",
+      `Name: ${username}`,
+      `Archetype: ${archetype}`,
+      `Cook Level: ${cookLevel.toUpperCase()}`,
+      `Score: ${score}`,
+      "",
+      message.text,
+      "",
+      "Stay $MAD.",
+    ].join("\n");
+
+    await copyText(card);
   }
 
   async function handleSend() {
@@ -776,16 +1003,28 @@ export default function MadMindPage() {
       text: reply.text,
       ts: Date.now(),
       respected: reply.respected,
+      scoreValue: roastCardScore(reply.text, reply.respected),
     };
+
+    const nextMessages = [...messages, userMsg, botMsg];
+    const nextScore = calcSurvivorScore(finalProfile, cookLevel);
+    const nextDaily = updateDailyProgress(
+      ensureDailyState(dailyState),
+      finalProfile,
+      nextScore,
+      cookLevel,
+      reply.respected,
+    );
 
     setProfile(finalProfile);
     setMessages((prev) => [...prev, botMsg]);
+    setDailyState(nextDaily);
     setIsThinking(false);
 
     if (hasSupabase) {
       await upsertRemoteScore({
         player_name: (finalProfile.name || username || "Anonymous Survivor").trim(),
-        score: calcSurvivorScore(finalProfile, cookLevel),
+        score: nextScore,
         survived_responses: finalProfile.survivedResponses,
         best_streak: finalProfile.bestStreak,
         cook_level: cookLevel,
@@ -794,6 +1033,15 @@ export default function MadMindPage() {
 
       const rows = await fetchLeaderboard();
       setLeaderboard(rows);
+    }
+
+    const newTop = [...nextMessages]
+      .filter((m) => m.role === "bot")
+      .map((m) => ({ ...m, scoreValue: roastCardScore(m.text, m.respected) }))
+      .sort((a, b) => (b.scoreValue ?? 0) - (a.scoreValue ?? 0))[0];
+
+    if (newTop && (!topRoast || (newTop.scoreValue ?? 0) > (topRoast.scoreValue ?? 0))) {
+      setSelectedRoast(newTop);
     }
   }
 
@@ -823,9 +1071,9 @@ export default function MadMindPage() {
         <div className="mb-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
             <p className="text-xs uppercase tracking-[0.35em] text-red-400/80">$MAD Mind</p>
-            <h1 className="mt-2 text-3xl font-black sm:text-4xl">Cook Chamber</h1>
+            <h1 className="mt-2 text-3xl font-black sm:text-4xl">Archetype Chamber</h1>
             <p className="mt-2 max-w-2xl text-sm text-white/65">
-              Cook levels, rare respect mode, copy/share actions, and a live leaderboard.
+              Daily challenges, roast cards, and a hidden behavior archetype that evolves as you talk.
             </p>
 
             <div className="mt-4 flex flex-wrap gap-2">
@@ -862,6 +1110,7 @@ export default function MadMindPage() {
                 placeholder="Enter survivor name"
                 className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm outline-none placeholder:text-white/35 focus:border-red-400/50"
               />
+
               <div className="flex gap-2">
                 <button
                   onClick={() => saveIdentity(username)}
@@ -873,7 +1122,7 @@ export default function MadMindPage() {
                   onClick={shareScore}
                   className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm font-bold text-white/90 hover:bg-black/50"
                 >
-                  Share score
+                  Share
                 </button>
               </div>
 
@@ -881,6 +1130,37 @@ export default function MadMindPage() {
                 {supabaseStatus}
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="mb-4 grid gap-4 lg:grid-cols-[0.68fr_0.32fr]">
+          <div className="rounded-3xl border border-emerald-400/20 bg-emerald-500/10 p-5">
+            <p className="text-xs uppercase tracking-[0.35em] text-emerald-200/80">Archetype</p>
+            <div className="mt-2 flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-black">{archetype}</h2>
+                <p className="mt-1 text-sm text-white/70">{archetypeDescription(archetype)}</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-right">
+                <div className="text-xs text-white/45">Dominant weakness</div>
+                <div className="mt-1 text-sm font-bold">{dominantLabel}</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+            <p className="text-xs uppercase tracking-[0.35em] text-white/45">Session Best Roast</p>
+            {topRoast ? (
+              <button
+                onClick={() => setSelectedRoast(topRoast)}
+                className="mt-3 w-full rounded-2xl border border-white/10 bg-black/30 p-4 text-left hover:bg-black/50"
+              >
+                <div className="text-sm font-bold text-red-200">Open roast card</div>
+                <div className="mt-2 line-clamp-3 text-sm text-white/70">{topRoast.text}</div>
+              </button>
+            ) : (
+              <p className="mt-3 text-sm text-white/45">No roast card yet.</p>
+            )}
           </div>
         </div>
 
@@ -901,10 +1181,10 @@ export default function MadMindPage() {
                     Best Streak: {profile.bestStreak}
                   </span>
                   <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/70">
-                    Weakness: {dominantLabel}
+                    Respect: {profile.respectCount}
                   </span>
                   <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/70">
-                    Respect: {profile.respectCount}
+                    No Repeat Streak: {profile.noRepeatStreak}
                   </span>
                 </div>
               </div>
@@ -938,7 +1218,7 @@ export default function MadMindPage() {
                       </div>
 
                       {message.role === "bot" && (
-                        <div className="mt-2 flex max-w-[88%] gap-2">
+                        <div className="mt-2 flex max-w-[88%] flex-wrap gap-2">
                           <button
                             onClick={() => copyText(message.text)}
                             className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
@@ -946,16 +1226,16 @@ export default function MadMindPage() {
                             Copy roast
                           </button>
                           <button
+                            onClick={() => setSelectedRoast(message)}
+                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                          >
+                            Roast card
+                          </button>
+                          <button
                             onClick={shareScore}
                             className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
                           >
                             Share score
-                          </button>
-                          <button
-                            onClick={() => copyText(`I survived ${cookLevel.toUpperCase()} mode with score ${score}. Beat that.`)}
-                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
-                          >
-                            Challenge friend
                           </button>
                         </div>
                       )}
@@ -999,6 +1279,47 @@ export default function MadMindPage() {
           </section>
 
           <aside className="space-y-4">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+              <p className="text-xs uppercase tracking-[0.35em] text-white/45">Daily Challenges</p>
+              <div className="mt-4 space-y-3">
+                {activeChallenges.map((challenge) => {
+                  const progress = dailyState.progress[challenge.key];
+                  const complete = dailyState.completed[challenge.key];
+                  const pct = Math.min((progress / challenge.target) * 100, 100);
+
+                  return (
+                    <div
+                      key={challenge.key}
+                      className={`rounded-2xl border p-4 ${
+                        complete
+                          ? "border-emerald-400/30 bg-emerald-500/10"
+                          : "border-white/10 bg-black/20"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="text-sm font-bold">{challenge.title}</div>
+                          <div className="mt-1 text-xs text-white/55">{challenge.description}</div>
+                        </div>
+                        <div className="text-xs font-bold text-white/70">
+                          {complete ? "DONE" : `${Math.min(progress, challenge.target)}/${challenge.target}`}
+                        </div>
+                      </div>
+
+                      <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            complete ? "bg-emerald-400" : "bg-red-500"
+                          }`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
               <p className="text-xs uppercase tracking-[0.35em] text-white/45">Learned Profile</p>
 
@@ -1066,6 +1387,55 @@ export default function MadMindPage() {
             </div>
           </aside>
         </div>
+
+        {selectedRoast ? (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+            <div className="w-full max-w-xl rounded-[28px] border border-white/10 bg-neutral-950 p-6 shadow-2xl">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.35em] text-red-300/80">$MAD Roast Card</p>
+                  <h3 className="mt-2 text-2xl font-black">{username}</h3>
+                  <p className="mt-1 text-sm text-white/55">
+                    {archetype} · {cookLevel.toUpperCase()} · Score {score}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSelectedRoast(null)}
+                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/70 hover:bg-white/10"
+                >
+                  Close
+                </button>
+              </div>
+
+              <div
+                className={`mt-5 rounded-[24px] border p-5 ${
+                  selectedRoast.respected
+                    ? "border-emerald-400/30 bg-emerald-500/10"
+                    : "border-red-500/20 bg-red-500/10"
+                }`}
+              >
+                <p className="text-sm leading-7 text-white/95 whitespace-pre-wrap">
+                  {selectedRoast.text}
+                </p>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                <button
+                  onClick={() => copyRoastCard(selectedRoast)}
+                  className="rounded-2xl bg-red-500 px-4 py-2 text-sm font-bold text-white hover:bg-red-400"
+                >
+                  Copy card
+                </button>
+                <button
+                  onClick={() => copyText(selectedRoast.text)}
+                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/90 hover:bg-white/10"
+                >
+                  Copy roast only
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {copyToast ? (
           <div className="fixed bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/80 px-4 py-2 text-xs text-white/90 backdrop-blur">
