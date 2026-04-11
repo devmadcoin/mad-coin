@@ -1,1 +1,22 @@
+function trackEvent(
+  event: "message_sent" | "copy_clicked" | "share_x_clicked" | "say_it_harder_clicked",
+  payload: Record<string, string | number | boolean>
+) {
+  const body = {
+    event,
+    payload,
+    timestamp: new Date().toISOString(),
+  };
 
+  console.log("[MAD TRACK]", body);
+
+  void fetch("/api/mad-track", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  }).catch((error) => {
+    console.error("MAD tracking failed:", error);
+  });
+}
