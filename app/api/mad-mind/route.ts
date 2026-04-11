@@ -13,6 +13,7 @@ const client = new OpenAI({
 });
 
 type Intent = "DEFINITION" | "GENERAL";
+
 type Angle =
   | "IDENTITY"
   | "CONTRAST"
@@ -21,12 +22,20 @@ type Angle =
   | "ACCUSATION"
   | "VERDICT";
 
+type Structure =
+  | "DIRECT"
+  | "ACCUSATION"
+  | "QUESTION"
+  | "CONTRAST"
+  | "IMPLICATION";
+
 type MemoryEntry = {
   last: string;
   count: number;
   recentStates: string[];
   lastBot?: string;
   lastAngle?: Angle;
+  lastStructure?: Structure;
 };
 
 const memory = new Map<string, MemoryEntry>();
@@ -38,6 +47,14 @@ const ANGLE_ROTATION: Angle[] = [
   "SEPARATION",
   "ACCUSATION",
   "VERDICT",
+];
+
+const STRUCTURE_ROTATION: Structure[] = [
+  "DIRECT",
+  "ACCUSATION",
+  "QUESTION",
+  "CONTRAST",
+  "IMPLICATION",
 ];
 
 function normalize(text: string): string {
@@ -323,6 +340,22 @@ function nextAngle(previousAngle?: Angle, seed = ""): Angle {
   return ANGLE_ROTATION[nextIndex];
 }
 
+function nextStructure(previousStructure?: Structure, seed = ""): Structure {
+  if (!previousStructure) {
+    const idx = Math.abs(
+      seed.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
+    ) % STRUCTURE_ROTATION.length;
+
+    return STRUCTURE_ROTATION[idx];
+  }
+
+  const currentIndex = STRUCTURE_ROTATION.indexOf(previousStructure);
+  const nextIndex =
+    currentIndex === -1 ? 0 : (currentIndex + 1) % STRUCTURE_ROTATION.length;
+
+  return STRUCTURE_ROTATION[nextIndex];
+}
+
 function buildIntentLayer(intent: Intent, angle: Angle): string {
   if (intent !== "DEFINITION") return "";
 
@@ -348,6 +381,41 @@ Follow this angle strictly:
 
 Each answer must feel different from earlier ones.
 Avoid recycled brand phrases unless transformed beyond recognition.
+`;
+}
+
+function buildStructureLayer(structure: Structure): string {
+  return `
+STRUCTURE MODE: ${structure}
+
+Follow this structure:
+
+- DIRECT:
+  define clearly, sharp, minimal
+
+- ACCUSATION:
+  call out the user immediately
+  expose what they are getting wrong
+
+- QUESTION:
+  open with a question that corners them
+  force realization
+
+- CONTRAST:
+  start with a flip
+  "You think X. It's Y."
+
+- IMPLICATION:
+  do not define directly
+  show consequences instead
+
+STYLE BREAKER:
+- do NOT always start with "$MAD is"
+- do NOT always define directly
+- you may start with a verdict
+- you may start with an accusation
+- you may start with a rhetorical question
+- you may imply the definition instead of stating it
 `;
 }
 
@@ -392,6 +460,7 @@ export async function POST(req: Request) {
     const prev = memory.get(userId);
     const previousStates = prev?.recentStates ?? [];
     const angle = nextAngle(prev?.lastAngle, `${message}-${intent}`);
+    const structure = nextStructure(prev?.lastStructure, `${message}-${intent}`);
 
     let escalation = 0;
 
@@ -404,6 +473,7 @@ export async function POST(req: Request) {
         recentStates: [],
         lastBot: prev?.lastBot,
         lastAngle: angle,
+        lastStructure: structure,
       });
     } else if (prev && isSimilar(prev.last, message)) {
       escalation = Math.min(prev.count + 1, 3);
@@ -415,6 +485,7 @@ export async function POST(req: Request) {
     const escalationLayer = buildEscalationLayer(escalation);
     const continuityLayer = buildContinuityLayer(previousStates, states);
     const intentLayer = buildIntentLayer(intent, angle);
+    const structureLayer = buildStructureLayer(structure);
 
     const harderLayer = harderRequested
       ? `
@@ -468,6 +539,8 @@ ${escalationLayer}
 ${continuityLayer}
 
 ${intentLayer}
+
+${structureLayer}
 
 ${harderLayer}
 
@@ -527,6 +600,7 @@ Sound like judgment.
       recentStates: states,
       lastBot: output,
       lastAngle: angle,
+      lastStructure: structure,
     });
 
     return NextResponse.json({ output });
