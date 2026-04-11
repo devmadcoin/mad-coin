@@ -2,25 +2,75 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export default function Page() {
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<string[]>([
-    "MAD: Ask something real.\n\nI’ll know if you’re avoiding it.",
+type ChatMessage = {
+  role: "user" | "bot";
+  text: string;
+};
+
+const STARTER_MESSAGE = `Ask something real.
+
+I’ll know if you’re avoiding it.`;
+
+const QUICK_PROMPTS = [
+  "I panicked and sold.",
+  "Why do people lose?",
+  "Explain weak hands.",
+  "Say it harder.",
+];
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export default function MadMindPage() {
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { role: "bot", text: STARTER_MESSAGE },
   ]);
-  const [loading, setLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
 
-  async function send(customMessage?: string) {
-    const trimmed = (customMessage ?? input).trim();
-    if (!trimmed || loading) return;
+  async function typeBotMessage(finalText: string) {
+    setIsTyping(true);
 
-    setMessages((prev) => [...prev, "You: " + trimmed]);
+    let current = "";
+
+    setMessages((prev) => [...prev, { role: "bot", text: "" }]);
+
+    for (let i = 0; i < finalText.length; i++) {
+      current += finalText[i];
+
+      setMessages((prev) => {
+        const next = [...prev];
+        next[next.length - 1] = { role: "bot", text: current };
+        return next;
+      });
+
+      const char = finalText[i];
+      const delay =
+        char === "\n" ? 35 : char === "." || char === "," || char === "—" ? 18 : 10;
+
+      await wait(delay);
+    }
+
+    setIsTyping(false);
+  }
+
+  async function sendMessage(rawMessage?: string) {
+    const message = (rawMessage ?? input).trim();
+
+    if (!message || isLoading || isTyping) return;
+
+    setMessages((prev) => [...prev, { role: "user", text: message }]);
     setInput("");
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       const res = await fetch("/api/mad-mind", {
@@ -28,61 +78,52 @@ export default function Page() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          message: trimmed,
-        }),
+        body: JSON.stringify({ message }),
       });
 
       const data = await res.json();
+      console.log("MAD API RESPONSE:", data);
 
-      setMessages((prev) => [
-        ...prev,
-        "MAD: " + (data.output || "Signal lost.\n\nTry again."),
-      ]);
-    } catch {
-      setMessages((prev) => [...prev, "MAD: Signal lost.\n\nTry again."]);
+      const output =
+        typeof data?.output === "string" && data.output.trim().length > 0
+          ? data.output.trim()
+          : "Signal lost.\nTry again.";
+
+      await wait(220);
+      await typeBotMessage(output);
+    } catch (error) {
+      console.error("MAD frontend error:", error);
+      await typeBotMessage("Signal broke.\nTry again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
+      inputRef.current?.focus();
     }
   }
 
-  const promptChips = [
-    "I panicked and sold.",
-    "Why do people lose?",
-    "Explain weak hands.",
-    "Say it harder.",
-  ];
-
   return (
-    <main className="min-h-screen bg-[#050505] text-white">
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="overflow-hidden rounded-[32px] border border-white/10 bg-black/40 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-          <div className="border-b border-white/10 px-5 py-5 sm:px-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-              MAD Signal
-            </p>
+    <div className="relative min-h-screen overflow-hidden bg-black text-white">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,40,40,0.14),transparent_30%),radial-gradient(circle_at_bottom,rgba(255,40,40,0.08),transparent_35%)]" />
 
-            <h1 className="mt-3 text-3xl font-black leading-[0.95] sm:text-4xl">
+      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-6 sm:px-6">
+        <div className="flex min-h-[calc(100vh-3rem)] flex-col rounded-[28px] border border-white/10 bg-black/90 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
+          <div className="border-b border-white/10 px-4 py-6 sm:px-6">
+            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
               MAD Mind
             </h1>
 
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-              One voice.
-              <br />
-              Pressure with clarity.
-            </p>
+            <div className="mt-4 space-y-2 text-lg text-white/70">
+              <p>One voice.</p>
+              <p>Pressure with clarity.</p>
+            </div>
 
-            <div className="mt-5 flex flex-wrap gap-3">
-              {promptChips.map((prompt) => (
+            <div className="mt-6 flex flex-wrap gap-3">
+              {QUICK_PROMPTS.map((prompt) => (
                 <button
                   key={prompt}
-                  onClick={() => {
-                    setInput(prompt);
-                    setTimeout(() => {
-                      send(prompt);
-                    }, 100);
-                  }}
-                  className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-white/78 transition duration-200 hover:border-red-500/30 hover:bg-white/10 hover:text-white"
+                  type="button"
+                  onClick={() => void sendMessage(prompt)}
+                  disabled={isLoading || isTyping}
+                  className="rounded-full border border-white/10 bg-transparent px-5 py-3 text-base font-semibold text-white transition hover:border-white/20 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {prompt}
                 </button>
@@ -90,69 +131,72 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="h-[55vh] overflow-y-auto px-5 py-5 sm:px-6">
-            <div className="space-y-4">
-              {messages.map((m, i) => {
-                const isUser = m.startsWith("You:");
+          <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+            <div className="space-y-10">
+              {messages.map((message, index) => {
+                const isUser = message.role === "user";
 
                 return (
                   <div
-                    key={i}
+                    key={`${message.role}-${index}`}
                     className={`flex ${isUser ? "justify-end" : "justify-start"}`}
                   >
                     <div
                       className={[
-                        "max-w-[85%] rounded-[22px] px-4 py-3 text-sm sm:text-base",
+                        "max-w-[85%] rounded-[28px] border px-5 py-4 text-[15px] leading-8 sm:max-w-[72%] sm:text-[16px]",
                         isUser
-                          ? "bg-red-500 text-white"
-                          : "border border-white/10 bg-white/5 text-white/88",
+                          ? "border-red-500/80 bg-red-500 text-white"
+                          : "border-white/10 bg-[#0b0b0f] text-white shadow-[0_0_30px_rgba(255,255,255,0.02)]",
                       ].join(" ")}
                     >
-                      <p className="whitespace-pre-wrap leading-7">{m}</p>
+                      <div className="whitespace-pre-wrap break-words">
+                        {isUser ? `You: ${message.text}` : `MAD: ${message.text}`}
+                      </div>
                     </div>
                   </div>
                 );
               })}
 
-              {loading ? (
+              {(isLoading || isTyping) && (
                 <div className="flex justify-start">
-                  <div className="max-w-[85%] rounded-[22px] border border-white/10 bg-white/5 px-4 py-3 text-sm leading-7 text-white/70 sm:text-base">
-                    MAD: Thinking...
+                  <div className="max-w-[85%] rounded-[28px] border border-white/10 bg-[#0b0b0f] px-5 py-4 text-[15px] text-white/70 sm:max-w-[72%] sm:text-[16px]">
+                    MAD is thinking...
                   </div>
                 </div>
-              ) : null}
+              )}
 
-              <div ref={bottomRef} />
+              <div ref={scrollRef} />
             </div>
           </div>
 
-          <div className="border-t border-white/10 px-5 py-4 sm:px-6">
-            <div className="flex gap-3">
+          <div className="border-t border-white/10 p-4 sm:p-5">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void sendMessage();
+              }}
+              className="flex items-center gap-3"
+            >
               <input
-                autoFocus
+                ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    send();
-                  }
-                }}
                 placeholder="Say it directly."
-                className="flex-1 rounded-full border border-white/10 bg-black px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-red-500/40 sm:text-base"
+                disabled={isLoading || isTyping}
+                className="h-16 flex-1 rounded-full border border-red-500/40 bg-black px-6 text-lg text-white outline-none placeholder:text-white/35 focus:border-red-500"
               />
 
               <button
-                onClick={() => send()}
-                disabled={loading}
-                className="rounded-full border border-red-500/30 bg-red-500 px-5 py-3 text-sm font-black text-white transition duration-200 hover:scale-[1.01] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-60 sm:text-base"
+                type="submit"
+                disabled={!input.trim() || isLoading || isTyping}
+                className="h-16 rounded-full bg-red-500 px-8 text-lg font-bold text-white transition hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {loading ? "Thinking..." : "Send"}
+                Send
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
