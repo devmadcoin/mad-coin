@@ -45,7 +45,23 @@ function trackEvent(
   event: TrackEvent,
   payload: Record<string, string | number | boolean>
 ) {
-  console.log("[MAD TRACK]", event, payload);
+  const body = {
+    event,
+    payload,
+    timestamp: new Date().toISOString(),
+  };
+
+  console.log("[MAD TRACK]", body);
+
+  void fetch("/api/mad-track", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  }).catch((error) => {
+    console.error("MAD tracking failed:", error);
+  });
 }
 
 export default function MadMindPage() {
@@ -146,6 +162,8 @@ export default function MadMindPage() {
   }
 
   async function handleCopy(message: ChatMessage) {
+    const prompt = getLastUserMessage();
+
     try {
       await navigator.clipboard.writeText(buildShareText(message.text));
       setCopiedId(message.id);
@@ -154,6 +172,7 @@ export default function MadMindPage() {
         messageId: message.id,
         text: message.text,
         textLength: message.text.length,
+        prompt,
       });
 
       window.setTimeout(() => {
@@ -165,6 +184,7 @@ export default function MadMindPage() {
   }
 
   function handleShareToX(message: ChatMessage) {
+    const prompt = getLastUserMessage();
     const shareText = buildShareText(message.text);
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       shareText
@@ -174,6 +194,7 @@ export default function MadMindPage() {
       messageId: message.id,
       text: message.text,
       textLength: message.text.length,
+      prompt,
     });
 
     window.open(url, "_blank", "noopener,noreferrer");
