@@ -12,10 +12,10 @@ const STARTER_MESSAGE = `Ask something real.
 I’ll know if you’re avoiding it.`;
 
 const QUICK_PROMPTS = [
-  "I panicked and sold.",
+  "What is $MAD?",
   "Why do people lose?",
-  "Explain weak hands.",
-  "Say it harder.",
+  "i panic sold, what should i do?",
+  "What should i do?",
 ];
 
 function wait(ms: number) {
@@ -29,6 +29,7 @@ export default function MadMindPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -36,6 +37,13 @@ export default function MadMindPage() {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
+
+  function getLastUserMessage(): string {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === "user") return messages[i].text;
+    }
+    return "";
+  }
 
   async function typeBotMessage(finalText: string) {
     setIsTyping(true);
@@ -100,18 +108,33 @@ export default function MadMindPage() {
     }
   }
 
+  async function handleCopy(text: string, index: number) {
+    const tweet = `MAD Mind just called me out:
+
+"${text}"
+
+Stay $MAD.`;
+
+    await navigator.clipboard.writeText(tweet);
+    setCopiedIndex(index);
+
+    setTimeout(() => setCopiedIndex(null), 1500);
+  }
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-black text-white">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,40,40,0.14),transparent_30%),radial-gradient(circle_at_bottom,rgba(255,40,40,0.08),transparent_35%)]" />
 
       <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-6 sm:px-6">
-        <div className="flex min-h-[calc(100vh-3rem)] flex-col rounded-[28px] border border-white/10 bg-black/90 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
+        <div className="flex min-h-[calc(100vh-3rem)] flex-col rounded-[28px] border border-white/10 bg-black/90">
+          
+          {/* HEADER */}
           <div className="border-b border-white/10 px-4 py-6 sm:px-6">
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <h1 className="text-4xl font-extrabold sm:text-5xl">
               MAD Mind
             </h1>
 
-            <div className="mt-4 space-y-2 text-lg text-white/70">
+            <div className="mt-4 text-white/70">
               <p>One voice.</p>
               <p>Pressure with clarity.</p>
             </div>
@@ -120,10 +143,9 @@ export default function MadMindPage() {
               {QUICK_PROMPTS.map((prompt) => (
                 <button
                   key={prompt}
-                  type="button"
-                  onClick={() => void sendMessage(prompt)}
+                  onClick={() => sendMessage(prompt)}
                   disabled={isLoading || isTyping}
-                  className="rounded-full border border-white/10 bg-transparent px-5 py-3 text-base font-semibold text-white transition hover:border-white/20 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-full border border-white/10 px-5 py-3 text-sm hover:bg-white/5"
                 >
                   {prompt}
                 </button>
@@ -131,37 +153,52 @@ export default function MadMindPage() {
             </div>
           </div>
 
+          {/* CHAT */}
           <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-            <div className="space-y-10">
+            <div className="space-y-8">
               {messages.map((message, index) => {
                 const isUser = message.role === "user";
 
                 return (
                   <div
-                    key={`${message.role}-${index}`}
+                    key={index}
                     className={`flex ${isUser ? "justify-end" : "justify-start"}`}
                   >
-                    <div
-                      className={[
-                        "max-w-[85%] rounded-[28px] border px-5 py-4 text-[15px] leading-8 sm:max-w-[72%] sm:text-[16px]",
-                        isUser
-                          ? "border-red-500/80 bg-red-500 text-white"
-                          : "border-white/10 bg-[#0b0b0f] text-white shadow-[0_0_30px_rgba(255,255,255,0.02)]",
-                      ].join(" ")}
-                    >
-                      <div className="whitespace-pre-wrap break-words">
-                        {isUser ? `You: ${message.text}` : `MAD: ${message.text}`}
+                    <div className="max-w-[75%] rounded-[24px] border px-5 py-4">
+                      <div className="whitespace-pre-wrap">
+                        {isUser
+                          ? `You: ${message.text}`
+                          : `MAD Mind: ${message.text}`}
                       </div>
+
+                      {/* BOT ACTIONS */}
+                      {!isUser && index !== 0 && (
+                        <div className="mt-3 flex gap-4 text-xs">
+                          <button
+                            onClick={() => handleCopy(message.text, index)}
+                            className="text-white/50 hover:text-white"
+                          >
+                            {copiedIndex === index ? "Copied" : "Copy this"}
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              sendMessage(getLastUserMessage() + " say it harder")
+                            }
+                            className="text-red-400 hover:text-red-300"
+                          >
+                            Say it harder
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
               })}
 
               {(isLoading || isTyping) && (
-                <div className="flex justify-start">
-                  <div className="max-w-[85%] rounded-[28px] border border-white/10 bg-[#0b0b0f] px-5 py-4 text-[15px] text-white/70 sm:max-w-[72%] sm:text-[16px]">
-                    MAD is thinking...
-                  </div>
+                <div className="text-white/60">
+                  MAD Mind is thinking...
                 </div>
               )}
 
@@ -169,32 +206,29 @@ export default function MadMindPage() {
             </div>
           </div>
 
-          <div className="border-t border-white/10 p-4 sm:p-5">
+          {/* INPUT */}
+          <div className="border-t border-white/10 p-4">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                void sendMessage();
+                sendMessage();
               }}
-              className="flex items-center gap-3"
+              className="flex gap-3"
             >
               <input
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Say it directly."
-                disabled={isLoading || isTyping}
-                className="h-16 flex-1 rounded-full border border-red-500/40 bg-black px-6 text-lg text-white outline-none placeholder:text-white/35 focus:border-red-500"
+                className="flex-1 rounded-full border px-6 py-4 bg-black"
               />
 
-              <button
-                type="submit"
-                disabled={!input.trim() || isLoading || isTyping}
-                className="h-16 rounded-full bg-red-500 px-8 text-lg font-bold text-white transition hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-50"
-              >
+              <button className="bg-red-500 px-6 rounded-full">
                 Send
               </button>
             </form>
           </div>
+
         </div>
       </div>
     </div>
