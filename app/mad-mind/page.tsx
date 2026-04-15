@@ -5,6 +5,17 @@ import { hasSupabase, supabase } from "@/lib/supabase/client";
 
 type MessageRole = "user" | "bot";
 type CookLevel = "mild" | "mean" | "crashout" | "demon";
+type StyleTab = "safe" | "savage" | "crashout";
+type Intent =
+  | "DEFINITION"
+  | "GENERAL"
+  | "CAPTION"
+  | "COMEBACK"
+  | "PHILOSOPHY"
+  | "SHILL"
+  | "CONFESSION"
+  | "CONTENT_IDEA"
+  | "MANIFESTO";
 
 type Archetype =
   | "The Hesitator"
@@ -21,6 +32,20 @@ type ChallengeKey =
   | "demon_survive_3"
   | "score_250";
 
+type BotVariants = {
+  safe?: string;
+  savage?: string;
+  crashout?: string;
+};
+
+type BotMeta = {
+  intent?: Intent;
+  states?: string[];
+  escalation?: number;
+  favoriteStyle?: StyleTab | null;
+  multiOutput?: boolean;
+};
+
 type ChatMessage = {
   id: string;
   role: MessageRole;
@@ -28,6 +53,9 @@ type ChatMessage = {
   ts: number;
   respected?: boolean;
   scoreValue?: number;
+  outputs?: BotVariants;
+  meta?: BotMeta;
+  selectedStyle?: StyleTab;
 };
 
 type UserProfile = {
@@ -77,13 +105,30 @@ type DailyChallengeState = {
   completed: ChallengeCompletion;
 };
 
+type ApiResponse = {
+  output?: string;
+  outputs?: {
+    safe?: string;
+    savage?: string;
+    crashout?: string;
+  };
+  meta?: {
+    intent?: Intent;
+    states?: string[];
+    escalation?: number;
+    favoriteStyle?: StyleTab | null;
+    multiOutput?: boolean;
+  };
+};
+
 const STORAGE_KEYS = {
-  messages: "madbot_messages_v8",
-  profile: "madbot_profile_v8",
-  session: "madbot_session_v8",
-  cookLevel: "madbot_cook_level_v8",
-  daily: "madbot_daily_v8",
-  runtimeSessionId: "madbot_runtime_session_id_v8",
+  messages: "madbot_messages_v9",
+  profile: "madbot_profile_v9",
+  session: "madbot_session_v9",
+  cookLevel: "madbot_cook_level_v9",
+  daily: "madbot_daily_v9",
+  runtimeSessionId: "madbot_runtime_session_id_v9",
+  preferredStyle: "madbot_preferred_style_v9",
 };
 
 const MAX_HISTORY = 60;
@@ -132,6 +177,10 @@ const CHALLENGE_DEFINITIONS: Record<ChallengeKey, ChallengeDefinition> = {
     target: 250,
   },
 };
+
+function cn(...parts: Array<string | false | null | undefined>) {
+  return parts.filter(Boolean).join(" ");
+}
 
 function normalizeInput(input: string) {
   return input.toLowerCase().trim().replace(/\s+/g, " ");
@@ -463,6 +512,20 @@ function roastCardScore(text: string, respected?: boolean) {
   return lengthValue + punctuationBonus + capsChaosBonus + respectBonus;
 }
 
+function getMessageDisplayText(message: ChatMessage) {
+  if (message.role !== "bot") return message.text;
+
+  const style = message.selectedStyle || message.meta?.favoriteStyle || "savage";
+
+  if (message.outputs) {
+    if (style === "safe" && message.outputs.safe) return message.outputs.safe;
+    if (style === "crashout" && message.outputs.crashout) return message.outputs.crashout;
+    if (message.outputs.savage) return message.outputs.savage;
+  }
+
+  return message.text;
+}
+
 async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
   if (!supabase) return [];
   const { data, error } = await supabase
@@ -522,6 +585,7 @@ export default function MadMindPage() {
   const [input, setInput] = useState("");
   const [username, setUsername] = useState("Anonymous Survivor");
   const [cookLevel, setCookLevel] = useState<CookLevel>("crashout");
+  const [preferredStyle, setPreferredStyle] = useState<StyleTab>("savage");
   const [isThinking, setIsThinking] = useState(false);
   const [copyToast, setCopyToast] = useState("");
   const [supabaseStatus, setSupabaseStatus] = useState(
@@ -538,11 +602,13 @@ export default function MadMindPage() {
     const savedSession = loadJSON<{ name: string } | null>(STORAGE_KEYS.session, null);
     const savedCookLevel = loadJSON<CookLevel>(STORAGE_KEYS.cookLevel, "crashout");
     const savedDaily = loadJSON<DailyChallengeState | null>(STORAGE_KEYS.daily, null);
+    const savedPreferredStyle = loadJSON<StyleTab>(STORAGE_KEYS.preferredStyle, "savage");
 
     setMessages(savedMessages);
     setProfile(savedProfile);
     setUsername(savedSession?.name || savedProfile.name || "Anonymous Survivor");
     setCookLevel(savedCookLevel);
+    setPreferredStyle(savedPreferredStyle);
     setDailyState(ensureDailyState(savedDaily));
     setMounted(true);
 
@@ -579,6 +645,11 @@ export default function MadMindPage() {
   }, [dailyState, mounted]);
 
   useEffect(() => {
+    if (!mounted) return;
+    saveJSON(STORAGE_KEYS.preferredStyle, preferredStyle);
+  }, [preferredStyle, mounted]);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isThinking]);
 
@@ -596,7 +667,10 @@ export default function MadMindPage() {
     if (botMessages.length === 0) return null;
 
     return [...botMessages]
-      .map((m) => ({ ...m, scoreValue: roastCardScore(m.text, m.respected) }))
+      .map((m) => ({
+        ...m,
+        scoreValue: roastCardScore(getMessageDisplayText(m), m.respected),
+      }))
       .sort((a, b) => (b.scoreValue ?? 0) - (a.scoreValue ?? 0))[0];
   }, [messages]);
 
@@ -660,6 +734,8 @@ export default function MadMindPage() {
   }
 
   async function copyRoastCard(message: ChatMessage) {
+    const visibleText = getMessageDisplayText(message);
+
     const card = [
       "━━━━━━━━━━━━━━━━━━",
       "$MAD BOT ROAST CARD",
@@ -667,9 +743,10 @@ export default function MadMindPage() {
       `Name: ${username}`,
       `Archetype: ${archetype}`,
       `Cook Level: ${cookLevel.toUpperCase()}`,
+      `Style: ${(message.selectedStyle || message.meta?.favoriteStyle || "savage").toUpperCase()}`,
       `Score: ${score}`,
       "",
-      message.text,
+      visibleText,
       "",
       "Stay $MAD.",
     ].join("\n");
@@ -677,8 +754,40 @@ export default function MadMindPage() {
     await copyText(card);
   }
 
-  async function handleSend() {
-    const trimmed = input.trim();
+  function updateMessageStyle(messageId: string, style: StyleTab) {
+    setMessages((prev) =>
+      prev.map((message) =>
+        message.id === messageId ? { ...message, selectedStyle: style } : message,
+      ),
+    );
+
+    if (selectedRoast?.id === messageId) {
+      setSelectedRoast((prev) => (prev ? { ...prev, selectedStyle: style } : prev));
+    }
+  }
+
+  async function refineMessage(
+    sourceMessage: ChatMessage,
+    refineKind: "harder" | "shorter" | "smarter" | "tweet",
+  ) {
+    const baseText = getMessageDisplayText(sourceMessage);
+    if (!baseText || isThinking) return;
+
+    const refinePrompt =
+      refineKind === "harder"
+        ? `${baseText}\n\nharder`
+        : refineKind === "shorter"
+        ? `${baseText}\n\nmake it shorter`
+        : refineKind === "smarter"
+        ? `${baseText}\n\nmake it smarter`
+        : `${baseText}\n\nturn into tweet`;
+
+    setInput(refinePrompt);
+    await handleSend(refinePrompt);
+  }
+
+  async function handleSend(overrideInput?: string) {
+    const trimmed = (overrideInput ?? input).trim();
     if (!trimmed || isThinking) return;
 
     const userMsg: ChatMessage = {
@@ -696,13 +805,17 @@ export default function MadMindPage() {
 
     setMessages(currentMessages);
     setProfile(nextProfileBase);
-    setInput("");
+    if (!overrideInput) {
+      setInput("");
+    }
     setIsThinking(true);
 
     const delay = 220 + Math.floor(Math.random() * 280);
     await new Promise((resolve) => setTimeout(resolve, delay));
 
     let replyText = "Signal lost.";
+    let replyOutputs: BotVariants | undefined;
+    let replyMeta: BotMeta | undefined;
     let respected = false;
 
     if (isSensitiveInput(trimmed)) {
@@ -724,14 +837,45 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             archetype: archetypeNow,
             sessionId,
             username: (nextProfileBase.name || username || "Anonymous Survivor").trim(),
+            preferredStyle,
+            multiOutput: true,
           }),
         });
 
-        const json = (await res.json()) as { output?: string };
+        const json = (await res.json()) as ApiResponse;
 
         if (typeof json?.output === "string" && json.output.trim()) {
           replyText = json.output.trim();
-        } else {
+        }
+
+        if (json?.outputs) {
+          replyOutputs = {
+            safe: json.outputs.safe?.trim(),
+            savage: json.outputs.savage?.trim(),
+            crashout: json.outputs.crashout?.trim(),
+          };
+        }
+
+        if (json?.meta) {
+          replyMeta = {
+            intent: json.meta.intent,
+            states: json.meta.states || [],
+            escalation: json.meta.escalation,
+            favoriteStyle: json.meta.favoriteStyle ?? preferredStyle,
+            multiOutput: json.meta.multiOutput,
+          };
+        }
+
+        if (!replyText && replyOutputs) {
+          replyText =
+            replyOutputs[preferredStyle] ||
+            replyOutputs.savage ||
+            replyOutputs.safe ||
+            replyOutputs.crashout ||
+            "Signal lost.";
+        }
+
+        if (!replyText) {
           replyText = "Signal lost.";
         }
       } catch (error) {
@@ -739,9 +883,15 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
         replyText = "Signal broke.";
       }
 
+      const respectSource =
+        replyOutputs?.safe ||
+        replyOutputs?.savage ||
+        replyOutputs?.crashout ||
+        replyText;
+
       respected =
         /rare\. accountability|that answer had a spine|that actually sounded disciplined|worth watching/i.test(
-          replyText.toLowerCase(),
+          respectSource.toLowerCase(),
         );
     }
 
@@ -752,13 +902,24 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
         }
       : nextProfileBase;
 
+    const chosenStyle = replyMeta?.favoriteStyle || preferredStyle;
+    const visibleReplyText =
+      (replyOutputs && replyOutputs[chosenStyle]) ||
+      replyOutputs?.savage ||
+      replyOutputs?.safe ||
+      replyOutputs?.crashout ||
+      replyText;
+
     const botMsg: ChatMessage = {
       id: uid(),
       role: "bot",
-      text: replyText,
+      text: visibleReplyText,
       ts: Date.now(),
       respected,
-      scoreValue: roastCardScore(replyText, respected),
+      outputs: replyOutputs,
+      meta: replyMeta,
+      selectedStyle: chosenStyle,
+      scoreValue: roastCardScore(visibleReplyText, respected),
     };
 
     const nextMessages = [...currentMessages, botMsg];
@@ -776,6 +937,10 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
     setDailyState(nextDaily);
     setIsThinking(false);
 
+    if (replyMeta?.favoriteStyle) {
+      setPreferredStyle(replyMeta.favoriteStyle);
+    }
+
     if (hasSupabase) {
       await upsertRemoteScore({
         player_name: (finalProfile.name || username || "Anonymous Survivor").trim(),
@@ -792,7 +957,10 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
     const newTop = nextMessages
       .filter((m) => m.role === "bot")
-      .map((m) => ({ ...m, scoreValue: roastCardScore(m.text, m.respected) }))
+      .map((m) => ({
+        ...m,
+        scoreValue: roastCardScore(getMessageDisplayText(m), m.respected),
+      }))
       .sort((a, b) => (b.scoreValue ?? 0) - (a.scoreValue ?? 0))[0];
 
     if (newTop && (!topRoast || (newTop.scoreValue ?? 0) > (topRoast.scoreValue ?? 0))) {
@@ -828,7 +996,8 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             <p className="text-xs uppercase tracking-[0.35em] text-red-400/80">$MAD Mind</p>
             <h1 className="mt-2 text-3xl font-black sm:text-4xl">Archetype Chamber</h1>
             <p className="mt-2 max-w-2xl text-sm text-white/65">
-              Daily challenges, roast cards, and a hidden behavior archetype that evolves as you talk.
+              Daily challenges, roast cards, evolving archetypes, and now Safe / Savage /
+              Crashout response modes.
             </p>
 
             <div className="mt-4 flex flex-wrap gap-2">
@@ -852,6 +1021,32 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
               >
                 Reset
               </button>
+            </div>
+
+            <div className="mt-4">
+              <p className="mb-2 text-xs uppercase tracking-[0.25em] text-white/45">
+                Preferred Style
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {(["safe", "savage", "crashout"] as StyleTab[]).map((style) => (
+                  <button
+                    key={style}
+                    onClick={() => setPreferredStyle(style)}
+                    className={cn(
+                      "rounded-2xl px-4 py-2 text-sm font-bold capitalize transition",
+                      preferredStyle === style
+                        ? style === "safe"
+                          ? "bg-white/15 text-white"
+                          : style === "savage"
+                          ? "bg-red-500 text-white"
+                          : "bg-red-800 text-white"
+                        : "border border-white/10 bg-white/5 text-white/80 hover:bg-white/10",
+                    )}
+                  >
+                    {style}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -904,14 +1099,18 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-            <p className="text-xs uppercase tracking-[0.35em] text-white/45">Session Best Roast</p>
+            <p className="text-xs uppercase tracking-[0.35em] text-white/45">
+              Session Best Roast
+            </p>
             {topRoast ? (
               <button
                 onClick={() => setSelectedRoast(topRoast)}
                 className="mt-3 w-full rounded-2xl border border-white/10 bg-black/30 p-4 text-left hover:bg-black/50"
               >
                 <div className="text-sm font-bold text-red-200">Open roast card</div>
-                <div className="mt-2 line-clamp-3 text-sm text-white/70">{topRoast.text}</div>
+                <div className="mt-2 line-clamp-3 text-sm text-white/70">
+                  {getMessageDisplayText(topRoast)}
+                </div>
               </button>
             ) : (
               <p className="mt-3 text-sm text-white/45">No roast card yet.</p>
@@ -924,7 +1123,9 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             <div className="border-b border-white/10 px-4 py-4 sm:px-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-white/45">Live Chamber</p>
+                  <p className="text-xs uppercase tracking-[0.35em] text-white/45">
+                    Live Chamber
+                  </p>
                   <h2 className="mt-1 text-xl font-bold">Talk to the bot</h2>
                 </div>
 
@@ -950,57 +1151,153 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                 <div className="rounded-3xl border border-dashed border-white/10 bg-black/20 p-6 text-white/55">
                   <p className="text-lg font-semibold text-white">Enter the chamber.</p>
                   <p className="mt-2 text-sm">
-                    Ask about money, discipline, virality, hesitation, fear, branding, or execution.
+                    Ask about money, discipline, virality, hesitation, fear, branding,
+                    execution, captions, comebacks, and manifestos.
                   </p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {messages.map((message) => (
-                    <div key={message.id}>
-                      <div
-                        className={`max-w-[88%] rounded-3xl px-4 py-3 whitespace-pre-wrap ${
-                          message.role === "user"
-                            ? "ml-auto border border-white/10 bg-white/10 text-white"
-                            : message.respected
-                              ? "border border-emerald-400/30 bg-emerald-500/10 text-emerald-50"
-                              : "border border-red-500/20 bg-red-500/10 text-red-50"
-                        }`}
-                      >
-                        <div className="mb-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
-                          {message.role === "user" ? "Survivor" : message.respected ? "Respect Mode" : "$MAD Bot"}
-                        </div>
-                        <div className="text-sm leading-7 sm:text-[15px]">{message.text}</div>
-                      </div>
+                  {messages.map((message) => {
+                    const displayText = getMessageDisplayText(message);
+                    const hasVariants =
+                      message.role === "bot" &&
+                      (message.outputs?.safe ||
+                        message.outputs?.savage ||
+                        message.outputs?.crashout);
 
-                      {message.role === "bot" && (
-                        <div className="mt-2 flex max-w-[88%] flex-wrap gap-2">
-                          <button
-                            onClick={() => void copyText(message.text)}
-                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
-                          >
-                            Copy roast
-                          </button>
-                          <button
-                            onClick={() => setSelectedRoast(message)}
-                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
-                          >
-                            Roast card
-                          </button>
-                          <button
-                            onClick={() => void shareScore()}
-                            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
-                          >
-                            Share score
-                          </button>
+                    return (
+                      <div key={message.id}>
+                        <div
+                          className={`max-w-[88%] rounded-3xl px-4 py-3 whitespace-pre-wrap ${
+                            message.role === "user"
+                              ? "ml-auto border border-white/10 bg-white/10 text-white"
+                              : message.respected
+                                ? "border border-emerald-400/30 bg-emerald-500/10 text-emerald-50"
+                                : "border border-red-500/20 bg-red-500/10 text-red-50"
+                          }`}
+                        >
+                          <div className="mb-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
+                            <span>
+                              {message.role === "user"
+                                ? "Survivor"
+                                : message.respected
+                                  ? "Respect Mode"
+                                  : "$MAD Bot"}
+                            </span>
+
+                            {message.role === "bot" && message.meta?.intent ? (
+                              <span className="rounded-full border border-white/10 bg-black/20 px-2 py-0.5 text-[10px] tracking-[0.18em] text-white/65">
+                                {message.meta.intent}
+                              </span>
+                            ) : null}
+
+                            {message.role === "bot" &&
+                            typeof message.meta?.escalation === "number" ? (
+                              <span className="rounded-full border border-red-500/20 bg-red-950/40 px-2 py-0.5 text-[10px] tracking-[0.18em] text-red-200">
+                                Esc {message.meta.escalation}
+                              </span>
+                            ) : null}
+                          </div>
+
+                          {message.role === "bot" && message.meta?.states?.length ? (
+                            <div className="mb-2 flex flex-wrap gap-1.5">
+                              {message.meta.states.map((state) => (
+                                <span
+                                  key={`${message.id}-${state}`}
+                                  className="rounded-full border border-white/10 bg-black/20 px-2 py-0.5 text-[10px] font-semibold tracking-[0.14em] text-white/60"
+                                >
+                                  {state}
+                                </span>
+                              ))}
+                            </div>
+                          ) : null}
+
+                          {hasVariants ? (
+                            <div className="mb-3 flex flex-wrap gap-2">
+                              {(["safe", "savage", "crashout"] as StyleTab[]).map((style) => (
+                                <button
+                                  key={style}
+                                  onClick={() => updateMessageStyle(message.id, style)}
+                                  className={cn(
+                                    "rounded-full border px-3 py-1 text-[11px] font-bold capitalize transition",
+                                    (message.selectedStyle ||
+                                      message.meta?.favoriteStyle ||
+                                      "savage") === style
+                                      ? style === "safe"
+                                        ? "border-white/20 bg-white/10 text-white"
+                                        : style === "savage"
+                                          ? "border-red-400/40 bg-red-500/20 text-white"
+                                          : "border-red-800/50 bg-red-900/50 text-white"
+                                      : "border-white/10 bg-black/20 text-white/65 hover:bg-black/35",
+                                  )}
+                                >
+                                  {style}
+                                </button>
+                              ))}
+                            </div>
+                          ) : null}
+
+                          <div className="text-sm leading-7 sm:text-[15px]">{displayText}</div>
                         </div>
-                      )}
-                    </div>
-                  ))}
+
+                        {message.role === "bot" && (
+                          <div className="mt-2 flex max-w-[88%] flex-wrap gap-2">
+                            <button
+                              onClick={() => void copyText(displayText)}
+                              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                            >
+                              Copy roast
+                            </button>
+                            <button
+                              onClick={() => setSelectedRoast(message)}
+                              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                            >
+                              Roast card
+                            </button>
+                            <button
+                              onClick={() => void shareScore()}
+                              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                            >
+                              Share score
+                            </button>
+                            <button
+                              onClick={() => void refineMessage(message, "harder")}
+                              className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs text-red-100 hover:bg-red-500/20"
+                            >
+                              Harder
+                            </button>
+                            <button
+                              onClick={() => void refineMessage(message, "shorter")}
+                              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                            >
+                              Shorter
+                            </button>
+                            <button
+                              onClick={() => void refineMessage(message, "smarter")}
+                              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                            >
+                              Smarter
+                            </button>
+                            <button
+                              onClick={() => void refineMessage(message, "tweet")}
+                              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
+                            >
+                              Tweet
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
 
                   {isThinking && (
                     <div className="max-w-[88%] rounded-3xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-red-50">
-                      <div className="mb-2 text-[11px] uppercase tracking-[0.3em] text-white/45">$MAD Bot</div>
-                      <div className="text-sm leading-7 sm:text-[15px]">analyzing weakness...</div>
+                      <div className="mb-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
+                        $MAD Bot
+                      </div>
+                      <div className="text-sm leading-7 sm:text-[15px]">
+                        analyzing weakness...
+                      </div>
                     </div>
                   )}
 
@@ -1019,15 +1316,35 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                   placeholder="Type your question and press Enter..."
                   className="w-full resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-white/30"
                 />
-                <div className="mt-3 flex items-center justify-between gap-3">
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                   <p className="text-xs text-white/35">Enter = send · Shift + Enter = new line</p>
-                  <button
-                    onClick={() => void handleSend()}
-                    disabled={!input.trim() || isThinking}
-                    className="rounded-2xl bg-red-500 px-5 py-2.5 text-sm font-bold text-white transition hover:scale-[1.01] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    Send
-                  </button>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setInput("Explain Stay $MAD")}
+                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white/75 hover:bg-white/10"
+                    >
+                      Explain Stay $MAD
+                    </button>
+                    <button
+                      onClick={() => setInput("Write a savage caption")}
+                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white/75 hover:bg-white/10"
+                    >
+                      Savage caption
+                    </button>
+                    <button
+                      onClick={() => setInput("Give me a comeback reply")}
+                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white/75 hover:bg-white/10"
+                    >
+                      Comeback
+                    </button>
+                    <button
+                      onClick={() => void handleSend()}
+                      disabled={!input.trim() || isThinking}
+                      className="rounded-2xl bg-red-500 px-5 py-2.5 text-sm font-bold text-white transition hover:scale-[1.01] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Send
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1035,7 +1352,9 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
           <aside className="space-y-4">
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/45">Daily Challenges</p>
+              <p className="text-xs uppercase tracking-[0.35em] text-white/45">
+                Daily Challenges
+              </p>
               <div className="mt-4 space-y-3">
                 {activeChallenges.map((challenge) => {
                   const progress = dailyState.progress[challenge.key];
@@ -1054,10 +1373,14 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="text-sm font-bold">{challenge.title}</div>
-                          <div className="mt-1 text-xs text-white/55">{challenge.description}</div>
+                          <div className="mt-1 text-xs text-white/55">
+                            {challenge.description}
+                          </div>
                         </div>
                         <div className="text-xs font-bold text-white/70">
-                          {complete ? "DONE" : `${Math.min(progress, challenge.target)}/${challenge.target}`}
+                          {complete
+                            ? "DONE"
+                            : `${Math.min(progress, challenge.target)}/${challenge.target}`}
                         </div>
                       </div>
 
@@ -1090,13 +1413,18 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                 <Meter label="Ego" value={clamp(profile.egoScore, 0, 100)} />
                 <Meter label="Cope" value={clamp(profile.copeScore, 0, 100)} />
                 <Meter label="Greed" value={clamp(profile.greedScore, 0, 100)} />
-                <Meter label="Discipline Damage" value={clamp(profile.disciplineScore, 0, 100)} />
+                <Meter
+                  label="Discipline Damage"
+                  value={clamp(profile.disciplineScore, 0, 100)}
+                />
                 <Meter label="Fear" value={clamp(profile.fearScore, 0, 100)} />
               </div>
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/45">Learned Weak Spots</p>
+              <p className="text-xs uppercase tracking-[0.35em] text-white/45">
+                Learned Weak Spots
+              </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {profile.learnedWeakSpots.length === 0 ? (
                   <span className="text-sm text-white/45">No weakness profile yet.</span>
@@ -1131,10 +1459,13 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                           #{index + 1} {entry.player_name}
                         </div>
                         <div className="mt-1 text-xs text-white/45">
-                          {entry.cook_level.toUpperCase()} · Survived: {entry.survived_responses} · Streak: {entry.best_streak}
+                          {entry.cook_level.toUpperCase()} · Survived: {entry.survived_responses} ·
+                          Streak: {entry.best_streak}
                         </div>
                       </div>
-                      <div className="text-right text-sm font-black text-red-300">{entry.score}</div>
+                      <div className="text-right text-sm font-black text-red-300">
+                        {entry.score}
+                      </div>
                     </div>
                   ))
                 )}
@@ -1148,7 +1479,9 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             <div className="w-full max-w-xl rounded-[28px] border border-white/10 bg-neutral-950 p-6 shadow-2xl">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-red-300/80">$MAD Roast Card</p>
+                  <p className="text-xs uppercase tracking-[0.35em] text-red-300/80">
+                    $MAD Roast Card
+                  </p>
                   <h3 className="mt-2 text-2xl font-black">{username}</h3>
                   <p className="mt-1 text-sm text-white/55">
                     {archetype} · {cookLevel.toUpperCase()} · Score {score}
@@ -1162,6 +1495,53 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                 </button>
               </div>
 
+              {selectedRoast.outputs ? (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {(["safe", "savage", "crashout"] as StyleTab[]).map((style) => (
+                    <button
+                      key={style}
+                      onClick={() =>
+                        setSelectedRoast((prev) =>
+                          prev ? { ...prev, selectedStyle: style } : prev,
+                        )
+                      }
+                      className={cn(
+                        "rounded-full border px-3 py-1 text-xs font-bold capitalize transition",
+                        (selectedRoast.selectedStyle ||
+                          selectedRoast.meta?.favoriteStyle ||
+                          "savage") === style
+                          ? style === "safe"
+                            ? "border-white/20 bg-white/10 text-white"
+                            : style === "savage"
+                              ? "border-red-400/40 bg-red-500/20 text-white"
+                              : "border-red-800/50 bg-red-900/50 text-white"
+                          : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10",
+                      )}
+                    >
+                      {style}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+
+              {selectedRoast.meta?.intent || selectedRoast.meta?.states?.length ? (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {selectedRoast.meta?.intent ? (
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+                      {selectedRoast.meta.intent}
+                    </span>
+                  ) : null}
+                  {selectedRoast.meta?.states?.map((state) => (
+                    <span
+                      key={`roast-${state}`}
+                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70"
+                    >
+                      {state}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+
               <div
                 className={`mt-5 rounded-[24px] border p-5 ${
                   selectedRoast.respected
@@ -1170,7 +1550,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                 }`}
               >
                 <p className="whitespace-pre-wrap text-sm leading-7 text-white/95">
-                  {selectedRoast.text}
+                  {getMessageDisplayText(selectedRoast)}
                 </p>
               </div>
 
@@ -1182,10 +1562,16 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                   Copy card
                 </button>
                 <button
-                  onClick={() => void copyText(selectedRoast.text)}
+                  onClick={() => void copyText(getMessageDisplayText(selectedRoast))}
                   className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/90 hover:bg-white/10"
                 >
                   Copy roast only
+                </button>
+                <button
+                  onClick={() => void refineMessage(selectedRoast, "harder")}
+                  className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-100 hover:bg-red-500/20"
+                >
+                  Harder
                 </button>
               </div>
             </div>
