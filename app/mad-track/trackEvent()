@@ -1,84 +1,146 @@
-type TrackEvent =
-  | "message_sent"
-  | "copy_clicked"
-  | "share_x_clicked"
-  | "say_it_harder_clicked"
-  | "cook_level_changed"
-  | "respect_mode_hit"
-  | "roast_card_opened"
-  | "roast_card_copied"
-  | "challenge_completed"
-  | "archetype_revealed"
-  | "leaderboard_submitted"
-  | "session_best_roast_selected"
-  | "share_score_clicked"
-  | "challenge_friend_clicked";
+export type MadEventType = "user_message" | "bot_response" | "interaction";
 
-type TrackValue = string | number | boolean | null;
+export type MadStyle = "safe" | "savage" | "crashout";
 
-type TrackPayload = Record<string, TrackValue>;
+export type MadEvent = {
+  type: MadEventType;
 
-const MAX_STRING_LENGTH = 500;
+  message?: string;
+  response?: string;
 
-// optional: session id for grouping user activity
-const sessionId =
-  typeof window !== "undefined"
-    ? (localStorage.getItem("mad_session_id") ||
-        (() => {
-          const id = `session_${Date.now()}_${Math.random()
-            .toString(36)
-            .slice(2, 8)}`;
-          localStorage.setItem("mad_session_id", id);
-          return id;
-        })())
-    : "server";
+  intent?: string;
+  style?: MadStyle;
 
-// sanitize payload (prevents huge logs / bad values)
-function sanitizePayload(payload: TrackPayload): TrackPayload {
-  const result: TrackPayload = {};
+  archetype?: string;
+  cookLevel?: string;
 
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value === null) {
-      result[key] = null;
-    } else if (typeof value === "string") {
-      result[key] = value.slice(0, MAX_STRING_LENGTH);
-    } else if (typeof value === "number" || typeof value === "boolean") {
-      result[key] = value;
-    }
-  });
+  respected?: boolean;
+  escalation?: number;
 
-  return result;
+  action?: string;
+
+  timestamp: number;
+};
+
+const STORAGE_KEY = "mad_events_v2";
+const MAX_EVENTS = 300;
+
+function readEvents(): MadEvent[] {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as MadEvent[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 }
 
-export function trackEvent(
-  event: TrackEvent,
-  payload: TrackPayload = {}
-) {
+function writeEvents(events: MadEvent[]) {
+  if (typeof window === "undefined") return;
+
   try {
-    const body = {
-      event,
-      payload: sanitizePayload({
-        ...payload,
-        sessionId,
-        url:
-          typeof window !== "undefined" ? window.location.pathname : "server",
-      }),
-      timestamp: new Date().toISOString(),
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(events.slice(-MAX_EVENTS)));
+  } catch (error) {
+    console.error("trackEvent write failed:", error);
+  }
+}
+
+export function trackEvent(event: Omit<MadEvent, "timestamp">) {
+  try {
+    const next: MadEvent = {
+      ...event,
+      timestamp: Date.now(),
     };
 
-    console.log("[MAD TRACK]", body);
-
-    void fetch("/api/mad-track", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-      keepalive: true, // important for tracking on page exit
-    }).catch((error) => {
-      console.error("MAD tracking failed:", error);
-    });
-  } catch (err) {
-    console.error("MAD trackEvent crash:", err);
+    const existing = readEvents();
+    existing.push(next);
+    writeEvents(existing);
+  } catch (error) {
+    console.error("trackEvent failed:", error);
   }
+}
+
+export function getTrackedEvents(): MadEvent[] {
+  return readEvents();
+}
+
+export function clearTrackedEvents() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+export function getMadAnalytics() {
+  const events = readEvents();
+
+  const userMessages = events.filter((e) => e.type === "user_message");
+  const botResponses = events.filter((e) => e.type === "bot_response");
+  const interactions = events.filter((e) => e.type === "interaction");
+
+  const countMap = (values: Array<string | undefined>) => {
+    const map: Record<string, number> = {};
+    for (const value of values) {
+      if (!value) continue;
+      map[value] = (map[value] || 0) + 1;
+    }
+    return map;
+  };
+
+  const topEntry = (map: Record<string, number>) => {
+    const entries = Object.entries(map).sort((a, b) => b[1] - a[1]);
+    return entries[0] || null;
+  };
+
+  const styleCounts = countMap(botResponses.map((e) => e.style));
+  const intentCounts = countMap(botResponses.map((e) => e.intent));
+  const archetypeCounts = countMap(userMessages.map((e) => e.archetype));
+  const actionCounts = countMap(interactions.map((e) => e.action));
+  const cookCounts = countMap(botResponses.map((e) => e.cookLevel));
+
+  const respectedCount = botResponses.filter((e) => e.respected).length;
+  const avgEscalation =
+    botResponses.length > 0
+      ? Number(
+          (
+            botResponses.reduce((sum, e) => sum + (e.escalation || 0), 0) /
+            botResponses.length
+          ).toFixed(2),
+        )
+      : 0;
+
+  const longestResponse =
+    [...botResponses]
+      .filter((e) => e.response)
+      .sort((a, b) => (b.response?.length || 0) - (a.response?.length || 0))[0] || null;
+
+  return {
+    totals: {
+      events: events.length,
+      userMessages: userMessages.length,
+      botResponses: botResponses.length,
+      interactions: interactions.length,
+      respectedCount,
+      avgEscalation,
+    },
+    top: {
+      style: topEntry(styleCounts),
+      intent: topEntry(intentCounts),
+      archetype: topEntry(archetypeCounts),
+      interaction: topEntry(actionCounts),
+      cookLevel: topEntry(cookCounts),
+    },
+    counts: {
+      styles: styleCounts,
+      intents: intentCounts,
+      archetypes: archetypeCounts,
+      interactions: actionCounts,
+      cookLevels: cookCounts,
+    },
+    samples: {
+      longestResponse: longestResponse?.response || null,
+    },
+    recent: events.slice(-25).reverse(),
+  };
 }
