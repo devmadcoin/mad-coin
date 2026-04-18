@@ -31,6 +31,8 @@ type Intent =
 
 type CookLevel = "mild" | "mean" | "crashout" | "demon";
 type StyleTab = "safe" | "savage" | "crashout";
+type VariantKey = "default" | "safe" | "savage" | "crashout";
+type MoodMode = "cold" | "surgical" | "mocking" | "prophetic" | "respect";
 
 type MemoryEntry = {
   last: string;
@@ -40,9 +42,9 @@ type MemoryEntry = {
   intentHistory: Intent[];
   favoriteStyle?: StyleTab;
   lastIntent?: Intent;
+  callbackNotes: string[];
+  moodHistory: MoodMode[];
 };
-
-type VariantKey = "default" | "safe" | "savage" | "crashout";
 
 type RequestBody = {
   message?: unknown;
@@ -51,6 +53,18 @@ type RequestBody = {
   sessionId?: unknown;
   preferredStyle?: unknown;
   multiOutput?: unknown;
+};
+
+type ApiMeta = {
+  intent: Intent;
+  states: string[];
+  escalation: number;
+  favoriteStyle: StyleTab | null;
+  multiOutput: boolean;
+  mood: MoodMode;
+  callback?: string | null;
+  rarityHint?: "standard" | "rare" | "legendary";
+  followUpBait?: string[];
 };
 
 const memory = new Map<string, MemoryEntry>();
@@ -472,6 +486,53 @@ Do not become repetitive.
 `;
 }
 
+function buildMoodLayer(mood: MoodMode): string {
+  switch (mood) {
+    case "cold":
+      return `
+MOOD MODE:
+Cold.
+Minimal.
+Final.
+`;
+    case "surgical":
+      return `
+MOOD MODE:
+Surgical.
+Precise.
+Expose the flaw cleanly.
+`;
+    case "mocking":
+      return `
+MOOD MODE:
+Mocking.
+Controlled disrespect.
+Never sloppy.
+`;
+    case "prophetic":
+      return `
+MOOD MODE:
+Prophetic.
+Judgment with doctrine energy.
+`;
+    case "respect":
+      return `
+MOOD MODE:
+Respect is rare.
+Still sharp, but acknowledge real discipline.
+`;
+  }
+}
+
+function buildCallbackLayer(callback: string | null): string {
+  if (!callback) return "";
+  return `
+CALLBACK MEMORY:
+Use this lightly if it helps:
+${callback}
+`;
+}
+
 function buildRefinementLayer(opts: {
   harder: boolean;
   shorter: boolean;
@@ -525,6 +586,14 @@ function scoreOutput(text: string, intent: Intent): number {
   if (!text.includes("•") && !text.includes("- ")) score += 1;
   if (/[.!?]$/.test(text)) score += 1;
   if (!/\$mad is\.\.\./i.test(text)) score += 1;
+  if (/[A-Z]{3,}/.test(text)) score += 1;
+  if (
+    /you keep|you didn.t|that.s not|fear|discipline|signal|pressure|excuse/i.test(
+      text,
+    )
+  ) {
+    score += 2;
+  }
 
   if (intent === "CAPTION" || intent === "SHILL" || intent === "COMEBACK") {
     if (text.length <= 160) score += 1;
@@ -532,6 +601,12 @@ function scoreOutput(text: string, intent: Intent): number {
   }
 
   return score;
+}
+
+function getRarityHint(score: number): "standard" | "rare" | "legendary" {
+  if (score >= 12) return "legendary";
+  if (score >= 10) return "rare";
+  return "standard";
 }
 
 function shouldReturnVariants(intent: Intent): boolean {
@@ -557,6 +632,51 @@ function topStyleFromHistory(history: Intent[]): StyleTab | undefined {
   return undefined;
 }
 
+function pickMood(prev: MemoryEntry | undefined, respect: boolean, escalation: number): MoodMode {
+  if (respect) return "respect";
+  if (escalation >= 3) return "cold";
+  if (prev?.moodHistory?.slice(-1)[0] === "cold") return "mocking";
+  if (prev?.moodHistory?.slice(-1)[0] === "mocking") return "surgical";
+  const pool: MoodMode[] = ["surgical", "mocking", "prophetic", "cold"];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function buildCallbackFromMemory(prev: MemoryEntry | undefined, states: string[]): string | null {
+  if (!prev) return null;
+  const recent = prev.callbackNotes || [];
+
+  if (recent.length) return recent[0];
+
+  if (prev.recentStates.includes("FEAR") && states.includes("FEAR")) {
+    return "Second time the pattern points to fear.";
+  }
+  if (prev.recentStates.includes("VALIDATION") && states.includes("VALIDATION")) {
+    return "Again asking for permission instead of moving.";
+  }
+  if (prev.recentStates.includes("HESITATION") && states.includes("HESITATION")) {
+    return "This still sounds like hesitation dressed up as thought.";
+  }
+
+  return null;
+}
+
+function buildFollowUpBait(intent: Intent, rarity: "standard" | "rare" | "legendary") {
+  const common =
+    intent === "COMEBACK"
+      ? ["Make it harsher", "One-line version", "Make it cleaner"]
+      : intent === "CAPTION" || intent === "SHILL"
+        ? ["Turn that into a post", "Make it shorter", "Make it meaner"]
+        : intent === "CONFESSION"
+          ? ["Tell me my real problem", "Go deeper", "Don’t soften it"]
+          : ["Go deeper", "Hit me harder", "What does that say about me?"];
+
+  if (rarity === "legendary") {
+    return [common[0], "Make it legendary again", "Turn that into a post"];
+  }
+
+  return common;
+}
+
 function updateMemory(
   sessionId: string,
   prev: MemoryEntry | undefined,
@@ -567,6 +687,8 @@ function updateMemory(
     bot: string;
     intent: Intent;
     favoriteStyle?: StyleTab;
+    mood: MoodMode;
+    callback?: string | null;
   },
 ) {
   memory.set(sessionId, {
@@ -577,6 +699,11 @@ function updateMemory(
     intentHistory: [...(prev?.intentHistory || []), data.intent].slice(-12),
     favoriteStyle: data.favoriteStyle ?? prev?.favoriteStyle,
     lastIntent: data.intent,
+    callbackNotes: [
+      ...(data.callback ? [data.callback] : []),
+      ...(prev?.callbackNotes || []),
+    ].slice(0, 5),
+    moodHistory: [...(prev?.moodHistory || []), data.mood].slice(-8),
   });
 }
 
@@ -594,6 +721,8 @@ async function generateSingleOutput(params: {
   shorter: boolean;
   smarter: boolean;
   tweetify: boolean;
+  mood: MoodMode;
+  callback: string | null;
 }): Promise<string> {
   const input = `
 MAD CANON:
@@ -610,6 +739,8 @@ ${buildAntiRepetitionLayer(params.prev?.lastBot)}
 ${buildIntentLayer(params.intent)}
 ${buildVariantLayer(params.variant)}
 ${buildPreferenceLayer(params.prev?.favoriteStyle, params.prev?.lastIntent)}
+${buildMoodLayer(params.mood)}
+${buildCallbackLayer(params.callback)}
 ${buildRefinementLayer({
   harder: params.harder,
   shorter: params.shorter,
@@ -635,6 +766,7 @@ RESPONSE CONSTRUCTION RULES:
 - do not sound like generic motivation content
 - do not sound like therapy
 - never apologize unless explicitly asked to write an apology
+- make the line feel screenshot-worthy when possible
 
 USER:
 ${params.message}
@@ -648,7 +780,7 @@ ${params.message}
 
   let output = first.output_text?.trim() || "Say it again.";
 
-  if (scoreOutput(output, params.intent) < 8) {
+  if (scoreOutput(output, params.intent) < 9) {
     const retry = await client.responses.create({
       model: "gpt-4.1",
       instructions: SYSTEM_PROMPT,
@@ -659,7 +791,8 @@ The first draft was too weak.
 Rewrite it sharper.
 Keep the meaning.
 Make it more quotable, more human, and less generic.
-Do not get longer unless needed.`,
+Do not get longer unless needed.
+Prefer lines that feel dangerous to screenshot.`,
     });
 
     output = retry.output_text?.trim() || output;
@@ -708,6 +841,9 @@ export async function POST(req: Request) {
       escalation = Math.min(prev.repeatCount + 1, 3);
     }
 
+    const mood = pickMood(prev, respect, escalation);
+    const callback = buildCallbackFromMemory(prev, states);
+
     const returnVariants =
       body.multiOutput === true || shouldReturnVariants(intent);
 
@@ -741,6 +877,8 @@ export async function POST(req: Request) {
           shorter,
           smarter,
           tweetify,
+          mood,
+          callback,
         }),
         generateSingleOutput({
           message,
@@ -756,6 +894,8 @@ export async function POST(req: Request) {
           shorter,
           smarter,
           tweetify,
+          mood,
+          callback,
         }),
         generateSingleOutput({
           message,
@@ -771,6 +911,8 @@ export async function POST(req: Request) {
           shorter,
           smarter,
           tweetify,
+          mood,
+          callback,
         }),
       ]);
 
@@ -786,6 +928,9 @@ export async function POST(req: Request) {
             ? crashoutOutput
             : savageOutput;
 
+      const rarityHint = getRarityHint(scoreOutput(chosen, intent));
+      const followUpBait = buildFollowUpBait(intent, rarityHint);
+
       updateMemory(sessionId, prev, {
         message,
         escalation,
@@ -793,6 +938,8 @@ export async function POST(req: Request) {
         bot: chosen,
         intent,
         favoriteStyle: favoredStyle,
+        mood,
+        callback,
       });
 
       return NextResponse.json({
@@ -808,7 +955,11 @@ export async function POST(req: Request) {
           escalation,
           favoriteStyle: favoredStyle,
           multiOutput: true,
-        },
+          mood,
+          callback,
+          rarityHint,
+          followUpBait,
+        } satisfies ApiMeta,
       });
     }
 
@@ -826,7 +977,12 @@ export async function POST(req: Request) {
       shorter,
       smarter,
       tweetify,
+      mood,
+      callback,
     });
+
+    const rarityHint = getRarityHint(scoreOutput(output, intent));
+    const followUpBait = buildFollowUpBait(intent, rarityHint);
 
     updateMemory(sessionId, prev, {
       message,
@@ -835,6 +991,8 @@ export async function POST(req: Request) {
       bot: output,
       intent,
       favoriteStyle: preferredStyle,
+      mood,
+      callback,
     });
 
     return NextResponse.json({
@@ -845,7 +1003,11 @@ export async function POST(req: Request) {
         escalation,
         favoriteStyle: preferredStyle || prev?.favoriteStyle || null,
         multiOutput: false,
-      },
+        mood,
+        callback,
+        rarityHint,
+        followUpBait,
+      } satisfies ApiMeta,
     });
   } catch (error) {
     console.error("MAD Mind route error:", error);
