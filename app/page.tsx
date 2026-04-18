@@ -82,6 +82,23 @@ function StatChip({ label }: { label: string }) {
   );
 }
 
+function QuickCard({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
+        {title}
+      </p>
+      <p className="mt-2 text-sm leading-6 text-white/62">{text}</p>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
@@ -101,41 +118,36 @@ export default function Home() {
                 CONTROL YOURSELF
               </p>
 
-              <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.5rem] lg:text-[6rem]">
+              <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.5rem] lg:text-[5.8rem]">
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   STOP
                 </span>
                 <br />
-                PANICKING.
+                PANICKING
                 <br />
-                START
-                <br />
-                BUILDING
+                AND GET
                 <br />
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   $MAD
                 </span>{" "}
                 <span className="text-green-400 drop-shadow-[0_0_18px_rgba(0,255,120,0.6)]">
-                  CONTROL
+                  RICH.
                 </span>
-                .
               </h1>
 
-              <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                Most people panic when pressure hits. $MAD is about staying clear,
-                disciplined, and dangerous enough to move while everyone else
-                loses command.
+              <p className="mt-6 max-w-lg text-base text-white/68">
+                Clear mind. Strong signal. Real project.
               </p>
 
-              <div className="mt-4 max-w-xl rounded-[20px] border border-red-500/15 bg-red-500/[0.06] px-4 py-3 text-sm text-white/70">
-                You do not need more noise. You need more self-command.
+              <div className="mt-4 max-w-lg rounded-[20px] border border-red-500/15 bg-red-500/[0.06] px-4 py-3 text-sm font-semibold text-white/78">
+                Most people panic. $MAD builds.
               </div>
 
               <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
                 <div className="flex flex-wrap gap-3">
                   <PrimaryButton href="/mad-mind">Enter MAD Mind</PrimaryButton>
-                  <SecondaryAnchor href="#confessions">
-                    Read Live Confessions
+                  <SecondaryAnchor href="/roadmap">
+                    See Why It’s Real
                   </SecondaryAnchor>
                 </div>
 
@@ -163,9 +175,9 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                  <StatChip label="Real People" />
-                  <StatChip label="Live Reactions" />
-                  <StatChip label="Pressure Tested" />
+                  <StatChip label="Real Project" />
+                  <StatChip label="Live Tech" />
+                  <StatChip label="Public Build" />
                 </div>
               </div>
             </div>
@@ -191,41 +203,18 @@ export default function Home() {
                   </div>
 
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
-                        Signal
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-white/62">
-                        Clear reads under pressure.
-                      </p>
-                    </div>
-
-                    <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
-                        Control
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-white/62">
-                        Emotion under command.
-                      </p>
-                    </div>
-
-                    <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
-                        Pressure
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-white/62">
-                        Chaos reveals character.
-                      </p>
-                    </div>
+                    <QuickCard title="Live" text="Website, confessions, MAD Mind." />
+                    <QuickCard title="Building" text="MAD AI, progression, loops." />
+                    <QuickCard title="Next" text="Game, merch, full ecosystem." />
                   </div>
 
-                  <div className="mt-4 rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
-                      Why it matters
+                  <div className="mt-4 rounded-[20px] border border-emerald-400/20 bg-emerald-500/10 p-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-200/80">
+                      Why people care
                     </p>
-                    <p className="mt-2 text-sm leading-6 text-white/62">
-                      This is not about hype. It is about learning how to think,
-                      move, and stay steady while everyone else reacts emotionally.
+                    <p className="mt-2 text-sm font-semibold leading-6 text-emerald-100/90">
+                      This is not just a meme page anymore. It already has live tech,
+                      public interaction, and an expanding ecosystem.
                     </p>
                   </div>
                 </div>
@@ -245,24 +234,19 @@ export default function Home() {
               </p>
 
               <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-                Say what you’re really thinking.
+                See what people really think.
               </h2>
 
               <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-                Real people post what they actually feel. The strongest reads,
-                sharpest truths, and most relatable confessions rise to the top.
+                Real thoughts. Real reactions. Real signal.
               </p>
             </div>
 
             <div className="shrink-0 flex flex-wrap gap-2">
               <StatChip label="Trending" />
-              <StatChip label="Most Liked" />
+              <StatChip label="Top" />
               <StatChip label="Live" />
             </div>
-          </div>
-
-          <div className="mb-6 rounded-[22px] border border-red-500/15 bg-red-500/[0.06] px-4 py-3 text-sm text-white/70">
-            Anonymous thoughts. Public signal.
           </div>
 
           <div className="min-w-0">
@@ -275,7 +259,7 @@ export default function Home() {
             Stay $MAD
           </p>
           <p className="mt-2 text-sm text-white/60">
-            Feel everything. Obey nothing weak.
+            Stop panicking. Build smarter.
           </p>
         </section>
       </div>
