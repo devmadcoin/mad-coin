@@ -219,6 +219,28 @@ function ExchangeLogoCard({
   );
 }
 
+function HeroGlobe() {
+  return (
+    <div className="pointer-events-none absolute right-[-120px] top-[-90px] hidden h-[520px] w-[520px] overflow-hidden rounded-full opacity-20 lg:block">
+      <div className="absolute inset-0 rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_35%_35%,rgba(255,0,0,0.22),rgba(255,0,0,0.06)_38%,transparent_65%)] shadow-[0_0_70px_rgba(255,0,0,0.18)]" />
+      <div className="absolute inset-0 rounded-full bg-[repeating-linear-gradient(to_right,rgba(255,0,0,0.18)_0px,rgba(255,0,0,0.18)_1px,transparent_1px,transparent_40px),repeating-linear-gradient(to_bottom,rgba(255,0,0,0.14)_0px,rgba(255,0,0,0.14)_1px,transparent_1px,transparent_40px)] opacity-55" />
+      <div className="absolute inset-[8%] rounded-full border border-red-500/18" />
+      <div className="absolute inset-[22%] rounded-full border border-red-500/14" />
+      <div className="absolute inset-[36%] rounded-full border border-red-500/10" />
+
+      <div className="absolute left-[12%] top-[16%] h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
+      <div className="absolute left-[28%] top-[34%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
+      <div className="absolute left-[60%] top-[24%] h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
+      <div className="absolute left-[74%] top-[40%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
+      <div className="absolute left-[52%] top-[62%] h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
+      <div className="absolute left-[30%] top-[70%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
+
+      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/20 to-transparent" />
+      <div className="absolute inset-0 rounded-full border border-red-500/8" />
+    </div>
+  );
+}
+
 export default function Home() {
   const exchangeItems = [
     {
@@ -252,8 +274,10 @@ export default function Home() {
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.06),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
 
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 lg:px-8">
-        <section className="rounded-[42px] border border-white/10 bg-black/40 p-6 shadow-[0_20px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10 lg:p-14">
-          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <section className="relative overflow-hidden rounded-[42px] border border-white/10 bg-black/40 p-6 shadow-[0_20px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10 lg:p-14">
+          <HeroGlobe />
+
+          <div className="relative z-10 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">
                 CONTROL YOURSELF
@@ -319,7 +343,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-[34px] border border-white/10 bg-white/[0.03] p-4">
+            <div className="relative rounded-[34px] border border-white/10 bg-white/[0.03] p-4">
               <div className="overflow-hidden rounded-[28px] border border-white/10 bg-black">
                 <video
                   autoPlay
