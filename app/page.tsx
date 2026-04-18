@@ -6,6 +6,7 @@ import MadConfessions from "./components/MadConfessions";
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-black px-4 py-6 text-white sm:px-6 sm:py-8 lg:px-8">
+      {/* BACKGROUND */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.08),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.06),transparent_30%)]" />
         <div className="absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:40px_40px]" />
@@ -13,8 +14,10 @@ export default function Home() {
       </div>
 
       <div className="relative mx-auto max-w-6xl">
+        {/* HERO */}
         <section className="overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0a0a]/90 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.95fr]">
+            {/* LEFT */}
             <div className="px-6 py-10 sm:px-8 sm:py-12 lg:px-10 lg:py-14">
               <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/35">
                 CONTROLLED CHAOS
@@ -57,8 +60,21 @@ export default function Home() {
                   View Confessions
                 </a>
               </div>
+
+              <div className="mt-8 flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45 sm:text-xs">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                  Anonymous
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                  Live Reactions
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                  Top Ranked
+                </span>
+              </div>
             </div>
 
+            {/* RIGHT */}
             <div className="relative flex justify-center px-6 pb-8 sm:px-8 lg:px-10 lg:pb-0">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.12),transparent_45%)]" />
               <video
@@ -74,20 +90,36 @@ export default function Home() {
           </div>
         </section>
 
+        {/* CONFESSIONS INTRO */}
         <section
           id="confessions"
           className="mt-10 rounded-[30px] border border-white/10 bg-[#0a0a0a]/90 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8"
         >
-          <div className="mb-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/35">
-              MAD CONFESSIONS
-            </p>
-            <h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">
-              Say it. Don’t hold it.
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60 sm:text-base">
-              Anonymous thoughts. Real pressure. Real people.
-            </p>
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/35">
+                MAD CONFESSIONS
+              </p>
+              <h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">
+                Say it. Don’t hold it.
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60 sm:text-base">
+                Anonymous thoughts. Real pressure. Real people. Ranked by the
+                crowd in real time.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45 sm:text-xs">
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                Trending Now
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                Top MAD
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                Auto Refresh
+              </span>
+            </div>
           </div>
 
           <MadConfessions />
