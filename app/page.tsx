@@ -1,90 +1,190 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import MadConfessions from "./components/MadConfessions";
 
+const LINKS = {
+  telegram: "https://t.me/MadOfficalChannel",
+  x: "https://x.com/madrichclub_",
+  instagram: "https://www.instagram.com/madrichclub/",
+  tiktok: "https://www.tiktok.com/@madrichclub",
+} as const;
+
+function PrimaryButton({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex items-center justify-center rounded-full border border-red-500/30 bg-red-500 px-5 py-3 text-sm font-black text-white transition duration-200 hover:scale-[1.01] hover:bg-red-400"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function SecondaryAnchor({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] px-5 py-3 text-sm font-black text-white transition duration-200 hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]"
+    >
+      {children}
+    </a>
+  );
+}
+
+function SocialIcon({
+  href,
+  src,
+  alt,
+}: {
+  href: string;
+  src: string;
+  alt: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={alt}
+      title={alt}
+      className="block h-14 w-14 shrink-0 transition-transform duration-300 hover:scale-110"
+    >
+      <Image
+        src={src}
+        alt={alt}
+        width={56}
+        height={56}
+        className="h-full w-full object-contain"
+      />
+    </a>
+  );
+}
+
 export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-black px-4 py-6 text-white sm:px-6 sm:py-8 lg:px-8">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
       {/* BACKGROUND */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.08),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.06),transparent_30%)]" />
-        <div className="absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:40px_40px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.10),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.08),transparent_30%)]" />
+        <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8">
         {/* HERO */}
-        <section className="overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0a0a]/90 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-          <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.95fr]">
-            
+        <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+          <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
             {/* LEFT */}
-            <div className="px-6 py-10 sm:px-8 sm:py-12 lg:px-10 lg:py-14">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/35">
+            <div className="relative flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
+
+              <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/40">
                 CONTROL YOURSELF
               </p>
 
-              <h1 className="mt-5 text-4xl font-black leading-[0.9] tracking-[-0.04em] sm:text-5xl lg:text-7xl">
-                <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.45)]">
+              <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.5rem] lg:text-[6rem]">
+                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   STOP
-                </span>{" "}
+                </span>
+                <br />
                 PANICKING.
                 <br />
-                START BEING{" "}
-                <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.45)]">
+                START
+                <br />
+                BEING{" "}
+                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   $MAD
                 </span>{" "}
-                <span className="text-green-400 drop-shadow-[0_0_16px_rgba(0,255,120,0.35)]">
+                <span className="text-green-400 drop-shadow-[0_0_18px_rgba(0,255,120,0.6)]">
                   RICH
                 </span>
                 .
               </h1>
 
-              <p className="mt-5 max-w-xl text-sm leading-7 text-white/60 sm:text-base">
+              <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
                 Most people panic. You don’t have to.
               </p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link
-                  href="/mad-mind"
-                  className="inline-flex items-center justify-center rounded-full bg-red-500 px-5 py-2.5 text-sm font-bold text-white transition duration-200 hover:scale-[1.02] hover:bg-red-400"
-                >
-                  Enter MAD Mind
-                </Link>
+              <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
+                <div className="flex flex-wrap gap-3">
+                  <PrimaryButton href="/mad-mind">Enter MAD Mind</PrimaryButton>
+                  <SecondaryAnchor href="#confessions">
+                    See What People Are Saying
+                  </SecondaryAnchor>
+                </div>
 
-                <a
-                  href="#confessions"
-                  className="inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:border-white/40 hover:bg-white/5"
-                >
-                  See What People Are Saying
-                </a>
-              </div>
+                <div className="flex w-full max-w-md items-center justify-between">
+                  <SocialIcon
+                    href={LINKS.telegram}
+                    src="/logos/MAD-TELEGRAM.png"
+                    alt="Telegram"
+                  />
+                  <SocialIcon
+                    href={LINKS.x}
+                    src="/logos/MAD-X-LOGO.png"
+                    alt="X"
+                  />
+                  <SocialIcon
+                    href={LINKS.instagram}
+                    src="/logos/MAD-INSTAGRAM-LOGO.png"
+                    alt="Instagram"
+                  />
+                  <SocialIcon
+                    href={LINKS.tiktok}
+                    src="/logos/MAD-TIKTOK-LOGO.png"
+                    alt="TikTok"
+                  />
+                </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45 sm:text-xs">
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                  Anonymous
-                </span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                  Real People
-                </span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                  Live Reactions
-                </span>
+                <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45 sm:text-xs">
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                    Real People
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                    Live Reactions
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                    Top Ranked
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* RIGHT */}
-            <div className="relative flex justify-center px-6 pb-8 sm:px-8 lg:px-10 lg:pb-0">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.12),transparent_45%)]" />
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="relative w-full max-w-md rounded-2xl border border-white/10 bg-black shadow-[0_18px_60px_rgba(0,0,0,0.45)]"
-              >
-                <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-              </video>
+            <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-5 sm:p-7 lg:p-10">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.14),transparent_44%)]" />
+
+              <div className="relative w-full max-w-[620px]">
+                <div className="absolute -inset-8 rounded-[42px] bg-red-500/10 blur-3xl" />
+
+                <div className="relative rounded-[34px] border border-white/10 bg-black/60 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.6)] sm:p-5">
+                  <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black">
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="aspect-[16/10] w-full object-cover"
+                    >
+                      <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                    </video>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -92,25 +192,25 @@ export default function Home() {
         {/* CONFESSIONS */}
         <section
           id="confessions"
-          className="mt-10 rounded-[30px] border border-white/10 bg-[#0a0a0a]/90 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8"
+          className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10"
         >
-          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            
+          <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/35">
-                MAD CONFESSIONS
+              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+                MAD Confessions
               </p>
 
-              <h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">
+              <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
                 Say what you’re really thinking.
               </h2>
 
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60 sm:text-base">
-                People share what they actually feel. Others react. The real ones rise to the top.
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+                People say what they really feel. Others react. The real ones rise
+                to the top.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45 sm:text-xs">
+            <div className="shrink-0 flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45 sm:text-xs">
               <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
                 Trending
               </span>
@@ -123,7 +223,9 @@ export default function Home() {
             </div>
           </div>
 
-          <MadConfessions />
+          <div className="min-w-0">
+            <MadConfessions />
+          </div>
         </section>
 
         {/* MINI FOOTER */}
