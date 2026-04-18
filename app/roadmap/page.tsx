@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import MadConfessions from "./components/MadConfessions";
+import MadConfessions from "../components/MadConfessions";
 
 const LINKS = {
   telegram: "https://t.me/MadOfficalChannel",
@@ -77,7 +77,6 @@ function SocialIcon({
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
-      {/* BACKGROUND */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.10),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.08),transparent_30%)]" />
         <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
@@ -85,10 +84,8 @@ export default function Home() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8">
-        {/* HERO */}
         <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
           <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
-            {/* LEFT */}
             <div className="relative flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
 
@@ -161,7 +158,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* RIGHT */}
             <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-5 sm:p-7 lg:p-10">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.14),transparent_44%)]" />
 
@@ -186,7 +182,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* MAD CONFESSIONS */}
         <section
           id="confessions"
           className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10"
@@ -225,7 +220,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* MINI FOOTER */}
         <section className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-4 text-center shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
             Stay $MAD
