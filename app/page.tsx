@@ -122,44 +122,6 @@ function MetricCard({
   );
 }
 
-function PlatformMarqueeCard({
-  href,
-  src,
-  alt,
-  label,
-}: {
-  href: string;
-  src: string;
-  alt: string;
-  label: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="flex min-w-[280px] items-center gap-4 rounded-[24px] border border-white/10 bg-white/[0.04] px-5 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.22)] transition duration-300 hover:scale-[1.02] hover:border-white/20 hover:bg-white/[0.07]"
-    >
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-black/40">
-        <Image
-          src={src}
-          alt={alt}
-          width={32}
-          height={32}
-          className="h-8 w-8 object-contain"
-        />
-      </div>
-
-      <div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40">
-          Live On
-        </p>
-        <p className="text-lg font-black text-white/95">{label}</p>
-      </div>
-    </a>
-  );
-}
-
 function UniverseCard({
   title,
   text,
@@ -192,34 +154,56 @@ function UniverseCard({
   );
 }
 
-export default function Home() {
-  const marqueeItems = [
-    {
-      href: LINKS.jupiter,
-      src: "/logos/jupiter.png",
-      alt: "Jupiter",
-      label: "Buy on Jupiter",
-    },
-    {
-      href: LINKS.dexscreener,
-      src: "/logos/DEX-screener.png",
-      alt: "DEX Screener",
-      label: "View Chart",
-    },
-    {
-      href: LINKS.birdeye,
-      src: "/logos/birdeye.png",
-      alt: "Birdeye",
-      label: "Track on Birdeye",
-    },
-    {
-      href: LINKS.solscan,
-      src: "/logos/solscan.png",
-      alt: "Solscan",
-      label: "Verify on Solscan",
-    },
-  ];
+function PlatformPoster({
+  href,
+  src,
+  alt,
+  eyebrow,
+  title,
+}: {
+  href: string;
+  src: string;
+  alt: string;
+  eyebrow: string;
+  title: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-6 transition duration-300 hover:scale-[1.015] hover:border-white/20 hover:bg-white/[0.06]"
+    >
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/35 to-transparent" />
+      <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-red-500/10 blur-3xl transition duration-300 group-hover:bg-red-500/20" />
 
+      <div className="relative flex min-h-[230px] flex-col justify-between">
+        <div className="flex justify-center">
+          <div className="flex h-32 w-32 items-center justify-center rounded-full border border-white/10 bg-black/50 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
+            <Image
+              src={src}
+              alt={alt}
+              width={84}
+              height={84}
+              className="h-20 w-20 object-contain"
+            />
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/40">
+            {eyebrow}
+          </p>
+          <p className="mt-3 text-3xl font-black leading-tight text-white">
+            {title}
+          </p>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#040404] text-white">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.06),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
@@ -333,43 +317,50 @@ export default function Home() {
           />
         </section>
 
-        <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-5 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-                Live In The Wild
-              </p>
+        <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+              Live In The Wild
+            </p>
 
-              <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-                Real. Public. Moving.
-              </h2>
+            <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+              Real. Public. Moving.
+            </h2>
 
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-                $MAD is already visible on real platforms.
-              </p>
-            </div>
-
-            <div className="shrink-0 flex flex-wrap gap-2">
-              <Chip>Tracked</Chip>
-              <Chip>Visible</Chip>
-              <Chip>Moving</Chip>
-            </div>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+              $MAD is already visible on real platforms.
+            </p>
           </div>
 
-          <div className="marquee-mask relative mt-8">
-            <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] py-5">
-              <div className="logo-marquee flex w-max items-center gap-4 px-4">
-                {[...marqueeItems, ...marqueeItems].map((item, index) => (
-                  <PlatformMarqueeCard
-                    key={`${item.label}-${index}`}
-                    href={item.href}
-                    src={item.src}
-                    alt={item.alt}
-                    label={item.label}
-                  />
-                ))}
-              </div>
-            </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <PlatformPoster
+              href={LINKS.birdeye}
+              src="/logos/birdeye.png"
+              alt="Birdeye"
+              eyebrow="Live On"
+              title="Track on Birdeye"
+            />
+            <PlatformPoster
+              href={LINKS.solscan}
+              src="/logos/solscan.png"
+              alt="Solscan"
+              eyebrow="Live On"
+              title="Verify on Solscan"
+            />
+            <PlatformPoster
+              href={LINKS.jupiter}
+              src="/logos/jupiter.png"
+              alt="Jupiter"
+              eyebrow="Live On"
+              title="Buy on Jupiter"
+            />
+            <PlatformPoster
+              href={LINKS.dexscreener}
+              src="/logos/DEX-screener.png"
+              alt="DEX Screener"
+              eyebrow="Live On"
+              title="View Chart"
+            />
           </div>
         </section>
 
