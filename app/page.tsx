@@ -9,6 +9,8 @@ const LINKS = {
   x: "https://x.com/madrichclub_",
   instagram: "https://www.instagram.com/madrichclub/",
   tiktok: "https://www.tiktok.com/@madrichclub",
+  buy: "#",
+  chart: "#",
   dexscreener: "#",
   birdeye: "#",
   coingecko: "#",
@@ -16,121 +18,75 @@ const LINKS = {
   solscan: "#",
 } as const;
 
-function PrimaryButton({
+function Btn({
   href,
   children,
+  primary = false,
 }: {
   href: string;
   children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="inline-flex items-center justify-center rounded-full border border-red-500/30 bg-red-500 px-5 py-3 text-sm font-black text-white transition duration-200 hover:scale-[1.01] hover:bg-red-400"
-    >
-      {children}
-    </Link>
-  );
-}
-
-function SecondaryAnchor({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
+  primary?: boolean;
 }) {
   return (
     <a
       href={href}
-      className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] px-5 py-3 text-sm font-black text-white transition duration-200 hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]"
-    >
-      {children}
-    </a>
-  );
-}
-
-function SocialIcon({
-  href,
-  src,
-  alt,
-}: {
-  href: string;
-  src: string;
-  alt: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
+      target={href.startsWith("http") ? "_blank" : undefined}
       rel="noreferrer"
-      aria-label={alt}
-      title={alt}
-      className="group flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 transition duration-300 hover:scale-110 hover:border-white/20 hover:bg-white/10"
+      className={`inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-black transition duration-300 ${
+        primary
+          ? "bg-red-500 text-white hover:scale-[1.02] hover:bg-red-400"
+          : "border border-white/10 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]"
+      }`}
     >
-      <Image
-        src={src}
-        alt={alt}
-        width={28}
-        height={28}
-        className="h-7 w-7 object-contain"
-      />
+      {children}
     </a>
   );
 }
 
-function StatChip({ label }: { label: string }) {
+function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45 sm:text-xs">
-      {label}
+    <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/55">
+      {children}
     </span>
   );
 }
 
-function QuickCard({
-  title,
-  text,
+function Stat({
+  number,
+  label,
 }: {
-  title: string;
-  text: string;
+  number: string;
+  label: string;
 }) {
   return (
-    <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
-        {title}
+    <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+      <p className="text-2xl font-black text-white">{number}</p>
+      <p className="mt-1 text-xs uppercase tracking-[0.24em] text-white/45">
+        {label}
       </p>
-      <p className="mt-2 text-sm leading-6 text-white/62">{text}</p>
     </div>
   );
 }
 
-function PlatformBadge({
-  href,
+function Platform({
   src,
   alt,
   label,
+  href,
 }: {
-  href: string;
   src: string;
   alt: string;
   label: string;
+  href: string;
 }) {
   return (
     <a
       href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="group flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 transition duration-300 hover:scale-[1.01] hover:border-white/20 hover:bg-white/[0.06]"
+      className="flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 transition hover:scale-[1.01] hover:border-white/20"
     >
-      <Image
-        src={src}
-        alt={alt}
-        width={30}
-        height={30}
-        className="h-8 w-8 object-contain"
-      />
+      <Image src={src} alt={alt} width={28} height={28} className="h-7 w-7" />
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
+        <p className="text-[10px] uppercase tracking-[0.22em] text-white/40">
           Live On
         </p>
         <p className="text-sm font-black text-white/90">{label}</p>
@@ -139,264 +95,267 @@ function PlatformBadge({
   );
 }
 
+function Step({
+  n,
+  title,
+  text,
+}: {
+  n: string;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-500 text-sm font-black">
+        {n}
+      </div>
+      <p className="mt-4 text-lg font-black text-white">{title}</p>
+      <p className="mt-2 text-sm leading-7 text-white/62">{text}</p>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.10),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.08),transparent_30%)]" />
-        <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70" />
-      </div>
+    <div className="min-h-screen bg-[#040404] text-white overflow-x-hidden">
+      {/* background */}
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.06),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
 
-      <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8">
-        <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-          <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="relative flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
-
-              <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/40">
+      <main className="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 lg:px-8">
+        {/* HERO */}
+        <section className="rounded-[42px] border border-white/10 bg-black/40 p-6 shadow-[0_20px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10 lg:p-14">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">
                 CONTROL YOURSELF
               </p>
 
-              <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.5rem] lg:text-[5.8rem]">
-                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
-                  STOP
-                </span>
+              <h1 className="mt-6 text-[3.2rem] font-black leading-[0.88] tracking-[-0.05em] sm:text-[5rem] lg:text-[6.4rem]">
+                <span className="text-red-500">STOP</span>
                 <br />
-                PANICKING
+                PANICKING.
                 <br />
-                AND GET
+                GET
                 <br />
-                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
-                  $MAD
-                </span>{" "}
-                <span className="text-green-400 drop-shadow-[0_0_18px_rgba(0,255,120,0.6)]">
-                  RICH.
-                </span>
+                <span className="text-red-500">$MAD</span>{" "}
+                <span className="text-green-400">RICH.</span>
               </h1>
 
-              <p className="mt-6 max-w-lg text-base text-white/68">
-                Clear mind. Strong signal. Real project.
+              <p className="mt-6 max-w-xl text-base leading-8 text-white/65">
+                Most people lose because of emotion. $MAD was built around
+                discipline, identity, community, and controlled chaos.
               </p>
 
-              <div className="mt-4 max-w-lg rounded-[20px] border border-red-500/15 bg-red-500/[0.06] px-4 py-3 text-sm font-semibold text-white/78">
-                Most people panic. $MAD builds.
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Btn href="/mad-mind" primary>
+                  Enter MAD Mind
+                </Btn>
+                <Btn href="/roadmap">See Why It’s Real</Btn>
+                <Btn href={LINKS.buy}>Buy $MAD</Btn>
               </div>
 
-              <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
-                <div className="flex flex-wrap gap-3">
-                  <PrimaryButton href="/mad-mind">Enter MAD Mind</PrimaryButton>
-                  <SecondaryAnchor href="/roadmap">
-                    See Why It’s Real
-                  </SecondaryAnchor>
-                </div>
-
-                <div className="flex w-full max-w-md items-center gap-4">
-                  <SocialIcon
-                    href={LINKS.telegram}
-                    src="/logos/MAD-TELEGRAM.png"
-                    alt="Telegram"
-                  />
-                  <SocialIcon
-                    href={LINKS.x}
-                    src="/logos/MAD-X-LOGO.png"
-                    alt="X"
-                  />
-                  <SocialIcon
-                    href={LINKS.instagram}
-                    src="/logos/MAD-INSTAGRAM-LOGO.png"
-                    alt="Instagram"
-                  />
-                  <SocialIcon
-                    href={LINKS.tiktok}
-                    src="/logos/MAD-TIKTOK-LOGO.png"
-                    alt="TikTok"
-                  />
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
-                  <StatChip label="Real Project" />
-                  <StatChip label="Live Tech" />
-                  <StatChip label="Public Build" />
-                </div>
+              <div className="mt-8 flex flex-wrap gap-2">
+                <Badge>Real Project</Badge>
+                <Badge>Live Tech</Badge>
+                <Badge>Public Build</Badge>
+                <Badge>Meme Coin</Badge>
               </div>
             </div>
 
-            <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-5 sm:p-7 lg:p-10">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.14),transparent_44%)]" />
+            <div className="rounded-[34px] border border-white/10 bg-white/[0.03] p-4">
+              <div className="overflow-hidden rounded-[28px] border border-white/10 bg-black">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="aspect-[16/10] w-full object-cover"
+                >
+                  <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                </video>
+              </div>
 
-              <div className="relative w-full max-w-[620px]">
-                <div className="absolute -inset-8 rounded-[42px] bg-red-500/10 blur-3xl" />
-
-                <div className="relative rounded-[34px] border border-white/10 bg-black/60 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.6)] sm:p-5">
-                  <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black">
-                    <video
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="auto"
-                      className="aspect-[16/10] w-full object-cover"
-                    >
-                      <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-                    </video>
-                  </div>
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                    <QuickCard title="Live" text="Website, confessions, MAD Mind." />
-                    <QuickCard title="Building" text="MAD AI, progression, loops." />
-                    <QuickCard title="Next" text="Game, merch, full ecosystem." />
-                  </div>
-
-                  <div className="mt-4 rounded-[20px] border border-emerald-400/20 bg-emerald-500/10 p-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-200/80">
-                      Why people care
-                    </p>
-                    <p className="mt-2 text-sm font-semibold leading-6 text-emerald-100/90">
-                      This is not just a meme page anymore. It already has live tech,
-                      public interaction, and an expanding ecosystem.
-                    </p>
-                  </div>
-                </div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <Stat number="LIVE" label="website" />
+                <Stat number="AI" label="mad mind" />
+                <Stat number="BUILD" label="daily" />
               </div>
             </div>
           </div>
         </section>
 
-        <section className="mt-10 rounded-[38px] border border-white/10 bg-black/30 p-5 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-                $MAD Is Already Live
-              </p>
+        {/* WHY */}
+        <section className="mt-10 grid gap-4 lg:grid-cols-3">
+          <div className="rounded-[28px] border border-white/10 bg-red-500/[0.08] p-6">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-red-300">
+              Why $MAD Exists
+            </p>
+            <p className="mt-4 text-xl font-black leading-tight">
+              Most people panic.
+              <br />
+              $MAD builds.
+            </p>
+          </div>
 
-              <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+          <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-white/45">
+              Identity
+            </p>
+            <p className="mt-4 text-white/75 leading-7">
+              Stay $MAD means feel pressure, but move with discipline.
+            </p>
+          </div>
+
+          <div className="rounded-[28px] border border-white/10 bg-green-500/[0.08] p-6">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-green-300">
+              Wealth Mindset
+            </p>
+            <p className="mt-4 text-white/75 leading-7">
+              Rich starts in the mind before it hits the wallet.
+            </p>
+          </div>
+        </section>
+
+        {/* LIVE ECOSYSTEM */}
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-black/30 p-6 sm:p-8 lg:p-10">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.34em] text-white/40">
+                Already Live
+              </p>
+              <h2 className="mt-3 text-4xl font-black tracking-[-0.04em]">
                 Tracked. Visible. Building.
               </h2>
-
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-                You do not need to read everything. Just see that $MAD is already
-                showing up, already building, and already moving beyond a basic meme page.
+              <p className="mt-4 max-w-2xl text-white/62 leading-7">
+                Even if someone hates reading, they can instantly see this is
+                more than just a meme page.
               </p>
             </div>
 
-            <div className="shrink-0 flex flex-wrap gap-2">
-              <StatChip label="Live" />
-              <StatChip label="Tracked" />
-              <StatChip label="Public" />
+            <div className="flex gap-2 flex-wrap">
+              <Badge>Tracked</Badge>
+              <Badge>Public</Badge>
+              <Badge>Growing</Badge>
             </div>
           </div>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-            <PlatformBadge
-              href={LINKS.dexscreener}
+            <Platform
               src="/logos/DEX-screener.png"
-              alt="DEX Screener"
+              alt="DEX"
               label="DEX Screener"
+              href={LINKS.dexscreener}
             />
-            <PlatformBadge
-              href={LINKS.birdeye}
+            <Platform
               src="/logos/birdeye.png"
               alt="Birdeye"
               label="Birdeye"
+              href={LINKS.birdeye}
             />
-            <PlatformBadge
-              href={LINKS.coingecko}
+            <Platform
               src="/logos/coingecko.png"
-              alt="CoinGecko"
+              alt="Coingecko"
               label="CoinGecko"
+              href={LINKS.coingecko}
             />
-            <PlatformBadge
-              href={LINKS.jupiter}
+            <Platform
               src="/logos/jupiter.png"
               alt="Jupiter"
               label="Jupiter"
+              href={LINKS.jupiter}
             />
-            <PlatformBadge
-              href={LINKS.solscan}
+            <Platform
               src="/logos/solscan.png"
               alt="Solscan"
               label="Solscan"
+              href={LINKS.solscan}
             />
-          </div>
-
-          <div className="mt-6 grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-[24px] border border-emerald-400/20 bg-emerald-500/10 p-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-200/80">
-                Why this matters
-              </p>
-              <p className="mt-3 text-sm font-semibold leading-7 text-emerald-100/90">
-                For people who need proof fast: $MAD is not just an idea sitting in a bio.
-                It already has visibility, public tracking, community activity, and live tech.
-              </p>
-            </div>
-
-            <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
-                Quick reality check
-              </p>
-              <div className="mt-3 space-y-2 text-sm text-white/75">
-                <p>• Meme coin culture + public brand</p>
-                <p>• Live website + community features</p>
-                <p>• MAD Mind + interactive tech layer</p>
-                <p>• Expanding ecosystem direction</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-[24px] border border-yellow-400/20 bg-yellow-500/10 px-5 py-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-yellow-200/85">
-              Risk Notice
-            </p>
-            <p className="mt-2 text-sm leading-7 text-yellow-100/90">
-              $MAD is a meme coin and community-driven digital asset. It is highly speculative,
-              volatile, and carries significant risk. Nothing on this site is financial advice,
-              investment advice, or a promise of returns. Only participate with money you can
-              afford to lose. Do your own research before making any decision.
-            </p>
           </div>
         </section>
 
-        <section
-          id="confessions"
-          className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10"
-        >
-          <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        {/* MAD AI */}
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-gradient-to-br from-red-500/[0.08] to-black p-8">
+          <p className="text-[11px] uppercase tracking-[0.34em] text-white/40">
+            Technology Layer
+          </p>
+
+          <h2 className="mt-4 text-4xl font-black tracking-[-0.04em]">
+            MAD AI Is Here.
+          </h2>
+
+          <p className="mt-4 max-w-3xl text-white/65 leading-8">
+            While most meme coins stop at a mascot, $MAD is building live
+            interactive tech: MAD Mind, viral content engines, engagement loops,
+            roast systems, and future autonomous community tools.
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Badge>AI Identity</Badge>
+            <Badge>Interactive</Badge>
+            <Badge>Scalable</Badge>
+            <Badge>Future Utility</Badge>
+          </div>
+        </section>
+
+        {/* HOW TO BUY */}
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-black/30 p-6 sm:p-8 lg:p-10">
+          <p className="text-[11px] uppercase tracking-[0.34em] text-white/40">
+            Easy Entry
+          </p>
+
+          <h2 className="mt-3 text-4xl font-black tracking-[-0.04em]">
+            How To Join $MAD
+          </h2>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <Step n="1" title="Get Wallet" text="Download Phantom wallet." />
+            <Step n="2" title="Buy SOL" text="Add Solana to your wallet." />
+            <Step n="3" title="Swap" text="Use Jupiter or supported DEX." />
+            <Step n="4" title="Stay $MAD" text="Join the movement." />
+          </div>
+        </section>
+
+        {/* CONFESSIONS */}
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(25,0,0,0.9),rgba(6,0,0,0.96))] p-6 sm:p-8 lg:p-10">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-                MAD Confessions
+              <p className="text-[11px] uppercase tracking-[0.34em] text-white/40">
+                Community Signal
               </p>
-
-              <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-                See what people really think.
+              <h2 className="mt-3 text-4xl font-black tracking-[-0.04em]">
+                See What People Really Think.
               </h2>
-
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+              <p className="mt-4 text-white/62">
                 Real thoughts. Real reactions. Real signal.
               </p>
             </div>
 
-            <div className="shrink-0 flex flex-wrap gap-2">
-              <StatChip label="Trending" />
-              <StatChip label="Top" />
-              <StatChip label="Live" />
+            <div className="flex gap-2 flex-wrap">
+              <Badge>Trending</Badge>
+              <Badge>Live</Badge>
+              <Badge>Top</Badge>
             </div>
           </div>
 
-          <div className="min-w-0">
+          <div className="mt-8">
             <MadConfessions />
           </div>
         </section>
 
-        <section className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-4 text-center shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
-            Stay $MAD
+        {/* DISCLAIMER */}
+        <section className="mt-8 rounded-[26px] border border-yellow-400/15 bg-yellow-500/[0.07] px-5 py-5 text-center">
+          <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-yellow-200/80">
+            Risk Notice
           </p>
-          <p className="mt-2 text-sm text-white/60">
-            $MAD is a meme coin. Nothing here is financial advice. Never risk more than you can afford to lose.
+
+          <p className="mt-3 text-sm leading-7 text-yellow-100/85">
+            $MAD is a meme coin and speculative digital asset. Nothing on this
+            website is financial advice or a guarantee of returns. Crypto is
+            risky and volatile. Never risk money you cannot afford to lose.
+            Always do your own research.
           </p>
         </section>
-      </div>
+      </main>
     </div>
   );
 }
