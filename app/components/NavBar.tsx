@@ -49,14 +49,14 @@ function NavPill({
     <Link
       href={href}
       className={cn(
-        "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition",
+        "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-bold transition duration-300",
         active
-          ? "bg-white text-black"
+          ? "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.15)]"
           : variant === "cta"
-            ? "border border-red-500/30 bg-red-500 text-white hover:bg-red-400"
+            ? "border border-red-500/30 bg-red-500 text-white hover:scale-105 hover:bg-red-400 hover:shadow-[0_0_20px_rgba(255,0,0,0.35)]"
             : variant === "primary"
               ? "border border-white/15 bg-white/10 text-white hover:bg-white/15"
-              : "text-white/75 hover:bg-white/10 hover:text-white",
+              : "text-white/72 hover:bg-white/10 hover:text-white"
       )}
     >
       {children}
@@ -68,22 +68,27 @@ export default function NavBar() {
   const pathname = usePathname();
 
   return (
-    <header className="relative z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl md:sticky md:top-0">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/75 backdrop-blur-2xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex min-h-[72px] items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-10 w-10 overflow-hidden rounded-full border border-white/10 bg-white/5">
+        <div className="flex min-h-[76px] items-center justify-between gap-4">
+          <Link href="/" className="group flex items-center gap-3">
+            <div className="relative h-12 w-12 overflow-hidden rounded-full border border-white/10 bg-black shadow-[0_0_25px_rgba(255,0,0,0.15)] transition duration-300 group-hover:scale-105 group-hover:shadow-[0_0_35px_rgba(255,0,0,0.28)]">
               <Image
-                src="/mad-orb.png"
-                alt="$MAD"
+                src="/mad.png"
+                alt="$MAD logo"
                 fill
-                className="object-cover"
-                sizes="40px"
+                className="object-contain"
+                sizes="48px"
+                priority
               />
             </div>
+
             <div className="leading-tight">
-              <div className="text-sm font-black tracking-wide text-white">$MAD</div>
-              <div className="text-[10px] uppercase tracking-[0.28em] text-white/40">
+              <div className="text-lg font-black tracking-wide text-white">
+                $MAD
+              </div>
+
+              <div className="text-[10px] uppercase tracking-[0.34em] text-white/40">
                 Stay $MAD
               </div>
             </div>
