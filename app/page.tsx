@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import MadConfessions from "./components/MadConfessions";
+import MadConfessions from "@/app/components/MadConfessions";
 
 const LINKS = {
   telegram: "https://t.me/MadOfficalChannel",
@@ -74,7 +74,6 @@ export default function Home() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8">
-        {/* HERO */}
         <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
           <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
             <div className="relative flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
@@ -172,7 +171,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* MAD CONFESSIONS */}
         <section
           id="confessions"
           className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10"
