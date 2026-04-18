@@ -122,34 +122,68 @@ function MetricCard({
   );
 }
 
-function UniverseCard({
+function ArtCampaignCard({
   title,
   text,
+  image,
   accent = "red",
 }: {
   title: string;
   text: string;
+  image: string;
   accent?: "red" | "green" | "white";
 }) {
   return (
     <div
       className={[
-        "relative overflow-hidden rounded-[28px] border p-6",
-        accent === "red" &&
-          "border-red-500/20 bg-[linear-gradient(180deg,rgba(80,8,8,0.55),rgba(15,3,3,0.92))]",
-        accent === "green" &&
-          "border-emerald-400/20 bg-[linear-gradient(180deg,rgba(8,45,20,0.5),rgba(3,15,8,0.92))]",
-        accent === "white" &&
-          "border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))]",
+        "group relative overflow-hidden rounded-[28px] border min-h-[220px] transition duration-300 hover:scale-[1.01]",
+        accent === "red" && "border-red-500/20",
+        accent === "green" && "border-emerald-400/20",
+        accent === "white" && "border-white/10",
       ].join(" ")}
     >
-      <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/5 blur-2xl" />
-      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/42">
-        {title}
-      </p>
-      <p className="mt-4 max-w-sm text-xl font-black leading-tight text-white">
-        {text}
-      </p>
+      <div className="absolute inset-0">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover transition duration-500 group-hover:scale-[1.04]"
+          sizes="(max-width: 1024px) 100vw, 33vw"
+        />
+      </div>
+
+      <div
+        className={[
+          "absolute inset-0",
+          accent === "red" &&
+            "bg-[linear-gradient(180deg,rgba(10,10,10,0.2),rgba(20,0,0,0.58)_50%,rgba(0,0,0,0.92))]",
+          accent === "green" &&
+            "bg-[linear-gradient(180deg,rgba(10,10,10,0.2),rgba(0,24,10,0.52)_50%,rgba(0,0,0,0.92))]",
+          accent === "white" &&
+            "bg-[linear-gradient(180deg,rgba(10,10,10,0.22),rgba(12,12,12,0.56)_50%,rgba(0,0,0,0.92))]",
+        ].join(" ")}
+      />
+
+      <div
+        className={[
+          "absolute inset-0",
+          accent === "red" && "bg-red-500/10",
+          accent === "green" && "bg-emerald-500/10",
+          accent === "white" && "bg-black/10",
+        ].join(" ")}
+      />
+
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+      <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/8 blur-3xl" />
+
+      <div className="relative z-10 flex h-full flex-col justify-end p-6">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
+          {title}
+        </p>
+        <p className="mt-3 max-w-sm text-2xl font-black leading-tight text-white sm:text-[2rem]">
+          {text}
+        </p>
+      </div>
     </div>
   );
 }
@@ -320,19 +354,22 @@ export default function Home() {
         </section>
 
         <section className="mt-10 grid gap-4 lg:grid-cols-3">
-          <UniverseCard
+          <ArtCampaignCard
             title="Mindset"
             text="Pressure reveals the real ones."
+            image="/memes/MAD-KINGS-ONLY.png"
             accent="red"
           />
-          <UniverseCard
+          <ArtCampaignCard
             title="Signal"
             text="Not noise. Not panic. Signal."
+            image="/memes/MAD-YOU-SIDELINED.png"
             accent="white"
           />
-          <UniverseCard
+          <ArtCampaignCard
             title="Wealth"
             text="Rich starts in the mind first."
+            image="/memes/MAD-RICH-OR-BROKE.png"
             accent="green"
           />
         </section>
