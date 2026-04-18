@@ -90,7 +90,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CONFESSIONS INTRO */}
+        {/* CONFESSIONS */}
         <section
           id="confessions"
           className="mt-10 rounded-[30px] border border-white/10 bg-[#0a0a0a]/90 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8"
@@ -123,6 +123,16 @@ export default function Home() {
           </div>
 
           <MadConfessions />
+        </section>
+
+        {/* MINI FOOTER STRIP */}
+        <section className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-4 text-center shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
+            Stay $MAD
+          </p>
+          <p className="mt-2 text-sm text-white/60">
+            Built for pressure, signal, and conviction.
+          </p>
         </section>
       </div>
     </div>
