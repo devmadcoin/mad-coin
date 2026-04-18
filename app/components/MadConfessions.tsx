@@ -143,6 +143,19 @@ function isToday(timestamp: number) {
   );
 }
 
+function buildShareText(confession: Confession) {
+  const score = totalReactions(confession.reactions);
+  const persona = personaForId(confession.id);
+  return `Top $MAD confession from ${persona}: "${confession.text}" — ${score} reaction${
+    score === 1 ? "" : "s"
+  }`;
+}
+
+function buildShareUrl() {
+  if (typeof window === "undefined") return "";
+  return `${window.location.origin}${window.location.pathname}#confessions`;
+}
+
 export default function MadConfessions() {
   const [items, setItems] = useState<Confession[]>([]);
   const [text, setText] = useState("");
@@ -152,6 +165,7 @@ export default function MadConfessions() {
   const [sortMode, setSortMode] = useState<SortMode>("new");
   const [cooldownLeft, setCooldownLeft] = useState(0);
   const [reactedMap, setReactedMapState] = useState<Record<string, true>>({});
+  const [shareMessage, setShareMessage] = useState<string | null>(null);
 
   async function load(silent = false) {
     try {
@@ -199,6 +213,12 @@ export default function MadConfessions() {
       window.clearInterval(cooldownInterval);
     };
   }, []);
+
+  useEffect(() => {
+    if (!shareMessage) return;
+    const timer = window.setTimeout(() => setShareMessage(null), 2500);
+    return () => window.clearTimeout(timer);
+  }, [shareMessage]);
 
   async function submit() {
     if (posting) return;
@@ -326,6 +346,41 @@ export default function MadConfessions() {
     }
   }
 
+  async function shareConfession(confession: Confession) {
+    const shareText = buildShareText(confession);
+    const shareUrl = buildShareUrl();
+
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: "$MAD Confession",
+          text: shareText,
+          url: shareUrl,
+        });
+        setShareMessage("Shared");
+        return;
+      } catch {
+        // fall through to clipboard/X
+      }
+    }
+
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+        setShareMessage("Copied share text");
+        return;
+      } catch {
+        // fall through to X
+      }
+    }
+
+    const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
+      `${shareText} ${shareUrl}`
+    )}`;
+    window.open(xUrl, "_blank", "noopener,noreferrer");
+    setShareMessage("Opened share");
+  }
+
   const headerChip = useMemo(() => {
     if (loading) return "Loading…";
     return `${items.length} confessions`;
@@ -418,6 +473,12 @@ export default function MadConfessions() {
           </div>
         </div>
 
+        {shareMessage && (
+          <div className="mt-4 rounded-xl border border-green-500/20 bg-green-500/10 px-3 py-2 text-sm text-green-200">
+            {shareMessage}
+          </div>
+        )}
+
         {(todaysTop || todaysItems.length > 0) && (
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -476,6 +537,16 @@ export default function MadConfessions() {
                       {totalReactions(todaysTop.reactions)} reactions
                     </div>
                   </div>
+                </div>
+
+                <div className="mt-4">
+                  <button
+                    type="button"
+                    onClick={() => shareConfession(todaysTop)}
+                    className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold transition hover:bg-white/15"
+                  >
+                    Share Top MAD Today
+                  </button>
                 </div>
               </div>
             ) : (
@@ -666,6 +737,11 @@ export default function MadConfessions() {
                       count={c.reactions.handshake}
                       disabled={!!reactedMap[reactionStorageKey(c.id, "handshake")]}
                       onClick={() => react(c.id, "handshake")}
+                    />
+                    <ReactionButton
+                      label="Share"
+                      count={score}
+                      onClick={() => shareConfession(c)}
                     />
                   </div>
                 </div>
