@@ -26,11 +26,11 @@ const PHASES: Phase[] = [
     title: "Identity Locked",
     status: "Live",
     description:
-      "$MAD started by building a strong identity first: controlled chaos, emotional discipline, and pressure-tested mindset.",
+      "$MAD began by building identity first: controlled chaos, emotional discipline, and pressure-tested mindset.",
     bullets: [
       "Stay $MAD philosophy established",
-      "Brand system and visual identity live",
-      "Homepage and core site launched",
+      "Brand identity and visual language live",
+      "Core website launched",
       "Community-facing signal started",
     ],
   },
@@ -39,11 +39,11 @@ const PHASES: Phase[] = [
     title: "Proof Layer Online",
     status: "Live",
     description:
-      "The project moved past just being a meme page by creating visible public proof and stronger community interaction.",
+      "The project moved beyond a meme page by creating visible proof, exchange visibility, and public interaction.",
     bullets: [
       "MAD Confessions live",
-      "Exchange / tracking visibility live",
-      "Retail-friendly proof sections added",
+      "Exchange / tracker visibility live",
+      "Retail-friendlier proof sections",
       "Social ecosystem connected",
     ],
   },
@@ -52,7 +52,7 @@ const PHASES: Phase[] = [
     title: "MAD Mind + Tech",
     status: "Building",
     description:
-      "$MAD is now building a real tech layer with interactive features, identity loops, and stronger retention mechanics.",
+      "$MAD is now building a real tech layer with interactive behavior, identity loops, and stronger retention mechanics.",
     bullets: [
       "MAD Mind live",
       "Interactive system expansion",
@@ -65,7 +65,7 @@ const PHASES: Phase[] = [
     title: "Expansion Mode",
     status: "Next",
     description:
-      "The next stage is deeper ecosystem growth through game, merch, collectible culture, and stronger utility loops.",
+      "The next stage is deeper ecosystem growth through game, merch, collectibles, and stronger utility loops.",
     bullets: [
       "Game direction",
       "Merch and collectible layer",
@@ -119,8 +119,10 @@ function StatusPill({ status }: { status: PhaseStatus }) {
     <span
       className={cn(
         "rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em]",
-        status === "Live" && "border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
-        status === "Building" && "border-red-500/20 bg-red-500/10 text-red-100",
+        status === "Live" &&
+          "border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
+        status === "Building" &&
+          "border-red-500/20 bg-red-500/10 text-red-100",
         status === "Next" && "border-white/10 bg-white/5 text-white/65",
       )}
     >
@@ -222,6 +224,7 @@ function TimelineCard({ phase, index }: { phase: Phase; index: number }) {
   return (
     <div className="group relative rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.018))] p-6 transition duration-300 hover:border-white/18 hover:bg-white/[0.05]">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
+
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-3xl">
           <div className="flex flex-wrap items-center gap-3">
@@ -291,12 +294,12 @@ function AnimatedGraph() {
   const points = useMemo(
     () => [
       [4, 88],
-      [14, 78],
-      [24, 73],
-      [34, 59],
-      [44, 62],
-      [54, 49],
-      [64, 36],
+      [14, 82],
+      [24, 74],
+      [34, 66],
+      [44, 59],
+      [54, 52],
+      [64, 40],
       [74, 31],
       [84, 18],
       [96, 10],
@@ -309,6 +312,7 @@ function AnimatedGraph() {
   return (
     <div className="relative overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,0,0,0.12),transparent_35%)]" />
+
       <div className="relative z-10 rounded-[28px] border border-white/10 bg-black/40 p-4">
         <div className="mb-4 flex items-center justify-between">
           <div>
@@ -319,6 +323,7 @@ function AnimatedGraph() {
               Panic down. Signal up.
             </p>
           </div>
+
           <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200">
             Live build
           </div>
@@ -335,8 +340,8 @@ function AnimatedGraph() {
           >
             <defs>
               <linearGradient id="madLine" x1="0%" x2="100%" y1="0%" y2="0%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.6" />
-                <stop offset="55%" stopColor="#ef4444" stopOpacity="0.95" />
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
+                <stop offset="60%" stopColor="#ef4444" stopOpacity="0.95" />
                 <stop offset="100%" stopColor="#22c55e" stopOpacity="0.95" />
               </linearGradient>
 
@@ -358,7 +363,6 @@ function AnimatedGraph() {
               strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]"
             />
 
             {points.map(([x, y], i) => (
@@ -378,6 +382,49 @@ function AnimatedGraph() {
 
           <div className="absolute bottom-4 right-4 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200">
             Strong signal
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LaunchChartBlock() {
+  return (
+    <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
+      <div className="relative min-h-[420px]">
+        <Image
+          src="/memes/mad-launch-chart.png"
+          alt="MAD public chart history"
+          fill
+          className="object-cover"
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
+
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.08),rgba(20,0,0,0.38)_35%,rgba(0,0,0,0.88))]" />
+        <div className="absolute inset-0 bg-red-500/5" />
+
+        <div className="relative z-10 flex min-h-[420px] flex-col justify-end p-6 sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
+            Public Since Day One
+          </p>
+          <p className="mt-3 max-w-md text-3xl font-black leading-tight text-white">
+            Launch. ATH. Pullback. Still building.
+          </p>
+          <p className="mt-3 max-w-md text-sm leading-7 text-white/72">
+            The whole journey happened in public. That matters.
+          </p>
+
+          <div className="mt-5 flex flex-wrap gap-2">
+            <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
+              Launch
+            </span>
+            <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
+              ATH 620K
+            </span>
+            <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
+              Rebuild
+            </span>
           </div>
         </div>
       </div>
@@ -411,7 +458,7 @@ function DancingMadBlock() {
             Building can still look fun.
           </p>
           <p className="mt-3 max-w-md text-sm leading-7 text-white/70">
-            This project is not just roadmap text. It has culture, motion, art, and identity.
+            This is not just roadmap text. It has culture, motion, art, and identity.
           </p>
         </div>
       </div>
@@ -498,9 +545,9 @@ export default function RoadmapPage() {
         </Reveal>
 
         <Reveal delay={180}>
-          <section className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <section className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
             <AnimatedGraph />
-            <DancingMadBlock />
+            <LaunchChartBlock />
           </section>
         </Reveal>
 
@@ -529,7 +576,13 @@ export default function RoadmapPage() {
           </section>
         </Reveal>
 
-        <Reveal delay={320}>
+        <Reveal delay={300}>
+          <section className="mt-10">
+            <DancingMadBlock />
+          </section>
+        </Reveal>
+
+        <Reveal delay={360}>
           <section className="mt-10 rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
             <SectionHeading
               eyebrow="Timeline"
@@ -545,7 +598,7 @@ export default function RoadmapPage() {
           </section>
         </Reveal>
 
-        <Reveal delay={400}>
+        <Reveal delay={440}>
           <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-6 text-center shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10">
             <SectionHeading
               eyebrow="Next Move"
