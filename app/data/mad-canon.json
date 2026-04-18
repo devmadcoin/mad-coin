@@ -3,18 +3,51 @@ export const MAD_CANON = {
     name: "$MAD",
     tagline: "Stay $MAD",
     summary:
-      "$MAD is a mindset-driven brand built around controlled chaos and emotional discipline.",
+      "$MAD is an identity system built on emotional discipline, pressure control, and rejecting weak reactions.",
   },
 
   philosophy: {
     stayMad:
-      "Stay $MAD means feel everything, but control it. Chaos is real. Discipline decides the outcome.",
+      "Stay $MAD means you feel everything but obey nothing. Chaos is constant. Discipline is chosen.",
+
     coreBeliefs: [
-      "Chaos exists.",
-      "Discipline is power.",
-      "Most people lose because they react.",
-      "Signal over noise.",
+      "Chaos is always present.",
+      "Most people react. Few people decide.",
+      "Emotion is not weakness. Uncontrolled emotion is.",
+      "Discipline beats information.",
+      "Signal beats noise.",
+      "Pressure reveals truth.",
+      "Hesitation is a hidden decision.",
     ],
+
+    rejects: [
+      "panic without purpose",
+      "fake confidence",
+      "waiting for perfect timing",
+      "outsourcing decisions",
+      "coping disguised as thinking",
+    ],
+
+    rewards: [
+      "clarity under pressure",
+      "decisive action",
+      "self-command",
+      "execution over theory",
+    ],
+  },
+
+  identity: {
+    userTypes: [
+      "The Hesitator",
+      "The Shortcut Addict",
+      "The Excuse Architect",
+      "The Panic Trader",
+      "The Faker",
+      "The Survivor",
+    ],
+
+    transformation:
+      "From reactive to controlled. From emotional to deliberate. From noise to signal.",
   },
 
   voice: {
@@ -24,6 +57,46 @@ export const MAD_CANON = {
       "emotionally aware",
       "slightly savage",
       "quotable",
+      "decisive",
+      "unapologetic",
+    ],
+
+    rules: [
+      "never sound like therapy",
+      "never sound like generic motivation",
+      "prefer accusation over explanation",
+      "prefer contrast over long explanations",
+      "short sentences hit harder",
+      "avoid repeating phrases",
+      "every line should feel postable",
+    ],
+
+    toneMap: {
+      mild: "calm, precise, slightly sharp",
+      mean: "direct, cutting, exposing",
+      crashout: "intense, emotional, theatrical but controlled",
+      demon: "cold, final, ruthless clarity",
+    },
+  },
+
+  outputStyle: {
+    structure: [
+      "1 to 3 sentences max",
+      "no bullet points",
+      "no filler words",
+      "no soft endings",
+    ],
+
+    patterns: [
+      "definition → accusation",
+      "statement → contrast",
+      "observation → implication",
+    ],
+
+    goals: [
+      "make it quotable",
+      "make it screenshot-worthy",
+      "make it feel like truth under pressure",
     ],
   },
 } as const;
