@@ -76,51 +76,26 @@ export default function GamePage() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,0,60,0.16),transparent_40%),radial-gradient(circle_at_82%_22%,rgba(255,90,0,0.12),transparent_34%),radial-gradient(circle_at_50%_100%,rgba(120,0,0,0.16),transparent_45%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02),transparent_20%,transparent_80%,rgba(255,255,255,0.015))]" />
 
-      <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-16 sm:px-8 lg:px-10">
-        <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-7 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,0,60,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,60,0,0.08),transparent_25%)]" />
-
-          <div className="relative mx-auto max-w-5xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.38em] text-white/45">
-              GAME PORTAL
+      <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-10 sm:px-8 lg:px-10">
+        <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8">
+          <div className="max-w-4xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-300/75">
+              START HERE
             </p>
 
-            <h1 className="mt-5 text-5xl font-black tracking-tight sm:text-6xl lg:text-7xl">
-              Play the official{" "}
-              <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
-                $MAD
-              </span>{" "}
-              games
+            <h1 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">
+              Play the $MAD games
             </h1>
 
-            <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/68 sm:text-lg">
-              New here? Start with the quick tutorial, make your Roblox account,
-              and jump straight into the MAD universe.
+            <p className="mt-4 text-white/70 leading-relaxed">
+              New to Roblox? Follow these 3 simple steps and jump in fast.
             </p>
+          </div>
 
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Pill tone="green">Easy Start</Pill>
-              <Pill tone="red">Official Games</Pill>
-              <Pill>Tutorial Included</Pill>
-            </div>
-
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <a
-                href="#quick-start"
-                className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 shadow-[0_0_14px_rgba(255,0,0,0.32)] transition hover:bg-red-500/25"
-              >
-                Start Here
-              </a>
-
-              <a
-                href={GAME_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/85 transition hover:bg-white/[0.08]"
-              >
-                Go Straight to Game
-              </a>
-            </div>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Pill tone="green">Easy Start</Pill>
+            <Pill tone="red">Official Games</Pill>
+            <Pill>Tutorial Included</Pill>
           </div>
         </section>
 
