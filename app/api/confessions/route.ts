@@ -8,6 +8,7 @@ type Confession = {
   text: string;
   createdAt: number;
   reactions: Record<ReactionKey, number>;
+  score?: number;
 };
 
 type PostBody = {
@@ -39,7 +40,7 @@ const EMPTY_REACTIONS: Record<ReactionKey, number> = {
 
 function json(
   body: Record<string, unknown>,
-  init?: number | ResponseInit
+  init?: number | ResponseInit,
 ) {
   if (typeof init === "number") {
     return NextResponse.json(body, { status: init });
@@ -51,6 +52,26 @@ function sanitizeText(value: unknown, max = MAX_TEXT) {
   const raw = typeof value === "string" ? value : String(value ?? "");
   const text = raw.replace(/\s+/g, " ").trim();
   return text.length > max ? text.slice(0, max).trim() : text;
+}
+
+function scoreConfession(text: string) {
+  let score = 0;
+  const lower = text.toLowerCase();
+
+  if (text.length >= 20 && text.length <= 120) score += 2;
+  if (/\b(i|me|my|mine)\b/.test(lower)) score += 1;
+  if (/\b(never|always|everyone|no one|nobody)\b/.test(lower)) score += 1;
+  if (/\b(secret|truth|real|honest|confession)\b/.test(lower)) score += 2;
+  if (/[?!]/.test(text)) score += 1;
+  if (text.length < 12) score -= 1;
+
+  return Math.max(score, 0);
+}
+
+function getRating(score: number) {
+  if (score >= 5) return "🔥 viral";
+  if (score >= 3) return "👀 interesting";
+  return "🙂 normal";
 }
 
 function makeId() {
@@ -96,6 +117,7 @@ function normalizeConfession(item: Partial<Confession> | null): Confession | nul
       lol: Number(item.reactions?.lol ?? 0),
       handshake: Number(item.reactions?.handshake ?? 0),
     },
+    score: Number(item.score ?? scoreConfession(String(item.text))),
   };
 }
 
@@ -125,7 +147,7 @@ function postCooldownKey(clientId: string) {
 function reactionCooldownKey(
   clientId: string,
   confessionId: string,
-  reaction: ReactionKey
+  reaction: ReactionKey,
 ) {
   return `mad:cooldown:react:${clientId}:${confessionId}:${reaction}`;
 }
@@ -145,6 +167,23 @@ async function setCooldown(key: string, seconds: number) {
   await kv.set(key, expiresAt, { ex: seconds });
 }
 
+function rankConfession(confession: Confession) {
+  const engagement =
+    confession.reactions.same * 2 +
+    confession.reactions.lol * 1 +
+    confession.reactions.handshake * 1.5;
+
+  const freshnessHours = Math.max(
+    0,
+    (Date.now() - confession.createdAt) / (1000 * 60 * 60),
+  );
+
+  const freshnessBoost = Math.max(0, 12 - freshnessHours) * 0.15;
+  const quality = confession.score ?? 0;
+
+  return quality + engagement + freshnessBoost;
+}
+
 export async function GET() {
   try {
     const rawIds = (await kv.lrange(KEY, 0, MAX_ITEMS - 1)) ?? [];
@@ -156,12 +195,21 @@ export async function GET() {
       return json({ confessions: [] });
     }
 
-    const items = await Promise.all(ids.map((id) => kv.get<Confession>(ITEM(id))));
+    const seen = new Set<string>();
+    const uniqueIds = ids.filter((id) => {
+      if (seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
+
+    const items = await Promise.all(
+      uniqueIds.map((id) => kv.get<Confession>(ITEM(id))),
+    );
 
     const confessions = items
       .map((item) => normalizeConfession(item))
       .filter((item): item is Confession => Boolean(item))
-      .sort((a, b) => b.createdAt - a.createdAt);
+      .sort((a, b) => rankConfession(b) - rankConfession(a));
 
     return json({ confessions });
   } catch (error) {
@@ -182,7 +230,7 @@ export async function POST(req: Request) {
           error: "Cooldown active",
           retryAfterSeconds: remainingSeconds,
         },
-        429
+        429,
       );
     }
 
@@ -197,21 +245,31 @@ export async function POST(req: Request) {
       return json({ error: "Too short" }, 400);
     }
 
+    const score = scoreConfession(text);
+
     const item: Confession = {
       id: makeId(),
       text,
       createdAt: Date.now(),
       reactions: { ...EMPTY_REACTIONS },
+      score,
     };
 
     await kv.set(ITEM(item.id), item);
+
     await kv.lpush(KEY, item.id);
+
+    if (score >= 4) {
+      await kv.lpush(KEY, item.id);
+    }
+
     await kv.ltrim(KEY, 0, MAX_ITEMS - 1);
     await setCooldown(cooldownKey, POST_COOLDOWN_SECONDS);
 
     return json({
       item,
       cooldownSeconds: POST_COOLDOWN_SECONDS,
+      rating: getRating(score),
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "POST failed";
@@ -249,7 +307,7 @@ export async function PATCH(req: Request) {
           error: "Reaction already used",
           retryAfterSeconds: remainingSeconds,
         },
-        429
+        429,
       );
     }
 
@@ -261,13 +319,15 @@ export async function PATCH(req: Request) {
       return json({ error: "not found" }, 404);
     }
 
+    const boost = reaction === "same" ? 2 : 1;
+
     const updated: Confession = {
       ...existing,
       reactions: {
         same: existing.reactions.same,
         lol: existing.reactions.lol,
         handshake: existing.reactions.handshake,
-        [reaction]: Math.max(0, existing.reactions[reaction] + 1),
+        [reaction]: Math.max(0, existing.reactions[reaction] + boost),
       },
     };
 
