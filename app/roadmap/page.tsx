@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const LINKS = {
   telegram: "https://t.me/MadOfficialChannel",
@@ -23,59 +23,59 @@ type Phase = {
 const PHASES: Phase[] = [
   {
     phase: "01",
-    title: "Identity + Core Signal",
+    title: "Identity Locked",
     status: "Live",
     description:
-      "$MAD started by building identity first: emotion under control, pressure as truth, and discipline over panic.",
+      "$MAD started by building a strong identity first: controlled chaos, emotional discipline, and pressure-tested mindset.",
     bullets: [
       "Stay $MAD philosophy established",
-      "Core branding and visual identity live",
-      "Website foundation deployed",
-      "Public social channels connected",
+      "Brand system and visual identity live",
+      "Homepage and core site launched",
+      "Community-facing signal started",
     ],
   },
   {
     phase: "02",
-    title: "Community + Proof",
+    title: "Proof Layer Online",
     status: "Live",
     description:
-      "The project moved from idea to visible proof with public interaction, confessions, and stronger community-facing signal.",
+      "The project moved past just being a meme page by creating visible public proof and stronger community interaction.",
     bullets: [
       "MAD Confessions live",
-      "Public proof and social trust layer",
-      "Retail-friendlier messaging",
-      "Community interaction loop started",
+      "Exchange / tracking visibility live",
+      "Retail-friendly proof sections added",
+      "Social ecosystem connected",
     ],
   },
   {
     phase: "03",
-    title: "MAD Mind + Tech Layer",
+    title: "MAD Mind + Tech",
     status: "Building",
     description:
-      "$MAD is no longer just a meme page. It is becoming a live system with interaction, memory, progression, and AI behavior.",
+      "$MAD is now building a real tech layer with interactive features, identity loops, and stronger retention mechanics.",
     bullets: [
-      "MAD Mind deployed",
-      "Pressure score and archetype system",
-      "Shareable card / clip loop",
-      "MAD AI build phase started",
+      "MAD Mind live",
+      "Interactive system expansion",
+      "Shareable loop mechanics",
+      "MAD AI build phase active",
     ],
   },
   {
     phase: "04",
-    title: "Expansion Layer",
+    title: "Expansion Mode",
     status: "Next",
     description:
-      "The next layer is ecosystem depth: stronger retention loops, game direction, merch, collectibles, and broader participation.",
+      "The next stage is deeper ecosystem growth through game, merch, collectible culture, and stronger utility loops.",
     bullets: [
-      "Game ecosystem direction",
-      "Merch and collectible identity",
-      "Leaderboard / retention upgrades",
-      "Stronger community mechanics",
+      "Game direction",
+      "Merch and collectible layer",
+      "Longer retention mechanics",
+      "Broader ecosystem expansion",
     ],
   },
 ];
 
-const STATUS_CARDS = [
+const STATUS = [
   { label: "Website", value: "Live", tone: "red" },
   { label: "MAD Mind", value: "Live", tone: "green" },
   { label: "Confessions", value: "Live", tone: "red" },
@@ -164,7 +164,7 @@ function SectionHeading({
 
 function GlobeBackdrop() {
   return (
-    <div className="pointer-events-none absolute right-[-10%] top-[-12%] hidden h-[480px] w-[480px] overflow-hidden rounded-full opacity-20 lg:block">
+    <div className="pointer-events-none absolute right-[-10%] top-[-12%] hidden h-[500px] w-[500px] overflow-hidden rounded-full opacity-20 lg:block">
       <div className="absolute inset-0 rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_35%_35%,rgba(255,0,0,0.24),rgba(255,0,0,0.06)_38%,transparent_65%)] shadow-[0_0_60px_rgba(255,0,0,0.18)]" />
       <div className="absolute inset-0 rounded-full bg-[repeating-linear-gradient(to_right,rgba(255,0,0,0.16)_0px,rgba(255,0,0,0.16)_1px,transparent_1px,transparent_38px),repeating-linear-gradient(to_bottom,rgba(255,0,0,0.12)_0px,rgba(255,0,0,0.12)_1px,transparent_1px,transparent_38px)] opacity-55" />
       <div className="absolute inset-[10%] rounded-full border border-red-500/20" />
@@ -187,7 +187,7 @@ function QuickStatusCard({
   return (
     <div
       className={cn(
-        "rounded-[24px] border p-5",
+        "rounded-[24px] border p-5 transition duration-300 hover:scale-[1.01]",
         tone === "red" && "border-red-500/20 bg-red-500/10",
         tone === "green" && "border-emerald-400/20 bg-emerald-500/10",
         tone === "white" && "border-white/10 bg-white/[0.03]",
@@ -260,27 +260,21 @@ function TimelineCard({ phase, index }: { phase: Phase; index: number }) {
 }
 
 function ProgressStrip() {
+  const items = [
+    "Identity Live",
+    "Website Live",
+    "Confessions Live",
+    "MAD Mind Live",
+    "MAD AI Building",
+    "Game Next",
+    "Merch Next",
+    "Ecosystem Expanding",
+  ];
+
   return (
     <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(90deg,rgba(70,14,14,0.95),rgba(31,28,44,0.95))] px-4 py-6 sm:px-6">
       <div className="logo-marquee flex w-max items-center gap-4">
-        {[
-          "Identity Live",
-          "Website Live",
-          "Confessions Live",
-          "MAD Mind Live",
-          "MAD AI Building",
-          "Game Next",
-          "Merch Next",
-          "Ecosystem Expanding",
-          "Identity Live",
-          "Website Live",
-          "Confessions Live",
-          "MAD Mind Live",
-          "MAD AI Building",
-          "Game Next",
-          "Merch Next",
-          "Ecosystem Expanding",
-        ].map((item, index) => (
+        {[...items, ...items, ...items].map((item, index) => (
           <div
             key={`${item}-${index}`}
             className="rounded-full border border-white/10 bg-white/[0.05] px-5 py-3 text-sm font-black text-white/90"
@@ -288,6 +282,138 @@ function ProgressStrip() {
             {item}
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function AnimatedGraph() {
+  const points = useMemo(
+    () => [
+      [4, 88],
+      [14, 78],
+      [24, 73],
+      [34, 59],
+      [44, 62],
+      [54, 49],
+      [64, 36],
+      [74, 31],
+      [84, 18],
+      [96, 10],
+    ],
+    [],
+  );
+
+  const polyline = points.map(([x, y]) => `${x},${y}`).join(" ");
+
+  return (
+    <div className="relative overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,0,0,0.12),transparent_35%)]" />
+      <div className="relative z-10 rounded-[28px] border border-white/10 bg-black/40 p-4">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
+              Pressure Chart
+            </p>
+            <p className="mt-2 text-xl font-black text-white">
+              Panic down. Signal up.
+            </p>
+          </div>
+          <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200">
+            Live build
+          </div>
+        </div>
+
+        <div className="relative h-[280px] overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,20,0.8),rgba(5,5,5,0.98))]">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.08),transparent_55%)]" />
+
+          <svg
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            className="absolute inset-0 h-full w-full"
+          >
+            <defs>
+              <linearGradient id="madLine" x1="0%" x2="100%" y1="0%" y2="0%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.6" />
+                <stop offset="55%" stopColor="#ef4444" stopOpacity="0.95" />
+                <stop offset="100%" stopColor="#22c55e" stopOpacity="0.95" />
+              </linearGradient>
+
+              <linearGradient id="madFill" x1="0%" x2="0%" y1="0%" y2="100%">
+                <stop offset="0%" stopColor="#ef4444" stopOpacity="0.28" />
+                <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+
+            <polygon
+              points={`${polyline} 100,100 0,100`}
+              fill="url(#madFill)"
+            />
+
+            <polyline
+              points={polyline}
+              fill="none"
+              stroke="url(#madLine)"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]"
+            />
+
+            {points.map(([x, y], i) => (
+              <circle
+                key={i}
+                cx={x}
+                cy={y}
+                r="1.4"
+                fill={i === points.length - 1 ? "#22c55e" : "#ef4444"}
+              />
+            ))}
+          </svg>
+
+          <div className="absolute left-4 top-4 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-red-100">
+            Weak hands
+          </div>
+
+          <div className="absolute bottom-4 right-4 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200">
+            Strong signal
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DancingMadBlock() {
+  return (
+    <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
+      <div className="relative min-h-[420px]">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src="/loops/mad-dancing.mp4" type="video/mp4" />
+        </video>
+
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.08),rgba(20,0,0,0.48)_50%,rgba(0,0,0,0.92))]" />
+        <div className="absolute inset-0 bg-red-500/10" />
+
+        <div className="relative z-10 flex min-h-[420px] flex-col justify-end p-6 sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
+            MAD Energy
+          </p>
+          <p className="mt-3 max-w-md text-3xl font-black leading-tight text-white">
+            Building can still look fun.
+          </p>
+          <p className="mt-3 max-w-md text-sm leading-7 text-white/70">
+            This project is not just roadmap text. It has culture, motion, art, and identity.
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -322,7 +448,7 @@ export default function RoadmapPage() {
                 </h1>
 
                 <p className="mt-6 max-w-xl text-base font-semibold text-white/68">
-                  This is the roadmap, lore, and live proof of what $MAD is building.
+                  The roadmap, lore, and live proof of what $MAD is building.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
@@ -352,7 +478,7 @@ export default function RoadmapPage() {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
-                {STATUS_CARDS.map((card) => (
+                {STATUS.map((card) => (
                   <QuickStatusCard
                     key={card.label}
                     label={card.label}
@@ -372,6 +498,13 @@ export default function RoadmapPage() {
         </Reveal>
 
         <Reveal delay={180}>
+          <section className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <AnimatedGraph />
+            <DancingMadBlock />
+          </section>
+        </Reveal>
+
+        <Reveal delay={240}>
           <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-6 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10">
             <SectionHeading
               eyebrow="Lore"
@@ -396,12 +529,12 @@ export default function RoadmapPage() {
           </section>
         </Reveal>
 
-        <Reveal delay={260}>
+        <Reveal delay={320}>
           <section className="mt-10 rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
             <SectionHeading
               eyebrow="Timeline"
               title="The roadmap"
-              body="Shorter. Cleaner. Easier to scan. Everything important is still here."
+              body="Cleaner, faster to scan, still meaningful."
             />
 
             <div className="mt-10 space-y-5">
@@ -412,76 +545,12 @@ export default function RoadmapPage() {
           </section>
         </Reveal>
 
-        <Reveal delay={340}>
-          <section className="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-              <div className="relative min-h-[420px]">
-                <Image
-                  src="/memes/MAD-KINGS-ONLY.png"
-                  alt="MAD art"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.08),rgba(20,0,0,0.48)_50%,rgba(0,0,0,0.92))]" />
-                <div className="relative z-10 flex min-h-[420px] flex-col justify-end p-6 sm:p-8">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
-                    MAD Art
-                  </p>
-                  <p className="mt-3 max-w-md text-3xl font-black leading-tight text-white">
-                    This is not just a token page.
-                  </p>
-                  <p className="mt-3 max-w-md text-sm leading-7 text-white/70">
-                    The art, culture, and identity layer are part of what makes the project stick.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-6 shadow-[0_18px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8">
-              <SectionHeading
-                eyebrow="Quick Read"
-                title="What’s done. What’s building. What’s next."
-              />
-
-              <div className="mt-8 space-y-4">
-                <div className="rounded-[24px] border border-emerald-400/20 bg-emerald-500/10 p-5">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-emerald-200/85">
-                    Done
-                  </p>
-                  <p className="mt-3 text-sm leading-7 text-emerald-50/90">
-                    Website live. Brand identity live. MAD Confessions live. MAD Mind live.
-                  </p>
-                </div>
-
-                <div className="rounded-[24px] border border-red-500/20 bg-red-500/10 p-5">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-red-100/85">
-                    Building
-                  </p>
-                  <p className="mt-3 text-sm leading-7 text-red-50/90">
-                    MAD AI, progression layers, retention loops, and stronger system depth.
-                  </p>
-                </div>
-
-                <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                    Next
-                  </p>
-                  <p className="mt-3 text-sm leading-7 text-white/72">
-                    Game direction, merch, collectibles, and broader ecosystem expansion.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-        </Reveal>
-
-        <Reveal delay={420}>
+        <Reveal delay={400}>
           <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-6 text-center shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10">
             <SectionHeading
               eyebrow="Next Move"
               title="Still early. Still building."
-              body="The goal is simple: turn pressure into signal, signal into identity, and identity into a real ecosystem."
+              body="The mission is simple: turn pressure into signal, signal into identity, and identity into a real ecosystem."
               center
             />
 
