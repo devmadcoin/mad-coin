@@ -7,6 +7,7 @@ const TUTORIAL_VIDEO = "https://www.youtube.com/embed/V0LBY-ZiklY";
 const GAME_LINK =
   "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD";
 const SPECIAL_GUEST_URL = "https://x.com/Kubo100x";
+const TOWER_DEFENSE_TEASER = "https://streamable.com/e/yc9dot";
 
 function Pill({
   children,
@@ -42,12 +43,29 @@ function StepCard({
   text: string;
 }) {
   return (
-    <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
+    <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition duration-300 hover:border-white/20 hover:bg-white/[0.05]">
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
         {step}
       </p>
       <h3 className="mt-3 text-xl font-black text-white">{title}</h3>
       <p className="mt-3 text-sm leading-relaxed text-white/68">{text}</p>
+    </div>
+  );
+}
+
+function InfoCard({
+  eyebrow,
+  text,
+}: {
+  eyebrow: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
+        {eyebrow}
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-white/65">{text}</p>
     </div>
   );
 }
@@ -72,17 +90,17 @@ export default function GamePage() {
               <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
                 $MAD
               </span>{" "}
-              Roblox game
+              games
             </h1>
 
             <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-white/68 sm:text-lg">
-              New here? Watch the quick tutorial, make your Roblox account, and
-              then jump into the game.
+              New here? Start with the quick tutorial, make your Roblox account,
+              and jump straight into the MAD universe.
             </p>
 
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <Pill tone="green">Easy Start</Pill>
-              <Pill tone="red">Official Game</Pill>
+              <Pill tone="red">Official Games</Pill>
               <Pill>Tutorial Included</Pill>
             </div>
 
@@ -115,7 +133,7 @@ export default function GamePage() {
           <StepCard
             step="STEP 2"
             title="Watch the quick tutorial"
-            text="Use the video below if you want help getting set up the easy way."
+            text="Use the video below if you want the easiest way to get set up."
           />
           <StepCard
             step="STEP 3"
@@ -128,20 +146,34 @@ export default function GamePage() {
           id="quick-start"
           className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8"
         >
-          <div className="max-w-4xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-300/75">
-              QUICK START
-            </p>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-4xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-300/75">
+                QUICK START
+              </p>
 
-            <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">
-              Need help before playing?
-            </h2>
+              <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">
+                Need help before playing?
+              </h2>
 
-            <p className="mt-4 leading-relaxed text-white/70">
-              Watch this quick setup video first. It helps brand new players get
-              into Roblox fast so they can jump into MAD Games without getting
-              confused.
-            </p>
+              <p className="mt-4 leading-relaxed text-white/70">
+                Watch this quick setup video first. It helps brand new players
+                get into Roblox fast so they can jump into MAD Games without
+                getting confused.
+              </p>
+            </div>
+
+            <a
+              href={SPECIAL_GUEST_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center gap-3 rounded-full border border-red-500/30 bg-red-500/12 px-5 py-3 text-sm font-black text-red-200 shadow-[0_0_16px_rgba(255,0,0,0.22)] transition hover:bg-red-500/20"
+            >
+              <span className="rounded-full border border-red-400/30 bg-black/30 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-red-200">
+                Special Guest
+              </span>
+              <span className="text-white group-hover:text-red-100">Kubo</span>
+            </a>
           </div>
 
           <div className="mt-8 overflow-hidden rounded-[1.5rem] border border-white/10 bg-black shadow-[0_0_24px_rgba(255,0,0,0.12)]">
@@ -157,14 +189,17 @@ export default function GamePage() {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-sm text-white/60">
-              Special Guest:{" "}
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-[1.25rem] border border-white/10 bg-black/20 px-4 py-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-red-200">
+                Tutorial Host
+              </span>
+
               <a
                 href={SPECIAL_GUEST_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="font-semibold text-red-400 underline underline-offset-2 transition hover:text-red-300"
+                className="text-sm font-black text-white underline underline-offset-4 transition hover:text-red-300"
               >
                 Kubo
               </a>
@@ -204,34 +239,18 @@ export default function GamePage() {
             </p>
 
             <div className="mt-6 grid gap-3">
-              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
-                  WHAT IT IS
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-white/65">
-                  A Roblox game inside the $MAD world. Easy to enter, fast to
-                  understand, and built for action.
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
-                  WHO IT IS FOR
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-white/65">
-                  New visitors, Roblox players, and anyone who wants the fastest
-                  way to experience the MAD universe.
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/40">
-                  SIMPLE VERSION
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-white/65">
-                  Make account. Open game. Start playing.
-                </p>
-              </div>
+              <InfoCard
+                eyebrow="WHAT IT IS"
+                text="A Roblox game inside the $MAD world. Easy to enter, fast to understand, and built for action."
+              />
+              <InfoCard
+                eyebrow="WHO IT IS FOR"
+                text="New visitors, Roblox players, and anyone who wants the fastest way to experience the MAD universe."
+              />
+              <InfoCard
+                eyebrow="SIMPLE VERSION"
+                text="Make account. Open game. Start playing."
+              />
             </div>
 
             <div className="mt-6">
@@ -257,6 +276,80 @@ export default function GamePage() {
                 priority
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-10 grid gap-6 lg:grid-cols-[1.02fr_0.98fr]">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-300/75">
+              COMING SOON
+            </p>
+
+            <h2 className="mt-4 text-3xl font-black leading-tight sm:text-5xl">
+              MAD Tower Defense
+            </h2>
+
+            <p className="mt-4 leading-relaxed text-white/68">
+              A new MAD game is coming. Build your defense, place crazy towers,
+              and survive wave after wave inside the MAD universe.
+            </p>
+
+            <div className="mt-6 grid gap-3">
+              <InfoCard
+                eyebrow="WHAT IT IS"
+                text="A tower defense game where players place MAD-themed units and try to stop incoming enemies."
+              />
+              <InfoCard
+                eyebrow="FIRST TOWER CONCEPT"
+                text="Hazmat Turret concept revealed. More towers, enemies, and upgrades are planned next."
+              />
+              <InfoCard
+                eyebrow="STATUS"
+                text="Early concept stage. Teaser and concept art are live now. Full game coming later."
+              />
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href="https://streamable.com/yc9dot"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 shadow-[0_0_12px_rgba(255,0,0,0.35)] transition hover:bg-red-500/25"
+              >
+                Watch Tower Defense Teaser →
+              </a>
+
+              <div className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/80">
+                More towers coming
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-6">
+            <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+              <div className="relative aspect-video w-full">
+                <iframe
+                  src={TOWER_DEFENSE_TEASER}
+                  title="MAD Tower Defense teaser"
+                  className="absolute inset-0 h-full w-full"
+                  allow="autoplay; fullscreen"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+              <div className="relative aspect-[4/3] w-full">
+                <Image
+                  src="/game/mad-hazmat-turret.png"
+                  alt="MAD Tower Defense Hazmat Turret concept art"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 700px"
+                  className="object-cover"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              </div>
             </div>
           </div>
         </section>
