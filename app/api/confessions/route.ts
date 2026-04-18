@@ -73,9 +73,7 @@ export async function GET() {
       return NextResponse.json({ confessions: [] });
     }
 
-    const items = await Promise.all(
-      ids.map((id) => kv.get<Confession>(ITEM(id)))
-    );
+    const items = await Promise.all(ids.map((id) => kv.get<Confession>(ITEM(id))));
 
     const confessions = items
       .filter((item): item is Confession => Boolean(item))
@@ -84,7 +82,6 @@ export async function GET() {
     return NextResponse.json({ confessions });
   } catch (error) {
     const message = error instanceof Error ? error.message : "KV error";
-
     return NextResponse.json(
       { confessions: [], error: message },
       { status: 500 }
@@ -123,7 +120,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ item });
   } catch (error) {
     const message = error instanceof Error ? error.message : "POST failed";
-
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -141,62 +137,43 @@ export async function PATCH(req: Request) {
     }
 
     if (!isReactionKey(reaction)) {
-      return NextResponse.json(
-        { error: "invalid reaction" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "invalid reaction" }, { status: 400 });
     }
 
     if (delta !== 1 && delta !== -1) {
       return NextResponse.json({ error: "invalid delta" }, { status: 400 });
     }
 
-    const result = await kv.eval(
-      `
-local k = KEYS[1]
-local reaction = ARGV[1]
-local delta = tonumber(ARGV[2])
+    const key = ITEM(id);
+    const existing = await kv.get<Confession>(key);
 
-local obj = redis.call("GET", k)
-if not obj then
-  return nil
-end
-
-local data = cjson.decode(obj)
-data.reactions = data.reactions or {}
-
-local current = tonumber(data.reactions[reaction]) or 0
-local nextVal = current + delta
-if nextVal < 0 then
-  nextVal = 0
-end
-
-data.reactions[reaction] = nextVal
-
-redis.call("SET", k, cjson.encode(data))
-return cjson.encode(data)
-      `,
-      [ITEM(id)],
-      [reaction, String(delta)]
-    );
-
-    if (!result) {
+    if (!existing) {
       return NextResponse.json({ error: "not found" }, { status: 404 });
     }
 
-    const parsed = safeJson<Confession>(result);
+    const current = existing.reactions?.[reaction] ?? 0;
+    const nextValue = Math.max(0, current + delta);
 
+    const updated: Confession = {
+      ...existing,
+      reactions: {
+        same: existing.reactions?.same ?? 0,
+        lol: existing.reactions?.lol ?? 0,
+        handshake: existing.reactions?.handshake ?? 0,
+        [reaction]: nextValue,
+      },
+    };
+
+    await kv.set(key, updated);
+
+    const parsed = safeJson<Confession>(JSON.stringify(updated));
     if (!parsed) {
-      return NextResponse.json(
-        { error: "bad data from KV" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "bad data from KV" }, { status: 500 });
     }
 
     return NextResponse.json({ item: parsed });
   } catch (error) {
     const message = error instanceof Error ? error.message : "PATCH failed";
-
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
