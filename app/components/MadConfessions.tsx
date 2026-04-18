@@ -10,11 +10,13 @@ type Confession = {
   text: string;
   createdAt: number;
   reactions: Record<ReactionKey, number>;
+  score?: number;
 };
 
 type PostResponse = {
   item?: Confession;
   cooldownSeconds?: number;
+  rating?: string;
   error?: string;
   retryAfterSeconds?: number;
 };
@@ -64,6 +66,15 @@ function totalReactions(reactions: Record<ReactionKey, number>) {
     (reactions.lol ?? 0) +
     (reactions.handshake ?? 0)
   );
+}
+
+function effectiveScore(confession: Confession) {
+  const reactionScore =
+    (confession.reactions.same ?? 0) * 2 +
+    (confession.reactions.lol ?? 0) +
+    (confession.reactions.handshake ?? 0) * 1.5;
+
+  return (confession.score ?? 0) + reactionScore;
 }
 
 function personaForId(id: string) {
@@ -167,6 +178,7 @@ export default function MadConfessions() {
   const [cooldownLeft, setCooldownLeft] = useState(0);
   const [reactedMap, setReactedMapState] = useState<Record<string, true>>({});
   const [shareMessage, setShareMessage] = useState<string | null>(null);
+  const [postRating, setPostRating] = useState<string | null>(null);
 
   async function load(silent = false) {
     try {
@@ -221,6 +233,12 @@ export default function MadConfessions() {
     return () => window.clearTimeout(timer);
   }, [shareMessage]);
 
+  useEffect(() => {
+    if (!postRating) return;
+    const timer = window.setTimeout(() => setPostRating(null), 2200);
+    return () => window.clearTimeout(timer);
+  }, [postRating]);
+
   async function submit() {
     if (posting) return;
 
@@ -274,6 +292,7 @@ export default function MadConfessions() {
         setItems((prev) => [json.item as Confession, ...prev]);
         setText("");
         setSortMode("new");
+        setPostRating(json.rating ?? null);
 
         const cooldownSeconds = json.cooldownSeconds ?? 45;
         const now = Date.now();
@@ -304,6 +323,8 @@ export default function MadConfessions() {
     setReactionMap(nextReactionMap);
     setError(null);
 
+    const optimisticBoost = key === "same" ? 2 : 1;
+
     setItems((prev) =>
       prev.map((c) =>
         c.id === id
@@ -311,7 +332,7 @@ export default function MadConfessions() {
               ...c,
               reactions: {
                 ...c.reactions,
-                [key]: (c.reactions[key] ?? 0) + 1,
+                [key]: (c.reactions[key] ?? 0) + optimisticBoost,
               },
             }
           : c
@@ -391,9 +412,8 @@ export default function MadConfessions() {
 
     if (sortMode === "top") {
       copy.sort((a, b) => {
-        const reactionDiff =
-          totalReactions(b.reactions) - totalReactions(a.reactions);
-        if (reactionDiff !== 0) return reactionDiff;
+        const scoreDiff = effectiveScore(b) - effectiveScore(a);
+        if (scoreDiff !== 0) return scoreDiff;
         return b.createdAt - a.createdAt;
       });
       return copy;
@@ -405,13 +425,8 @@ export default function MadConfessions() {
 
   const trendingItems = useMemo(() => {
     return [...items]
-      .filter((item) => totalReactions(item.reactions) > 0)
-      .sort((a, b) => {
-        const reactionDiff =
-          totalReactions(b.reactions) - totalReactions(a.reactions);
-        if (reactionDiff !== 0) return reactionDiff;
-        return b.createdAt - a.createdAt;
-      })
+      .filter((item) => effectiveScore(item) > 0)
+      .sort((a, b) => effectiveScore(b) - effectiveScore(a))
       .slice(0, 3);
   }, [items]);
 
@@ -420,12 +435,9 @@ export default function MadConfessions() {
   }, [items]);
 
   const todaysTop = useMemo(() => {
-    const copy = [...todaysItems].sort((a, b) => {
-      const reactionDiff =
-        totalReactions(b.reactions) - totalReactions(a.reactions);
-      if (reactionDiff !== 0) return reactionDiff;
-      return b.createdAt - a.createdAt;
-    });
+    const copy = [...todaysItems].sort(
+      (a, b) => effectiveScore(b) - effectiveScore(a)
+    );
 
     return copy[0] ?? null;
   }, [todaysItems]);
@@ -479,6 +491,12 @@ export default function MadConfessions() {
           </div>
         )}
 
+        {postRating && (
+          <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-100">
+            {postRating}
+          </div>
+        )}
+
         {(todaysTop || todaysItems.length > 0) && (
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -487,7 +505,7 @@ export default function MadConfessions() {
                   Top MAD Today
                 </p>
                 <p className="mt-1 text-sm text-white/65">
-                  Today’s most reacted confession.
+                  Today’s strongest confession by signal and reactions.
                 </p>
               </div>
 
@@ -512,14 +530,14 @@ export default function MadConfessions() {
                     {personaForId(todaysTop.id)}
                   </div>
 
-                  {momentumForScore(totalReactions(todaysTop.reactions)) && (
+                  {momentumForScore(effectiveScore(todaysTop)) && (
                     <div
                       className={[
                         "rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-[0.16em]",
-                        momentumForScore(totalReactions(todaysTop.reactions))!.cls,
+                        momentumForScore(effectiveScore(todaysTop))!.cls,
                       ].join(" ")}
                     >
-                      {momentumForScore(totalReactions(todaysTop.reactions))!.label}
+                      {momentumForScore(effectiveScore(todaysTop))!.label}
                     </div>
                   )}
                 </div>
@@ -534,7 +552,7 @@ export default function MadConfessions() {
                       {timeAgo(todaysTop.createdAt)}
                     </div>
                     <div className="mt-2 text-[11px] text-white/30">
-                      {totalReactions(todaysTop.reactions)} reactions
+                      {effectiveScore(todaysTop).toFixed(1)} score
                     </div>
                   </div>
                 </div>
@@ -565,7 +583,7 @@ export default function MadConfessions() {
                   Trending Now
                 </p>
                 <p className="mt-1 text-sm text-white/65">
-                  Most reacted confessions right now.
+                  Strongest confessions by signal and reaction weight.
                 </p>
               </div>
 
@@ -583,7 +601,7 @@ export default function MadConfessions() {
                       #{index + 1} Trending
                     </div>
                     <div className="text-[11px] text-white/35">
-                      {totalReactions(item.reactions)} reactions
+                      {effectiveScore(item).toFixed(1)} score
                     </div>
                   </div>
 
@@ -671,7 +689,8 @@ export default function MadConfessions() {
             <div className="text-white/60">No confessions yet. Be first 😤</div>
           ) : (
             sortedItems.map((c, index) => {
-              const score = totalReactions(c.reactions);
+              const reactionCount = totalReactions(c.reactions);
+              const score = effectiveScore(c);
               const momentum = momentumForScore(score);
               const showRank = sortMode === "top" && score > 0;
               const persona = personaForId(c.id);
@@ -702,6 +721,12 @@ export default function MadConfessions() {
                         {momentum.label}
                       </div>
                     )}
+
+                    {typeof c.score === "number" && (
+                      <div className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] text-white/55">
+                        Signal {c.score}
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-start justify-between gap-4">
@@ -714,7 +739,10 @@ export default function MadConfessions() {
                         {timeAgo(c.createdAt)}
                       </div>
                       <div className="mt-2 text-[11px] text-white/30">
-                        {score} reaction{score === 1 ? "" : "s"}
+                        {reactionCount} reaction{reactionCount === 1 ? "" : "s"}
+                      </div>
+                      <div className="mt-1 text-[11px] text-white/30">
+                        {score.toFixed(1)} score
                       </div>
                     </div>
                   </div>
