@@ -9,6 +9,11 @@ const LINKS = {
   x: "https://x.com/madrichclub_",
   instagram: "https://www.instagram.com/madrichclub/",
   tiktok: "https://www.tiktok.com/@madrichclub",
+  dexscreener: "#",
+  birdeye: "#",
+  coingecko: "#",
+  jupiter: "#",
+  solscan: "#",
 } as const;
 
 function PrimaryButton({
@@ -96,6 +101,41 @@ function QuickCard({
       </p>
       <p className="mt-2 text-sm leading-6 text-white/62">{text}</p>
     </div>
+  );
+}
+
+function PlatformBadge({
+  href,
+  src,
+  alt,
+  label,
+}: {
+  href: string;
+  src: string;
+  alt: string;
+  label: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="group flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.03] px-4 py-4 transition duration-300 hover:scale-[1.01] hover:border-white/20 hover:bg-white/[0.06]"
+    >
+      <Image
+        src={src}
+        alt={alt}
+        width={30}
+        height={30}
+        className="h-8 w-8 object-contain"
+      />
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">
+          Live On
+        </p>
+        <p className="text-sm font-black text-white/90">{label}</p>
+      </div>
+    </a>
   );
 }
 
@@ -223,6 +263,100 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-black/30 p-5 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+                $MAD Is Already Live
+              </p>
+
+              <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+                Tracked. Visible. Building.
+              </h2>
+
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+                You do not need to read everything. Just see that $MAD is already
+                showing up, already building, and already moving beyond a basic meme page.
+              </p>
+            </div>
+
+            <div className="shrink-0 flex flex-wrap gap-2">
+              <StatChip label="Live" />
+              <StatChip label="Tracked" />
+              <StatChip label="Public" />
+            </div>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <PlatformBadge
+              href={LINKS.dexscreener}
+              src="/logos/DEX-screener.png"
+              alt="DEX Screener"
+              label="DEX Screener"
+            />
+            <PlatformBadge
+              href={LINKS.birdeye}
+              src="/logos/birdeye.png"
+              alt="Birdeye"
+              label="Birdeye"
+            />
+            <PlatformBadge
+              href={LINKS.coingecko}
+              src="/logos/coingecko.png"
+              alt="CoinGecko"
+              label="CoinGecko"
+            />
+            <PlatformBadge
+              href={LINKS.jupiter}
+              src="/logos/jupiter.png"
+              alt="Jupiter"
+              label="Jupiter"
+            />
+            <PlatformBadge
+              href={LINKS.solscan}
+              src="/logos/solscan.png"
+              alt="Solscan"
+              label="Solscan"
+            />
+          </div>
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="rounded-[24px] border border-emerald-400/20 bg-emerald-500/10 p-5">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-200/80">
+                Why this matters
+              </p>
+              <p className="mt-3 text-sm font-semibold leading-7 text-emerald-100/90">
+                For people who need proof fast: $MAD is not just an idea sitting in a bio.
+                It already has visibility, public tracking, community activity, and live tech.
+              </p>
+            </div>
+
+            <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
+                Quick reality check
+              </p>
+              <div className="mt-3 space-y-2 text-sm text-white/75">
+                <p>• Meme coin culture + public brand</p>
+                <p>• Live website + community features</p>
+                <p>• MAD Mind + interactive tech layer</p>
+                <p>• Expanding ecosystem direction</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-[24px] border border-yellow-400/20 bg-yellow-500/10 px-5 py-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-yellow-200/85">
+              Risk Notice
+            </p>
+            <p className="mt-2 text-sm leading-7 text-yellow-100/90">
+              $MAD is a meme coin and community-driven digital asset. It is highly speculative,
+              volatile, and carries significant risk. Nothing on this site is financial advice,
+              investment advice, or a promise of returns. Only participate with money you can
+              afford to lose. Do your own research before making any decision.
+            </p>
+          </div>
+        </section>
+
         <section
           id="confessions"
           className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10"
@@ -259,7 +393,7 @@ export default function Home() {
             Stay $MAD
           </p>
           <p className="mt-2 text-sm text-white/60">
-            Stop panicking. Build smarter.
+            $MAD is a meme coin. Nothing here is financial advice. Never risk more than you can afford to lose.
           </p>
         </section>
       </div>
