@@ -203,6 +203,26 @@ function PlatformPoster({
   );
 }
 
+function ExchangeGlobe() {
+  return (
+    <div className="pointer-events-none absolute right-[-8%] top-[-8%] hidden h-[440px] w-[440px] overflow-hidden rounded-full opacity-90 lg:block">
+      <div className="absolute inset-0 rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_35%_35%,rgba(255,0,0,0.2),rgba(255,0,0,0.05)_38%,transparent_65%)] shadow-[0_0_60px_rgba(255,0,0,0.16)]" />
+      <div className="absolute inset-0 rounded-full bg-[repeating-linear-gradient(to_right,rgba(255,0,0,0.16)_0px,rgba(255,0,0,0.16)_1px,transparent_1px,transparent_36px),repeating-linear-gradient(to_bottom,rgba(255,0,0,0.12)_0px,rgba(255,0,0,0.12)_1px,transparent_1px,transparent_36px)] opacity-55" />
+      <div className="absolute inset-[10%] rounded-full border border-red-500/20" />
+      <div className="absolute inset-[22%] rounded-full border border-red-500/15" />
+      <div className="absolute inset-[34%] rounded-full border border-red-500/10" />
+      <div className="absolute left-[12%] top-[16%] h-2 w-2 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
+      <div className="absolute left-[26%] top-[34%] h-1.5 w-1.5 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
+      <div className="absolute left-[58%] top-[24%] h-2 w-2 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
+      <div className="absolute left-[72%] top-[38%] h-1.5 w-1.5 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
+      <div className="absolute left-[48%] top-[58%] h-2 w-2 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
+      <div className="absolute left-[30%] top-[66%] h-1.5 w-1.5 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
+      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/25 to-transparent" />
+      <div className="absolute left-0 top-0 h-full w-full rounded-full border border-red-500/10" />
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#040404] text-white">
@@ -317,50 +337,57 @@ export default function Home() {
           />
         </section>
 
-        <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-              Live In The Wild
-            </p>
+        <section className="relative mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <ExchangeGlobe />
 
-            <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-              Real. Public. Moving.
-            </h2>
+          <div className="relative z-10">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+                Live In The Wild
+              </p>
 
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-              $MAD is already visible on real platforms.
-            </p>
-          </div>
+              <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+                Verified on{" "}
+                <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.4)]">
+                  exchanges.
+                </span>
+              </h2>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <PlatformPoster
-              href={LINKS.birdeye}
-              src="/logos/birdeye.png"
-              alt="Birdeye"
-              eyebrow="Live On"
-              title="Track on Birdeye"
-            />
-            <PlatformPoster
-              href={LINKS.solscan}
-              src="/logos/solscan.png"
-              alt="Solscan"
-              eyebrow="Live On"
-              title="Verify on Solscan"
-            />
-            <PlatformPoster
-              href={LINKS.jupiter}
-              src="/logos/jupiter.png"
-              alt="Jupiter"
-              eyebrow="Live On"
-              title="Buy on Jupiter"
-            />
-            <PlatformPoster
-              href={LINKS.dexscreener}
-              src="/logos/DEX-screener.png"
-              alt="DEX Screener"
-              eyebrow="Live On"
-              title="View Chart"
-            />
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+                $MAD is already visible on real crypto platforms.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <PlatformPoster
+                href={LINKS.birdeye}
+                src="/logos/birdeye.png"
+                alt="Birdeye"
+                eyebrow="Live On"
+                title="Track on Birdeye"
+              />
+              <PlatformPoster
+                href={LINKS.solscan}
+                src="/logos/solscan.png"
+                alt="Solscan"
+                eyebrow="Live On"
+                title="Verify on Solscan"
+              />
+              <PlatformPoster
+                href={LINKS.jupiter}
+                src="/logos/jupiter.png"
+                alt="Jupiter"
+                eyebrow="Live On"
+                title="Buy on Jupiter"
+              />
+              <PlatformPoster
+                href={LINKS.dexscreener}
+                src="/logos/DEX-screener.png"
+                alt="DEX Screener"
+                eyebrow="Live On"
+                title="View Chart"
+              />
+            </div>
           </div>
         </section>
 
