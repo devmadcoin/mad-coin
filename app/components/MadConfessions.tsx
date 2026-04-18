@@ -41,7 +41,11 @@ function timeAgo(ms: number) {
 }
 
 function totalReactions(reactions: Record<ReactionKey, number>) {
-  return (reactions.same ?? 0) + (reactions.lol ?? 0) + (reactions.handshake ?? 0);
+  return (
+    (reactions.same ?? 0) +
+    (reactions.lol ?? 0) +
+    (reactions.handshake ?? 0)
+  );
 }
 
 function personaForId(id: string) {
@@ -199,7 +203,8 @@ export default function MadConfessions() {
 
     if (sortMode === "top") {
       copy.sort((a, b) => {
-        const reactionDiff = totalReactions(b.reactions) - totalReactions(a.reactions);
+        const reactionDiff =
+          totalReactions(b.reactions) - totalReactions(a.reactions);
         if (reactionDiff !== 0) return reactionDiff;
         return b.createdAt - a.createdAt;
       });
@@ -214,7 +219,8 @@ export default function MadConfessions() {
     return [...items]
       .filter((item) => totalReactions(item.reactions) > 0)
       .sort((a, b) => {
-        const reactionDiff = totalReactions(b.reactions) - totalReactions(a.reactions);
+        const reactionDiff =
+          totalReactions(b.reactions) - totalReactions(a.reactions);
         if (reactionDiff !== 0) return reactionDiff;
         return b.createdAt - a.createdAt;
       })
@@ -262,7 +268,7 @@ export default function MadConfessions() {
                 </p>
               </div>
 
-              <div className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.75)] animate-pulse" />
+              <div className="h-2 w-2 animate-pulse rounded-full bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.75)]" />
             </div>
 
             <div className="space-y-3">
@@ -280,7 +286,9 @@ export default function MadConfessions() {
                     </div>
                   </div>
 
-                  <p className="text-sm text-white/85 line-clamp-2">{item.text}</p>
+                  <p className="line-clamp-2 text-sm text-white/85">
+                    {item.text}
+                  </p>
                 </div>
               ))}
             </div>
@@ -304,7 +312,7 @@ export default function MadConfessions() {
               type="button"
               onClick={submit}
               disabled={posting}
-              className="rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm hover:bg-white/15 disabled:opacity-50"
+              className="rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm transition hover:bg-white/15 disabled:opacity-50"
             >
               {posting ? "Posting…" : "Post"}
             </button>
@@ -392,7 +400,9 @@ export default function MadConfessions() {
                   </div>
 
                   <div className="flex items-start justify-between gap-4">
-                    <p className="break-words text-sm text-white/90">{c.text}</p>
+                    <p className="break-words text-sm text-white/90">
+                      {c.text}
+                    </p>
 
                     <div className="shrink-0 text-right">
                       <div className="whitespace-nowrap text-xs text-white/40">
@@ -429,57 +439,6 @@ export default function MadConfessions() {
       </div>
     </section>
   );
-}
-
-function momentumForScore(score: number) {
-  if (score >= 10) {
-    return {
-      label: "Dominating",
-      cls: "border-yellow-500/25 bg-yellow-500/10 text-yellow-200",
-    };
-  }
-
-  if (score >= 5) {
-    return {
-      label: "Exploding",
-      cls: "border-red-500/25 bg-red-500/10 text-red-200",
-    };
-  }
-
-  if (score >= 3) {
-    return {
-      label: "Heating Up",
-      cls: "border-orange-500/25 bg-orange-500/10 text-orange-200",
-    };
-  }
-
-  return null;
-}
-
-function personaForId(id: string) {
-  const PERSONA_POOL = [
-    "Mad Trader",
-    "Silent Bagholder",
-    "Cold Strategist",
-    "Chart Addict",
-    "Chaos Monk",
-    "Late Entry Legend",
-    "Candle Chaser",
-    "Signal Hunter",
-    "Fear Eater",
-    "Conviction Goblin",
-  ] as const;
-
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
-  }
-
-  return PERSONA_POOL[hash % PERSONA_POOL.length];
-}
-
-function totalReactions(reactions: Record<ReactionKey, number>) {
-  return (reactions.same ?? 0) + (reactions.lol ?? 0) + (reactions.handshake ?? 0);
 }
 
 function ReactionButton({
