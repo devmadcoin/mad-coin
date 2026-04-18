@@ -12,6 +12,25 @@ type Confession = {
   reactions: Record<ReactionKey, number>;
 };
 
+type ApiError = {
+  error?: string;
+  retryAfterSeconds?: number;
+};
+
+type PostResponse = {
+  item?: Confession;
+  cooldownSeconds?: number;
+  error?: string;
+  retryAfterSeconds?: number;
+};
+
+type PatchResponse = {
+  item?: Confession;
+  reactionLocked?: boolean;
+  retryAfterSeconds?: number;
+  error?: string;
+};
+
 const PERSONA_POOL = [
   "Mad Trader",
   "Silent Bagholder",
@@ -209,21 +228,30 @@ export default function MadConfessions() {
         body: JSON.stringify({ text: clean }),
       });
 
-      const json = await res.json();
+      const json = (await res.json()) as PostResponse;
 
       if (!res.ok) {
-        setError(json?.error || "Failed to post");
+        if (res.status === 429 && json.retryAfterSeconds) {
+          const now = Date.now();
+          const cooldownMs = json.retryAfterSeconds * 1000;
+          setLastPostAt(now - POST_COOLDOWN_MS + cooldownMs);
+          setCooldownLeft(cooldownMs);
+          setError(`Cooldown active. Wait ${json.retryAfterSeconds}s.`);
+        } else {
+          setError(json.error || "Failed to post");
+        }
         return;
       }
 
-      if (json?.item) {
-        setItems((prev) => [json.item, ...prev]);
+      if (json.item) {
+        setItems((prev) => [json.item as Confession, ...prev]);
         setText("");
         setSortMode("new");
 
+        const cooldownSeconds = json.cooldownSeconds ?? 45;
         const now = Date.now();
         setLastPostAt(now);
-        setCooldownLeft(POST_COOLDOWN_MS);
+        setCooldownLeft(cooldownSeconds * 1000);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Post failed");
@@ -270,13 +298,23 @@ export default function MadConfessions() {
         body: JSON.stringify({ id, reaction: key, delta: 1 }),
       });
 
-      const json = await res.json();
+      const json = (await res.json()) as PatchResponse;
 
-      if (res.ok && json?.item) {
-        setItems((prev) => prev.map((c) => (c.id === id ? json.item : c)));
-      } else {
-        setError("Reaction failed. Try again.");
+      if (res.ok && json.item) {
+        setItems((prev) => prev.map((c) => (c.id === id ? json.item! : c)));
+        return;
       }
+
+      if (res.status === 429) {
+        setError(
+          json.retryAfterSeconds
+            ? `Reaction locked. Try again in ${json.retryAfterSeconds}s.`
+            : json.error || "Reaction already used."
+        );
+        return;
+      }
+
+      setError(json.error || "Reaction failed. Try again.");
     } catch {
       setError("Reaction failed. Try again.");
     }
