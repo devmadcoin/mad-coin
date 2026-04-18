@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 type ReactionKey = "same" | "lol" | "handshake";
+type SortMode = "new" | "top";
 
 type Confession = {
   id: string;
@@ -26,19 +27,23 @@ function timeAgo(ms: number) {
   return `${d}d ago`;
 }
 
+function totalReactions(reactions: Record<ReactionKey, number>) {
+  return (reactions.same ?? 0) + (reactions.lol ?? 0) + (reactions.handshake ?? 0);
+}
+
 export default function MadConfessions() {
   const [items, setItems] = useState<Confession[]>([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sortMode, setSortMode] = useState<SortMode>("new");
 
-  // =========================
-  // LOAD
-  // =========================
   async function load() {
     try {
       setLoading(true);
+      setError(null);
+
       const res = await fetch("/api/confessions", { cache: "no-store" });
       const json = await res.json();
 
@@ -54,16 +59,18 @@ export default function MadConfessions() {
     void load();
   }, []);
 
-  // =========================
-  // SUBMIT
-  // =========================
   async function submit() {
-    if (posting) return; // prevent spam
+    if (posting) return;
 
     const clean = text.replace(/\s+/g, " ").trim();
 
     if (clean.length < 4) {
       setError("Too short (min 4 chars)");
+      return;
+    }
+
+    if (clean.length > 240) {
+      setError("Too long (max 240 chars)");
       return;
     }
 
@@ -84,10 +91,10 @@ export default function MadConfessions() {
         return;
       }
 
-      // 🔥 instant insert (feels fast)
       if (json?.item) {
         setItems((prev) => [json.item, ...prev]);
         setText("");
+        setSortMode("new");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Post failed");
@@ -96,11 +103,7 @@ export default function MadConfessions() {
     }
   }
 
-  // =========================
-  // REACTIONS
-  // =========================
   async function react(id: string, key: ReactionKey) {
-    // ⚡ optimistic update
     setItems((prev) =>
       prev.map((c) =>
         c.id === id
@@ -124,33 +127,43 @@ export default function MadConfessions() {
 
       const json = await res.json();
 
-      // fallback sync if mismatch
       if (res.ok && json?.item) {
-        setItems((prev) =>
-          prev.map((c) => (c.id === id ? json.item : c))
-        );
+        setItems((prev) => prev.map((c) => (c.id === id ? json.item : c)));
       }
     } catch {
-      // silently ignore (optimistic already handled)
+      // keep optimistic update
     }
   }
 
-  // =========================
-  // HEADER CHIP
-  // =========================
   const headerChip = useMemo(() => {
     if (loading) return "Loading…";
     return `${items.length} confessions`;
   }, [loading, items.length]);
 
-  // =========================
-  // UI
-  // =========================
+  const sortedItems = useMemo(() => {
+    const copy = [...items];
+
+    if (sortMode === "top") {
+      copy.sort((a, b) => {
+        const reactionDiff = totalReactions(b.reactions) - totalReactions(a.reactions);
+        if (reactionDiff !== 0) return reactionDiff;
+        return b.createdAt - a.createdAt;
+      });
+      return copy;
+    }
+
+    copy.sort((a, b) => b.createdAt - a.createdAt);
+    return copy;
+  }, [items, sortMode]);
+
+  const topCount = useMemo(
+    () => items.filter((item) => totalReactions(item.reactions) > 0).length,
+    [items]
+  );
+
   return (
     <section className="mt-8 animate-fadeUp sm:mt-10">
       <div className="rounded-[28px] border border-white/10 bg-black/30 p-4 shadow-2xl backdrop-blur-xl sm:p-6">
-
-        {/* HEADER */}
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
           <div>
             <p className="text-[11px] uppercase tracking-[0.3em] text-white/50">
@@ -166,27 +179,32 @@ export default function MadConfessions() {
             </p>
           </div>
 
-          <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs">
-            {headerChip}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs">
+              {headerChip}
+            </div>
+
+            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+              {topCount} active
+            </div>
           </div>
         </div>
 
-        {/* INPUT */}
         <div className="mt-6 space-y-3">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={3}
+            maxLength={240}
             placeholder="Confess what made you $MAD today…"
-            className="w-full resize-none rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder:text-white/35 focus:border-white/20"
+            className="w-full resize-none rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder:text-white/35 focus:border-white/20 focus:outline-none"
           />
 
-          <div className="flex flex-col sm:flex-row justify-between gap-3">
-            <p className="text-xs text-white/40">
-              {text.length}/240
-            </p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-white/40">{text.length}/240</p>
 
             <button
+              type="button"
               onClick={submit}
               disabled={posting}
               className="rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm hover:bg-white/15 disabled:opacity-50"
@@ -202,46 +220,94 @@ export default function MadConfessions() {
           )}
         </div>
 
-        {/* LIST */}
+        <div className="mt-6 flex items-center justify-between gap-3">
+          <div className="text-xs uppercase tracking-[0.24em] text-white/35">
+            Feed
+          </div>
+
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-1">
+            <button
+              type="button"
+              onClick={() => setSortMode("new")}
+              className={[
+                "rounded-full px-3 py-1.5 text-xs font-semibold transition",
+                sortMode === "new"
+                  ? "bg-white text-black"
+                  : "text-white/75 hover:bg-white/10",
+              ].join(" ")}
+            >
+              New
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setSortMode("top")}
+              className={[
+                "rounded-full px-3 py-1.5 text-xs font-semibold transition",
+                sortMode === "top"
+                  ? "bg-white text-black"
+                  : "text-white/75 hover:bg-white/10",
+              ].join(" ")}
+            >
+              Top
+            </button>
+          </div>
+        </div>
+
         <div className="mt-6 space-y-4">
           {loading ? (
             <div className="text-white/60">Loading…</div>
-          ) : items.length === 0 ? (
-            <div className="text-white/60">
-              No confessions yet. Be first 😤
-            </div>
+          ) : sortedItems.length === 0 ? (
+            <div className="text-white/60">No confessions yet. Be first 😤</div>
           ) : (
-            items.map((c) => (
-              <div
-                key={c.id}
-                className="rounded-2xl border border-white/10 bg-black/25 p-4"
-              >
-                <div className="flex justify-between text-sm gap-4">
-                  <p className="break-words">{c.text}</p>
-                  <span className="text-xs text-white/40 whitespace-nowrap">
-                    {timeAgo(c.createdAt)}
-                  </span>
-                </div>
+            sortedItems.map((c, index) => {
+              const score = totalReactions(c.reactions);
+              const showRank = sortMode === "top" && score > 0;
 
-                <div className="mt-3 flex gap-2">
-                  <ReactionButton
-                    label="Same"
-                    count={c.reactions.same}
-                    onClick={() => react(c.id, "same")}
-                  />
-                  <ReactionButton
-                    label="LOL"
-                    count={c.reactions.lol}
-                    onClick={() => react(c.id, "lol")}
-                  />
-                  <ReactionButton
-                    label="🤝"
-                    count={c.reactions.handshake}
-                    onClick={() => react(c.id, "handshake")}
-                  />
+              return (
+                <div
+                  key={c.id}
+                  className="rounded-2xl border border-white/10 bg-black/25 p-4"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      {showRank && (
+                        <div className="mb-2 inline-flex rounded-full border border-yellow-500/20 bg-yellow-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-yellow-200">
+                          #{index + 1} Top MAD
+                        </div>
+                      )}
+
+                      <p className="break-words text-sm text-white/90">{c.text}</p>
+                    </div>
+
+                    <div className="shrink-0 text-right">
+                      <div className="text-xs text-white/40">{timeAgo(c.createdAt)}</div>
+                      <div className="mt-2 text-[11px] text-white/30">
+                        {score} reaction{score === 1 ? "" : "s"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <ReactionButton
+                      label="Same"
+                      count={c.reactions.same}
+                      onClick={() => react(c.id, "same")}
+                    />
+                    <ReactionButton
+                      label="LOL"
+                      count={c.reactions.lol}
+                      onClick={() => react(c.id, "lol")}
+                    />
+                    <ReactionButton
+                      label="🤝"
+                      count={c.reactions.handshake}
+                      onClick={() => react(c.id, "handshake")}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
@@ -260,8 +326,9 @@ function ReactionButton({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs hover:bg-white/10 transition"
+      className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs transition hover:bg-white/10"
     >
       {label}
       <span className="rounded bg-white/10 px-2">{count}</span>
