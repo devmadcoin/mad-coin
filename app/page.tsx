@@ -76,31 +76,21 @@ function Chip({ children }: { children: React.ReactNode }) {
   );
 }
 
-function SocialIcon({
+function SocialButton({
   href,
-  src,
-  alt,
+  label,
 }: {
   href: string;
-  src: string;
-  alt: string;
+  label: string;
 }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
-      aria-label={alt}
-      title={alt}
-      className="group flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 transition duration-300 hover:scale-110 hover:border-white/20 hover:bg-white/10"
+      className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-black text-white transition duration-300 hover:scale-[1.02] hover:border-white/20 hover:bg-white/[0.08]"
     >
-      <Image
-        src={src}
-        alt={alt}
-        width={28}
-        height={28}
-        className="h-7 w-7 object-contain"
-      />
+      {label}
     </a>
   );
 }
@@ -306,27 +296,11 @@ export default function Home() {
                 <Chip>Meme Coin</Chip>
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <SocialIcon
-                  href={LINKS.telegram}
-                  src="/logos/MAD-TELEGRAM.png"
-                  alt="Telegram"
-                />
-                <SocialIcon
-                  href={LINKS.x}
-                  src="/logos/MAD-X-LOGO.png"
-                  alt="X"
-                />
-                <SocialIcon
-                  href={LINKS.instagram}
-                  src="/logos/MAD-INSTAGRAM-LOGO.png"
-                  alt="Instagram"
-                />
-                <SocialIcon
-                  href={LINKS.tiktok}
-                  src="/logos/MAD-TIKTOK-LOGO.png"
-                  alt="TikTok"
-                />
+              <div className="mt-8 flex flex-wrap gap-3">
+                <SocialButton href={LINKS.telegram} label="Join Telegram" />
+                <SocialButton href={LINKS.x} label="Follow X" />
+                <SocialButton href={LINKS.instagram} label="Instagram" />
+                <SocialButton href={LINKS.tiktok} label="TikTok" />
               </div>
             </div>
 
