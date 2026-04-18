@@ -81,7 +81,7 @@ export default function Home() {
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
 
               <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/40">
-                CONTROLLED CHAOS
+                CONTROL YOURSELF
               </p>
 
               <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.5rem] lg:text-[6rem]">
@@ -89,9 +89,7 @@ export default function Home() {
                   STOP
                 </span>
                 <br />
-                TRADING
-                <br />
-                NOISE.
+                PANICKING.
                 <br />
                 START
                 <br />
@@ -106,7 +104,7 @@ export default function Home() {
               </h1>
 
               <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                Control the chaos. Or it controls you.
+                Most people panic. You don’t have to.
               </p>
 
               <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
@@ -119,7 +117,7 @@ export default function Home() {
                     href="#confessions"
                     className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] px-5 py-3 text-sm font-black text-white transition duration-200 hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]"
                   >
-                    View Confessions
+                    See What People Are Saying
                   </a>
                 </div>
 
@@ -144,6 +142,18 @@ export default function Home() {
                     src="/logos/MAD-TIKTOK-LOGO.png"
                     alt="TikTok"
                   />
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45 sm:text-xs">
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                    Real People
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                    Live Reactions
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                    Top Ranked
+                  </span>
                 </div>
               </div>
             </div>
@@ -184,29 +194,40 @@ export default function Home() {
               </p>
 
               <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-                Proof everyone’s a little{" "}
-                <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.5)]">
-                  $MAD
-                </span>
-                .
+                Say what you’re really thinking.
               </h2>
 
               <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-                Anonymous thoughts. Real pressure. Real people. This is where
-                the movement talks back.
+                People say what they really feel. Others react. The real ones rise to the top.
               </p>
             </div>
 
-            <div className="shrink-0">
-              <InternalPillButton href="/mad-mind">
-                Explore MAD AI
-              </InternalPillButton>
+            <div className="shrink-0 flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45 sm:text-xs">
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                Trending
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                Most Liked
+              </span>
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                Live
+              </span>
             </div>
           </div>
 
           <div className="min-w-0">
             <MadConfessions />
           </div>
+        </section>
+
+        {/* MINI FOOTER */}
+        <section className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-4 text-center shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
+            Stay $MAD
+          </p>
+          <p className="mt-2 text-sm text-white/60">
+            Most people panic. You don’t have to.
+          </p>
         </section>
       </div>
     </div>
