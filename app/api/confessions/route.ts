@@ -83,8 +83,7 @@ export async function GET() {
 
     return NextResponse.json({ confessions });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "KV error";
+    const message = error instanceof Error ? error.message : "KV error";
 
     return NextResponse.json(
       { confessions: [], error: message },
@@ -99,17 +98,11 @@ export async function POST(req: Request) {
     const text = clampText(String((body as { text?: unknown })?.text ?? ""));
 
     if (!text) {
-      return NextResponse.json(
-        { error: "Text required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Text required" }, { status: 400 });
     }
 
     if (text.length < 4) {
-      return NextResponse.json(
-        { error: "Too short" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Too short" }, { status: 400 });
     }
 
     const item: Confession = {
@@ -129,13 +122,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ item });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "POST failed";
+    const message = error instanceof Error ? error.message : "POST failed";
 
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -148,10 +137,7 @@ export async function PATCH(req: Request) {
     const delta = Number(body?.delta ?? 1);
 
     if (!id) {
-      return NextResponse.json(
-        { error: "id required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "id required" }, { status: 400 });
     }
 
     if (!isReactionKey(reaction)) {
@@ -162,10 +148,7 @@ export async function PATCH(req: Request) {
     }
 
     if (delta !== 1 && delta !== -1) {
-      return NextResponse.json(
-        { error: "invalid delta" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "invalid delta" }, { status: 400 });
     }
 
     const result = await kv.eval(
@@ -198,10 +181,7 @@ return cjson.encode(data)
     );
 
     if (!result) {
-      return NextResponse.json(
-        { error: "not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "not found" }, { status: 404 });
     }
 
     const parsed = safeJson<Confession>(result);
@@ -215,12 +195,8 @@ return cjson.encode(data)
 
     return NextResponse.json({ item: parsed });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "PATCH failed";
+    const message = error instanceof Error ? error.message : "PATCH failed";
 
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
