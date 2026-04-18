@@ -12,11 +12,6 @@ type Confession = {
   reactions: Record<ReactionKey, number>;
 };
 
-type ApiError = {
-  error?: string;
-  retryAfterSeconds?: number;
-};
-
 type PostResponse = {
   item?: Confession;
   cooldownSeconds?: number;
@@ -135,6 +130,17 @@ function setReactionMap(map: Record<string, true>) {
 
 function reactionStorageKey(confessionId: string, reaction: ReactionKey) {
   return `${confessionId}:${reaction}`;
+}
+
+function isToday(timestamp: number) {
+  const now = new Date();
+  const date = new Date(timestamp);
+
+  return (
+    now.getFullYear() === date.getFullYear() &&
+    now.getMonth() === date.getMonth() &&
+    now.getDate() === date.getDate()
+  );
 }
 
 export default function MadConfessions() {
@@ -354,6 +360,28 @@ export default function MadConfessions() {
       .slice(0, 3);
   }, [items]);
 
+  const todaysItems = useMemo(() => {
+    return items.filter((item) => isToday(item.createdAt));
+  }, [items]);
+
+  const todaysTop = useMemo(() => {
+    const copy = [...todaysItems].sort((a, b) => {
+      const reactionDiff =
+        totalReactions(b.reactions) - totalReactions(a.reactions);
+      if (reactionDiff !== 0) return reactionDiff;
+      return b.createdAt - a.createdAt;
+    });
+
+    return copy[0] ?? null;
+  }, [todaysItems]);
+
+  const todaysReactionTotal = useMemo(() => {
+    return todaysItems.reduce(
+      (sum, item) => sum + totalReactions(item.reactions),
+      0
+    );
+  }, [todaysItems]);
+
   const cooldownLabel =
     cooldownLeft > 0 ? `${Math.ceil(cooldownLeft / 1000)}s cooldown` : "Ready";
 
@@ -389,6 +417,74 @@ export default function MadConfessions() {
             </div>
           </div>
         </div>
+
+        {(todaysTop || todaysItems.length > 0) && (
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.24em] text-white/40">
+                  Top MAD Today
+                </p>
+                <p className="mt-1 text-sm text-white/65">
+                  Today’s strongest confession by reaction score.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-white/70">
+                  {todaysItems.length} today
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-white/70">
+                  {todaysReactionTotal} reactions
+                </span>
+              </div>
+            </div>
+
+            {todaysTop ? (
+              <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4">
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <div className="rounded-full border border-yellow-500/20 bg-yellow-500/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-yellow-200">
+                    #1 Today
+                  </div>
+
+                  <div className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] text-white/70">
+                    {personaForId(todaysTop.id)}
+                  </div>
+
+                  {momentumForScore(totalReactions(todaysTop.reactions)) && (
+                    <div
+                      className={[
+                        "rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-[0.16em]",
+                        momentumForScore(totalReactions(todaysTop.reactions))!.cls,
+                      ].join(" ")}
+                    >
+                      {momentumForScore(totalReactions(todaysTop.reactions))!.label}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-start justify-between gap-4">
+                  <p className="break-words text-sm text-white/90">
+                    {todaysTop.text}
+                  </p>
+
+                  <div className="shrink-0 text-right">
+                    <div className="whitespace-nowrap text-xs text-white/40">
+                      {timeAgo(todaysTop.createdAt)}
+                    </div>
+                    <div className="mt-2 text-[11px] text-white/30">
+                      {totalReactions(todaysTop.reactions)} reactions
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-sm text-white/60">
+                No Top MAD yet today. Start the first one.
+              </div>
+            )}
+          </div>
+        )}
 
         {trendingItems.length > 0 && (
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
