@@ -37,17 +37,14 @@ export default function MadConfessions() {
   // LOAD
   // =========================
   async function load() {
-    setError(null);
-    setLoading(true);
-
     try {
+      setLoading(true);
       const res = await fetch("/api/confessions", { cache: "no-store" });
       const json = await res.json();
 
       setItems(Array.isArray(json?.confessions) ? json.confessions : []);
-    } catch (err: unknown) {
+    } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load");
-      setItems([]);
     } finally {
       setLoading(false);
     }
@@ -61,6 +58,8 @@ export default function MadConfessions() {
   // SUBMIT
   // =========================
   async function submit() {
+    if (posting) return; // prevent spam
+
     const clean = text.replace(/\s+/g, " ").trim();
 
     if (clean.length < 4) {
@@ -85,14 +84,12 @@ export default function MadConfessions() {
         return;
       }
 
-      // Optimistic insert
+      // 🔥 instant insert (feels fast)
       if (json?.item) {
-        setItems((prev) => [json.item as Confession, ...prev]);
+        setItems((prev) => [json.item, ...prev]);
         setText("");
-      } else {
-        await load();
       }
-    } catch (err: unknown) {
+    } catch (err) {
       setError(err instanceof Error ? err.message : "Post failed");
     } finally {
       setPosting(false);
@@ -103,7 +100,7 @@ export default function MadConfessions() {
   // REACTIONS
   // =========================
   async function react(id: string, key: ReactionKey) {
-    // Optimistic UI
+    // ⚡ optimistic update
     setItems((prev) =>
       prev.map((c) =>
         c.id === id
@@ -111,7 +108,7 @@ export default function MadConfessions() {
               ...c,
               reactions: {
                 ...c.reactions,
-                [key]: Math.max(0, (c.reactions[key] ?? 0) + 1),
+                [key]: (c.reactions[key] ?? 0) + 1,
               },
             }
           : c
@@ -127,17 +124,14 @@ export default function MadConfessions() {
 
       const json = await res.json();
 
-      if (!res.ok || !json?.item) {
-        await load();
-        return;
+      // fallback sync if mismatch
+      if (res.ok && json?.item) {
+        setItems((prev) =>
+          prev.map((c) => (c.id === id ? json.item : c))
+        );
       }
-
-      // Sync exact value
-      setItems((prev) =>
-        prev.map((c) => (c.id === id ? json.item : c))
-      );
     } catch {
-      await load();
+      // silently ignore (optimistic already handled)
     }
   }
 
@@ -154,17 +148,19 @@ export default function MadConfessions() {
   // =========================
   return (
     <section className="mt-8 animate-fadeUp sm:mt-10">
-      <div className="rounded-[28px] border border-white/10 bg-black/30 p-4 shadow-2xl backdrop-blur-xl sm:rounded-3xl sm:p-6">
-        
+      <div className="rounded-[28px] border border-white/10 bg-black/30 p-4 shadow-2xl backdrop-blur-xl sm:p-6">
+
         {/* HEADER */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/50">
+            <p className="text-[11px] uppercase tracking-[0.3em] text-white/50">
               MAD CONFESSIONS
             </p>
+
             <h2 className="mt-3 text-2xl font-black sm:text-3xl">
               Say it. Don’t hold it.
             </h2>
+
             <p className="mt-3 text-sm text-white/70">
               Short. Anonymous. Raw signal only.
             </p>
@@ -187,7 +183,7 @@ export default function MadConfessions() {
 
           <div className="flex flex-col sm:flex-row justify-between gap-3">
             <p className="text-xs text-white/40">
-              Keep it under 240 chars.
+              {text.length}/240
             </p>
 
             <button
@@ -220,9 +216,9 @@ export default function MadConfessions() {
                 key={c.id}
                 className="rounded-2xl border border-white/10 bg-black/25 p-4"
               >
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-sm gap-4">
                   <p className="break-words">{c.text}</p>
-                  <span className="text-xs text-white/40">
+                  <span className="text-xs text-white/40 whitespace-nowrap">
                     {timeAgo(c.createdAt)}
                   </span>
                 </div>
@@ -265,7 +261,7 @@ function ReactionButton({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs hover:bg-white/10"
+      className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs hover:bg-white/10 transition"
     >
       {label}
       <span className="rounded bg-white/10 px-2">{count}</span>
