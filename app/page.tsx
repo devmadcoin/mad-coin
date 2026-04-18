@@ -85,7 +85,6 @@ function StatChip({ label }: { label: string }) {
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
-      {/* BACKGROUND */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.10),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.08),transparent_30%)]" />
         <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
@@ -93,10 +92,8 @@ export default function Home() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8">
-        {/* HERO */}
         <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
           <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
-            {/* LEFT */}
             <div className="relative flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
 
@@ -113,26 +110,32 @@ export default function Home() {
                 <br />
                 START
                 <br />
-                BEING{" "}
+                BUILDING
+                <br />
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
                   $MAD
                 </span>{" "}
                 <span className="text-green-400 drop-shadow-[0_0_18px_rgba(0,255,120,0.6)]">
-                  RICH
+                  CONTROL
                 </span>
                 .
               </h1>
 
               <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                Most people panic. You don’t have to. $MAD is about staying clear,
-                disciplined, and sharp when everyone else loses control.
+                Most people panic when pressure hits. $MAD is about staying clear,
+                disciplined, and dangerous enough to move while everyone else
+                loses command.
               </p>
+
+              <div className="mt-4 max-w-xl rounded-[20px] border border-red-500/15 bg-red-500/[0.06] px-4 py-3 text-sm text-white/70">
+                You do not need more noise. You need more self-command.
+              </div>
 
               <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
                 <div className="flex flex-wrap gap-3">
                   <PrimaryButton href="/mad-mind">Enter MAD Mind</PrimaryButton>
                   <SecondaryAnchor href="#confessions">
-                    See What People Are Saying
+                    Read Live Confessions
                   </SecondaryAnchor>
                 </div>
 
@@ -162,12 +165,11 @@ export default function Home() {
                 <div className="flex flex-wrap items-center gap-2">
                   <StatChip label="Real People" />
                   <StatChip label="Live Reactions" />
-                  <StatChip label="Top Ranked" />
+                  <StatChip label="Pressure Tested" />
                 </div>
               </div>
             </div>
 
-            {/* RIGHT */}
             <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-5 sm:p-7 lg:p-10">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.14),transparent_44%)]" />
 
@@ -188,14 +190,42 @@ export default function Home() {
                     </video>
                   </div>
 
+                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                    <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
+                        Signal
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-white/62">
+                        Clear reads under pressure.
+                      </p>
+                    </div>
+
+                    <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
+                        Control
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-white/62">
+                        Emotion under command.
+                      </p>
+                    </div>
+
+                    <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
+                        Pressure
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-white/62">
+                        Chaos reveals character.
+                      </p>
+                    </div>
+                  </div>
+
                   <div className="mt-4 rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
                       Why it matters
                     </p>
                     <p className="mt-2 text-sm leading-6 text-white/62">
-                      This is not about panic. It is about pressure, discipline,
-                      and learning how to move with control while everyone else
-                      reacts emotionally.
+                      This is not about hype. It is about learning how to think,
+                      move, and stay steady while everyone else reacts emotionally.
                     </p>
                   </div>
                 </div>
@@ -204,7 +234,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CONFESSIONS */}
         <section
           id="confessions"
           className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10"
@@ -220,8 +249,8 @@ export default function Home() {
               </h2>
 
               <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-                People say what they really feel. Others react. The real ones rise
-                to the top.
+                Real people post what they actually feel. The strongest reads,
+                sharpest truths, and most relatable confessions rise to the top.
               </p>
             </div>
 
@@ -232,18 +261,21 @@ export default function Home() {
             </div>
           </div>
 
+          <div className="mb-6 rounded-[22px] border border-red-500/15 bg-red-500/[0.06] px-4 py-3 text-sm text-white/70">
+            Anonymous thoughts. Public signal.
+          </div>
+
           <div className="min-w-0">
             <MadConfessions />
           </div>
         </section>
 
-        {/* MINI FOOTER */}
         <section className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.03] px-5 py-4 text-center shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
             Stay $MAD
           </p>
           <p className="mt-2 text-sm text-white/60">
-            Most people panic. You don’t have to.
+            Feel everything. Obey nothing weak.
           </p>
         </section>
       </div>
