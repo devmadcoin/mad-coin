@@ -391,28 +391,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(25,0,0,0.9),rgba(6,0,0,0.96))] p-6 sm:p-8 lg:p-10">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.34em] text-white/40">
-                Community Signal
-              </p>
-              <h2 className="mt-3 text-4xl font-black tracking-[-0.04em]">
-                See What People Really Think.
-              </h2>
-              <p className="mt-4 text-white/62">
-                Real thoughts. Real reactions. Real signal.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <Chip>Trending</Chip>
-              <Chip>Live</Chip>
-              <Chip>Top</Chip>
-            </div>
-          </div>
-
-          <div className="mt-8">
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(25,0,0,0.9),rgba(6,0,0,0.96))] p-4 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6 lg:p-8">
+          <div className="min-w-0">
             <MadConfessions />
           </div>
         </section>
