@@ -398,7 +398,7 @@ function LaunchChartBlock() {
           alt="MAD public chart history"
           fill
           className="object-cover"
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          sizes="100vw"
         />
 
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.08),rgba(20,0,0,0.38)_35%,rgba(0,0,0,0.88))]" />
@@ -412,7 +412,7 @@ function LaunchChartBlock() {
             Launch. ATH. Pullback. Still building.
           </p>
           <p className="mt-3 max-w-md text-sm leading-7 text-white/72">
-            The whole journey happened in public. That matters.
+            The whole journey happened in public. That makes the roadmap hit harder.
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2">
@@ -545,9 +545,9 @@ export default function RoadmapPage() {
         </Reveal>
 
         <Reveal delay={180}>
-          <section className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <section className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
             <AnimatedGraph />
-            <LaunchChartBlock />
+            <DancingMadBlock />
           </section>
         </Reveal>
 
@@ -578,7 +578,7 @@ export default function RoadmapPage() {
 
         <Reveal delay={300}>
           <section className="mt-10">
-            <DancingMadBlock />
+            <LaunchChartBlock />
           </section>
         </Reveal>
 
