@@ -25,6 +25,10 @@ const PERSONA_POOL = [
   "Conviction Goblin",
 ] as const;
 
+const POST_COOLDOWN_MS = 45_000;
+const POST_COOLDOWN_KEY = "mad_confession_last_post_at";
+const REACTED_KEY = "mad_confession_reacted_map";
+
 function timeAgo(ms: number) {
   const s = Math.floor((Date.now() - ms) / 1000);
   if (s < 10) return "just now";
@@ -81,6 +85,39 @@ function momentumForScore(score: number) {
   return null;
 }
 
+function getLastPostAt() {
+  if (typeof window === "undefined") return 0;
+  const raw = window.localStorage.getItem(POST_COOLDOWN_KEY);
+  const value = Number(raw ?? 0);
+  return Number.isFinite(value) ? value : 0;
+}
+
+function setLastPostAt(value: number) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(POST_COOLDOWN_KEY, String(value));
+}
+
+function getReactionMap(): Record<string, true> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(REACTED_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as Record<string, true>;
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function setReactionMap(map: Record<string, true>) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(REACTED_KEY, JSON.stringify(map));
+}
+
+function reactionStorageKey(confessionId: string, reaction: ReactionKey) {
+  return `${confessionId}:${reaction}`;
+}
+
 export default function MadConfessions() {
   const [items, setItems] = useState<Confession[]>([]);
   const [text, setText] = useState("");
@@ -88,6 +125,8 @@ export default function MadConfessions() {
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>("new");
+  const [cooldownLeft, setCooldownLeft] = useState(0);
+  const [reactedMap, setReactedMapState] = useState<Record<string, true>>({});
 
   async function load(silent = false) {
     try {
@@ -108,13 +147,32 @@ export default function MadConfessions() {
   }
 
   useEffect(() => {
+    setReactedMapState(getReactionMap());
+
+    const syncCooldown = () => {
+      const lastPostAt = getLastPostAt();
+      const remaining = Math.max(
+        0,
+        POST_COOLDOWN_MS - (Date.now() - lastPostAt)
+      );
+      setCooldownLeft(remaining);
+    };
+
+    syncCooldown();
     void load();
 
-    const interval = window.setInterval(() => {
+    const refreshInterval = window.setInterval(() => {
       void load(true);
     }, 25000);
 
-    return () => window.clearInterval(interval);
+    const cooldownInterval = window.setInterval(() => {
+      syncCooldown();
+    }, 1000);
+
+    return () => {
+      window.clearInterval(refreshInterval);
+      window.clearInterval(cooldownInterval);
+    };
   }, []);
 
   async function submit() {
@@ -129,6 +187,15 @@ export default function MadConfessions() {
 
     if (clean.length > 240) {
       setError("Too long (max 240 chars)");
+      return;
+    }
+
+    const lastPostAt = getLastPostAt();
+    const remaining = Math.max(0, POST_COOLDOWN_MS - (Date.now() - lastPostAt));
+
+    if (remaining > 0) {
+      setError(`Cooldown active. Wait ${Math.ceil(remaining / 1000)}s.`);
+      setCooldownLeft(remaining);
       return;
     }
 
@@ -153,6 +220,10 @@ export default function MadConfessions() {
         setItems((prev) => [json.item, ...prev]);
         setText("");
         setSortMode("new");
+
+        const now = Date.now();
+        setLastPostAt(now);
+        setCooldownLeft(POST_COOLDOWN_MS);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Post failed");
@@ -162,6 +233,22 @@ export default function MadConfessions() {
   }
 
   async function react(id: string, key: ReactionKey) {
+    const storageKey = reactionStorageKey(id, key);
+
+    if (reactedMap[storageKey]) {
+      setError("You already used that reaction on this confession.");
+      return;
+    }
+
+    const nextReactionMap = {
+      ...reactedMap,
+      [storageKey]: true,
+    };
+
+    setReactedMapState(nextReactionMap);
+    setReactionMap(nextReactionMap);
+    setError(null);
+
     setItems((prev) =>
       prev.map((c) =>
         c.id === id
@@ -187,9 +274,11 @@ export default function MadConfessions() {
 
       if (res.ok && json?.item) {
         setItems((prev) => prev.map((c) => (c.id === id ? json.item : c)));
+      } else {
+        setError("Reaction failed. Try again.");
       }
     } catch {
-      // keep optimistic update
+      setError("Reaction failed. Try again.");
     }
   }
 
@@ -227,6 +316,9 @@ export default function MadConfessions() {
       .slice(0, 3);
   }, [items]);
 
+  const cooldownLabel =
+    cooldownLeft > 0 ? `${Math.ceil(cooldownLeft / 1000)}s cooldown` : "Ready";
+
   return (
     <section className="mt-8 animate-fadeUp sm:mt-10">
       <div className="rounded-[28px] border border-white/10 bg-black/30 p-4 shadow-2xl backdrop-blur-xl sm:p-6">
@@ -252,6 +344,10 @@ export default function MadConfessions() {
 
             <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
               Auto-refresh on
+            </div>
+
+            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+              {cooldownLabel}
             </div>
           </div>
         </div>
@@ -311,10 +407,14 @@ export default function MadConfessions() {
             <button
               type="button"
               onClick={submit}
-              disabled={posting}
+              disabled={posting || cooldownLeft > 0}
               className="rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm transition hover:bg-white/15 disabled:opacity-50"
             >
-              {posting ? "Posting…" : "Post"}
+              {posting
+                ? "Posting…"
+                : cooldownLeft > 0
+                ? `Wait ${Math.ceil(cooldownLeft / 1000)}s`
+                : "Post"}
             </button>
           </div>
 
@@ -418,16 +518,19 @@ export default function MadConfessions() {
                     <ReactionButton
                       label="Same"
                       count={c.reactions.same}
+                      disabled={!!reactedMap[reactionStorageKey(c.id, "same")]}
                       onClick={() => react(c.id, "same")}
                     />
                     <ReactionButton
                       label="LOL"
                       count={c.reactions.lol}
+                      disabled={!!reactedMap[reactionStorageKey(c.id, "lol")]}
                       onClick={() => react(c.id, "lol")}
                     />
                     <ReactionButton
                       label="🤝"
                       count={c.reactions.handshake}
+                      disabled={!!reactedMap[reactionStorageKey(c.id, "handshake")]}
                       onClick={() => react(c.id, "handshake")}
                     />
                   </div>
@@ -445,16 +548,24 @@ function ReactionButton({
   label,
   count,
   onClick,
+  disabled = false,
 }: {
   label: string;
   count: number;
   onClick: () => void;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs transition hover:bg-white/10"
+      disabled={disabled}
+      className={[
+        "flex items-center gap-2 rounded-full border px-3 py-1 text-xs transition",
+        disabled
+          ? "border-white/5 bg-white/[0.03] text-white/35 opacity-70"
+          : "border-white/10 bg-white/5 hover:bg-white/10",
+      ].join(" ")}
     >
       {label}
       <span className="rounded bg-white/10 px-2">{count}</span>
