@@ -1,212 +1,255 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import MadConfessions from "./components/MadConfessions";
+import React, { useEffect, useMemo, useState } from "react";
 
-const LINKS = {
-  telegram: "https://t.me/MadOfficalChannel",
-  x: "https://x.com/madrichclub_",
-  instagram: "https://www.instagram.com/madrichclub/",
-  tiktok: "https://www.tiktok.com/@madrichclub",
-} as const;
+type ReactionKey = "same" | "lol" | "handshake";
 
-function InternalPillButton({
-  href,
-  children,
-  primary = false,
-}: {
-  href: string;
-  children: React.ReactNode;
-  primary?: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={[
-        "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition duration-200",
-        primary
-          ? "border border-red-500/30 bg-red-500 text-white hover:scale-[1.01] hover:bg-red-400"
-          : "border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] text-white hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]",
-      ].join(" ")}
-    >
-      {children}
-    </Link>
-  );
+type Confession = {
+  id: string;
+  text: string;
+  createdAt: number;
+  reactions: Record<ReactionKey, number>;
+};
+
+function timeAgo(ms: number) {
+  const s = Math.floor((Date.now() - ms) / 1000);
+  if (s < 10) return "just now";
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 48) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
 }
 
-function SocialIcon({
-  href,
-  src,
-  alt,
-}: {
-  href: string;
-  src: string;
-  alt: string;
-}) {
+export default function MadConfessions() {
+  const [items, setItems] = useState<Confession[]>([]);
+  const [text, setText] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [posting, setPosting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function load() {
+    setError(null);
+    setLoading(true);
+    try {
+      const r = await fetch("/api/confessions", { cache: "no-store" });
+      const j = await r.json();
+      setItems(Array.isArray(j?.confessions) ? j.confessions : []);
+    } catch (e: any) {
+      setError(e?.message || "Failed to load confessions");
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function submit() {
+    const clean = (text || "").replace(/\s+/g, " ").trim();
+    if (clean.length < 4) {
+      setError("Confession too short (min 4 chars).");
+      return;
+    }
+
+    setPosting(true);
+    setError(null);
+
+    try {
+      const r = await fetch("/api/confessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: clean }),
+      });
+
+      const j = await r.json();
+
+      if (!r.ok) {
+        setError(j?.error || "Failed to post confession");
+        return;
+      }
+
+      if (j?.item) {
+        setItems((prev) => [j.item as Confession, ...prev]);
+        setText("");
+      } else {
+        await load();
+        setText("");
+      }
+    } catch (e: any) {
+      setError(e?.message || "Failed to post confession");
+    } finally {
+      setPosting(false);
+    }
+  }
+
+  async function react(id: string, key: ReactionKey) {
+    setItems((prev) =>
+      prev.map((c) =>
+        c.id === id
+          ? {
+              ...c,
+              reactions: {
+                ...c.reactions,
+                [key]: Math.max(0, (c.reactions?.[key] ?? 0) + 1),
+              },
+            }
+          : c
+      )
+    );
+
+    try {
+      const r = await fetch("/api/confessions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, reaction: key, delta: 1 }),
+      });
+
+      const j = await r.json();
+
+      if (!r.ok || !j?.item) {
+        await load();
+        return;
+      }
+
+      setItems((prev) =>
+        prev.map((c) => (c.id === id ? (j.item as Confession) : c))
+      );
+    } catch {
+      await load();
+    }
+  }
+
+  const count = items.length;
+
+  const headerChip = useMemo(() => {
+    if (loading) return "Loading…";
+    return `${count} confessions`;
+  }, [loading, count]);
+
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      aria-label={alt}
-      title={alt}
-      className="block h-14 w-14 shrink-0 transition-transform duration-300 hover:scale-110"
-    >
-      <Image
-        src={src}
-        alt={alt}
-        width={56}
-        height={56}
-        className="h-full w-full object-contain"
-      />
-    </a>
-  );
-}
-
-export default function Home() {
-  return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.10),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.08),transparent_30%)]" />
-        <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70" />
-      </div>
-
-      <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8">
-        <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-          <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="relative flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
-
-              <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/40">
-                CONTROLLED CHAOS
-              </p>
-
-              <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.5rem] lg:text-[6rem]">
-                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
-                  STOP
-                </span>
-                <br />
-                TRADING
-                <br />
-                NOISE.
-                <br />
-                START
-                <br />
-                BEING{" "}
-                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
-                  $MAD
-                </span>{" "}
-                <span className="text-green-400 drop-shadow-[0_0_18px_rgba(0,255,120,0.6)]">
-                  RICH
-                </span>
-                .
-              </h1>
-
-              <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                Control the chaos. Or it controls you.
-              </p>
-
-              <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
-                <div className="flex flex-wrap gap-3">
-                  <InternalPillButton href="/mad-mind" primary>
-                    Enter MAD Mind
-                  </InternalPillButton>
-
-                  <a
-                    href="#confessions"
-                    className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] px-5 py-3 text-sm font-black text-white transition duration-200 hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]"
-                  >
-                    View Confessions
-                  </a>
-                </div>
-
-                <div className="flex w-full max-w-md items-center justify-between">
-                  <SocialIcon
-                    href={LINKS.telegram}
-                    src="/logos/MAD-TELEGRAM.png"
-                    alt="Telegram"
-                  />
-                  <SocialIcon
-                    href={LINKS.x}
-                    src="/logos/MAD-X-LOGO.png"
-                    alt="X"
-                  />
-                  <SocialIcon
-                    href={LINKS.instagram}
-                    src="/logos/MAD-INSTAGRAM-LOGO.png"
-                    alt="Instagram"
-                  />
-                  <SocialIcon
-                    href={LINKS.tiktok}
-                    src="/logos/MAD-TIKTOK-LOGO.png"
-                    alt="TikTok"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-5 sm:p-7 lg:p-10">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.14),transparent_44%)]" />
-
-              <div className="relative w-full max-w-[620px]">
-                <div className="absolute -inset-8 rounded-[42px] bg-red-500/10 blur-3xl" />
-
-                <div className="relative rounded-[34px] border border-white/10 bg-black/60 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.6)] sm:p-5">
-                  <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black">
-                    <video
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="aspect-[16/10] w-full object-cover"
-                    >
-                      <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-                    </video>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="confessions"
-          className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10"
-        >
-          <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-                MAD Confessions
-              </p>
-
-              <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-                Proof everyone’s a little{" "}
-                <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.5)]">
-                  $MAD
-                </span>
-                .
-              </h2>
-
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-                Anonymous thoughts. Real pressure. Real people. This is where
-                the movement talks back.
-              </p>
-            </div>
-
-            <div className="shrink-0">
-              <InternalPillButton href="/mad-mind">
-                Explore MAD AI
-              </InternalPillButton>
-            </div>
-          </div>
-
+    <section className="mt-8 animate-fadeUp sm:mt-10">
+      <div className="rounded-[28px] border border-white/10 bg-black/30 p-4 shadow-2xl backdrop-blur-xl sm:rounded-3xl sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <MadConfessions />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/50 sm:text-xs sm:tracking-[0.35em]">
+              MAD CONFESSIONS
+            </p>
+            <h2 className="mt-3 text-2xl font-black leading-tight sm:text-3xl">
+              Say it. Don’t hold it.
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-white/70 sm:text-base">
+              Short. Anonymous vibe. Pure $MAD energy.
+            </p>
           </div>
-        </section>
+
+          <div className="shrink-0 self-start rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80">
+            {headerChip}
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-col gap-3">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={3}
+            placeholder="Confess what made you $MAD today…"
+            className="w-full resize-none rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-[14px] text-white/90 placeholder:text-white/35 outline-none focus:border-white/20 sm:text-sm"
+          />
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-white/40">Tip: keep it under 240 chars.</p>
+
+            <button
+              onClick={submit}
+              disabled={posting}
+              className="w-full rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/15 disabled:opacity-50 sm:w-auto"
+            >
+              {posting ? "Posting…" : "Post Confession"}
+            </button>
+          </div>
+
+          {error ? (
+            <div className="mt-2 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              {error}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="mt-6 grid gap-4">
+          {loading ? (
+            <div className="rounded-2xl border border-white/10 bg-black/25 p-4 text-sm text-white/60">
+              Loading confessions…
+            </div>
+          ) : items.length === 0 ? (
+            <div className="rounded-2xl border border-white/10 bg-black/25 p-4 text-sm text-white/60">
+              No confessions yet. Be the first 😤
+            </div>
+          ) : (
+            items.map((c) => (
+              <div
+                key={c.id}
+                className="w-full min-w-0 rounded-2xl border border-white/10 bg-black/25 p-4 sm:p-5"
+              >
+                <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                  <p className="min-w-0 break-words whitespace-pre-wrap text-[14px] leading-6 text-white/90 sm:text-sm sm:leading-7">
+                    {c.text}
+                  </p>
+
+                  <span className="shrink-0 text-xs text-white/40 sm:pt-0.5">
+                    {timeAgo(c.createdAt)}
+                  </span>
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <ReactionButton
+                    label="Same"
+                    count={c.reactions?.same ?? 0}
+                    onClick={() => react(c.id, "same")}
+                  />
+                  <ReactionButton
+                    label="LOL"
+                    count={c.reactions?.lol ?? 0}
+                    onClick={() => react(c.id, "lol")}
+                  />
+                  <ReactionButton
+                    label="🤝"
+                    count={c.reactions?.handshake ?? 0}
+                    onClick={() => react(c.id, "handshake")}
+                  />
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
-    </div>
+    </section>
+  );
+}
+
+function ReactionButton({
+  label,
+  count,
+  onClick,
+}: {
+  label: string;
+  count: number;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="inline-flex min-w-0 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[13px] font-semibold text-white/80 transition hover:bg-white/10 sm:text-xs"
+      type="button"
+    >
+      <span>{label}</span>
+      <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-white/80">
+        {count}
+      </span>
+    </button>
   );
 }
