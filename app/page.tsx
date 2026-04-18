@@ -5,7 +5,7 @@ import Link from "next/link";
 import MadConfessions from "./components/MadConfessions";
 
 const LINKS = {
-  telegram: "https://t.me/MadOfficalChannel",
+  telegram: "https://t.me/MadOfficialChannel",
   x: "https://x.com/madrichclub_",
   instagram: "https://www.instagram.com/madrichclub/",
   tiktok: "https://www.tiktok.com/@madrichclub",
@@ -61,16 +61,24 @@ function SocialIcon({
       rel="noreferrer"
       aria-label={alt}
       title={alt}
-      className="block h-14 w-14 shrink-0 transition-transform duration-300 hover:scale-110"
+      className="group flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 transition duration-300 hover:scale-110 hover:border-white/20 hover:bg-white/10"
     >
       <Image
         src={src}
         alt={alt}
-        width={56}
-        height={56}
-        className="h-full w-full object-contain"
+        width={28}
+        height={28}
+        className="h-7 w-7 object-contain"
       />
     </a>
+  );
+}
+
+function StatChip({ label }: { label: string }) {
+  return (
+    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45 sm:text-xs">
+      {label}
+    </span>
   );
 }
 
@@ -116,7 +124,8 @@ export default function Home() {
               </h1>
 
               <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                Most people panic. You don’t have to.
+                Most people panic. You don’t have to. $MAD is about staying clear,
+                disciplined, and sharp when everyone else loses control.
               </p>
 
               <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
@@ -127,7 +136,7 @@ export default function Home() {
                   </SecondaryAnchor>
                 </div>
 
-                <div className="flex w-full max-w-md items-center justify-between">
+                <div className="flex w-full max-w-md items-center gap-4">
                   <SocialIcon
                     href={LINKS.telegram}
                     src="/logos/MAD-TELEGRAM.png"
@@ -150,16 +159,10 @@ export default function Home() {
                   />
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/45 sm:text-xs">
-                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                    Real People
-                  </span>
-                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                    Live Reactions
-                  </span>
-                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                    Top Ranked
-                  </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <StatChip label="Real People" />
+                  <StatChip label="Live Reactions" />
+                  <StatChip label="Top Ranked" />
                 </div>
               </div>
             </div>
@@ -178,10 +181,22 @@ export default function Home() {
                       muted
                       loop
                       playsInline
+                      preload="auto"
                       className="aspect-[16/10] w-full object-cover"
                     >
                       <source src="/loops/bullish-mad.mp4" type="video/mp4" />
                     </video>
+                  </div>
+
+                  <div className="mt-4 rounded-[20px] border border-white/10 bg-white/[0.03] p-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/40">
+                      Why it matters
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-white/62">
+                      This is not about panic. It is about pressure, discipline,
+                      and learning how to move with control while everyone else
+                      reacts emotionally.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -210,16 +225,10 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="shrink-0 flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45 sm:text-xs">
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                Trending
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                Most Liked
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                Live
-              </span>
+            <div className="shrink-0 flex flex-wrap gap-2">
+              <StatChip label="Trending" />
+              <StatChip label="Most Liked" />
+              <StatChip label="Live" />
             </div>
           </div>
 
