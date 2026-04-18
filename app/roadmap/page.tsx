@@ -265,27 +265,48 @@ function TimelineCard({ phase, index }: { phase: Phase; index: number }) {
 
 function ProgressStrip() {
   const items = [
-    "Website Completed",
-    "MAD Mind Completed",
-    "Confessions Completed",
-    "400M Burned Completed",
-    "MAD AI Building",
-    "Stickers Completed",
-    "Clothing Not Yet",
-    "800M Burn Goal",
-  ];
+    { type: "logo" as const },
+    { type: "text" as const, label: "Website Completed", done: true },
+    { type: "text" as const, label: "MAD Mind Completed", done: true },
+    { type: "text" as const, label: "Confessions Completed", done: true },
+    { type: "text" as const, label: "400M Burned Completed", done: true },
+    { type: "text" as const, label: "MAD AI Building", done: false },
+    { type: "text" as const, label: "Stickers Completed", done: true },
+    { type: "text" as const, label: "Clothing Not Yet", done: false },
+    { type: "text" as const, label: "800M Burn Goal", done: false },
+  ] as const;
+
+  const repeated = [...items, ...items, ...items];
 
   return (
     <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(90deg,rgba(70,14,14,0.95),rgba(31,28,44,0.95))] px-4 py-6 sm:px-6">
       <div className="logo-marquee flex w-max items-center gap-4">
-        {[...items, ...items, ...items].map((item, index) => (
-          <div
-            key={`${item}-${index}`}
-            className="rounded-full border border-white/10 bg-white/[0.05] px-5 py-3 text-sm font-black text-white/90"
-          >
-            {item}
-          </div>
-        ))}
+        {repeated.map((item, index) =>
+          item.type === "logo" ? (
+            <div
+              key={`logo-${index}`}
+              className="flex h-[54px] min-w-[54px] items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-3 shadow-[0_0_18px_rgba(255,0,0,0.18)]"
+            >
+              <img
+                src="/mad.png"
+                alt="$MAD logo"
+                className="h-10 w-10 rounded-full object-contain"
+              />
+            </div>
+          ) : (
+            <div
+              key={`${item.label}-${index}`}
+              className={cn(
+                "rounded-full border px-5 py-3 text-sm font-black",
+                item.done
+                  ? "border-emerald-400/20 bg-emerald-500/10 text-white"
+                  : "border-red-500/20 bg-red-500/10 text-white",
+              )}
+            >
+              {item.label}
+            </div>
+          ),
+        )}
       </div>
     </div>
   );
