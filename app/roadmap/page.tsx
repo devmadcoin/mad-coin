@@ -10,7 +10,7 @@ const LINKS = {
   dex: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs",
 } as const;
 
-type PhaseStatus = "Live" | "Building" | "Next";
+type PhaseStatus = "Completed" | "Building" | "Next";
 
 type Phase = {
   phase: string;
@@ -23,65 +23,67 @@ type Phase = {
 const PHASES: Phase[] = [
   {
     phase: "01",
-    title: "Identity Locked",
-    status: "Live",
+    title: "Brand + Foundation",
+    status: "Completed",
     description:
-      "$MAD began by building identity first: controlled chaos, emotional discipline, and pressure-tested mindset.",
+      "$MAD started by building the identity, website, and public-facing foundation first.",
     bullets: [
       "Stay $MAD philosophy established",
-      "Brand identity and visual language live",
+      "Brand identity and visual language completed",
       "Core website launched",
-      "Community-facing signal started",
+      "Public social channels connected",
     ],
   },
   {
     phase: "02",
-    title: "Proof Layer Online",
-    status: "Live",
+    title: "Proof + Community",
+    status: "Completed",
     description:
-      "The project moved beyond a meme page by creating visible proof, exchange visibility, and public interaction.",
+      "The project moved past just being a meme page by creating visible proof and public interaction.",
     bullets: [
       "MAD Confessions live",
       "Exchange / tracker visibility live",
-      "Retail-friendlier proof sections",
-      "Social ecosystem connected",
+      "Community-facing proof sections completed",
+      "400M tokens burned completed",
     ],
   },
   {
     phase: "03",
-    title: "MAD Mind + Tech",
+    title: "Tech + Expansion",
     status: "Building",
     description:
-      "$MAD is now building a real tech layer with interactive behavior, identity loops, and stronger retention mechanics.",
+      "$MAD is now building the next layer: deeper tech, stronger retention loops, and broader ecosystem growth.",
     bullets: [
       "MAD Mind live",
-      "Interactive system expansion",
-      "Shareable loop mechanics",
-      "MAD AI build phase active",
+      "MAD AI currently building",
+      "MAD merch stickers completed",
+      "MAD merch clothing not launched yet",
     ],
   },
   {
     phase: "04",
-    title: "Expansion Mode",
+    title: "Big Goal",
     status: "Next",
     description:
-      "The next stage is deeper ecosystem growth through game, merch, collectibles, and stronger utility loops.",
+      "The long-term mission is to keep tightening supply, expand the ecosystem, and push the brand further.",
     bullets: [
+      "800M total burn goal",
       "Game direction",
-      "Merch and collectible layer",
-      "Longer retention mechanics",
+      "Clothing rollout later",
       "Broader ecosystem expansion",
     ],
   },
 ];
 
 const STATUS = [
-  { label: "Website", value: "Live", tone: "red" },
-  { label: "MAD Mind", value: "Live", tone: "green" },
-  { label: "Confessions", value: "Live", tone: "red" },
-  { label: "MAD AI", value: "Building", tone: "white" },
-  { label: "Game", value: "Next", tone: "white" },
-  { label: "Merch", value: "Next", tone: "white" },
+  { label: "Website", value: "Completed", tone: "green" },
+  { label: "MAD Mind", value: "Completed", tone: "green" },
+  { label: "Confessions", value: "Completed", tone: "green" },
+  { label: "400M Burned", value: "Completed", tone: "green" },
+  { label: "MAD AI", value: "Building", tone: "red" },
+  { label: "Stickers", value: "Completed", tone: "green" },
+  { label: "Clothing", value: "Not Yet", tone: "red" },
+  { label: "800M Goal", value: "Target", tone: "red" },
 ] as const;
 
 function cn(...classes: Array<string | false | null | undefined>) {
@@ -119,11 +121,11 @@ function StatusPill({ status }: { status: PhaseStatus }) {
     <span
       className={cn(
         "rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em]",
-        status === "Live" &&
+        status === "Completed" &&
           "border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
         status === "Building" &&
           "border-red-500/20 bg-red-500/10 text-red-100",
-        status === "Next" && "border-white/10 bg-white/5 text-white/65",
+        status === "Next" && "border-red-500/20 bg-red-500/10 text-red-100",
       )}
     >
       {status}
@@ -184,15 +186,14 @@ function QuickStatusCard({
 }: {
   label: string;
   value: string;
-  tone: "red" | "green" | "white";
+  tone: "red" | "green";
 }) {
   return (
     <div
       className={cn(
         "rounded-[24px] border p-5 transition duration-300 hover:scale-[1.01]",
-        tone === "red" && "border-red-500/20 bg-red-500/10",
         tone === "green" && "border-emerald-400/20 bg-emerald-500/10",
-        tone === "white" && "border-white/10 bg-white/[0.03]",
+        tone === "red" && "border-red-500/20 bg-red-500/10",
       )}
     >
       <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
@@ -264,14 +265,14 @@ function TimelineCard({ phase, index }: { phase: Phase; index: number }) {
 
 function ProgressStrip() {
   const items = [
-    "Identity Live",
-    "Website Live",
-    "Confessions Live",
-    "MAD Mind Live",
+    "Website Completed",
+    "MAD Mind Completed",
+    "Confessions Completed",
+    "400M Burned Completed",
     "MAD AI Building",
-    "Game Next",
-    "Merch Next",
-    "Ecosystem Expanding",
+    "Stickers Completed",
+    "Clothing Not Yet",
+    "800M Burn Goal",
   ];
 
   return (
@@ -317,10 +318,10 @@ function AnimatedGraph() {
         <div className="mb-4 flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
-              Pressure Chart
+              Progress Chart
             </p>
             <p className="mt-2 text-xl font-black text-white">
-              Panic down. Signal up.
+              Panic down. Progress up.
             </p>
           </div>
 
@@ -381,7 +382,7 @@ function AnimatedGraph() {
           </div>
 
           <div className="absolute bottom-4 right-4 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200">
-            Strong signal
+            Strong build
           </div>
         </div>
       </div>
@@ -497,7 +498,7 @@ export default function RoadmapPage() {
                 <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] sm:text-[4.8rem] lg:text-[6rem]">
                   BUILD
                   <br />
-                  SIGNAL.
+                  PROGRESS.
                   <br />
                   SURVIVE
                   <br />
@@ -573,16 +574,16 @@ export default function RoadmapPage() {
 
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               <LoreCard
-                title="Chaos"
-                text="Chaos is real. Markets move, people panic, and pressure never asks permission."
+                title="Pressure"
+                text="Pressure is real. Markets move, people panic, and most fold too early."
               />
               <LoreCard
-                title="Discipline"
-                text="Most people react. Very few decide. That difference changes everything."
+                title="Control"
+                text="The difference is control. Stronger people do not panic first."
               />
               <LoreCard
                 title="Identity"
-                text="The goal is not temporary motivation. The goal is becoming harder to break."
+                text="The goal is to build something stronger than hype: a real identity and ecosystem."
               />
             </div>
           </section>
@@ -615,7 +616,7 @@ export default function RoadmapPage() {
             <SectionHeading
               eyebrow="Next Move"
               title="Still early. Still building."
-              body="The mission is simple: turn pressure into signal, signal into identity, and identity into a real ecosystem."
+              body="The mission is simple: turn pressure into progress, progress into identity, and identity into a real ecosystem."
               center
             />
 
