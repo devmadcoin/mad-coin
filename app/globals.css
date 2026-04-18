@@ -10,8 +10,11 @@
 
   --bg: #050505;
   --bg-soft: #0b0b0b;
+  --bg-deep: #030303;
+
   --bg-panel: rgba(255, 255, 255, 0.035);
   --bg-panel-strong: rgba(255, 255, 255, 0.055);
+  --bg-panel-luxury: rgba(255, 255, 255, 0.065);
 
   --text: #ffffff;
   --text-soft: rgba(255, 255, 255, 0.7);
@@ -19,6 +22,8 @@
 
   --line: rgba(255, 255, 255, 0.1);
   --line-strong: rgba(255, 255, 255, 0.16);
+  --line-red: rgba(239, 68, 68, 0.2);
+  --line-green: rgba(34, 197, 94, 0.2);
 
   --red: #ef4444;
   --red-soft: rgba(239, 68, 68, 0.16);
@@ -32,12 +37,14 @@
 
   --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.22);
   --shadow-panel: 0 18px 60px rgba(0, 0, 0, 0.35);
+  --shadow-heavy: 0 28px 120px rgba(0, 0, 0, 0.46);
   --shadow-red: 0 0 24px rgba(255, 0, 0, 0.16);
 
   --radius-sm: 14px;
   --radius-md: 22px;
   --radius-lg: 30px;
   --radius-xl: 38px;
+  --radius-2xl: 42px;
 }
 
 /* =========================================
@@ -149,6 +156,16 @@
   border-radius: var(--radius-lg);
 }
 
+.panel-luxury {
+  border: 1px solid var(--line-strong);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+  box-shadow: var(--shadow-heavy);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: var(--radius-2xl);
+}
+
 .overscroll-none {
   overscroll-behavior: none;
 }
@@ -185,6 +202,16 @@
   50% {
     opacity: 1;
     transform: scale(1.015);
+  }
+}
+
+@keyframes floatUp {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
   }
 }
 
@@ -229,6 +256,20 @@
   }
 }
 
+@keyframes luxuryGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 16px 50px rgba(0, 0, 0, 0.32),
+      0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow:
+      0 18px 60px rgba(0, 0, 0, 0.38),
+      0 0 26px rgba(255, 255, 255, 0.04);
+  }
+}
+
 .animate-fadeUp {
   animation: fadeUp 700ms ease-out both;
 }
@@ -243,6 +284,14 @@
 
 .animate-borderGlow {
   animation: borderGlow 2.8s ease-in-out infinite;
+}
+
+.animate-floatUp {
+  animation: floatUp 3.2s ease-in-out infinite;
+}
+
+.animate-luxuryGlow {
+  animation: luxuryGlow 4s ease-in-out infinite;
 }
 
 /* =========================================
@@ -363,6 +412,17 @@
   -webkit-backdrop-filter: blur(14px);
 }
 
+.glass-luxury {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.018));
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.34),
+    0 0 18px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
 .text-glow-red {
   text-shadow: 0 0 18px rgba(255, 0, 0, 0.35);
 }
@@ -381,6 +441,12 @@
     0 0 20px rgba(255, 0, 0, 0.08);
 }
 
+.border-glow-green {
+  box-shadow:
+    inset 0 0 0 1px rgba(34, 197, 94, 0.1),
+    0 0 18px rgba(34, 197, 94, 0.08);
+}
+
 .card-hover-lift {
   transition:
     transform 220ms ease,
@@ -394,6 +460,49 @@
   border-color: rgba(255, 255, 255, 0.18);
   background-color: rgba(255, 255, 255, 0.06);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+}
+
+.card-hover-luxury {
+  transition:
+    transform 260ms ease,
+    border-color 260ms ease,
+    background-color 260ms ease,
+    box-shadow 260ms ease,
+    filter 260ms ease;
+}
+
+.card-hover-luxury:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.18);
+  background-color: rgba(255, 255, 255, 0.065);
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.34),
+    0 0 22px rgba(255, 255, 255, 0.03);
+  filter: saturate(1.05);
+}
+
+.campaign-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.campaign-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.campaign-frame::after {
+  content: "";
+  position: absolute;
+  inset: auto -15% -40% -15%;
+  height: 55%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.06), transparent 60%);
+  pointer-events: none;
 }
 
 /* =========================================
@@ -457,6 +566,8 @@
   .animate-fadeIn,
   .animate-softPulse,
   .animate-borderGlow,
+  .animate-floatUp,
+  .animate-luxuryGlow,
   .logo-marquee,
   .logo-marquee-slow,
   .mad-progress-fill {
