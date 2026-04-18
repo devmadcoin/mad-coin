@@ -56,6 +56,7 @@ type ChatMessage = {
   outputs?: BotVariants;
   meta?: BotMeta;
   selectedStyle?: StyleTab;
+  isTyping?: boolean;
 };
 
 type UserProfile = {
@@ -122,16 +123,16 @@ type ApiResponse = {
 };
 
 const STORAGE_KEYS = {
-  messages: "madbot_messages_v9",
-  profile: "madbot_profile_v9",
-  session: "madbot_session_v9",
-  cookLevel: "madbot_cook_level_v9",
-  daily: "madbot_daily_v9",
-  runtimeSessionId: "madbot_runtime_session_id_v9",
-  preferredStyle: "madbot_preferred_style_v9",
+  messages: "madbot_messages_v10",
+  profile: "madbot_profile_v10",
+  session: "madbot_session_v10",
+  cookLevel: "madbot_cook_level_v10",
+  daily: "madbot_daily_v10",
+  runtimeSessionId: "madbot_runtime_session_id_v10",
+  preferredStyle: "madbot_preferred_style_v10",
 };
 
-const MAX_HISTORY = 60;
+const MAX_HISTORY = 80;
 const MAX_LAST_INPUTS = 10;
 const MAX_LEARNED_WEAKSPOTS = 12;
 
@@ -249,11 +250,19 @@ function scoreInput(input: string) {
   let discipline = 0;
   let fear = 0;
 
-  if (/should i|what if|not sure|maybe|i think|i guess|can i|could i|do you think/.test(text)) {
+  if (
+    /should i|what if|not sure|maybe|i think|i guess|can i|could i|do you think/.test(
+      text,
+    )
+  ) {
     hesitation += 2;
   }
 
-  if (/rich|get rich|money fast|viral|blow up|win big|moon|100x|pump|profit/.test(text)) {
+  if (
+    /rich|get rich|money fast|viral|blow up|win big|moon|100x|pump|profit/.test(
+      text,
+    )
+  ) {
     greed += 2;
   }
 
@@ -383,12 +392,14 @@ function updateProfileFromInput(prev: UserProfile, input: string): UserProfile {
   const repeated = prev.lastInputs.includes(normalized);
   const weakSpot = buildWeakSpotLabel(input);
 
-  const nextWeakSpots = Array.from(new Set([weakSpot, ...prev.learnedWeakSpots])).slice(
-    0,
-    MAX_LEARNED_WEAKSPOTS,
-  );
+  const nextWeakSpots = Array.from(
+    new Set([weakSpot, ...prev.learnedWeakSpots]),
+  ).slice(0, MAX_LEARNED_WEAKSPOTS);
 
-  const nextLastInputs = [normalized, ...prev.lastInputs].slice(0, MAX_LAST_INPUTS);
+  const nextLastInputs = [normalized, ...prev.lastInputs].slice(
+    0,
+    MAX_LAST_INPUTS,
+  );
 
   return {
     ...prev,
@@ -419,7 +430,13 @@ function calcSurvivorScore(profile: UserProfile, cookLevel: CookLevel) {
     profile.fearScore;
 
   const levelBonus =
-    cookLevel === "mild" ? 0 : cookLevel === "mean" ? 20 : cookLevel === "crashout" ? 45 : 80;
+    cookLevel === "mild"
+      ? 0
+      : cookLevel === "mean"
+        ? 20
+        : cookLevel === "crashout"
+          ? 45
+          : 80;
 
   return (
     profile.survivedResponses * 12 +
@@ -501,8 +518,14 @@ function updateDailyProgress(
     completed: { ...current.completed },
   };
 
-  next.progress.no_repeats_5 = Math.max(next.progress.no_repeats_5, profile.noRepeatStreak);
-  next.progress.survive_7 = Math.max(next.progress.survive_7, profile.survivedResponses);
+  next.progress.no_repeats_5 = Math.max(
+    next.progress.no_repeats_5,
+    profile.noRepeatStreak,
+  );
+  next.progress.survive_7 = Math.max(
+    next.progress.survive_7,
+    profile.survivedResponses,
+  );
   next.progress.earn_respect_1 = Math.max(
     next.progress.earn_respect_1,
     respectedThisTurn ? 1 : profile.respectCount,
@@ -536,7 +559,9 @@ function getMessageDisplayText(message: ChatMessage) {
 
   if (message.outputs) {
     if (style === "safe" && message.outputs.safe) return message.outputs.safe;
-    if (style === "crashout" && message.outputs.crashout) return message.outputs.crashout;
+    if (style === "crashout" && message.outputs.crashout) {
+      return message.outputs.crashout;
+    }
     if (message.outputs.savage) return message.outputs.savage;
   }
 
@@ -592,8 +617,14 @@ async function upsertRemoteScore(entry: Omit<LeaderboardEntry, "id">) {
   if (existing?.id) {
     const mergedScore = Math.max(existing.score ?? 0, entry.score);
     const mergedBestStreak = Math.max(existing.best_streak ?? 0, entry.best_streak);
-    const mergedSurvived = Math.max(existing.survived_responses ?? 0, entry.survived_responses);
-    const mergedRespect = Math.max(existing.respect_count ?? 0, entry.respect_count);
+    const mergedSurvived = Math.max(
+      existing.survived_responses ?? 0,
+      entry.survived_responses,
+    );
+    const mergedRespect = Math.max(
+      existing.respect_count ?? 0,
+      entry.respect_count,
+    );
 
     await supabase
       .from("mad_bot_scores")
@@ -632,18 +663,36 @@ export default function MadMindPage() {
   const [supabaseStatus, setSupabaseStatus] = useState(
     hasSupabase ? "Leaderboard connected" : "Local mode only",
   );
-  const [dailyState, setDailyState] = useState<DailyChallengeState>(createDailyState(todayKey()));
+  const [dailyState, setDailyState] = useState<DailyChallengeState>(
+    createDailyState(todayKey()),
+  );
   const [selectedRoast, setSelectedRoast] = useState<ChatMessage | null>(null);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const introAddedRef = useRef(false);
 
   useEffect(() => {
     const savedMessages = loadJSON<ChatMessage[]>(STORAGE_KEYS.messages, []);
-    const savedProfile = loadJSON<UserProfile>(STORAGE_KEYS.profile, defaultProfile());
-    const savedSession = loadJSON<{ name: string } | null>(STORAGE_KEYS.session, null);
-    const savedCookLevel = loadJSON<CookLevel>(STORAGE_KEYS.cookLevel, "crashout");
-    const savedDaily = loadJSON<DailyChallengeState | null>(STORAGE_KEYS.daily, null);
-    const savedPreferredStyle = loadJSON<StyleTab>(STORAGE_KEYS.preferredStyle, "savage");
+    const savedProfile = loadJSON<UserProfile>(
+      STORAGE_KEYS.profile,
+      defaultProfile(),
+    );
+    const savedSession = loadJSON<{ name: string } | null>(
+      STORAGE_KEYS.session,
+      null,
+    );
+    const savedCookLevel = loadJSON<CookLevel>(
+      STORAGE_KEYS.cookLevel,
+      "crashout",
+    );
+    const savedDaily = loadJSON<DailyChallengeState | null>(
+      STORAGE_KEYS.daily,
+      null,
+    );
+    const savedPreferredStyle = loadJSON<StyleTab>(
+      STORAGE_KEYS.preferredStyle,
+      "savage",
+    );
 
     setMessages(savedMessages);
     setProfile(savedProfile);
@@ -664,6 +713,25 @@ export default function MadMindPage() {
         });
     }
   }, []);
+
+  useEffect(() => {
+    if (!mounted || introAddedRef.current) return;
+    if (messages.length > 0) {
+      introAddedRef.current = true;
+      return;
+    }
+
+    const intro: ChatMessage = {
+      id: uid(),
+      role: "bot",
+      text: "Say one thing you're struggling with.\n\nI'll tell you the truth most people avoid.",
+      ts: Date.now(),
+      selectedStyle: preferredStyle,
+    };
+
+    setMessages([intro]);
+    introAddedRef.current = true;
+  }, [mounted, messages.length, preferredStyle]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -696,15 +764,18 @@ export default function MadMindPage() {
 
   useEffect(() => {
     if (!copyToast) return;
-    const t = setTimeout(() => setCopyToast(""), 1400);
+    const t = setTimeout(() => setCopyToast(""), 1600);
     return () => clearTimeout(t);
   }, [copyToast]);
 
-  const score = useMemo(() => calcSurvivorScore(profile, cookLevel), [profile, cookLevel]);
+  const score = useMemo(
+    () => calcSurvivorScore(profile, cookLevel),
+    [profile, cookLevel],
+  );
   const archetype = useMemo(() => deriveArchetype(profile), [profile]);
 
   const topRoast = useMemo(() => {
-    const botMessages = messages.filter((m) => m.role === "bot");
+    const botMessages = messages.filter((m) => m.role === "bot" && !m.isTyping);
     if (botMessages.length === 0) return null;
 
     return [...botMessages]
@@ -715,7 +786,17 @@ export default function MadMindPage() {
       .sort((a, b) => (b.scoreValue ?? 0) - (a.scoreValue ?? 0))[0];
   }, [messages]);
 
-  const activeChallenges = dailyState.activeKeys.map((key) => CHALLENGE_DEFINITIONS[key]);
+  const activeChallenges = dailyState.activeKeys.map(
+    (key) => CHALLENGE_DEFINITIONS[key],
+  );
+
+  async function refreshLeaderboardWithDelay() {
+    if (!hasSupabase) return;
+    window.setTimeout(async () => {
+      const rows = await fetchLeaderboard();
+      setLeaderboard(rows);
+    }, 700);
+  }
 
   async function saveIdentity(name: string) {
     const cleaned = name.trim() || "Anonymous Player";
@@ -735,8 +816,7 @@ export default function MadMindPage() {
         respect_count: nextProfile.respectCount,
       });
 
-      const rows = await fetchLeaderboard();
-      setLeaderboard(rows);
+      await refreshLeaderboardWithDelay();
     }
   }
 
@@ -744,8 +824,17 @@ export default function MadMindPage() {
     const fresh = defaultProfile();
     fresh.name = username || "Anonymous Player";
     setProfile(fresh);
-    setMessages([]);
+    setMessages([
+      {
+        id: uid(),
+        role: "bot",
+        text: "Say one thing you're struggling with.\n\nI'll tell you the truth most people avoid.",
+        ts: Date.now(),
+        selectedStyle: preferredStyle,
+      },
+    ]);
     setSelectedRoast(null);
+    setDailyState(createDailyState(todayKey()));
     saveJSON(STORAGE_KEYS.profile, fresh);
     saveJSON(STORAGE_KEYS.messages, []);
   }
@@ -760,9 +849,12 @@ export default function MadMindPage() {
   }
 
   async function shareScore() {
-    const text = `${username} got a score of ${score} in ${displayCookLevel(
-      cookLevel,
-    )} mode and is currently: ${archetypeTitle(archetype)}.`;
+    const text = `${username} just got called out by $MAD.
+
+Score: ${score}
+Mode: ${displayCookLevel(cookLevel)}
+
+I wasn't ready for this.`;
 
     if (navigator.share) {
       try {
@@ -799,6 +891,37 @@ export default function MadMindPage() {
     await copyText(card);
   }
 
+  function generateClip(message: ChatMessage) {
+    const text = getMessageDisplayText(message);
+
+    const clip = `🔥 $MAD BOT EXPOSED ME
+
+${text}
+
+Score: ${score}
+Mode: ${displayCookLevel(cookLevel)}
+
+#mad #selfimprovement #mindset #viral`;
+
+    void copyText(clip);
+    setCopyToast("Clip copied");
+  }
+
+  function compareScore(friendScore: number) {
+    if (!Number.isFinite(friendScore)) {
+      setCopyToast("Invalid score");
+      return;
+    }
+
+    if (score > friendScore) {
+      setCopyToast("You beat them.");
+    } else if (score < friendScore) {
+      setCopyToast("They’re ahead of you.");
+    } else {
+      setCopyToast("It’s tied.");
+    }
+  }
+
   function updateMessageStyle(messageId: string, style: StyleTab) {
     setMessages((prev) =>
       prev.map((message) =>
@@ -822,10 +945,10 @@ export default function MadMindPage() {
       refineKind === "harder"
         ? `${baseText}\n\nharder`
         : refineKind === "shorter"
-        ? `${baseText}\n\nmake it shorter`
-        : refineKind === "smarter"
-        ? `${baseText}\n\nmake it smarter`
-        : `${baseText}\n\nturn into tweet`;
+          ? `${baseText}\n\nmake it shorter`
+          : refineKind === "smarter"
+            ? `${baseText}\n\nmake it smarter`
+            : `${baseText}\n\nturn into tweet`;
 
     setInput(refinePrompt);
     await handleSend(refinePrompt);
@@ -855,8 +978,18 @@ export default function MadMindPage() {
     }
     setIsThinking(true);
 
-    const delay = 220 + Math.floor(Math.random() * 280);
-    await new Promise((resolve) => setTimeout(resolve, delay));
+    const typingId = uid();
+    const thinkingMessage: ChatMessage = {
+      id: typingId,
+      role: "bot",
+      text: "...",
+      ts: Date.now(),
+      isTyping: true,
+    };
+
+    setMessages((prev) => [...prev, thinkingMessage]);
+
+    await new Promise((r) => setTimeout(r, 80));
 
     let replyText = "Something broke.";
     let replyOutputs: BotVariants | undefined;
@@ -871,6 +1004,16 @@ This sounds serious. Please contact emergency services now if you might act on t
 Tell one real person near you immediately: "I am not safe alone right now."`;
     } else {
       try {
+        const dynamicCookLevel =
+          nextProfileBase.survivedResponses > 10 && cookLevel === "crashout"
+            ? "demon"
+            : cookLevel;
+
+        if (dynamicCookLevel !== cookLevel) {
+          setCookLevel(dynamicCookLevel);
+          setCopyToast("Brutal mode unlocked");
+        }
+
         const res = await fetch("/api/mad-mind", {
           method: "POST",
           headers: {
@@ -878,7 +1021,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
           },
           body: JSON.stringify({
             message: trimmed,
-            cookLevel,
+            cookLevel: dynamicCookLevel,
             archetype: archetypeNow,
             sessionId,
             username: (nextProfileBase.name || username || "Anonymous Player").trim(),
@@ -934,10 +1077,9 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
         replyOutputs?.crashout ||
         replyText;
 
-      respected =
-        /rare\. accountability|that answer had a spine|that actually sounded disciplined|worth watching/i.test(
-          respectSource.toLowerCase(),
-        );
+      respected = /rare\. accountability|that answer had a spine|that actually sounded disciplined|worth watching/i.test(
+        respectSource.toLowerCase(),
+      );
     }
 
     const finalProfile = respected
@@ -948,12 +1090,20 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
       : nextProfileBase;
 
     const chosenStyle = replyMeta?.favoriteStyle || preferredStyle;
+    const energyPrefix =
+      cookLevel === "demon"
+        ? "Listen carefully.\n\n"
+        : cookLevel === "crashout"
+          ? ""
+          : "";
+
     const visibleReplyText =
-      (replyOutputs && replyOutputs[chosenStyle]) ||
-      replyOutputs?.savage ||
-      replyOutputs?.safe ||
-      replyOutputs?.crashout ||
-      replyText;
+      energyPrefix +
+      ((replyOutputs && replyOutputs[chosenStyle]) ||
+        replyOutputs?.savage ||
+        replyOutputs?.safe ||
+        replyOutputs?.crashout ||
+        replyText);
 
     const botMsg: ChatMessage = {
       id: uid(),
@@ -986,6 +1136,18 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
       setPreferredStyle(replyMeta.favoriteStyle);
     }
 
+    if (respected) {
+      setCopyToast("⚠️ RARE RESPONSE UNLOCKED");
+    } else if (nextScore > score) {
+      setCopyToast(`+${nextScore - score} score`);
+    } else {
+      setCopyToast(`+${Math.floor(Math.random() * 12 + 6)} momentum`);
+    }
+
+    if (finalProfile.streak % 5 === 0 && finalProfile.streak > 0) {
+      setCopyToast(`🔥 ${finalProfile.streak} streak`);
+    }
+
     if (hasSupabase) {
       await upsertRemoteScore({
         player_name: (finalProfile.name || username || "Anonymous Player").trim(),
@@ -996,12 +1158,11 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
         respect_count: finalProfile.respectCount,
       });
 
-      const rows = await fetchLeaderboard();
-      setLeaderboard(rows);
+      await refreshLeaderboardWithDelay();
     }
 
     const newTop = nextMessages
-      .filter((m) => m.role === "bot")
+      .filter((m) => m.role === "bot" && !m.isTyping)
       .map((m) => ({
         ...m,
         scoreValue: roastCardScore(getMessageDisplayText(m), m.respected),
@@ -1010,6 +1171,14 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
     if (newTop && (!topRoast || (newTop.scoreValue ?? 0) > (topRoast.scoreValue ?? 0))) {
       setSelectedRoast(newTop);
+    }
+
+    if (newTop && (newTop.scoreValue ?? 0) > 180) {
+      setSelectedRoast(newTop);
+    }
+
+    if (leaderboard.length > 0 && nextScore > leaderboard[0].score) {
+      setCopyToast("👑 NEW #1 PLAYER");
     }
   }
 
@@ -1045,17 +1214,24 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             <p className="mt-2 max-w-2xl text-sm text-white/65">
               Ask anything. The bot tells you the truth. Most people can’t handle it.
             </p>
+            <p className="mt-3 text-xs text-white/40">
+              Every message reveals your pattern.
+            </p>
+            <p className="mt-2 text-xs text-red-500/70">
+              The longer you stay, the harder it gets.
+            </p>
 
             <div className="mt-4 flex flex-wrap gap-2">
               {(["mild", "mean", "crashout", "demon"] as CookLevel[]).map((level) => (
                 <button
                   key={level}
                   onClick={() => setCookLevel(level)}
-                  className={`rounded-2xl px-4 py-2 text-sm font-bold transition ${
+                  className={cn(
+                    "rounded-2xl px-4 py-2 text-sm font-bold transition",
                     cookLevel === level
                       ? "bg-red-500 text-white"
-                      : "border border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
-                  }`}
+                      : "border border-white/10 bg-white/5 text-white/80 hover:bg-white/10",
+                  )}
                 >
                   {displayCookLevel(level).toUpperCase()}
                 </button>
@@ -1084,8 +1260,8 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                         ? style === "safe"
                           ? "bg-white/15 text-white"
                           : style === "savage"
-                          ? "bg-red-500 text-white"
-                          : "bg-red-800 text-white"
+                            ? "bg-red-500 text-white"
+                            : "bg-red-800 text-white"
                         : "border border-white/10 bg-white/5 text-white/80 hover:bg-white/10",
                     )}
                   >
@@ -1109,7 +1285,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                 className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm outline-none placeholder:text-white/35 focus:border-red-400/50"
               />
 
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => void saveIdentity(username)}
                   className="flex-1 rounded-2xl bg-red-500 px-4 py-3 text-sm font-bold text-white hover:bg-red-400"
@@ -1121,6 +1297,16 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                   className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm font-bold text-white/90 hover:bg-black/50"
                 >
                   Share
+                </button>
+                <button
+                  onClick={() => {
+                    const val = window.prompt("Enter your friend's score");
+                    if (!val) return;
+                    compareScore(Number(val));
+                  }}
+                  className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm font-bold text-white/90 hover:bg-black/50"
+                >
+                  Compare
                 </button>
               </div>
 
@@ -1140,6 +1326,9 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
               <div>
                 <h2 className="text-2xl font-black">{archetypeTitle(archetype)}</h2>
                 <p className="mt-1 text-sm text-white/70">{archetypeDescription(archetype)}</p>
+                <p className="mt-2 text-xs text-white/50">
+                  This profile gets more accurate the more you talk.
+                </p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-right">
                 <div className="text-xs text-white/45">Biggest issue</div>
@@ -1177,6 +1366,9 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                     Live Chat
                   </p>
                   <h2 className="mt-1 text-xl font-bold">Say something. It will respond.</h2>
+                  <p className="mt-2 text-xs text-red-400/80">
+                    Most people quit after 3 messages.
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap gap-2 text-xs">
@@ -1194,6 +1386,15 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                   </span>
                 </div>
               </div>
+              <p className="mt-3 text-xs text-red-300/70">
+                Survive 10 responses without repeating.
+              </p>
+              <p className="mt-1 text-xs text-red-400/80">
+                Break your streak and it resets.
+              </p>
+              <p className="mt-1 text-xs text-yellow-300/70">
+                Top players get remembered.
+              </p>
             </div>
 
             <div className="h-[58vh] overflow-y-auto px-4 py-4 sm:px-6">
@@ -1215,23 +1416,26 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                         message.outputs?.crashout);
 
                     return (
-                      <div key={message.id}>
+                      <div key={message.id} className="animate-fadeUp">
                         <div
-                          className={`max-w-[88%] rounded-3xl px-4 py-3 whitespace-pre-wrap ${
+                          className={cn(
+                            "max-w-[88%] rounded-3xl px-4 py-3 whitespace-pre-wrap",
                             message.role === "user"
                               ? "ml-auto border border-white/10 bg-white/10 text-white"
                               : message.respected
                                 ? "border border-emerald-400/30 bg-emerald-500/10 text-emerald-50"
-                                : "border border-red-500/20 bg-red-500/10 text-red-50"
-                          }`}
+                                : "border border-red-500/20 bg-red-500/10 text-red-50",
+                          )}
                         >
                           <div className="mb-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
                             <span>
                               {message.role === "user"
                                 ? "You"
-                                : message.respected
-                                  ? "Respect"
-                                  : "$MAD Bot"}
+                                : message.isTyping
+                                  ? "$MAD Bot"
+                                  : message.respected
+                                    ? "Respect"
+                                    : "$MAD Bot"}
                             </span>
 
                             {message.role === "bot" && message.meta?.intent ? (
@@ -1261,7 +1465,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                             </div>
                           ) : null}
 
-                          {hasVariants ? (
+                          {hasVariants && !message.isTyping ? (
                             <div className="mb-3 flex flex-wrap gap-2">
                               {(["safe", "savage", "crashout"] as StyleTab[]).map((style) => (
                                 <button
@@ -1286,10 +1490,12 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                             </div>
                           ) : null}
 
-                          <div className="text-sm leading-7 sm:text-[15px]">{displayText}</div>
+                          <div className="text-sm leading-7 sm:text-[15px]">
+                            {message.isTyping ? "thinking..." : displayText}
+                          </div>
                         </div>
 
-                        {message.role === "bot" && (
+                        {message.role === "bot" && !message.isTyping && (
                           <div className="mt-2 flex max-w-[88%] flex-wrap gap-2">
                             <button
                               onClick={() => void copyText(displayText)}
@@ -1308,6 +1514,12 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                               className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
                             >
                               Share score
+                            </button>
+                            <button
+                              onClick={() => generateClip(message)}
+                              className="rounded-full border border-yellow-500/20 bg-yellow-500/10 px-3 py-1 text-xs text-yellow-200 hover:bg-yellow-500/20"
+                            >
+                              Clip
                             </button>
                             <button
                               onClick={() => void refineMessage(message, "harder")}
@@ -1339,15 +1551,6 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                     );
                   })}
 
-                  {isThinking && (
-                    <div className="max-w-[88%] rounded-3xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-red-50">
-                      <div className="mb-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
-                        $MAD Bot
-                      </div>
-                      <div className="text-sm leading-7 sm:text-[15px]">thinking...</div>
-                    </div>
-                  )}
-
                   <div ref={bottomRef} />
                 </div>
               )}
@@ -1355,6 +1558,10 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
             <div className="border-t border-white/10 px-4 py-4 sm:px-6">
               <div className="rounded-3xl border border-white/10 bg-black/30 p-3">
+                <p className="mb-3 text-xs text-red-400/70">
+                  Every message reveals how you think.
+                </p>
+
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -1363,6 +1570,24 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                   placeholder="Ask anything..."
                   className="w-full resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-white/30"
                 />
+
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {[
+                    "Why am I stuck?",
+                    "Be honest with me",
+                    "Call me out",
+                    "Why do I keep failing?",
+                  ].map((q) => (
+                    <button
+                      key={q}
+                      onClick={() => setInput(q)}
+                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70 hover:bg-white/10"
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                   <p className="text-xs text-white/35">Enter = send · Shift + Enter = new line</p>
                   <div className="flex flex-wrap gap-2">
@@ -1411,11 +1636,12 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                   return (
                     <div
                       key={challenge.key}
-                      className={`rounded-2xl border p-4 ${
+                      className={cn(
+                        "rounded-2xl border p-4",
                         complete
                           ? "border-emerald-400/30 bg-emerald-500/10"
-                          : "border-white/10 bg-black/20"
-                      }`}
+                          : "border-white/10 bg-black/20",
+                      )}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
@@ -1433,9 +1659,10 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
                       <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
                         <div
-                          className={`h-full rounded-full transition-all duration-500 ${
-                            complete ? "bg-emerald-400" : "bg-red-500"
-                          }`}
+                          className={cn(
+                            "h-full rounded-full transition-all duration-500",
+                            complete ? "bg-emerald-400" : "bg-red-500",
+                          )}
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -1462,7 +1689,10 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                 <Meter label="Ego" value={clamp(profile.egoScore, 0, 100)} />
                 <Meter label="Excuses" value={clamp(profile.copeScore, 0, 100)} />
                 <Meter label="Greed" value={clamp(profile.greedScore, 0, 100)} />
-                <Meter label="Discipline Problems" value={clamp(profile.disciplineScore, 0, 100)} />
+                <Meter
+                  label="Discipline Problems"
+                  value={clamp(profile.disciplineScore, 0, 100)}
+                />
                 <Meter label="Fear" value={clamp(profile.fearScore, 0, 100)} />
               </div>
             </div>
@@ -1589,11 +1819,12 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
               ) : null}
 
               <div
-                className={`mt-5 rounded-[24px] border p-5 ${
+                className={cn(
+                  "mt-5 rounded-[24px] border p-5",
                   selectedRoast.respected
                     ? "border-emerald-400/30 bg-emerald-500/10"
-                    : "border-red-500/20 bg-red-500/10"
-                }`}
+                    : "border-red-500/20 bg-red-500/10",
+                )}
               >
                 <p className="whitespace-pre-wrap text-sm leading-7 text-white/95">
                   {getMessageDisplayText(selectedRoast)}
@@ -1612,6 +1843,12 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                   className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/90 hover:bg-white/10"
                 >
                   Copy text
+                </button>
+                <button
+                  onClick={() => generateClip(selectedRoast)}
+                  className="rounded-2xl border border-yellow-500/20 bg-yellow-500/10 px-4 py-2 text-sm font-bold text-yellow-200 hover:bg-yellow-500/20"
+                >
+                  Copy clip
                 </button>
                 <button
                   onClick={() => void refineMessage(selectedRoast, "harder")}
