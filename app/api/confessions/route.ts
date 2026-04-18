@@ -1,8 +1,6 @@
 import { kv } from "@vercel/kv";
 import { NextResponse } from "next/server";
 
-export const runtime = "nodejs";
-
 type ReactionKey = "same" | "lol" | "handshake";
 
 type Confession = {
@@ -135,6 +133,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ item });
   } catch (error) {
     const message = error instanceof Error ? error.message : "POST failed";
+
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -184,6 +183,7 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ item: updated });
   } catch (error) {
     const message = error instanceof Error ? error.message : "PATCH failed";
+
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
