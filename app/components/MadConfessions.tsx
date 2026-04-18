@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type ReactionKey = "same" | "lol" | "handshake";
 
@@ -15,10 +15,13 @@ function timeAgo(ms: number) {
   const s = Math.floor((Date.now() - ms) / 1000);
   if (s < 10) return "just now";
   if (s < 60) return `${s}s ago`;
+
   const m = Math.floor(s / 60);
   if (m < 60) return `${m}m ago`;
+
   const h = Math.floor(m / 60);
   if (h < 48) return `${h}h ago`;
+
   const d = Math.floor(h / 24);
   return `${d}d ago`;
 }
@@ -33,12 +36,13 @@ export default function MadConfessions() {
   async function load() {
     setError(null);
     setLoading(true);
+
     try {
-      const r = await fetch("/api/confessions", { cache: "no-store" });
-      const j = await r.json();
-      setItems(Array.isArray(j?.confessions) ? j.confessions : []);
-    } catch (e: any) {
-      setError(e?.message || "Failed to load confessions");
+      const response = await fetch("/api/confessions", { cache: "no-store" });
+      const json = await response.json();
+      setItems(Array.isArray(json?.confessions) ? json.confessions : []);
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : "Failed to load confessions");
       setItems([]);
     } finally {
       setLoading(false);
@@ -46,11 +50,12 @@ export default function MadConfessions() {
   }
 
   useEffect(() => {
-    load();
+    void load();
   }, []);
 
   async function submit() {
-    const clean = (text || "").replace(/\s+/g, " ").trim();
+    const clean = text.replace(/\s+/g, " ").trim();
+
     if (clean.length < 4) {
       setError("Confession too short (min 4 chars).");
       return;
@@ -60,28 +65,28 @@ export default function MadConfessions() {
     setError(null);
 
     try {
-      const r = await fetch("/api/confessions", {
+      const response = await fetch("/api/confessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: clean }),
       });
 
-      const j = await r.json();
+      const json = await response.json();
 
-      if (!r.ok) {
-        setError(j?.error || "Failed to post confession");
+      if (!response.ok) {
+        setError(json?.error || "Failed to post confession");
         return;
       }
 
-      if (j?.item) {
-        setItems((prev) => [j.item as Confession, ...prev]);
+      if (json?.item) {
+        setItems((prev) => [json.item as Confession, ...prev]);
         setText("");
       } else {
         await load();
         setText("");
       }
-    } catch (e: any) {
-      setError(e?.message || "Failed to post confession");
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : "Failed to post confession");
     } finally {
       setPosting(false);
     }
@@ -89,47 +94,47 @@ export default function MadConfessions() {
 
   async function react(id: string, key: ReactionKey) {
     setItems((prev) =>
-      prev.map((c) =>
-        c.id === id
+      prev.map((confession) =>
+        confession.id === id
           ? {
-              ...c,
+              ...confession,
               reactions: {
-                ...c.reactions,
-                [key]: Math.max(0, (c.reactions?.[key] ?? 0) + 1),
+                ...confession.reactions,
+                [key]: Math.max(0, (confession.reactions?.[key] ?? 0) + 1),
               },
             }
-          : c
+          : confession
       )
     );
 
     try {
-      const r = await fetch("/api/confessions", {
+      const response = await fetch("/api/confessions", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, reaction: key, delta: 1 }),
       });
 
-      const j = await r.json();
+      const json = await response.json();
 
-      if (!r.ok || !j?.item) {
+      if (!response.ok || !json?.item) {
         await load();
         return;
       }
 
       setItems((prev) =>
-        prev.map((c) => (c.id === id ? (j.item as Confession) : c))
+        prev.map((confession) =>
+          confession.id === id ? (json.item as Confession) : confession
+        )
       );
     } catch {
       await load();
     }
   }
 
-  const count = items.length;
-
   const headerChip = useMemo(() => {
     if (loading) return "Loading…";
-    return `${count} confessions`;
-  }, [loading, count]);
+    return `${items.length} confessions`;
+  }, [loading, items.length]);
 
   return (
     <section className="mt-8 animate-fadeUp sm:mt-10">
@@ -165,6 +170,7 @@ export default function MadConfessions() {
             <p className="text-xs text-white/40">Tip: keep it under 240 chars.</p>
 
             <button
+              type="button"
               onClick={submit}
               disabled={posting}
               className="w-full rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/15 disabled:opacity-50 sm:w-auto"
@@ -190,36 +196,36 @@ export default function MadConfessions() {
               No confessions yet. Be the first 😤
             </div>
           ) : (
-            items.map((c) => (
+            items.map((confession) => (
               <div
-                key={c.id}
+                key={confession.id}
                 className="w-full min-w-0 rounded-2xl border border-white/10 bg-black/25 p-4 sm:p-5"
               >
                 <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                   <p className="min-w-0 break-words whitespace-pre-wrap text-[14px] leading-6 text-white/90 sm:text-sm sm:leading-7">
-                    {c.text}
+                    {confession.text}
                   </p>
 
                   <span className="shrink-0 text-xs text-white/40 sm:pt-0.5">
-                    {timeAgo(c.createdAt)}
+                    {timeAgo(confession.createdAt)}
                   </span>
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2">
                   <ReactionButton
                     label="Same"
-                    count={c.reactions?.same ?? 0}
-                    onClick={() => react(c.id, "same")}
+                    count={confession.reactions?.same ?? 0}
+                    onClick={() => react(confession.id, "same")}
                   />
                   <ReactionButton
                     label="LOL"
-                    count={c.reactions?.lol ?? 0}
-                    onClick={() => react(c.id, "lol")}
+                    count={confession.reactions?.lol ?? 0}
+                    onClick={() => react(confession.id, "lol")}
                   />
                   <ReactionButton
                     label="🤝"
-                    count={c.reactions?.handshake ?? 0}
-                    onClick={() => react(c.id, "handshake")}
+                    count={confession.reactions?.handshake ?? 0}
+                    onClick={() => react(confession.id, "handshake")}
                   />
                 </div>
               </div>
@@ -242,9 +248,9 @@ function ReactionButton({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className="inline-flex min-w-0 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[13px] font-semibold text-white/80 transition hover:bg-white/10 sm:text-xs"
-      type="button"
     >
       <span>{label}</span>
       <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-white/80">
