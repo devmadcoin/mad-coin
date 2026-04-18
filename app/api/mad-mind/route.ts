@@ -30,6 +30,7 @@ type Intent =
   | "MANIFESTO";
 
 type CookLevel = "mild" | "mean" | "crashout" | "demon";
+type StyleTab = "safe" | "savage" | "crashout";
 
 type MemoryEntry = {
   last: string;
@@ -37,11 +38,20 @@ type MemoryEntry = {
   recentStates: string[];
   lastBot?: string;
   intentHistory: Intent[];
-  favoriteStyle?: "safe" | "savage" | "crashout";
+  favoriteStyle?: StyleTab;
   lastIntent?: Intent;
 };
 
 type VariantKey = "default" | "safe" | "savage" | "crashout";
+
+type RequestBody = {
+  message?: unknown;
+  cookLevel?: unknown;
+  archetype?: unknown;
+  sessionId?: unknown;
+  preferredStyle?: unknown;
+  multiOutput?: unknown;
+};
 
 const memory = new Map<string, MemoryEntry>();
 
@@ -50,7 +60,11 @@ function sanitize(value: unknown, max = 500): string {
 }
 
 function normalize(text: string): string {
-  return text.toLowerCase().replace(/[^\w\s$]/g, "").replace(/\s+/g, " ").trim();
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s$]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function isSimilar(a: string, b: string): boolean {
@@ -59,10 +73,24 @@ function isSimilar(a: string, b: string): boolean {
 
   if (!na || !nb) return false;
   if (na === nb) return true;
-
   if (na.includes(nb) || nb.includes(na)) return true;
 
   return false;
+}
+
+function parseCookLevel(value: unknown): CookLevel {
+  return value === "mild" ||
+    value === "mean" ||
+    value === "crashout" ||
+    value === "demon"
+    ? value
+    : "crashout";
+}
+
+function parsePreferredStyle(value: unknown): StyleTab | undefined {
+  return value === "safe" || value === "savage" || value === "crashout"
+    ? value
+    : undefined;
 }
 
 function detectIntent(text: string): Intent {
@@ -431,8 +459,8 @@ Balanced force.
 }
 
 function buildPreferenceLayer(
-  favoriteStyle?: "safe" | "savage" | "crashout",
-  lastIntent?: Intent
+  favoriteStyle?: StyleTab,
+  lastIntent?: Intent,
 ): string {
   return `
 SESSION BIAS:
@@ -515,16 +543,41 @@ function shouldReturnVariants(intent: Intent): boolean {
   );
 }
 
-function topStyleFromHistory(history: Intent[]): "safe" | "savage" | "crashout" | undefined {
+function topStyleFromHistory(history: Intent[]): StyleTab | undefined {
   if (!history.length) return undefined;
 
   const recent = history.slice(-6);
 
   if (recent.includes("COMEBACK") || recent.includes("SHILL")) return "savage";
-  if (recent.includes("MANIFESTO") || recent.includes("CONFESSION")) return "crashout";
+  if (recent.includes("MANIFESTO") || recent.includes("CONFESSION")) {
+    return "crashout";
+  }
   if (recent.includes("CAPTION")) return "safe";
 
   return undefined;
+}
+
+function updateMemory(
+  sessionId: string,
+  prev: MemoryEntry | undefined,
+  data: {
+    message: string;
+    escalation: number;
+    states: string[];
+    bot: string;
+    intent: Intent;
+    favoriteStyle?: StyleTab;
+  },
+) {
+  memory.set(sessionId, {
+    last: data.message,
+    repeatCount: data.escalation,
+    recentStates: data.states,
+    lastBot: data.bot,
+    intentHistory: [...(prev?.intentHistory || []), data.intent].slice(-12),
+    favoriteStyle: data.favoriteStyle ?? prev?.favoriteStyle,
+    lastIntent: data.intent,
+  });
 }
 
 async function generateSingleOutput(params: {
@@ -547,27 +600,16 @@ MAD CANON:
 ${JSON.stringify(MAD_CANON, null, 2)}
 
 ${buildStateLayer(params.states)}
-
 ${buildEscalationLayer(params.escalation)}
-
 ${buildContinuityLayer(params.prev?.recentStates || [], params.states)}
-
 ${buildCookLayer(params.cookLevel)}
-
 ${buildArchetypeLayer(params.archetype || undefined)}
-
 ${buildRespectLayer(params.respect)}
-
 ${buildDefinitionLayer(params.intent === "DEFINITION")}
-
 ${buildAntiRepetitionLayer(params.prev?.lastBot)}
-
 ${buildIntentLayer(params.intent)}
-
 ${buildVariantLayer(params.variant)}
-
 ${buildPreferenceLayer(params.prev?.favoriteStyle, params.prev?.lastIntent)}
-
 ${buildRefinementLayer({
   harder: params.harder,
   shorter: params.shorter,
@@ -628,23 +670,24 @@ Do not get longer unless needed.`,
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { output: "OpenAI key missing." },
+        { status: 500 },
+      );
+    }
+
+    const body = (await req.json()) as RequestBody;
 
     const raw = sanitize(body.message, 700);
     if (!raw) {
       return NextResponse.json({ output: "Say something real." });
     }
 
-    const cookLevel: CookLevel =
-      body.cookLevel === "mild" ||
-      body.cookLevel === "mean" ||
-      body.cookLevel === "crashout" ||
-      body.cookLevel === "demon"
-        ? body.cookLevel
-        : "crashout";
-
+    const cookLevel = parseCookLevel(body.cookLevel);
     const archetype = sanitize(body.archetype, 120);
     const sessionId = sanitize(body.sessionId, 120) || "anon";
+    const preferredStyle = parsePreferredStyle(body.preferredStyle);
 
     const harder = wantsHarder(raw);
     const shorter = wantsShorter(raw);
@@ -652,7 +695,6 @@ export async function POST(req: Request) {
     const tweetify = wantsTweet(raw);
 
     const message = stripRefinementPrompt(raw) || raw;
-
     const intent = detectIntent(message);
     const states = detectState(message);
     const respect = detectRespect(message);
@@ -660,7 +702,6 @@ export async function POST(req: Request) {
     const prev = memory.get(sessionId);
 
     let escalation = 0;
-
     if (harder) {
       escalation = prev?.lastBot ? Math.min((prev.repeatCount || 0) + 2, 3) : 2;
     } else if (prev && isSimilar(prev.last, message)) {
@@ -673,9 +714,17 @@ export async function POST(req: Request) {
     if (returnVariants) {
       const safeCook: CookLevel = cookLevel === "demon" ? "mean" : "mild";
       const savageCook: CookLevel =
-        cookLevel === "mild" ? "mean" : cookLevel === "demon" ? "crashout" : cookLevel;
+        cookLevel === "mild"
+          ? "mean"
+          : cookLevel === "demon"
+            ? "crashout"
+            : cookLevel;
       const crashoutCook: CookLevel =
-        cookLevel === "mild" ? "crashout" : cookLevel === "mean" ? "crashout" : "demon";
+        cookLevel === "mild"
+          ? "crashout"
+          : cookLevel === "mean"
+            ? "crashout"
+            : "demon";
 
       const [safeOutput, savageOutput, crashoutOutput] = await Promise.all([
         generateSingleOutput({
@@ -726,27 +775,24 @@ export async function POST(req: Request) {
       ]);
 
       const favoredStyle =
-        body.preferredStyle === "safe" ||
-        body.preferredStyle === "savage" ||
-        body.preferredStyle === "crashout"
-          ? body.preferredStyle
-          : topStyleFromHistory([...(prev?.intentHistory || []), intent]) || "savage";
+        preferredStyle ||
+        topStyleFromHistory([...(prev?.intentHistory || []), intent]) ||
+        "savage";
 
       const chosen =
         favoredStyle === "safe"
           ? safeOutput
           : favoredStyle === "crashout"
-          ? crashoutOutput
-          : savageOutput;
+            ? crashoutOutput
+            : savageOutput;
 
-      memory.set(sessionId, {
-        last: message,
-        repeatCount: escalation,
-        recentStates: states,
-        lastBot: chosen,
-        intentHistory: [...(prev?.intentHistory || []), intent].slice(-12),
+      updateMemory(sessionId, prev, {
+        message,
+        escalation,
+        states,
+        bot: chosen,
+        intent,
         favoriteStyle: favoredStyle,
-        lastIntent: intent,
       });
 
       return NextResponse.json({
@@ -782,21 +828,13 @@ export async function POST(req: Request) {
       tweetify,
     });
 
-    const favoriteStyle =
-      body.preferredStyle === "safe" ||
-      body.preferredStyle === "savage" ||
-      body.preferredStyle === "crashout"
-        ? body.preferredStyle
-        : prev?.favoriteStyle;
-
-    memory.set(sessionId, {
-      last: message,
-      repeatCount: escalation,
-      recentStates: states,
-      lastBot: output,
-      intentHistory: [...(prev?.intentHistory || []), intent].slice(-12),
-      favoriteStyle,
-      lastIntent: intent,
+    updateMemory(sessionId, prev, {
+      message,
+      escalation,
+      states,
+      bot: output,
+      intent,
+      favoriteStyle: preferredStyle,
     });
 
     return NextResponse.json({
@@ -805,7 +843,7 @@ export async function POST(req: Request) {
         intent,
         states,
         escalation,
-        favoriteStyle: favoriteStyle || null,
+        favoriteStyle: preferredStyle || prev?.favoriteStyle || null,
         multiOutput: false,
       },
     });
