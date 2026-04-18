@@ -51,11 +51,11 @@ function NavPill({
       className={cn(
         "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-bold transition duration-300",
         active
-          ? "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+          ? "bg-white text-black shadow-[0_0_12px_rgba(255,255,255,0.08)]"
           : variant === "cta"
-            ? "border border-red-500/30 bg-red-500 text-white hover:scale-105 hover:bg-red-400 hover:shadow-[0_0_20px_rgba(255,0,0,0.35)]"
+            ? "border border-red-500/30 bg-red-500 text-white hover:scale-105 hover:bg-red-400 hover:shadow-[0_0_20px_rgba(255,0,0,0.25)]"
             : variant === "primary"
-              ? "border border-white/15 bg-white/10 text-white hover:bg-white/15"
+              ? "border border-white/10 bg-white/5 text-white/85 hover:bg-white/10"
               : "text-white/72 hover:bg-white/10 hover:text-white"
       )}
     >
@@ -72,7 +72,7 @@ export default function NavBar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex min-h-[76px] items-center justify-between gap-4">
           <Link href="/" className="group flex items-center gap-3">
-            <div className="relative h-12 w-12 overflow-hidden rounded-full border border-white/10 bg-black shadow-[0_0_25px_rgba(255,0,0,0.15)] transition duration-300 group-hover:scale-105 group-hover:shadow-[0_0_35px_rgba(255,0,0,0.28)]">
+            <div className="relative h-12 w-12 overflow-hidden rounded-full border border-white/10 bg-black shadow-[0_0_18px_rgba(255,0,0,0.12)] transition duration-300 group-hover:scale-105">
               <Image
                 src="/mad.png"
                 alt="$MAD logo"
