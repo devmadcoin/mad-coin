@@ -76,21 +76,31 @@ function Chip({ children }: { children: React.ReactNode }) {
   );
 }
 
-function SocialButton({
+function SocialIconButton({
   href,
-  label,
+  src,
+  alt,
 }: {
   href: string;
-  label: string;
+  src: string;
+  alt: string;
 }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-black text-white transition duration-300 hover:scale-[1.02] hover:border-white/20 hover:bg-white/[0.08]"
+      aria-label={alt}
+      title={alt}
+      className="group flex h-16 w-16 items-center justify-center rounded-full border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition duration-300 hover:scale-105 hover:border-white/20 hover:bg-white/[0.08]"
     >
-      {label}
+      <Image
+        src={src}
+        alt={alt}
+        width={34}
+        height={34}
+        className="h-9 w-9 object-contain transition duration-300 group-hover:scale-110"
+      />
     </a>
   );
 }
@@ -178,76 +188,65 @@ function ArtCampaignCard({
   );
 }
 
-function PlatformPoster({
+function ExchangeLogoCard({
   href,
   src,
   alt,
-  eyebrow,
-  title,
+  label,
 }: {
   href: string;
   src: string;
   alt: string;
-  eyebrow: string;
-  title: string;
+  label: string;
 }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-6 transition duration-300 hover:scale-[1.015] hover:border-white/20 hover:bg-white/[0.06]"
+      className="flex min-w-[240px] items-center justify-center rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.018))] px-8 py-10 shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition duration-300 hover:scale-[1.01] hover:border-white/20 hover:bg-white/[0.06]"
+      aria-label={label}
+      title={label}
     >
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/35 to-transparent" />
-      <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-red-500/10 blur-3xl transition duration-300 group-hover:bg-red-500/20" />
-
-      <div className="relative flex min-h-[230px] flex-col justify-between">
-        <div className="flex justify-center">
-          <div className="flex h-32 w-32 items-center justify-center rounded-full border border-white/10 bg-black/50 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
-            <Image
-              src={src}
-              alt={alt}
-              width={84}
-              height={84}
-              className="h-20 w-20 object-contain"
-            />
-          </div>
-        </div>
-
-        <div className="mt-8 text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/40">
-            {eyebrow}
-          </p>
-          <p className="mt-3 text-3xl font-black leading-tight text-white">
-            {title}
-          </p>
-        </div>
-      </div>
+      <Image
+        src={src}
+        alt={alt}
+        width={180}
+        height={56}
+        className="h-12 w-auto object-contain opacity-95"
+      />
     </a>
   );
 }
 
-function ExchangeGlobe() {
-  return (
-    <div className="pointer-events-none absolute right-[-8%] top-[-8%] hidden h-[440px] w-[440px] overflow-hidden rounded-full opacity-90 lg:block">
-      <div className="absolute inset-0 rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_35%_35%,rgba(255,0,0,0.2),rgba(255,0,0,0.05)_38%,transparent_65%)] shadow-[0_0_60px_rgba(255,0,0,0.16)]" />
-      <div className="absolute inset-0 rounded-full bg-[repeating-linear-gradient(to_right,rgba(255,0,0,0.16)_0px,rgba(255,0,0,0.16)_1px,transparent_1px,transparent_36px),repeating-linear-gradient(to_bottom,rgba(255,0,0,0.12)_0px,rgba(255,0,0,0.12)_1px,transparent_1px,transparent_36px)] opacity-55" />
-      <div className="absolute inset-[10%] rounded-full border border-red-500/20" />
-      <div className="absolute inset-[22%] rounded-full border border-red-500/15" />
-      <div className="absolute inset-[34%] rounded-full border border-red-500/10" />
-      <div className="absolute left-[12%] top-[16%] h-2 w-2 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
-      <div className="absolute left-[26%] top-[34%] h-1.5 w-1.5 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
-      <div className="absolute left-[58%] top-[24%] h-2 w-2 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
-      <div className="absolute left-[72%] top-[38%] h-1.5 w-1.5 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
-      <div className="absolute left-[48%] top-[58%] h-2 w-2 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
-      <div className="absolute left-[30%] top-[66%] h-1.5 w-1.5 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
-      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/25 to-transparent" />
-      <div className="absolute left-0 top-0 h-full w-full rounded-full border border-red-500/10" />
-    </div>
-  );
-}
-
 export default function Home() {
+  const exchangeItems = [
+    {
+      href: LINKS.birdeye,
+      src: "/logos/birdeye.png",
+      alt: "Birdeye",
+      label: "Birdeye",
+    },
+    {
+      href: LINKS.solscan,
+      src: "/logos/solscan.png",
+      alt: "Solscan",
+      label: "Solscan",
+    },
+    {
+      href: LINKS.jupiter,
+      src: "/logos/jupiter.png",
+      alt: "Jupiter",
+      label: "Jupiter",
+    },
+    {
+      href: LINKS.dexscreener,
+      src: "/logos/DEX-screener.png",
+      alt: "DEX Screener",
+      label: "DEX Screener",
+    },
+  ];
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#040404] text-white">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.06),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
@@ -296,11 +295,27 @@ export default function Home() {
                 <Chip>Meme Coin</Chip>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <SocialButton href={LINKS.telegram} label="Join Telegram" />
-                <SocialButton href={LINKS.x} label="Follow X" />
-                <SocialButton href={LINKS.instagram} label="Instagram" />
-                <SocialButton href={LINKS.tiktok} label="TikTok" />
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <SocialIconButton
+                  href={LINKS.telegram}
+                  src="/logos/MAD-TELEGRAM.png"
+                  alt="Telegram"
+                />
+                <SocialIconButton
+                  href={LINKS.x}
+                  src="/logos/MAD-X-LOGO.png"
+                  alt="X"
+                />
+                <SocialIconButton
+                  href={LINKS.instagram}
+                  src="/logos/MAD-INSTAGRAM-LOGO.png"
+                  alt="Instagram"
+                />
+                <SocialIconButton
+                  href={LINKS.tiktok}
+                  src="/logos/MAD-TIKTOK-LOGO.png"
+                  alt="TikTok"
+                />
               </div>
             </div>
 
@@ -348,56 +363,30 @@ export default function Home() {
           />
         </section>
 
-        <section className="relative mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
-          <ExchangeGlobe />
+        <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div>
+            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+              Verified on exchanges
+            </p>
 
-          <div className="relative z-10">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-                Live In The Wild
-              </p>
+            <h2 className="mt-3 text-center text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+              Trusted across real crypto platforms.
+            </h2>
+          </div>
 
-              <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-                Verified on{" "}
-                <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.4)]">
-                  exchanges.
-                </span>
-              </h2>
-
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-                $MAD is already visible on real crypto platforms.
-              </p>
-            </div>
-
-            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <PlatformPoster
-                href={LINKS.birdeye}
-                src="/logos/birdeye.png"
-                alt="Birdeye"
-                eyebrow="Live On"
-                title="Track on Birdeye"
-              />
-              <PlatformPoster
-                href={LINKS.solscan}
-                src="/logos/solscan.png"
-                alt="Solscan"
-                eyebrow="Live On"
-                title="Verify on Solscan"
-              />
-              <PlatformPoster
-                href={LINKS.jupiter}
-                src="/logos/jupiter.png"
-                alt="Jupiter"
-                eyebrow="Live On"
-                title="Buy on Jupiter"
-              />
-              <PlatformPoster
-                href={LINKS.dexscreener}
-                src="/logos/DEX-screener.png"
-                alt="DEX Screener"
-                eyebrow="Live On"
-                title="View Chart"
-              />
+          <div className="mt-8 overflow-hidden rounded-[28px] bg-[linear-gradient(90deg,rgba(96,58,80,0.95),rgba(49,57,110,0.95))] px-4 py-8 sm:px-6">
+            <div className="logo-marquee flex w-max items-center gap-8">
+              {[...exchangeItems, ...exchangeItems, ...exchangeItems].map(
+                (item, index) => (
+                  <ExchangeLogoCard
+                    key={`${item.label}-${index}`}
+                    href={item.href}
+                    src={item.src}
+                    alt={item.alt}
+                    label={item.label}
+                  />
+                ),
+              )}
             </div>
           </div>
         </section>
