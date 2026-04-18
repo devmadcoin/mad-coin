@@ -1,16 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import MadConfessions from "./components/MadConfessions";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white px-4 py-8">
-      
+    <div className="min-h-screen bg-black px-4 py-8 text-white">
       {/* HERO */}
-      <div className="max-w-6xl mx-auto rounded-[30px] border border-white/10 bg-[#0a0a0a] p-8 flex flex-col lg:flex-row items-center justify-between gap-8">
-        
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-8 rounded-[30px] border border-white/10 bg-[#0a0a0a] p-8 lg:flex-row">
         {/* LEFT TEXT */}
         <div className="flex-1">
           <h1 className="text-5xl font-black leading-tight">
@@ -25,17 +22,17 @@ export default function Home() {
             Control the chaos. Or it controls you.
           </p>
 
-          <div className="mt-6 flex gap-3">
+          <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/mad-mind"
-              className="bg-red-500 px-5 py-2 rounded-full font-bold"
+              className="rounded-full bg-red-500 px-5 py-2 font-bold text-white transition hover:bg-red-400"
             >
               Enter MAD Mind
             </Link>
 
             <a
               href="#confessions"
-              className="border border-white/20 px-5 py-2 rounded-full"
+              className="rounded-full border border-white/20 px-5 py-2 transition hover:border-white/40 hover:bg-white/5"
             >
               View Confessions
             </a>
@@ -43,13 +40,13 @@ export default function Home() {
         </div>
 
         {/* RIGHT VISUAL */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex flex-1 justify-center">
           <video
             autoPlay
             muted
             loop
             playsInline
-            className="rounded-xl w-full max-w-md"
+            className="w-full max-w-md rounded-xl"
           >
             <source src="/loops/bullish-mad.mp4" type="video/mp4" />
           </video>
@@ -57,11 +54,8 @@ export default function Home() {
       </div>
 
       {/* CONFESSIONS */}
-      <div id="confessions" className="max-w-6xl mx-auto mt-10">
-        <h2 className="text-3xl font-black mb-4">
-          MAD Confessions
-        </h2>
-
+      <div id="confessions" className="mx-auto mt-10 max-w-6xl">
+        <h2 className="mb-4 text-3xl font-black">MAD Confessions</h2>
         <MadConfessions />
       </div>
     </div>
