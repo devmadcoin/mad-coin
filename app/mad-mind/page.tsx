@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { hasSupabase, supabase } from "@/lib/supabase/client";
 
 type MessageRole = "user" | "bot";
 type CookLevel = "mild" | "mean" | "crashout" | "demon";
@@ -121,6 +120,8 @@ type ApiResponse = {
     multiOutput?: boolean;
   };
 };
+
+const hasSupabase = false;
 
 const STORAGE_KEYS = {
   messages: "madbot_messages_v10",
@@ -593,60 +594,11 @@ function displayStyle(style: StyleTab) {
 }
 
 async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
-  if (!supabase) return [];
-  const { data, error } = await supabase
-    .from("mad_bot_scores")
-    .select("*")
-    .order("score", { ascending: false })
-    .order("best_streak", { ascending: false })
-    .limit(10);
-
-  if (error || !data) return [];
-  return data as LeaderboardEntry[];
+  return [];
 }
 
-async function upsertRemoteScore(entry: Omit<LeaderboardEntry, "id">) {
-  if (!supabase) return;
-
-  const { data: existing } = await supabase
-    .from("mad_bot_scores")
-    .select("id, score, best_streak, survived_responses, respect_count")
-    .eq("player_name", entry.player_name)
-    .maybeSingle();
-
-  if (existing?.id) {
-    const mergedScore = Math.max(existing.score ?? 0, entry.score);
-    const mergedBestStreak = Math.max(existing.best_streak ?? 0, entry.best_streak);
-    const mergedSurvived = Math.max(
-      existing.survived_responses ?? 0,
-      entry.survived_responses,
-    );
-    const mergedRespect = Math.max(
-      existing.respect_count ?? 0,
-      entry.respect_count,
-    );
-
-    await supabase
-      .from("mad_bot_scores")
-      .update({
-        score: mergedScore,
-        best_streak: mergedBestStreak,
-        survived_responses: mergedSurvived,
-        respect_count: mergedRespect,
-        cook_level: entry.cook_level,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", existing.id);
-  } else {
-    await supabase.from("mad_bot_scores").insert({
-      player_name: entry.player_name,
-      score: entry.score,
-      survived_responses: entry.survived_responses,
-      best_streak: entry.best_streak,
-      cook_level: entry.cook_level,
-      respect_count: entry.respect_count,
-    });
-  }
+async function upsertRemoteScore(_entry: Omit<LeaderboardEntry, "id">) {
+  return;
 }
 
 export default function MadMindPage() {
@@ -660,9 +612,7 @@ export default function MadMindPage() {
   const [preferredStyle, setPreferredStyle] = useState<StyleTab>("savage");
   const [isThinking, setIsThinking] = useState(false);
   const [copyToast, setCopyToast] = useState("");
-  const [supabaseStatus, setSupabaseStatus] = useState(
-    hasSupabase ? "Leaderboard connected" : "Local mode only",
-  );
+  const [supabaseStatus] = useState("Local mode only");
   const [dailyState, setDailyState] = useState<DailyChallengeState>(
     createDailyState(todayKey()),
   );
@@ -703,14 +653,9 @@ export default function MadMindPage() {
     setMounted(true);
 
     if (hasSupabase) {
-      void fetchLeaderboard()
-        .then((rows) => {
-          setLeaderboard(rows);
-          setSupabaseStatus("Live leaderboard");
-        })
-        .catch(() => {
-          setSupabaseStatus("Leaderboard unavailable");
-        });
+      void fetchLeaderboard().then((rows) => {
+        setLeaderboard(rows);
+      });
     }
   }, []);
 
@@ -978,9 +923,8 @@ Mode: ${displayCookLevel(cookLevel)}
     }
     setIsThinking(true);
 
-    const typingId = uid();
     const thinkingMessage: ChatMessage = {
-      id: typingId,
+      id: uid(),
       role: "bot",
       text: "...",
       ts: Date.now(),
@@ -1722,7 +1666,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
               <div className="mt-4 space-y-3">
                 {leaderboard.length === 0 ? (
                   <p className="text-sm text-white/45">
-                    {hasSupabase ? "No scores yet." : "Connect Supabase for a global leaderboard."}
+                    Connect Supabase for a global leaderboard.
                   </p>
                 ) : (
                   leaderboard.map((entry, index) => (
