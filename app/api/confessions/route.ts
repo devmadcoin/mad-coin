@@ -12,18 +12,31 @@ type Confession = {
   reactions: Record<ReactionKey, number>;
 };
 
+type PostBody = {
+  text?: unknown;
+};
+
+type PatchBody = {
+  id?: unknown;
+  reaction?: unknown;
+  kind?: unknown;
+  delta?: unknown;
+};
+
 const KEY = "mad:confessions";
 const ITEM = (id: string) => `mad:confession:${id}`;
 const MAX_ITEMS = 200;
 const MAX_TEXT = 240;
 
 function clampText(value: string, max = MAX_TEXT) {
-  const text = (value || "").replace(/\s+/g, " ").trim();
+  const text = value.replace(/\s+/g, " ").trim();
   return text.length > max ? text.slice(0, max).trim() : text;
 }
 
 function makeId() {
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+  return `${Date.now().toString(36)}-${Math.random()
+    .toString(36)
+    .slice(2, 10)}`;
 }
 
 function isReactionKey(value: unknown): value is ReactionKey {
@@ -45,21 +58,20 @@ function toStringSafe(value: unknown): string | null {
   return null;
 }
 
-function safeJson<T>(raw: unknown): T | null {
-  try {
-    const text = toStringSafe(raw);
-    if (!text) return null;
-    return JSON.parse(text) as T;
-  } catch {
-    return null;
-  }
-}
-
 function normalizeId(value: unknown): string | null {
   const text = toStringSafe(value);
   if (!text) return null;
+
   const clean = text.trim();
-  return clean ? clean : null;
+  return clean || null;
+}
+
+async function parseJson<T>(req: Request): Promise<T | null> {
+  try {
+    return (await req.json()) as T;
+  } catch {
+    return null;
+  }
 }
 
 export async function GET() {
@@ -73,7 +85,9 @@ export async function GET() {
       return NextResponse.json({ confessions: [] });
     }
 
-    const items = await Promise.all(ids.map((id) => kv.get<Confession>(ITEM(id))));
+    const items = await Promise.all(
+      ids.map((id) => kv.get<Confession>(ITEM(id)))
+    );
 
     const confessions = items
       .filter((item): item is Confession => Boolean(item))
@@ -82,6 +96,7 @@ export async function GET() {
     return NextResponse.json({ confessions });
   } catch (error) {
     const message = error instanceof Error ? error.message : "KV error";
+
     return NextResponse.json(
       { confessions: [], error: message },
       { status: 500 }
@@ -91,8 +106,8 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json().catch(() => ({}));
-    const text = clampText(String((body as { text?: unknown })?.text ?? ""));
+    const body = await parseJson<PostBody>(req);
+    const text = clampText(String(body?.text ?? ""));
 
     if (!text) {
       return NextResponse.json({ error: "Text required" }, { status: 400 });
@@ -126,7 +141,7 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
-    const body = await req.json().catch(() => ({} as Record<string, unknown>));
+    const body = await parseJson<PatchBody>(req);
 
     const id = String(body?.id ?? "").trim();
     const reaction = body?.reaction ?? body?.kind;
@@ -137,7 +152,10 @@ export async function PATCH(req: Request) {
     }
 
     if (!isReactionKey(reaction)) {
-      return NextResponse.json({ error: "invalid reaction" }, { status: 400 });
+      return NextResponse.json(
+        { error: "invalid reaction" },
+        { status: 400 }
+      );
     }
 
     if (delta !== 1 && delta !== -1) {
@@ -151,27 +169,19 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "not found" }, { status: 404 });
     }
 
-    const current = existing.reactions?.[reaction] ?? 0;
-    const nextValue = Math.max(0, current + delta);
-
     const updated: Confession = {
       ...existing,
       reactions: {
         same: existing.reactions?.same ?? 0,
         lol: existing.reactions?.lol ?? 0,
         handshake: existing.reactions?.handshake ?? 0,
-        [reaction]: nextValue,
+        [reaction]: Math.max(0, (existing.reactions?.[reaction] ?? 0) + delta),
       },
     };
 
     await kv.set(key, updated);
 
-    const parsed = safeJson<Confession>(JSON.stringify(updated));
-    if (!parsed) {
-      return NextResponse.json({ error: "bad data from KV" }, { status: 500 });
-    }
-
-    return NextResponse.json({ item: parsed });
+    return NextResponse.json({ item: updated });
   } catch (error) {
     const message = error instanceof Error ? error.message : "PATCH failed";
     return NextResponse.json({ error: message }, { status: 500 });
