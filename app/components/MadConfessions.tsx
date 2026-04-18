@@ -12,6 +12,19 @@ type Confession = {
   reactions: Record<ReactionKey, number>;
 };
 
+const PERSONA_POOL = [
+  "Mad Trader",
+  "Silent Bagholder",
+  "Cold Strategist",
+  "Chart Addict",
+  "Chaos Monk",
+  "Late Entry Legend",
+  "Candle Chaser",
+  "Signal Hunter",
+  "Fear Eater",
+  "Conviction Goblin",
+] as const;
+
 function timeAgo(ms: number) {
   const s = Math.floor((Date.now() - ms) / 1000);
   if (s < 10) return "just now";
@@ -31,6 +44,39 @@ function totalReactions(reactions: Record<ReactionKey, number>) {
   return (reactions.same ?? 0) + (reactions.lol ?? 0) + (reactions.handshake ?? 0);
 }
 
+function personaForId(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+  return PERSONA_POOL[hash % PERSONA_POOL.length];
+}
+
+function momentumForScore(score: number) {
+  if (score >= 10) {
+    return {
+      label: "Dominating",
+      cls: "border-yellow-500/25 bg-yellow-500/10 text-yellow-200",
+    };
+  }
+
+  if (score >= 5) {
+    return {
+      label: "Exploding",
+      cls: "border-red-500/25 bg-red-500/10 text-red-200",
+    };
+  }
+
+  if (score >= 3) {
+    return {
+      label: "Heating Up",
+      cls: "border-orange-500/25 bg-orange-500/10 text-orange-200",
+    };
+  }
+
+  return null;
+}
+
 export default function MadConfessions() {
   const [items, setItems] = useState<Confession[]>([]);
   const [text, setText] = useState("");
@@ -39,24 +85,32 @@ export default function MadConfessions() {
   const [error, setError] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>("new");
 
-  async function load() {
+  async function load(silent = false) {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       setError(null);
 
-      const res = await fetch("/api/confessions", { cache: "no-store" });
+      const res = await fetch("/api/confessions", {
+        cache: "no-store",
+      });
       const json = await res.json();
 
       setItems(Array.isArray(json?.confessions) ? json.confessions : []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load");
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }
 
   useEffect(() => {
     void load();
+
+    const interval = window.setInterval(() => {
+      void load(true);
+    }, 25000);
+
+    return () => window.clearInterval(interval);
   }, []);
 
   async function submit() {
@@ -156,10 +210,16 @@ export default function MadConfessions() {
     return copy;
   }, [items, sortMode]);
 
-  const topCount = useMemo(
-    () => items.filter((item) => totalReactions(item.reactions) > 0).length,
-    [items]
-  );
+  const trendingItems = useMemo(() => {
+    return [...items]
+      .filter((item) => totalReactions(item.reactions) > 0)
+      .sort((a, b) => {
+        const reactionDiff = totalReactions(b.reactions) - totalReactions(a.reactions);
+        if (reactionDiff !== 0) return reactionDiff;
+        return b.createdAt - a.createdAt;
+      })
+      .slice(0, 3);
+  }, [items]);
 
   return (
     <section className="mt-8 animate-fadeUp sm:mt-10">
@@ -185,10 +245,47 @@ export default function MadConfessions() {
             </div>
 
             <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
-              {topCount} active
+              Auto-refresh on
             </div>
           </div>
         </div>
+
+        {trendingItems.length > 0 && (
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.24em] text-white/40">
+                  Trending Now
+                </p>
+                <p className="mt-1 text-sm text-white/65">
+                  Most reacted confessions right now.
+                </p>
+              </div>
+
+              <div className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.75)] animate-pulse" />
+            </div>
+
+            <div className="space-y-3">
+              {trendingItems.map((item, index) => (
+                <div
+                  key={`trending-${item.id}`}
+                  className="rounded-xl border border-white/10 bg-black/25 p-3"
+                >
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <div className="inline-flex rounded-full border border-yellow-500/20 bg-yellow-500/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-yellow-200">
+                      #{index + 1} Trending
+                    </div>
+                    <div className="text-[11px] text-white/35">
+                      {totalReactions(item.reactions)} reactions
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-white/85 line-clamp-2">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-6 space-y-3">
           <textarea
@@ -200,7 +297,7 @@ export default function MadConfessions() {
             className="w-full resize-none rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder:text-white/35 focus:border-white/20 focus:outline-none"
           />
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
             <p className="text-xs text-white/40">{text.length}/240</p>
 
             <button
@@ -262,26 +359,45 @@ export default function MadConfessions() {
           ) : (
             sortedItems.map((c, index) => {
               const score = totalReactions(c.reactions);
+              const momentum = momentumForScore(score);
               const showRank = sortMode === "top" && score > 0;
+              const persona = personaForId(c.id);
 
               return (
                 <div
                   key={c.id}
                   className="rounded-2xl border border-white/10 bg-black/25 p-4"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                      {showRank && (
-                        <div className="mb-2 inline-flex rounded-full border border-yellow-500/20 bg-yellow-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-yellow-200">
-                          #{index + 1} Top MAD
-                        </div>
-                      )}
-
-                      <p className="break-words text-sm text-white/90">{c.text}</p>
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <div className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] text-white/70">
+                      {persona}
                     </div>
 
+                    {showRank && (
+                      <div className="rounded-full border border-yellow-500/20 bg-yellow-500/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] text-yellow-200">
+                        #{index + 1} Top MAD
+                      </div>
+                    )}
+
+                    {momentum && (
+                      <div
+                        className={[
+                          "rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-[0.16em]",
+                          momentum.cls,
+                        ].join(" ")}
+                      >
+                        {momentum.label}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-start justify-between gap-4">
+                    <p className="break-words text-sm text-white/90">{c.text}</p>
+
                     <div className="shrink-0 text-right">
-                      <div className="text-xs text-white/40">{timeAgo(c.createdAt)}</div>
+                      <div className="whitespace-nowrap text-xs text-white/40">
+                        {timeAgo(c.createdAt)}
+                      </div>
                       <div className="mt-2 text-[11px] text-white/30">
                         {score} reaction{score === 1 ? "" : "s"}
                       </div>
@@ -313,6 +429,57 @@ export default function MadConfessions() {
       </div>
     </section>
   );
+}
+
+function momentumForScore(score: number) {
+  if (score >= 10) {
+    return {
+      label: "Dominating",
+      cls: "border-yellow-500/25 bg-yellow-500/10 text-yellow-200",
+    };
+  }
+
+  if (score >= 5) {
+    return {
+      label: "Exploding",
+      cls: "border-red-500/25 bg-red-500/10 text-red-200",
+    };
+  }
+
+  if (score >= 3) {
+    return {
+      label: "Heating Up",
+      cls: "border-orange-500/25 bg-orange-500/10 text-orange-200",
+    };
+  }
+
+  return null;
+}
+
+function personaForId(id: string) {
+  const PERSONA_POOL = [
+    "Mad Trader",
+    "Silent Bagholder",
+    "Cold Strategist",
+    "Chart Addict",
+    "Chaos Monk",
+    "Late Entry Legend",
+    "Candle Chaser",
+    "Signal Hunter",
+    "Fear Eater",
+    "Conviction Goblin",
+  ] as const;
+
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+
+  return PERSONA_POOL[hash % PERSONA_POOL.length];
+}
+
+function totalReactions(reactions: Record<ReactionKey, number>) {
+  return (reactions.same ?? 0) + (reactions.lol ?? 0) + (reactions.handshake ?? 0);
 }
 
 function ReactionButton({
