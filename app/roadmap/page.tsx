@@ -11,27 +11,37 @@ const LINKS = {
   tiktok: "https://www.tiktok.com/@madrichclub",
 } as const;
 
-function InternalPillButton({
+function PrimaryButton({
   href,
   children,
-  primary = false,
 }: {
   href: string;
   children: React.ReactNode;
-  primary?: boolean;
 }) {
   return (
     <Link
       href={href}
-      className={[
-        "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition duration-200",
-        primary
-          ? "border border-red-500/30 bg-red-500 text-white hover:scale-[1.01] hover:bg-red-400"
-          : "border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] text-white hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]",
-      ].join(" ")}
+      className="inline-flex items-center justify-center rounded-full border border-red-500/30 bg-red-500 px-5 py-3 text-sm font-black text-white transition duration-200 hover:scale-[1.01] hover:bg-red-400"
     >
       {children}
     </Link>
+  );
+}
+
+function SecondaryAnchor({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] px-5 py-3 text-sm font-black text-white transition duration-200 hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]"
+    >
+      {children}
+    </a>
   );
 }
 
@@ -67,6 +77,7 @@ function SocialIcon({
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
+      {/* BACKGROUND */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.10),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.08),transparent_30%)]" />
         <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
@@ -77,6 +88,7 @@ export default function Home() {
         {/* HERO */}
         <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
           <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+            {/* LEFT */}
             <div className="relative flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
 
@@ -109,16 +121,11 @@ export default function Home() {
 
               <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
                 <div className="flex flex-wrap gap-3">
-                  <InternalPillButton href="/mad-mind" primary>
-                    Enter MAD Mind
-                  </InternalPillButton>
+                  <PrimaryButton href="/mad-mind">Enter MAD Mind</PrimaryButton>
 
-                  <a
-                    href="#confessions"
-                    className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] px-5 py-3 text-sm font-black text-white transition duration-200 hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]"
-                  >
-                    See What People Are Saying
-                  </a>
+                  <SecondaryAnchor href="#confessions">
+                    See What People Really Think
+                  </SecondaryAnchor>
                 </div>
 
                 <div className="flex w-full max-w-md items-center justify-between">
@@ -127,11 +134,7 @@ export default function Home() {
                     src="/logos/MAD-TELEGRAM.png"
                     alt="Telegram"
                   />
-                  <SocialIcon
-                    href={LINKS.x}
-                    src="/logos/MAD-X-LOGO.png"
-                    alt="X"
-                  />
+                  <SocialIcon href={LINKS.x} src="/logos/MAD-X-LOGO.png" alt="X" />
                   <SocialIcon
                     href={LINKS.instagram}
                     src="/logos/MAD-INSTAGRAM-LOGO.png"
@@ -158,6 +161,7 @@ export default function Home() {
               </div>
             </div>
 
+            {/* RIGHT */}
             <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-5 sm:p-7 lg:p-10">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.14),transparent_44%)]" />
 
@@ -198,7 +202,8 @@ export default function Home() {
               </h2>
 
               <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
-                People say what they really feel. Others react. The real ones rise to the top.
+                People say what they really feel. Others react. The strongest rise
+                to the top.
               </p>
             </div>
 
