@@ -1,193 +1,214 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import Link from "next/link";
+import MadConfessions from "./components/MadConfessions";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Home" },
+const LINKS = {
+  telegram: "https://t.me/MadOfficalChannel",
+  x: "https://x.com/madrichclub_",
+  instagram: "https://www.instagram.com/madrichclub/",
+  tiktok: "https://www.tiktok.com/@madrichclub",
+} as const;
 
-  {
-    href: "/roadmap",
-    label: "The Mad Path",
-    mobileLabel: "Mad Path",
-  },
-
-  { href: "/game", label: "Game" },
-
-  {
-    href: "/mad-mind",
-    label: "MAD AI",
-    mobileLabel: "MAD AI",
-    variant: "primary" as const,
-  },
-
-  { href: "/memes", label: "$MAD Art", mobileLabel: "Art" },
-
-  { href: "/forge", label: "Forge" },
-
-  {
-    href: "/merch",
-    label: "Merch",
-    variant: "cta" as const,
-  },
-];
-
-export default function NavBar() {
-  const pathname = usePathname();
-
-  return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[rgba(5,5,5,0.78)] backdrop-blur-xl">
-      {/* subtle red energy line */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <nav className="py-3">
-          {/* DESKTOP */}
-          <div className="hidden items-center justify-between gap-6 md:flex">
-            {/* LOGO */}
-            <Link
-              href="/"
-              className="group flex items-center gap-3 rounded-2xl px-2 py-1 transition hover:bg-white/[0.03]"
-            >
-              <span className="relative inline-flex h-11 w-11 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_0_20px_rgba(255,0,0,0.15)]">
-                <Image
-                  src="/mad.png"
-                  alt="$MAD logo"
-                  fill
-                  priority
-                  sizes="44px"
-                  className="object-cover"
-                />
-              </span>
-
-              <div className="flex flex-col leading-none">
-                <span className="text-sm font-black tracking-[0.18em] text-white">
-                  $MAD
-                </span>
-                <span className="text-[10px] uppercase tracking-[0.3em] text-white/40">
-                  Controlled Chaos
-                </span>
-              </div>
-            </Link>
-
-            {/* NAV */}
-            <div className="flex flex-1 justify-end gap-2">
-              {NAV_ITEMS.map((item) => (
-                <NavPill
-                  key={item.href}
-                  href={item.href}
-                  pathname={pathname}
-                  variant={item.variant}
-                >
-                  {item.label}
-                </NavPill>
-              ))}
-            </div>
-          </div>
-
-          {/* MOBILE */}
-          <div className="md:hidden">
-            <div className="flex items-center justify-between">
-              {/* LOGO */}
-              <Link href="/" className="flex items-center gap-3">
-                <span className="relative inline-flex h-10 w-10 overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                  <Image
-                    src="/mad.png"
-                    alt="$MAD logo"
-                    fill
-                    priority
-                    sizes="40px"
-                    className="object-cover"
-                  />
-                </span>
-
-                <span className="text-sm font-black text-white">$MAD</span>
-              </Link>
-
-              {/* QUICK MAD AI BUTTON */}
-              <Link
-                href="/mad-mind"
-                className="rounded-full border border-red-500/40 bg-red-500/15 px-3 py-2 text-xs font-black text-red-400 shadow-[0_0_12px_rgba(255,0,0,0.4)]"
-              >
-                MAD AI
-              </Link>
-            </div>
-
-            {/* SCROLLABLE NAV */}
-            <div className="mt-3 -mx-1 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="flex min-w-max gap-2 px-1">
-                {NAV_ITEMS.map((item) => (
-                  <NavPill
-                    key={item.href}
-                    href={item.href}
-                    pathname={pathname}
-                    mobile
-                    variant={item.variant}
-                  >
-                    {item.mobileLabel ?? item.label}
-                  </NavPill>
-                ))}
-              </div>
-            </div>
-          </div>
-        </nav>
-      </div>
-    </header>
-  );
-}
-
-function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(href + "/");
-}
-
-function NavPill({
+function InternalPillButton({
   href,
   children,
-  pathname,
-  mobile = false,
-  variant,
+  primary = false,
 }: {
   href: string;
-  children: ReactNode;
-  pathname: string;
-  mobile?: boolean;
-  variant?: "primary" | "cta";
+  children: React.ReactNode;
+  primary?: boolean;
 }) {
-  const active = isActive(pathname, href);
-
-  const base =
-    "inline-flex items-center justify-center rounded-full border font-semibold transition-all duration-300 whitespace-nowrap";
-  const size = mobile ? "px-3.5 py-2 text-[13px]" : "px-4 py-2 text-sm";
-
-  const defaultStyle = active
-    ? "border-red-500/40 bg-red-500/15 text-red-400 shadow-[0_0_12px_rgba(255,0,0,0.45)]"
-    : "border-white/10 bg-white/[0.04] text-white/85 hover:border-red-500/25 hover:bg-white/[0.08]";
-
-  const primaryStyle = active
-    ? "border-red-500/50 bg-red-500/20 text-red-300 shadow-[0_0_16px_rgba(255,0,0,0.6)]"
-    : "border-red-500/25 bg-[linear-gradient(180deg,rgba(90,12,12,0.5),rgba(45,6,6,0.7))] text-white hover:border-red-500/40";
-
-  const ctaStyle = active
-    ? "border-white bg-white text-black shadow-[0_0_18px_rgba(255,255,255,0.35)]"
-    : "border-white/20 bg-white/10 text-white hover:bg-white hover:text-black";
-
   return (
     <Link
       href={href}
       className={[
-        base,
-        size,
-        variant === "primary"
-          ? primaryStyle
-          : variant === "cta"
-          ? ctaStyle
-          : defaultStyle,
+        "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-black transition duration-200",
+        primary
+          ? "border border-red-500/30 bg-red-500 text-white hover:scale-[1.01] hover:bg-red-400"
+          : "border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] text-white hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]",
       ].join(" ")}
     >
       {children}
     </Link>
+  );
+}
+
+function SocialIcon({
+  href,
+  src,
+  alt,
+}: {
+  href: string;
+  src: string;
+  alt: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={alt}
+      title={alt}
+      className="block h-14 w-14 shrink-0 transition-transform duration-300 hover:scale-110"
+    >
+      <Image
+        src={src}
+        alt={alt}
+        width={56}
+        height={56}
+        className="h-full w-full object-contain"
+      />
+    </a>
+  );
+}
+
+export default function Home() {
+  return (
+    <div className="relative min-h-screen overflow-x-hidden bg-[#050505] text-white">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.10),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.08),transparent_30%)]" />
+        <div className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-4 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8">
+        {/* HERO */}
+        <section className="overflow-hidden rounded-[38px] border border-white/10 bg-black/35 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+          <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="relative flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-12 lg:py-20">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
+
+              <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/40">
+                CONTROLLED CHAOS
+              </p>
+
+              <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[4.5rem] lg:text-[6rem]">
+                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
+                  STOP
+                </span>
+                <br />
+                TRADING
+                <br />
+                NOISE.
+                <br />
+                START
+                <br />
+                BEING{" "}
+                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.6)]">
+                  $MAD
+                </span>{" "}
+                <span className="text-green-400 drop-shadow-[0_0_18px_rgba(0,255,120,0.6)]">
+                  RICH
+                </span>
+                .
+              </h1>
+
+              <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
+                Control the chaos. Or it controls you.
+              </p>
+
+              <div className="mt-10 flex w-full max-w-md flex-col items-start gap-6">
+                <div className="flex flex-wrap gap-3">
+                  <InternalPillButton href="/mad-mind" primary>
+                    Enter MAD Mind
+                  </InternalPillButton>
+
+                  <a
+                    href="#confessions"
+                    className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[linear-gradient(180deg,rgba(70,20,20,0.75),rgba(36,10,10,0.9))] px-5 py-3 text-sm font-black text-white transition duration-200 hover:border-white/20 hover:bg-[linear-gradient(180deg,rgba(82,26,26,0.85),rgba(44,12,12,0.96))]"
+                  >
+                    View Confessions
+                  </a>
+                </div>
+
+                <div className="flex w-full max-w-md items-center justify-between">
+                  <SocialIcon
+                    href={LINKS.telegram}
+                    src="/logos/MAD-TELEGRAM.png"
+                    alt="Telegram"
+                  />
+                  <SocialIcon
+                    href={LINKS.x}
+                    src="/logos/MAD-X-LOGO.png"
+                    alt="X"
+                  />
+                  <SocialIcon
+                    href={LINKS.instagram}
+                    src="/logos/MAD-INSTAGRAM-LOGO.png"
+                    alt="Instagram"
+                  />
+                  <SocialIcon
+                    href={LINKS.tiktok}
+                    src="/logos/MAD-TIKTOK-LOGO.png"
+                    alt="TikTok"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="relative flex items-center justify-center bg-[linear-gradient(180deg,rgba(100,0,0,0.18),rgba(20,0,0,0.04))] p-5 sm:p-7 lg:p-10">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.14),transparent_44%)]" />
+
+              <div className="relative w-full max-w-[620px]">
+                <div className="absolute -inset-8 rounded-[42px] bg-red-500/10 blur-3xl" />
+
+                <div className="relative rounded-[34px] border border-white/10 bg-black/60 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.6)] sm:p-5">
+                  <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black">
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="aspect-[16/10] w-full object-cover"
+                    >
+                      <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* MAD CONFESSIONS */}
+        <section
+          id="confessions"
+          className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10"
+        >
+          <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+                MAD Confessions
+              </p>
+
+              <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+                Proof everyone’s a little{" "}
+                <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.5)]">
+                  $MAD
+                </span>
+                .
+              </h2>
+
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+                Anonymous thoughts. Real pressure. Real people. This is where
+                the movement talks back.
+              </p>
+            </div>
+
+            <div className="shrink-0">
+              <InternalPillButton href="/mad-mind">
+                Explore MAD AI
+              </InternalPillButton>
+            </div>
+          </div>
+
+          <div className="min-w-0">
+            <MadConfessions />
+          </div>
+        </section>
+      </div>
+    </div>
   );
 }
