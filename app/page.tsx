@@ -5,58 +5,98 @@ import MadConfessions from "./components/MadConfessions";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black px-4 py-8 text-white">
-      {/* HERO */}
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-8 rounded-[30px] border border-white/10 bg-[#0a0a0a] p-8 lg:flex-row">
-        {/* LEFT TEXT */}
-        <div className="flex-1">
-          <h1 className="text-5xl font-black leading-tight">
-            <span className="text-red-500">STOP</span> TRADING NOISE.
-            <br />
-            START BEING{" "}
-            <span className="text-red-500">$MAD</span>{" "}
-            <span className="text-green-400">RICH</span>.
-          </h1>
-
-          <p className="mt-4 text-white/60">
-            Control the chaos. Or it controls you.
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href="/mad-mind"
-              className="rounded-full bg-red-500 px-5 py-2 font-bold text-white transition hover:bg-red-400"
-            >
-              Enter MAD Mind
-            </Link>
-
-            <a
-              href="#confessions"
-              className="rounded-full border border-white/20 px-5 py-2 transition hover:border-white/40 hover:bg-white/5"
-            >
-              View Confessions
-            </a>
-          </div>
-        </div>
-
-        {/* RIGHT VISUAL */}
-        <div className="flex flex-1 justify-center">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full max-w-md rounded-xl"
-          >
-            <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-          </video>
-        </div>
+    <div className="relative min-h-screen overflow-x-hidden bg-black px-4 py-6 text-white sm:px-6 sm:py-8 lg:px-8">
+      {/* BACKGROUND */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.08),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.06),transparent_30%)]" />
+        <div className="absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:40px_40px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70" />
       </div>
 
-      {/* CONFESSIONS */}
-      <div id="confessions" className="mx-auto mt-10 max-w-6xl">
-        <h2 className="mb-4 text-3xl font-black">MAD Confessions</h2>
-        <MadConfessions />
+      <div className="relative mx-auto max-w-6xl">
+        {/* HERO */}
+        <section className="overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0a0a]/90 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+          <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.95fr]">
+            {/* LEFT TEXT */}
+            <div className="px-6 py-10 sm:px-8 sm:py-12 lg:px-10 lg:py-14">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/35">
+                CONTROLLED CHAOS
+              </p>
+
+              <h1 className="mt-5 text-4xl font-black leading-[0.9] tracking-[-0.04em] sm:text-5xl lg:text-7xl">
+                <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.45)]">
+                  STOP
+                </span>{" "}
+                TRADING
+                <br />
+                NOISE.
+                <br />
+                START BEING{" "}
+                <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.45)]">
+                  $MAD
+                </span>{" "}
+                <span className="text-green-400 drop-shadow-[0_0_16px_rgba(0,255,120,0.35)]">
+                  RICH
+                </span>
+                .
+              </h1>
+
+              <p className="mt-5 max-w-xl text-sm leading-7 text-white/60 sm:text-base">
+                Control the chaos. Or it controls you.
+              </p>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  href="/mad-mind"
+                  className="inline-flex items-center justify-center rounded-full bg-red-500 px-5 py-2.5 text-sm font-bold text-white transition duration-200 hover:scale-[1.02] hover:bg-red-400"
+                >
+                  Enter MAD Mind
+                </Link>
+
+                <a
+                  href="#confessions"
+                  className="inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:border-white/40 hover:bg-white/5"
+                >
+                  View Confessions
+                </a>
+              </div>
+            </div>
+
+            {/* RIGHT VISUAL */}
+            <div className="relative flex justify-center px-6 pb-8 sm:px-8 lg:px-10 lg:pb-0">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,60,60,0.12),transparent_45%)]" />
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="relative w-full max-w-md rounded-2xl border border-white/10 bg-black shadow-[0_18px_60px_rgba(0,0,0,0.45)]"
+              >
+                <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+        </section>
+
+        {/* CONFESSIONS */}
+        <section
+          id="confessions"
+          className="mt-10 rounded-[30px] border border-white/10 bg-[#0a0a0a]/90 p-6 shadow-[0_20px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8"
+        >
+          <div className="mb-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/35">
+              MAD CONFESSIONS
+            </p>
+            <h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">
+              Say it. Don’t hold it.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/60 sm:text-base">
+              Anonymous thoughts. Real pressure. Real people.
+            </p>
+          </div>
+
+          <MadConfessions />
+        </section>
       </div>
     </div>
   );
