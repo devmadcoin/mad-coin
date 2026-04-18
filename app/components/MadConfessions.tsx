@@ -124,11 +124,21 @@ function setLastPostAt(value: number) {
 
 function getReactionMap(): Record<string, true> {
   if (typeof window === "undefined") return {};
+
   try {
     const raw = window.localStorage.getItem(REACTED_KEY);
     if (!raw) return {};
-    const parsed = JSON.parse(raw) as Record<string, true>;
-    return parsed && typeof parsed === "object" ? parsed : {};
+
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    const clean: Record<string, true> = {};
+
+    for (const [key, value] of Object.entries(parsed)) {
+      if (value === true) {
+        clean[key] = true;
+      }
+    }
+
+    return clean;
   } catch {
     return {};
   }
@@ -314,7 +324,7 @@ export default function MadConfessions() {
       return;
     }
 
-    const nextReactionMap = {
+    const nextReactionMap: Record<string, true> = {
       ...reactedMap,
       [storageKey]: true,
     };
@@ -636,8 +646,8 @@ export default function MadConfessions() {
               {posting
                 ? "Posting…"
                 : cooldownLeft > 0
-                ? `Wait ${Math.ceil(cooldownLeft / 1000)}s`
-                : "Post"}
+                  ? `Wait ${Math.ceil(cooldownLeft / 1000)}s`
+                  : "Post"}
             </button>
           </div>
 
