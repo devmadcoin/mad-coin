@@ -144,11 +144,12 @@ function isToday(timestamp: number) {
 }
 
 function buildShareText(confession: Confession) {
-  const score = totalReactions(confession.reactions);
-  const persona = personaForId(confession.id);
-  return `Top $MAD confession from ${persona}: "${confession.text}" — ${score} reaction${
-    score === 1 ? "" : "s"
-  }`;
+  return `$MAD Confession:
+
+${confession.text}
+
+Most people panic. You don’t have to.
+mad-coin.vercel.app`;
 }
 
 function buildShareUrl() {
@@ -349,6 +350,7 @@ export default function MadConfessions() {
   async function shareConfession(confession: Confession) {
     const shareText = buildShareText(confession);
     const shareUrl = buildShareUrl();
+    const fullShare = `${shareText}\n\n${shareUrl}`;
 
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
@@ -360,25 +362,23 @@ export default function MadConfessions() {
         setShareMessage("Shared");
         return;
       } catch {
-        // fall through to clipboard/X
+        // fall through
       }
     }
 
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       try {
-        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-        setShareMessage("Copied share text");
+        await navigator.clipboard.writeText(fullShare);
+        setShareMessage("Copied. Now go post it.");
         return;
       } catch {
-        // fall through to X
+        // fall through
       }
     }
 
-    const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
-      `${shareText} ${shareUrl}`
-    )}`;
+    const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(fullShare)}`;
     window.open(xUrl, "_blank", "noopener,noreferrer");
-    setShareMessage("Opened share");
+    setShareMessage("Opened X share");
   }
 
   const headerChip = useMemo(() => {
@@ -450,11 +450,11 @@ export default function MadConfessions() {
             </p>
 
             <h2 className="mt-3 text-2xl font-black sm:text-3xl">
-              Say it. Don’t hold it.
+              Say what you’re really thinking.
             </h2>
 
             <p className="mt-3 text-sm text-white/70">
-              Short. Anonymous. Raw signal only.
+              People say what they really feel. Others react. The real ones rise to the top.
             </p>
           </div>
 
@@ -464,7 +464,7 @@ export default function MadConfessions() {
             </div>
 
             <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
-              Auto-refresh on
+              Live
             </div>
 
             <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
@@ -487,7 +487,7 @@ export default function MadConfessions() {
                   Top MAD Today
                 </p>
                 <p className="mt-1 text-sm text-white/65">
-                  Today’s strongest confession by reaction score.
+                  Today’s most reacted confession.
                 </p>
               </div>
 
@@ -602,7 +602,7 @@ export default function MadConfessions() {
             onChange={(e) => setText(e.target.value)}
             rows={3}
             maxLength={240}
-            placeholder="Confess what made you $MAD today…"
+            placeholder="What made you mad today?"
             className="w-full resize-none rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder:text-white/35 focus:border-white/20 focus:outline-none"
           />
 
@@ -738,9 +738,8 @@ export default function MadConfessions() {
                       disabled={!!reactedMap[reactionStorageKey(c.id, "handshake")]}
                       onClick={() => react(c.id, "handshake")}
                     />
-                    <ReactionButton
+                    <ActionButton
                       label="Share"
-                      count={score}
                       onClick={() => shareConfession(c)}
                     />
                   </div>
@@ -779,6 +778,24 @@ function ReactionButton({
     >
       {label}
       <span className="rounded bg-white/10 px-2">{count}</span>
+    </button>
+  );
+}
+
+function ActionButton({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs transition hover:bg-white/10"
+    >
+      {label}
     </button>
   );
 }
