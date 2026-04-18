@@ -302,14 +302,16 @@ function scoreInput(input: string) {
 }
 
 function dominantTrait(profile: UserProfile) {
-  const pairs = [
+  const pairs: Array<
+    ["hesitation" | "ego" | "cope" | "greed" | "discipline" | "fear", number]
+  > = [
     ["hesitation", profile.hesitationScore],
     ["ego", profile.egoScore],
     ["cope", profile.copeScore],
     ["greed", profile.greedScore],
     ["discipline", profile.disciplineScore],
     ["fear", profile.fearScore],
-  ] as const;
+  ];
 
   return pairs.sort((a, b) => b[1] - a[1])[0][0];
 }
