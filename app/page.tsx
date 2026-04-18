@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import MadConfessions from "@/app/components/MadConfessions";
+import MadConfessions from "./components/MadConfessions";
 
 const LINKS = {
   telegram: "https://t.me/MadOfficalChannel",
