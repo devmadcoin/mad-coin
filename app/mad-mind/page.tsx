@@ -148,31 +148,31 @@ const SAFE_GUARD_PATTERNS = [
 const CHALLENGE_DEFINITIONS: Record<ChallengeKey, ChallengeDefinition> = {
   no_repeats_5: {
     key: "no_repeats_5",
-    title: "No Echoes",
+    title: "No Repeats",
     description: "Send 5 messages without repeating yourself.",
     target: 5,
   },
   survive_7: {
     key: "survive_7",
-    title: "Steel Stomach",
-    description: "Survive 7 bot replies in one day.",
+    title: "Talk 7 Times",
+    description: "Get through 7 bot replies today.",
     target: 7,
   },
   earn_respect_1: {
     key: "earn_respect_1",
     title: "Earn Respect",
-    description: "Trigger 1 rare respect-flavored moment.",
+    description: "Trigger 1 rare respect moment.",
     target: 1,
   },
   demon_survive_3: {
     key: "demon_survive_3",
-    title: "Demon Shift",
-    description: "Survive 3 replies in Demon mode.",
+    title: "Brutal Mode",
+    description: "Get through 3 replies in Brutal mode.",
     target: 3,
   },
   score_250: {
     key: "score_250",
-    title: "Quarter Kilo Rage",
+    title: "Hit 250",
     description: "Reach a score of 250.",
     target: 250,
   },
@@ -220,7 +220,7 @@ function getRuntimeSessionId() {
 
 function defaultProfile(): UserProfile {
   return {
-    name: "Anonymous Survivor",
+    name: "Anonymous Player",
     totalMessages: 0,
     repeatedQuestions: 0,
     hesitationScore: 0,
@@ -314,20 +314,37 @@ function deriveArchetype(profile: UserProfile): Archetype {
   return "The Survivor";
 }
 
+function archetypeTitle(archetype: Archetype) {
+  switch (archetype) {
+    case "The Hesitator":
+      return "You overthink everything";
+    case "The Shortcut Addict":
+      return "You chase quick wins";
+    case "The Excuse Architect":
+      return "You make excuses";
+    case "The Panic Trader":
+      return "You panic fast";
+    case "The Faker":
+      return "You protect your image";
+    case "The Survivor":
+      return "You’re actually improving";
+  }
+}
+
 function archetypeDescription(archetype: Archetype) {
   switch (archetype) {
     case "The Hesitator":
-      return "Waits for certainty until momentum dies.";
+      return "You wait too long and lose momentum.";
     case "The Shortcut Addict":
-      return "Wants upside faster than mastery.";
+      return "You want the reward before the work.";
     case "The Excuse Architect":
-      return "Builds clean stories around bad habits.";
+      return "You explain problems instead of fixing them.";
     case "The Panic Trader":
-      return "Lets fear hold the steering wheel.";
+      return "Fear takes over too easily.";
     case "The Faker":
-      return "Protects image harder than progress.";
+      return "You care too much about looking smart.";
     case "The Survivor":
-      return "Still flawed, but actually moving.";
+      return "You’re not perfect, but you’re moving.";
   }
 }
 
@@ -335,25 +352,25 @@ function buildWeakSpotLabel(input: string) {
   const text = normalizeInput(input);
 
   if (/rich|money|profit|100x|moon|investment|token|pump/.test(text)) {
-    return "chases upside faster than mastery";
+    return "chases money too fast";
   }
   if (/same|again|repeat/.test(text)) {
-    return "loops instead of learning";
+    return "keeps repeating the same patterns";
   }
   if (/should i|maybe|not sure|guess/.test(text)) {
-    return "hesitates until momentum dies";
+    return "overthinks instead of moving";
   }
   if (/afraid|fear|panic|worried/.test(text)) {
-    return "lets fear wear the crown";
+    return "lets fear take over";
   }
   if (/later|tomorrow|eventually/.test(text)) {
-    return "romanticizes delay";
+    return "keeps putting things off";
   }
   if (/why me|unfair|they/.test(text)) {
-    return "outsources blame";
+    return "blames instead of adjusts";
   }
 
-  return "asks for answers while dodging action";
+  return "asks for answers but avoids action";
 }
 
 function isSensitiveInput(input: string) {
@@ -526,6 +543,30 @@ function getMessageDisplayText(message: ChatMessage) {
   return message.text;
 }
 
+function displayCookLevel(level: CookLevel) {
+  switch (level) {
+    case "mild":
+      return "Easy";
+    case "mean":
+      return "Real";
+    case "crashout":
+      return "Savage";
+    case "demon":
+      return "Brutal";
+  }
+}
+
+function displayStyle(style: StyleTab) {
+  switch (style) {
+    case "safe":
+      return "Nice";
+    case "savage":
+      return "Honest";
+    case "crashout":
+      return "Unfiltered";
+  }
+}
+
 async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
   if (!supabase) return [];
   const { data, error } = await supabase
@@ -583,13 +624,13 @@ export default function MadMindPage() {
   const [profile, setProfile] = useState<UserProfile>(defaultProfile());
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [input, setInput] = useState("");
-  const [username, setUsername] = useState("Anonymous Survivor");
+  const [username, setUsername] = useState("Anonymous Player");
   const [cookLevel, setCookLevel] = useState<CookLevel>("crashout");
   const [preferredStyle, setPreferredStyle] = useState<StyleTab>("savage");
   const [isThinking, setIsThinking] = useState(false);
   const [copyToast, setCopyToast] = useState("");
   const [supabaseStatus, setSupabaseStatus] = useState(
-    hasSupabase ? "Supabase connected" : "Local mode only",
+    hasSupabase ? "Leaderboard connected" : "Local mode only",
   );
   const [dailyState, setDailyState] = useState<DailyChallengeState>(createDailyState(todayKey()));
   const [selectedRoast, setSelectedRoast] = useState<ChatMessage | null>(null);
@@ -606,7 +647,7 @@ export default function MadMindPage() {
 
     setMessages(savedMessages);
     setProfile(savedProfile);
-    setUsername(savedSession?.name || savedProfile.name || "Anonymous Survivor");
+    setUsername(savedSession?.name || savedProfile.name || "Anonymous Player");
     setCookLevel(savedCookLevel);
     setPreferredStyle(savedPreferredStyle);
     setDailyState(ensureDailyState(savedDaily));
@@ -616,10 +657,10 @@ export default function MadMindPage() {
       void fetchLeaderboard()
         .then((rows) => {
           setLeaderboard(rows);
-          setSupabaseStatus("Supabase live leaderboard");
+          setSupabaseStatus("Live leaderboard");
         })
         .catch(() => {
-          setSupabaseStatus("Supabase unavailable");
+          setSupabaseStatus("Leaderboard unavailable");
         });
     }
   }, []);
@@ -677,7 +718,7 @@ export default function MadMindPage() {
   const activeChallenges = dailyState.activeKeys.map((key) => CHALLENGE_DEFINITIONS[key]);
 
   async function saveIdentity(name: string) {
-    const cleaned = name.trim() || "Anonymous Survivor";
+    const cleaned = name.trim() || "Anonymous Player";
     setUsername(cleaned);
 
     const nextProfile = { ...profile, name: cleaned };
@@ -701,7 +742,7 @@ export default function MadMindPage() {
 
   function resetSession() {
     const fresh = defaultProfile();
-    fresh.name = username || "Anonymous Survivor";
+    fresh.name = username || "Anonymous Player";
     setProfile(fresh);
     setMessages([]);
     setSelectedRoast(null);
@@ -719,7 +760,9 @@ export default function MadMindPage() {
   }
 
   async function shareScore() {
-    const text = `${username} survived the $MAD Bot in ${cookLevel.toUpperCase()} mode with score ${score} as ${archetype}.`;
+    const text = `${username} got a score of ${score} in ${displayCookLevel(
+      cookLevel,
+    )} mode and is currently: ${archetypeTitle(archetype)}.`;
 
     if (navigator.share) {
       try {
@@ -738,12 +781,14 @@ export default function MadMindPage() {
 
     const card = [
       "━━━━━━━━━━━━━━━━━━",
-      "$MAD BOT ROAST CARD",
+      "$MAD BOT CARD",
       "━━━━━━━━━━━━━━━━━━",
       `Name: ${username}`,
-      `Archetype: ${archetype}`,
-      `Cook Level: ${cookLevel.toUpperCase()}`,
-      `Style: ${(message.selectedStyle || message.meta?.favoriteStyle || "savage").toUpperCase()}`,
+      `Current Type: ${archetypeTitle(archetype)}`,
+      `Mode: ${displayCookLevel(cookLevel)}`,
+      `Style: ${displayStyle(
+        message.selectedStyle || message.meta?.favoriteStyle || "savage",
+      )}`,
       `Score: ${score}`,
       "",
       visibleText,
@@ -813,7 +858,7 @@ export default function MadMindPage() {
     const delay = 220 + Math.floor(Math.random() * 280);
     await new Promise((resolve) => setTimeout(resolve, delay));
 
-    let replyText = "Signal lost.";
+    let replyText = "Something broke.";
     let replyOutputs: BotVariants | undefined;
     let replyMeta: BotMeta | undefined;
     let respected = false;
@@ -836,7 +881,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             cookLevel,
             archetype: archetypeNow,
             sessionId,
-            username: (nextProfileBase.name || username || "Anonymous Survivor").trim(),
+            username: (nextProfileBase.name || username || "Anonymous Player").trim(),
             preferredStyle,
             multiOutput: true,
           }),
@@ -872,15 +917,15 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             replyOutputs.savage ||
             replyOutputs.safe ||
             replyOutputs.crashout ||
-            "Signal lost.";
+            "Something broke.";
         }
 
         if (!replyText) {
-          replyText = "Signal lost.";
+          replyText = "Something broke.";
         }
       } catch (error) {
         console.error("MAD Mind fetch failed:", error);
-        replyText = "Signal broke.";
+        replyText = "Connection broke.";
       }
 
       const respectSource =
@@ -943,7 +988,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
     if (hasSupabase) {
       await upsertRemoteScore({
-        player_name: (finalProfile.name || username || "Anonymous Survivor").trim(),
+        player_name: (finalProfile.name || username || "Anonymous Player").trim(),
         score: nextScore,
         survived_responses: finalProfile.survivedResponses,
         best_streak: finalProfile.bestStreak,
@@ -978,7 +1023,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
   if (!mounted) {
     return (
       <div className="min-h-screen bg-black text-white">
-        <div className="mx-auto max-w-6xl px-6 py-20">Loading $MAD Mind...</div>
+        <div className="mx-auto max-w-6xl px-6 py-20">Loading MAD Mind...</div>
       </div>
     );
   }
@@ -994,10 +1039,11 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
         <div className="mb-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
             <p className="text-xs uppercase tracking-[0.35em] text-red-400/80">$MAD Mind</p>
-            <h1 className="mt-2 text-3xl font-black sm:text-4xl">Archetype Chamber</h1>
+            <h1 className="mt-2 text-3xl font-black sm:text-4xl">
+              Talk. Get called out. Get better.
+            </h1>
             <p className="mt-2 max-w-2xl text-sm text-white/65">
-              Daily challenges, roast cards, evolving archetypes, and now Safe / Savage /
-              Crashout response modes.
+              Ask anything. The bot tells you the truth. Most people can’t handle it.
             </p>
 
             <div className="mt-4 flex flex-wrap gap-2">
@@ -1011,7 +1057,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                       : "border border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
                   }`}
                 >
-                  {level.toUpperCase()}
+                  {displayCookLevel(level).toUpperCase()}
                 </button>
               ))}
 
@@ -1025,7 +1071,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
             <div className="mt-4">
               <p className="mb-2 text-xs uppercase tracking-[0.25em] text-white/45">
-                Preferred Style
+                How should it talk to you?
               </p>
               <div className="flex flex-wrap gap-2">
                 {(["safe", "savage", "crashout"] as StyleTab[]).map((style) => (
@@ -1033,7 +1079,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                     key={style}
                     onClick={() => setPreferredStyle(style)}
                     className={cn(
-                      "rounded-2xl px-4 py-2 text-sm font-bold capitalize transition",
+                      "rounded-2xl px-4 py-2 text-sm font-bold transition",
                       preferredStyle === style
                         ? style === "safe"
                           ? "bg-white/15 text-white"
@@ -1043,7 +1089,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                         : "border border-white/10 bg-white/5 text-white/80 hover:bg-white/10",
                     )}
                   >
-                    {style}
+                    {displayStyle(style)}
                   </button>
                 ))}
               </div>
@@ -1051,13 +1097,15 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
           </div>
 
           <div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-5">
-            <p className="text-xs uppercase tracking-[0.35em] text-red-300/80">Identity</p>
+            <p className="text-xs uppercase tracking-[0.35em] text-red-300/80">
+              Your Name (Optional)
+            </p>
 
             <div className="mt-3 flex flex-col gap-3">
               <input
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter survivor name"
+                placeholder="Enter a name"
                 className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm outline-none placeholder:text-white/35 focus:border-red-400/50"
               />
 
@@ -1085,14 +1133,16 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
         <div className="mb-4 grid gap-4 lg:grid-cols-[0.68fr_0.32fr]">
           <div className="rounded-3xl border border-emerald-400/20 bg-emerald-500/10 p-5">
-            <p className="text-xs uppercase tracking-[0.35em] text-emerald-200/80">Archetype</p>
+            <p className="text-xs uppercase tracking-[0.35em] text-emerald-200/80">
+              How You Act Right Now
+            </p>
             <div className="mt-2 flex items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-black">{archetype}</h2>
+                <h2 className="text-2xl font-black">{archetypeTitle(archetype)}</h2>
                 <p className="mt-1 text-sm text-white/70">{archetypeDescription(archetype)}</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-right">
-                <div className="text-xs text-white/45">Dominant weakness</div>
+                <div className="text-xs text-white/45">Biggest issue</div>
                 <div className="mt-1 text-sm font-bold">{dominantLabel}</div>
               </div>
             </div>
@@ -1100,20 +1150,20 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
 
           <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
             <p className="text-xs uppercase tracking-[0.35em] text-white/45">
-              Session Best Roast
+              Best Call-Out
             </p>
             {topRoast ? (
               <button
                 onClick={() => setSelectedRoast(topRoast)}
                 className="mt-3 w-full rounded-2xl border border-white/10 bg-black/30 p-4 text-left hover:bg-black/50"
               >
-                <div className="text-sm font-bold text-red-200">Open roast card</div>
+                <div className="text-sm font-bold text-red-200">Open best card</div>
                 <div className="mt-2 line-clamp-3 text-sm text-white/70">
                   {getMessageDisplayText(topRoast)}
                 </div>
               </button>
             ) : (
-              <p className="mt-3 text-sm text-white/45">No roast card yet.</p>
+              <p className="mt-3 text-sm text-white/45">No call-out yet.</p>
             )}
           </div>
         </div>
@@ -1124,9 +1174,9 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs uppercase tracking-[0.35em] text-white/45">
-                    Live Chamber
+                    Live Chat
                   </p>
-                  <h2 className="mt-1 text-xl font-bold">Talk to the bot</h2>
+                  <h2 className="mt-1 text-xl font-bold">Say something. It will respond.</h2>
                 </div>
 
                 <div className="flex flex-wrap gap-2 text-xs">
@@ -1140,7 +1190,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                     Respect: {profile.respectCount}
                   </span>
                   <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-white/70">
-                    No Repeat Streak: {profile.noRepeatStreak}
+                    No Repeat: {profile.noRepeatStreak}
                   </span>
                 </div>
               </div>
@@ -1149,10 +1199,9 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             <div className="h-[58vh] overflow-y-auto px-4 py-4 sm:px-6">
               {messages.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-white/10 bg-black/20 p-6 text-white/55">
-                  <p className="text-lg font-semibold text-white">Enter the chamber.</p>
+                  <p className="text-lg font-semibold text-white">Type anything.</p>
                   <p className="mt-2 text-sm">
-                    Ask about money, discipline, virality, hesitation, fear, branding,
-                    execution, captions, comebacks, and manifestos.
+                    Ask about money, life, captions, replies, ideas, or anything you’re stuck on.
                   </p>
                 </div>
               ) : (
@@ -1179,9 +1228,9 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                           <div className="mb-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
                             <span>
                               {message.role === "user"
-                                ? "Survivor"
+                                ? "You"
                                 : message.respected
-                                  ? "Respect Mode"
+                                  ? "Respect"
                                   : "$MAD Bot"}
                             </span>
 
@@ -1194,7 +1243,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                             {message.role === "bot" &&
                             typeof message.meta?.escalation === "number" ? (
                               <span className="rounded-full border border-red-500/20 bg-red-950/40 px-2 py-0.5 text-[10px] tracking-[0.18em] text-red-200">
-                                Esc {message.meta.escalation}
+                                Level {message.meta.escalation}
                               </span>
                             ) : null}
                           </div>
@@ -1219,7 +1268,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                                   key={style}
                                   onClick={() => updateMessageStyle(message.id, style)}
                                   className={cn(
-                                    "rounded-full border px-3 py-1 text-[11px] font-bold capitalize transition",
+                                    "rounded-full border px-3 py-1 text-[11px] font-bold transition",
                                     (message.selectedStyle ||
                                       message.meta?.favoriteStyle ||
                                       "savage") === style
@@ -1231,7 +1280,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                                       : "border-white/10 bg-black/20 text-white/65 hover:bg-black/35",
                                   )}
                                 >
-                                  {style}
+                                  {displayStyle(style)}
                                 </button>
                               ))}
                             </div>
@@ -1246,13 +1295,13 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                               onClick={() => void copyText(displayText)}
                               className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
                             >
-                              Copy roast
+                              Copy
                             </button>
                             <button
                               onClick={() => setSelectedRoast(message)}
                               className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/75 hover:bg-white/10"
                             >
-                              Roast card
+                              Card
                             </button>
                             <button
                               onClick={() => void shareScore()}
@@ -1295,9 +1344,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                       <div className="mb-2 text-[11px] uppercase tracking-[0.3em] text-white/45">
                         $MAD Bot
                       </div>
-                      <div className="text-sm leading-7 sm:text-[15px]">
-                        analyzing weakness...
-                      </div>
+                      <div className="text-sm leading-7 sm:text-[15px]">thinking...</div>
                     </div>
                   )}
 
@@ -1313,29 +1360,29 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={onKeyDown}
                   rows={4}
-                  placeholder="Type your question and press Enter..."
+                  placeholder="Ask anything..."
                   className="w-full resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-white/30"
                 />
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                   <p className="text-xs text-white/35">Enter = send · Shift + Enter = new line</p>
                   <div className="flex flex-wrap gap-2">
                     <button
-                      onClick={() => setInput("Explain Stay $MAD")}
+                      onClick={() => setInput("What is $MAD?")}
                       className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white/75 hover:bg-white/10"
                     >
-                      Explain Stay $MAD
+                      What is $MAD?
                     </button>
                     <button
-                      onClick={() => setInput("Write a savage caption")}
+                      onClick={() => setInput("Give me a caption")}
                       className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white/75 hover:bg-white/10"
                     >
-                      Savage caption
+                      Give me a caption
                     </button>
                     <button
-                      onClick={() => setInput("Give me a comeback reply")}
+                      onClick={() => setInput("Help me reply")}
                       className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white/75 hover:bg-white/10"
                     >
-                      Comeback
+                      Help me reply
                     </button>
                     <button
                       onClick={() => void handleSend()}
@@ -1353,7 +1400,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
           <aside className="space-y-4">
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
               <p className="text-xs uppercase tracking-[0.35em] text-white/45">
-                Daily Challenges
+                Today’s Goals
               </p>
               <div className="mt-4 space-y-3">
                 {activeChallenges.map((challenge) => {
@@ -1399,35 +1446,34 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/45">Learned Profile</p>
+              <p className="text-xs uppercase tracking-[0.35em] text-white/45">
+                What It Sees About You
+              </p>
 
               <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                 <Stat label="Messages" value={profile.totalMessages} />
                 <Stat label="Repeats" value={profile.repeatedQuestions} />
-                <Stat label="Survived" value={profile.survivedResponses} />
+                <Stat label="Replies" value={profile.survivedResponses} />
                 <Stat label="Respect" value={profile.respectCount} />
               </div>
 
               <div className="mt-4 space-y-3">
-                <Meter label="Hesitation" value={clamp(profile.hesitationScore, 0, 100)} />
+                <Meter label="Overthinking" value={clamp(profile.hesitationScore, 0, 100)} />
                 <Meter label="Ego" value={clamp(profile.egoScore, 0, 100)} />
-                <Meter label="Cope" value={clamp(profile.copeScore, 0, 100)} />
+                <Meter label="Excuses" value={clamp(profile.copeScore, 0, 100)} />
                 <Meter label="Greed" value={clamp(profile.greedScore, 0, 100)} />
-                <Meter
-                  label="Discipline Damage"
-                  value={clamp(profile.disciplineScore, 0, 100)}
-                />
+                <Meter label="Discipline Problems" value={clamp(profile.disciplineScore, 0, 100)} />
                 <Meter label="Fear" value={clamp(profile.fearScore, 0, 100)} />
               </div>
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
               <p className="text-xs uppercase tracking-[0.35em] text-white/45">
-                Learned Weak Spots
+                Your Patterns
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {profile.learnedWeakSpots.length === 0 ? (
-                  <span className="text-sm text-white/45">No weakness profile yet.</span>
+                  <span className="text-sm text-white/45">No patterns yet.</span>
                 ) : (
                   profile.learnedWeakSpots.map((spot) => (
                     <span
@@ -1442,7 +1488,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/45">Top Survivors</p>
+              <p className="text-xs uppercase tracking-[0.35em] text-white/45">Top Players</p>
               <div className="mt-4 space-y-3">
                 {leaderboard.length === 0 ? (
                   <p className="text-sm text-white/45">
@@ -1459,7 +1505,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                           #{index + 1} {entry.player_name}
                         </div>
                         <div className="mt-1 text-xs text-white/45">
-                          {entry.cook_level.toUpperCase()} · Survived: {entry.survived_responses} ·
+                          {displayCookLevel(entry.cook_level)} · Replies: {entry.survived_responses} ·
                           Streak: {entry.best_streak}
                         </div>
                       </div>
@@ -1480,11 +1526,11 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.35em] text-red-300/80">
-                    $MAD Roast Card
+                    $MAD Card
                   </p>
                   <h3 className="mt-2 text-2xl font-black">{username}</h3>
                   <p className="mt-1 text-sm text-white/55">
-                    {archetype} · {cookLevel.toUpperCase()} · Score {score}
+                    {archetypeTitle(archetype)} · {displayCookLevel(cookLevel)} · Score {score}
                   </p>
                 </div>
                 <button
@@ -1506,7 +1552,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                         )
                       }
                       className={cn(
-                        "rounded-full border px-3 py-1 text-xs font-bold capitalize transition",
+                        "rounded-full border px-3 py-1 text-xs font-bold transition",
                         (selectedRoast.selectedStyle ||
                           selectedRoast.meta?.favoriteStyle ||
                           "savage") === style
@@ -1518,7 +1564,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                           : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10",
                       )}
                     >
-                      {style}
+                      {displayStyle(style)}
                     </button>
                   ))}
                 </div>
@@ -1565,7 +1611,7 @@ Tell one real person near you immediately: "I am not safe alone right now."`;
                   onClick={() => void copyText(getMessageDisplayText(selectedRoast))}
                   className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/90 hover:bg-white/10"
                 >
-                  Copy roast only
+                  Copy text
                 </button>
                 <button
                   onClick={() => void refineMessage(selectedRoast, "harder")}
