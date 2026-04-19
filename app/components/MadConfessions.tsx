@@ -3,12 +3,46 @@
 import { useEffect, useMemo, useState } from "react";
 
 type ReactionKey = "same" | "lol" | "handshake";
+type FilterMode = "Latest" | "Hot" | "Unhinged";
+type ApiMode = "latest" | "hot" | "unhinged";
 
 type Confession = {
   id: string;
   text: string;
   createdAt: number;
   reactions: Record<ReactionKey, number>;
+  score?: number;
+};
+
+type Pagination = {
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+};
+
+type GetConfessionsResponse = {
+  confessions: Confession[];
+  pagination: Pagination;
+  mode: ApiMode;
+  error?: string;
+};
+
+type PostConfessionResponse = {
+  item?: Confession;
+  cooldownSeconds?: number;
+  rating?: string;
+  error?: string;
+  retryAfterSeconds?: number;
+};
+
+type PatchReactionResponse = {
+  item?: Confession;
+  reactionLocked?: boolean;
+  retryAfterSeconds?: number;
+  error?: string;
 };
 
 const MAX_LENGTH = 220;
@@ -22,8 +56,13 @@ const PROMPTS = [
   "What do you want to say with no filter?",
 ];
 
-const FILTERS = ["Latest", "Hot", "Unhinged"] as const;
-type FilterMode = (typeof FILTERS)[number];
+const FILTERS: FilterMode[] = ["Latest", "Hot", "Unhinged"];
+
+function filterToApiMode(filter: FilterMode): ApiMode {
+  if (filter === "Hot") return "hot";
+  if (filter === "Unhinged") return "unhinged";
+  return "latest";
+}
 
 function timeAgo(ts: number) {
   const diff = Date.now() - ts;
@@ -35,36 +74,6 @@ function timeAgo(ts: number) {
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   return `${days}d ago`;
-}
-
-function confessionScore(confession: Confession) {
-  const same = confession.reactions.same || 0;
-  const lol = confession.reactions.lol || 0;
-  const handshake = confession.reactions.handshake || 0;
-
-  return same * 2 + lol * 1.2 + handshake * 1.6;
-}
-
-function sortConfessions(items: Confession[], mode: FilterMode) {
-  const copy = [...items];
-
-  if (mode === "Latest") {
-    return copy.sort((a, b) => b.createdAt - a.createdAt);
-  }
-
-  if (mode === "Hot") {
-    return copy.sort((a, b) => {
-      const scoreDiff = confessionScore(b) - confessionScore(a);
-      if (scoreDiff !== 0) return scoreDiff;
-      return b.createdAt - a.createdAt;
-    });
-  }
-
-  return copy.sort((a, b) => {
-    const aEnergy = confessionScore(a) + a.text.length * 0.05;
-    const bEnergy = confessionScore(b) + b.text.length * 0.05;
-    return bEnergy - aEnergy;
-  });
 }
 
 function ReactionButton({
@@ -96,23 +105,28 @@ function ReactionButton({
 }
 
 function PageButton({
-  active,
+  active = false,
+  disabled = false,
   children,
   onClick,
 }: {
   active?: boolean;
+  disabled?: boolean;
   children: React.ReactNode;
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
+      disabled={disabled}
       onClick={onClick}
       className={[
-        "inline-flex h-10 min-w-[40px] items-center justify-center rounded-full border px-4 text-sm font-bold transition duration-200",
+        "inline-flex h-10 min-w-[42px] items-center justify-center rounded-full border px-4 text-sm font-bold transition duration-200",
         active
           ? "border-red-400/40 bg-red-500/15 text-white"
           : "border-white/10 bg-white/[0.04] text-white/65 hover:border-white/20 hover:bg-white/[0.07] hover:text-white",
+        disabled &&
+          "cursor-not-allowed opacity-40 hover:border-white/10 hover:bg-white/[0.04] hover:text-white/65",
       ].join(" ")}
     >
       {children}
@@ -126,57 +140,73 @@ export default function MadConfessions() {
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
   const [filter, setFilter] = useState<FilterMode>("Latest");
-  const [error, setError] = useState("");
-  const [reacted, setReacted] = useState<Record<string, ReactionKey | null>>({});
   const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState<Pagination>({
+    page: 1,
+    pageSize: PAGE_SIZE,
+    totalItems: 0,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPrevPage: false,
+  });
+  const [error, setError] = useState("");
+  const [reacted, setReacted] = useState<Record<string, ReactionKey | null>>(
+    {},
+  );
 
-  async function loadConfessions() {
+  const apiMode = useMemo(() => filterToApiMode(filter), [filter]);
+
+  async function loadConfessions(nextPage = page, nextFilter = filter) {
     try {
       setLoading(true);
       setError("");
 
-      const res = await fetch("/api/confessions", {
-        method: "GET",
-        cache: "no-store",
-      });
+      const mode = filterToApiMode(nextFilter);
+      const res = await fetch(
+        `/api/confessions?mode=${mode}&page=${nextPage}&pageSize=${PAGE_SIZE}`,
+        {
+          method: "GET",
+          cache: "no-store",
+        },
+      );
+
+      const data = (await res.json()) as GetConfessionsResponse;
 
       if (!res.ok) {
-        throw new Error("Failed to load confessions");
+        throw new Error(data.error || "Failed to load confessions");
       }
 
-      const data = (await res.json()) as Confession[];
-      setConfessions(Array.isArray(data) ? data : []);
-    } catch {
+      setConfessions(Array.isArray(data.confessions) ? data.confessions : []);
+      setPagination(
+        data.pagination ?? {
+          page: nextPage,
+          pageSize: PAGE_SIZE,
+          totalItems: 0,
+          totalPages: 1,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
+      );
+    } catch (err) {
       setError("Couldn’t load confessions right now.");
+      setConfessions([]);
+      setPagination({
+        page: 1,
+        pageSize: PAGE_SIZE,
+        totalItems: 0,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      });
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    loadConfessions();
-  }, []);
-
-  useEffect(() => {
-    setPage(1);
-  }, [filter]);
-
-  const sortedConfessions = useMemo(() => {
-    return sortConfessions(confessions, filter);
-  }, [confessions, filter]);
-
-  const totalPages = Math.max(1, Math.ceil(sortedConfessions.length / PAGE_SIZE));
-
-  const pagedConfessions = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    return sortedConfessions.slice(start, start + PAGE_SIZE);
-  }, [sortedConfessions, page]);
-
-  useEffect(() => {
-    if (page > totalPages) {
-      setPage(totalPages);
-    }
-  }, [page, totalPages]);
+    loadConfessions(page, filter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, filter]);
 
   async function submitConfession() {
     const trimmed = text.trim();
@@ -196,16 +226,28 @@ export default function MadConfessions() {
         body: JSON.stringify({ text: trimmed }),
       });
 
+      const data = (await res.json()) as PostConfessionResponse;
+
       if (!res.ok) {
-        throw new Error("Failed to post confession");
+        if (res.status === 429 && data.retryAfterSeconds) {
+          throw new Error(
+            `Cooldown active. Try again in ${data.retryAfterSeconds}s.`,
+          );
+        }
+
+        throw new Error(data.error || "Failed to post confession");
       }
 
       setText("");
-      await loadConfessions();
       setPage(1);
       setFilter("Latest");
-    } catch {
-      setError("Couldn’t post your confession.");
+      await loadConfessions(1, "Latest");
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Couldn’t post your confession.",
+      );
     } finally {
       setPosting(false);
     }
@@ -213,16 +255,32 @@ export default function MadConfessions() {
 
   async function reactToConfession(id: string, reaction: ReactionKey) {
     try {
-      const res = await fetch("/api/confessions/react", {
-        method: "POST",
+      setError("");
+
+      const res = await fetch("/api/confessions", {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id, reaction }),
+        body: JSON.stringify({
+          id,
+          reaction,
+          delta: 1,
+        }),
       });
 
+      const data = (await res.json()) as PatchReactionResponse;
+
       if (!res.ok) {
-        throw new Error("Failed to react");
+        if (res.status === 429 && data.retryAfterSeconds) {
+          throw new Error("You already used that reaction recently.");
+        }
+
+        throw new Error(data.error || "Failed to react");
+      }
+
+      if (!data.item) {
+        throw new Error("Missing updated confession");
       }
 
       setReacted((prev) => ({
@@ -231,24 +289,28 @@ export default function MadConfessions() {
       }));
 
       setConfessions((prev) =>
-        prev.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                reactions: {
-                  ...item.reactions,
-                  [reaction]: (item.reactions[reaction] || 0) + 1,
-                },
-              }
-            : item,
-        ),
+        prev.map((item) => (item.id === id ? data.item! : item)),
       );
-    } catch {
-      setError("Couldn’t save reaction.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Couldn’t save reaction.",
+      );
     }
   }
 
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const pageNumbers = useMemo(() => {
+    const totalPages = pagination.totalPages || 1;
+    const current = pagination.page || 1;
+
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const pages = new Set<number>([1, totalPages, current, current - 1, current + 1]);
+    return Array.from(pages)
+      .filter((n) => n >= 1 && n <= totalPages)
+      .sort((a, b) => a - b);
+  }, [pagination.page, pagination.totalPages]);
 
   return (
     <section className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,0,0,0.96),rgba(8,0,0,0.98))] p-5 shadow-[0_20px_80px_rgba(0,0,0,0.32)] sm:p-6 lg:p-8">
@@ -274,7 +336,10 @@ export default function MadConfessions() {
               <button
                 key={item}
                 type="button"
-                onClick={() => setFilter(item)}
+                onClick={() => {
+                  setFilter(item);
+                  setPage(1);
+                }}
                 className={[
                   "rounded-full border px-4 py-2 text-sm font-bold transition duration-200",
                   filter === item
@@ -348,20 +413,18 @@ export default function MadConfessions() {
           ) : null}
         </div>
 
-        <div className="mt-8 flex items-center justify-between gap-4">
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
           <p className="text-sm text-white/45">
-            {sortedConfessions.length > 0
-              ? `${sortedConfessions.length} total confession${
-                  sortedConfessions.length === 1 ? "" : "s"
+            {pagination.totalItems > 0
+              ? `${pagination.totalItems} total confession${
+                  pagination.totalItems === 1 ? "" : "s"
                 }`
               : "No confessions yet"}
           </p>
 
-          {totalPages > 1 ? (
-            <p className="text-sm text-white/35">
-              Page {page} of {totalPages}
-            </p>
-          ) : null}
+          <p className="text-sm text-white/35">
+            {filter} • Page {pagination.page} of {pagination.totalPages}
+          </p>
         </div>
 
         <div className="mt-4 grid gap-4">
@@ -369,20 +432,28 @@ export default function MadConfessions() {
             <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 text-white/55">
               Loading confessions...
             </div>
-          ) : pagedConfessions.length === 0 ? (
+          ) : confessions.length === 0 ? (
             <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 text-white/55">
               No confessions yet. Be the first to drop one.
             </div>
           ) : (
-            pagedConfessions.map((confession) => (
+            confessions.map((confession, index) => (
               <article
                 key={confession.id}
                 className="group rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5 transition duration-200 hover:border-white/16 hover:bg-white/[0.05]"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <span className="rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-red-200/80">
-                    anonymous
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-red-200/80">
+                      anonymous
+                    </span>
+
+                    {index === 0 && pagination.page === 1 && filter !== "Latest" ? (
+                      <span className="rounded-full border border-yellow-400/20 bg-yellow-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-yellow-200/80">
+                        loudest
+                      </span>
+                    ) : null}
+                  </div>
 
                   <span className="text-sm text-white/35">
                     {timeAgo(confession.createdAt)}
@@ -420,23 +491,41 @@ export default function MadConfessions() {
           )}
         </div>
 
-        {totalPages > 1 ? (
+        {pagination.totalPages > 1 ? (
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-            <PageButton onClick={() => setPage(Math.max(1, page - 1))}>
+            <PageButton
+              disabled={!pagination.hasPrevPage}
+              onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+            >
               Prev
             </PageButton>
 
-            {pageNumbers.map((pageNumber) => (
-              <PageButton
-                key={pageNumber}
-                active={pageNumber === page}
-                onClick={() => setPage(pageNumber)}
-              >
-                {pageNumber}
-              </PageButton>
-            ))}
+            {pageNumbers.map((pageNumber, index) => {
+              const prevPage = pageNumbers[index - 1];
+              const showGap = index > 0 && pageNumber - prevPage > 1;
 
-            <PageButton onClick={() => setPage(Math.min(totalPages, page + 1))}>
+              return (
+                <div key={pageNumber} className="flex items-center gap-2">
+                  {showGap ? (
+                    <span className="px-1 text-sm text-white/30">…</span>
+                  ) : null}
+
+                  <PageButton
+                    active={pageNumber === pagination.page}
+                    onClick={() => setPage(pageNumber)}
+                  >
+                    {pageNumber}
+                  </PageButton>
+                </div>
+              );
+            })}
+
+            <PageButton
+              disabled={!pagination.hasNextPage}
+              onClick={() =>
+                setPage((prev) => Math.min(pagination.totalPages, prev + 1))
+              }
+            >
               Next
             </PageButton>
           </div>
