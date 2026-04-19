@@ -24,7 +24,6 @@ const NAV_ITEMS: NavItem[] = [
   },
   { href: "/game", label: "Game" },
   { href: "/memes", label: "$MAD Art", mobileLabel: "Art" },
-  { href: "/forge", label: "Forge" },
   { href: "/merch", label: "Merch", variant: "cta" },
 ];
 
