@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 const ART_ITEMS = [
   {
@@ -37,6 +38,24 @@ const ART_ITEMS = [
     title: "Stay $MAD",
     eyebrow: "Poster",
     text: "A brand built on pressure, identity, and motion.",
+    image: "/memes/MAD-RICH-OR-BROKE.png",
+  },
+  {
+    title: "Kings Only",
+    eyebrow: "Drop",
+    text: "Built for conviction under pressure.",
+    image: "/memes/MAD-KINGS-ONLY.png",
+  },
+  {
+    title: "No Sidelines",
+    eyebrow: "Visual",
+    text: "The world rewards builders, not watchers.",
+    image: "/memes/MAD-YOU-SIDELINED.png",
+  },
+  {
+    title: "Build or Fold",
+    eyebrow: "Poster",
+    text: "The cleanest version of the $MAD choice.",
     image: "/memes/MAD-RICH-OR-BROKE.png",
   },
 ] as const;
@@ -188,7 +207,7 @@ export default function MemesPage() {
               </h2>
 
               <p className="mt-5 max-w-xl break-words text-base leading-8 text-white/70">
-                This page is the visual side of $MAD. Clean, aggressive, and easy to scroll on mobile without feeling cramped or broken.
+                This page is the visual side of $MAD. Clean, aggressive, premium, and easy to scroll on mobile without feeling cramped.
               </p>
 
               <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -214,17 +233,63 @@ export default function MemesPage() {
           </div>
         </SectionShell>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {ART_ITEMS.map((item) => (
-            <ArtCard
-              key={item.title}
-              title={item.title}
-              eyebrow={item.eyebrow}
-              text={item.text}
-              image={item.image}
-            />
-          ))}
-        </div>
+        <SectionShell className="mt-8 p-5 sm:p-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-red-200/70">
+                FULL DROP
+              </p>
+              <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">
+                More $MAD art.
+              </h2>
+              <p className="mt-3 text-base leading-8 text-white/65">
+                Scroll the full collection below. Same world. More visuals. More identity.
+              </p>
+            </div>
+
+            <Link
+              href="/forge"
+              className="inline-flex items-center justify-center rounded-full border border-red-500/30 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 shadow-[0_0_16px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-500/20"
+            >
+              Enter Forge →
+            </Link>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {ART_ITEMS.map((item) => (
+              <ArtCard
+                key={item.title}
+                title={item.title}
+                eyebrow={item.eyebrow}
+                text={item.text}
+                image={item.image}
+              />
+            ))}
+          </div>
+        </SectionShell>
+
+        <SectionShell className="mt-8 p-5 sm:p-8 lg:p-10">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div className="max-w-3xl">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-red-200/70">
+                FORGE
+              </p>
+              <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">
+                Build the next layer of $MAD.
+              </h2>
+              <p className="mt-4 text-base leading-8 text-white/68">
+                Forge is where the visual world expands. More art. More identity. More collectible energy.
+              </p>
+            </div>
+
+            <Link
+              href="/forge"
+              className="inline-flex items-center justify-center rounded-full border border-red-500/35 bg-red-500 px-8 py-4 text-base font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
+            >
+              Open Forge →
+            </Link>
+          </div>
+        </SectionShell>
       </main>
     </div>
   );
