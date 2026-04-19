@@ -428,24 +428,35 @@ export default function MemesPage() {
           </div>
         </section>
 
-        <section className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 text-center shadow-[0_18px_50px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8">
+        <section className="mt-12 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 text-center backdrop-blur-xl">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-200/70">
-            FUTURE COLLECTIBLES
+            STAY $MAD
           </p>
-          <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-5xl">
-            Art today. NFTs tomorrow.
-          </h2>
-          <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-white/65 sm:text-lg">
-            $MAD Art pulls people in. The prototype lab shows where it can go.
-          </p>
-        </section>
 
-        <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.025] px-5 py-4 text-xs leading-relaxed text-white/38 backdrop-blur-xl">
-          Add new art in <span className="text-white/60">/public/memes/</span> and update{" "}
-          <span className="text-white/60">GALLERY_ART</span>. If something is blank,
-          the filename and capitalization must match exactly. Prototype assets still depend on{" "}
-          <span className="text-white/60">/public/pfp/manifest.json</span>.
-        </div>
+          <h2 className="mt-4 text-3xl font-black text-white sm:text-5xl">
+            Build early. Stay loud.
+          </h2>
+
+          <p className="mx-auto mt-4 max-w-2xl text-sm text-white/60 sm:text-lg">
+            Culture first. Utility later.
+          </p>
+
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <a
+              href="/"
+              className="rounded-full bg-red-500 px-6 py-3 font-bold text-white transition hover:bg-red-400"
+            >
+              Back Home
+            </a>
+
+            <a
+              href="/roadmap"
+              className="rounded-full border border-white/10 px-6 py-3 font-bold text-white transition hover:bg-white/5"
+            >
+              View The Path
+            </a>
+          </div>
+        </section>
       </div>
     </div>
   );
