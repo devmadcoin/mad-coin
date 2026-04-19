@@ -6,7 +6,6 @@ import IdentityForge from "../components/IdentityForge";
 
 type Category =
   | "All"
-  | "New Drop"
   | "Archive"
   | "Army"
   | "Philosophy"
@@ -20,7 +19,7 @@ type ArtItem = {
   featured?: boolean;
 };
 
-const NEW_ART: ArtItem[] = [
+const GALLERY_ART: ArtItem[] = [
   {
     src: "/memes/WE-MAD-ZOOMIN.png",
     title: "We MAD Zoomin",
@@ -51,9 +50,7 @@ const NEW_ART: ArtItem[] = [
     category: "Meme",
     featured: true,
   },
-];
 
-const ARCHIVE_ART: ArtItem[] = [
   { src: "/memes/MAD-ARMY.png", title: "MAD Army", category: "Army", featured: true },
   { src: "/memes/MAD-AT-BEARS.png", title: "MAD at Bears", category: "Meme", featured: true },
   { src: "/memes/MAD-BELIEVE.png", title: "MAD Believe", category: "Philosophy", featured: true },
@@ -84,11 +81,8 @@ const ARCHIVE_ART: ArtItem[] = [
   { src: "/memes/mad-meme-wifibuffer.png", title: "WiFi Buffer", category: "Meme" },
 ];
 
-const ALL_ART: ArtItem[] = [...NEW_ART, ...ARCHIVE_ART];
-
 const FILTERS: Category[] = [
   "All",
-  "New Drop",
   "Archive",
   "Army",
   "Philosophy",
@@ -102,9 +96,7 @@ function downloadNameFromSrc(src: string) {
 
 function getVisibleArt(activeFilter: Category, items: ArtItem[]) {
   if (activeFilter === "All") return items;
-  if (activeFilter === "Archive") {
-    return items.filter((item) => item.category !== "New Drop");
-  }
+  if (activeFilter === "Archive") return items;
   return items.filter((item) => item.category === activeFilter);
 }
 
@@ -193,14 +185,12 @@ export default function MemesPage() {
   const stickerSrc = "/stickers/sticker-smash.webp";
   const forgeStickerSrc = "/stickers/he-sold-pump-it.webp";
 
-  const featuredCount = ALL_ART.filter((item) => item.featured).length;
+  const featuredCount = GALLERY_ART.filter((item) => item.featured).length;
 
   const visibleArt = useMemo(
-    () => getVisibleArt(activeFilter, ALL_ART),
+    () => getVisibleArt(activeFilter, GALLERY_ART),
     [activeFilter]
   );
-
-  const visibleNewArt = useMemo(() => NEW_ART, []);
 
   return (
     <div className="relative overflow-hidden bg-black text-white">
@@ -226,7 +216,7 @@ export default function MemesPage() {
 
               <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
                 A curated gallery of <span className="text-white/90">community energy</span>, signal,
-                identity, and collectible direction. Explore the archive, download the art, then
+                identity, and collectible direction. Explore the gallery, download the art, then
                 build your own MAD identity in the Forge Lab below.
               </p>
 
@@ -235,7 +225,7 @@ export default function MemesPage() {
                   Premium Gallery
                 </div>
                 <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                  {ALL_ART.length} Pieces
+                  {GALLERY_ART.length} Pieces
                 </div>
                 <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
                   Forge Lab Included
@@ -261,10 +251,10 @@ export default function MemesPage() {
         <section className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.025] px-5 py-4 backdrop-blur-xl">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
-              EXHIBITION STATUS
+              GALLERY STATUS
             </p>
             <p className="mt-2 text-sm text-white/65">
-              New drops lead the gallery, classics stay archived below, and Forge Lab now lives in the same experience.
+              Live gallery. Updated culture archive. Forge Lab included.
             </p>
           </div>
 
@@ -296,36 +286,11 @@ export default function MemesPage() {
           </div>
         </section>
 
-        {visibleNewArt.length > 0 && (activeFilter === "All" || activeFilter === "New Drop") ? (
-          <section className="mt-10">
-            <div className="mb-5 flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-200/70">
-                  CURRENT SIGNAL DROP
-                </p>
-                <h2 className="mt-2 text-2xl font-black tracking-tight text-white">
-                  New Additions
-                </h2>
-              </div>
-
-              <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-100">
-                {visibleNewArt.length} New
-              </div>
-            </div>
-
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {visibleNewArt.map((item, index) => (
-                <ArtCard key={item.src} item={item} index={index} />
-              ))}
-            </div>
-          </section>
-        ) : null}
-
         <section className="mt-10">
           <div className="mb-5 flex items-center justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
-                FULL ARCHIVE
+                THE GALLERY
               </p>
               <h2 className="mt-2 text-2xl font-black tracking-tight text-white">
                 {activeFilter === "All" ? "All Pieces" : activeFilter}
@@ -459,7 +424,7 @@ export default function MemesPage() {
         <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.025] px-5 py-4 text-xs leading-relaxed text-white/38 backdrop-blur-xl">
           To add more art later, drop new image files into{" "}
           <span className="text-white/60">/public/memes/</span> and paste a new object into{" "}
-          <span className="text-white/60">NEW_ART</span> at the top of this file.
+          <span className="text-white/60">GALLERY_ART</span> at the top of this file.
           If a tile appears blank, the filename in the script must match the real file exactly,
           including capitalization. Forge assets still depend on{" "}
           <span className="text-white/60">/public/pfp/manifest.json</span> matching the real filenames.
