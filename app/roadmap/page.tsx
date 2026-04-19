@@ -1,8 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const LINKS = {
   telegram: "https://t.me/MadOfficialChannel",
@@ -12,37 +10,14 @@ const LINKS = {
 } as const;
 
 const STATUS_CARDS = [
-  { label: "Website", value: "Completed", tone: "green", icon: "◉" },
-  { label: "MAD Mind", value: "Completed", tone: "green", icon: "◎" },
-  { label: "Confessions", value: "Completed", tone: "green", icon: "◌" },
-  { label: "400M Burned", value: "Completed", tone: "green", icon: "◍" },
-  { label: "MAD AI", value: "Building", tone: "red", icon: "✦" },
-  { label: "Stickers", value: "Completed", tone: "green", icon: "⬢" },
-  { label: "Clothing", value: "Prototype", tone: "red", icon: "⬡" },
-  { label: "800M Goal", value: "Target", tone: "red", icon: "◔" },
-] as const;
-
-const BUILD_FLOW = [
-  {
-    step: "1. IDENTITY",
-    text: "The project starts with philosophy, visual language, and brand meaning.",
-    icon: "◔",
-  },
-  {
-    step: "2. PROOF",
-    text: "Real pages, live products, burns, and public interaction prove it is alive.",
-    icon: "☷",
-  },
-  {
-    step: "3. EXPANSION",
-    text: "Games, AI, merch, and utility make the universe bigger over time.",
-    icon: "✦",
-  },
-  {
-    step: "4. SCALE",
-    text: "The end goal is a stronger brand, tighter supply, and larger ecosystem reach.",
-    icon: "♛",
-  },
+  { label: "Website", value: "Live", tone: "green" },
+  { label: "MAD Mind", value: "Live", tone: "green" },
+  { label: "Confessions", value: "Live", tone: "green" },
+  { label: "400M Burn", value: "Done", tone: "green" },
+  { label: "MAD AI", value: "Building", tone: "red" },
+  { label: "Stickers", value: "Done", tone: "green" },
+  { label: "Clothing", value: "Prototype", tone: "red" },
+  { label: "800M Goal", value: "Target", tone: "red" },
 ] as const;
 
 const ROADMAP_PHASES = [
@@ -96,32 +71,6 @@ function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Reveal({
-  children,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-}) {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const t = window.setTimeout(() => setShow(true), delay);
-    return () => window.clearTimeout(t);
-  }, [delay]);
-
-  return (
-    <div
-      className={cn(
-        "transition-all duration-700 ease-out",
-        show ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0",
-      )}
-    >
-      {children}
-    </div>
-  );
-}
-
 function Shell({
   children,
   className = "",
@@ -133,27 +82,11 @@ function Shell({
     <section
       className={cn(
         "overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl",
-        className,
+        className
       )}
     >
       {children}
     </section>
-  );
-}
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
-      {children}
-    </p>
-  );
-}
-
-function HeroBadge({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="inline-flex rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-red-200">
-      {children}
-    </div>
   );
 }
 
@@ -170,126 +103,28 @@ function GlobeBackdrop() {
   );
 }
 
-function SectionHeading({
-  eyebrow,
-  title,
-  body,
-}: {
-  eyebrow: string;
-  title: string;
-  body?: string;
-}) {
-  return (
-    <div>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/40">
-        {eyebrow}
-      </p>
-      <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-        {title}
-      </h2>
-      {body ? (
-        <p className="mt-4 max-w-3xl text-sm leading-7 text-white/78 sm:text-base">
-          {body}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
 function StatusMiniCard({
   label,
   value,
   tone,
-  icon,
 }: {
   label: string;
   value: string;
   tone: "red" | "green";
-  icon: string;
 }) {
   return (
     <div className="rounded-[1.25rem] border border-white/10 bg-black/25 p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/48">
-            {label}
-          </p>
-          <p
-            className={cn(
-              "mt-2 text-base font-black",
-              tone === "green" ? "text-emerald-200" : "text-red-100",
-            )}
-          >
-            {value}
-          </p>
-        </div>
-        <div
-          className={cn(
-            "flex h-9 w-9 items-center justify-center rounded-full border text-sm font-black",
-            tone === "green"
-              ? "border-emerald-400/30 bg-emerald-500/12 text-emerald-200"
-              : "border-red-500/30 bg-red-500/12 text-red-100",
-          )}
-        >
-          {icon}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function BuildFlowCard({
-  step,
-  text,
-  icon,
-}: {
-  step: string;
-  text: string;
-  icon: string;
-}) {
-  return (
-    <div className="rounded-[1.25rem] border border-white/10 bg-black/25 p-4">
-      <div className="flex gap-4">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-lg font-black text-red-200">
-          {icon}
-        </div>
-        <div>
-          <p className="text-sm font-black text-white">{step}</p>
-          <p className="mt-1 text-sm leading-6 text-white/74">{text}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PillInfoCard({
-  title,
-  text,
-}: {
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
-      <p className="text-lg font-black text-white">{title}</p>
-      <p className="mt-2 text-sm leading-7 text-white/72">{text}</p>
-    </div>
-  );
-}
-
-function ProgressStat({
-  value,
-  label,
-}: {
-  value: string;
-  label: string;
-}) {
-  return (
-    <div className="rounded-[1.25rem] border border-white/10 bg-black/20 p-4 text-center">
-      <div className="text-3xl font-black text-white">{value}</div>
-      <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/52">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/48">
         {label}
-      </div>
+      </p>
+      <p
+        className={cn(
+          "mt-2 text-base font-black",
+          tone === "green" ? "text-emerald-200" : "text-red-100"
+        )}
+      >
+        {value}
+      </p>
     </div>
   );
 }
@@ -323,7 +158,7 @@ function RoadmapCard({
             status === "Building" &&
               "border-red-500/30 bg-red-500/14 text-red-100",
             status === "Next" &&
-              "border-white/15 bg-white/[0.06] text-white/85",
+              "border-white/15 bg-white/[0.06] text-white/85"
           )}
         >
           {status}
@@ -344,415 +179,181 @@ function RoadmapCard({
   );
 }
 
-function PhilosophyBlock() {
-  return (
-    <Shell className="p-6 sm:p-8">
-      <Eyebrow>Lore + Philosophy</Eyebrow>
-
-      <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
-        Control chaos.
-        <br />
-        Build{" "}
-        <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
-          identity.
-        </span>
-      </h2>
-
-      <p className="mt-5 max-w-md text-base leading-8 text-white/78">
-        $MAD is not random anger and not empty hype. It is about emotional
-        discipline, pressure, signal, and building something real when most
-        people fold.
-      </p>
-
-      <div className="mt-8 grid gap-3 sm:grid-cols-3">
-        <PillInfoCard
-          title="Pressure"
-          text="Markets move. People panic. Pressure reveals who is real."
-        />
-        <PillInfoCard
-          title="Signal"
-          text="Noise is everywhere. $MAD is about seeing clearly and staying controlled."
-        />
-        <PillInfoCard
-          title="Wealth"
-          text="True wealth starts with behavior first, then brand, then expansion."
-        />
-      </div>
-
-      <div className="mt-7">
-        <Link
-          href="/mad-mind"
-          className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
-        >
-          Enter MAD Mind →
-        </Link>
-      </div>
-    </Shell>
-  );
-}
-
-function UtilityBlock() {
-  return (
-    <Shell className="p-6 sm:p-8">
-      <Eyebrow>Utility + Access</Eyebrow>
-
-      <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
-        $MAD unlocks
-        <br />
-        the{" "}
-        <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
-          universe.
-        </span>
-      </h2>
-
-      <p className="mt-5 max-w-md text-base leading-8 text-white/78">
-        Games, content, AI, products, and more layers as the ecosystem expands.
-      </p>
-
-      <div className="mt-8 grid gap-3 sm:grid-cols-2">
-        <PillInfoCard
-          title="Games"
-          text="MAD game experiences are part of the ecosystem build."
-        />
-        <PillInfoCard
-          title="Exclusive"
-          text="Early drops, special access, and stronger community loops."
-        />
-        <PillInfoCard
-          title="Perks"
-          text="More benefits appear as the brand gets stronger."
-        />
-        <PillInfoCard
-          title="More Coming"
-          text="New tools and layers are still in building mode."
-        />
-      </div>
-
-      <div className="mt-7">
-        <Link
-          href="/game"
-          className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
-        >
-          Learn More →
-        </Link>
-      </div>
-    </Shell>
-  );
-}
-
-function ProgressPanel() {
-  return (
-    <Shell className="p-6 sm:p-8">
-      <Eyebrow>Your Progress</Eyebrow>
-
-      <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
-        Track the{" "}
-        <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
-          build.
-        </span>
-      </h2>
-
-      <p className="mt-5 max-w-md text-base leading-8 text-white/78">
-        The Mad Path now combines the lore, the proof, and the roadmap into one
-        cleaner page.
-      </p>
-
-      <div className="mt-8 rounded-[1.4rem] border border-white/10 bg-black/25 p-5">
-        <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-black/30 text-xl font-black text-white">
-            $
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-black text-white">MAD BUILD STATUS</p>
-            <p className="mt-1 text-xs uppercase tracking-[0.22em] text-white/50">
-              Level 12
-            </p>
-          </div>
-          <div className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-red-200">
-            Live
-          </div>
-        </div>
-
-        <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
-          <div className="h-full w-[72%] rounded-full bg-[linear-gradient(90deg,#ff4a4a,#ff1818)] shadow-[0_0_14px_rgba(255,0,0,0.25)]" />
-        </div>
-
-        <div className="mt-3 text-xs uppercase tracking-[0.22em] text-white/50">
-          Build Progress 72%
-        </div>
-      </div>
-
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        <ProgressStat value="24" label="Build Steps Done" />
-        <ProgressStat value="400M" label="Burned" />
-        <ProgressStat value="8" label="Core Layers Live" />
-      </div>
-
-      <div className="mt-7">
-        <a
-          href={LINKS.telegram}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
-        >
-          Follow Progress →
-        </a>
-      </div>
-    </Shell>
-  );
-}
-
-function MerchPrototypeBlock() {
-  return (
-    <Shell className="p-0">
-      <div className="grid gap-0 lg:grid-cols-[0.85fr_1.15fr]">
-        <div className="p-6 sm:p-8">
-          <Eyebrow>Merch Prototype</Eyebrow>
-
-          <h3 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-6xl">
-            MAD
-            <br />
-            <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
-              RICH.
-            </span>
-          </h3>
-
-          <p className="mt-5 max-w-md text-base leading-8 text-white/78">
-            The sticker line is done. Clothing is now moving from idea into
-            real-world prototype phase.
-          </p>
-
-          <div className="mt-7 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                Status
-              </p>
-              <p className="mt-2 text-sm leading-7 text-white/82">
-                Sample shirt created.
-              </p>
-            </div>
-            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                What It Proves
-              </p>
-              <p className="mt-2 text-sm leading-7 text-white/82">
-                $MAD is becoming a real brand, not just a chart.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-7 flex flex-wrap gap-3">
-            <div className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-red-200">
-              Clothing Prototype
-            </div>
-            <div className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/85">
-              More Pieces Later
-            </div>
-          </div>
-        </div>
-
-        <div className="relative min-h-[520px]">
-          <Image
-            src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
-            alt="MAD merch sample shirt"
-            fill
-            sizes="(max-width: 1024px) 100vw, 800px"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-        </div>
-      </div>
-    </Shell>
-  );
-}
-
-function LiveDexChartBlock() {
-  return (
-    <Shell className="p-0">
-      <div className="border-b border-white/10 px-6 py-5 sm:px-8">
-        <Eyebrow>Public Since Day One</Eyebrow>
-        <h3 className="mt-3 text-3xl font-black text-white sm:text-4xl">
-          Live market chart.
-        </h3>
-        <p className="mt-3 max-w-xl text-sm leading-7 text-white/78">
-          Launch, growth, pullback, and rebuild — all visible in public.
-        </p>
-      </div>
-
-      <div className="relative aspect-[16/10] w-full bg-black">
-        <iframe
-          src={LINKS.dex}
-          title="MAD live DexScreener chart"
-          className="absolute inset-0 h-full w-full"
-          loading="lazy"
-          allowFullScreen
-        />
-      </div>
-
-      <div className="border-t border-white/10 px-6 py-5 sm:px-8">
-        <a
-          href={LINKS.dex}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
-        >
-          View on DexScreener →
-        </a>
-      </div>
-    </Shell>
-  );
-}
-
 export default function RoadmapPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.10),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.08),transparent_30%),linear-gradient(180deg,#080808,#030303)]" />
 
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
-        <Reveal>
-          <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <Shell className="relative p-6 sm:p-8">
-              <GlobeBackdrop />
+        <div className="grid gap-6">
+          <Shell className="relative p-6 sm:p-8 lg:p-10">
+            <GlobeBackdrop />
 
-              <div className="relative z-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-                <div>
-                  <HeroBadge>The MAD Path</HeroBadge>
-
-                  <h1 className="mt-6 text-[3rem] font-black leading-[0.9] tracking-[-0.05em] text-white sm:text-[4.4rem]">
-                    BUILD
-                    <br />
-                    SIGNAL.
-                    <br />
-                    PROVE{" "}
-                    <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.5)]">
-                      $MAD.
-                    </span>
-                  </h1>
-
-                  <p className="mt-5 max-w-xl text-base leading-8 text-white/82">
-                    The Mad Path is now the combined home for the lore, the
-                    roadmap, and the real proof of what $MAD is building.
-                  </p>
-
-                  <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4 text-center">
-                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-lg font-black text-red-200">
-                        ◎
-                      </div>
-                      <p className="mt-3 text-sm font-black text-white">
-                        Lore
-                      </p>
-                      <p className="mt-2 text-sm text-white/74">
-                        Philosophy, identity, and what $MAD means.
-                      </p>
-                    </div>
-
-                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4 text-center">
-                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-lg font-black text-red-200">
-                        $
-                      </div>
-                      <p className="mt-3 text-sm font-black text-white">
-                        Proof
-                      </p>
-                      <p className="mt-2 text-sm text-white/74">
-                        Burns, pages, products, and public visibility.
-                      </p>
-                    </div>
-
-                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4 text-center">
-                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-lg font-black text-red-200">
-                        ▣
-                      </div>
-                      <p className="mt-3 text-sm font-black text-white">
-                        Roadmap
-                      </p>
-                      <p className="mt-2 text-sm text-white/74">
-                        What is done, what is building, and what is next.
-                      </p>
-                    </div>
-                  </div>
+            <div className="relative z-10 grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+              <div>
+                <div className="inline-flex rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-red-200">
+                  The Mad Path
                 </div>
 
-                <div className="relative flex min-h-[480px] items-center justify-center">
-                  <div className="absolute h-[320px] w-[320px] rounded-full border border-red-500/20 shadow-[0_0_70px_rgba(255,0,0,0.18)]" />
-                  <div className="absolute h-[390px] w-[390px] rounded-full border border-red-500/10" />
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.26),transparent_38%)]" />
+                <h1 className="mt-6 text-[3rem] font-black leading-[0.9] tracking-[-0.05em] text-white sm:text-[4.4rem]">
+                  BUILD.
+                  <br />
+                  PROVE.
+                  <br />
+                  <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.5)]">
+                    EXPAND.
+                  </span>
+                </h1>
 
-                  <div className="relative text-center">
-                    <div className="mx-auto flex h-64 w-64 items-center justify-center rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),rgba(0,0,0,0.3)_55%,rgba(0,0,0,0.8))] shadow-[0_0_55px_rgba(255,0,0,0.2)]">
-                      <div className="rounded-[2rem] border border-white/10 bg-black/55 px-10 py-10 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
-                        <div className="text-5xl font-black text-red-500">
-                          $MAD
-                        </div>
-                        <div className="mt-3 text-xs uppercase tracking-[0.28em] text-white/55">
-                          Build Core
-                        </div>
+                <p className="mt-5 max-w-xl text-base leading-8 text-white/82">
+                  Lore, roadmap, and real proof of what $MAD is building.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <div className="rounded-full border border-emerald-400/25 bg-emerald-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-emerald-200">
+                    Live
+                  </div>
+                  <div className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-red-200">
+                    Building
+                  </div>
+                  <div className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/85">
+                    Next
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative flex min-h-[360px] items-center justify-center">
+                <div className="absolute h-[240px] w-[240px] rounded-full border border-red-500/20 shadow-[0_0_70px_rgba(255,0,0,0.18)]" />
+                <div className="absolute h-[310px] w-[310px] rounded-full border border-red-500/10" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),transparent_38%)]" />
+
+                <div className="relative text-center">
+                  <div className="mx-auto flex h-56 w-56 items-center justify-center rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),rgba(0,0,0,0.3)_55%,rgba(0,0,0,0.8))] shadow-[0_0_55px_rgba(255,0,0,0.2)]">
+                    <div className="rounded-[2rem] border border-white/10 bg-black/55 px-10 py-10 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
+                      <div className="text-5xl font-black text-red-500">
+                        $MAD
+                      </div>
+                      <div className="mt-3 text-xs uppercase tracking-[0.28em] text-white/55">
+                        Build Core
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </Shell>
+            </div>
+          </Shell>
 
-            <Shell className="p-6 sm:p-8">
-              <Eyebrow>How It Works</Eyebrow>
-
-              <div className="mt-6 space-y-4">
-                {BUILD_FLOW.map((item) => (
-                  <BuildFlowCard
-                    key={item.step}
-                    step={item.step}
-                    text={item.text}
-                    icon={item.icon}
-                  />
-                ))}
-              </div>
-
-              <div className="mt-7">
-                <a
-                  href={LINKS.telegram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex w-full items-center justify-center rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
-                >
-                  Follow The Build →
-                </a>
-              </div>
-            </Shell>
-          </div>
-        </Reveal>
-
-        <Reveal delay={120}>
-          <div className="mt-6 grid gap-3 md:grid-cols-4 xl:grid-cols-8">
+          <div className="grid gap-3 md:grid-cols-4 xl:grid-cols-8">
             {STATUS_CARDS.map((card) => (
               <StatusMiniCard
                 key={card.label}
                 label={card.label}
                 value={card.value}
                 tone={card.tone}
-                icon={card.icon}
               />
             ))}
           </div>
-        </Reveal>
 
-        <Reveal delay={220}>
-          <div className="mt-6 grid gap-6 lg:grid-cols-3">
-            <PhilosophyBlock />
-            <UtilityBlock />
-            <ProgressPanel />
+          <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+            <Shell className="p-0">
+              <div className="grid gap-0 lg:grid-cols-[0.85fr_1.15fr]">
+                <div className="p-6 sm:p-8">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
+                    Merch Prototype
+                  </p>
+
+                  <h3 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-6xl">
+                    MAD
+                    <br />
+                    <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+                      RICH.
+                    </span>
+                  </h3>
+
+                  <p className="mt-5 max-w-md text-base leading-8 text-white/78">
+                    The sticker line is done. Clothing is now moving from idea
+                    into real-world prototype phase.
+                  </p>
+
+                  <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+                        Status
+                      </p>
+                      <p className="mt-2 text-sm leading-7 text-white/82">
+                        Sample shirt created.
+                      </p>
+                    </div>
+                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+                        What It Proves
+                      </p>
+                      <p className="mt-2 text-sm leading-7 text-white/82">
+                        $MAD is becoming a real brand, not just a chart.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-7 flex flex-wrap gap-3">
+                    <div className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-red-200">
+                      Clothing Prototype
+                    </div>
+                    <div className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/85">
+                      More Pieces Later
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative min-h-[520px]">
+                  <Image
+                    src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
+                    alt="MAD merch sample shirt"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 800px"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                </div>
+              </div>
+            </Shell>
+
+            <Shell className="p-0">
+              <div className="border-b border-white/10 px-6 py-5 sm:px-8">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
+                  Public Since Day One
+                </p>
+                <h3 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+                  Live market chart.
+                </h3>
+                <p className="mt-3 max-w-xl text-sm leading-7 text-white/78">
+                  Launch, growth, pullback, and rebuild — all visible in public.
+                </p>
+              </div>
+
+              <div className="relative aspect-[16/10] w-full bg-black">
+                <iframe
+                  src={LINKS.dex}
+                  title="MAD live DexScreener chart"
+                  className="absolute inset-0 h-full w-full"
+                  loading="lazy"
+                  allowFullScreen
+                />
+              </div>
+
+              <div className="border-t border-white/10 px-6 py-5 sm:px-8">
+                <a
+                  href={LINKS.dex}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
+                >
+                  View on DexScreener →
+                </a>
+              </div>
+            </Shell>
           </div>
-        </Reveal>
 
-        <Reveal delay={320}>
-          <div className="mt-6 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-            <MerchPrototypeBlock />
-            <LiveDexChartBlock />
-          </div>
-        </Reveal>
-
-        <Reveal delay={400}>
-          <Shell className="mt-6 p-6 sm:p-8">
+          <Shell className="p-6 sm:p-8">
             <SectionHeading
               eyebrow="Timeline"
               title="The roadmap"
@@ -771,10 +372,8 @@ export default function RoadmapPage() {
               ))}
             </div>
           </Shell>
-        </Reveal>
 
-        <Reveal delay={480}>
-          <Shell className="mt-6 p-6 sm:p-8">
+          <Shell className="p-6 sm:p-8">
             <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div className="flex items-center gap-5">
                 <div className="flex h-24 w-24 items-center justify-center rounded-full border border-red-500/30 bg-red-500/14 text-4xl font-black text-red-300 shadow-[0_0_30px_rgba(255,0,0,0.22)]">
@@ -804,7 +403,7 @@ export default function RoadmapPage() {
               </div>
             </div>
           </Shell>
-        </Reveal>
+        </div>
       </main>
     </div>
   );
