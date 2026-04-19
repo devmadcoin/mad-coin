@@ -12,6 +12,7 @@ type Confession = {
 };
 
 const MAX_LENGTH = 220;
+const PAGE_SIZE = 6;
 
 const PROMPTS = [
   "What made you mad today?",
@@ -60,10 +61,8 @@ function sortConfessions(items: Confession[], mode: FilterMode) {
   }
 
   return copy.sort((a, b) => {
-    const aLen = a.text.length;
-    const bLen = b.text.length;
-    const aEnergy = confessionScore(a) + aLen * 0.05;
-    const bEnergy = confessionScore(b) + bLen * 0.05;
+    const aEnergy = confessionScore(a) + a.text.length * 0.05;
+    const bEnergy = confessionScore(b) + b.text.length * 0.05;
     return bEnergy - aEnergy;
   });
 }
@@ -96,6 +95,31 @@ function ReactionButton({
   );
 }
 
+function PageButton({
+  active,
+  children,
+  onClick,
+}: {
+  active?: boolean;
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={[
+        "inline-flex h-10 min-w-[40px] items-center justify-center rounded-full border px-4 text-sm font-bold transition duration-200",
+        active
+          ? "border-red-400/40 bg-red-500/15 text-white"
+          : "border-white/10 bg-white/[0.04] text-white/65 hover:border-white/20 hover:bg-white/[0.07] hover:text-white",
+      ].join(" ")}
+    >
+      {children}
+    </button>
+  );
+}
+
 export default function MadConfessions() {
   const [text, setText] = useState("");
   const [confessions, setConfessions] = useState<Confession[]>([]);
@@ -104,6 +128,7 @@ export default function MadConfessions() {
   const [filter, setFilter] = useState<FilterMode>("Latest");
   const [error, setError] = useState("");
   const [reacted, setReacted] = useState<Record<string, ReactionKey | null>>({});
+  const [page, setPage] = useState(1);
 
   async function loadConfessions() {
     try {
@@ -121,7 +146,7 @@ export default function MadConfessions() {
 
       const data = (await res.json()) as Confession[];
       setConfessions(Array.isArray(data) ? data : []);
-    } catch (err) {
+    } catch {
       setError("Couldn’t load confessions right now.");
     } finally {
       setLoading(false);
@@ -132,9 +157,26 @@ export default function MadConfessions() {
     loadConfessions();
   }, []);
 
+  useEffect(() => {
+    setPage(1);
+  }, [filter]);
+
   const sortedConfessions = useMemo(() => {
     return sortConfessions(confessions, filter);
   }, [confessions, filter]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedConfessions.length / PAGE_SIZE));
+
+  const pagedConfessions = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return sortedConfessions.slice(start, start + PAGE_SIZE);
+  }, [sortedConfessions, page]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   async function submitConfession() {
     const trimmed = text.trim();
@@ -160,7 +202,9 @@ export default function MadConfessions() {
 
       setText("");
       await loadConfessions();
-    } catch (err) {
+      setPage(1);
+      setFilter("Latest");
+    } catch {
       setError("Couldn’t post your confession.");
     } finally {
       setPosting(false);
@@ -199,14 +243,16 @@ export default function MadConfessions() {
             : item,
         ),
       );
-    } catch (err) {
+    } catch {
       setError("Couldn’t save reaction.");
     }
   }
 
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   return (
     <section className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,0,0,0.96),rgba(8,0,0,0.98))] p-5 shadow-[0_20px_80px_rgba(0,0,0,0.32)] sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-red-200/45">
@@ -270,14 +316,16 @@ export default function MadConfessions() {
                 <span className="h-1 w-1 rounded-full bg-white/20" />
                 <span>Raw</span>
                 <span className="h-1 w-1 rounded-full bg-white/20" />
-                <span>No filter</span>
+                <span>No Filter</span>
               </div>
 
               <div className="flex items-center gap-3">
                 <span
                   className={[
                     "text-xs font-bold",
-                    text.length > MAX_LENGTH - 25 ? "text-yellow-300/80" : "text-white/35",
+                    text.length > MAX_LENGTH - 25
+                      ? "text-yellow-300/80"
+                      : "text-white/35",
                   ].join(" ")}
                 >
                   {text.length}/{MAX_LENGTH}
@@ -300,33 +348,41 @@ export default function MadConfessions() {
           ) : null}
         </div>
 
-        <div className="mt-8 grid gap-4">
+        <div className="mt-8 flex items-center justify-between gap-4">
+          <p className="text-sm text-white/45">
+            {sortedConfessions.length > 0
+              ? `${sortedConfessions.length} total confession${
+                  sortedConfessions.length === 1 ? "" : "s"
+                }`
+              : "No confessions yet"}
+          </p>
+
+          {totalPages > 1 ? (
+            <p className="text-sm text-white/35">
+              Page {page} of {totalPages}
+            </p>
+          ) : null}
+        </div>
+
+        <div className="mt-4 grid gap-4">
           {loading ? (
             <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 text-white/55">
               Loading confessions...
             </div>
-          ) : sortedConfessions.length === 0 ? (
+          ) : pagedConfessions.length === 0 ? (
             <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 text-white/55">
               No confessions yet. Be the first to drop one.
             </div>
           ) : (
-            sortedConfessions.map((confession, index) => (
+            pagedConfessions.map((confession) => (
               <article
                 key={confession.id}
                 className="group rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5 transition duration-200 hover:border-white/16 hover:bg-white/[0.05]"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-red-200/80">
-                      anonymous
-                    </span>
-
-                    {index === 0 && filter !== "Latest" ? (
-                      <span className="rounded-full border border-yellow-400/20 bg-yellow-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-yellow-200/80">
-                        loudest
-                      </span>
-                    ) : null}
-                  </div>
+                  <span className="rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-red-200/80">
+                    anonymous
+                  </span>
 
                   <span className="text-sm text-white/35">
                     {timeAgo(confession.createdAt)}
@@ -354,13 +410,37 @@ export default function MadConfessions() {
                     label="Respect"
                     value={confession.reactions.handshake || 0}
                     active={reacted[confession.id] === "handshake"}
-                    onClick={() => reactToConfession(confession.id, "handshake")}
+                    onClick={() =>
+                      reactToConfession(confession.id, "handshake")
+                    }
                   />
                 </div>
               </article>
             ))
           )}
         </div>
+
+        {totalPages > 1 ? (
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            <PageButton onClick={() => setPage(Math.max(1, page - 1))}>
+              Prev
+            </PageButton>
+
+            {pageNumbers.map((pageNumber) => (
+              <PageButton
+                key={pageNumber}
+                active={pageNumber === page}
+                onClick={() => setPage(pageNumber)}
+              >
+                {pageNumber}
+              </PageButton>
+            ))}
+
+            <PageButton onClick={() => setPage(Math.min(totalPages, page + 1))}>
+              Next
+            </PageButton>
+          </div>
+        ) : null}
       </div>
     </section>
   );
