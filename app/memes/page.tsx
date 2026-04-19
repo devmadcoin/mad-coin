@@ -185,7 +185,6 @@ export default function MemesPage() {
   const [activeFilter, setActiveFilter] = useState<Category>("All");
 
   const stickerSrc = "/stickers/sticker-smash.webp";
-
   const featuredCount = GALLERY_ART.filter((item) => item.featured).length;
 
   const visibleArt = useMemo(
@@ -199,118 +198,105 @@ export default function MemesPage() {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.03),transparent_18%,transparent_82%,rgba(255,255,255,0.02))]" />
 
       <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-16 sm:px-8 lg:px-10">
-        <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-7 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,0,60,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,60,0,0.08),transparent_25%)]" />
+        <section className="relative overflow-hidden rounded-[2.4rem] border border-white/10 bg-white/[0.02] p-7 shadow-[0_20px_80px_rgba(0,0,0,0.48)] backdrop-blur-xl sm:p-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(255,0,0,0.14),transparent_22%),radial-gradient(circle_at_82%_18%,rgba(255,0,0,0.08),transparent_18%)]" />
+          <div className="pointer-events-none absolute right-[-10%] top-[-18%] hidden h-[420px] w-[420px] rounded-full border border-red-500/10 lg:block" />
+          <div className="pointer-events-none absolute right-[-6%] top-[-10%] hidden h-[320px] w-[320px] rounded-full border border-red-500/8 lg:block" />
+          <div className="pointer-events-none absolute right-[8%] top-[10%] hidden h-3 w-3 rounded-full bg-red-500/30 lg:block" />
+          <div className="pointer-events-none absolute right-[20%] top-[18%] hidden h-2.5 w-2.5 rounded-full bg-red-500/20 lg:block" />
+          <div className="pointer-events-none absolute right-[4%] top-[28%] hidden h-2 w-2 rounded-full bg-red-500/20 lg:block" />
 
-          <div className="relative flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-            <div className="max-w-3xl animate-fadeUp">
+          <div className="relative grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div className="max-w-3xl">
               <p className="text-xs font-semibold uppercase tracking-[0.38em] text-white/45">
                 CULTURE ARCHIVE
               </p>
 
-              <h1 className="mt-5 text-5xl font-black tracking-tight sm:text-6xl lg:text-7xl">
+              <h1 className="mt-5 text-[3.8rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[5.7rem]">
                 <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
                   $MAD
                 </span>{" "}
                 Art
               </h1>
 
-              <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
-                A curated gallery of <span className="text-white/90">community energy</span>, signal,
-                identity, and collectible direction. Explore the gallery, download the art, then
-                build your own MAD identity in the NFT Prototype Lab below.
+              <p className="mt-5 max-w-2xl text-base leading-8 text-white/68 sm:text-lg">
+                Signal, culture, identity, and premium collectible direction.
+                Explore the gallery below, then enter the NFT Prototype Lab to
+                build your own MAD identity.
               </p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
-                <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-200">
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a
+                  href="#prototype-lab"
+                  className="inline-flex rounded-full border border-red-500/30 bg-red-500 px-6 py-3 text-sm font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
+                >
+                  Enter Prototype Lab
+                </a>
+
+                <a
+                  href="#gallery"
+                  className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-black text-white/90 transition hover:bg-white/[0.08]"
+                >
+                  View Gallery
+                </a>
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
                   Premium Gallery
                 </div>
                 <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
                   {GALLERY_ART.length} Pieces
                 </div>
-                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                  $MAD NFT Prototype
+                <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-200">
+                  NFT Prototype Live
                 </div>
               </div>
             </div>
 
-            <div className="relative mx-auto h-[120px] w-[120px] shrink-0 sm:h-[150px] sm:w-[150px] lg:mx-0 lg:mt-1">
-              <div className="absolute inset-0 rounded-full bg-red-500/10 blur-2xl" />
-              <div className="relative h-full w-full rotate-[-7deg] drop-shadow-[0_20px_40px_rgba(0,0,0,0.55)]">
-                <Image
-                  src={stickerSrc}
-                  alt="$MAD Art Sticker"
-                  fill
-                  sizes="150px"
-                  className="object-contain"
-                />
+            <div className="relative mx-auto w-full max-w-[530px]">
+              <div className="absolute inset-0 rounded-[2rem] bg-red-500/10 blur-3xl" />
+              <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-4 shadow-[0_22px_60px_rgba(0,0,0,0.45)]">
+                <div className="relative aspect-[16/10] overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/40">
+                  <Image
+                    src="/memes/MAD-RICH-OR-BROKE.png"
+                    alt="$MAD featured art"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 530px"
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                </div>
+
+                <div className="mt-4 grid grid-cols-3 gap-3">
+                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] p-4">
+                    <div className="text-3xl font-black text-white">LIVE</div>
+                    <div className="mt-1 text-[11px] uppercase tracking-[0.28em] text-white/40">
+                      Gallery
+                    </div>
+                  </div>
+
+                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] p-4">
+                    <div className="text-3xl font-black text-white">NFT</div>
+                    <div className="mt-1 text-[11px] uppercase tracking-[0.28em] text-white/40">
+                      Prototype
+                    </div>
+                  </div>
+
+                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] p-4">
+                    <div className="text-3xl font-black text-white">DAILY</div>
+                    <div className="mt-1 text-[11px] uppercase tracking-[0.28em] text-white/40">
+                      Signal
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.025] px-5 py-4 backdrop-blur-xl">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
-              GALLERY STATUS
-            </p>
-            <p className="mt-2 text-sm text-white/65">
-              Live gallery. Updated culture archive. NFT Prototype Lab included.
-            </p>
-          </div>
-
-          <div className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm font-semibold text-white/80">
-            Featured: {featuredCount}
-          </div>
-        </section>
-
-        <section className="mt-6 overflow-x-auto">
-          <div className="flex min-w-max gap-3 pb-2">
-            {FILTERS.map((filter) => {
-              const isActive = activeFilter === filter;
-
-              return (
-                <button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  className={[
-                    "rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] transition",
-                    isActive
-                      ? "border-red-500/30 bg-red-500/15 text-red-100"
-                      : "border-white/10 bg-white/[0.04] text-white/70 hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-100",
-                  ].join(" ")}
-                >
-                  {filter}
-                </button>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="mt-10">
-          <div className="mb-5 flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
-                THE GALLERY
-              </p>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-white">
-                {activeFilter === "All" ? "All Pieces" : activeFilter}
-              </h2>
-            </div>
-
-            <div className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
-              {visibleArt.length} Visible
-            </div>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {visibleArt.map((item, index) => (
-              <ArtCard key={`${item.src}-${activeFilter}`} item={item} index={index} />
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-12">
+        <section id="prototype-lab" className="mt-10">
           <SectionShell className="relative overflow-hidden p-0">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,0,60,0.14),transparent_28%),radial-gradient(circle_at_top_right,rgba(255,120,40,0.10),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_22%,transparent_78%,rgba(255,255,255,0.02))]" />
 
@@ -460,6 +446,67 @@ export default function MemesPage() {
               </div>
             </div>
           </SectionShell>
+        </section>
+
+        <section className="mt-10 flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.025] px-5 py-4 backdrop-blur-xl">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
+              GALLERY STATUS
+            </p>
+            <p className="mt-2 text-sm text-white/65">
+              Live gallery. Updated culture archive. NFT Prototype Lab included.
+            </p>
+          </div>
+
+          <div className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm font-semibold text-white/80">
+            Featured: {featuredCount}
+          </div>
+        </section>
+
+        <section id="gallery" className="mt-6 overflow-x-auto">
+          <div className="flex min-w-max gap-3 pb-2">
+            {FILTERS.map((filter) => {
+              const isActive = activeFilter === filter;
+
+              return (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={[
+                    "rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] transition",
+                    isActive
+                      ? "border-red-500/30 bg-red-500/15 text-red-100"
+                      : "border-white/10 bg-white/[0.04] text-white/70 hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-100",
+                  ].join(" ")}
+                >
+                  {filter}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
+                THE GALLERY
+              </p>
+              <h2 className="mt-2 text-2xl font-black tracking-tight text-white">
+                {activeFilter === "All" ? "All Pieces" : activeFilter}
+              </h2>
+            </div>
+
+            <div className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
+              {visibleArt.length} Visible
+            </div>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {visibleArt.map((item, index) => (
+              <ArtCard key={`${item.src}-${activeFilter}`} item={item} index={index} />
+            ))}
+          </div>
         </section>
 
         <section className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 text-center shadow-[0_18px_50px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8">
