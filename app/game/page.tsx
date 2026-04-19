@@ -87,7 +87,7 @@ export default function GamePage() {
               Play the $MAD games
             </h1>
 
-            <p className="mt-4 text-white/70 leading-relaxed">
+            <p className="mt-4 leading-relaxed text-white/70">
               New to Roblox? Follow these 3 simple steps and jump in fast.
             </p>
           </div>
@@ -191,7 +191,7 @@ export default function GamePage() {
           </div>
         </section>
 
-        <section className="mt-10 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+        <section className="mt-10 grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
               OFFICIAL GAME
@@ -201,34 +201,23 @@ export default function GamePage() {
               Will You Get{" "}
               <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.5)]">
                 RICH
-              </span>{" "}
+              </span>
+              <br />
               Or Stay{" "}
               <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.5)]">
                 $MAD
               </span>
             </h2>
 
-            <p className="mt-4 leading-relaxed text-white/68">
-              This is the official $MAD Roblox experience. Go in, survive the
-              chaos, and see where your run takes you.
+            <p className="mt-5 text-base leading-relaxed text-white/70">
+              The official $MAD Roblox game.
             </p>
 
-            <div className="mt-6 grid gap-3">
-              <InfoCard
-                eyebrow="WHAT IT IS"
-                text="A Roblox game inside the $MAD world. Easy to enter, fast to understand, and built for action."
-              />
-              <InfoCard
-                eyebrow="WHO IT IS FOR"
-                text="New visitors, Roblox players, and anyone who wants the fastest way to experience the MAD universe."
-              />
-              <InfoCard
-                eyebrow="SIMPLE VERSION"
-                text="Make account. Open game. Start playing."
-              />
-            </div>
+            <p className="mt-2 text-sm leading-relaxed text-white/55">
+              Open it. Play it. See what happens.
+            </p>
 
-            <div className="mt-6">
+            <div className="mt-8">
               <a
                 href={GAME_LINK}
                 target="_blank"
