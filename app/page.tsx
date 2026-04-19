@@ -5,7 +5,7 @@ import Link from "next/link";
 import MadConfessions from "./components/MadConfessions";
 
 const LINKS = {
-  telegram: "https://t.me/MadOfficialChannel",
+  telegram: "https://t.me/MadOfficalChannel",
   x: "https://x.com/madrichclub_",
   instagram: "https://www.instagram.com/madrichclub/",
   tiktok: "https://www.tiktok.com/@madrichclub",
@@ -300,9 +300,16 @@ export default function Home() {
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-lg text-base font-semibold text-white/68">
-                Most people fold. $MAD builds.
-              </p>
+              <div className="mt-6 max-w-xl">
+                <p className="text-base font-semibold text-white/72">
+                  Most people fold. $MAD builds.
+                </p>
+
+                <p className="mt-3 text-sm leading-7 text-white/55 sm:text-base">
+                  $MAD Rich means staying calm under pressure, building while others
+                  panic, and turning discipline into wealth.
+                </p>
+              </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Btn href="/mad-mind" primary>
