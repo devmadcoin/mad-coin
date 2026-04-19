@@ -88,6 +88,22 @@ function getDailyPrompt() {
   return DAILY_PROMPTS[Math.abs(dayIndex) % DAILY_PROMPTS.length];
 }
 
+function looksLikeWalletSpam(text: string) {
+  const lower = text.toLowerCase();
+
+  const hasBeggingPhrase =
+    lower.includes("send me some") ||
+    lower.includes("send me $mad") ||
+    lower.includes("token") ||
+    lower.includes("airdrop") ||
+    lower.includes("send sol") ||
+    lower.includes("wallet");
+
+  const hasLongAddress = /\b[A-HJ-NP-Za-km-z1-9]{32,48}\b/.test(text);
+
+  return hasBeggingPhrase || hasLongAddress;
+}
+
 function ReactionButton({
   label,
   value,
@@ -343,15 +359,28 @@ export default function MadConfessions() {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    const pages = new Set<number>([1, totalPages, current, current - 1, current + 1]);
+    const pages = new Set<number>([
+      1,
+      totalPages,
+      current,
+      current - 1,
+      current + 1,
+    ]);
+
     return Array.from(pages)
       .filter((n) => n >= 1 && n <= totalPages)
       .sort((a, b) => a - b);
   }, [pagination.page, pagination.totalPages]);
 
-  const featuredConfession = useMemo(() => {
-    return confessions[0] ?? null;
+  const visibleConfessions = useMemo(() => {
+    return confessions.filter(
+      (confession) => !looksLikeWalletSpam(confession.text),
+    );
   }, [confessions]);
+
+  const featuredConfession = useMemo(() => {
+    return visibleConfessions[0] ?? null;
+  }, [visibleConfessions]);
 
   return (
     <section className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,0,0,0.96),rgba(8,0,0,0.98))] p-5 shadow-[0_20px_80px_rgba(0,0,0,0.32)] sm:p-6 lg:p-8">
@@ -397,7 +426,7 @@ export default function MadConfessions() {
           <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
             <SectionStat
               label="Confessions"
-              value={String(pagination.totalItems || 0)}
+              value={String(visibleConfessions.length || 0)}
             />
             <SectionStat label="Feed" value="Live" />
             <SectionStat
@@ -498,9 +527,9 @@ export default function MadConfessions() {
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
           <p className="text-sm text-white/45">
-            {pagination.totalItems > 0
-              ? `${pagination.totalItems} total confession${
-                  pagination.totalItems === 1 ? "" : "s"
+            {visibleConfessions.length > 0
+              ? `${visibleConfessions.length} visible confession${
+                  visibleConfessions.length === 1 ? "" : "s"
                 }`
               : "No confessions yet"}
           </p>
@@ -515,12 +544,12 @@ export default function MadConfessions() {
             <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 text-white/55">
               Loading confessions...
             </div>
-          ) : confessions.length === 0 ? (
+          ) : visibleConfessions.length === 0 ? (
             <div className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 text-white/55">
               No confessions yet. Be the first to drop one.
             </div>
           ) : (
-            confessions.map((confession) => (
+            visibleConfessions.map((confession) => (
               <article
                 key={confession.id}
                 className="group rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5 transition duration-200 hover:border-white/16 hover:bg-white/[0.05]"
@@ -535,7 +564,7 @@ export default function MadConfessions() {
                   </span>
                 </div>
 
-                <p className="mt-4 text-xl font-semibold leading-relaxed text-white/90 sm:text-2xl">
+                <p className="mt-4 text-xl font-semibold leading-relaxed text-white/90 sm:text-2xl break-words">
                   {confession.text}
                 </p>
 
