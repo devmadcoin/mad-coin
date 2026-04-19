@@ -3,21 +3,21 @@
 import Image from "next/image";
 
 const LINKS = {
-  telegram: "https://t.me/MadOfficialChannel",
+  telegram: "https://t.me/MadOfficalChannel",
   x: "https://x.com/madrichclub_",
   buy: "https://jup.ag/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
   dex: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs",
 } as const;
 
 const STATUS_CARDS = [
-  { label: "Website", value: "Live", tone: "green" },
-  { label: "MAD Mind", value: "Live", tone: "green" },
-  { label: "Confessions", value: "Live", tone: "green" },
-  { label: "400M Burn", value: "Done", tone: "green" },
-  { label: "MAD AI", value: "Building", tone: "red" },
-  { label: "Stickers", value: "Done", tone: "green" },
-  { label: "Clothing", value: "Prototype", tone: "red" },
-  { label: "800M Goal", value: "Target", tone: "red" },
+  { label: "Website", value: "LIVE NOW", tone: "green" },
+  { label: "MAD Mind", value: "LIVE NOW", tone: "green" },
+  { label: "Confessions", value: "LIVE NOW", tone: "green" },
+  { label: "400M Burn", value: "COMPLETE", tone: "green" },
+  { label: "MAD AI", value: "IN PROGRESS", tone: "red" },
+  { label: "Stickers", value: "COMPLETE", tone: "green" },
+  { label: "Clothing", value: "TESTING", tone: "red" },
+  { label: "800M Goal", value: "FINAL GOAL", tone: "red" },
 ] as const;
 
 const ROADMAP_PHASES = [
@@ -92,13 +92,13 @@ function Shell({
 
 function GlobeBackdrop() {
   return (
-    <div className="pointer-events-none absolute right-[-10%] top-[-12%] hidden h-[500px] w-[500px] overflow-hidden rounded-full opacity-20 lg:block">
-      <div className="absolute inset-0 rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_35%_35%,rgba(255,0,0,0.24),rgba(255,0,0,0.06)_38%,transparent_65%)] shadow-[0_0_60px_rgba(255,0,0,0.18)]" />
-      <div className="absolute inset-0 rounded-full bg-[repeating-linear-gradient(to_right,rgba(255,0,0,0.16)_0px,rgba(255,0,0,0.16)_1px,transparent_1px,transparent_38px),repeating-linear-gradient(to_bottom,rgba(255,0,0,0.12)_0px,rgba(255,0,0,0.12)_1px,transparent_1px,transparent_38px)] opacity-55" />
-      <div className="absolute inset-[10%] rounded-full border border-red-500/20" />
-      <div className="absolute inset-[24%] rounded-full border border-red-500/14" />
-      <div className="absolute inset-[38%] rounded-full border border-red-500/10" />
-      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/25 to-transparent" />
+    <div className="pointer-events-none absolute right-[-8%] top-[-10%] hidden h-[520px] w-[520px] overflow-hidden rounded-full opacity-30 lg:block">
+      <div className="absolute inset-0 rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_35%_35%,rgba(255,0,0,0.24),rgba(255,0,0,0.06)_38%,transparent_65%)] shadow-[0_0_70px_rgba(255,0,0,0.16)]" />
+      <div className="absolute inset-0 rounded-full bg-[repeating-linear-gradient(to_right,rgba(255,0,0,0.13)_0px,rgba(255,0,0,0.13)_1px,transparent_1px,transparent_44px),repeating-linear-gradient(to_bottom,rgba(255,0,0,0.11)_0px,rgba(255,0,0,0.11)_1px,transparent_1px,transparent_44px)] opacity-60" />
+      <div className="absolute inset-[9%] rounded-full border border-red-500/18" />
+      <div className="absolute inset-[22%] rounded-full border border-red-500/14" />
+      <div className="absolute inset-[35%] rounded-full border border-red-500/10" />
+      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/20 to-transparent" />
     </div>
   );
 }
@@ -122,9 +122,33 @@ function SectionHeading({
         {title}
       </h2>
 
-      <p className="mt-4 max-w-3xl text-base leading-8 text-white/72 sm:text-lg">
+      <p className="mt-4 max-w-3xl text-base leading-8 text-white/78 sm:text-lg">
         {body}
       </p>
+    </div>
+  );
+}
+
+function HeroPill({
+  children,
+  tone = "default",
+}: {
+  children: React.ReactNode;
+  tone?: "green" | "red" | "default";
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.2em]",
+        tone === "green" &&
+          "border border-emerald-400/30 bg-emerald-500/12 text-emerald-200 shadow-[0_0_18px_rgba(16,185,129,0.12)]",
+        tone === "red" &&
+          "border border-red-500/30 bg-red-500/12 text-red-100 shadow-[0_0_18px_rgba(255,0,0,0.12)]",
+        tone === "default" &&
+          "border border-white/10 bg-white/[0.05] text-white/85",
+      )}
+    >
+      {children}
     </div>
   );
 }
@@ -139,14 +163,22 @@ function StatusMiniCard({
   tone: "red" | "green";
 }) {
   return (
-    <div className="rounded-[1.25rem] border border-white/10 bg-black/25 p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/48">
+    <div
+      className={cn(
+        "rounded-[1.25rem] border p-4 transition duration-300 hover:-translate-y-0.5",
+        tone === "green"
+          ? "border-emerald-400/35 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.22),rgba(0,0,0,0.78))] shadow-[0_0_25px_rgba(16,185,129,0.15)]"
+          : "border-red-500/25 bg-[radial-gradient(circle_at_top_left,rgba(255,0,0,0.16),rgba(0,0,0,0.78))] shadow-[0_0_20px_rgba(255,0,0,0.08)]",
+      )}
+    >
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/58">
         {label}
       </p>
+
       <p
         className={cn(
-          "mt-2 text-base font-black",
-          tone === "green" ? "text-emerald-200" : "text-red-100",
+          "mt-3 text-xl font-black sm:text-2xl",
+          tone === "green" ? "text-emerald-300" : "text-red-100",
         )}
       >
         {value}
@@ -205,10 +237,147 @@ function RoadmapCard({
   );
 }
 
+function BurnGoalBlock() {
+  return (
+    <Shell className="p-6 sm:p-8">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
+        Supply Goal
+      </p>
+
+      <h3 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
+        Burn progress
+      </h3>
+
+      <p className="mt-4 max-w-xl text-base leading-8 text-white/78">
+        400M tokens already burned. Final target is 800M.
+      </p>
+
+      <div className="mt-7">
+        <div className="flex items-center justify-between text-sm font-black text-white">
+          <span>400M burned</span>
+          <span>800M goal</span>
+        </div>
+
+        <div className="mt-3 h-4 overflow-hidden rounded-full bg-white/10">
+          <div className="h-full w-1/2 rounded-full bg-[linear-gradient(90deg,#22c55e,#16a34a)] shadow-[0_0_20px_rgba(34,197,94,0.25)]" />
+        </div>
+
+        <div className="mt-3 text-sm text-white/72">50% of final burn goal complete.</div>
+      </div>
+
+      <div className="mt-7 flex flex-wrap gap-3">
+        <HeroPill tone="green">400M COMPLETE</HeroPill>
+        <HeroPill tone="red">800M TARGET</HeroPill>
+      </div>
+    </Shell>
+  );
+}
+
+function MerchPrototypeBlock() {
+  return (
+    <Shell className="p-0">
+      <div className="grid gap-0 lg:grid-cols-[0.85fr_1.15fr]">
+        <div className="p-6 sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
+            Merch Prototype
+          </p>
+
+          <h3 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-6xl">
+            MAD
+            <br />
+            <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+              RICH.
+            </span>
+          </h3>
+
+          <p className="mt-5 max-w-md text-base leading-8 text-white/78">
+            The sticker line is done. Clothing is now moving from idea into
+            real-world prototype phase.
+          </p>
+
+          <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+                Status
+              </p>
+              <p className="mt-2 text-sm leading-7 text-white/82">
+                Sample shirt created.
+              </p>
+            </div>
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+                What It Proves
+              </p>
+              <p className="mt-2 text-sm leading-7 text-white/82">
+                $MAD is becoming a real brand, not just a chart.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-7 flex flex-wrap gap-3">
+            <HeroPill tone="red">CLOTHING PROTOTYPE</HeroPill>
+            <HeroPill>MORE PIECES LATER</HeroPill>
+          </div>
+        </div>
+
+        <div className="relative min-h-[520px]">
+          <Image
+            src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
+            alt="MAD merch sample shirt"
+            fill
+            sizes="(max-width: 1024px) 100vw, 800px"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
+function LiveDexChartBlock() {
+  return (
+    <Shell className="p-0">
+      <div className="border-b border-white/10 px-6 py-5 sm:px-8">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
+          Public Since Day One
+        </p>
+        <h3 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+          Live market chart.
+        </h3>
+        <p className="mt-3 max-w-xl text-sm leading-7 text-white/78">
+          Launch, growth, pullback, and rebuild — all visible in public.
+        </p>
+      </div>
+
+      <div className="relative aspect-[16/10] w-full bg-black">
+        <iframe
+          src={LINKS.dex}
+          title="MAD live DexScreener chart"
+          className="absolute inset-0 h-full w-full"
+          loading="lazy"
+          allowFullScreen
+        />
+      </div>
+
+      <div className="border-t border-white/10 px-6 py-5 sm:px-8">
+        <a
+          href={LINKS.dex}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
+        >
+          View on DexScreener →
+        </a>
+      </div>
+    </Shell>
+  );
+}
+
 export default function RoadmapPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,48,48,0.12),transparent_35%),radial-gradient(circle_at_20%_20%,rgba(255,0,60,0.10),transparent_30%),radial-gradient(circle_at_80%_30%,rgba(255,80,0,0.08),transparent_30%),linear-gradient(180deg,#080808,#030303)]" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,0,0.10),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.08),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.03),transparent_25%),linear-gradient(180deg,#050505,#020202)]" />
 
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
         <div className="grid gap-6">
@@ -236,15 +405,9 @@ export default function RoadmapPage() {
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <div className="rounded-full border border-emerald-400/25 bg-emerald-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-emerald-200">
-                    Live
-                  </div>
-                  <div className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-red-200">
-                    Building
-                  </div>
-                  <div className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/85">
-                    Next
-                  </div>
+                  <HeroPill tone="green">LIVE</HeroPill>
+                  <HeroPill tone="red">BUILDING</HeroPill>
+                  <HeroPill>NEXT</HeroPill>
                 </div>
               </div>
 
@@ -256,9 +419,7 @@ export default function RoadmapPage() {
                 <div className="relative text-center">
                   <div className="mx-auto flex h-56 w-56 items-center justify-center rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),rgba(0,0,0,0.3)_55%,rgba(0,0,0,0.8))] shadow-[0_0_55px_rgba(255,0,0,0.2)]">
                     <div className="rounded-[2rem] border border-white/10 bg-black/55 px-10 py-10 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
-                      <div className="text-5xl font-black text-red-500">
-                        $MAD
-                      </div>
+                      <div className="text-5xl font-black text-red-500">$MAD</div>
                       <div className="mt-3 text-xs uppercase tracking-[0.28em] text-white/55">
                         Build Core
                       </div>
@@ -281,103 +442,11 @@ export default function RoadmapPage() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-            <Shell className="p-0">
-              <div className="grid gap-0 lg:grid-cols-[0.85fr_1.15fr]">
-                <div className="p-6 sm:p-8">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
-                    Merch Prototype
-                  </p>
-
-                  <h3 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-6xl">
-                    MAD
-                    <br />
-                    <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
-                      RICH.
-                    </span>
-                  </h3>
-
-                  <p className="mt-5 max-w-md text-base leading-8 text-white/78">
-                    The sticker line is done. Clothing is now moving from idea
-                    into real-world prototype phase.
-                  </p>
-
-                  <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                        Status
-                      </p>
-                      <p className="mt-2 text-sm leading-7 text-white/82">
-                        Sample shirt created.
-                      </p>
-                    </div>
-                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                        What It Proves
-                      </p>
-                      <p className="mt-2 text-sm leading-7 text-white/82">
-                        $MAD is becoming a real brand, not just a chart.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-7 flex flex-wrap gap-3">
-                    <div className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-red-200">
-                      Clothing Prototype
-                    </div>
-                    <div className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/85">
-                      More Pieces Later
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative min-h-[520px]">
-                  <Image
-                    src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
-                    alt="MAD merch sample shirt"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 800px"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                </div>
-              </div>
-            </Shell>
-
-            <Shell className="p-0">
-              <div className="border-b border-white/10 px-6 py-5 sm:px-8">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
-                  Public Since Day One
-                </p>
-                <h3 className="mt-3 text-3xl font-black text-white sm:text-4xl">
-                  Live market chart.
-                </h3>
-                <p className="mt-3 max-w-xl text-sm leading-7 text-white/78">
-                  Launch, growth, pullback, and rebuild — all visible in public.
-                </p>
-              </div>
-
-              <div className="relative aspect-[16/10] w-full bg-black">
-                <iframe
-                  src={LINKS.dex}
-                  title="MAD live DexScreener chart"
-                  className="absolute inset-0 h-full w-full"
-                  loading="lazy"
-                  allowFullScreen
-                />
-              </div>
-
-              <div className="border-t border-white/10 px-6 py-5 sm:px-8">
-                <a
-                  href={LINKS.dex}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
-                >
-                  View on DexScreener →
-                </a>
-              </div>
-            </Shell>
+            <MerchPrototypeBlock />
+            <LiveDexChartBlock />
           </div>
+
+          <BurnGoalBlock />
 
           <Shell className="p-6 sm:p-8">
             <SectionHeading
@@ -411,8 +480,7 @@ export default function RoadmapPage() {
                     THIS IS YOUR PATH.
                   </h2>
                   <p className="mt-2 text-base leading-8 text-white/82">
-                    Lore, proof, roadmap, and the real build of $MAD in one
-                    place.
+                    Lore, proof, roadmap, and the real build of $MAD in one place.
                   </p>
                 </div>
               </div>
