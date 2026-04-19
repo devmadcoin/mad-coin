@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import type { ReactNode } from "react";
 
 const LINKS = {
   telegram: "https://t.me/MadOfficalChannel",
@@ -75,7 +76,7 @@ function Shell({
   children,
   className = "",
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }) {
   return (
@@ -133,7 +134,7 @@ function HeroPill({
   children,
   tone = "default",
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   tone?: "green" | "red" | "default";
 }) {
   return (
@@ -242,7 +243,7 @@ function OrbitIcon({
   children,
 }: {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div
@@ -415,22 +416,28 @@ function MerchPrototypeBlock() {
 
 function LiveDexChartBlock() {
   return (
-    <Shell className="p-0">
+    <Shell className="overflow-hidden p-0">
       <div className="border-b border-white/10 px-6 py-5 sm:px-8">
         <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
           Public Since Day One
         </p>
+
         <h3 className="mt-3 text-3xl font-black text-white sm:text-4xl">
           Live market chart.
         </h3>
+
         <p className="mt-3 max-w-xl text-sm leading-7 text-white/78">
-          Launch, growth, pullback, and rebuild — all visible in public.
+          Launch, growth, pullback, rebuild — visible in real time.
         </p>
       </div>
 
-      <div className="relative aspect-[16/10] w-full bg-black">
+      <div className="relative h-[760px] w-full bg-black">
+        <div className="absolute right-4 top-4 z-20 rounded-full border border-emerald-400/30 bg-emerald-500/14 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200 shadow-[0_0_14px_rgba(16,185,129,0.18)]">
+          LIVE
+        </div>
+
         <iframe
-          src={LINKS.dex}
+          src="https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs?embed=1&theme=dark&trades=0&info=1"
           title="MAD live DexScreener chart"
           className="absolute inset-0 h-full w-full"
           loading="lazy"
@@ -445,7 +452,7 @@ function LiveDexChartBlock() {
           rel="noreferrer"
           className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
         >
-          View on DexScreener →
+          Open Full DexScreener →
         </a>
       </div>
     </Shell>
@@ -504,7 +511,7 @@ export default function RoadmapPage() {
             ))}
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
             <MerchPrototypeBlock />
             <LiveDexChartBlock />
           </div>
