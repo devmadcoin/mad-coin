@@ -1,4 +1,3 @@
-/* app/game/page.tsx */
 "use client";
 
 import Image from "next/image";
@@ -9,6 +8,10 @@ const GAME_LINK =
 const SPECIAL_GUEST_URL = "https://x.com/Kubo100x";
 const TOWER_DEFENSE_TEASER = "https://streamable.com/e/yc9dot";
 
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
 function Pill({
   children,
   tone = "default",
@@ -18,18 +21,36 @@ function Pill({
 }) {
   return (
     <div
-      className={[
-        "rounded-full px-5 py-3 text-xs font-semibold uppercase tracking-[0.24em]",
-        tone === "red" &&
-          "border border-red-500/25 bg-red-500/10 text-red-200",
+      className={cn(
+        "rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em]",
+        tone === "red" && "border border-red-500/25 bg-red-500/10 text-red-200",
         tone === "green" &&
           "border border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
         tone === "default" &&
           "border border-white/10 bg-white/[0.04] text-white/70",
-      ].join(" ")}
+      )}
     >
       {children}
     </div>
+  );
+}
+
+function SectionShell({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section
+      className={cn(
+        "overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl",
+        className,
+      )}
+    >
+      {children}
+    </section>
   );
 }
 
@@ -58,7 +79,7 @@ function StepTile({
         {title}
       </h3>
 
-      <p className="mt-3 text-sm leading-8 text-white/68">{text}</p>
+      <p className="mt-3 text-sm leading-7 text-white/68">{text}</p>
     </div>
   );
 }
@@ -80,25 +101,6 @@ function SmallCard({
   );
 }
 
-function SectionShell({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <section
-      className={[
-        "overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl",
-        className,
-      ].join(" ")}
-    >
-      {children}
-    </section>
-  );
-}
-
 export default function GamePage() {
   return (
     <div className="relative overflow-hidden bg-black text-white">
@@ -109,25 +111,25 @@ export default function GamePage() {
         <SectionShell className="p-6 sm:p-8">
           <div className="max-w-5xl">
             <p className="text-xs font-semibold uppercase tracking-[0.34em] text-red-200/75">
-              HOW TO START
+              PLAY NOW
             </p>
 
             <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl">
-              Play the{" "}
+              The{" "}
               <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.45)]">
                 $MAD
               </span>{" "}
-              games
+              games are live.
             </h1>
 
             <p className="mt-5 max-w-3xl text-base leading-8 text-white/70 sm:text-lg">
-              New to Roblox? Do these 3 simple steps and you are in.
+              New to Roblox? Relax. Do these 3 easy steps, then jump in.
             </p>
           </div>
 
           <div className="mt-7 flex flex-wrap gap-3">
             <Pill tone="green">Easy Start</Pill>
-            <Pill tone="red">Official Games</Pill>
+            <Pill tone="red">Official $MAD Game</Pill>
             <Pill>Tutorial Included</Pill>
           </div>
 
@@ -135,7 +137,7 @@ export default function GamePage() {
             <StepTile
               step="STEP 1"
               title="Make a Roblox account"
-              text="If you do not have Roblox yet, make your free account first."
+              text="No account yet? Make one free first. That gets you in the door."
               icon={
                 <svg viewBox="0 0 24 24" className="h-7 w-7 fill-current">
                   <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Zm9-3h-2V9h-2v2h-2v2h2v2h2v-2h2Z" />
@@ -144,8 +146,8 @@ export default function GamePage() {
             />
             <StepTile
               step="STEP 2"
-              title="Watch the quick tutorial"
-              text="Use the video below if you want the easiest way to get set up."
+              title="Watch the quick video"
+              text="If you want the easiest setup, hit the tutorial below and copy it."
               icon={
                 <svg viewBox="0 0 24 24" className="h-7 w-7 fill-current">
                   <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm-2 14.5v-9l7 4.5Z" />
@@ -154,8 +156,8 @@ export default function GamePage() {
             />
             <StepTile
               step="STEP 3"
-              title="Join the MAD game"
-              text="Once your account is ready, open the official Roblox game and play."
+              title="Join the game"
+              text="When your account is ready, open the official $MAD Roblox game and play."
               icon={
                 <svg viewBox="0 0 24 24" className="h-7 w-7 fill-current">
                   <path d="M7 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3l3 3h4l3-3h3a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-3-3h-4Zm1 5a1.5 1.5 0 1 1-1.5-1.5A1.5 1.5 0 0 1 8 12Zm9 0a1.5 1.5 0 1 1-1.5-1.5A1.5 1.5 0 0 1 17 12Z" />
@@ -172,7 +174,7 @@ export default function GamePage() {
             </p>
 
             <div className="mt-5 inline-flex rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em] text-red-200">
-              Live Prototype
+              Live Right Now
             </div>
 
             <h2 className="mt-6 text-4xl font-black leading-[0.95] text-white sm:text-6xl">
@@ -188,22 +190,37 @@ export default function GamePage() {
             </h2>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-white/78">
-              Prototype #1 of the official $MAD Roblox game.
+              This is prototype #1 of the official $MAD Roblox game.
             </p>
 
             <p className="mt-3 max-w-xl text-base leading-8 text-white/58">
-              Play the first version now before future upgrades drop.
+              It is live now. Click in, play early, and see the first version before bigger upgrades land.
             </p>
 
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href={GAME_LINK}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-7 py-4 text-base font-black text-red-200 shadow-[0_0_16px_rgba(255,0,0,0.3)] transition hover:scale-[1.02] hover:bg-red-500/25"
+                className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white shadow-[0_0_16px_rgba(255,0,0,0.3)] transition hover:scale-[1.02] hover:bg-red-400"
               >
-                Play Prototype Now →
+                Play Now →
               </a>
+
+              <a
+                href={TUTORIAL_VIDEO.replace("/embed/", "/watch?v=")}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-7 py-4 text-base font-black text-white/85 transition hover:border-white/20 hover:bg-white/[0.08]"
+              >
+                Watch Tutorial
+              </a>
+            </div>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              <SmallCard eyebrow="What It Is" text="A live Roblox prototype you can play right now." />
+              <SmallCard eyebrow="Best For" text="Anyone who wants the easiest way to enter the $MAD world." />
+              <SmallCard eyebrow="Goal" text="Jump in fast. Learn the vibe. Play before the next upgrades drop." />
             </div>
           </SectionShell>
 
@@ -226,16 +243,15 @@ export default function GamePage() {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-4xl">
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">
-                QUICK START
+                QUICK HELP
               </p>
 
               <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">
-                Need help before playing?
+                Need help first?
               </h2>
 
               <p className="mt-4 max-w-3xl text-base leading-8 text-white/70">
-                Watch this quick setup video first. It helps brand new players
-                get into Roblox fast so they can jump into MAD Games.
+                Watch this quick setup video. It is the fastest way for brand new players to get into Roblox and start playing $MAD.
               </p>
             </div>
 
@@ -306,8 +322,12 @@ export default function GamePage() {
               Tower Defense
             </h2>
 
-            <p className="mt-5 max-w-md text-lg leading-8 text-white/62">
-              Prototype in development.
+            <p className="mt-5 max-w-md text-lg leading-8 text-white/75">
+              Bigger. Wilder. More chaos. This one is still being built.
+            </p>
+
+            <p className="mt-3 max-w-xl text-base leading-8 text-white/58">
+              The next $MAD game is in development now. Watch the teaser and see where the world is going next.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -323,6 +343,12 @@ export default function GamePage() {
               <div className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/80">
                 More Towers Coming
               </div>
+            </div>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              <SmallCard eyebrow="Status" text="Still in development." />
+              <SmallCard eyebrow="Energy" text="More action. More defense. More MAD." />
+              <SmallCard eyebrow="Next Move" text="Watch the teaser and get ready for what is coming." />
             </div>
           </SectionShell>
 
