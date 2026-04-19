@@ -157,6 +157,45 @@ function HeroBadge({ children }: { children: React.ReactNode }) {
   );
 }
 
+function GlobeBackdrop() {
+  return (
+    <div className="pointer-events-none absolute right-[-10%] top-[-12%] hidden h-[500px] w-[500px] overflow-hidden rounded-full opacity-20 lg:block">
+      <div className="absolute inset-0 rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_35%_35%,rgba(255,0,0,0.24),rgba(255,0,0,0.06)_38%,transparent_65%)] shadow-[0_0_60px_rgba(255,0,0,0.18)]" />
+      <div className="absolute inset-0 rounded-full bg-[repeating-linear-gradient(to_right,rgba(255,0,0,0.16)_0px,rgba(255,0,0,0.16)_1px,transparent_1px,transparent_38px),repeating-linear-gradient(to_bottom,rgba(255,0,0,0.12)_0px,rgba(255,0,0,0.12)_1px,transparent_1px,transparent_38px)] opacity-55" />
+      <div className="absolute inset-[10%] rounded-full border border-red-500/20" />
+      <div className="absolute inset-[24%] rounded-full border border-red-500/14" />
+      <div className="absolute inset-[38%] rounded-full border border-red-500/10" />
+      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/25 to-transparent" />
+    </div>
+  );
+}
+
+function SectionHeading({
+  eyebrow,
+  title,
+  body,
+}: {
+  eyebrow: string;
+  title: string;
+  body?: string;
+}) {
+  return (
+    <div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/40">
+        {eyebrow}
+      </p>
+      <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+        {title}
+      </h2>
+      {body ? (
+        <p className="mt-4 max-w-3xl text-sm leading-7 text-white/62 sm:text-base">
+          {body}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function StatusMiniCard({
   label,
   value,
@@ -569,7 +608,8 @@ function MerchPrototypeBlock() {
           </h3>
 
           <p className="mt-5 max-w-md text-base leading-8 text-white/68">
-            The sticker line is done. Clothing is now moving from idea into real-world prototype phase.
+            The sticker line is done. Clothing is now moving from idea into
+            real-world prototype phase.
           </p>
 
           <div className="mt-7 grid gap-3 sm:grid-cols-2">
@@ -641,7 +681,9 @@ export default function RoadmapPage() {
                   </h1>
 
                   <p className="mt-5 max-w-xl text-base leading-8 text-white/70">
-                    The MAD Path is your journey inside the $MAD universe. Complete missions, track the build, and unlock bigger opportunities.
+                    The MAD Path is your journey inside the $MAD universe.
+                    Complete missions, track the build, and unlock bigger
+                    opportunities.
                   </p>
 
                   <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -691,7 +733,9 @@ export default function RoadmapPage() {
                   <div className="relative text-center">
                     <div className="mx-auto flex h-64 w-64 items-center justify-center rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),rgba(0,0,0,0.3)_55%,rgba(0,0,0,0.8))] shadow-[0_0_55px_rgba(255,0,0,0.2)]">
                       <div className="rounded-[2rem] border border-white/10 bg-black/55 px-10 py-10 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
-                        <div className="text-5xl font-black text-red-500">$MAD</div>
+                        <div className="text-5xl font-black text-red-500">
+                          $MAD
+                        </div>
                         <div className="mt-3 text-xs uppercase tracking-[0.28em] text-white/50">
                           Mission Core
                         </div>
