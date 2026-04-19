@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 
 type ReactionKey = "same" | "lol" | "handshake";
-type FilterMode = "Latest" | "Hot" | "Unhinged";
-type ApiMode = "latest" | "hot" | "unhinged";
 
 type Confession = {
   id: string;
@@ -26,7 +24,7 @@ type Pagination = {
 type GetConfessionsResponse = {
   confessions: Confession[];
   pagination: Pagination;
-  mode: ApiMode;
+  mode?: "latest" | "hot" | "unhinged";
   error?: string;
 };
 
@@ -65,14 +63,6 @@ const DAILY_PROMPTS = [
   "What pressure are you carrying quietly?",
   "What’s something real you wish you could say out loud?",
 ];
-
-const FILTERS: FilterMode[] = ["Latest", "Hot", "Unhinged"];
-
-function filterToApiMode(filter: FilterMode): ApiMode {
-  if (filter === "Hot") return "hot";
-  if (filter === "Unhinged") return "unhinged";
-  return "latest";
-}
 
 function timeAgo(ts: number) {
   const diff = Date.now() - ts;
@@ -178,7 +168,6 @@ export default function MadConfessions() {
   const [confessions, setConfessions] = useState<Confession[]>([]);
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
-  const [filter, setFilter] = useState<FilterMode>("Latest");
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
@@ -195,16 +184,14 @@ export default function MadConfessions() {
   const [successMessage, setSuccessMessage] = useState("");
 
   const dailyPrompt = useMemo(() => getDailyPrompt(), []);
-  const apiMode = useMemo(() => filterToApiMode(filter), [filter]);
 
-  async function loadConfessions(nextPage = page, nextFilter = filter) {
+  async function loadConfessions(nextPage = page) {
     try {
       setLoading(true);
       setError("");
 
-      const mode = filterToApiMode(nextFilter);
       const res = await fetch(
-        `/api/confessions?mode=${mode}&page=${nextPage}&pageSize=${PAGE_SIZE}`,
+        `/api/confessions?mode=latest&page=${nextPage}&pageSize=${PAGE_SIZE}`,
         {
           method: "GET",
           cache: "no-store",
@@ -245,9 +232,9 @@ export default function MadConfessions() {
   }
 
   useEffect(() => {
-    loadConfessions(page, filter);
+    loadConfessions(page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, filter]);
+  }, [page]);
 
   useEffect(() => {
     if (!successMessage) return;
@@ -290,9 +277,8 @@ export default function MadConfessions() {
 
       setText("");
       setPage(1);
-      setFilter("Latest");
       setSuccessMessage("Confession received. The wall heard you.");
-      await loadConfessions(1, "Latest");
+      await loadConfessions(1);
     } catch (err) {
       setError(
         err instanceof Error
@@ -364,9 +350,8 @@ export default function MadConfessions() {
   }, [pagination.page, pagination.totalPages]);
 
   const featuredConfession = useMemo(() => {
-    if (filter === "Latest") return confessions[0] ?? null;
     return confessions[0] ?? null;
-  }, [confessions, filter]);
+  }, [confessions]);
 
   return (
     <section className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,0,0,0.96),rgba(8,0,0,0.98))] p-5 shadow-[0_20px_80px_rgba(0,0,0,0.32)] sm:p-6 lg:p-8">
@@ -387,25 +372,8 @@ export default function MadConfessions() {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {FILTERS.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => {
-                  setFilter(item);
-                  setPage(1);
-                }}
-                className={[
-                  "rounded-full border px-4 py-2 text-sm font-bold transition duration-200",
-                  filter === item
-                    ? "border-red-400/40 bg-red-500/15 text-white"
-                    : "border-white/10 bg-white/[0.04] text-white/60 hover:border-white/20 hover:bg-white/[0.07] hover:text-white",
-                ].join(" ")}
-              >
-                {item}
-              </button>
-            ))}
+          <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-bold text-white/75">
+            Live Feed
           </div>
         </div>
 
@@ -431,7 +399,7 @@ export default function MadConfessions() {
               label="Confessions"
               value={String(pagination.totalItems || 0)}
             />
-            <SectionStat label="Mode" value={filter} />
+            <SectionStat label="Feed" value="Live" />
             <SectionStat
               label="Page"
               value={`${pagination.page}/${pagination.totalPages}`}
@@ -538,7 +506,7 @@ export default function MadConfessions() {
           </p>
 
           <p className="text-sm text-white/35">
-            {filter} • Page {pagination.page} of {pagination.totalPages}
+            Page {pagination.page} of {pagination.totalPages}
           </p>
         </div>
 
@@ -552,23 +520,15 @@ export default function MadConfessions() {
               No confessions yet. Be the first to drop one.
             </div>
           ) : (
-            confessions.map((confession, index) => (
+            confessions.map((confession) => (
               <article
                 key={confession.id}
                 className="group rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5 transition duration-200 hover:border-white/16 hover:bg-white/[0.05]"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-red-200/80">
-                      anonymous
-                    </span>
-
-                    {index === 0 && pagination.page === 1 && filter !== "Latest" ? (
-                      <span className="rounded-full border border-yellow-400/20 bg-yellow-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-yellow-200/80">
-                        loudest
-                      </span>
-                    ) : null}
-                  </div>
+                  <span className="rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-red-200/80">
+                    anonymous
+                  </span>
 
                   <span className="text-sm text-white/35">
                     {timeAgo(confession.createdAt)}
