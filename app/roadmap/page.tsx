@@ -80,62 +80,18 @@ function StatusMiniCard({
   );
 }
 
-function ProgressBlock() {
+function RoadmapPoster() {
   return (
-    <div className="mt-8 max-w-[34rem]">
-      <div className="mb-3 flex items-center justify-between gap-4 text-sm font-black text-white">
-        <span className="uppercase tracking-[0.18em]">Overall Progress</span>
-        <span className="text-emerald-300">65% complete</span>
-      </div>
-
-      <div className="h-4 overflow-hidden rounded-full bg-white/10">
-        <div className="h-full w-[65%] rounded-full bg-[linear-gradient(90deg,#22c55e,#34d399)] shadow-[0_0_22px_rgba(16,185,129,0.35)]" />
-      </div>
-    </div>
-  );
-}
-
-function RoadmapHero() {
-  return (
-    <Shell className="overflow-hidden">
-      <div className="relative min-h-[920px]">
+    <Shell className="overflow-hidden p-0">
+      <div className="relative aspect-[16/9] w-full bg-black">
         <Image
           src="/roadmap/the-mad-roadmap.png"
-          alt="The MAD roadmap background"
+          alt="The MAD roadmap"
           fill
           priority
-          className="object-cover object-center"
           sizes="100vw"
+          className="object-cover object-center"
         />
-
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.52)_34%,rgba(0,0,0,0.14)_64%,rgba(0,0,0,0.04)_100%)]" />
-
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.10),rgba(0,0,0,0.28))]" />
-
-        <div className="relative z-10 grid min-h-[920px] gap-8 p-6 sm:p-8 lg:grid-cols-[0.62fr_1.38fr] lg:p-10">
-          <div className="pt-4">
-            <div className="inline-flex rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-red-200">
-              The Mad Path
-            </div>
-
-            <h1 className="mt-6 text-[3.6rem] font-black leading-[0.88] tracking-[-0.05em] text-white sm:text-[5.9rem]">
-              The roadmap
-              <br />
-              to{" "}
-              <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.52)]">
-                greatness.
-              </span>
-            </h1>
-
-            <p className="mt-5 max-w-xl text-base leading-8 text-white/82 sm:text-lg">
-              See what is done, what is building, and what comes next.
-            </p>
-
-            <ProgressBlock />
-          </div>
-
-          <div />
-        </div>
       </div>
     </Shell>
   );
@@ -186,7 +142,7 @@ export default function RoadmapPage() {
             ))}
           </div>
 
-          <RoadmapHero />
+          <RoadmapPoster />
 
           <CTASection />
         </div>
