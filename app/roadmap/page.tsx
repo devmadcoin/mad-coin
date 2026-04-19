@@ -11,9 +11,9 @@ const STATUS_CARDS = [
   { label: "Website", value: "LIVE NOW", tone: "green", icon: "🌐" },
   { label: "MAD Mind", value: "LIVE NOW", tone: "green", icon: "🧠" },
   { label: "Confessions", value: "LIVE NOW", tone: "green", icon: "💬" },
-  { label: "400M Burn", value: "COMPLETE", tone: "green", icon: "🔥" },
+  { label: "400M Burn", value: "PROVEN", tone: "green", icon: "🔥" },
   { label: "MAD AI", value: "IN PROGRESS", tone: "red", icon: "🤖" },
-  { label: "Stickers", value: "COMPLETE", tone: "green", icon: "😈" },
+  { label: "Stickers", value: "LIVE", tone: "green", icon: "😈" },
   { label: "Clothing", value: "TESTING", tone: "red", icon: "👕" },
   { label: "800M Goal", value: "FINAL GOAL", tone: "red", icon: "🎯" },
 ] as const;
