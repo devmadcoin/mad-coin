@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import IdentityForge from "../components/IdentityForge";
 
 type Category =
   | "All"
@@ -101,7 +102,9 @@ function downloadNameFromSrc(src: string) {
 
 function getVisibleArt(activeFilter: Category, items: ArtItem[]) {
   if (activeFilter === "All") return items;
-  if (activeFilter === "Archive") return items.filter((item) => item.category !== "New Drop");
+  if (activeFilter === "Archive") {
+    return items.filter((item) => item.category !== "New Drop");
+  }
   return items.filter((item) => item.category === activeFilter);
 }
 
@@ -168,10 +171,27 @@ function ArtCard({
   );
 }
 
+function SectionShell({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section
+      className={`rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl ${className}`}
+    >
+      {children}
+    </section>
+  );
+}
+
 export default function MemesPage() {
   const [activeFilter, setActiveFilter] = useState<Category>("All");
 
   const stickerSrc = "/stickers/sticker-smash.webp";
+  const forgeStickerSrc = "/stickers/he-sold-pump-it.webp";
 
   const featuredCount = ALL_ART.filter((item) => item.featured).length;
 
@@ -206,7 +226,8 @@ export default function MemesPage() {
 
               <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
                 A curated gallery of <span className="text-white/90">community energy</span>, signal,
-                and visual identity. Open any piece in full size or download it below.
+                identity, and collectible direction. Explore the archive, download the art, then
+                build your own MAD identity in the Forge Lab below.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -217,7 +238,7 @@ export default function MemesPage() {
                   {ALL_ART.length} Pieces
                 </div>
                 <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                  Download Ready
+                  Forge Lab Included
                 </div>
               </div>
             </div>
@@ -243,7 +264,7 @@ export default function MemesPage() {
               EXHIBITION STATUS
             </p>
             <p className="mt-2 text-sm text-white/65">
-              New drops can lead the gallery, while older classics stay archived below in the same flow.
+              New drops lead the gallery, classics stay archived below, and Forge Lab now lives in the same experience.
             </p>
           </div>
 
@@ -323,12 +344,125 @@ export default function MemesPage() {
           </div>
         </section>
 
+        <section className="mt-12">
+          <SectionShell className="relative overflow-hidden p-7 sm:p-10">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,0,60,0.12),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(255,60,0,0.08),transparent_28%)]" />
+
+            <div className="relative flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+              <div className="max-w-3xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.38em] text-white/45">
+                  FORGE LAB
+                </p>
+
+                <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+                  Identity{" "}
+                  <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
+                    Forge
+                  </span>
+                </h2>
+
+                <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/68 sm:text-lg">
+                  Prototype your <span className="text-white/90">$MAD identity</span>. Mix traits,
+                  randomize builds, explore collectible directions, and export your PNG.
+                </p>
+
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-200">
+                    NFT Prototype
+                  </div>
+                  <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
+                    Collectible Identity System
+                  </div>
+                  <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
+                    No Live Mint
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative mx-auto h-[130px] w-[130px] shrink-0 sm:h-[160px] sm:w-[160px] lg:mx-0 lg:mt-1">
+                <div className="absolute inset-0 rounded-full bg-red-500/10 blur-2xl" />
+                <div className="relative h-full w-full rotate-[6deg] drop-shadow-[0_22px_45px_rgba(0,0,0,0.6)]">
+                  <Image
+                    src={forgeStickerSrc}
+                    alt="Forge Sticker"
+                    fill
+                    sizes="160px"
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-4 lg:grid-cols-3">
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
+                  WHAT IT IS
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-white/68">
+                  Forge is an experimental builder for shaping possible{" "}
+                  <span className="text-white/90">$MAD</span> character identities and collectible directions.
+                </p>
+              </div>
+
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
+                  CURRENT STATUS
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-white/68">
+                  This is a <span className="text-red-300">prototype only</span>. It is not a live mint,
+                  not a final NFT collection, and not a finished release.
+                </p>
+              </div>
+
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
+                  WHY IT MATTERS
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-white/68">
+                  It gives the community an early look at how{" "}
+                  <span className="text-white/90">$MAD</span> identity, traits,
+                  and collectible expansion could evolve over time.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.025] p-3 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-4">
+              <IdentityForge />
+            </div>
+
+            <div className="mt-8 rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-6 text-center shadow-[0_18px_50px_rgba(0,0,0,0.3)] backdrop-blur-xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
+                FORGE NOTICE
+              </p>
+              <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-white/65 sm:text-base">
+                The Forge exists to explore visual identity and collectible potential
+                inside the <span className="font-semibold text-white/90">$MAD</span>{" "}
+                universe. Today it is a concept lab. Tomorrow it could become something bigger.
+              </p>
+            </div>
+          </SectionShell>
+        </section>
+
+        <section className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 text-center shadow-[0_18px_50px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-200/70">
+            FUTURE COLLECTIBLES
+          </p>
+          <h2 className="mt-4 text-3xl font-black tracking-tight text-white sm:text-5xl">
+            Art today. Collectibles tomorrow.
+          </h2>
+          <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-white/65 sm:text-lg">
+            $MAD Art is the public culture layer. Forge Lab is the identity layer.
+            Together they shape where the visual universe can go next.
+          </p>
+        </section>
+
         <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.025] px-5 py-4 text-xs leading-relaxed text-white/38 backdrop-blur-xl">
-          To add more art later, drop the new image files into{" "}
+          To add more art later, drop new image files into{" "}
           <span className="text-white/60">/public/memes/</span> and paste a new object into{" "}
           <span className="text-white/60">NEW_ART</span> at the top of this file.
           If a tile appears blank, the filename in the script must match the real file exactly,
-          including capitalization.
+          including capitalization. Forge assets still depend on{" "}
+          <span className="text-white/60">/public/pfp/manifest.json</span> matching the real filenames.
         </div>
       </div>
     </div>
