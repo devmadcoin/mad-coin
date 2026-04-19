@@ -237,6 +237,82 @@ function RoadmapCard({
   );
 }
 
+function OrbitIcon({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        "absolute flex items-center justify-center rounded-full border border-red-500/25 bg-[radial-gradient(circle_at_top,rgba(255,40,40,0.25),rgba(0,0,0,0.92))] shadow-[0_0_24px_rgba(255,0,0,0.18)]",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+function BuildCoreOrbit() {
+  return (
+    <div className="relative flex min-h-[430px] items-center justify-center">
+      <div className="absolute h-[280px] w-[280px] rounded-full border border-red-500/20 shadow-[0_0_80px_rgba(255,0,0,0.18)]" />
+      <div className="absolute h-[360px] w-[360px] rounded-full border border-red-500/10" />
+      <div className="absolute h-[430px] w-[430px] rounded-full border border-red-500/6" />
+
+      <div className="absolute h-[340px] w-[470px] rotate-[14deg] rounded-full border border-red-500/14" />
+      <div className="absolute h-[300px] w-[420px] -rotate-[18deg] rounded-full border border-red-500/10" />
+
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),transparent_42%)]" />
+
+      <OrbitIcon className="left-[16%] top-[20%] h-20 w-20">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lg font-black text-red-300">
+          $MAD
+        </div>
+      </OrbitIcon>
+
+      <OrbitIcon className="left-[20%] bottom-[14%] h-24 w-24 rotate-[-18deg]">
+        <div className="text-5xl">🎮</div>
+      </OrbitIcon>
+
+      <OrbitIcon className="right-[10%] top-[14%] h-24 w-24 rotate-[12deg]">
+        <div className="text-5xl">👕</div>
+      </OrbitIcon>
+
+      <OrbitIcon className="right-[6%] bottom-[20%] h-24 w-24">
+        <div className="text-5xl">🤖</div>
+      </OrbitIcon>
+
+      <OrbitIcon className="top-[2%] h-20 w-20">
+        <div className="text-4xl">😡</div>
+      </OrbitIcon>
+
+      <OrbitIcon className="bottom-[8%] right-[24%] h-14 w-14">
+        <div className="text-2xl">🪙</div>
+      </OrbitIcon>
+
+      <div className="relative z-10 text-center">
+        <div className="mx-auto flex h-60 w-60 items-center justify-center rounded-[2.2rem] border border-red-500/20 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),rgba(20,0,0,0.6)_52%,rgba(0,0,0,0.96))] shadow-[0_0_60px_rgba(255,0,0,0.25)]">
+          <div className="rounded-[2rem] border border-white/10 bg-black/55 px-10 py-10 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
+            <div className="text-5xl font-black text-red-500">$MAD</div>
+            <div className="mt-3 text-xs uppercase tracking-[0.28em] text-white/60">
+              Build Core
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute left-[24%] top-[26%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.8)]" />
+      <div className="absolute right-[20%] top-[20%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.8)]" />
+      <div className="absolute bottom-[18%] left-[28%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.8)]" />
+      <div className="absolute right-[26%] bottom-[10%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.8)]" />
+    </div>
+  );
+}
+
 function BurnGoalBlock() {
   return (
     <Shell className="p-6 sm:p-8">
@@ -262,7 +338,9 @@ function BurnGoalBlock() {
           <div className="h-full w-1/2 rounded-full bg-[linear-gradient(90deg,#22c55e,#16a34a)] shadow-[0_0_20px_rgba(34,197,94,0.25)]" />
         </div>
 
-        <div className="mt-3 text-sm text-white/72">50% of final burn goal complete.</div>
+        <div className="mt-3 text-sm text-white/72">
+          50% of final burn goal complete.
+        </div>
       </div>
 
       <div className="mt-7 flex flex-wrap gap-3">
@@ -411,22 +489,7 @@ export default function RoadmapPage() {
                 </div>
               </div>
 
-              <div className="relative flex min-h-[360px] items-center justify-center">
-                <div className="absolute h-[240px] w-[240px] rounded-full border border-red-500/20 shadow-[0_0_70px_rgba(255,0,0,0.18)]" />
-                <div className="absolute h-[310px] w-[310px] rounded-full border border-red-500/10" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),transparent_38%)]" />
-
-                <div className="relative text-center">
-                  <div className="mx-auto flex h-56 w-56 items-center justify-center rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),rgba(0,0,0,0.3)_55%,rgba(0,0,0,0.8))] shadow-[0_0_55px_rgba(255,0,0,0.2)]">
-                    <div className="rounded-[2rem] border border-white/10 bg-black/55 px-10 py-10 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
-                      <div className="text-5xl font-black text-red-500">$MAD</div>
-                      <div className="mt-3 text-xs uppercase tracking-[0.28em] text-white/55">
-                        Build Core
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <BuildCoreOrbit />
             </div>
           </Shell>
 
@@ -480,7 +543,8 @@ export default function RoadmapPage() {
                     THIS IS YOUR PATH.
                   </h2>
                   <p className="mt-2 text-base leading-8 text-white/82">
-                    Lore, proof, roadmap, and the real build of $MAD in one place.
+                    Lore, proof, roadmap, and the real build of $MAD in one
+                    place.
                   </p>
                 </div>
               </div>
