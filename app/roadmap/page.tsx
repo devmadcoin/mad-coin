@@ -2,6 +2,10 @@
 
 import type { ReactNode } from "react";
 
+const LINKS = {
+  buy: "https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
+} as const;
+
 const STATUS_CARDS = [
   { label: "Website", value: "LIVE NOW", tone: "green", icon: "🌐" },
   { label: "MAD Mind", value: "LIVE NOW", tone: "green", icon: "🧠" },
@@ -12,10 +16,6 @@ const STATUS_CARDS = [
   { label: "Clothing", value: "TESTING", tone: "red", icon: "👕" },
   { label: "800M Goal", value: "FINAL GOAL", tone: "red", icon: "🎯" },
 ] as const;
-
-const LINKS = {
-  buy: "https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
-} as const;
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -158,7 +158,7 @@ function RoadCard({
   return (
     <div
       className={cn(
-        "absolute z-20 w-[17rem] rounded-[1.8rem] border bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5 backdrop-blur-xl",
+        "absolute z-20 rounded-[1.8rem] border bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5 backdrop-blur-xl",
         tone === "green" &&
           "border-emerald-400/40 shadow-[0_0_35px_rgba(16,185,129,0.16)]",
         tone === "red" &&
@@ -177,23 +177,12 @@ function RoadCard({
       </h3>
 
       <div className="mt-4">
-        <Badge
-          tone={
-            tone === "green" ? "green" : tone === "red" ? "red" : "neutral"
-          }
-        >
-          {status}
-        </Badge>
+        <Badge tone={tone}>{status}</Badge>
       </div>
 
       <div className="mt-5 grid gap-3">
         {bullets.map((item) => (
-          <Bullet
-            key={item}
-            tone={
-              tone === "green" ? "green" : tone === "red" ? "red" : "neutral"
-            }
-          >
+          <Bullet key={item} tone={tone}>
             {item}
           </Bullet>
         ))}
@@ -205,28 +194,28 @@ function RoadCard({
 function RoadPins() {
   return (
     <>
-      <div className="absolute left-[22%] top-[71%] z-10 flex flex-col items-center">
+      <div className="absolute left-[22%] top-[72%] z-10 flex flex-col items-center">
         <div className="h-12 w-[3px] bg-emerald-400/80 shadow-[0_0_16px_rgba(16,185,129,0.45)]" />
         <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/40 bg-black text-2xl text-white shadow-[0_0_18px_rgba(16,185,129,0.38)]">
           ✓
         </div>
       </div>
 
-      <div className="absolute left-[47%] top-[56%] z-10 flex flex-col items-center">
+      <div className="absolute left-[48%] top-[56%] z-10 flex flex-col items-center">
         <div className="h-10 w-[3px] bg-emerald-400/80 shadow-[0_0_16px_rgba(16,185,129,0.42)]" />
         <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/35 bg-black text-2xl text-white shadow-[0_0_16px_rgba(16,185,129,0.32)]">
           ✓
         </div>
       </div>
 
-      <div className="absolute left-[68%] top-[40%] z-10 flex flex-col items-center">
+      <div className="absolute left-[69%] top-[40%] z-10 flex flex-col items-center">
         <div className="h-10 w-[3px] bg-red-500/80 shadow-[0_0_16px_rgba(255,0,0,0.35)]" />
         <div className="flex h-14 w-14 items-center justify-center rounded-full border border-red-500/40 bg-black text-2xl text-white shadow-[0_0_16px_rgba(255,0,0,0.25)]">
           •
         </div>
       </div>
 
-      <div className="absolute left-[87%] top-[22%] z-10 flex flex-col items-center">
+      <div className="absolute left-[88%] top-[22%] z-10 flex flex-col items-center">
         <div className="h-10 w-[3px] bg-white/65 shadow-[0_0_14px_rgba(255,255,255,0.15)]" />
         <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-black text-xl text-white shadow-[0_0_14px_rgba(255,255,255,0.08)]">
           🔒
@@ -238,7 +227,7 @@ function RoadPins() {
 
 function RoadCanvas() {
   return (
-    <div className="relative h-[820px] overflow-hidden rounded-[2.2rem] border border-white/10 bg-[linear-gradient(180deg,#030406,#050607_35%,#090909_100%)]">
+    <div className="relative h-[880px] overflow-hidden rounded-[2.2rem] border border-white/10 bg-[linear-gradient(180deg,#030406,#050607_35%,#090909_100%)]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_12%,rgba(255,255,255,0.05),transparent_16%),radial-gradient(circle_at_70%_42%,rgba(255,0,0,0.16),transparent_20%),radial-gradient(circle_at_24%_74%,rgba(16,185,129,0.14),transparent_22%)]" />
 
       <div className="absolute left-[-8%] bottom-[18%] h-[34%] w-[42%] bg-[radial-gradient(circle_at_60%_40%,rgba(90,90,90,0.16),rgba(0,0,0,0)_58%)] [clip-path:polygon(0%_100%,18%_60%,36%_72%,48%_42%,64%_78%,80%_48%,100%_100%)]" />
@@ -246,7 +235,7 @@ function RoadCanvas() {
       <div className="absolute left-[32%] bottom-[34%] h-[23%] w-[18%] bg-[radial-gradient(circle_at_50%_30%,rgba(80,80,80,0.14),rgba(0,0,0,0)_64%)] [clip-path:polygon(0%_100%,20%_44%,38%_64%,58%_28%,74%_56%,100%_100%)]" />
 
       <svg
-        viewBox="0 0 1000 820"
+        viewBox="0 0 1000 880"
         className="absolute inset-0 h-full w-full"
         preserveAspectRatio="none"
       >
@@ -271,26 +260,34 @@ function RoadCanvas() {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+
+          <filter id="sweepGlow">
+            <feGaussianBlur stdDeviation="10" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
 
         <path
-          d="M170 760 C 255 705, 345 660, 430 603 C 545 527, 618 444, 690 355 C 760 270, 821 190, 930 78"
+          d="M170 815 C 255 760, 345 715, 430 658 C 545 582, 618 499, 690 410 C 760 325, 821 245, 930 133"
           stroke="rgba(0,0,0,0.82)"
-          strokeWidth="160"
+          strokeWidth="168"
           strokeLinecap="round"
           fill="none"
         />
 
         <path
-          d="M170 760 C 255 705, 345 660, 430 603 C 545 527, 618 444, 690 355 C 760 270, 821 190, 930 78"
+          d="M170 815 C 255 760, 345 715, 430 658 C 545 582, 618 499, 690 410 C 760 325, 821 245, 930 133"
           stroke="url(#roadFillDense)"
-          strokeWidth="136"
+          strokeWidth="144"
           strokeLinecap="round"
           fill="none"
         />
 
         <path
-          d="M146 777 C 232 720, 321 675, 408 618 C 523 541, 597 458, 669 368 C 741 282, 801 203, 911 92"
+          d="M146 832 C 232 775, 321 730, 408 673 C 523 596, 597 513, 669 423 C 741 337, 801 258, 911 147"
           stroke="rgba(240,255,255,0.78)"
           strokeWidth="4"
           strokeLinecap="round"
@@ -298,7 +295,7 @@ function RoadCanvas() {
         />
 
         <path
-          d="M193 741 C 278 686, 369 642, 454 587 C 569 512, 641 430, 713 342 C 783 258, 844 177, 950 65"
+          d="M193 796 C 278 741, 369 697, 454 642 C 569 567, 641 485, 713 397 C 783 313, 844 232, 950 120"
           stroke="rgba(255,210,210,0.7)"
           strokeWidth="4"
           strokeLinecap="round"
@@ -306,7 +303,7 @@ function RoadCanvas() {
         />
 
         <path
-          d="M146 777 C 232 720, 321 675, 408 618 C 523 541, 597 458, 669 368 C 741 282, 801 203, 911 92"
+          d="M146 832 C 232 775, 321 730, 408 673 C 523 596, 597 513, 669 423 C 741 337, 801 258, 911 147"
           stroke="url(#roadLeftEdgeDense)"
           strokeWidth="6"
           strokeLinecap="round"
@@ -315,13 +312,36 @@ function RoadCanvas() {
         />
 
         <path
-          d="M170 760 C 255 705, 345 660, 430 603 C 545 527, 618 444, 690 355 C 760 270, 821 190, 930 78"
+          d="M170 815 C 255 760, 345 715, 430 658 C 545 582, 618 499, 690 410 C 760 325, 821 245, 930 133"
           stroke="rgba(255,255,255,0.34)"
           strokeWidth="3"
           strokeDasharray="18 18"
           strokeLinecap="round"
           fill="none"
         />
+
+        <path
+          d="M205 790 C 290 735, 375 690, 458 635 C 571 560, 642 482, 712 395 C 780 311, 840 235, 940 128"
+          stroke="rgba(255,255,255,0.7)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+          filter="url(#sweepGlow)"
+          opacity="0.9"
+        >
+          <animate
+            attributeName="stroke-dasharray"
+            values="1 900;120 780;1 900"
+            dur="5s"
+            repeatCount="indefinite"
+          />
+          <animate
+            attributeName="stroke-dashoffset"
+            values="0;-260;-540"
+            dur="5s"
+            repeatCount="indefinite"
+          />
+        </path>
       </svg>
 
       <RoadCard
@@ -334,7 +354,7 @@ function RoadCanvas() {
           "Smart contract framework built",
           "Community channels launched",
         ]}
-        className="left-[6%] bottom-[24%]"
+        className="left-[5%] bottom-[26%] w-[17rem]"
       />
 
       <RoadCard
@@ -348,7 +368,7 @@ function RoadCanvas() {
           "400M tokens burned completed",
           "Community growth active",
         ]}
-        className="left-[31%] bottom-[34%]"
+        className="left-[30%] bottom-[35%] w-[17.5rem]"
       />
 
       <RoadCard
@@ -361,7 +381,7 @@ function RoadCanvas() {
           "Marketplace integration",
           "Partnerships & alliances",
         ]}
-        className="left-[56%] top-[18%]"
+        className="left-[56%] top-[18%] w-[16.5rem]"
       />
 
       <RoadCard
@@ -374,7 +394,7 @@ function RoadCanvas() {
           "CEX listings",
           "Ecosystem expansion",
         ]}
-        className="right-[6%] top-[5%] w-[16rem]"
+        className="right-[5%] top-[5%] w-[16rem]"
       />
 
       <RoadPins />
@@ -385,13 +405,13 @@ function RoadCanvas() {
 function RoadmapHero() {
   return (
     <Shell className="p-6 sm:p-8 lg:p-10">
-      <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+      <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
         <div className="pt-4">
           <div className="inline-flex rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-red-200">
             The Mad Path
           </div>
 
-          <h1 className="mt-6 text-[3.3rem] font-black leading-[0.9] tracking-[-0.05em] text-white sm:text-[5.4rem]">
+          <h1 className="mt-6 text-[3.2rem] font-black leading-[0.9] tracking-[-0.05em] text-white sm:text-[5.3rem]">
             The roadmap
             <br />
             to{" "}
