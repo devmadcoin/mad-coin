@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
@@ -29,9 +30,9 @@ const PHASES: Phase[] = [
       "$MAD started by building the identity, website, and public-facing foundation first.",
     bullets: [
       "Stay $MAD philosophy established",
-      "Brand identity and visual language completed",
+      "Brand identity completed",
       "Core website launched",
-      "Public social channels connected",
+      "Public socials connected",
     ],
   },
   {
@@ -39,12 +40,12 @@ const PHASES: Phase[] = [
     title: "Proof + Community",
     status: "Completed",
     description:
-      "The project moved past just being a meme page by creating visible proof and public interaction.",
+      "The project moved beyond just memes by creating visible proof and community interaction.",
     bullets: [
       "MAD Confessions live",
-      "Exchange / tracker visibility live",
-      "Community-facing proof sections completed",
+      "Exchange visibility live",
       "400M tokens burned completed",
+      "Community growth active",
     ],
   },
   {
@@ -52,12 +53,12 @@ const PHASES: Phase[] = [
     title: "Tech + Expansion",
     status: "Building",
     description:
-      "$MAD is now building the next layer: deeper tech, stronger retention loops, and broader ecosystem growth.",
+      "$MAD is now building stronger tools, deeper retention loops, and expanding the ecosystem.",
     bullets: [
       "MAD Mind live",
-      "MAD AI currently building",
-      "MAD merch stickers completed",
-      "MAD merch clothing not launched yet",
+      "MAD AI building",
+      "Sticker merch completed",
+      "Clothing collection in development",
     ],
   },
   {
@@ -65,12 +66,12 @@ const PHASES: Phase[] = [
     title: "Big Goal",
     status: "Next",
     description:
-      "The long-term mission is to keep tightening supply, expand the ecosystem, and push the brand further.",
+      "Long term mission: reduce supply, grow ecosystem, and strengthen the $MAD brand.",
     bullets: [
-      "800M total burn goal",
-      "Game direction",
+      "800M burn target",
+      "Game expansion",
       "Clothing rollout later",
-      "Broader ecosystem expansion",
+      "Bigger ecosystem push",
     ],
   },
 ];
@@ -82,7 +83,7 @@ const STATUS = [
   { label: "400M Burned", value: "Completed", tone: "green" },
   { label: "MAD AI", value: "Building", tone: "red" },
   { label: "Stickers", value: "Completed", tone: "green" },
-  { label: "Clothing", value: "Not Yet", tone: "red" },
+  { label: "Clothing", value: "Prototype", tone: "red" },
   { label: "800M Goal", value: "Target", tone: "red" },
 ] as const;
 
@@ -123,9 +124,8 @@ function StatusPill({ status }: { status: PhaseStatus }) {
         "rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em]",
         status === "Completed" &&
           "border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
-        status === "Building" &&
+        status !== "Completed" &&
           "border-red-500/20 bg-red-500/10 text-red-100",
-        status === "Next" && "border-red-500/20 bg-red-500/10 text-red-100",
       )}
     >
       {status}
@@ -417,10 +417,77 @@ function LiveDexChartBlock() {
           href={LINKS.dex}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-sm font-black text-white transition duration-300 hover:border-white/20 hover:bg-white/[0.07]"
+          className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-sm font-black text-white transition duration-300 hover:border-white/20 hover:bgwhite/[0.07]"
         >
           Open full chart
         </a>
+      </div>
+    </div>
+  );
+}
+
+function MerchPrototypeBlock() {
+  return (
+    <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
+      <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="p-6 sm:p-8">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-red-200/75">
+            MERCH PROTOTYPE
+          </p>
+
+          <h3 className="mt-4 text-3xl font-black leading-tight text-white sm:text-5xl">
+            MAD
+            <br />
+            <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+              RICH.
+            </span>
+          </h3>
+
+          <p className="mt-5 max-w-md text-base leading-8 text-white/68">
+            The sticker line is already done. Clothing is now moving from idea
+            into real-world prototype phase.
+          </p>
+
+          <div className="mt-6 grid gap-3">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
+                STATUS
+              </p>
+              <p className="mt-2 text-sm leading-7 text-white/70">
+                Sample shirt created.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
+                WHAT IT PROVES
+              </p>
+              <p className="mt-2 text-sm leading-7 text-white/70">
+                $MAD is becoming a real brand, not just a chart.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-red-200">
+              Clothing prototype
+            </div>
+            <div className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/75">
+              More pieces later
+            </div>
+          </div>
+        </div>
+
+        <div className="relative min-h-[420px]">
+          <Image
+            src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
+            alt="MAD merch sample shirt"
+            fill
+            sizes="(max-width: 1024px) 100vw, 700px"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+        </div>
       </div>
     </div>
   );
@@ -489,7 +556,7 @@ export default function RoadmapPage() {
                 </h1>
 
                 <p className="mt-6 max-w-xl text-base font-semibold text-white/68">
-                  The roadmap, lore, and live proof of what $MAD is building.
+                  The roadmap, proof, and real-world steps showing what $MAD is becoming.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
@@ -511,7 +578,7 @@ export default function RoadmapPage() {
                     href={LINKS.x}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-black text-white transition duration-300 hover:border-white/20 hover:bg-white/[0.07]"
+                    className="inline-flex items-center justify-center rounded-full border borderwhite/10 bg-white/[0.04] px-6 py-3 text-sm font-black text-white transition duration-300 hover:border-white/20 hover:bg-white/[0.07]"
                   >
                     Follow X
                   </a>
@@ -545,13 +612,19 @@ export default function RoadmapPage() {
           </section>
         </Reveal>
 
-        <Reveal delay={300}>
+        <Reveal delay={260}>
+          <section className="mt-10">
+            <MerchPrototypeBlock />
+          </section>
+        </Reveal>
+
+        <Reveal delay={320}>
           <section className="mt-10">
             <LiveDexChartBlock />
           </section>
         </Reveal>
 
-        <Reveal delay={360}>
+        <Reveal delay={380}>
           <section className="mt-10 rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
             <SectionHeading
               eyebrow="Timeline"
@@ -572,7 +645,7 @@ export default function RoadmapPage() {
             <SectionHeading
               eyebrow="Next Move"
               title="Still early. Still building."
-              body="The mission is simple: turn pressure into progress, progress into identity, and identity into a real ecosystem."
+              body="Turn pressure into progress, progress into identity, and identity into a real ecosystem."
               center
             />
 
