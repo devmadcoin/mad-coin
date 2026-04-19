@@ -148,7 +148,9 @@ function ArtCard({
           <p className="mt-1 text-[11px] uppercase tracking-[0.22em] text-white/45">
             {item.category}
           </p>
-          <p className="mt-1 truncate text-xs text-white/35">{downloadNameFromSrc(item.src)}</p>
+          <p className="mt-1 truncate text-xs text-white/35">
+            {downloadNameFromSrc(item.src)}
+          </p>
         </div>
 
         <a
@@ -183,7 +185,6 @@ export default function MemesPage() {
   const [activeFilter, setActiveFilter] = useState<Category>("All");
 
   const stickerSrc = "/stickers/sticker-smash.webp";
-  const forgeStickerSrc = "/stickers/he-sold-pump-it.webp";
 
   const featuredCount = GALLERY_ART.filter((item) => item.featured).length;
 
@@ -217,7 +218,7 @@ export default function MemesPage() {
               <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
                 A curated gallery of <span className="text-white/90">community energy</span>, signal,
                 identity, and collectible direction. Explore the gallery, download the art, then
-                build your own MAD identity in the Forge Lab below.
+                build your own MAD identity in the NFT Prototype Lab below.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -228,7 +229,7 @@ export default function MemesPage() {
                   {GALLERY_ART.length} Pieces
                 </div>
                 <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                  Forge Lab Included
+                  $MAD NFT Prototype
                 </div>
               </div>
             </div>
@@ -254,7 +255,7 @@ export default function MemesPage() {
               GALLERY STATUS
             </p>
             <p className="mt-2 text-sm text-white/65">
-              Live gallery. Updated culture archive. Forge Lab included.
+              Live gallery. Updated culture archive. NFT Prototype Lab included.
             </p>
           </div>
 
@@ -310,100 +311,153 @@ export default function MemesPage() {
         </section>
 
         <section className="mt-12">
-          <SectionShell className="relative overflow-hidden p-7 sm:p-10">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,0,60,0.12),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(255,60,0,0.08),transparent_28%)]" />
+          <SectionShell className="relative overflow-hidden p-0">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,0,60,0.14),transparent_28%),radial-gradient(circle_at_top_right,rgba(255,120,40,0.10),transparent_24%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_22%,transparent_78%,rgba(255,255,255,0.02))]" />
 
-            <div className="relative flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-              <div className="max-w-3xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.38em] text-white/45">
-                  FORGE LAB
-                </p>
+            <div className="relative border-b border-white/10 px-7 py-8 sm:px-10 sm:py-10">
+              <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+                <div className="max-w-3xl">
+                  <p className="text-xs font-semibold uppercase tracking-[0.38em] text-white/45">
+                    NFT PROTOTYPE LAB
+                  </p>
 
-                <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-                  Identity{" "}
-                  <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
-                    Forge
-                  </span>
-                </h2>
-
-                <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/68 sm:text-lg">
-                  Prototype your <span className="text-white/90">$MAD identity</span>. Mix traits,
-                  randomize builds, explore collectible directions, and export your PNG.
-                </p>
-
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-200">
+                  <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+                    <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
+                      $MAD
+                    </span>{" "}
                     NFT Prototype
+                  </h2>
+
+                  <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/68 sm:text-lg">
+                    Premium collectible identity concepts for the{" "}
+                    <span className="text-white/90">$MAD</span> universe. Explore the
+                    prototype floor, randomize traits, preview combinations, and export
+                    your own build.
+                  </p>
+
+                  <div className="mt-7 flex flex-wrap gap-3">
+                    <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-200">
+                      Prototype Floor
+                    </div>
+                    <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
+                      Collectible Identity System
+                    </div>
+                    <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
+                      No Live Mint
+                    </div>
                   </div>
-                  <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                    Collectible Identity System
+                </div>
+
+                <div className="grid w-full max-w-[430px] gap-3 sm:grid-cols-3 lg:w-[420px]">
+                  <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-4 backdrop-blur-xl">
+                    <p className="text-[11px] uppercase tracking-[0.24em] text-white/40">
+                      Status
+                    </p>
+                    <p className="mt-3 text-xl font-black text-white">Prototype</p>
+                    <p className="mt-2 text-sm text-white/55">
+                      Experimental concept phase
+                    </p>
                   </div>
-                  <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                    No Live Mint
+
+                  <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-4 backdrop-blur-xl">
+                    <p className="text-[11px] uppercase tracking-[0.24em] text-white/40">
+                      Utility
+                    </p>
+                    <p className="mt-3 text-xl font-black text-white">Identity</p>
+                    <p className="mt-2 text-sm text-white/55">
+                      Traits, style, culture
+                    </p>
+                  </div>
+
+                  <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-4 backdrop-blur-xl">
+                    <p className="text-[11px] uppercase tracking-[0.24em] text-white/40">
+                      Access
+                    </p>
+                    <p className="mt-3 text-xl font-black text-white">Open</p>
+                    <p className="mt-2 text-sm text-white/55">
+                      Build and export freely
+                    </p>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div className="relative mx-auto h-[130px] w-[130px] shrink-0 sm:h-[160px] sm:w-[160px] lg:mx-0 lg:mt-1">
-                <div className="absolute inset-0 rounded-full bg-red-500/10 blur-2xl" />
-                <div className="relative h-full w-full rotate-[6deg] drop-shadow-[0_22px_45px_rgba(0,0,0,0.6)]">
-                  <Image
-                    src={forgeStickerSrc}
-                    alt="Forge Sticker"
-                    fill
-                    sizes="160px"
-                    className="object-contain"
-                  />
+            <div className="relative grid gap-0 xl:grid-cols-[0.95fr_1.05fr]">
+              <div className="border-b border-white/10 p-7 xl:border-b-0 xl:border-r sm:p-8">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-200/70">
+                      Prototype Showcase
+                    </p>
+                    <h3 className="mt-2 text-2xl font-black tracking-tight text-white">
+                      Premium collectible direction
+                    </h3>
+                  </div>
+
+                  <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-100">
+                    Early Concept
+                  </div>
+                </div>
+
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-[1.6rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
+                      Floor Feel
+                    </p>
+                    <p className="mt-3 text-sm leading-relaxed text-white/68">
+                      Designed to feel like a premium collectible drop page, with rare
+                      identity energy instead of a basic asset picker.
+                    </p>
+                  </div>
+
+                  <div className="rounded-[1.6rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
+                      What You Control
+                    </p>
+                    <p className="mt-3 text-sm leading-relaxed text-white/68">
+                      Backgrounds, faces, eyes, mouths, and accessories combine into a
+                      collectible-style identity preview.
+                    </p>
+                  </div>
+
+                  <div className="rounded-[1.6rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
+                      Download Flow
+                    </p>
+                    <p className="mt-3 text-sm leading-relaxed text-white/68">
+                      Randomize a build, dial in the vibe, and export your PNG as a
+                      collectible prototype.
+                    </p>
+                  </div>
+
+                  <div className="rounded-[1.6rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
+                      Important
+                    </p>
+                    <p className="mt-3 text-sm leading-relaxed text-white/68">
+                      This is not a live mint and not a final NFT collection. It is a
+                      public prototype lab for exploring the visual future of $MAD.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 rounded-[1.75rem] border border-white/10 bg-black/30 p-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
+                    Collector Signal
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-white/65 sm:text-base">
+                    Art pulls people in. Identity keeps them exploring. This section
+                    shows how <span className="font-semibold text-white/90">$MAD</span>{" "}
+                    could evolve from memes into a richer collectible universe.
+                  </p>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-8 grid gap-4 lg:grid-cols-3">
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
-                  WHAT IT IS
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-white/68">
-                  Forge is an experimental builder for shaping possible{" "}
-                  <span className="text-white/90">$MAD</span> character identities and collectible directions.
-                </p>
+              <div className="p-3 sm:p-4">
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.025] p-3 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-4">
+                  <IdentityForge />
+                </div>
               </div>
-
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
-                  CURRENT STATUS
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-white/68">
-                  This is a <span className="text-red-300">prototype only</span>. It is not a live mint,
-                  not a final NFT collection, and not a finished release.
-                </p>
-              </div>
-
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">
-                  WHY IT MATTERS
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-white/68">
-                  It gives the community an early look at how{" "}
-                  <span className="text-white/90">$MAD</span> identity, traits,
-                  and collectible expansion could evolve over time.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.025] p-3 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-4">
-              <IdentityForge />
-            </div>
-
-            <div className="mt-8 rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-6 text-center shadow-[0_18px_50px_rgba(0,0,0,0.3)] backdrop-blur-xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
-                FORGE NOTICE
-              </p>
-              <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-white/65 sm:text-base">
-                The Forge exists to explore visual identity and collectible potential
-                inside the <span className="font-semibold text-white/90">$MAD</span>{" "}
-                universe. Today it is a concept lab. Tomorrow it could become something bigger.
-              </p>
             </div>
           </SectionShell>
         </section>
@@ -416,7 +470,7 @@ export default function MemesPage() {
             Art today. Collectibles tomorrow.
           </h2>
           <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-white/65 sm:text-lg">
-            $MAD Art is the public culture layer. Forge Lab is the identity layer.
+            $MAD Art is the public culture layer. NFT Prototype Lab is the identity layer.
             Together they shape where the visual universe can go next.
           </p>
         </section>
@@ -426,7 +480,7 @@ export default function MemesPage() {
           <span className="text-white/60">/public/memes/</span> and paste a new object into{" "}
           <span className="text-white/60">GALLERY_ART</span> at the top of this file.
           If a tile appears blank, the filename in the script must match the real file exactly,
-          including capitalization. Forge assets still depend on{" "}
+          including capitalization. Prototype assets still depend on{" "}
           <span className="text-white/60">/public/pfp/manifest.json</span> matching the real filenames.
         </div>
       </div>
