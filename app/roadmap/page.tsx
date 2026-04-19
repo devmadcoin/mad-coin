@@ -82,7 +82,7 @@ function Shell({
     <section
       className={cn(
         "overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl",
-        className
+        className,
       )}
     >
       {children}
@@ -99,6 +99,32 @@ function GlobeBackdrop() {
       <div className="absolute inset-[24%] rounded-full border border-red-500/14" />
       <div className="absolute inset-[38%] rounded-full border border-red-500/10" />
       <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/25 to-transparent" />
+    </div>
+  );
+}
+
+function SectionHeading({
+  eyebrow,
+  title,
+  body,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-red-200/80">
+        {eyebrow}
+      </p>
+
+      <h2 className="mt-3 text-4xl font-black tracking-[-0.04em] text-white sm:text-6xl">
+        {title}
+      </h2>
+
+      <p className="mt-4 max-w-3xl text-base leading-8 text-white/72 sm:text-lg">
+        {body}
+      </p>
     </div>
   );
 }
@@ -120,7 +146,7 @@ function StatusMiniCard({
       <p
         className={cn(
           "mt-2 text-base font-black",
-          tone === "green" ? "text-emerald-200" : "text-red-100"
+          tone === "green" ? "text-emerald-200" : "text-red-100",
         )}
       >
         {value}
@@ -158,7 +184,7 @@ function RoadmapCard({
             status === "Building" &&
               "border-red-500/30 bg-red-500/14 text-red-100",
             status === "Next" &&
-              "border-white/15 bg-white/[0.06] text-white/85"
+              "border-white/15 bg-white/[0.06] text-white/85",
           )}
         >
           {status}
