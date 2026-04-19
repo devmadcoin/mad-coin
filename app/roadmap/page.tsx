@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const LINKS = {
   telegram: "https://t.me/MadOfficialChannel",
@@ -11,23 +11,45 @@ const LINKS = {
   dex: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs",
 } as const;
 
-type PhaseStatus = "Completed" | "Building" | "Next";
+const STATUS_CARDS = [
+  { label: "Website", value: "Completed", tone: "green", icon: "◉" },
+  { label: "MAD Mind", value: "Completed", tone: "green", icon: "◎" },
+  { label: "Confessions", value: "Completed", tone: "green", icon: "◌" },
+  { label: "400M Burned", value: "Completed", tone: "green", icon: "◍" },
+  { label: "MAD AI", value: "Building", tone: "red", icon: "✦" },
+  { label: "Stickers", value: "Completed", tone: "green", icon: "⬢" },
+  { label: "Clothing", value: "Prototype", tone: "red", icon: "⬡" },
+  { label: "800M Goal", value: "Target", tone: "red", icon: "◔" },
+] as const;
 
-type Phase = {
-  phase: string;
-  title: string;
-  status: PhaseStatus;
-  description: string;
-  bullets: string[];
-};
-
-const PHASES: Phase[] = [
+const HOW_IT_WORKS = [
   {
-    phase: "01",
+    step: "1. START",
+    text: "Enter the MAD world and follow the first builds.",
+    icon: "◔",
+  },
+  {
+    step: "2. COMPLETE",
+    text: "Each launch, tool, burn, and product pushes the path forward.",
+    icon: "☷",
+  },
+  {
+    step: "3. EARN",
+    text: "As the brand grows, the ecosystem gets stronger and more visible.",
+    icon: "$",
+  },
+  {
+    step: "4. UNLOCK",
+    text: "More tech, more games, more merch, more reach.",
+    icon: "♛",
+  },
+] as const;
+
+const ROADMAP_PHASES = [
+  {
+    phase: "PHASE 01",
     title: "Brand + Foundation",
     status: "Completed",
-    description:
-      "$MAD started by building the identity, website, and public-facing foundation first.",
     bullets: [
       "Stay $MAD philosophy established",
       "Brand identity completed",
@@ -36,11 +58,9 @@ const PHASES: Phase[] = [
     ],
   },
   {
-    phase: "02",
+    phase: "PHASE 02",
     title: "Proof + Community",
     status: "Completed",
-    description:
-      "The project moved beyond just memes by creating visible proof and community interaction.",
     bullets: [
       "MAD Confessions live",
       "Exchange visibility live",
@@ -49,24 +69,20 @@ const PHASES: Phase[] = [
     ],
   },
   {
-    phase: "03",
+    phase: "PHASE 03",
     title: "Tech + Expansion",
     status: "Building",
-    description:
-      "$MAD is now building stronger tools, deeper retention loops, and expanding the ecosystem.",
     bullets: [
       "MAD Mind live",
       "MAD AI building",
       "Sticker merch completed",
-      "Clothing collection in development",
+      "Clothing prototype started",
     ],
   },
   {
-    phase: "04",
+    phase: "PHASE 04",
     title: "Big Goal",
     status: "Next",
-    description:
-      "Long term mission: reduce supply, grow ecosystem, and strengthen the $MAD brand.",
     bullets: [
       "800M burn target",
       "Game expansion",
@@ -74,17 +90,6 @@ const PHASES: Phase[] = [
       "Bigger ecosystem push",
     ],
   },
-];
-
-const STATUS = [
-  { label: "Website", value: "Completed", tone: "green" },
-  { label: "MAD Mind", value: "Completed", tone: "green" },
-  { label: "Confessions", value: "Completed", tone: "green" },
-  { label: "400M Burned", value: "Completed", tone: "green" },
-  { label: "MAD AI", value: "Building", tone: "red" },
-  { label: "Stickers", value: "Completed", tone: "green" },
-  { label: "Clothing", value: "Prototype", tone: "red" },
-  { label: "800M Goal", value: "Target", tone: "red" },
 ] as const;
 
 function cn(...classes: Array<string | false | null | undefined>) {
@@ -109,7 +114,7 @@ function Reveal({
     <div
       className={cn(
         "transition-all duration-700 ease-out",
-        show ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
+        show ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0",
       )}
     >
       {children}
@@ -117,126 +122,165 @@ function Reveal({
   );
 }
 
-function StatusPill({ status }: { status: PhaseStatus }) {
-  return (
-    <span
-      className={cn(
-        "rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em]",
-        status === "Completed" &&
-          "border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
-        status !== "Completed" &&
-          "border-red-500/20 bg-red-500/10 text-red-100",
-      )}
-    >
-      {status}
-    </span>
-  );
-}
-
-function SectionHeading({
-  eyebrow,
-  title,
-  body,
-  center = false,
+function Shell({
+  children,
+  className = "",
 }: {
-  eyebrow: string;
-  title: string;
-  body?: string;
-  center?: boolean;
+  children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className={cn(center && "text-center")}>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/40">
-        {eyebrow}
-      </p>
-      <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-        {title}
-      </h2>
-      {body ? (
-        <p
-          className={cn(
-            "mt-4 text-sm leading-7 text-white/62 sm:text-base",
-            center ? "mx-auto max-w-3xl" : "max-w-3xl",
-          )}
-        >
-          {body}
-        </p>
-      ) : null}
-    </div>
+    <section
+      className={cn(
+        "overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl",
+        className,
+      )}
+    >
+      {children}
+    </section>
   );
 }
 
-function GlobeBackdrop() {
+function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="pointer-events-none absolute right-[-10%] top-[-12%] hidden h-[500px] w-[500px] overflow-hidden rounded-full opacity-20 lg:block">
-      <div className="absolute inset-0 rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_35%_35%,rgba(255,0,0,0.24),rgba(255,0,0,0.06)_38%,transparent_65%)] shadow-[0_0_60px_rgba(255,0,0,0.18)]" />
-      <div className="absolute inset-0 rounded-full bg-[repeating-linear-gradient(to_right,rgba(255,0,0,0.16)_0px,rgba(255,0,0,0.16)_1px,transparent_1px,transparent_38px),repeating-linear-gradient(to_bottom,rgba(255,0,0,0.12)_0px,rgba(255,0,0,0.12)_1px,transparent_1px,transparent_38px)] opacity-55" />
-      <div className="absolute inset-[10%] rounded-full border border-red-500/20" />
-      <div className="absolute inset-[24%] rounded-full border border-red-500/14" />
-      <div className="absolute inset-[38%] rounded-full border border-red-500/10" />
-      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/25 to-transparent" />
+    <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
+      {children}
+    </p>
+  );
+}
+
+function HeroBadge({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="inline-flex rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-red-200">
+      {children}
     </div>
   );
 }
 
-function QuickStatusCard({
+function StatusMiniCard({
   label,
   value,
   tone,
+  icon,
 }: {
   label: string;
   value: string;
   tone: "red" | "green";
+  icon: string;
 }) {
   return (
-    <div
-      className={cn(
-        "rounded-[24px] border p-5 transition duration-300 hover:scale-[1.01]",
-        tone === "green" && "border-emerald-400/20 bg-emerald-500/10",
-        tone === "red" && "border-red-500/20 bg-red-500/10",
-      )}
-    >
-      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
-        {label}
-      </p>
-      <p className="mt-3 text-2xl font-black text-white">{value}</p>
+    <div className="rounded-[1.25rem] border border-white/10 bg-black/25 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/42">
+            {label}
+          </p>
+          <p
+            className={cn(
+              "mt-2 text-base font-black",
+              tone === "green" ? "text-emerald-300" : "text-red-200",
+            )}
+          >
+            {value}
+          </p>
+        </div>
+        <div
+          className={cn(
+            "flex h-9 w-9 items-center justify-center rounded-full border text-sm font-black",
+            tone === "green"
+              ? "border-emerald-400/20 bg-emerald-500/10 text-emerald-300"
+              : "border-red-500/20 bg-red-500/10 text-red-200",
+          )}
+        >
+          {icon}
+        </div>
+      </div>
     </div>
   );
 }
 
-function TimelineCard({ phase, index }: { phase: Phase; index: number }) {
+function HowCard({
+  step,
+  text,
+  icon,
+}: {
+  step: string;
+  text: string;
+  icon: string;
+}) {
   return (
-    <div className="group relative rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.018))] p-6 transition duration-300 hover:border-white/18 hover:bg-white/[0.05]">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent" />
+    <div className="rounded-[1.25rem] border border-white/10 bg-black/25 p-4">
+      <div className="flex gap-4">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-lg font-black text-red-200">
+          {icon}
+        </div>
+        <div>
+          <p className="text-sm font-black text-white">{step}</p>
+          <p className="mt-1 text-sm leading-6 text-white/62">{text}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-        <div className="max-w-3xl">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm font-black tracking-[0.2em] text-red-300">
-              PHASE {phase.phase}
-            </span>
-            <StatusPill status={phase.status} />
-          </div>
+function ProgressStat({
+  value,
+  label,
+}: {
+  value: string;
+  label: string;
+}) {
+  return (
+    <div className="rounded-[1.25rem] border border-white/10 bg-black/20 p-4 text-center">
+      <div className="text-3xl font-black text-white">{value}</div>
+      <div className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/45">
+        {label}
+      </div>
+    </div>
+  );
+}
 
-          <h3 className="mt-3 text-2xl font-black text-white sm:text-3xl">
-            {phase.title}
-          </h3>
-
-          <p className="mt-3 text-sm leading-7 text-white/65 sm:text-base">
-            {phase.description}
+function RoadmapCard({
+  phase,
+  title,
+  status,
+  bullets,
+}: {
+  phase: string;
+  title: string;
+  status: string;
+  bullets: readonly string[];
+}) {
+  return (
+    <div className="rounded-[1.6rem] border border-white/10 bg-black/20 p-5 transition duration-300 hover:border-white/20 hover:bg-white/[0.03]">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-red-200/80">
+            {phase}
           </p>
+          <h3 className="mt-2 text-2xl font-black text-white">{title}</h3>
         </div>
 
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black/30 text-sm font-black text-white/70">
-          {index + 1}
+        <div
+          className={cn(
+            "rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em]",
+            status === "Completed" &&
+              "border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
+            status === "Building" &&
+              "border-red-500/20 bg-red-500/10 text-red-100",
+            status === "Next" &&
+              "border-white/10 bg-white/[0.05] text-white/70",
+          )}
+        >
+          {status}
         </div>
       </div>
 
-      <div className="mt-6 grid gap-3 md:grid-cols-2">
-        {phase.bullets.map((item) => (
+      <div className="mt-5 grid gap-3 md:grid-cols-2">
+        {bullets.map((item) => (
           <div
             key={item}
-            className="rounded-[18px] border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/75"
+            className="rounded-[1rem] border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/72"
           >
             {item}
           </div>
@@ -246,159 +290,246 @@ function TimelineCard({ phase, index }: { phase: Phase; index: number }) {
   );
 }
 
-function ProgressStrip() {
-  const items = Array.from({ length: 18 });
+function AnimatedGraphBlock() {
+  const bars = [22, 38, 24, 54, 81, 47, 65, 42, 33, 48, 30, 44];
 
   return (
-    <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(90deg,rgba(70,14,14,0.95),rgba(31,28,44,0.95))] px-4 py-6 sm:px-6">
-      <div className="logo-marquee flex w-max items-center gap-4">
-        {items.map((_, index) => (
-          <div
-            key={index}
-            className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.05] px-5 py-3 shadow-[0_0_18px_rgba(255,0,0,0.14)]"
-          >
-            <img
-              src="/mad.png"
-              alt="$MAD logo"
-              className="h-10 w-10 rounded-full object-contain"
-            />
-            <span className="text-sm font-black tracking-wide text-white">
-              $MAD
+    <Shell className="p-6 sm:p-8">
+      <Eyebrow>Reward System</Eyebrow>
+
+      <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_0.95fr]">
+        <div>
+          <h2 className="text-4xl font-black leading-[0.95] text-white sm:text-5xl">
+            Get rewarded for
+            <br />
+            being{" "}
+            <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+              active.
             </span>
+          </h2>
+
+          <p className="mt-5 max-w-md text-base leading-8 text-white/68">
+            The more you participate, the more the path moves forward.
+          </p>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-red-200/80">
+                Tier 1
+              </p>
+              <p className="mt-3 text-lg font-black text-white">Starter</p>
+              <p className="mt-2 text-sm text-white/58">
+                Easy missions, small rewards.
+              </p>
+            </div>
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-red-200/80">
+                Tier 2
+              </p>
+              <p className="mt-3 text-lg font-black text-white">Grinder</p>
+              <p className="mt-2 text-sm text-white/58">
+                More missions, better rewards.
+              </p>
+            </div>
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-red-200/80">
+                Tier 3
+              </p>
+              <p className="mt-3 text-lg font-black text-white">Legend</p>
+              <p className="mt-2 text-sm text-white/58">
+                Harder missions, biggest rewards.
+              </p>
+            </div>
           </div>
-        ))}
+
+          <div className="mt-7">
+            <a
+              href={LINKS.x}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
+            >
+              View Rewards →
+            </a>
+          </div>
+        </div>
+
+        <div className="rounded-[1.5rem] border border-white/10 bg-black/25 p-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/42">
+            Activity Meter
+          </p>
+          <div className="mt-5 flex h-[260px] items-end gap-3 rounded-[1.25rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(0,0,0,0.35))] p-5">
+            {bars.map((h, i) => (
+              <div key={i} className="flex flex-1 items-end">
+                <div
+                  className="w-full rounded-t-[0.8rem] bg-[linear-gradient(180deg,#ff3b3b,#7f1313)] shadow-[0_0_18px_rgba(255,0,0,0.22)]"
+                  style={{ height: `${h * 2.2}px` }}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 flex items-center justify-between text-xs uppercase tracking-[0.22em] text-white/42">
+            <span>Early</span>
+            <span>Now</span>
+          </div>
+        </div>
       </div>
-    </div>
+    </Shell>
   );
 }
 
-function AnimatedGraph() {
-  const points = useMemo(
-    () => [
-      [4, 88],
-      [14, 82],
-      [24, 74],
-      [34, 66],
-      [44, 59],
-      [54, 52],
-      [64, 40],
-      [74, 31],
-      [84, 18],
-      [96, 10],
-    ],
-    [],
-  );
-
-  const polyline = points.map(([x, y]) => `${x},${y}`).join(" ");
-
+function UtilityBlock() {
   return (
-    <div className="relative overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,0,0,0.12),transparent_35%)]" />
+    <Shell className="p-6 sm:p-8">
+      <Eyebrow>Utility + Access</Eyebrow>
 
-      <div className="relative z-10 rounded-[28px] border border-white/10 bg-black/40 p-4">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
-              Progress Chart
-            </p>
-            <p className="mt-2 text-xl font-black text-white">
-              Panic down. Progress up.
-            </p>
+      <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_0.9fr]">
+        <div>
+          <h2 className="text-4xl font-black leading-[0.95] text-white sm:text-5xl">
+            $MAD unlocks
+            <br />
+            the{" "}
+            <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+              MAD
+            </span>{" "}
+            universe.
+          </h2>
+
+          <p className="mt-5 max-w-md text-base leading-8 text-white/68">
+            Games, content, perks, and more layers as the brand expands.
+          </p>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+              <p className="text-lg font-black text-white">Games</p>
+              <p className="mt-2 text-sm text-white/58">
+                Access MAD game experiences.
+              </p>
+            </div>
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+              <p className="text-lg font-black text-white">Exclusive</p>
+              <p className="mt-2 text-sm text-white/58">
+                Early drops, special access, WL spots.
+              </p>
+            </div>
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+              <p className="text-lg font-black text-white">Perks</p>
+              <p className="mt-2 text-sm text-white/58">
+                More benefits as the universe grows.
+              </p>
+            </div>
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
+              <p className="text-lg font-black text-white">More Coming</p>
+              <p className="mt-2 text-sm text-white/58">
+                New tools and layers still in build mode.
+              </p>
+            </div>
           </div>
 
-          <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200">
-            Live build
+          <div className="mt-7">
+            <Link
+              href="/game"
+              className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
+            >
+              Learn More →
+            </Link>
           </div>
         </div>
 
-        <div className="relative h-[280px] overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(20,20,20,0.8),rgba(5,5,5,0.98))]">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.08),transparent_55%)]" />
-
-          <svg
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            className="absolute inset-0 h-full w-full"
-          >
-            <defs>
-              <linearGradient id="madLine" x1="0%" x2="100%" y1="0%" y2="0%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
-                <stop offset="60%" stopColor="#ef4444" stopOpacity="0.95" />
-                <stop offset="100%" stopColor="#22c55e" stopOpacity="0.95" />
-              </linearGradient>
-
-              <linearGradient id="madFill" x1="0%" x2="0%" y1="0%" y2="100%">
-                <stop offset="0%" stopColor="#ef4444" stopOpacity="0.28" />
-                <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            <polygon
-              points={`${polyline} 100,100 0,100`}
-              fill="url(#madFill)"
-            />
-
-            <polyline
-              points={polyline}
-              fill="none"
-              stroke="url(#madLine)"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-
-            {points.map(([x, y], i) => (
-              <circle
-                key={i}
-                cx={x}
-                cy={y}
-                r="1.4"
-                fill={i === points.length - 1 ? "#22c55e" : "#ef4444"}
-              />
-            ))}
-          </svg>
-
-          <div className="absolute left-4 top-4 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-red-100">
-            Weak hands
-          </div>
-
-          <div className="absolute bottom-4 right-4 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200">
-            Strong build
+        <div className="flex items-center justify-center">
+          <div className="relative flex h-[320px] w-full items-center justify-center overflow-hidden rounded-[1.6rem] border border-white/10 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.18),rgba(0,0,0,0.08)_45%,transparent_70%)]">
+            <div className="absolute h-[210px] w-[210px] rounded-full border border-red-500/25 shadow-[0_0_40px_rgba(255,0,0,0.18)]" />
+            <div className="absolute h-[270px] w-[270px] rounded-full border border-red-500/10" />
+            <div className="relative rounded-[2rem] border border-red-500/20 bg-black/55 px-10 py-14 text-center shadow-[0_0_40px_rgba(255,0,0,0.12)]">
+              <div className="text-5xl font-black tracking-tight text-red-500">
+                $MAD
+              </div>
+              <div className="mt-3 text-sm uppercase tracking-[0.26em] text-white/55">
+                Access Portal
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Shell>
+  );
+}
+
+function ProgressPanel() {
+  return (
+    <Shell className="p-6 sm:p-8">
+      <Eyebrow>Your Progress</Eyebrow>
+
+      <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
+        Track your{" "}
+        <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+          journey.
+        </span>
+      </h2>
+
+      <p className="mt-5 max-w-md text-base leading-8 text-white/68">
+        Every mission, build, and launch moves the MAD Path forward.
+      </p>
+
+      <div className="mt-8 rounded-[1.4rem] border border-white/10 bg-black/25 p-5">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-black/30 text-xl font-black text-white">
+            $
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-black text-white">MAD HOLDER</p>
+            <p className="mt-1 text-xs uppercase tracking-[0.22em] text-white/45">
+              Level 12
+            </p>
+          </div>
+          <div className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-red-200">
+            Live
+          </div>
+        </div>
+
+        <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
+          <div className="h-full w-[72%] rounded-full bg-[linear-gradient(90deg,#ff4a4a,#ff1818)] shadow-[0_0_14px_rgba(255,0,0,0.25)]" />
+        </div>
+
+        <div className="mt-3 text-xs uppercase tracking-[0.22em] text-white/42">
+          XP 8,450 / 12,000
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <ProgressStat value="24" label="Missions Completed" />
+        <ProgressStat value="12,450" label="$MAD Earned" />
+        <ProgressStat value="12" label="Current Level" />
+      </div>
+
+      <div className="mt-7">
+        <a
+          href={LINKS.telegram}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
+        >
+          View My Progress →
+        </a>
+      </div>
+    </Shell>
   );
 }
 
 function LiveDexChartBlock() {
   return (
-    <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
+    <Shell className="p-0">
       <div className="border-b border-white/10 px-6 py-5 sm:px-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
-          Public Since Day One
-        </p>
-        <h3 className="mt-3 text-2xl font-black text-white sm:text-3xl">
-          Live market chart
+        <Eyebrow>Public Since Day One</Eyebrow>
+        <h3 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+          Live market chart.
         </h3>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-white/68">
+        <p className="mt-3 max-w-xl text-sm leading-7 text-white/68">
           Launch, growth, pullback, and rebuild — all visible in public.
         </p>
-
-        <div className="mt-5 flex flex-wrap gap-2">
-          <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
-            Live DexScreener
-          </span>
-          <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
-            Public history
-          </span>
-          <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
-            Real market proof
-          </span>
-        </div>
       </div>
 
-      <div className="relative aspect-[16/9] w-full bg-black">
+      <div className="relative aspect-[16/10] w-full bg-black">
         <iframe
           src={LINKS.dex}
           title="MAD live DexScreener chart"
@@ -408,34 +539,28 @@ function LiveDexChartBlock() {
         />
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 px-6 py-4 sm:px-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-white/45">
-          Live chart powered by DexScreener
-        </p>
-
+      <div className="border-t border-white/10 px-6 py-5 sm:px-8">
         <a
           href={LINKS.dex}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-sm font-black text-white transition duration-300 hover:border-white/20 hover:bgwhite/[0.07]"
+          className="inline-flex rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
         >
-          Open full chart
+          View on DexScreener →
         </a>
       </div>
-    </div>
+    </Shell>
   );
 }
 
 function MerchPrototypeBlock() {
   return (
-    <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-      <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+    <Shell className="p-0">
+      <div className="grid gap-0 lg:grid-cols-[0.85fr_1.15fr]">
         <div className="p-6 sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-red-200/75">
-            MERCH PROTOTYPE
-          </p>
+          <Eyebrow>Merch Prototype</Eyebrow>
 
-          <h3 className="mt-4 text-3xl font-black leading-tight text-white sm:text-5xl">
+          <h3 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-6xl">
             MAD
             <br />
             <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
@@ -444,23 +569,21 @@ function MerchPrototypeBlock() {
           </h3>
 
           <p className="mt-5 max-w-md text-base leading-8 text-white/68">
-            The sticker line is already done. Clothing is now moving from idea
-            into real-world prototype phase.
+            The sticker line is done. Clothing is now moving from idea into real-world prototype phase.
           </p>
 
-          <div className="mt-6 grid gap-3">
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
               <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
-                STATUS
+                Status
               </p>
               <p className="mt-2 text-sm leading-7 text-white/70">
                 Sample shirt created.
               </p>
             </div>
-
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
               <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
-                WHAT IT PROVES
+                What It Proves
               </p>
               <p className="mt-2 text-sm leading-7 text-white/70">
                 $MAD is becoming a real brand, not just a chart.
@@ -468,62 +591,28 @@ function MerchPrototypeBlock() {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-red-200">
-              Clothing prototype
+          <div className="mt-7 flex flex-wrap gap-3">
+            <div className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-red-200">
+              Clothing Prototype
             </div>
             <div className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/75">
-              More pieces later
+              More Pieces Later
             </div>
           </div>
         </div>
 
-        <div className="relative min-h-[420px]">
+        <div className="relative min-h-[520px]">
           <Image
             src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
             alt="MAD merch sample shirt"
             fill
-            sizes="(max-width: 1024px) 100vw, 700px"
+            sizes="(max-width: 1024px) 100vw, 800px"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
         </div>
       </div>
-    </div>
-  );
-}
-
-function DancingMadBlock() {
-  return (
-    <div className="overflow-hidden rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
-      <div className="relative min-h-[420px]">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/loops/mad-dancing.mp4" type="video/mp4" />
-        </video>
-
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.08),rgba(20,0,0,0.48)_50%,rgba(0,0,0,0.92))]" />
-        <div className="absolute inset-0 bg-red-500/10" />
-
-        <div className="relative z-10 flex min-h-[420px] flex-col justify-end p-6 sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">
-            MAD Energy
-          </p>
-          <p className="mt-3 max-w-md text-3xl font-black leading-tight text-white">
-            Building can still look fun.
-          </p>
-          <p className="mt-3 max-w-md text-sm leading-7 text-white/70">
-            This is not just roadmap text. It has culture, motion, art, and identity.
-          </p>
-        </div>
-      </div>
-    </div>
+    </Shell>
   );
 }
 
@@ -534,140 +623,194 @@ export default function RoadmapPage() {
 
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
         <Reveal>
-          <section className="relative overflow-hidden rounded-[42px] border border-white/10 bg-black/35 p-6 shadow-[0_24px_120px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:p-10 lg:p-14">
-            <GlobeBackdrop />
+          <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+            <Shell className="relative p-6 sm:p-8">
+              <GlobeBackdrop />
 
-            <div className="relative z-10 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/40">
-                  THE MAD PATH
-                </p>
+              <div className="relative z-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+                <div>
+                  <HeroBadge>The MAD Path</HeroBadge>
 
-                <h1 className="mt-6 text-[3rem] font-black leading-[0.88] tracking-[-0.05em] sm:text-[4.8rem] lg:text-[6rem]">
-                  BUILD
-                  <br />
-                  PROGRESS.
-                  <br />
-                  SURVIVE
-                  <br />
-                  <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.55)]">
-                    PRESSURE.
-                  </span>
-                </h1>
+                  <h1 className="mt-6 text-[3rem] font-black leading-[0.9] tracking-[-0.05em] text-white sm:text-[4.4rem]">
+                    COMPLETE MISSIONS.
+                    <br />
+                    EARN{" "}
+                    <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.5)]">
+                      $MAD.
+                    </span>
+                  </h1>
 
-                <p className="mt-6 max-w-xl text-base font-semibold text-white/68">
-                  The roadmap, proof, and real-world steps showing what $MAD is becoming.
-                </p>
+                  <p className="mt-5 max-w-xl text-base leading-8 text-white/70">
+                    The MAD Path is your journey inside the $MAD universe. Complete missions, track the build, and unlock bigger opportunities.
+                  </p>
 
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Link
-                    href="/mad-mind"
-                    className="inline-flex items-center justify-center rounded-full bg-red-500 px-6 py-3 text-sm font-black text-white transition duration-300 hover:scale-[1.02] hover:bg-red-400"
-                  >
-                    Enter MAD Mind
-                  </Link>
-                  <a
-                    href={LINKS.buy}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-black text-white transition duration-300 hover:border-white/20 hover:bg-white/[0.07]"
-                  >
-                    Buy $MAD
-                  </a>
-                  <a
-                    href={LINKS.x}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center rounded-full border borderwhite/10 bg-white/[0.04] px-6 py-3 text-sm font-black text-white transition duration-300 hover:border-white/20 hover:bg-white/[0.07]"
-                  >
-                    Follow X
-                  </a>
+                  <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4 text-center">
+                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-lg font-black text-red-200">
+                        ◎
+                      </div>
+                      <p className="mt-3 text-sm font-black text-white">
+                        Complete Missions
+                      </p>
+                      <p className="mt-2 text-sm text-white/58">
+                        Finish simple tasks across platforms.
+                      </p>
+                    </div>
+
+                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4 text-center">
+                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-lg font-black text-red-200">
+                        $
+                      </div>
+                      <p className="mt-3 text-sm font-black text-white">
+                        Earn $MAD
+                      </p>
+                      <p className="mt-2 text-sm text-white/58">
+                        Get rewarded for your actions.
+                      </p>
+                    </div>
+
+                    <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4 text-center">
+                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-lg font-black text-red-200">
+                        ▣
+                      </div>
+                      <p className="mt-3 text-sm font-black text-white">
+                        Unlock More
+                      </p>
+                      <p className="mt-2 text-sm text-white/58">
+                        Access bigger layers as the brand grows.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative flex min-h-[480px] items-center justify-center">
+                  <div className="absolute h-[320px] w-[320px] rounded-full border border-red-500/20 shadow-[0_0_70px_rgba(255,0,0,0.18)]" />
+                  <div className="absolute h-[390px] w-[390px] rounded-full border border-red-500/10" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.26),transparent_38%)]" />
+
+                  <div className="relative text-center">
+                    <div className="mx-auto flex h-64 w-64 items-center justify-center rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.22),rgba(0,0,0,0.3)_55%,rgba(0,0,0,0.8))] shadow-[0_0_55px_rgba(255,0,0,0.2)]">
+                      <div className="rounded-[2rem] border border-white/10 bg-black/55 px-10 py-10 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
+                        <div className="text-5xl font-black text-red-500">$MAD</div>
+                        <div className="mt-3 text-xs uppercase tracking-[0.28em] text-white/50">
+                          Mission Core
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </Shell>
 
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
-                {STATUS.map((card) => (
-                  <QuickStatusCard
-                    key={card.label}
-                    label={card.label}
-                    value={card.value}
-                    tone={card.tone}
+            <Shell className="p-6 sm:p-8">
+              <Eyebrow>How It Works</Eyebrow>
+
+              <div className="mt-6 space-y-4">
+                {HOW_IT_WORKS.map((item) => (
+                  <HowCard
+                    key={item.step}
+                    step={item.step}
+                    text={item.text}
+                    icon={item.icon}
                   />
                 ))}
               </div>
-            </div>
-          </section>
+
+              <div className="mt-7">
+                <a
+                  href={LINKS.telegram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex w-full items-center justify-center rounded-full border border-red-500/35 bg-red-500/12 px-6 py-3 text-sm font-black text-red-200 transition hover:bg-red-500/20"
+                >
+                  View All Missions →
+                </a>
+              </div>
+            </Shell>
+          </div>
         </Reveal>
 
         <Reveal delay={120}>
-          <section className="mt-10">
-            <ProgressStrip />
-          </section>
+          <div className="mt-6 grid gap-3 md:grid-cols-4 xl:grid-cols-8">
+            {STATUS_CARDS.map((card) => (
+              <StatusMiniCard
+                key={card.label}
+                label={card.label}
+                value={card.value}
+                tone={card.tone}
+                icon={card.icon}
+              />
+            ))}
+          </div>
         </Reveal>
 
-        <Reveal delay={180}>
-          <section className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-            <AnimatedGraph />
-            <DancingMadBlock />
-          </section>
-        </Reveal>
-
-        <Reveal delay={260}>
-          <section className="mt-10">
-            <MerchPrototypeBlock />
-          </section>
+        <Reveal delay={220}>
+          <div className="mt-6 grid gap-6 lg:grid-cols-3">
+            <AnimatedGraphBlock />
+            <UtilityBlock />
+            <ProgressPanel />
+          </div>
         </Reveal>
 
         <Reveal delay={320}>
-          <section className="mt-10">
+          <div className="mt-6 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+            <MerchPrototypeBlock />
             <LiveDexChartBlock />
-          </section>
+          </div>
         </Reveal>
 
-        <Reveal delay={380}>
-          <section className="mt-10 rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+        <Reveal delay={400}>
+          <Shell className="mt-6 p-6 sm:p-8">
             <SectionHeading
               eyebrow="Timeline"
               title="The roadmap"
-              body="Cleaner, faster to scan, still meaningful."
+              body="A cleaner, faster way to see what is finished, what is building, and what comes next."
             />
 
-            <div className="mt-10 space-y-5">
-              {PHASES.map((phase, index) => (
-                <TimelineCard key={phase.phase} phase={phase} index={index} />
+            <div className="mt-8 grid gap-4 xl:grid-cols-2">
+              {ROADMAP_PHASES.map((phase) => (
+                <RoadmapCard
+                  key={phase.phase}
+                  phase={phase.phase}
+                  title={phase.title}
+                  status={phase.status}
+                  bullets={phase.bullets}
+                />
               ))}
             </div>
-          </section>
+          </Shell>
         </Reveal>
 
-        <Reveal delay={440}>
-          <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(30,0,0,0.86),rgba(8,0,0,0.96))] p-6 text-center shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8 lg:p-10">
-            <SectionHeading
-              eyebrow="Next Move"
-              title="Still early. Still building."
-              body="Turn pressure into progress, progress into identity, and identity into a real ecosystem."
-              center
-            />
+        <Reveal delay={480}>
+          <Shell className="mt-6 p-6 sm:p-8">
+            <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div className="flex items-center gap-5">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full border border-red-500/20 bg-red-500/10 text-3xl font-black text-red-500 shadow-[0_0_24px_rgba(255,0,0,0.18)]">
+                  $
+                </div>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <a
-                href={LINKS.telegram}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-red-500 px-6 py-3 text-sm font-black text-white transition duration-300 hover:scale-[1.02] hover:bg-red-400"
-              >
-                Join Telegram
-              </a>
-              <a
-                href={LINKS.x}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-black text-white transition duration-300 hover:border-white/20 hover:bg-white/[0.07]"
-              >
-                Follow X
-              </a>
+                <div>
+                  <h2 className="text-3xl font-black text-white sm:text-5xl">
+                    THIS IS YOUR PATH.
+                  </h2>
+                  <p className="mt-2 text-base leading-8 text-white/68">
+                    Complete missions. Earn $MAD. Build the MAD life.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <a
+                  href={LINKS.telegram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-8 py-4 text-base font-black text-white shadow-[0_0_18px_rgba(255,0,0,0.2)] transition hover:scale-[1.02] hover:bg-red-400"
+                >
+                  Start Your Journey →
+                </a>
+              </div>
             </div>
-          </section>
+          </Shell>
         </Reveal>
       </main>
     </div>
