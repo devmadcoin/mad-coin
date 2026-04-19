@@ -355,45 +355,28 @@ function BurnGoalBlock() {
 function MerchPrototypeBlock() {
   return (
     <Shell className="p-0">
-      <div className="grid gap-0 lg:grid-cols-[0.85fr_1.15fr]">
-        <div className="p-6 sm:p-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
-            Merch Prototype
-          </p>
+      <div className="grid gap-0 lg:grid-cols-[0.78fr_1.22fr]">
+        <div className="flex flex-col justify-between p-6 sm:p-8">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/80">
+              Merch Prototype
+            </p>
 
-          <h3 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-6xl">
-            MAD
-            <br />
-            <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
-              RICH.
-            </span>
-          </h3>
+            <h3 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-6xl">
+              MAD
+              <br />
+              <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+                RICH.
+              </span>
+            </h3>
 
-          <p className="mt-5 max-w-md text-base leading-8 text-white/78">
-            The sticker line is done. Clothing is now moving from idea into
-            real-world prototype phase.
-          </p>
-
-          <div className="mt-7 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                Status
-              </p>
-              <p className="mt-2 text-sm leading-7 text-white/82">
-                Sample shirt created.
-              </p>
-            </div>
-            <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                What It Proves
-              </p>
-              <p className="mt-2 text-sm leading-7 text-white/82">
-                $MAD is becoming a real brand, not just a chart.
-              </p>
-            </div>
+            <p className="mt-5 max-w-sm text-base leading-8 text-white/78">
+              The sticker line is done. Clothing is now moving from idea into
+              real-world prototype phase.
+            </p>
           </div>
 
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <HeroPill tone="red">CLOTHING PROTOTYPE</HeroPill>
             <HeroPill>MORE PIECES LATER</HeroPill>
           </div>
@@ -404,10 +387,10 @@ function MerchPrototypeBlock() {
             src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
             alt="MAD merch sample shirt"
             fill
-            sizes="(max-width: 1024px) 100vw, 800px"
+            sizes="(max-width: 1024px) 100vw, 900px"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
         </div>
       </div>
     </Shell>
