@@ -56,6 +56,16 @@ const PROMPTS = [
   "What do you want to say with no filter?",
 ];
 
+const DAILY_PROMPTS = [
+  "What are you done tolerating?",
+  "What made you snap this week?",
+  "What truth are you holding in?",
+  "What are you building while nobody notices?",
+  "What do people keep faking that you’re tired of?",
+  "What pressure are you carrying quietly?",
+  "What’s something real you wish you could say out loud?",
+];
+
 const FILTERS: FilterMode[] = ["Latest", "Hot", "Unhinged"];
 
 function filterToApiMode(filter: FilterMode): ApiMode {
@@ -74,6 +84,18 @@ function timeAgo(ts: number) {
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   return `${days}d ago`;
+}
+
+function getDailyPrompt() {
+  const start = new Date("2026-01-01T00:00:00Z").getTime();
+  const today = new Date();
+  const utcDay = Date.UTC(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate(),
+  );
+  const dayIndex = Math.floor((utcDay - start) / 86400000);
+  return DAILY_PROMPTS[Math.abs(dayIndex) % DAILY_PROMPTS.length];
 }
 
 function ReactionButton({
@@ -134,6 +156,23 @@ function PageButton({
   );
 }
 
+function SectionStat({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4">
+      <p className="text-lg font-black text-white">{value}</p>
+      <p className="mt-1 text-[10px] uppercase tracking-[0.24em] text-white/40">
+        {label}
+      </p>
+    </div>
+  );
+}
+
 export default function MadConfessions() {
   const [text, setText] = useState("");
   const [confessions, setConfessions] = useState<Confession[]>([]);
@@ -153,7 +192,9 @@ export default function MadConfessions() {
   const [reacted, setReacted] = useState<Record<string, ReactionKey | null>>(
     {},
   );
+  const [successMessage, setSuccessMessage] = useState("");
 
+  const dailyPrompt = useMemo(() => getDailyPrompt(), []);
   const apiMode = useMemo(() => filterToApiMode(filter), [filter]);
 
   async function loadConfessions(nextPage = page, nextFilter = filter) {
@@ -187,7 +228,7 @@ export default function MadConfessions() {
           hasPrevPage: false,
         },
       );
-    } catch (err) {
+    } catch {
       setError("Couldn’t load confessions right now.");
       setConfessions([]);
       setPagination({
@@ -208,6 +249,14 @@ export default function MadConfessions() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, filter]);
 
+  useEffect(() => {
+    if (!successMessage) return;
+    const timer = window.setTimeout(() => {
+      setSuccessMessage("");
+    }, 2600);
+    return () => window.clearTimeout(timer);
+  }, [successMessage]);
+
   async function submitConfession() {
     const trimmed = text.trim();
 
@@ -217,6 +266,7 @@ export default function MadConfessions() {
     try {
       setPosting(true);
       setError("");
+      setSuccessMessage("");
 
       const res = await fetch("/api/confessions", {
         method: "POST",
@@ -241,6 +291,7 @@ export default function MadConfessions() {
       setText("");
       setPage(1);
       setFilter("Latest");
+      setSuccessMessage("Confession received. The wall heard you.");
       await loadConfessions(1, "Latest");
     } catch (err) {
       setError(
@@ -312,6 +363,11 @@ export default function MadConfessions() {
       .sort((a, b) => a - b);
   }, [pagination.page, pagination.totalPages]);
 
+  const featuredConfession = useMemo(() => {
+    if (filter === "Latest") return confessions[0] ?? null;
+    return confessions[0] ?? null;
+  }, [confessions, filter]);
+
   return (
     <section className="rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,0,0,0.96),rgba(8,0,0,0.98))] p-5 shadow-[0_20px_80px_rgba(0,0,0,0.32)] sm:p-6 lg:p-8">
       <div className="mx-auto max-w-6xl">
@@ -352,6 +408,59 @@ export default function MadConfessions() {
             ))}
           </div>
         </div>
+
+        <div className="mt-8 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.015))] p-5">
+            <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-yellow-200/60">
+              Today’s Prompt
+            </p>
+            <p className="mt-3 text-2xl font-black leading-tight text-white">
+              {dailyPrompt}
+            </p>
+            <button
+              type="button"
+              onClick={() => setText(dailyPrompt)}
+              className="mt-5 inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm font-bold text-white/80 transition duration-200 hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
+            >
+              Use this prompt
+            </button>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+            <SectionStat
+              label="Confessions"
+              value={String(pagination.totalItems || 0)}
+            />
+            <SectionStat label="Mode" value={filter} />
+            <SectionStat
+              label="Page"
+              value={`${pagination.page}/${pagination.totalPages}`}
+            />
+          </div>
+        </div>
+
+        {featuredConfession ? (
+          <div className="mt-8 rounded-[28px] border border-yellow-400/15 bg-[linear-gradient(180deg,rgba(255,200,60,0.08),rgba(255,255,255,0.02))] p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full border border-yellow-400/20 bg-yellow-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-yellow-200/80">
+                  Today’s Loudest Confession
+                </span>
+                <span className="rounded-full border border-red-400/20 bg-red-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.24em] text-red-200/80">
+                  anonymous
+                </span>
+              </div>
+
+              <span className="text-sm text-white/35">
+                {timeAgo(featuredConfession.createdAt)}
+              </span>
+            </div>
+
+            <p className="mt-4 text-2xl font-black leading-relaxed text-white sm:text-3xl">
+              {featuredConfession.text}
+            </p>
+          </div>
+        ) : null}
 
         <div className="mt-8 rounded-[28px] border border-white/10 bg-black/30 p-4 sm:p-5">
           <div className="flex flex-wrap gap-2">
@@ -407,6 +516,12 @@ export default function MadConfessions() {
               </div>
             </div>
           </div>
+
+          {successMessage ? (
+            <p className="mt-3 text-sm font-semibold text-green-300/85">
+              {successMessage}
+            </p>
+          ) : null}
 
           {error ? (
             <p className="mt-3 text-sm text-red-300/80">{error}</p>
