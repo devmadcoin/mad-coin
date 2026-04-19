@@ -1,169 +1,48 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
-import IdentityForge from "../components/IdentityForge";
 
-type Category =
-  | "All"
-  | "Archive"
-  | "Army"
-  | "Philosophy"
-  | "Meme"
-  | "Signal";
-
-type ArtItem = {
-  src: string;
-  title: string;
-  category: Exclude<Category, "All">;
-  featured?: boolean;
-};
-
-const GALLERY_ART: ArtItem[] = [
+const ART_ITEMS = [
   {
-    src: "/memes/WE-MAD-ZOOMIN.png",
-    title: "We MAD Zoomin",
-    category: "Signal",
-    featured: true,
+    title: "$MAD Core Drop",
+    eyebrow: "Featured",
+    text: "The main visual identity behind the $MAD world.",
+    image: "/memes/MAD-KINGS-ONLY.png",
   },
   {
-    src: "/memes/MAD-2-MONTHS.png",
-    title: "MAD 2 Months",
-    category: "Signal",
-    featured: true,
+    title: "Signal Over Noise",
+    eyebrow: "Poster",
+    text: "Built for clarity, pressure, and conviction.",
+    image: "/memes/MAD-YOU-SIDELINED.png",
   },
   {
-    src: "/memes/MAD-KINGS-ONLY.png",
-    title: "MAD Kings Only",
-    category: "Signal",
-    featured: true,
+    title: "Rich or Broke",
+    eyebrow: "Drop",
+    text: "The choice is simple. Build or fold.",
+    image: "/memes/MAD-RICH-OR-BROKE.png",
   },
   {
-    src: "/memes/MAD-NEPTUNE.png",
-    title: "MAD Neptune",
-    category: "Philosophy",
-    featured: false,
+    title: "$MAD Energy",
+    eyebrow: "Concept",
+    text: "Raw emotion turned into visual identity.",
+    image: "/memes/MAD-KINGS-ONLY.png",
   },
   {
-    src: "/memes/MAD-RICH-IN-THE-TUB.png",
-    title: "MAD Rich in the Tub",
-    category: "Meme",
-    featured: true,
+    title: "Pressure Tested",
+    eyebrow: "Visual",
+    text: "Chaos outside. Control inside.",
+    image: "/memes/MAD-YOU-SIDELINED.png",
   },
-
-  { src: "/memes/MAD-ARMY.png", title: "MAD Army", category: "Army", featured: true },
-  { src: "/memes/MAD-AT-BEARS.png", title: "MAD at Bears", category: "Meme", featured: true },
-  { src: "/memes/MAD-BELIEVE.png", title: "MAD Believe", category: "Philosophy", featured: true },
-  { src: "/memes/MAD-BELIEVING.png", title: "MAD Believing", category: "Philosophy" },
-  { src: "/memes/MAD-COMMUNITY.png", title: "MAD Community", category: "Signal" },
-  { src: "/memes/MAD-DOCTOR.png", title: "MAD Doctor", category: "Meme" },
-  { src: "/memes/MAD-DOLLAR.png", title: "MAD Dollar", category: "Signal" },
   {
-    src: "/memes/MAD-HOLD-ON-DEAR-LIFE.png",
-    title: "MAD Hold On Dear Life",
-    category: "Signal",
+    title: "Stay $MAD",
+    eyebrow: "Poster",
+    text: "A brand built on pressure, identity, and motion.",
+    image: "/memes/MAD-RICH-OR-BROKE.png",
   },
-  { src: "/memes/MAD-MONTH.png", title: "MAD Month", category: "Signal" },
-  { src: "/memes/MAD-RICH-OR-BROKE.png", title: "MAD Rich or Broke", category: "Meme" },
-  { src: "/memes/MAD-SCHOOL.png", title: "MAD School", category: "Meme" },
-  { src: "/memes/MAD-YOU-SIDELINED.png", title: "MAD You Sidelined", category: "Signal" },
-  { src: "/memes/MAKE-MAD-GREAT-AGAIN.png", title: "Make MAD Great Again", category: "Meme" },
-  { src: "/memes/YOU-MAKE-ME-MAD.png", title: "You Make Me MAD", category: "Meme" },
-  { src: "/memes/YOU-WILL-BE-MAD.png", title: "You Will Be MAD", category: "Signal" },
-
-  { src: "/memes/mad-meme-alarm.png", title: "Alarm", category: "Meme" },
-  { src: "/memes/mad-meme-chipsbagofair.png", title: "Chips Bag of Air", category: "Meme" },
-  { src: "/memes/mad-meme-coffeehot.png", title: "Coffee Too Hot", category: "Meme" },
-  { src: "/memes/mad-meme-coldshower.png", title: "Cold Shower", category: "Meme" },
-  { src: "/memes/mad-meme-lipbalm.png", title: "Lip Balm", category: "Meme" },
-  { src: "/memes/mad-meme-nogym.png", title: "No Gym", category: "Meme" },
-  { src: "/memes/mad-meme-toiletpaper.png", title: "Toilet Paper", category: "Meme" },
-  { src: "/memes/mad-meme-wifibuffer.png", title: "WiFi Buffer", category: "Meme" },
-];
-
-const FILTERS: Category[] = [
-  "All",
-  "Archive",
-  "Army",
-  "Philosophy",
-  "Meme",
-  "Signal",
-];
+] as const;
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
-}
-
-function downloadNameFromSrc(src: string) {
-  return src.split("/").pop() || "mad-art.png";
-}
-
-function getVisibleArt(activeFilter: Category, items: ArtItem[]) {
-  if (activeFilter === "All") return items;
-  if (activeFilter === "Archive") return items;
-  return items.filter((item) => item.category === activeFilter);
-}
-
-function ArtCard({
-  item,
-  index,
-}: {
-  item: ArtItem;
-  index: number;
-}) {
-  return (
-    <article className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-red-500/25 hover:shadow-[0_24px_70px_rgba(120,0,0,0.28)]">
-      <a
-        href={item.src}
-        target="_blank"
-        rel="noreferrer"
-        className="block"
-        title={`Open ${item.title}`}
-      >
-        <div className="relative aspect-[4/5] w-full overflow-hidden">
-          <Image
-            src={item.src}
-            alt={item.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-            className="object-cover transition duration-500 group-hover:scale-[1.04]"
-            priority={index < 6}
-          />
-
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent opacity-90" />
-
-          <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-            <div className="rounded-full border border-white/10 bg-black/45 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/70 backdrop-blur-md">
-              $MAD Art
-            </div>
-
-            {item.featured ? (
-              <div className="rounded-full border border-red-400/20 bg-red-500/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-red-100 backdrop-blur-md">
-                Featured
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </a>
-
-      <div className="flex items-center justify-between gap-4 p-5">
-        <div className="min-w-0">
-          <h3 className="truncate text-lg font-black text-white/95">{item.title}</h3>
-          <p className="mt-1 text-[11px] uppercase tracking-[0.22em] text-white/45">
-            {item.category}
-          </p>
-        </div>
-
-        <a
-          href={item.src}
-          download={downloadNameFromSrc(item.src)}
-          className="shrink-0 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-semibold text-white/90 transition hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-100"
-        >
-          Download
-        </a>
-      </div>
-    </article>
-  );
 }
 
 function SectionShell({
@@ -176,8 +55,8 @@ function SectionShell({
   return (
     <section
       className={cn(
-        "rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl",
-        className
+        "overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:rounded-[2rem]",
+        className,
       )}
     >
       {children}
@@ -185,279 +64,168 @@ function SectionShell({
   );
 }
 
-function StatPill({
-  label,
-  value,
+function Pill({
+  children,
+  tone = "default",
 }: {
-  label: string;
-  value: string;
+  children: React.ReactNode;
+  tone?: "default" | "red" | "green";
 }) {
   return (
-    <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-4">
-      <p className="text-[11px] uppercase tracking-[0.24em] text-white/40">
-        {label}
-      </p>
-      <p className="mt-3 text-2xl font-black text-white">{value}</p>
+    <div
+      className={cn(
+        "rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em]",
+        tone === "red" && "border border-red-500/25 bg-red-500/10 text-red-200",
+        tone === "green" &&
+          "border border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
+        tone === "default" &&
+          "border border-white/10 bg-white/[0.04] text-white/70",
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+function ArtCard({
+  title,
+  eyebrow,
+  text,
+  image,
+}: {
+  title: string;
+  eyebrow: string;
+  text: string;
+  image: string;
+}) {
+  return (
+    <div className="min-w-0 overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/25 transition duration-300 hover:border-white/20 hover:bg-white/[0.04]">
+      <div className="relative aspect-[4/5] w-full sm:aspect-square">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+      </div>
+
+      <div className="min-w-0 p-4 sm:p-5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+          {eyebrow}
+        </p>
+
+        <h3 className="mt-2 break-words text-xl font-black leading-tight text-white sm:text-2xl">
+          {title}
+        </h3>
+
+        <p className="mt-2 break-words text-sm leading-7 text-white/65">
+          {text}
+        </p>
+      </div>
     </div>
   );
 }
 
 export default function MemesPage() {
-  const [activeFilter, setActiveFilter] = useState<Category>("All");
-
-  const featuredCount = GALLERY_ART.filter((item) => item.featured).length;
-
-  const visibleArt = useMemo(
-    () => getVisibleArt(activeFilter, GALLERY_ART),
-    [activeFilter]
-  );
-
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(255,0,0,0.10),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(255,0,0,0.06),transparent_22%),radial-gradient(circle_at_50%_100%,rgba(120,0,0,0.14),transparent_40%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02),transparent_18%,transparent_82%,rgba(255,255,255,0.015))]" />
+    <div className="min-h-screen overflow-x-hidden bg-[#040404] text-white">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.12),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.05),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
 
-      <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-16 sm:px-8 lg:px-10">
-        <section className="relative overflow-hidden rounded-[2.4rem] border border-white/10 bg-white/[0.02] p-7 shadow-[0_20px_80px_rgba(0,0,0,0.48)] backdrop-blur-xl sm:p-10">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(255,0,0,0.14),transparent_22%),radial-gradient(circle_at_82%_18%,rgba(255,0,0,0.08),transparent_18%)]" />
-          <div className="pointer-events-none absolute right-[-10%] top-[-18%] hidden h-[420px] w-[420px] rounded-full border border-red-500/10 lg:block" />
-          <div className="pointer-events-none absolute right-[-6%] top-[-10%] hidden h-[320px] w-[320px] rounded-full border border-red-500/8 lg:block" />
-
-          <div className="relative grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.38em] text-white/45">
-                CULTURE ARCHIVE
-              </p>
-
-              <h1 className="mt-5 text-[3.6rem] font-black leading-[0.88] tracking-[-0.05em] sm:text-[5.6rem]">
-                <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
-                  $MAD
-                </span>{" "}
-                Art.
-                <br />
-                Memes.
-                <br />
-                NFTs.
-              </h1>
-
-              <p className="mt-5 max-w-2xl text-base leading-8 text-white/68 sm:text-lg">
-                Signal, memes, collectibles.
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href="#prototype-lab"
-                  className="inline-flex rounded-full border border-red-500/30 bg-red-500 px-6 py-3 text-sm font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
-                >
-                  Enter Lab
-                </a>
-
-                <a
-                  href="#gallery"
-                  className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-black text-white/90 transition hover:bg-white/[0.08]"
-                >
-                  View Art
-                </a>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                  Premium Gallery
-                </div>
-                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                  {GALLERY_ART.length} Pieces
-                </div>
-                <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-200">
-                  NFT Prototype Live
-                </div>
-              </div>
-            </div>
-
-            <div className="relative mx-auto w-full max-w-[530px]">
-              <div className="absolute inset-0 rounded-[2rem] bg-red-500/10 blur-3xl" />
-              <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-4 shadow-[0_22px_60px_rgba(0,0,0,0.45)]">
-                <div className="relative aspect-[16/10] overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/40">
-                  <Image
-                    src="/memes/MAD-RICH-OR-BROKE.png"
-                    alt="$MAD featured art"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 530px"
-                    className="object-cover"
-                    priority
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-                </div>
-
-                <div className="mt-4 grid grid-cols-3 gap-3">
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] p-4">
-                    <div className="text-3xl font-black text-white">LIVE</div>
-                    <div className="mt-1 text-[11px] uppercase tracking-[0.28em] text-white/40">
-                      Gallery
-                    </div>
-                  </div>
-
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] p-4">
-                    <div className="text-3xl font-black text-white">NFT</div>
-                    <div className="mt-1 text-[11px] uppercase tracking-[0.28em] text-white/40">
-                      Prototype
-                    </div>
-                  </div>
-
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.03] p-4">
-                    <div className="text-3xl font-black text-white">DAILY</div>
-                    <div className="mt-1 text-[11px] uppercase tracking-[0.28em] text-white/40">
-                      Signal
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="prototype-lab" className="mt-10">
-          <SectionShell className="relative overflow-hidden p-0">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,0,60,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,60,0,0.08),transparent_24%)]" />
-
-            <div className="relative border-b border-white/10 px-7 py-8 sm:px-10 sm:py-10">
-              <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-                <div className="max-w-3xl">
-                  <p className="text-xs font-semibold uppercase tracking-[0.38em] text-white/45">
-                    NFT PROTOTYPE LAB
-                  </p>
-
-                  <h2 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-                    <span className="text-red-500 drop-shadow-[0_0_16px_rgba(255,0,0,0.55)]">
-                      $MAD
-                    </span>{" "}
-                    NFT Prototype
-                  </h2>
-
-                  <p className="mt-5 max-w-2xl text-base leading-8 text-white/68 sm:text-lg">
-                    Build your own MAD identity.
-                    <br />
-                    Randomize traits.
-                    <br />
-                    Download your build.
-                  </p>
-
-                  <div className="mt-7 flex flex-wrap gap-3">
-                    <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-red-200">
-                      Prototype Only
-                    </div>
-                    <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                      No Live Mint
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid w-full max-w-[430px] gap-3 sm:grid-cols-3 lg:w-[420px]">
-                  <StatPill label="Status" value="Open" />
-                  <StatPill label="Style" value="Rare" />
-                  <StatPill label="Export" value="PNG" />
-                </div>
-              </div>
-            </div>
-
-            <div className="p-3 sm:p-4">
-              <div className="rounded-[2rem] border border-white/10 bg-white/[0.025] p-3 shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-4">
-                <IdentityForge />
-              </div>
-            </div>
-          </SectionShell>
-        </section>
-
-        <section className="mt-10 flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-white/[0.025] px-5 py-4 backdrop-blur-xl">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
-              GALLERY STATUS
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
+        <SectionShell className="p-5 sm:p-8 lg:p-10">
+          <div className="max-w-5xl min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-red-200/75">
+              $MAD ART
             </p>
-            <p className="mt-2 text-sm text-white/65">
-              Live gallery. Updated culture archive.
+
+            <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
+              Art for the{" "}
+              <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.45)]">
+                $MAD
+              </span>{" "}
+              world.
+            </h1>
+
+            <p className="mt-5 max-w-3xl text-base leading-8 text-white/70 sm:text-lg">
+              Posters, drops, identity pieces, and visual energy from the $MAD universe.
             </p>
           </div>
 
-          <div className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-sm font-semibold text-white/80">
-            Featured: {featuredCount}
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Pill tone="red">Official Art</Pill>
+            <Pill tone="green">Mobile Safe</Pill>
+            <Pill>Live Collection</Pill>
           </div>
-        </section>
+        </SectionShell>
 
-        <section id="gallery" className="mt-6 overflow-x-auto">
-          <div className="flex min-w-max gap-3 pb-2">
-            {FILTERS.map((filter) => {
-              const isActive = activeFilter === filter;
+        <SectionShell className="mt-8 overflow-hidden p-0">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-[540px]">
+              <Image
+                src="/memes/MAD-KINGS-ONLY.png"
+                alt="$MAD featured art"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                className="object-cover"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+            </div>
 
-              return (
-                <button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  className={[
-                    "rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] transition",
-                    isActive
-                      ? "border-red-500/30 bg-red-500/15 text-red-100"
-                      : "border-white/10 bg-white/[0.04] text-white/70 hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-100",
-                  ].join(" ")}
-                >
-                  {filter}
-                </button>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="mt-10">
-          <div className="mb-5 flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/40">
-                THE GALLERY
+            <div className="min-w-0 p-5 sm:p-8 lg:p-10">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/45">
+                Featured Piece
               </p>
-              <h2 className="mt-2 text-2xl font-black tracking-tight text-white">
-                {activeFilter === "All" ? "All Pieces" : activeFilter}
+
+              <h2 className="mt-4 break-words text-3xl font-black leading-[0.95] text-white sm:text-5xl">
+                Pressure.
+                <br />
+                Signal.
+                <br />
+                Identity.
               </h2>
+
+              <p className="mt-5 max-w-xl break-words text-base leading-8 text-white/70">
+                This page is the visual side of $MAD. Clean, aggressive, and easy to scroll on mobile without feeling cramped or broken.
+              </p>
+
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
+                    Style
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-white/65">
+                    Bold, premium, meme-native.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/40">
+                    Use
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-white/65">
+                    Posters, branding, drops, and visual lore.
+                  </p>
+                </div>
+              </div>
             </div>
-
-            <div className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
-              {visibleArt.length} Visible
-            </div>
           </div>
+        </SectionShell>
 
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {visibleArt.map((item, index) => (
-              <ArtCard key={`${item.src}-${activeFilter}`} item={item} index={index} />
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-12 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 text-center backdrop-blur-xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-200/70">
-            STAY $MAD
-          </p>
-
-          <h2 className="mt-4 text-3xl font-black text-white sm:text-5xl">
-            Build early. Stay loud.
-          </h2>
-
-          <p className="mx-auto mt-4 max-w-2xl text-sm text-white/60 sm:text-lg">
-            Culture first. Utility later.
-          </p>
-
-          <div className="mt-7 flex flex-wrap justify-center gap-3">
-            <a
-              href="/"
-              className="rounded-full bg-red-500 px-6 py-3 font-bold text-white transition hover:bg-red-400"
-            >
-              Back Home
-            </a>
-
-            <a
-              href="/roadmap"
-              className="rounded-full border border-white/10 px-6 py-3 font-bold text-white transition hover:bg-white/5"
-            >
-              View The Path
-            </a>
-          </div>
-        </section>
-      </div>
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {ART_ITEMS.map((item) => (
+            <ArtCard
+              key={item.title}
+              title={item.title}
+              eyebrow={item.eyebrow}
+              text={item.text}
+              image={item.image}
+            />
+          ))}
+        </div>
+      </main>
     </div>
   );
 }
