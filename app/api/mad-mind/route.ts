@@ -1,1016 +1,510 @@
-import { NextResponse } from "next/server";
-import OpenAI from "openai";
+"use client";
 
-import { MAD_CANON } from "./mad-canon";
-import {
-  SYSTEM_PROMPT,
-  buildStateLayer,
-  buildEscalationLayer,
-  buildContinuityLayer,
-  buildCookLayer,
-  buildArchetypeLayer,
-  buildRespectLayer,
-  buildAntiRepetitionLayer,
-  buildDefinitionLayer,
-} from "@/lib/mad-prompt";
+import { useEffect, useMemo, useState } from "react";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-type Intent =
-  | "DEFINITION"
-  | "GENERAL"
-  | "CAPTION"
-  | "COMEBACK"
-  | "PHILOSOPHY"
-  | "SHILL"
-  | "CONFESSION"
-  | "CONTENT_IDEA"
-  | "MANIFESTO";
-
-type CookLevel = "mild" | "mean" | "crashout" | "demon";
-type StyleTab = "safe" | "savage" | "crashout";
-type VariantKey = "default" | "safe" | "savage" | "crashout";
-type MoodMode = "cold" | "surgical" | "mocking" | "prophetic" | "respect";
-
-type MemoryEntry = {
-  last: string;
-  repeatCount: number;
-  recentStates: string[];
-  lastBot?: string;
-  intentHistory: Intent[];
-  favoriteStyle?: StyleTab;
-  lastIntent?: Intent;
-  callbackNotes: string[];
-  moodHistory: MoodMode[];
-};
-
-type RequestBody = {
-  message?: unknown;
-  cookLevel?: unknown;
-  archetype?: unknown;
-  sessionId?: unknown;
-  preferredStyle?: unknown;
-  multiOutput?: unknown;
+type Demo = {
+  q: string;
+  a: string;
 };
 
 type ApiMeta = {
-  intent: Intent;
-  states: string[];
-  escalation: number;
-  favoriteStyle: StyleTab | null;
-  multiOutput: boolean;
-  mood: MoodMode;
+  intent?: string;
+  states?: string[];
+  escalation?: number;
+  favoriteStyle?: string | null;
+  multiOutput?: boolean;
+  mood?: string;
   callback?: string | null;
   rarityHint?: "standard" | "rare" | "legendary";
   followUpBait?: string[];
 };
 
-const memory = new Map<string, MemoryEntry>();
-
-function sanitize(value: unknown, max = 500): string {
-  return typeof value === "string" ? value.trim().slice(0, max) : "";
-}
-
-function normalize(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s$]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function isSimilar(a: string, b: string): boolean {
-  const na = normalize(a);
-  const nb = normalize(b);
-
-  if (!na || !nb) return false;
-  if (na === nb) return true;
-  if (na.includes(nb) || nb.includes(na)) return true;
-
-  return false;
-}
-
-function parseCookLevel(value: unknown): CookLevel {
-  return value === "mild" ||
-    value === "mean" ||
-    value === "crashout" ||
-    value === "demon"
-    ? value
-    : "crashout";
-}
-
-function parsePreferredStyle(value: unknown): StyleTab | undefined {
-  return value === "safe" || value === "savage" || value === "crashout"
-    ? value
-    : undefined;
-}
-
-function detectIntent(text: string): Intent {
-  const lower = text.toLowerCase();
-
-  if (
-    lower.includes("what is $mad") ||
-    lower.includes("what is mad") ||
-    lower.includes("define $mad") ||
-    lower.includes("define mad") ||
-    lower.includes("what does $mad mean") ||
-    lower.includes("what does mad mean") ||
-    /^what is\b/.test(lower) ||
-    /^define\b/.test(lower)
-  ) {
-    return "DEFINITION";
-  }
-
-  if (
-    lower.includes("caption") ||
-    lower.includes("ig caption") ||
-    lower.includes("instagram caption")
-  ) {
-    return "CAPTION";
-  }
-
-  if (
-    lower.includes("comeback") ||
-    lower.includes("reply to this") ||
-    lower.includes("reply for this") ||
-    lower.includes("clap back") ||
-    lower.includes("what should i reply") ||
-    lower.includes("roast him") ||
-    lower.includes("roast them")
-  ) {
-    return "COMEBACK";
-  }
-
-  if (
-    lower.includes("philosophy") ||
-    lower.includes("what does stay $mad mean") ||
-    lower.includes("what does stay mad mean") ||
-    lower.includes("explain stay $mad") ||
-    lower.includes("explain stay mad")
-  ) {
-    return "PHILOSOPHY";
-  }
-
-  if (
-    lower.includes("tweet") ||
-    lower.includes("post for x") ||
-    lower.includes("x post") ||
-    lower.includes("shill") ||
-    lower.includes("telegram post") ||
-    lower.includes("write a post")
-  ) {
-    return "SHILL";
-  }
-
-  if (
-    lower.includes("confession") ||
-    lower.includes("be honest") ||
-    lower.includes("tell me the truth about me")
-  ) {
-    return "CONFESSION";
-  }
-
-  if (
-    lower.includes("content idea") ||
-    lower.includes("video idea") ||
-    lower.includes("give me an idea") ||
-    lower.includes("content concept") ||
-    lower.includes("brainstorm")
-  ) {
-    return "CONTENT_IDEA";
-  }
-
-  if (
-    lower.includes("manifesto") ||
-    lower.includes("war cry") ||
-    lower.includes("statement") ||
-    lower.includes("mission statement")
-  ) {
-    return "MANIFESTO";
-  }
-
-  return "GENERAL";
-}
-
-function detectState(text: string): string[] {
-  const lower = text.toLowerCase();
-  const states: string[] = [];
-
-  if (
-    lower.includes("panic") ||
-    lower.includes("scared") ||
-    lower.includes("afraid") ||
-    lower.includes("fear")
-  ) {
-    states.push("FEAR");
-  }
-
-  if (
-    lower.includes("regret") ||
-    lower.includes("was i wrong") ||
-    lower.includes("i was wrong")
-  ) {
-    states.push("REGRET");
-  }
-
-  if (
-    lower.includes("should i") ||
-    lower.includes("what should i do") ||
-    lower.includes("be honest")
-  ) {
-    states.push("VALIDATION");
-  }
-
-  if (
-    lower.includes("moon") ||
-    lower.includes("100x") ||
-    lower.includes("1000x") ||
-    lower.includes("pump")
-  ) {
-    states.push("GREED");
-  }
-
-  if (
-    lower.includes("maybe") ||
-    lower.includes("i think") ||
-    lower.includes("not sure") ||
-    lower.includes("idk")
-  ) {
-    states.push("COPE");
-  }
-
-  if (
-    lower.includes("i stayed calm") ||
-    lower.includes("i held") ||
-    lower.includes("i stayed disciplined") ||
-    lower.includes("i shipped") ||
-    lower.includes("i posted") ||
-    lower.includes("i took action") ||
-    lower.includes("i locked in")
-  ) {
-    states.push("DISCIPLINE");
-  }
-
-  if (
-    lower.includes("ego") ||
-    lower.includes("i know") ||
-    lower.includes("obviously") ||
-    lower.includes("i'm better") ||
-    lower.includes("im better")
-  ) {
-    states.push("EGO");
-  }
-
-  if (
-    lower.includes("hesitate") ||
-    lower.includes("not ready") ||
-    lower.includes("later") ||
-    lower.includes("tomorrow") ||
-    lower.includes("eventually")
-  ) {
-    states.push("HESITATION");
-  }
-
-  if (
-    lower.includes("angry") ||
-    lower.includes("mad") ||
-    lower.includes("rage") ||
-    lower.includes("furious")
-  ) {
-    states.push("RAGE");
-  }
-
-  if (states.length === 0) {
-    states.push("GENERAL");
-  }
-
-  return Array.from(new Set(states)).slice(0, 3);
-}
-
-function detectRespect(text: string): boolean {
-  const lower = text.toLowerCase();
-
-  return (
-    lower.includes("i was wrong") ||
-    lower.includes("my fault") ||
-    lower.includes("i took action") ||
-    lower.includes("i shipped") ||
-    lower.includes("i posted") ||
-    lower.includes("i stayed calm") ||
-    lower.includes("i held") ||
-    lower.includes("i stayed disciplined") ||
-    lower.includes("i locked in")
-  );
-}
-
-function wantsHarder(text: string): boolean {
-  const lower = text.toLowerCase();
-  return (
-    lower.includes("say it harder") ||
-    lower.includes("go harder") ||
-    lower.includes("be harsher") ||
-    lower.includes("more brutal") ||
-    lower.includes("hit harder") ||
-    lower === "harder"
-  );
-}
-
-function wantsShorter(text: string): boolean {
-  const lower = text.toLowerCase();
-  return (
-    lower.includes("make it shorter") ||
-    lower.includes("shorter") ||
-    lower.includes("say less") ||
-    lower.includes("cut it down")
-  );
-}
-
-function wantsSmarter(text: string): boolean {
-  const lower = text.toLowerCase();
-  return (
-    lower.includes("make it smarter") ||
-    lower.includes("say it smarter") ||
-    lower.includes("sound smarter") ||
-    lower.includes("more intelligent")
-  );
-}
-
-function wantsTweet(text: string): boolean {
-  const lower = text.toLowerCase();
-  return (
-    lower.includes("turn into tweet") ||
-    lower.includes("make it a tweet") ||
-    lower.includes("turn into post") ||
-    lower.includes("make it postable")
-  );
-}
-
-function stripRefinementPrompt(text: string): string {
-  return text
-    .replace(/say it harder/gi, "")
-    .replace(/go harder/gi, "")
-    .replace(/be harsher/gi, "")
-    .replace(/more brutal/gi, "")
-    .replace(/hit harder/gi, "")
-    .replace(/\bharder\b/gi, "")
-    .replace(/make it shorter/gi, "")
-    .replace(/say less/gi, "")
-    .replace(/cut it down/gi, "")
-    .replace(/\bshorter\b/gi, "")
-    .replace(/make it smarter/gi, "")
-    .replace(/say it smarter/gi, "")
-    .replace(/sound smarter/gi, "")
-    .replace(/more intelligent/gi, "")
-    .replace(/turn into tweet/gi, "")
-    .replace(/make it a tweet/gi, "")
-    .replace(/turn into post/gi, "")
-    .replace(/make it postable/gi, "")
-    .trim();
-}
-
-function buildIntentLayer(intent: Intent): string {
-  switch (intent) {
-    case "DEFINITION":
-      return `
-INTENT:
-This is a definition request.
-Define with force.
-Do not sound academic.
-If you define, do not stay stuck in explanation.
-After the definition, pivot into accusation, contrast, or implication.
-`;
-    case "CAPTION":
-      return `
-INTENT:
-This is a caption request.
-Write like something made to be posted.
-Make it punchy, quotable, and easy to screenshot.
-No hashtags unless the user asked.
-`;
-    case "COMEBACK":
-      return `
-INTENT:
-This is a comeback or reply request.
-Be sharp.
-Be controlled.
-Humiliate more through contrast than noise.
-`;
-    case "PHILOSOPHY":
-      return `
-INTENT:
-This is a philosophy request.
-Sound like doctrine, not therapy.
-Keep it clear, memorable, and pressure-tested.
-`;
-    case "SHILL":
-      return `
-INTENT:
-This is a post for X, Telegram, or community push.
-Make it viral without sounding needy.
-Build intrigue, pressure, and identity.
-`;
-    case "CONFESSION":
-      return `
-INTENT:
-This is a confession or truth request.
-Expose the weakness directly.
-Do not comfort the user unless they earned respect.
-`;
-    case "CONTENT_IDEA":
-      return `
-INTENT:
-This is a content ideation request.
-Turn the idea into something usable, hook-heavy, and high-pressure.
-`;
-    case "MANIFESTO":
-      return `
-INTENT:
-This is a manifesto request.
-Make it feel like doctrine, creed, signal, or war language.
-`;
-    default:
-      return `
-INTENT:
-General request.
-Still answer with identity, pressure, and signal.
-`;
-  }
-}
-
-function buildVariantLayer(variant: VariantKey): string {
-  switch (variant) {
-    case "safe":
-      return `
-VARIANT MODE:
-Safe does not mean soft.
-Keep it sharp, but cleaner and more broadly usable.
-`;
-    case "savage":
-      return `
-VARIANT MODE:
-Savage.
-Shorter.
-Mocking.
-Surgical disrespect.
-`;
-    case "crashout":
-      return `
-VARIANT MODE:
-Crashout.
-More theatrical.
-More dangerous.
-Still coherent.
-`;
-    default:
-      return `
-VARIANT MODE:
-Default.
-Balanced force.
-`;
-  }
-}
-
-function buildPreferenceLayer(
-  favoriteStyle?: StyleTab,
-  lastIntent?: Intent,
-): string {
-  return `
-SESSION BIAS:
-Favorite style so far: ${favoriteStyle || "unknown"}
-Last major intent: ${lastIntent || "unknown"}
-
-Use this only as a light bias.
-Do not become repetitive.
-`;
-}
-
-function buildMoodLayer(mood: MoodMode): string {
-  switch (mood) {
-    case "cold":
-      return `
-MOOD MODE:
-Cold.
-Minimal.
-Final.
-`;
-    case "surgical":
-      return `
-MOOD MODE:
-Surgical.
-Precise.
-Expose the flaw cleanly.
-`;
-    case "mocking":
-      return `
-MOOD MODE:
-Mocking.
-Controlled disrespect.
-Never sloppy.
-`;
-    case "prophetic":
-      return `
-MOOD MODE:
-Prophetic.
-Judgment with doctrine energy.
-`;
-    case "respect":
-      return `
-MOOD MODE:
-Respect is rare.
-Still sharp, but acknowledge real discipline.
-`;
-  }
-}
-
-function buildCallbackLayer(callback: string | null): string {
-  if (!callback) return "";
-  return `
-CALLBACK MEMORY:
-Use this lightly if it helps:
-${callback}
-`;
-}
-
-function buildRefinementLayer(opts: {
-  harder: boolean;
-  shorter: boolean;
-  smarter: boolean;
-  tweetify: boolean;
-}): string {
-  const lines: string[] = [];
-
-  if (opts.harder) {
-    lines.push("Go harder.");
-    lines.push("Do not soften.");
-    lines.push("Make the last sentence feel final.");
-  }
-
-  if (opts.shorter) {
-    lines.push("Make it shorter.");
-    lines.push("Cut every unnecessary word.");
-  }
-
-  if (opts.smarter) {
-    lines.push("Make it feel smarter and more precise.");
-    lines.push("Use stronger contrast and cleaner logic.");
-  }
-
-  if (opts.tweetify) {
-    lines.push("Format it like a post someone would actually publish.");
-    lines.push("Make it instantly copyable.");
-  }
-
-  if (lines.length === 0) return "";
-
-  return `
-REFINEMENT MODE:
-${lines.join("\n")}
-`;
-}
-
-function scoreOutput(text: string, intent: Intent): number {
-  let score = 0;
-  const lower = text.toLowerCase().trim();
-  const sentenceCount = text
-    .split(/[.!?]+/)
-    .map((s) => s.trim())
-    .filter(Boolean).length;
-
-  if (text.length >= 18) score += 1;
-  if (text.length <= 220) score += 2;
-  if (sentenceCount >= 1 && sentenceCount <= 3) score += 2;
-  if (!/\b(i think|maybe|perhaps|kind of|sort of)\b/i.test(lower)) score += 1;
-  if (!/\b(as an ai|i can help|let me know)\b/i.test(lower)) score += 2;
-  if (!text.includes("•") && !text.includes("- ")) score += 1;
-  if (/[.!?]$/.test(text)) score += 1;
-  if (!/\$mad is\.\.\./i.test(text)) score += 1;
-  if (/[A-Z]{3,}/.test(text)) score += 1;
-  if (
-    /you keep|you didn.t|that.s not|fear|discipline|signal|pressure|excuse/i.test(
-      text,
-    )
-  ) {
-    score += 2;
-  }
-
-  if (intent === "CAPTION" || intent === "SHILL" || intent === "COMEBACK") {
-    if (text.length <= 160) score += 1;
-    if (!/\n\n/.test(text)) score += 1;
-  }
-
-  return score;
-}
-
-function getRarityHint(score: number): "standard" | "rare" | "legendary" {
-  if (score >= 12) return "legendary";
-  if (score >= 10) return "rare";
-  return "standard";
-}
-
-function shouldReturnVariants(intent: Intent): boolean {
-  return (
-    intent === "CAPTION" ||
-    intent === "COMEBACK" ||
-    intent === "SHILL" ||
-    intent === "MANIFESTO"
-  );
-}
-
-function topStyleFromHistory(history: Intent[]): StyleTab | undefined {
-  if (!history.length) return undefined;
-
-  const recent = history.slice(-6);
-
-  if (recent.includes("COMEBACK") || recent.includes("SHILL")) return "savage";
-  if (recent.includes("MANIFESTO") || recent.includes("CONFESSION")) {
-    return "crashout";
-  }
-  if (recent.includes("CAPTION")) return "safe";
-
-  return undefined;
-}
-
-function pickMood(prev: MemoryEntry | undefined, respect: boolean, escalation: number): MoodMode {
-  if (respect) return "respect";
-  if (escalation >= 3) return "cold";
-  if (prev?.moodHistory?.slice(-1)[0] === "cold") return "mocking";
-  if (prev?.moodHistory?.slice(-1)[0] === "mocking") return "surgical";
-  const pool: MoodMode[] = ["surgical", "mocking", "prophetic", "cold"];
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function buildCallbackFromMemory(prev: MemoryEntry | undefined, states: string[]): string | null {
-  if (!prev) return null;
-  const recent = prev.callbackNotes || [];
-
-  if (recent.length) return recent[0];
-
-  if (prev.recentStates.includes("FEAR") && states.includes("FEAR")) {
-    return "Second time the pattern points to fear.";
-  }
-  if (prev.recentStates.includes("VALIDATION") && states.includes("VALIDATION")) {
-    return "Again asking for permission instead of moving.";
-  }
-  if (prev.recentStates.includes("HESITATION") && states.includes("HESITATION")) {
-    return "This still sounds like hesitation dressed up as thought.";
-  }
-
-  return null;
-}
-
-function buildFollowUpBait(intent: Intent, rarity: "standard" | "rare" | "legendary") {
-  const common =
-    intent === "COMEBACK"
-      ? ["Make it harsher", "One-line version", "Make it cleaner"]
-      : intent === "CAPTION" || intent === "SHILL"
-        ? ["Turn that into a post", "Make it shorter", "Make it meaner"]
-        : intent === "CONFESSION"
-          ? ["Tell me my real problem", "Go deeper", "Don’t soften it"]
-          : ["Go deeper", "Hit me harder", "What does that say about me?"];
-
-  if (rarity === "legendary") {
-    return [common[0], "Make it legendary again", "Turn that into a post"];
-  }
-
-  return common;
-}
-
-function updateMemory(
-  sessionId: string,
-  prev: MemoryEntry | undefined,
-  data: {
-    message: string;
-    escalation: number;
-    states: string[];
-    bot: string;
-    intent: Intent;
-    favoriteStyle?: StyleTab;
-    mood: MoodMode;
-    callback?: string | null;
+type ApiResponse = {
+  output?: string;
+  outputs?: {
+    safe?: string;
+    savage?: string;
+    crashout?: string;
+  };
+  meta?: ApiMeta;
+};
+
+const DEMOS: Demo[] = [
+  {
+    q: "Why can’t I stay consistent?",
+    a: "Because you rely on mood instead of systems.",
   },
-) {
-  memory.set(sessionId, {
-    last: data.message,
-    repeatCount: data.escalation,
-    recentStates: data.states,
-    lastBot: data.bot,
-    intentHistory: [...(prev?.intentHistory || []), data.intent].slice(-12),
-    favoriteStyle: data.favoriteStyle ?? prev?.favoriteStyle,
-    lastIntent: data.intent,
-    callbackNotes: [
-      ...(data.callback ? [data.callback] : []),
-      ...(prev?.callbackNotes || []),
-    ].slice(0, 5),
-    moodHistory: [...(prev?.moodHistory || []), data.mood].slice(-8),
-  });
-}
+  {
+    q: "Why am I broke?",
+    a: "Because comfort gets paid before discipline does.",
+  },
+  {
+    q: "Why am I anxious?",
+    a: "Because you rehearse fear more than action.",
+  },
+  {
+    q: "Why am I stuck?",
+    a: "Because thinking became your replacement for moving.",
+  },
+  {
+    q: "Why do I self sabotage?",
+    a: "Because your habits still serve your old identity.",
+  },
+];
 
-async function generateSingleOutput(params: {
-  message: string;
-  intent: Intent;
-  states: string[];
-  escalation: number;
-  cookLevel: CookLevel;
-  archetype?: string;
-  respect: boolean;
-  prev?: MemoryEntry;
-  variant: VariantKey;
-  harder: boolean;
-  shorter: boolean;
-  smarter: boolean;
-  tweetify: boolean;
-  mood: MoodMode;
-  callback: string | null;
-}): Promise<string> {
-  const input = `
-MAD CANON:
-${JSON.stringify(MAD_CANON, null, 2)}
+const PLACEHOLDERS = [
+  "What’s messing you up right now?",
+  "Why am I stuck?",
+  "Why can’t I focus?",
+  "Why do I overthink everything?",
+  "Why am I lazy lately?",
+];
 
-${buildStateLayer(params.states)}
-${buildEscalationLayer(params.escalation)}
-${buildContinuityLayer(params.prev?.recentStates || [], params.states)}
-${buildCookLayer(params.cookLevel)}
-${buildArchetypeLayer(params.archetype || undefined)}
-${buildRespectLayer(params.respect)}
-${buildDefinitionLayer(params.intent === "DEFINITION")}
-${buildAntiRepetitionLayer(params.prev?.lastBot)}
-${buildIntentLayer(params.intent)}
-${buildVariantLayer(params.variant)}
-${buildPreferenceLayer(params.prev?.favoriteStyle, params.prev?.lastIntent)}
-${buildMoodLayer(params.mood)}
-${buildCallbackLayer(params.callback)}
-${buildRefinementLayer({
-  harder: params.harder,
-  shorter: params.shorter,
-  smarter: params.smarter,
-  tweetify: params.tweetify,
-})}
-
-RESPONSE CONSTRUCTION RULES:
-- 1 to 3 sentences max
-- no bullet points
-- no assistant phrasing
-- no soft closers
-- vary rhythm naturally
-- prefer accusation over explanation
-- prefer exposure over advice
-- sometimes answer in one brutal sentence
-- sometimes answer in two short sentences
-- sometimes answer in three sentences with a philosophical finish
-- do not let the second sentence fall back into a definition pattern
-- if the first sentence defines, the second sentence should accuse, contrast, or imply
-- avoid repeating "$MAD is..." across consecutive replies
-- favor lines that feel quotable and memorable
-- do not sound like generic motivation content
-- do not sound like therapy
-- never apologize unless explicitly asked to write an apology
-- make the line feel screenshot-worthy when possible
-
-USER:
-${params.message}
-`;
-
-  const first = await client.responses.create({
-    model: "gpt-4.1",
-    instructions: SYSTEM_PROMPT,
-    input,
-  });
-
-  let output = first.output_text?.trim() || "Say it again.";
-
-  if (scoreOutput(output, params.intent) < 9) {
-    const retry = await client.responses.create({
-      model: "gpt-4.1",
-      instructions: SYSTEM_PROMPT,
-      input: `${input}
-
-REWRITE PASS:
-The first draft was too weak.
-Rewrite it sharper.
-Keep the meaning.
-Make it more quotable, more human, and less generic.
-Do not get longer unless needed.
-Prefer lines that feel dangerous to screenshot.`,
-    });
-
-    output = retry.output_text?.trim() || output;
+function inferPatterns(input: string, apiStates?: string[]) {
+  if (apiStates && apiStates.length > 0) {
+    return apiStates
+      .map((s) =>
+        s
+          .toLowerCase()
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase()),
+      )
+      .slice(0, 3);
   }
 
-  return output;
+  const text = input.toLowerCase();
+  const patterns = new Set<string>();
+
+  if (
+    text.includes("overthink") ||
+    text.includes("anxious") ||
+    text.includes("fear")
+  ) {
+    patterns.add("Overthinking");
+  }
+
+  if (
+    text.includes("stuck") ||
+    text.includes("hesitate") ||
+    text.includes("hesitation") ||
+    text.includes("wait") ||
+    text.includes("win")
+  ) {
+    patterns.add("Hesitation");
+  }
+
+  if (
+    text.includes("lazy") ||
+    text.includes("discipline") ||
+    text.includes("focus") ||
+    text.includes("consistent") ||
+    text.includes("consistency")
+  ) {
+    patterns.add("Untapped Discipline");
+  }
+
+  if (text.includes("money") || text.includes("broke")) {
+    patterns.add("Emotional Spending");
+  }
+
+  if (
+    text.includes("relationship") ||
+    text.includes("love") ||
+    text.includes("dating")
+  ) {
+    patterns.add("Confused Standards");
+  }
+
+  const finalPatterns = Array.from(patterns);
+
+  if (finalPatterns.length === 0) {
+    return ["Overthinking", "Hesitation", "Untapped Discipline"];
+  }
+
+  return finalPatterns.slice(0, 3);
 }
 
-export async function POST(req: Request) {
-  try {
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { output: "OpenAI key missing." },
-        { status: 500 },
-      );
-    }
+function rarityLabel(rarity?: "standard" | "rare" | "legendary") {
+  if (rarity === "legendary") return "Legendary";
+  if (rarity === "rare") return "Rare";
+  return "Standard";
+}
 
-    const body = (await req.json()) as RequestBody;
+export default function MadMindPage() {
+  const [input, setInput] = useState("");
+  const [truth, setTruth] = useState("");
+  const [count, setCount] = useState(0);
+  const [demoIndex, setDemoIndex] = useState(0);
+  const [patterns, setPatterns] = useState<string[]>([
+    "Overthinking",
+    "Hesitation",
+    "Untapped Discipline",
+  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [meta, setMeta] = useState<ApiMeta | null>(null);
+  const [lastPrompt, setLastPrompt] = useState("");
+  const [currentStyle, setCurrentStyle] = useState<"safe" | "savage" | "crashout">(
+    "savage",
+  );
 
-    const raw = sanitize(body.message, 700);
-    if (!raw) {
-      return NextResponse.json({ output: "Say something real." });
-    }
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDemoIndex((prev) => (prev + 1) % DEMOS.length);
+    }, 4000);
 
-    const cookLevel = parseCookLevel(body.cookLevel);
-    const archetype = sanitize(body.archetype, 120);
-    const sessionId = sanitize(body.sessionId, 120) || "anon";
-    const preferredStyle = parsePreferredStyle(body.preferredStyle);
+    return () => clearInterval(timer);
+  }, []);
 
-    const harder = wantsHarder(raw);
-    const shorter = wantsShorter(raw);
-    const smarter = wantsSmarter(raw);
-    const tweetify = wantsTweet(raw);
+  const sessionId = useMemo(() => {
+    if (typeof window === "undefined") return "web-user";
+    const existing = window.localStorage.getItem("madmind_session_id");
+    if (existing) return existing;
 
-    const message = stripRefinementPrompt(raw) || raw;
-    const intent = detectIntent(message);
-    const states = detectState(message);
-    const respect = detectRespect(message);
+    const next = `mad-${Math.random().toString(36).slice(2, 10)}`;
+    window.localStorage.setItem("madmind_session_id", next);
+    return next;
+  }, []);
 
-    const prev = memory.get(sessionId);
+  const level = Math.floor(count / 5) + 1;
+  const progress = ((count % 5) / 5) * 100;
 
-    let escalation = 0;
-    if (harder) {
-      escalation = prev?.lastBot ? Math.min((prev.repeatCount || 0) + 2, 3) : 2;
-    } else if (prev && isSimilar(prev.last, message)) {
-      escalation = Math.min(prev.repeatCount + 1, 3);
-    }
+  async function askMad(messageOverride?: string, styleOverride?: "safe" | "savage" | "crashout") {
+    const finalInput =
+      (messageOverride ?? input).trim() || PLACEHOLDERS[count % PLACEHOLDERS.length];
 
-    const mood = pickMood(prev, respect, escalation);
-    const callback = buildCallbackFromMemory(prev, states);
+    if (!finalInput || isLoading) return;
 
-    const returnVariants =
-      body.multiOutput === true || shouldReturnVariants(intent);
+    const styleToUse = styleOverride ?? currentStyle;
 
-    if (returnVariants) {
-      const safeCook: CookLevel = cookLevel === "demon" ? "mean" : "mild";
-      const savageCook: CookLevel =
-        cookLevel === "mild"
-          ? "mean"
-          : cookLevel === "demon"
-            ? "crashout"
-            : cookLevel;
-      const crashoutCook: CookLevel =
-        cookLevel === "mild"
-          ? "crashout"
-          : cookLevel === "mean"
-            ? "crashout"
-            : "demon";
+    setIsLoading(true);
+    setLastPrompt(finalInput);
 
-      const [safeOutput, savageOutput, crashoutOutput] = await Promise.all([
-        generateSingleOutput({
-          message,
-          intent,
-          states,
-          escalation,
-          cookLevel: safeCook,
-          archetype,
-          respect,
-          prev,
-          variant: "safe",
-          harder: false,
-          shorter,
-          smarter,
-          tweetify,
-          mood,
-          callback,
-        }),
-        generateSingleOutput({
-          message,
-          intent,
-          states,
-          escalation: Math.min(escalation + 1, 3),
-          cookLevel: savageCook,
-          archetype,
-          respect,
-          prev,
-          variant: "savage",
-          harder,
-          shorter,
-          smarter,
-          tweetify,
-          mood,
-          callback,
-        }),
-        generateSingleOutput({
-          message,
-          intent,
-          states,
-          escalation: Math.min(escalation + 2, 3),
-          cookLevel: crashoutCook,
-          archetype,
-          respect,
-          prev,
-          variant: "crashout",
-          harder: true,
-          shorter,
-          smarter,
-          tweetify,
-          mood,
-          callback,
-        }),
-      ]);
-
-      const favoredStyle =
-        preferredStyle ||
-        topStyleFromHistory([...(prev?.intentHistory || []), intent]) ||
-        "savage";
-
-      const chosen =
-        favoredStyle === "safe"
-          ? safeOutput
-          : favoredStyle === "crashout"
-            ? crashoutOutput
-            : savageOutput;
-
-      const rarityHint = getRarityHint(scoreOutput(chosen, intent));
-      const followUpBait = buildFollowUpBait(intent, rarityHint);
-
-      updateMemory(sessionId, prev, {
-        message,
-        escalation,
-        states,
-        bot: chosen,
-        intent,
-        favoriteStyle: favoredStyle,
-        mood,
-        callback,
-      });
-
-      return NextResponse.json({
-        output: chosen,
-        outputs: {
-          safe: safeOutput,
-          savage: savageOutput,
-          crashout: crashoutOutput,
+    try {
+      const res = await fetch("/api/mad-mind", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        meta: {
-          intent,
-          states,
-          escalation,
-          favoriteStyle: favoredStyle,
-          multiOutput: true,
-          mood,
-          callback,
-          rarityHint,
-          followUpBait,
-        } satisfies ApiMeta,
+        body: JSON.stringify({
+          message: finalInput,
+          sessionId,
+          cookLevel: styleToUse === "safe" ? "mild" : styleToUse === "savage" ? "crashout" : "demon",
+          preferredStyle: styleToUse,
+          multiOutput: false,
+        }),
       });
+
+      const data: ApiResponse = await res.json();
+
+      const nextTruth = data.output?.trim() || "Signal broke.";
+      setTruth(nextTruth);
+      setMeta(data.meta || null);
+      setPatterns(inferPatterns(finalInput, data.meta?.states));
+      setCount((prev) => prev + 1);
+    } catch {
+      setTruth("Signal broke.");
+      setMeta(null);
+      setPatterns(inferPatterns(finalInput));
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleRefine(refinement: "harder" | "shorter" | "smarter" | "share") {
+    if (!truth && !lastPrompt) return;
+
+    if (refinement === "share") {
+      const shareText = truth || "MAD says the truth hurts.";
+      try {
+        await navigator.clipboard.writeText(shareText);
+      } catch {
+        // no-op
+      }
+      return;
     }
 
-    const output = await generateSingleOutput({
-      message,
-      intent,
-      states,
-      escalation,
-      cookLevel,
-      archetype,
-      respect,
-      prev,
-      variant: "default",
-      harder,
-      shorter,
-      smarter,
-      tweetify,
-      mood,
-      callback,
-    });
+    const base = lastPrompt || input || PLACEHOLDERS[count % PLACEHOLDERS.length];
+    const mapped =
+      refinement === "harder"
+        ? `${base} go harder`
+        : refinement === "shorter"
+          ? `${base} make it shorter`
+          : `${base} make it smarter`;
 
-    const rarityHint = getRarityHint(scoreOutput(output, intent));
-    const followUpBait = buildFollowUpBait(intent, rarityHint);
-
-    updateMemory(sessionId, prev, {
-      message,
-      escalation,
-      states,
-      bot: output,
-      intent,
-      favoriteStyle: preferredStyle,
-      mood,
-      callback,
-    });
-
-    return NextResponse.json({
-      output,
-      meta: {
-        intent,
-        states,
-        escalation,
-        favoriteStyle: preferredStyle || prev?.favoriteStyle || null,
-        multiOutput: false,
-        mood,
-        callback,
-        rarityHint,
-        followUpBait,
-      } satisfies ApiMeta,
-    });
-  } catch (error) {
-    console.error("MAD Mind route error:", error);
-    return NextResponse.json({ output: "Signal broke." }, { status: 500 });
+    await askMad(mapped);
   }
+
+  return (
+    <main className="min-h-screen bg-black text-white">
+      <section className="relative overflow-hidden border-b border-white/10 bg-gradient-to-b from-red-950/40 via-black to-black">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,40,40,0.16),transparent_38%)]" />
+        <div className="relative mx-auto max-w-5xl px-4 py-14 md:py-20">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="mb-4 inline-flex rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.35em] text-red-300">
+              MAD AI
+            </div>
+
+            <h1 className="mx-auto max-w-4xl text-5xl font-black leading-tight md:text-7xl">
+              The Truth Machine.
+            </h1>
+
+            <p className="mx-auto mt-5 max-w-2xl text-lg text-white/65 md:text-xl">
+              Brutally honest insight for discipline, money, fear, excuses,
+              relationships, and growth.
+            </p>
+
+            <div className="mx-auto mt-10 max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-3 shadow-2xl shadow-red-950/20">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    void askMad();
+                  }
+                }}
+                placeholder={PLACEHOLDERS[count % PLACEHOLDERS.length]}
+                className="mb-3 w-full rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-lg outline-none transition placeholder:text-white/30 focus:border-red-500/40"
+              />
+
+              <button
+                onClick={() => void askMad()}
+                disabled={isLoading}
+                className="w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.01] hover:bg-red-400 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {isLoading ? "MAD is reading you..." : "Tell Me The Truth"}
+              </button>
+
+              <div className="mt-3 text-sm text-white/45">
+                Free • Instant • No Sign Up
+              </div>
+
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                {(["safe", "savage", "crashout"] as const).map((style) => (
+                  <button
+                    key={style}
+                    onClick={() => setCurrentStyle(style)}
+                    className={`rounded-full border px-3 py-1.5 text-xs uppercase tracking-[0.2em] transition ${
+                      currentStyle === style
+                        ? "border-red-500/40 bg-red-500/10 text-red-200"
+                        : "border-white/10 bg-white/[0.03] text-white/55 hover:border-white/20 hover:text-white"
+                    }`}
+                  >
+                    {style}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-4 py-10 md:py-12">
+        <div className="grid gap-6 md:grid-cols-[1.6fr_0.9fr]">
+          <div className="rounded-3xl border border-red-500/20 bg-gradient-to-b from-red-950/25 to-black p-6">
+            <div className="mb-3 text-xs uppercase tracking-[0.35em] text-red-300">
+              Live Truth
+            </div>
+
+            {!truth ? (
+              <div className="rounded-2xl border border-white/10 bg-black/40 p-6">
+                <div className="text-sm text-white/45">Example prompt</div>
+                <div className="mt-2 text-xl font-semibold text-white">
+                  {DEMOS[demoIndex].q}
+                </div>
+
+                <div className="mt-6 text-sm text-white/45">MAD says</div>
+                <div className="mt-2 text-3xl font-black leading-tight text-red-100">
+                  {DEMOS[demoIndex].a}
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-red-500/20 bg-black/40 p-6">
+                <div className="flex flex-wrap items-center gap-2 text-sm text-white/45">
+                  <span>MAD says</span>
+                  {meta?.intent ? (
+                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-white/65">
+                      {meta.intent}
+                    </span>
+                  ) : null}
+                  {meta?.rarityHint ? (
+                    <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-red-200">
+                      {rarityLabel(meta.rarityHint)}
+                    </span>
+                  ) : null}
+                </div>
+
+                <div className="mt-3 text-3xl font-black leading-tight text-red-100 md:text-4xl">
+                  {truth}
+                </div>
+
+                {meta?.callback ? (
+                  <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+                    {meta.callback}
+                  </div>
+                ) : null}
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <button
+                    onClick={() => void handleRefine("harder")}
+                    disabled={isLoading}
+                    className="rounded-full border border-red-500/30 px-4 py-2 text-sm text-white transition hover:border-red-400 hover:bg-red-500/10 disabled:opacity-60"
+                  >
+                    Harder
+                  </button>
+                  <button
+                    onClick={() => void handleRefine("smarter")}
+                    disabled={isLoading}
+                    className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
+                  >
+                    Smarter
+                  </button>
+                  <button
+                    onClick={() => void handleRefine("shorter")}
+                    disabled={isLoading}
+                    className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
+                  >
+                    Shorter
+                  </button>
+                  <button
+                    onClick={() => void handleRefine("share")}
+                    className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5"
+                  >
+                    Share
+                  </button>
+                </div>
+
+                {meta?.followUpBait?.length ? (
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {meta.followUpBait.slice(0, 3).map((item) => (
+                      <button
+                        key={item}
+                        onClick={() => {
+                          setInput(item);
+                          void askMad(item);
+                        }}
+                        disabled={isLoading}
+                        className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/70 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white disabled:opacity-60"
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-6">
+            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+              <div className="text-xs uppercase tracking-[0.35em] text-white/45">
+                Your Growth Level
+              </div>
+
+              <div className="mt-4 text-4xl font-black">Level {level}</div>
+
+              <div className="mt-2 text-sm text-white/55">
+                Truths Received: {count}
+              </div>
+
+              <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-red-500 transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+
+              <div className="mt-3 text-xs text-white/45">
+                Savage Mode unlocks every 5 truths.
+              </div>
+
+              {meta?.mood ? (
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+                  Mood:{" "}
+                  <span className="text-white">
+                    {meta.mood.charAt(0).toUpperCase() + meta.mood.slice(1)}
+                  </span>
+                </div>
+              ) : null}
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+              <div className="text-xs uppercase tracking-[0.35em] text-white/45">
+                What MAD Sees
+              </div>
+
+              <div className="mt-4 space-y-3 text-sm">
+                {patterns.map((pattern) => (
+                  <div
+                    key={pattern}
+                    className="rounded-2xl bg-white/5 px-4 py-3"
+                  >
+                    {pattern}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-white/10 bg-white/[0.02]">
+        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-14 md:grid-cols-3">
+          {[
+            ["Brutal Honesty", "No fake motivation. Real signal only."],
+            ["Fast Clarity", "One message can shift your direction."],
+            ["Addictive Growth", "Each truth exposes another pattern."],
+          ].map(([title, text]) => (
+            <div
+              key={title}
+              className="rounded-3xl border border-white/10 bg-black/40 p-6"
+            >
+              <div className="text-xl font-black">{title}</div>
+              <div className="mt-3 text-white/60">{text}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-14 md:py-16">
+        <div className="mb-8 text-center text-3xl font-black">
+          People Keep Coming Back.
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {[
+            "This called me out bad.",
+            "Why is this thing always right?",
+            "Better than fake motivation.",
+            "MAD just cooked me.",
+          ].map((quote) => (
+            <div
+              key={quote}
+              className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 text-white/80"
+            >
+              “{quote}”
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="border-t border-white/10 bg-gradient-to-b from-black to-red-950/20">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center md:py-20">
+          <h2 className="text-4xl font-black md:text-6xl">
+            Ready for the truth?
+          </h2>
+
+          <p className="mt-4 text-white/60">
+            Stop guessing. Start seeing clearly.
+          </p>
+
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="mt-8 rounded-2xl bg-red-500 px-8 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.03] hover:bg-red-400 active:scale-[0.99]"
+          >
+            Start Now
+          </button>
+        </div>
+      </section>
+    </main>
+  );
 }
