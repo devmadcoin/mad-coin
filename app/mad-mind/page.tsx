@@ -30,6 +30,8 @@ type ApiResponse = {
   error?: string;
 };
 
+type StyleMode = "safe" | "savage" | "crashout";
+
 const DEMOS: Demo[] = [
   {
     q: "Why can’t I stay consistent?",
@@ -61,7 +63,7 @@ const PLACEHOLDERS = [
   "Why am I lazy lately?",
 ];
 
-function inferPatterns(input: string, apiStates?: string[]) {
+function inferPatterns(input: string, apiStates?: string[]): string[] {
   if (apiStates && apiStates.length > 0) {
     return apiStates
       .map((s) =>
@@ -117,27 +119,24 @@ function inferPatterns(input: string, apiStates?: string[]) {
   }
 
   const finalPatterns = Array.from(patterns);
-
-  if (finalPatterns.length === 0) {
-    return ["Overthinking", "Hesitation", "Untapped Discipline"];
-  }
-
-  return finalPatterns.slice(0, 3);
+  return finalPatterns.length > 0
+    ? finalPatterns.slice(0, 3)
+    : ["Overthinking", "Hesitation", "Untapped Discipline"];
 }
 
-function rarityLabel(rarity?: "standard" | "rare" | "legendary") {
+function rarityLabel(rarity?: "standard" | "rare" | "legendary"): string {
   if (rarity === "legendary") return "Legendary";
   if (rarity === "rare") return "Rare";
   return "Standard";
 }
 
-function getCookLevel(style: "safe" | "savage" | "crashout") {
+function getCookLevel(style: StyleMode): "mild" | "crashout" | "demon" {
   if (style === "safe") return "mild";
   if (style === "crashout") return "demon";
   return "crashout";
 }
 
-function getOrCreateSessionId() {
+function getOrCreateSessionId(): string {
   if (typeof window === "undefined") return "web-user";
 
   const existing = window.localStorage.getItem("madmind_session_id");
@@ -148,34 +147,41 @@ function getOrCreateSessionId() {
   return next;
 }
 
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export default function MadMindPage() {
-  const [input, setInput] = useState("");
-  const [truth, setTruth] = useState("");
-  const [count, setCount] = useState(0);
-  const [demoIndex, setDemoIndex] = useState(0);
+  const [input, setInput] = useState<string>("");
+  const [truth, setTruth] = useState<string>("");
+  const [count, setCount] = useState<number>(0);
+  const [demoIndex, setDemoIndex] = useState<number>(0);
   const [patterns, setPatterns] = useState<string[]>([
     "Overthinking",
     "Hesitation",
     "Untapped Discipline",
   ]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [meta, setMeta] = useState<ApiMeta | null>(null);
-  const [lastPrompt, setLastPrompt] = useState("");
-  const [currentStyle, setCurrentStyle] = useState<
-    "safe" | "savage" | "crashout"
-  >("savage");
-  const [sessionId, setSessionId] = useState("web-user");
+  const [lastPrompt, setLastPrompt] = useState<string>("");
+  const [currentStyle, setCurrentStyle] = useState<StyleMode>("savage");
+  const [sessionId, setSessionId] = useState<string>("web-user");
 
   useEffect(() => {
     setSessionId(getOrCreateSessionId());
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const timer = window.setInterval(() => {
       setDemoIndex((prev) => (prev + 1) % DEMOS.length);
     }, 4000);
 
-    return () => clearInterval(timer);
+    return () => window.clearInterval(timer);
   }, []);
 
   const level = Math.floor(count / 5) + 1;
@@ -183,8 +189,8 @@ export default function MadMindPage() {
 
   async function askMad(
     messageOverride?: string,
-    styleOverride?: "safe" | "savage" | "crashout",
-  ) {
+    styleOverride?: StyleMode,
+  ): Promise<void> {
     const finalInput =
       (messageOverride ?? input).trim() ||
       PLACEHOLDERS[count % PLACEHOLDERS.length];
@@ -221,11 +227,10 @@ export default function MadMindPage() {
 
       if (!res.ok) {
         const errorMessage =
-          data?.output ||
-          data?.error ||
-          `Request failed (${res.status})`;
+          data?.output || data?.error || `Request failed (${res.status})`;
+
         setTruth(errorMessage);
-        setMeta(data?.meta || null);
+        setMeta(data?.meta ?? null);
         setPatterns(inferPatterns(finalInput, data?.meta?.states));
         return;
       }
@@ -234,7 +239,7 @@ export default function MadMindPage() {
         data?.output?.trim() || data?.error || "Signal broke.";
 
       setTruth(nextTruth);
-      setMeta(data?.meta || null);
+      setMeta(data?.meta ?? null);
       setPatterns(inferPatterns(finalInput, data?.meta?.states));
       setCount((prev) => prev + 1);
     } catch {
@@ -248,22 +253,12 @@ export default function MadMindPage() {
 
   async function handleRefine(
     refinement: "harder" | "shorter" | "smarter" | "share",
-  ) {
+  ): Promise<void> {
     if (!truth && !lastPrompt) return;
 
     if (refinement === "share") {
       const shareText = truth || "MAD says the truth hurts.";
-
-      try {
-        if (navigator.share) {
-          await navigator.share({ text: shareText });
-          return;
-        }
-
-        await navigator.clipboard.writeText(shareText);
-      } catch {
-        // no-op
-      }
+      await copyToClipboard(shareText);
       return;
     }
 
@@ -329,6 +324,7 @@ export default function MadMindPage() {
                   <button
                     key={style}
                     onClick={() => setCurrentStyle(style)}
+                    type="button"
                     className={`rounded-full border px-3 py-1.5 text-xs uppercase tracking-[0.2em] transition ${
                       currentStyle === style
                         ? "border-red-500/40 bg-red-500/10 text-red-200"
@@ -393,6 +389,7 @@ export default function MadMindPage() {
                   <button
                     onClick={() => void handleRefine("harder")}
                     disabled={isLoading}
+                    type="button"
                     className="rounded-full border border-red-500/30 px-4 py-2 text-sm text-white transition hover:border-red-400 hover:bg-red-500/10 disabled:opacity-60"
                   >
                     Harder
@@ -400,6 +397,7 @@ export default function MadMindPage() {
                   <button
                     onClick={() => void handleRefine("smarter")}
                     disabled={isLoading}
+                    type="button"
                     className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
                   >
                     Smarter
@@ -407,12 +405,14 @@ export default function MadMindPage() {
                   <button
                     onClick={() => void handleRefine("shorter")}
                     disabled={isLoading}
+                    type="button"
                     className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
                   >
                     Shorter
                   </button>
                   <button
                     onClick={() => void handleRefine("share")}
+                    type="button"
                     className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5"
                   >
                     Share
@@ -429,6 +429,7 @@ export default function MadMindPage() {
                           void askMad(item);
                         }}
                         disabled={isLoading}
+                        type="button"
                         className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/70 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white disabled:opacity-60"
                       >
                         {item}
@@ -545,6 +546,7 @@ export default function MadMindPage() {
 
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            type="button"
             className="mt-8 rounded-2xl bg-red-500 px-8 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.03] hover:bg-red-400 active:scale-[0.99]"
           >
             Start Now
