@@ -57,10 +57,6 @@ const merchItems = [
   },
 ] as const;
 
-function cn(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
-
 function PillLink({
   href,
   children,
@@ -187,20 +183,10 @@ export default function MerchPage() {
                 brand into real life.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-8">
                 <PillLink href="#products" primary>
                   Shop Now
                 </PillLink>
-                <PillLink href={LINKS.home}>Back Home</PillLink>
-                <PillLink href={LINKS.jupiter} external>
-                  Buy $MAD
-                </PillLink>
-              </div>
-
-              <div className="mt-10 grid gap-4 sm:grid-cols-3">
-                <InfoCard label="Category" value={<span>Merch</span>} />
-                <InfoCard label="Style" value={<span>Clean and bold</span>} />
-                <InfoCard label="Built For" value={<span>Holders and believers</span>} />
               </div>
             </div>
 
