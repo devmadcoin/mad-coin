@@ -26,6 +26,39 @@ const ART_FILES = [
   "YOU-WILL-BE-MAD.png",
 ] as const;
 
+const FORGE_SYSTEM_PARTS = [
+  {
+    title: "Base",
+    text: "Core character body used as the foundation layer.",
+    tone: "red",
+  },
+  {
+    title: "Background",
+    text: "Scene and energy layer behind the character.",
+    tone: "green",
+  },
+  {
+    title: "Eyes",
+    text: "Expression and attitude control for the face.",
+    tone: "default",
+  },
+  {
+    title: "Mouth",
+    text: "Emotion, mood, and personality shaping layer.",
+    tone: "default",
+  },
+  {
+    title: "Accessories",
+    text: "Extra identity pieces and collectible styling.",
+    tone: "red",
+  },
+  {
+    title: "Overlays",
+    text: "Final polish, effects, and visual enhancement.",
+    tone: "green",
+  },
+] as const;
+
 function cleanTitle(name: string) {
   return name.replace(".png", "").replaceAll("-", " ").toUpperCase();
 }
@@ -72,6 +105,30 @@ function Pill({
       )}
     >
       {children}
+    </div>
+  );
+}
+
+function ForgeSystemCard({
+  title,
+  text,
+  tone = "default",
+}: {
+  title: string;
+  text: string;
+  tone?: "default" | "red" | "green";
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-[1.2rem] border p-4",
+        tone === "red" && "border-red-500/20 bg-red-500/[0.04]",
+        tone === "green" && "border-emerald-400/20 bg-emerald-500/[0.04]",
+        tone === "default" && "border-white/10 bg-white/[0.03]",
+      )}
+    >
+      <p className="text-lg font-black text-white">{title}</p>
+      <p className="mt-2 text-sm leading-7 text-white/60">{text}</p>
     </div>
   );
 }
@@ -149,166 +206,94 @@ export default function MemesPage() {
         </SectionShell>
 
         <SectionShell className="mt-8 overflow-hidden p-0">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="p-6 sm:p-8 lg:p-10">
-              <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-                <div className="max-w-3xl">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/70">
-                    MAD FORGE
-                  </p>
+              <div className="max-w-3xl">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/70">
+                  MAD FORGE
+                </p>
 
-                  <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl lg:text-6xl">
-                    <span className="text-red-500">$MAD</span> Forge
-                  </h2>
+                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+                  <span className="text-red-500">$MAD</span> identity lab
+                </h2>
 
-                  <p className="mt-5 max-w-2xl text-base leading-8 text-white/68">
-                    Premium collectible identity concepts for the $MAD universe.
-                    Explore the next layer, shape new visual directions, and move
-                    deeper into the world before the next full expansion.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 xl:w-[320px] xl:grid-cols-1">
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.04] p-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
-                      Status
-                    </p>
-                    <p className="mt-2 text-xl font-black text-white">
-                      Prototype
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-white/55">
-                      Experimental concept phase
-                    </p>
-                  </div>
-
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.04] p-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
-                      Utility
-                    </p>
-                    <p className="mt-2 text-xl font-black text-white">
-                      Identity
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-white/55">
-                      Traits, style, culture
-                    </p>
-                  </div>
-
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.04] p-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
-                      Access
-                    </p>
-                    <p className="mt-2 text-xl font-black text-white">Open</p>
-                    <p className="mt-1 text-sm leading-6 text-white/55">
-                      Build and explore freely
-                    </p>
-                  </div>
-                </div>
+                <p className="mt-5 max-w-2xl text-base leading-8 text-white/68">
+                  Forge is a real asset system behind the $MAD collectible identity
+                  layer. It is built from actual folders and layered parts —
+                  backgrounds, bases, eyes, mouths, accessories, overlays, and a
+                  manifest that ties the system together.
+                </p>
               </div>
 
               <div className="mt-7 flex flex-wrap gap-3">
-                <Pill tone="red">Prototype Floor</Pill>
-                <Pill>Collectible Identity System</Pill>
-                <Pill>No Live Mint</Pill>
+                <Pill tone="red">Real Asset System</Pill>
+                <Pill tone="green">Layered Builder</Pill>
+                <Pill>Prototype Lab</Pill>
               </div>
 
-              <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="rounded-[1.5rem] border border-white/10 bg-black/25 p-5">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/42">
-                        Prototype Showcase
-                      </p>
-                      <h3 className="mt-3 text-3xl font-black leading-tight text-white">
-                        Premium collectible direction
-                      </h3>
-                    </div>
+              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {FORGE_SYSTEM_PARTS.map((item) => (
+                  <ForgeSystemCard
+                    key={item.title}
+                    title={item.title}
+                    text={item.text}
+                    tone={item.tone}
+                  />
+                ))}
+              </div>
 
-                    <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-red-200">
-                      Early Concept
-                    </div>
-                  </div>
-
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-[1.2rem] border border-white/10 bg-white/[0.03] p-4">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
-                        Floor Feel
-                      </p>
-                      <p className="mt-2 text-sm leading-7 text-white/60">
-                        Designed to feel like a premium collectible drop page,
-                        with rare identity and stronger visual direction.
-                      </p>
-                    </div>
-
-                    <div className="rounded-[1.2rem] border border-white/10 bg-white/[0.03] p-4">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
-                        What You Control
-                      </p>
-                      <p className="mt-2 text-sm leading-7 text-white/60">
-                        Backgrounds, faces, eyes, mouths, and accessories combine
-                        into more collectible-looking builds.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-6">
-                    <Link
-                      href="/forge"
-                      className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-7 py-4 text-sm font-black text-white shadow-[0_0_18px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
-                    >
-                      Open Full Forge →
-                    </Link>
-                  </div>
+              <div className="mt-8 grid gap-4 md:grid-cols-3">
+                <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.04] p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
+                    Status
+                  </p>
+                  <p className="mt-2 text-xl font-black text-white">Prototype</p>
+                  <p className="mt-1 text-sm leading-6 text-white/55">
+                    Live concept system
+                  </p>
                 </div>
 
-                <div className="rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-4 sm:p-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/42">
-                        Preview
-                      </p>
-                    </div>
-
-                    <div className="rounded-[1rem] border border-white/10 bg-black/25 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-                      Controls
-                    </div>
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-[1fr_auto] gap-4">
-                    <div className="relative min-h-[320px] overflow-hidden rounded-[1.5rem] border border-white/10 bg-black">
-                      <Image
-                        src="/memes/MAD-YOU-SIDELINED.png"
-                        alt="MAD Forge preview"
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 40vw"
-                        className="object-cover"
-                      />
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-                    </div>
-
-                    <div className="flex flex-col gap-3">
-                      {["Background", "Eyes", "Mouth", "Accessory"].map(
-                        (item) => (
-                          <div
-                            key={item}
-                            className="min-w-[108px] rounded-[1rem] border border-white/10 bg-black/25 p-3"
-                          >
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40">
-                              {item}
-                            </p>
-                            <div className="mt-3 flex items-center justify-between rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-black text-white/75">
-                              <span>1</span>
-                              <span>▼</span>
-                            </div>
-                          </div>
-                        ),
-                      )}
-                    </div>
-                  </div>
+                <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.04] p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
+                    Utility
+                  </p>
+                  <p className="mt-2 text-xl font-black text-white">Identity</p>
+                  <p className="mt-1 text-sm leading-6 text-white/55">
+                    Traits, style, culture
+                  </p>
                 </div>
+
+                <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.04] p-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
+                    Access
+                  </p>
+                  <p className="mt-2 text-xl font-black text-white">Open</p>
+                  <p className="mt-1 text-sm leading-6 text-white/55">
+                    Explore the full Forge
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <Link
+                  href="/forge"
+                  className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-7 py-4 text-sm font-black text-white shadow-[0_0_18px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
+                >
+                  Open Full Forge →
+                </Link>
               </div>
             </div>
 
-            <div className="hidden bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] lg:block" />
+            <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-full">
+              <Image
+                src="/memes/MAD-YOU-SIDELINED.png"
+                alt="MAD Forge concept preview"
+                fill
+                sizes="(max-width: 1024px) 100vw, 45vw"
+                className="object-cover"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+            </div>
           </div>
         </SectionShell>
 
