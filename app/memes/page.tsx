@@ -27,17 +27,62 @@ const ART_FILES = [
 ];
 
 function cleanTitle(name: string) {
-  return name
-    .replace(".png", "")
-    .replaceAll("-", " ")
-    .toUpperCase();
+  return name.replace(".png", "").replaceAll("-", " ").toUpperCase();
+}
+
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+function SectionShell({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section
+      className={cn(
+        "overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:rounded-[2rem]",
+        className,
+      )}
+    >
+      {children}
+    </section>
+  );
+}
+
+function Pill({
+  children,
+  tone = "default",
+}: {
+  children: React.ReactNode;
+  tone?: "default" | "red" | "green";
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em]",
+        tone === "red" && "border border-red-500/25 bg-red-500/10 text-red-200",
+        tone === "green" &&
+          "border border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
+        tone === "default" &&
+          "border border-white/10 bg-white/[0.04] text-white/70",
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
 export default function MemesPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.12),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.05),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
+
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-10">
+        <SectionShell className="p-6 sm:p-10">
           <p className="text-xs uppercase tracking-[0.34em] text-red-300/70">
             $MAD ART
           </p>
@@ -49,7 +94,74 @@ export default function MemesPage() {
           <p className="mt-5 max-w-3xl text-base leading-8 text-white/70 sm:text-lg">
             Posters. Memes. Identity. Chaos turned into visuals.
           </p>
-        </section>
+
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Pill tone="red">Official Art</Pill>
+            <Pill tone="green">Easy Download</Pill>
+            <Pill>Live Collection</Pill>
+          </div>
+        </SectionShell>
+
+        <SectionShell className="mt-8 p-6 sm:p-8 lg:p-10">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div className="max-w-3xl">
+              <p className="text-xs uppercase tracking-[0.34em] text-red-300/70">
+                FORGE
+              </p>
+
+              <h2 className="mt-4 text-3xl font-black sm:text-5xl">
+                Build the next layer of $MAD.
+              </h2>
+
+              <p className="mt-4 text-base leading-8 text-white/70">
+                More art. More identity. More collectible energy. Enter Forge to
+                move deeper into the $MAD world.
+              </p>
+            </div>
+
+            <Link
+              href="/forge"
+              className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-8 py-4 text-sm font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
+            >
+              Enter Forge →
+            </Link>
+          </div>
+        </SectionShell>
+
+        <SectionShell className="mt-8 overflow-hidden p-0">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-[540px]">
+              <Image
+                src="/memes/MAD-KINGS-ONLY.png"
+                alt="$MAD featured art"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                className="object-cover"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+            </div>
+
+            <div className="min-w-0 p-5 sm:p-8 lg:p-10">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-white/45">
+                Featured Piece
+              </p>
+
+              <h2 className="mt-4 break-words text-3xl font-black leading-[0.95] text-white sm:text-5xl">
+                Pressure.
+                <br />
+                Signal.
+                <br />
+                Identity.
+              </h2>
+
+              <p className="mt-5 max-w-xl break-words text-base leading-8 text-white/70">
+                The $MAD art world is built to be bold, sharable, and easy to
+                explore on mobile.
+              </p>
+            </div>
+          </div>
+        </SectionShell>
 
         <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {ART_FILES.map((file) => {
@@ -96,27 +208,6 @@ export default function MemesPage() {
               </div>
             );
           })}
-        </section>
-
-        <section className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-10">
-          <p className="text-xs uppercase tracking-[0.34em] text-red-300/70">
-            FORGE
-          </p>
-
-          <h2 className="mt-4 text-3xl font-black sm:text-5xl">
-            Build the next layer of $MAD.
-          </h2>
-
-          <p className="mt-4 max-w-3xl text-base leading-8 text-white/70">
-            More art. More identity. More collectible energy.
-          </p>
-
-          <Link
-            href="/forge"
-            className="mt-6 inline-flex rounded-full bg-red-500 px-8 py-4 text-sm font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
-          >
-            Enter Forge →
-          </Link>
         </section>
       </main>
     </div>
