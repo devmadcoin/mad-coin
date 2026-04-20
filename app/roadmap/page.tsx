@@ -33,7 +33,7 @@ function Shell({
     <section
       className={cn(
         "overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] shadow-[0_18px_60px_rgba(0,0,0,0.42)] backdrop-blur-xl",
-        className
+        className,
       )}
     >
       {children}
@@ -58,7 +58,7 @@ function StatusMiniCard({
         "rounded-[1.25rem] border p-4 transition duration-300 hover:-translate-y-0.5",
         tone === "green"
           ? "border-emerald-400/35 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.2),rgba(0,0,0,0.92))] shadow-[0_0_25px_rgba(16,185,129,0.12)]"
-          : "border-red-500/25 bg-[radial-gradient(circle_at_top_left,rgba(255,0,0,0.14),rgba(0,0,0,0.92))] shadow-[0_0_20px_rgba(255,0,0,0.08)]"
+          : "border-red-500/25 bg-[radial-gradient(circle_at_top_left,rgba(255,0,0,0.14),rgba(0,0,0,0.92))] shadow-[0_0_20px_rgba(255,0,0,0.08)]",
       )}
     >
       <div className="flex items-start justify-between gap-3">
@@ -71,7 +71,7 @@ function StatusMiniCard({
       <p
         className={cn(
           "mt-3 text-xl font-black leading-tight sm:text-2xl",
-          tone === "green" ? "text-emerald-300" : "text-red-100"
+          tone === "green" ? "text-emerald-300" : "text-red-100",
         )}
       >
         {value}
@@ -123,6 +123,23 @@ function CTASection() {
   );
 }
 
+function RiskNotice() {
+  return (
+    <Shell className="border-yellow-500/20 bg-[linear-gradient(180deg,rgba(255,208,0,0.05),rgba(255,208,0,0.02))] px-6 py-8 sm:px-10 sm:py-10">
+      <p className="text-center text-xs font-black uppercase tracking-[0.38em] text-yellow-300/85">
+        Risk Notice
+      </p>
+
+      <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-yellow-100/90 sm:text-xl">
+        $MAD is a meme coin and speculative digital asset. Nothing on this
+        website is financial advice or a guarantee of returns. Crypto is risky
+        and volatile. Never risk money you cannot afford to lose. Always do your
+        own research.
+      </p>
+    </Shell>
+  );
+}
+
 export default function RoadmapPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
@@ -145,6 +162,8 @@ export default function RoadmapPage() {
           <RoadmapPoster />
 
           <CTASection />
+
+          <RiskNotice />
         </div>
       </main>
     </div>
