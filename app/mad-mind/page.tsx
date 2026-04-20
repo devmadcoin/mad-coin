@@ -7,6 +7,29 @@ type Demo = {
   a: string;
 };
 
+type ApiMeta = {
+  intent?: string;
+  states?: string[];
+  escalation?: number;
+  favoriteStyle?: string | null;
+  multiOutput?: boolean;
+  mood?: string;
+  callback?: string | null;
+  rarityHint?: "standard" | "rare" | "legendary";
+  followUpBait?: string[];
+};
+
+type ApiResponse = {
+  output?: string;
+  outputs?: {
+    safe?: string;
+    savage?: string;
+    crashout?: string;
+  };
+  meta?: ApiMeta;
+  error?: string;
+};
+
 const DEMOS: Demo[] = [
   {
     q: "Why can’t I stay consistent?",
@@ -38,49 +61,26 @@ const PLACEHOLDERS = [
   "Why am I lazy lately?",
 ];
 
-function generateTruth(input: string) {
-  const text = input.toLowerCase();
-
-  if (text.includes("money") || text.includes("broke")) {
-    return "You treat money like emotion instead of strategy.";
+function inferPatterns(input: string, apiStates?: string[]) {
+  if (apiStates && apiStates.length > 0) {
+    return apiStates
+      .map((s) =>
+        s
+          .toLowerCase()
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase()),
+      )
+      .slice(0, 3);
   }
 
-  if (text.includes("lazy") || text.includes("discipline")) {
-    return "You don’t need motivation. You need rules.";
-  }
-
-  if (text.includes("focus")) {
-    return "Your attention is leaking into things that don’t matter.";
-  }
-
-  if (
-    text.includes("relationship") ||
-    text.includes("love") ||
-    text.includes("dating")
-  ) {
-    return "You keep asking for clarity from people who enjoy confusion.";
-  }
-
-  if (text.includes("fear") || text.includes("anxious") || text.includes("anxiety")) {
-    return "Your imagination is working harder than your courage.";
-  }
-
-  if (text.includes("overthink")) {
-    return "Overthinking is hesitation wearing intelligent clothes.";
-  }
-
-  if (text.includes("win") || text.includes("losing") || text.includes("lose")) {
-    return "You want the reward, but you still negotiate with the work.";
-  }
-
-  return "Your next level starts where your excuses end.";
-}
-
-function inferPatterns(input: string) {
   const text = input.toLowerCase();
   const patterns = new Set<string>();
 
-  if (text.includes("overthink") || text.includes("anxious") || text.includes("fear")) {
+  if (
+    text.includes("overthink") ||
+    text.includes("anxious") ||
+    text.includes("fear")
+  ) {
     patterns.add("Overthinking");
   }
 
@@ -108,7 +108,11 @@ function inferPatterns(input: string) {
     patterns.add("Emotional Spending");
   }
 
-  if (text.includes("relationship") || text.includes("love") || text.includes("dating")) {
+  if (
+    text.includes("relationship") ||
+    text.includes("love") ||
+    text.includes("dating")
+  ) {
     patterns.add("Confused Standards");
   }
 
@@ -121,16 +125,50 @@ function inferPatterns(input: string) {
   return finalPatterns.slice(0, 3);
 }
 
+function rarityLabel(rarity?: "standard" | "rare" | "legendary") {
+  if (rarity === "legendary") return "Legendary";
+  if (rarity === "rare") return "Rare";
+  return "Standard";
+}
+
+function getCookLevel(style: "safe" | "savage" | "crashout") {
+  if (style === "safe") return "mild";
+  if (style === "crashout") return "demon";
+  return "crashout";
+}
+
+function getOrCreateSessionId() {
+  if (typeof window === "undefined") return "web-user";
+
+  const existing = window.localStorage.getItem("madmind_session_id");
+  if (existing) return existing;
+
+  const next = `mad-${Math.random().toString(36).slice(2, 10)}`;
+  window.localStorage.setItem("madmind_session_id", next);
+  return next;
+}
+
 export default function MadMindPage() {
   const [input, setInput] = useState("");
   const [truth, setTruth] = useState("");
-  const [count, setCount] = useState(33);
+  const [count, setCount] = useState(0);
   const [demoIndex, setDemoIndex] = useState(0);
   const [patterns, setPatterns] = useState<string[]>([
     "Overthinking",
     "Hesitation",
     "Untapped Discipline",
   ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [meta, setMeta] = useState<ApiMeta | null>(null);
+  const [lastPrompt, setLastPrompt] = useState("");
+  const [currentStyle, setCurrentStyle] = useState<
+    "safe" | "savage" | "crashout"
+  >("savage");
+  const [sessionId, setSessionId] = useState("web-user");
+
+  useEffect(() => {
+    setSessionId(getOrCreateSessionId());
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -143,18 +181,107 @@ export default function MadMindPage() {
   const level = Math.floor(count / 5) + 1;
   const progress = ((count % 5) / 5) * 100;
 
-  function handleTruth() {
-    const finalInput = input.trim() || PLACEHOLDERS[count % PLACEHOLDERS.length];
-    const result = generateTruth(finalInput);
+  async function askMad(
+    messageOverride?: string,
+    styleOverride?: "safe" | "savage" | "crashout",
+  ) {
+    const finalInput =
+      (messageOverride ?? input).trim() ||
+      PLACEHOLDERS[count % PLACEHOLDERS.length];
 
-    setTruth(result);
-    setPatterns(inferPatterns(finalInput));
-    setCount((prev) => prev + 1);
+    if (!finalInput || isLoading) return;
+
+    const styleToUse = styleOverride ?? currentStyle;
+
+    setIsLoading(true);
+    setLastPrompt(finalInput);
+
+    try {
+      const res = await fetch("/api/mad-mind", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: finalInput,
+          sessionId,
+          cookLevel: getCookLevel(styleToUse),
+          preferredStyle: styleToUse,
+          multiOutput: false,
+        }),
+      });
+
+      let data: ApiResponse | null = null;
+
+      try {
+        data = (await res.json()) as ApiResponse;
+      } catch {
+        data = null;
+      }
+
+      if (!res.ok) {
+        const errorMessage =
+          data?.output ||
+          data?.error ||
+          `Request failed (${res.status})`;
+        setTruth(errorMessage);
+        setMeta(data?.meta || null);
+        setPatterns(inferPatterns(finalInput, data?.meta?.states));
+        return;
+      }
+
+      const nextTruth =
+        data?.output?.trim() || data?.error || "Signal broke.";
+
+      setTruth(nextTruth);
+      setMeta(data?.meta || null);
+      setPatterns(inferPatterns(finalInput, data?.meta?.states));
+      setCount((prev) => prev + 1);
+    } catch {
+      setTruth("Could not reach MAD.");
+      setMeta(null);
+      setPatterns(inferPatterns(finalInput));
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleRefine(
+    refinement: "harder" | "shorter" | "smarter" | "share",
+  ) {
+    if (!truth && !lastPrompt) return;
+
+    if (refinement === "share") {
+      const shareText = truth || "MAD says the truth hurts.";
+
+      try {
+        if (navigator.share) {
+          await navigator.share({ text: shareText });
+          return;
+        }
+
+        await navigator.clipboard.writeText(shareText);
+      } catch {
+        // no-op
+      }
+      return;
+    }
+
+    const base =
+      lastPrompt || input || PLACEHOLDERS[count % PLACEHOLDERS.length];
+
+    const mapped =
+      refinement === "harder"
+        ? `${base} go harder`
+        : refinement === "shorter"
+          ? `${base} make it shorter`
+          : `${base} make it smarter`;
+
+    await askMad(mapped);
   }
 
   return (
     <main className="min-h-screen bg-black text-white">
-      {/* HERO */}
       <section className="relative overflow-hidden border-b border-white/10 bg-gradient-to-b from-red-950/40 via-black to-black">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,40,40,0.16),transparent_38%)]" />
         <div className="relative mx-auto max-w-5xl px-4 py-14 md:py-20">
@@ -176,26 +303,47 @@ export default function MadMindPage() {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    void askMad();
+                  }
+                }}
                 placeholder={PLACEHOLDERS[count % PLACEHOLDERS.length]}
                 className="mb-3 w-full rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-lg outline-none transition placeholder:text-white/30 focus:border-red-500/40"
               />
 
               <button
-                onClick={handleTruth}
-                className="w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.01] hover:bg-red-400 active:scale-[0.99]"
+                onClick={() => void askMad()}
+                disabled={isLoading}
+                className="w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.01] hover:bg-red-400 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Tell Me The Truth
+                {isLoading ? "MAD is reading you..." : "Tell Me The Truth"}
               </button>
 
               <div className="mt-3 text-sm text-white/45">
                 Free • Instant • No Sign Up
+              </div>
+
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                {(["safe", "savage", "crashout"] as const).map((style) => (
+                  <button
+                    key={style}
+                    onClick={() => setCurrentStyle(style)}
+                    className={`rounded-full border px-3 py-1.5 text-xs uppercase tracking-[0.2em] transition ${
+                      currentStyle === style
+                        ? "border-red-500/40 bg-red-500/10 text-red-200"
+                        : "border-white/10 bg-white/[0.03] text-white/55 hover:border-white/20 hover:text-white"
+                    }`}
+                  >
+                    {style}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* RESULT */}
       <section className="mx-auto max-w-5xl px-4 py-10 md:py-12">
         <div className="grid gap-6 md:grid-cols-[1.6fr_0.9fr]">
           <div className="rounded-3xl border border-red-500/20 bg-gradient-to-b from-red-950/25 to-black p-6">
@@ -217,25 +365,77 @@ export default function MadMindPage() {
               </div>
             ) : (
               <div className="rounded-2xl border border-red-500/20 bg-black/40 p-6">
-                <div className="text-sm text-white/45">MAD says</div>
-                <div className="mt-3 text-3xl font-black leading-tight text-red-100 md:text-4xl">
+                <div className="flex flex-wrap items-center gap-2 text-sm text-white/45">
+                  <span>MAD says</span>
+                  {meta?.intent ? (
+                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-white/65">
+                      {meta.intent}
+                    </span>
+                  ) : null}
+                  {meta?.rarityHint ? (
+                    <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-red-200">
+                      {rarityLabel(meta.rarityHint)}
+                    </span>
+                  ) : null}
+                </div>
+
+                <div className="mt-3 whitespace-pre-wrap text-3xl font-black leading-tight text-red-100 md:text-4xl">
                   {truth}
                 </div>
 
+                {meta?.callback ? (
+                  <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+                    {meta.callback}
+                  </div>
+                ) : null}
+
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <button className="rounded-full border border-red-500/30 px-4 py-2 text-sm text-white transition hover:border-red-400 hover:bg-red-500/10">
+                  <button
+                    onClick={() => void handleRefine("harder")}
+                    disabled={isLoading}
+                    className="rounded-full border border-red-500/30 px-4 py-2 text-sm text-white transition hover:border-red-400 hover:bg-red-500/10 disabled:opacity-60"
+                  >
                     Harder
                   </button>
-                  <button className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5">
+                  <button
+                    onClick={() => void handleRefine("smarter")}
+                    disabled={isLoading}
+                    className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
+                  >
                     Smarter
                   </button>
-                  <button className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5">
+                  <button
+                    onClick={() => void handleRefine("shorter")}
+                    disabled={isLoading}
+                    className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
+                  >
                     Shorter
                   </button>
-                  <button className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5">
+                  <button
+                    onClick={() => void handleRefine("share")}
+                    className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5"
+                  >
                     Share
                   </button>
                 </div>
+
+                {meta?.followUpBait?.length ? (
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {meta.followUpBait.slice(0, 3).map((item) => (
+                      <button
+                        key={item}
+                        onClick={() => {
+                          setInput(item);
+                          void askMad(item);
+                        }}
+                        disabled={isLoading}
+                        className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/70 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white disabled:opacity-60"
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             )}
           </div>
@@ -262,6 +462,15 @@ export default function MadMindPage() {
               <div className="mt-3 text-xs text-white/45">
                 Savage Mode unlocks every 5 truths.
               </div>
+
+              {meta?.mood ? (
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+                  Mood:{" "}
+                  <span className="text-white">
+                    {meta.mood.charAt(0).toUpperCase() + meta.mood.slice(1)}
+                  </span>
+                </div>
+              ) : null}
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
@@ -284,7 +493,6 @@ export default function MadMindPage() {
         </div>
       </section>
 
-      {/* WHY IT HITS */}
       <section className="border-y border-white/10 bg-white/[0.02]">
         <div className="mx-auto grid max-w-6xl gap-6 px-4 py-14 md:grid-cols-3">
           {[
@@ -303,7 +511,6 @@ export default function MadMindPage() {
         </div>
       </section>
 
-      {/* SOCIAL PROOF */}
       <section className="mx-auto max-w-6xl px-4 py-14 md:py-16">
         <div className="mb-8 text-center text-3xl font-black">
           People Keep Coming Back.
@@ -326,7 +533,6 @@ export default function MadMindPage() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="border-t border-white/10 bg-gradient-to-b from-black to-red-950/20">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center md:py-20">
           <h2 className="text-4xl font-black md:text-6xl">
