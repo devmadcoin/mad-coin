@@ -121,6 +121,23 @@ function ArtCard({
   );
 }
 
+function RiskNotice() {
+  return (
+    <SectionShell className="mt-10 border-yellow-500/20 bg-[linear-gradient(180deg,rgba(255,208,0,0.05),rgba(255,208,0,0.02))] px-6 py-8 sm:px-10 sm:py-10">
+      <p className="text-center text-xs font-black uppercase tracking-[0.38em] text-yellow-300/85">
+        Risk Notice
+      </p>
+
+      <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-yellow-100/90 sm:text-xl">
+        $MAD is a meme coin and speculative digital asset. Nothing on this
+        website is financial advice or a guarantee of returns. Crypto is risky
+        and volatile. Never risk money you cannot afford to lose. Always do your
+        own research.
+      </p>
+    </SectionShell>
+  );
+}
+
 export default function MemesPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white">
@@ -193,6 +210,8 @@ export default function MemesPage() {
             <ArtCard key={file} file={file} />
           ))}
         </section>
+
+        <RiskNotice />
       </main>
     </div>
   );
