@@ -230,25 +230,6 @@ function ExchangeLogoCard({
   );
 }
 
-function FloatingBadge({
-  className,
-  label,
-}: {
-  className: string;
-  label: string;
-}) {
-  return (
-    <div
-      className={[
-        "pointer-events-none absolute hidden rounded-full border border-white/12 bg-black/60 px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-white/72 shadow-[0_10px_24px_rgba(0,0,0,0.28)] backdrop-blur-xl lg:flex",
-        className,
-      ].join(" ")}
-    >
-      {label}
-    </div>
-  );
-}
-
 function HeroGlobe() {
   return (
     <div className="pointer-events-none absolute right-[-120px] top-[-90px] hidden h-[520px] w-[520px] overflow-hidden rounded-full opacity-20 lg:block">
@@ -267,6 +248,78 @@ function HeroGlobe() {
 
       <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/20 to-transparent" />
       <div className="absolute inset-0 rounded-full border border-red-500/8" />
+    </div>
+  );
+}
+
+function HeroOrbPanel() {
+  return (
+    <div className="relative rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+      <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+      <div className="absolute inset-0 rounded-[34px] border border-white/5" />
+
+      <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_50%_35%,rgba(255,0,0,0.16),rgba(0,0,0,0)_38%),linear-gradient(180deg,#050505,#020202)]">
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-x-0 top-[18%] h-px bg-white/10" />
+          <div className="absolute inset-x-0 top-[34%] h-px bg-white/10" />
+          <div className="absolute inset-x-0 top-[50%] h-px bg-white/10" />
+          <div className="absolute inset-x-0 top-[66%] h-px bg-white/10" />
+          <div className="absolute inset-x-0 top-[82%] h-px bg-white/10" />
+
+          <div className="absolute inset-y-0 left-[18%] w-px bg-white/10" />
+          <div className="absolute inset-y-0 left-[38%] w-px bg-white/10" />
+          <div className="absolute inset-y-0 left-[58%] w-px bg-white/10" />
+          <div className="absolute inset-y-0 left-[78%] w-px bg-white/10" />
+        </div>
+
+        <div className="absolute inset-0 opacity-60">
+          <div className="absolute left-0 top-[58%] h-[2px] w-[20%] rotate-[-8deg] bg-gradient-to-r from-transparent via-red-400/0 to-red-400/0" />
+          <div className="absolute bottom-[22%] left-[8%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent blur-[1px]" />
+        </div>
+
+        <div className="relative flex aspect-[16/10] items-center justify-center">
+          <div className="absolute h-[280px] w-[280px] rounded-full border border-red-500/20" />
+          <div className="absolute h-[210px] w-[210px] rounded-full border border-white/10" />
+          <div className="absolute h-[160px] w-[160px] rounded-full bg-[radial-gradient(circle_at_35%_30%,#ff6b6b_0%,#ff2a2a_30%,#d01010_55%,#8a0000_100%)] shadow-[0_0_80px_rgba(255,0,0,0.35),inset_-16px_-20px_28px_rgba(0,0,0,0.38),inset_18px_18px_30px_rgba(255,255,255,0.12)]" />
+          <div className="absolute h-[176px] w-[176px] rounded-full border border-white/10" />
+          <div className="absolute left-1/2 top-1/2 h-[240px] w-[240px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-500/12" />
+          <div className="absolute left-1/2 top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-500/8" />
+
+          <div className="absolute left-1/2 top-1/2 h-[12px] w-[44px] -translate-x-1/2 translate-y-[8px] rounded-full bg-black/35 blur-md" />
+
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.34em] text-white/60">
+              <span className="inline-block h-2 w-2 rounded-full bg-red-500 shadow-[0_0_12px_rgba(255,0,0,0.8)]" />
+              Live Signal
+            </div>
+            <p className="mt-4 text-center text-4xl font-black tracking-[-0.05em] text-white sm:text-5xl">
+              $MAD
+            </p>
+            <p className="mt-2 text-center text-sm uppercase tracking-[0.28em] text-white/45">
+              Control • Discipline • Conviction
+            </p>
+          </div>
+
+          <div className="absolute left-5 top-5 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-white/60">
+            Live Build
+          </div>
+          <div className="absolute right-5 top-5 rounded-full border border-emerald-400/20 bg-black/55 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-emerald-300/70">
+            Wealth Signal
+          </div>
+          <div className="absolute bottom-5 left-5 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-white/60">
+            Public Project
+          </div>
+          <div className="absolute bottom-5 right-5 rounded-full border border-red-500/20 bg-black/55 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-red-300/70">
+            Burn Logic
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <MetricCard label="Community" value="GROWING" />
+        <MetricCard label="Supply" value="SHRINKING" />
+        <MetricCard label="Build" value="DAILY" />
+      </div>
     </div>
   );
 }
@@ -310,10 +363,10 @@ export default function Home() {
           <div className="relative z-10 grid gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">
-                CONTROL THE CHAOS
+                STAY $MAD • CONTROL THE CHAOS
               </p>
 
-              <h1 className="mt-6 text-[3.15rem] font-black leading-[0.88] tracking-[-0.06em] sm:text-[5rem] lg:text-[6.2rem]">
+              <h1 className="mt-6 text-[3.15rem] font-black leading-[0.9] tracking-[-0.06em] sm:text-[5rem] lg:text-[6.1rem]">
                 CONTROL
                 <br />
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">
@@ -325,22 +378,20 @@ export default function Home() {
                 <span className="text-green-400 drop-shadow-[0_0_18px_rgba(34,197,94,0.35)]">
                   WEALTH.
                 </span>
-                <br />
-                STAY{" "}
-                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">
-                  $MAD.
-                </span>
               </h1>
+
+              <h2 className="mt-3 text-[1.35rem] font-black uppercase tracking-[0.16em] text-white/92 sm:text-[1.55rem]">
+                Stay $MAD.
+              </h2>
 
               <div className="mt-6 max-w-xl">
                 <p className="text-base font-semibold text-white/76">
-                  Most people react. Winners stay calm and build.
+                  Built for people who stay calm while others panic.
                 </p>
 
                 <p className="mt-3 text-sm leading-7 text-white/58 sm:text-base">
-                  $MAD is a meme coin with real energy behind it: culture,
-                  discipline, community, and public building. While others panic,
-                  we create.
+                  Culture. Scarcity. Discipline. Community. $MAD is a meme coin
+                  with real identity and real energy behind it.
                 </p>
               </div>
 
@@ -348,8 +399,8 @@ export default function Home() {
                 <Btn href={LINKS.buy} primary>
                   Buy $MAD
                 </Btn>
-                <Btn href="/mad-mind">Enter MAD Mind</Btn>
                 <Btn href={LINKS.chart}>View Chart</Btn>
+                <Btn href={LINKS.telegram}>Join Telegram</Btn>
               </div>
 
               <div className="mt-5 flex flex-wrap gap-2">
@@ -384,36 +435,20 @@ export default function Home() {
             </div>
 
             <div className="relative">
-              <FloatingBadge className="-left-6 top-8" label="Game" />
-              <FloatingBadge className="right-4 top-4" label="AI" />
-              <FloatingBadge className="-left-10 bottom-24" label="Art" />
-              <FloatingBadge className="right-0 bottom-10" label="Burn" />
-              <FloatingBadge className="left-20 -top-5" label="Merch" />
-              <FloatingBadge className="right-14 top-1/2" label="Chart" />
-
-              <div className="relative rounded-[34px] border border-white/10 bg-white/[0.03] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
-                <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
-
-                <div className="overflow-hidden rounded-[28px] border border-white/10 bg-black">
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="auto"
-                    className="aspect-[16/10] w-full object-cover"
-                  >
-                    <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-                  </video>
-                </div>
-
-                <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                  <MetricCard label="Community" value="GROWING" />
-                  <MetricCard label="Supply" value="SHRINKING" />
-                  <MetricCard label="Build" value="DAILY" />
-                </div>
-              </div>
+              <HeroOrbPanel />
             </div>
+          </div>
+        </section>
+
+        <section className="mt-4 overflow-hidden rounded-[26px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] px-5 py-4 shadow-[0_12px_36px_rgba(0,0,0,0.22)]">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-center text-[11px] font-bold uppercase tracking-[0.28em] text-white/45 sm:text-[12px]">
+            <span>Live Community</span>
+            <span className="hidden text-white/20 sm:inline">•</span>
+            <span>Daily Build</span>
+            <span className="hidden text-white/20 sm:inline">•</span>
+            <span>Limited Supply</span>
+            <span className="hidden text-white/20 sm:inline">•</span>
+            <span>Real Products</span>
           </div>
         </section>
 
