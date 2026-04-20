@@ -22,8 +22,7 @@ const merchItems = [
   {
     name: "MAD Stickers",
     subtitle: "Retail classic",
-    description:
-      "The everyday signal piece. Clean, bold, and easy to add anywhere the culture needs a little more rage.",
+    description: "Clean, bold, and easy to place anywhere.",
     href: LINKS.retailSticker,
     src: "/stickers/Mad-Sticker-logo.png",
     badge: "Classic",
@@ -31,8 +30,7 @@ const merchItems = [
   {
     name: "Card Wrap",
     subtitle: "Premium embossed",
-    description:
-      "A sharper premium look with texture and attitude. Built for holders who want the flex to feel elevated.",
+    description: "A sharper premium look with texture and attitude.",
     href: LINKS.premiumCard,
     src: "/stickers/Mad-Premium-Embossed-Card-Wrap.png",
     badge: "Premium",
@@ -40,8 +38,7 @@ const merchItems = [
   {
     name: "Rich Wrap",
     subtitle: "Luxury variant",
-    description:
-      "The louder luxury version. Same $MAD energy, pushed into a more high-end lane.",
+    description: "The louder luxury version with richer flex energy.",
     href: LINKS.richPremiumCard,
     src: "/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png",
     badge: "Luxury",
@@ -49,13 +46,16 @@ const merchItems = [
   {
     name: "Peeker",
     subtitle: "Window flex",
-    description:
-      "A smaller but high-impact piece made to catch eyes fast. Minimal space, maximum signal.",
+    description: "Small piece. Fast attention. Big signal.",
     href: LINKS.peeker,
     src: "/stickers/Mad-Peeker.png",
     badge: "Fan Favorite",
   },
 ] as const;
+
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
 
 function PillLink({
   href,
@@ -113,9 +113,11 @@ function SectionHeader({
       <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
         {eyebrow}
       </p>
+
       <h2 className="mt-3 text-3xl font-black leading-[0.95] tracking-tight text-white sm:text-4xl md:text-5xl">
         {title}
       </h2>
+
       {body ? (
         <p
           className={[
@@ -165,7 +167,7 @@ export default function MerchPage() {
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/25 to-transparent" />
 
               <p className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/42">
-                RETAIL SIGNAL
+                MERCH
               </p>
 
               <h1 className="mt-5 max-w-4xl text-[2.5rem] font-black leading-[0.9] tracking-[-0.04em] text-white sm:text-[4rem] lg:text-[5.2rem]">
@@ -177,33 +179,24 @@ export default function MerchPage() {
               </h1>
 
               <p className="mt-6 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                A storefront for the people carrying the signal. Same culture.
-                Same chaos. Now in physical form.
+                Stickers, wraps, and signal pieces for the people carrying the
+                brand into real life.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <PillLink href="#products" primary>
-                  Shop the Drop
+                  Shop Now
                 </PillLink>
-                <PillLink href={LINKS.home}>Back to Home</PillLink>
+                <PillLink href={LINKS.home}>Back Home</PillLink>
                 <PillLink href={LINKS.jupiter} external>
                   Buy $MAD
                 </PillLink>
               </div>
 
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
-                <InfoCard
-                  label="Category"
-                  value={<span>Merch / Signal Pieces</span>}
-                />
-                <InfoCard
-                  label="Aesthetic"
-                  value={<span>Luxury meme chaos</span>}
-                />
-                <InfoCard
-                  label="Built For"
-                  value={<span>Holders, collectors, believers</span>}
-                />
+                <InfoCard label="Category" value={<span>Merch</span>} />
+                <InfoCard label="Style" value={<span>Clean and bold</span>} />
+                <InfoCard label="Built For" value={<span>Holders and believers</span>} />
               </div>
             </div>
 
@@ -238,8 +231,8 @@ export default function MerchPage() {
                         </p>
 
                         <p className="mt-3 max-w-md text-center text-sm leading-7 text-white/58">
-                          The premium flex lane for the people who want their
-                          $MAD to look louder, cleaner, and more collectible.
+                          The premium flex piece for the people who want their
+                          $MAD to look louder and cleaner.
                         </p>
                       </div>
                     </div>
@@ -253,75 +246,14 @@ export default function MerchPage() {
         <section className="mt-5 overflow-hidden rounded-[26px] border border-white/10 bg-black/25 py-3">
           <div className="mad-marquee whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.28em] text-red-200/65">
             <span className="mx-6">
-              MERCH FOR THE BELIEVERS • COLLECT THE SIGNAL • RETAIL CHAOS IN
-              PHYSICAL FORM
+              MERCH FOR THE BELIEVERS • COLLECT THE SIGNAL • WEAR THE CULTURE
             </span>
             <span className="mx-6">
-              MERCH FOR THE BELIEVERS • COLLECT THE SIGNAL • RETAIL CHAOS IN
-              PHYSICAL FORM
+              MERCH FOR THE BELIEVERS • COLLECT THE SIGNAL • WEAR THE CULTURE
             </span>
             <span className="mx-6">
-              MERCH FOR THE BELIEVERS • COLLECT THE SIGNAL • RETAIL CHAOS IN
-              PHYSICAL FORM
+              MERCH FOR THE BELIEVERS • COLLECT THE SIGNAL • WEAR THE CULTURE
             </span>
-          </div>
-        </section>
-
-        <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
-          <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-                Apparel Drop
-              </p>
-
-              <h2 className="mt-4 text-3xl font-black leading-[0.95] tracking-tight text-white sm:text-4xl md:text-5xl">
-                <span className="text-red-500">$MAD</span> isn’t just held.
-                <br />
-                It’s worn.
-              </h2>
-
-              <p className="mt-5 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
-                The first official apparel pieces are on the way. Built for the
-                people who want to carry the signal beyond the screen and into
-                real life.
-              </p>
-
-              <div className="mt-6 flex flex-wrap gap-3">
-                <span className="inline-flex items-center rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-red-300">
-                  Coming Soon
-                </span>
-
-                <PillLink href="#products">Shop Current Merch</PillLink>
-              </div>
-            </div>
-
-            <div className="relative overflow-hidden rounded-[30px] border border-white/10">
-              <div className="relative h-[420px] w-full sm:h-[560px]">
-                <Image
-                  src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
-                  alt="$MAD apparel coming soon"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-
-                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/55">
-                      Drop 001
-                    </p>
-                    <p className="mt-2 text-2xl font-black text-white sm:text-3xl">
-                      MAD RICH.
-                    </p>
-                  </div>
-
-                  <span className="shrink-0 rounded-full border border-white/15 bg-black/45 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/85 backdrop-blur">
-                    Apparel Preview
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -337,7 +269,7 @@ export default function MerchPage() {
                   The <span className="text-red-500">$MAD</span> drop.
                 </>
               }
-              body="Every piece below opens the product directly, but now the experience starts inside your own world first."
+              body="Pick a piece and open the product directly."
             />
             <div className="shrink-0">
               <PillLink href={LINKS.home}>Return Home</PillLink>
@@ -388,6 +320,62 @@ export default function MerchPage() {
         </section>
 
         <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
+          <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
+                Apparel
+              </p>
+
+              <h2 className="mt-4 text-3xl font-black leading-[0.95] tracking-tight text-white sm:text-4xl md:text-5xl">
+                <span className="text-red-500">$MAD</span> isn’t just held.
+                <br />
+                It’s worn.
+              </h2>
+
+              <p className="mt-5 max-w-xl text-sm leading-7 text-white/62 sm:text-base">
+                The first apparel pieces are on the way.
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                <span className="inline-flex items-center rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-red-300">
+                  Coming Soon
+                </span>
+
+                <PillLink href="#products">Shop Current Merch</PillLink>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-[30px] border border-white/10">
+              <div className="relative h-[420px] w-full sm:h-[560px]">
+                <Image
+                  src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
+                  alt="$MAD apparel coming soon"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+
+                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/55">
+                      Drop 001
+                    </p>
+                    <p className="mt-2 text-2xl font-black text-white sm:text-3xl">
+                      MAD RICH.
+                    </p>
+                  </div>
+
+                  <span className="shrink-0 rounded-full border border-white/15 bg-black/45 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/85 backdrop-blur">
+                    Apparel Preview
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-12 rounded-[38px] border border-white/10 bg-black/28 px-5 py-10 shadow-[0_18px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:px-8 sm:py-12 lg:px-10">
           <SectionHeader
             eyebrow="Built for the Culture"
             title={
@@ -397,49 +385,31 @@ export default function MerchPage() {
                 It’s <span className="text-red-500">$MAD</span> you can wear.
               </>
             }
-            body="Every piece is designed to carry the signal beyond the chart. Clean, bold, collectible, and made for the people who want the brand to live in the real world."
+            body="Clean, bold, collectible pieces built to carry the signal into the real world."
             align="center"
           />
 
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             <InfoCard
               label="Signal"
-              value={
-                <span>
-                  Clean pieces that instantly read as part of the $MAD universe.
-                </span>
-              }
+              value={<span>Instantly reads as part of the $MAD universe.</span>}
             />
             <InfoCard
               label="Style"
-              value={
-                <span>
-                  Premium presentation with a sharp, minimal, high-contrast
-                  look.
-                </span>
-              }
+              value={<span>Sharp, minimal, high-contrast presentation.</span>}
             />
             <InfoCard
               label="Collectible"
-              value={
-                <span>
-                  Built to feel like more than merch—something worth keeping.
-                </span>
-              }
+              value={<span>Built to feel worth keeping.</span>}
             />
           </div>
         </section>
 
         <footer className="mt-14 border-t border-white/10 pt-8 text-center">
           <p className="mx-auto max-w-3xl text-xs leading-7 text-white/42 sm:text-sm sm:leading-8">
-            $MAD is not about value.
+            $MAD is not just a token.
             <br />
-            It’s about belief.
-            <br />
-            <br />
-            This page is the retail layer for the culture.
-            <br />
-            Collect what carries the signal.
+            It’s a signal.
             <br />
             <br />
             © 2026 $MAD // Built on Solana
