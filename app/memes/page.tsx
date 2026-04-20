@@ -26,39 +26,6 @@ const ART_FILES = [
   "YOU-WILL-BE-MAD.png",
 ] as const;
 
-const FORGE_SYSTEM_PARTS = [
-  {
-    title: "Base",
-    text: "Core character body used as the foundation layer.",
-    tone: "red",
-  },
-  {
-    title: "Background",
-    text: "Scene and energy layer behind the character.",
-    tone: "green",
-  },
-  {
-    title: "Eyes",
-    text: "Expression and attitude control for the face.",
-    tone: "default",
-  },
-  {
-    title: "Mouth",
-    text: "Emotion, mood, and personality shaping layer.",
-    tone: "default",
-  },
-  {
-    title: "Accessories",
-    text: "Extra identity pieces and collectible styling.",
-    tone: "red",
-  },
-  {
-    title: "Overlays",
-    text: "Final polish, effects, and visual enhancement.",
-    tone: "green",
-  },
-] as const;
-
 function cleanTitle(name: string) {
   return name.replace(".png", "").replaceAll("-", " ").toUpperCase();
 }
@@ -109,26 +76,58 @@ function Pill({
   );
 }
 
-function ForgeSystemCard({
+function StatCard({
+  eyebrow,
+  value,
+  text,
+}: {
+  eyebrow: string;
+  value: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-[1.2rem] border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
+        {eyebrow}
+      </p>
+      <p className="mt-2 text-xl font-black text-white">{value}</p>
+      <p className="mt-1 text-sm leading-6 text-white/55">{text}</p>
+    </div>
+  );
+}
+
+function ForgeInfoCard({
   title,
   text,
-  tone = "default",
 }: {
   title: string;
   text: string;
-  tone?: "default" | "red" | "green";
 }) {
   return (
-    <div
-      className={cn(
-        "rounded-[1.2rem] border p-4",
-        tone === "red" && "border-red-500/20 bg-red-500/[0.04]",
-        tone === "green" && "border-emerald-400/20 bg-emerald-500/[0.04]",
-        tone === "default" && "border-white/10 bg-white/[0.03]",
-      )}
-    >
-      <p className="text-lg font-black text-white">{title}</p>
+    <div className="rounded-[1.2rem] border border-white/10 bg-white/[0.03] p-4">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
+        {title}
+      </p>
       <p className="mt-2 text-sm leading-7 text-white/60">{text}</p>
+    </div>
+  );
+}
+
+function ForgeControl({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="min-w-[110px] rounded-[1rem] border border-white/10 bg-black/25 p-3">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40">
+        {label}
+      </p>
+      <div className="mt-3 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-black text-white/75">
+        {value}
+      </div>
     </div>
   );
 }
@@ -201,99 +200,172 @@ export default function MemesPage() {
           <div className="mt-7 flex flex-wrap gap-3">
             <Pill tone="red">Official Art</Pill>
             <Pill tone="green">Easy Download</Pill>
-            <Pill>Live Collection</Pill>
+            <Pill>Forge Built In</Pill>
           </div>
         </SectionShell>
 
         <SectionShell className="mt-8 overflow-hidden p-0">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr]">
             <div className="p-6 sm:p-8 lg:p-10">
-              <div className="max-w-3xl">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/70">
-                  MAD FORGE
-                </p>
+              <div className="grid gap-6 xl:grid-cols-[1fr_auto] xl:items-start">
+                <div className="max-w-3xl">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-red-200/70">
+                    NFT PROTOTYPE LAB
+                  </p>
 
-                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl lg:text-6xl">
-                  <span className="text-red-500">$MAD</span> identity lab
-                </h2>
+                  <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+                    <span className="text-red-500">$MAD</span> Forge Prototype
+                  </h2>
 
-                <p className="mt-5 max-w-2xl text-base leading-8 text-white/68">
-                  Forge is a real asset system behind the $MAD collectible identity
-                  layer. It is built from actual folders and layered parts —
-                  backgrounds, bases, eyes, mouths, accessories, overlays, and a
-                  manifest that ties the system together.
-                </p>
+                  <p className="mt-5 max-w-2xl text-base leading-8 text-white/68">
+                    Premium collectible identity concepts for the $MAD universe.
+                    Explore the prototype floor, preview combinations, and move
+                    deeper into the next visual layer of the brand.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 xl:w-[320px] xl:grid-cols-1">
+                  <StatCard
+                    eyebrow="Status"
+                    value="Prototype"
+                    text="Experimental concept phase"
+                  />
+                  <StatCard
+                    eyebrow="Utility"
+                    value="Identity"
+                    text="Traits, style, culture"
+                  />
+                  <StatCard
+                    eyebrow="Access"
+                    value="Open"
+                    text="Build and explore freely"
+                  />
+                </div>
               </div>
 
               <div className="mt-7 flex flex-wrap gap-3">
-                <Pill tone="red">Real Asset System</Pill>
-                <Pill tone="green">Layered Builder</Pill>
-                <Pill>Prototype Lab</Pill>
+                <Pill tone="red">Prototype Floor</Pill>
+                <Pill>Collectible Identity System</Pill>
+                <Pill>No Live Mint</Pill>
               </div>
 
-              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {FORGE_SYSTEM_PARTS.map((item) => (
-                  <ForgeSystemCard
-                    key={item.title}
-                    title={item.title}
-                    text={item.text}
-                    tone={item.tone}
-                  />
-                ))}
-              </div>
+              <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[0.86fr_1.14fr]">
+                <div className="rounded-[1.5rem] border border-white/10 bg-black/25 p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/42">
+                        Prototype Showcase
+                      </p>
+                      <h3 className="mt-3 text-3xl font-black leading-tight text-white">
+                        Premium collectible direction
+                      </h3>
+                    </div>
 
-              <div className="mt-8 grid gap-4 md:grid-cols-3">
-                <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.04] p-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
-                    Status
-                  </p>
-                  <p className="mt-2 text-xl font-black text-white">Prototype</p>
-                  <p className="mt-1 text-sm leading-6 text-white/55">
-                    Live concept system
-                  </p>
+                    <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-red-200">
+                      Early Concept
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid gap-3">
+                    <ForgeInfoCard
+                      title="Floor Feel"
+                      text="Designed to feel like a premium collectible drop page, with rare identity energy and stronger visual direction."
+                    />
+                    <ForgeInfoCard
+                      title="What You Control"
+                      text="Backgrounds, bases, eyes, mouths, accessories, and overlays combine into a collectible-style build system."
+                    />
+                  </div>
+
+                  <div className="mt-6">
+                    <a
+                      href="/forge"
+                      className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-7 py-4 text-sm font-black text-white shadow-[0_0_18px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
+                    >
+                      Open Full Forge →
+                    </a>
+                  </div>
                 </div>
 
-                <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.04] p-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
-                    Utility
-                  </p>
-                  <p className="mt-2 text-xl font-black text-white">Identity</p>
-                  <p className="mt-1 text-sm leading-6 text-white/55">
-                    Traits, style, culture
-                  </p>
-                </div>
+                <div className="rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-4 sm:p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/42">
+                      Preview
+                    </p>
 
-                <div className="rounded-[1.3rem] border border-white/10 bg-white/[0.04] p-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/38">
-                    Access
-                  </p>
-                  <p className="mt-2 text-xl font-black text-white">Open</p>
-                  <p className="mt-1 text-sm leading-6 text-white/55">
-                    Explore the full Forge
-                  </p>
-                </div>
-              </div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/42">
+                      Controls
+                    </p>
+                  </div>
 
-              <div className="mt-8">
-                <Link
-                  href="/forge"
-                  className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-7 py-4 text-sm font-black text-white shadow-[0_0_18px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
-                >
-                  Open Full Forge →
-                </Link>
+                  <div className="mt-4 grid grid-cols-[1fr_auto] gap-4">
+                    <div className="relative min-h-[340px] overflow-hidden rounded-[1.5rem] border border-white/10 bg-black">
+                      <div className="absolute inset-0">
+                        <Image
+                          src="/pfp/bg/redclouds.png"
+                          alt="Forge background"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 40vw"
+                          className="object-cover"
+                        />
+                      </div>
+
+                      <div className="absolute inset-0">
+                        <Image
+                          src="/pfp/base/base-red.png"
+                          alt="Forge base"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 40vw"
+                          className="object-contain"
+                        />
+                      </div>
+
+                      <div className="absolute inset-0">
+                        <Image
+                          src="/pfp/eyes/cartoon/legendary/cartoon-legendary-fire.png"
+                          alt="Forge eyes"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 40vw"
+                          className="object-contain"
+                        />
+                      </div>
+
+                      <div className="absolute inset-0">
+                        <Image
+                          src="/pfp/mouth/mad-grin.png"
+                          alt="Forge mouth"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 40vw"
+                          className="object-contain"
+                        />
+                      </div>
+
+                      <div className="absolute inset-0">
+                        <Image
+                          src="/pfp/accessories/cartoon/legendary/cartoon-legendary-crown.png"
+                          alt="Forge accessory"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 40vw"
+                          className="object-contain"
+                        />
+                      </div>
+
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                      <ForgeControl label="Background" value="redclouds" />
+                      <ForgeControl label="Base" value="base-red" />
+                      <ForgeControl label="Eyes" value="fire" />
+                      <ForgeControl label="Mouth" value="mad-grin" />
+                      <ForgeControl label="Accessory" value="crown" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-full">
-              <Image
-                src="/memes/MAD-YOU-SIDELINED.png"
-                alt="MAD Forge concept preview"
-                fill
-                sizes="(max-width: 1024px) 100vw, 45vw"
-                className="object-cover"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-            </div>
+            <div className="hidden xl:block bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.12),transparent_35%),linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))]" />
           </div>
         </SectionShell>
 
