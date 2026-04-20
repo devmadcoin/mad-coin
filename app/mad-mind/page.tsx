@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Demo = {
   q: string;
@@ -57,11 +57,11 @@ const DEMOS: Demo[] = [
 ];
 
 const PLACEHOLDERS = [
-  "What’s messing you up right now?",
+  "What truth are you avoiding right now?",
   "Why am I stuck?",
-  "Why can’t I focus?",
+  "Why do I keep hesitating?",
   "Why do I overthink everything?",
-  "Why am I lazy lately?",
+  "What’s my real problem?",
 ];
 
 function inferPatterns(input: string, apiStates?: string[]): string[] {
@@ -149,23 +149,26 @@ function getOrCreateSessionId(): string {
   return next;
 }
 
-async function shareOrCopy(text: string): Promise<void> {
+async function shareOrCopy(text: string): Promise<boolean> {
   try {
     if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
       await navigator.share({ text });
-      return;
+      return true;
     }
   } catch {
-    // fall through to clipboard
+    // fall through
   }
 
   try {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       await navigator.clipboard.writeText(text);
+      return true;
     }
   } catch {
     // no-op
   }
+
+  return false;
 }
 
 export default function MadMindPage() {
@@ -183,6 +186,7 @@ export default function MadMindPage() {
   const [lastPrompt, setLastPrompt] = useState<string>("");
   const [currentStyle, setCurrentStyle] = useState<StyleMode>("savage");
   const [sessionId, setSessionId] = useState<string>("web-user");
+  const [shareMessage, setShareMessage] = useState<string>("");
 
   useEffect(() => {
     setSessionId(getOrCreateSessionId());
@@ -196,8 +200,22 @@ export default function MadMindPage() {
     return () => window.clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    if (!shareMessage) return;
+
+    const timer = window.setTimeout(() => {
+      setShareMessage("");
+    }, 1800);
+
+    return () => window.clearTimeout(timer);
+  }, [shareMessage]);
+
   const level = Math.floor(count / 5) + 1;
   const progress = ((count % 5) / 5) * 100;
+
+  const livePrompt = useMemo(() => {
+    return lastPrompt || input || PLACEHOLDERS[count % PLACEHOLDERS.length];
+  }, [lastPrompt, input, count]);
 
   async function askMad(
     messageOverride?: string,
@@ -213,6 +231,7 @@ export default function MadMindPage() {
 
     setIsLoading(true);
     setLastPrompt(finalInput);
+    setShareMessage("");
 
     try {
       const response = await fetch("/api/mad-mind", {
@@ -267,12 +286,12 @@ export default function MadMindPage() {
     if (!truth && !lastPrompt) return;
 
     if (refinement === "share") {
-      await shareOrCopy(truth || "MAD says the truth hurts.");
+      const didShare = await shareOrCopy(truth || "MAD says the truth hurts.");
+      setShareMessage(didShare ? "Copied." : "Could not share.");
       return;
     }
 
-    const base =
-      lastPrompt || input || PLACEHOLDERS[count % PLACEHOLDERS.length];
+    const base = livePrompt;
 
     const mapped =
       refinement === "harder"
@@ -322,11 +341,11 @@ export default function MadMindPage() {
                 disabled={isLoading}
                 className="w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.01] hover:bg-red-400 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isLoading ? "MAD is reading you..." : "Tell Me The Truth"}
+                {isLoading ? "MAD is reading you..." : "Tell Me The MAD Truth"}
               </button>
 
               <div className="mt-3 text-sm text-white/45">
-                Free • Instant • No Sign Up
+                Brutal • Instant • No Sign Up
               </div>
 
               <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -368,6 +387,10 @@ export default function MadMindPage() {
                 <div className="mt-2 text-3xl font-black leading-tight text-red-100">
                   {DEMOS[demoIndex].a}
                 </div>
+
+                <div className="mt-6 text-sm text-white/35">
+                  Ask what others avoid.
+                </div>
               </div>
             ) : (
               <div className="rounded-2xl border border-red-500/20 bg-black/40 p-6">
@@ -394,6 +417,13 @@ export default function MadMindPage() {
                     {meta.callback}
                   </div>
                 ) : null}
+
+                <div className="mt-3 text-xs uppercase tracking-[0.18em] text-white/30">
+                  Prompt
+                </div>
+                <div className="mt-1 text-sm text-white/55">
+                  {livePrompt}
+                </div>
 
                 <div className="mt-6 flex flex-wrap gap-3">
                   <button
@@ -428,6 +458,10 @@ export default function MadMindPage() {
                     Share
                   </button>
                 </div>
+
+                {shareMessage ? (
+                  <div className="mt-3 text-sm text-red-200">{shareMessage}</div>
+                ) : null}
 
                 {meta?.followUpBait?.length ? (
                   <div className="mt-5 flex flex-wrap gap-2">
@@ -547,7 +581,7 @@ export default function MadMindPage() {
       <section className="border-t border-white/10 bg-gradient-to-b from-black to-red-950/20">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center md:py-20">
           <h2 className="text-4xl font-black md:text-6xl">
-            Ready for the truth?
+            Ready for the MAD truth?
           </h2>
 
           <p className="mt-4 text-white/60">
@@ -559,7 +593,7 @@ export default function MadMindPage() {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="mt-8 rounded-2xl bg-red-500 px-8 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.03] hover:bg-red-400 active:scale-[0.99]"
           >
-            Start Now
+            Ask MAD
           </button>
         </div>
       </section>
