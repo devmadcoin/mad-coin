@@ -35,34 +35,23 @@ function Btn({
 }) {
   const external = href.startsWith("http");
 
+  const className = [
+    "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-black transition duration-300",
+    primary
+      ? "bg-red-500 text-white shadow-[0_12px_30px_rgba(239,68,68,0.28)] hover:scale-[1.02] hover:bg-red-400"
+      : "border border-white/10 bg-white/[0.04] text-white hover:scale-[1.02] hover:border-white/20 hover:bg-white/[0.08]",
+  ].join(" ");
+
   if (!external) {
     return (
-      <Link
-        href={href}
-        className={[
-          "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-black transition duration-300",
-          primary
-            ? "bg-red-500 text-white hover:scale-[1.02] hover:bg-red-400"
-            : "border border-white/10 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]",
-        ].join(" ")}
-      >
+      <Link href={href} className={className}>
         {children}
       </Link>
     );
   }
 
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className={[
-        "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-black transition duration-300",
-        primary
-          ? "bg-red-500 text-white hover:scale-[1.02] hover:bg-red-400"
-          : "border border-white/10 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]",
-      ].join(" ")}
-    >
+    <a href={href} target="_blank" rel="noreferrer" className={className}>
       {children}
     </a>
   );
@@ -113,11 +102,33 @@ function MetricCard({
   value: string;
 }) {
   return (
-    <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+    <div className="rounded-[24px] border border-white/10 bg-white/[0.035] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
       <p className="text-2xl font-black text-white">{value}</p>
       <p className="mt-1 text-[11px] uppercase tracking-[0.24em] text-white/42">
         {label}
       </p>
+    </div>
+  );
+}
+
+function WhyCard({
+  eyebrow,
+  title,
+  text,
+}: {
+  eyebrow: string;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+      <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-red-300/70">
+        {eyebrow}
+      </p>
+      <h3 className="mt-3 text-2xl font-black leading-tight text-white">
+        {title}
+      </h3>
+      <p className="mt-3 text-sm leading-7 text-white/62">{text}</p>
     </div>
   );
 }
@@ -136,7 +147,7 @@ function ArtCampaignCard({
   return (
     <div
       className={[
-        "group relative overflow-hidden rounded-[28px] border min-h-[220px] transition duration-300 hover:scale-[1.01]",
+        "group relative min-h-[220px] overflow-hidden rounded-[28px] border transition duration-300 hover:scale-[1.01]",
         accent === "red" && "border-red-500/20",
         accent === "green" && "border-emerald-400/20",
         accent === "white" && "border-white/10",
@@ -156,11 +167,11 @@ function ArtCampaignCard({
         className={[
           "absolute inset-0",
           accent === "red" &&
-            "bg-[linear-gradient(180deg,rgba(10,10,10,0.2),rgba(20,0,0,0.58)_50%,rgba(0,0,0,0.92))]",
+            "bg-[linear-gradient(180deg,rgba(10,10,10,0.18),rgba(20,0,0,0.58)_50%,rgba(0,0,0,0.94))]",
           accent === "green" &&
-            "bg-[linear-gradient(180deg,rgba(10,10,10,0.2),rgba(0,24,10,0.52)_50%,rgba(0,0,0,0.92))]",
+            "bg-[linear-gradient(180deg,rgba(10,10,10,0.18),rgba(0,24,10,0.52)_50%,rgba(0,0,0,0.94))]",
           accent === "white" &&
-            "bg-[linear-gradient(180deg,rgba(10,10,10,0.22),rgba(12,12,12,0.56)_50%,rgba(0,0,0,0.92))]",
+            "bg-[linear-gradient(180deg,rgba(10,10,10,0.2),rgba(12,12,12,0.58)_50%,rgba(0,0,0,0.94))]",
         ].join(" ")}
       />
 
@@ -219,6 +230,25 @@ function ExchangeLogoCard({
   );
 }
 
+function FloatingBadge({
+  className,
+  label,
+}: {
+  className: string;
+  label: string;
+}) {
+  return (
+    <div
+      className={[
+        "pointer-events-none absolute hidden rounded-full border border-white/12 bg-black/60 px-4 py-2 text-[10px] font-black uppercase tracking-[0.24em] text-white/72 shadow-[0_10px_24px_rgba(0,0,0,0.28)] backdrop-blur-xl lg:flex",
+        className,
+      ].join(" ")}
+    >
+      {label}
+    </div>
+  );
+}
+
 function HeroGlobe() {
   return (
     <div className="pointer-events-none absolute right-[-120px] top-[-90px] hidden h-[520px] w-[520px] overflow-hidden rounded-full opacity-20 lg:block">
@@ -271,59 +301,62 @@ export default function Home() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#040404] text-white">
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.06),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.16),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(34,197,94,0.05),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
 
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 lg:px-8">
         <section className="relative overflow-hidden rounded-[42px] border border-white/10 bg-black/40 p-6 shadow-[0_20px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10 lg:p-14">
           <HeroGlobe />
 
-          <div className="relative z-10 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div className="relative z-10 grid gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">
-                CONTROL YOURSELF
+                CONTROL THE CHAOS
               </p>
 
-              <h1 className="mt-6 text-[3.2rem] font-black leading-[0.88] tracking-[-0.05em] sm:text-[5rem] lg:text-[6.3rem]">
+              <h1 className="mt-6 text-[3.15rem] font-black leading-[0.88] tracking-[-0.06em] sm:text-[5rem] lg:text-[6.2rem]">
+                CONTROL
+                <br />
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">
-                  STOP
+                  CHAOS.
                 </span>
                 <br />
-                PANICKING.
+                BUILD
                 <br />
-                GET
-                <br />
-                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">
-                  $MAD
-                </span>{" "}
                 <span className="text-green-400 drop-shadow-[0_0_18px_rgba(34,197,94,0.35)]">
-                  RICH.
+                  WEALTH.
+                </span>
+                <br />
+                STAY{" "}
+                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">
+                  $MAD.
                 </span>
               </h1>
 
               <div className="mt-6 max-w-xl">
-                <p className="text-base font-semibold text-white/72">
-                  Most people fold. $MAD builds.
+                <p className="text-base font-semibold text-white/76">
+                  Most people react. Winners stay calm and build.
                 </p>
 
-                <p className="mt-3 text-sm leading-7 text-white/55 sm:text-base">
-                  $MAD Rich means staying calm under pressure, building while others
-                  panic, and turning discipline into wealth.
+                <p className="mt-3 text-sm leading-7 text-white/58 sm:text-base">
+                  $MAD is a meme coin with real energy behind it: culture,
+                  discipline, community, and public building. While others panic,
+                  we create.
                 </p>
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Btn href="/mad-mind" primary>
-                  Enter MAD Mind
+                <Btn href={LINKS.buy} primary>
+                  Buy $MAD
                 </Btn>
-                <Btn href="/roadmap">See Why It’s Real</Btn>
-                <Btn href={LINKS.buy}>Buy $MAD</Btn>
+                <Btn href="/mad-mind">Enter MAD Mind</Btn>
+                <Btn href={LINKS.chart}>View Chart</Btn>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-2">
-                <Chip>Real Project</Chip>
-                <Chip>Live Tech</Chip>
-                <Chip>Public Build</Chip>
-                <Chip>Meme Coin</Chip>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <Chip>Built Publicly</Chip>
+                <Chip>Daily Updates</Chip>
+                <Chip>Live Community</Chip>
+                <Chip>Real Products</Chip>
               </div>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -350,26 +383,70 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="relative rounded-[34px] border border-white/10 bg-white/[0.03] p-4">
-              <div className="overflow-hidden rounded-[28px] border border-white/10 bg-black">
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                  className="aspect-[16/10] w-full object-cover"
-                >
-                  <source src="/loops/bullish-mad.mp4" type="video/mp4" />
-                </video>
-              </div>
+            <div className="relative">
+              <FloatingBadge className="-left-6 top-8" label="Game" />
+              <FloatingBadge className="right-4 top-4" label="AI" />
+              <FloatingBadge className="-left-10 bottom-24" label="Art" />
+              <FloatingBadge className="right-0 bottom-10" label="Burn" />
+              <FloatingBadge className="left-20 -top-5" label="Merch" />
+              <FloatingBadge className="right-14 top-1/2" label="Chart" />
 
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                <MetricCard label="Website" value="LIVE" />
-                <MetricCard label="MAD Mind" value="AI" />
-                <MetricCard label="Build" value="DAILY" />
+              <div className="relative rounded-[34px] border border-white/10 bg-white/[0.03] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+                <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+
+                <div className="overflow-hidden rounded-[28px] border border-white/10 bg-black">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    className="aspect-[16/10] w-full object-cover"
+                  >
+                    <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                  </video>
+                </div>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <MetricCard label="Community" value="GROWING" />
+                  <MetricCard label="Supply" value="SHRINKING" />
+                  <MetricCard label="Build" value="DAILY" />
+                </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))] p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/42">
+              Why $MAD Wins
+            </p>
+            <h2 className="mt-3 text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
+              Built for people who refuse to fold.
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-white/58 sm:text-base">
+              $MAD is simple. Control emotion. Stay in the game. Build culture.
+              Let weak conviction shake out while strong conviction keeps moving.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-4 lg:grid-cols-3">
+            <WhyCard
+              eyebrow="Mindset"
+              title="Most people lose in the mind first."
+              text="Panic destroys timing, discipline, and conviction. $MAD is built around staying steady while others spiral."
+            />
+            <WhyCard
+              eyebrow="Supply"
+              title="Conviction gets stronger when supply gets tighter."
+              text="The story is not just noise. Burn pressure and scarcity make every strong hand more meaningful over time."
+            />
+            <WhyCard
+              eyebrow="Culture"
+              title="Coins fade. Movements stay."
+              text="The real edge is identity. Art, merch, AI, games, and community turn $MAD into something bigger than a chart."
+            />
           </div>
         </section>
 
@@ -397,11 +474,11 @@ export default function Home() {
         <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div>
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
-              Verified on exchanges
+              Verified on real crypto platforms
             </p>
 
             <h2 className="mt-3 text-center text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
-              Trusted across real crypto platforms.
+              Seen across the tools people actually use.
             </h2>
           </div>
 
@@ -425,6 +502,32 @@ export default function Home() {
         <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(25,0,0,0.9),rgba(6,0,0,0.96))] p-4 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6 lg:p-8">
           <div className="min-w-0">
             <MadConfessions />
+          </div>
+        </section>
+
+        <section className="mt-10 overflow-hidden rounded-[38px] border border-red-500/20 bg-[linear-gradient(180deg,rgba(32,0,0,0.88),rgba(8,0,0,0.97))] p-8 text-center shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-10 lg:p-14">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-red-200/70">
+            Final Call
+          </p>
+
+          <h2 className="mt-4 text-4xl font-black leading-[0.9] tracking-[-0.05em] text-white sm:text-5xl md:text-6xl">
+            MOST PEOPLE
+            <br />
+            <span className="text-red-500">BREAK.</span>
+            <br />
+            FEW BUILD.
+          </h2>
+
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/62 sm:text-base">
+            $MAD is for the ones still standing. The ones still building. The ones
+            who know emotion is real, but control is power.
+          </p>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Btn href={LINKS.buy} primary>
+              Buy $MAD
+            </Btn>
+            <Btn href={LINKS.telegram}>Join Telegram</Btn>
           </div>
         </section>
 
