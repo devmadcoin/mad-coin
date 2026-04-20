@@ -37,8 +37,6 @@ export default function MemesPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white">
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
-
-        {/* HERO */}
         <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-10">
           <p className="text-xs uppercase tracking-[0.34em] text-red-300/70">
             $MAD ART
@@ -53,32 +51,53 @@ export default function MemesPage() {
           </p>
         </section>
 
-        {/* GALLERY */}
         <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {ART_FILES.map((file) => (
-            <div
-              key={file}
-              className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/25 transition hover:border-white/20"
-            >
-              <div className="relative aspect-square">
-                <Image
-                  src={`/memes/${file}`}
-                  alt={cleanTitle(file)}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+          {ART_FILES.map((file) => {
+            const imageSrc = `/memes/${file}`;
+            const title = cleanTitle(file);
 
-              <div className="p-4">
-                <p className="text-sm font-black text-white">
-                  {cleanTitle(file)}
-                </p>
+            return (
+              <div
+                key={file}
+                className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/25 transition hover:border-white/20"
+              >
+                <div className="relative aspect-square">
+                  <Image
+                    src={imageSrc}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  />
+                </div>
+
+                <div className="p-4">
+                  <p className="text-sm font-black text-white">{title}</p>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <a
+                      href={imageSrc}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-white/80 transition hover:border-white/20 hover:bg-white/[0.08]"
+                    >
+                      View
+                    </a>
+
+                    <a
+                      href={imageSrc}
+                      download={file}
+                      className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-white transition hover:scale-[1.02] hover:bg-red-400"
+                    >
+                      Download
+                    </a>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </section>
 
-        {/* FORGE CTA */}
         <section className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-10">
           <p className="text-xs uppercase tracking-[0.34em] text-red-300/70">
             FORGE
@@ -94,12 +113,11 @@ export default function MemesPage() {
 
           <Link
             href="/forge"
-            className="mt-6 inline-flex rounded-full bg-red-500 px-8 py-4 text-sm font-black text-white"
+            className="mt-6 inline-flex rounded-full bg-red-500 px-8 py-4 text-sm font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
           >
             Enter Forge →
           </Link>
         </section>
-
       </main>
     </div>
   );
