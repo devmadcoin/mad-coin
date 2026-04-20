@@ -31,6 +31,7 @@ type ApiResponse = {
 };
 
 type StyleMode = "safe" | "savage" | "crashout";
+type RefineMode = "harder" | "shorter" | "smarter" | "share";
 
 const DEMOS: Demo[] = [
   {
@@ -66,11 +67,11 @@ const PLACEHOLDERS = [
 function inferPatterns(input: string, apiStates?: string[]): string[] {
   if (apiStates && apiStates.length > 0) {
     return apiStates
-      .map((s) =>
-        s
+      .map((state) =>
+        state
           .toLowerCase()
           .replace(/_/g, " ")
-          .replace(/\b\w/g, (c) => c.toUpperCase()),
+          .replace(/\b\w/g, (char) => char.toUpperCase()),
       )
       .slice(0, 3);
   }
@@ -119,6 +120,7 @@ function inferPatterns(input: string, apiStates?: string[]): string[] {
   }
 
   const finalPatterns = Array.from(patterns);
+
   return finalPatterns.length > 0
     ? finalPatterns.slice(0, 3)
     : ["Overthinking", "Hesitation", "Untapped Discipline"];
@@ -147,12 +149,22 @@ function getOrCreateSessionId(): string {
   return next;
 }
 
-async function copyToClipboard(text: string): Promise<boolean> {
+async function shareOrCopy(text: string): Promise<void> {
   try {
-    await navigator.clipboard.writeText(text);
-    return true;
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      await navigator.share({ text });
+      return;
+    }
   } catch {
-    return false;
+    // fall through to clipboard
+  }
+
+  try {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+    }
+  } catch {
+    // no-op
   }
 }
 
@@ -203,7 +215,7 @@ export default function MadMindPage() {
     setLastPrompt(finalInput);
 
     try {
-      const res = await fetch("/api/mad-mind", {
+      const response = await fetch("/api/mad-mind", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -220,14 +232,14 @@ export default function MadMindPage() {
       let data: ApiResponse | null = null;
 
       try {
-        data = (await res.json()) as ApiResponse;
+        data = (await response.json()) as ApiResponse;
       } catch {
         data = null;
       }
 
-      if (!res.ok) {
+      if (!response.ok) {
         const errorMessage =
-          data?.output || data?.error || `Request failed (${res.status})`;
+          data?.output || data?.error || `Request failed (${response.status})`;
 
         setTruth(errorMessage);
         setMeta(data?.meta ?? null);
@@ -251,14 +263,11 @@ export default function MadMindPage() {
     }
   }
 
-  async function handleRefine(
-    refinement: "harder" | "shorter" | "smarter" | "share",
-  ): Promise<void> {
+  async function handleRefine(refinement: RefineMode): Promise<void> {
     if (!truth && !lastPrompt) return;
 
     if (refinement === "share") {
-      const shareText = truth || "MAD says the truth hurts.";
-      await copyToClipboard(shareText);
+      await shareOrCopy(truth || "MAD says the truth hurts.");
       return;
     }
 
@@ -308,6 +317,7 @@ export default function MadMindPage() {
               />
 
               <button
+                type="button"
                 onClick={() => void askMad()}
                 disabled={isLoading}
                 className="w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.01] hover:bg-red-400 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
@@ -323,8 +333,8 @@ export default function MadMindPage() {
                 {(["safe", "savage", "crashout"] as const).map((style) => (
                   <button
                     key={style}
-                    onClick={() => setCurrentStyle(style)}
                     type="button"
+                    onClick={() => setCurrentStyle(style)}
                     className={`rounded-full border px-3 py-1.5 text-xs uppercase tracking-[0.2em] transition ${
                       currentStyle === style
                         ? "border-red-500/40 bg-red-500/10 text-red-200"
@@ -387,32 +397,32 @@ export default function MadMindPage() {
 
                 <div className="mt-6 flex flex-wrap gap-3">
                   <button
+                    type="button"
                     onClick={() => void handleRefine("harder")}
                     disabled={isLoading}
-                    type="button"
                     className="rounded-full border border-red-500/30 px-4 py-2 text-sm text-white transition hover:border-red-400 hover:bg-red-500/10 disabled:opacity-60"
                   >
                     Harder
                   </button>
                   <button
+                    type="button"
                     onClick={() => void handleRefine("smarter")}
                     disabled={isLoading}
-                    type="button"
                     className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
                   >
                     Smarter
                   </button>
                   <button
+                    type="button"
                     onClick={() => void handleRefine("shorter")}
                     disabled={isLoading}
-                    type="button"
                     className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
                   >
                     Shorter
                   </button>
                   <button
-                    onClick={() => void handleRefine("share")}
                     type="button"
+                    onClick={() => void handleRefine("share")}
                     className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5"
                   >
                     Share
@@ -424,12 +434,12 @@ export default function MadMindPage() {
                     {meta.followUpBait.slice(0, 3).map((item) => (
                       <button
                         key={item}
+                        type="button"
                         onClick={() => {
                           setInput(item);
                           void askMad(item);
                         }}
                         disabled={isLoading}
-                        type="button"
                         className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/70 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white disabled:opacity-60"
                       >
                         {item}
@@ -545,8 +555,8 @@ export default function MadMindPage() {
           </p>
 
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="mt-8 rounded-2xl bg-red-500 px-8 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.03] hover:bg-red-400 active:scale-[0.99]"
           >
             Start Now
