@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Demo = {
   q: string;
@@ -27,6 +27,7 @@ type ApiResponse = {
     crashout?: string;
   };
   meta?: ApiMeta;
+  error?: string;
 };
 
 const DEMOS: Demo[] = [
@@ -130,6 +131,23 @@ function rarityLabel(rarity?: "standard" | "rare" | "legendary") {
   return "Standard";
 }
 
+function getCookLevel(style: "safe" | "savage" | "crashout") {
+  if (style === "safe") return "mild";
+  if (style === "crashout") return "demon";
+  return "crashout";
+}
+
+function getOrCreateSessionId() {
+  if (typeof window === "undefined") return "web-user";
+
+  const existing = window.localStorage.getItem("madmind_session_id");
+  if (existing) return existing;
+
+  const next = `mad-${Math.random().toString(36).slice(2, 10)}`;
+  window.localStorage.setItem("madmind_session_id", next);
+  return next;
+}
+
 export default function MadMindPage() {
   const [input, setInput] = useState("");
   const [truth, setTruth] = useState("");
@@ -143,9 +161,14 @@ export default function MadMindPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [meta, setMeta] = useState<ApiMeta | null>(null);
   const [lastPrompt, setLastPrompt] = useState("");
-  const [currentStyle, setCurrentStyle] = useState<"safe" | "savage" | "crashout">(
-    "savage",
-  );
+  const [currentStyle, setCurrentStyle] = useState<
+    "safe" | "savage" | "crashout"
+  >("savage");
+  const [sessionId, setSessionId] = useState("web-user");
+
+  useEffect(() => {
+    setSessionId(getOrCreateSessionId());
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -155,22 +178,16 @@ export default function MadMindPage() {
     return () => clearInterval(timer);
   }, []);
 
-  const sessionId = useMemo(() => {
-    if (typeof window === "undefined") return "web-user";
-    const existing = window.localStorage.getItem("madmind_session_id");
-    if (existing) return existing;
-
-    const next = `mad-${Math.random().toString(36).slice(2, 10)}`;
-    window.localStorage.setItem("madmind_session_id", next);
-    return next;
-  }, []);
-
   const level = Math.floor(count / 5) + 1;
   const progress = ((count % 5) / 5) * 100;
 
-  async function askMad(messageOverride?: string, styleOverride?: "safe" | "savage" | "crashout") {
+  async function askMad(
+    messageOverride?: string,
+    styleOverride?: "safe" | "savage" | "crashout",
+  ) {
     const finalInput =
-      (messageOverride ?? input).trim() || PLACEHOLDERS[count % PLACEHOLDERS.length];
+      (messageOverride ?? input).trim() ||
+      PLACEHOLDERS[count % PLACEHOLDERS.length];
 
     if (!finalInput || isLoading) return;
 
@@ -188,21 +205,40 @@ export default function MadMindPage() {
         body: JSON.stringify({
           message: finalInput,
           sessionId,
-          cookLevel: styleToUse === "safe" ? "mild" : styleToUse === "savage" ? "crashout" : "demon",
+          cookLevel: getCookLevel(styleToUse),
           preferredStyle: styleToUse,
           multiOutput: false,
         }),
       });
 
-      const data: ApiResponse = await res.json();
+      let data: ApiResponse | null = null;
 
-      const nextTruth = data.output?.trim() || "Signal broke.";
+      try {
+        data = (await res.json()) as ApiResponse;
+      } catch {
+        data = null;
+      }
+
+      if (!res.ok) {
+        const errorMessage =
+          data?.output ||
+          data?.error ||
+          `Request failed (${res.status})`;
+        setTruth(errorMessage);
+        setMeta(data?.meta || null);
+        setPatterns(inferPatterns(finalInput, data?.meta?.states));
+        return;
+      }
+
+      const nextTruth =
+        data?.output?.trim() || data?.error || "Signal broke.";
+
       setTruth(nextTruth);
-      setMeta(data.meta || null);
-      setPatterns(inferPatterns(finalInput, data.meta?.states));
+      setMeta(data?.meta || null);
+      setPatterns(inferPatterns(finalInput, data?.meta?.states));
       setCount((prev) => prev + 1);
     } catch {
-      setTruth("Signal broke.");
+      setTruth("Could not reach MAD.");
       setMeta(null);
       setPatterns(inferPatterns(finalInput));
     } finally {
@@ -210,12 +246,20 @@ export default function MadMindPage() {
     }
   }
 
-  async function handleRefine(refinement: "harder" | "shorter" | "smarter" | "share") {
+  async function handleRefine(
+    refinement: "harder" | "shorter" | "smarter" | "share",
+  ) {
     if (!truth && !lastPrompt) return;
 
     if (refinement === "share") {
       const shareText = truth || "MAD says the truth hurts.";
+
       try {
+        if (navigator.share) {
+          await navigator.share({ text: shareText });
+          return;
+        }
+
         await navigator.clipboard.writeText(shareText);
       } catch {
         // no-op
@@ -223,7 +267,9 @@ export default function MadMindPage() {
       return;
     }
 
-    const base = lastPrompt || input || PLACEHOLDERS[count % PLACEHOLDERS.length];
+    const base =
+      lastPrompt || input || PLACEHOLDERS[count % PLACEHOLDERS.length];
+
     const mapped =
       refinement === "harder"
         ? `${base} go harder`
@@ -333,7 +379,7 @@ export default function MadMindPage() {
                   ) : null}
                 </div>
 
-                <div className="mt-3 text-3xl font-black leading-tight text-red-100 md:text-4xl">
+                <div className="mt-3 text-3xl font-black leading-tight text-red-100 md:text-4xl whitespace-pre-wrap">
                   {truth}
                 </div>
 
