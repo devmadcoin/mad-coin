@@ -26,6 +26,21 @@ const ART_FILES = [
   "YOU-WILL-BE-MAD.png",
 ];
 
+const FORGE_ITEMS = [
+  {
+    title: "Build New Drops",
+    text: "The Forge is where fresh $MAD ideas become future visuals, collectibles, and identity pieces.",
+  },
+  {
+    title: "Expand The World",
+    text: "More art. More lore. More things people can share, collect, and spread across the internet.",
+  },
+  {
+    title: "Next Layer Energy",
+    text: "Think of Forge as the lab where the next phase of the $MAD aesthetic gets shaped.",
+  },
+] as const;
+
 function cleanTitle(name: string) {
   return name.replace(".png", "").replaceAll("-", " ").toUpperCase();
 }
@@ -76,6 +91,21 @@ function Pill({
   );
 }
 
+function ForgeCard({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-[1.4rem] border border-white/10 bg-black/25 p-5">
+      <p className="text-xl font-black text-white">{title}</p>
+      <p className="mt-3 text-sm leading-7 text-white/65">{text}</p>
+    </div>
+  );
+}
+
 export default function MemesPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white">
@@ -102,29 +132,58 @@ export default function MemesPage() {
           </div>
         </SectionShell>
 
-        <SectionShell className="mt-8 p-6 sm:p-8 lg:p-10">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div className="max-w-3xl">
+        <SectionShell className="mt-8 overflow-hidden p-0">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.95fr]">
+            <div className="p-6 sm:p-8 lg:p-10">
               <p className="text-xs uppercase tracking-[0.34em] text-red-300/70">
-                FORGE
+                MAD FORGE
               </p>
 
-              <h2 className="mt-4 text-3xl font-black sm:text-5xl">
-                Build the next layer of $MAD.
+              <h2 className="mt-4 text-3xl font-black leading-[0.95] text-white sm:text-5xl">
+                Build the next layer of <span className="text-red-500">$MAD</span>.
               </h2>
 
-              <p className="mt-4 text-base leading-8 text-white/70">
-                More art. More identity. More collectible energy. Enter Forge to
-                move deeper into the $MAD world.
+              <p className="mt-5 max-w-2xl text-base leading-8 text-white/70">
+                Forge is not just a button. It is the part of the world where new
+                drops, new identity pieces, and new collectible energy get shaped.
               </p>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Pill tone="red">Next Layer</Pill>
+                <Pill tone="green">More Art</Pill>
+                <Pill>World Building</Pill>
+              </div>
+
+              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {FORGE_ITEMS.map((item) => (
+                  <ForgeCard
+                    key={item.title}
+                    title={item.title}
+                    text={item.text}
+                  />
+                ))}
+              </div>
+
+              <div className="mt-8">
+                <Link
+                  href="/forge"
+                  className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-8 py-4 text-sm font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
+                >
+                  Open Full Forge →
+                </Link>
+              </div>
             </div>
 
-            <Link
-              href="/forge"
-              className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-8 py-4 text-sm font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400"
-            >
-              Enter Forge →
-            </Link>
+            <div className="relative min-h-[260px] sm:min-h-[360px] lg:min-h-full">
+              <Image
+                src="/memes/MAD-YOU-SIDELINED.png"
+                alt="MAD Forge preview"
+                fill
+                sizes="(max-width: 1024px) 100vw, 45vw"
+                className="object-cover"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+            </div>
           </div>
         </SectionShell>
 
