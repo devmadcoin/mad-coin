@@ -23,6 +23,7 @@ const merchItems = [
     name: "MAD Stickers",
     subtitle: "Retail classic",
     description: "Clean, bold, and easy to place anywhere.",
+    price: "$5.98",
     href: LINKS.retailSticker,
     src: "/stickers/Mad-Sticker-logo.png",
     badge: "Classic",
@@ -31,6 +32,7 @@ const merchItems = [
     name: "Card Wrap",
     subtitle: "Premium embossed",
     description: "A sharper premium look with texture and attitude.",
+    price: "$10.98",
     href: LINKS.premiumCard,
     src: "/stickers/Mad-Premium-Embossed-Card-Wrap.png",
     badge: "Premium",
@@ -39,6 +41,7 @@ const merchItems = [
     name: "Rich Wrap",
     subtitle: "Luxury variant",
     description: "The louder luxury version with richer flex energy.",
+    price: "$10.98",
     href: LINKS.richPremiumCard,
     src: "/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png",
     badge: "Luxury",
@@ -47,6 +50,7 @@ const merchItems = [
     name: "Peeker",
     subtitle: "Window flex",
     description: "Small piece. Fast attention. Big signal.",
+    price: "$9.98",
     href: LINKS.peeker,
     src: "/stickers/Mad-Peeker.png",
     badge: "Fan Favorite",
@@ -230,6 +234,10 @@ export default function MerchPage() {
                           Rich Wrap
                         </p>
 
+                        <p className="mt-2 text-center text-xl font-black text-red-400">
+                          $10.98
+                        </p>
+
                         <p className="mt-3 max-w-md text-center text-sm leading-7 text-white/58">
                           The premium flex piece for the people who want their
                           $MAD to look louder and cleaner.
@@ -306,10 +314,17 @@ export default function MerchPage() {
                 </div>
 
                 <div className="mt-5">
-                  <h3 className="text-xl font-black text-white">{item.name}</h3>
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-xl font-black text-white">{item.name}</h3>
+                    <span className="shrink-0 text-lg font-black text-red-400">
+                      {item.price}
+                    </span>
+                  </div>
+
                   <p className="mt-3 text-sm leading-7 text-white/58">
                     {item.description}
                   </p>
+
                   <p className="mt-4 text-sm font-bold text-red-400">
                     Open Product →
                   </p>
