@@ -7,14 +7,21 @@ const LINKS = {
   buy: "https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
 } as const;
 
+const PROGRESS = {
+  complete: 7,
+  total: 9,
+};
+
+const percentComplete = Math.round((PROGRESS.complete / PROGRESS.total) * 100);
+
 const STATUS_CARDS = [
   { label: "Website", value: "LIVE NOW", tone: "green", icon: "🌐" },
   { label: "MAD Mind", value: "LIVE NOW", tone: "green", icon: "🧠" },
   { label: "Confessions", value: "LIVE NOW", tone: "green", icon: "💬" },
   { label: "400M Burn", value: "PROVEN", tone: "green", icon: "🔥" },
-  { label: "MAD AI", value: "COMPLETED", tone: "green", icon: "🤖" },
+  { label: "MAD AI", value: "LIVE NOW", tone: "green", icon: "🤖" },
   { label: "MAD Games", value: "IN PROGRESS", tone: "red", icon: "🎮" },
-  { label: "Stickers", value: "LIVE", tone: "green", icon: "😈" },
+  { label: "Stickers", value: "LIVE NOW", tone: "green", icon: "😈" },
   { label: "Clothing", value: "TESTING", tone: "red", icon: "👕" },
   { label: "800M Goal", value: "FINAL GOAL", tone: "red", icon: "🎯" },
 ] as const;
@@ -78,6 +85,38 @@ function StatusMiniCard({
         {value}
       </p>
     </div>
+  );
+}
+
+function ProgressStrip() {
+  return (
+    <Shell className="p-5 sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.35em] text-white/45">
+            Overall Progress
+          </p>
+          <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">
+            {percentComplete}% complete
+          </h2>
+          <p className="mt-2 text-sm text-white/60">
+            {PROGRESS.complete} of {PROGRESS.total} roadmap milestones are live,
+            proven, or locked in.
+          </p>
+        </div>
+
+        <div className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-bold text-white/75">
+          Build. Prove. Expand.
+        </div>
+      </div>
+
+      <div className="mt-5 h-4 overflow-hidden rounded-full bg-white/10">
+        <div
+          className="h-full rounded-full bg-[linear-gradient(90deg,#22c55e,#10b981,#ef4444)] shadow-[0_0_24px_rgba(16,185,129,0.25)] transition-all duration-500"
+          style={{ width: `${percentComplete}%` }}
+        />
+      </div>
+    </Shell>
   );
 }
 
@@ -179,6 +218,8 @@ export default function RoadmapPage() {
 
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
         <div className="grid gap-6">
+          <ProgressStrip />
+
           <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9">
             {STATUS_CARDS.map((card) => (
               <StatusMiniCard
