@@ -205,42 +205,52 @@ function detectStates(text: string): string[] {
     states.add("RELATIONSHIP");
   }
 
+  if (
+    lower.includes("success") ||
+    lower.includes("winner") ||
+    lower.includes("win") ||
+    lower.includes("better")
+  ) {
+    states.add("AMBITION");
+  }
+
   if (states.size === 0) states.add("GENERAL");
   return Array.from(states).slice(0, 3);
 }
 
 function getMood(style: StyleTab, escalation: number): string {
-  if (style === "safe") return "respect";
-  if (style === "crashout") return "prophetic";
+  if (style === "safe") return "disciplined";
+  if (style === "crashout") return "predatory";
   if (escalation >= 2) return "cold";
   return "surgical";
 }
 
 function getRarityHint(score: number): "standard" | "rare" | "legendary" {
-  if (score >= 12) return "legendary";
-  if (score >= 9) return "rare";
+  if (score >= 10) return "legendary";
+  if (score >= 7) return "rare";
   return "standard";
 }
 
 function scoreOutput(text: string): number {
   let score = 0;
   const len = text.trim().length;
+  const sentences = text.split(/[.!?]+/).filter(Boolean).length;
 
-  if (len >= 40) score += 2;
-  if (len <= 260) score += 2;
+  if (len >= 25 && len <= 140) score += 4;
+  if (sentences <= 2) score += 3;
   if (!/\bmaybe|perhaps|kind of|sort of|i think\b/i.test(text)) score += 2;
-  if (!/\bas an ai|i can help|let me know\b/i.test(text)) score += 2;
-  if (/discipline|fear|truth|excuse|pattern|future|pressure/i.test(text)) {
+  if (/truth|fear|discipline|excuse|comfort|action|winner|weak/i.test(text)) {
     score += 2;
   }
   if (/[.!?]$/.test(text.trim())) score += 1;
-  if (text.split(/[.!?]+/).filter(Boolean).length <= 3) score += 2;
 
   return score;
 }
 
 function buildFollowUpBait(intent: string): string[] {
-  if (intent === "COMEBACK") return ["Make it harsher", "Make it cleaner", "One-line version"];
+  if (intent === "COMEBACK") {
+    return ["Make it harsher", "Make it cleaner", "One-line version"];
+  }
   if (intent === "CAPTION" || intent === "SHILL") {
     return ["Make it shorter", "Make it meaner", "Turn it into a post"];
   }
@@ -249,15 +259,17 @@ function buildFollowUpBait(intent: string): string[] {
 
 function buildCallback(prev: MemoryEntry | undefined, states: string[]): string | null {
   if (!prev) return null;
+
   if (prev.recentStates.includes("FEAR") && states.includes("FEAR")) {
-    return "This is the same fear pattern showing up again.";
+    return "Same fear. Different costume.";
   }
   if (prev.recentStates.includes("HESITATION") && states.includes("HESITATION")) {
-    return "Again with hesitation dressed up as thought.";
+    return "Again with hesitation pretending to be thought.";
   }
   if (prev.recentStates.includes("DISCIPLINE") && states.includes("DISCIPLINE")) {
-    return "You already know the issue is discipline.";
+    return "You already know discipline is the issue.";
   }
+
   return prev.callbackNotes[0] || null;
 }
 
@@ -269,6 +281,7 @@ function getNodeList(intent: string, states: string[]): string[] {
   if (states.includes("MONEY")) nodes.add("MONEY");
   if (states.includes("EGO")) nodes.add("EGO");
   if (states.includes("RELATIONSHIP")) nodes.add("RELATIONSHIP");
+  if (states.includes("AMBITION")) nodes.add("AMBITION");
   if (intent === "DEFINITION") nodes.add("DEFINITION");
   if (intent === "SHILL" || intent === "CAPTION" || intent === "COMEBACK") {
     nodes.add("QUOTE");
@@ -280,46 +293,94 @@ function getNodeList(intent: string, states: string[]): string[] {
 function getNodeInstruction(node: string): string {
   switch (node) {
     case "TRUTH":
-      return "State the blunt reality in 1 sentence.";
+      return "Give one short brutal truth under 12 words.";
     case "PATTERN":
-      return "Identify the repeating pattern or loop in 1 sentence.";
+      return "Name the user's loop in under 10 words.";
     case "FEAR":
-      return "Expose the hidden fear controlling the user in 1 sentence.";
+      return "Expose the hidden fear in under 10 words.";
     case "DISCIPLINE":
-      return "Find the discipline failure or missing system in 1 sentence.";
+      return "Point out the discipline failure in under 10 words.";
     case "MONEY":
-      return "Frame the issue in terms of money behavior, leverage, or leakage in 1 sentence.";
+      return "Expose the money leak or leverage failure in under 10 words.";
     case "EGO":
-      return "Expose the ego lie, self-deception, or identity trap in 1 sentence.";
+      return "Expose the ego lie in under 10 words.";
     case "RELATIONSHIP":
-      return "Point out the relationship standard, confusion, or emotional trap in 1 sentence.";
+      return "Name the relationship trap in under 10 words.";
+    case "AMBITION":
+      return "Name what separates desire from winning in under 10 words.";
     case "DEFINITION":
-      return "Define the concept briefly, then imply why it matters, in 1 sentence.";
+      return "Define the concept in one clean sentence under 14 words.";
     case "QUOTE":
-      return "Create a short screenshot-worthy line in 1 sentence.";
+      return "Create one screenshot-worthy line under 12 words.";
     case "SAVAGE":
-      return "Write the harshest but still intelligent interpretation in 1 sentence.";
+      return "Write the hardest intelligent line under 12 words.";
     default:
-      return "Analyze the user input in 1 sentence.";
+      return "Analyze the user input in under 10 words.";
   }
+}
+
+function getStyleVoice(style: StyleTab): string {
+  if (style === "safe") {
+    return `
+VOICE:
+Speak like a disciplined mentor.
+Calm. Sharp. Respectful.
+You still challenge weakness, but without theatrical cruelty.
+`;
+  }
+
+  if (style === "crashout") {
+    return `
+VOICE:
+Speak like a dark mastermind.
+Cold. Predatory. Unsettling.
+You sound like someone who sees through every excuse immediately.
+`;
+  }
+
+  return `
+VOICE:
+Speak like a ruthless elite strategist.
+Blend cold truth with Ego Jinpachi / Blue Lock energy.
+You respect winners, hunger, evolution, and discipline.
+You despise comfort, hesitation, average thinking, and excuse-making.
+Every line should feel like pressure.
+`;
 }
 
 function getFinalInstructions(style: StyleTab, cookLevel: CookLevel): string {
   return `
-You are MAD AI powered by the MAD Lattice Engine.
-You synthesize multiple internal nodes into one elite final answer.
+You are MAD AI.
 
-Rules:
-- 1 to 3 sentences max
-- no bullet points
-- no assistant tone
-- no soft closers
-- no therapy voice
-- sound quotable and pressure-tested
-- if user asks for a definition, define briefly then pivot into implication
-- prefer clarity over decoration
-- do not mention the nodes or lattice
-- never say "as an AI"
+You speak like a dangerous smart friend texting truth.
+
+STRICT RULES:
+- Maximum 2 short sentences.
+- Prefer 1 sentence.
+- Under 160 characters when possible.
+- Never write essays.
+- Never lecture.
+- Never repeat the user's words back.
+- No motivational speaker tone.
+- No therapy tone.
+- No bullet points.
+- No disclaimers.
+- No soft closers.
+- No fake politeness.
+
+FORMAT:
+Sentence 1 = hard truth.
+Sentence 2 = sharp consequence or correction.
+
+STYLE:
+Direct. Modern. Clean. Addictive. Screenshot-worthy.
+
+${getStyleVoice(style)}
+
+EXTRA:
+- Make the user feel challenged to level up.
+- Sound like someone who only respects results.
+- If the user asks for a definition, define it briefly, then turn it into pressure.
 
 Style mode: ${style}
 Cook level: ${cookLevel}
@@ -337,7 +398,11 @@ async function runNode(
     instructions: `
 You are a hidden analysis node inside MAD AI.
 ${getNodeInstruction(node)}
-Return only the line. No labels. No bullets.
+Return only the line.
+No labels.
+No bullets.
+No explanation.
+
 Style mode: ${style}
 Cook level: ${cookLevel}
 `,
@@ -401,7 +466,9 @@ async function generateVariant(params: {
 }): Promise<string> {
   const nodes = getNodeList(params.intent, params.states);
   const nodeOutputs = await Promise.all(
-    nodes.map((node) => runNode(node, params.message, params.variant, params.cookLevel)),
+    nodes.map((node) =>
+      runNode(node, params.message, params.variant, params.cookLevel),
+    ),
   );
 
   return synthesizeFinal({
