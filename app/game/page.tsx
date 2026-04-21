@@ -6,7 +6,6 @@ const TUTORIAL_VIDEO = "https://www.youtube.com/embed/V0LBY-ZiklY";
 const GAME_LINK =
   "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD";
 const TOWER_DEFENSE_TEASER = "https://streamable.com/e/yc9dot";
-const KUBO_LINK = "https://x.com/Kubo100x";
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -90,9 +89,9 @@ export default function GamePage() {
   return (
     <div className="relative overflow-hidden bg-black text-white">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(255,0,60,0.14),transparent_30%),radial-gradient(circle_at_85%_15%,rgba(255,90,0,0.1),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(120,0,0,0.18),transparent_45%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02),transparent_20%,transparent_80%,rgba(255,255,255,0.015))]" />
 
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+        {/* HERO */}
         <SectionShell className="overflow-hidden p-0">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.95fr]">
             <div className="p-6 sm:p-8 lg:p-10">
@@ -123,7 +122,7 @@ export default function GamePage() {
                   href={GAME_LINK}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white shadow-[0_0_16px_rgba(255,0,0,0.3)] transition hover:scale-[1.02] hover:bg-red-400"
+                  className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
                 >
                   Play Now →
                 </a>
@@ -142,67 +141,16 @@ export default function GamePage() {
             <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-full">
               <Image
                 src="/game/rich-or-mad-banner.png"
-                alt="Will You Get RICH Or Stay $MAD"
+                alt="Will You Get Rich Or Stay MAD"
                 fill
                 priority
-                sizes="(max-width: 1024px) 100vw, 700px"
                 className="object-cover"
               />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             </div>
           </div>
         </SectionShell>
 
-        <SectionShell className="mt-8 overflow-hidden p-0">
-          <div className="grid grid-cols-1 lg:grid-cols-[0.78fr_1.22fr]">
-            <div className="relative min-h-[300px] sm:min-h-[360px]">
-              <Image
-                src="/game/kubo-special-guest.jpg"
-                alt="Kubo special guest on the MAD gaming page"
-                fill
-                sizes="(max-width: 1024px) 100vw, 480px"
-                className="object-cover"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-            </div>
-
-            <div className="p-6 sm:p-8 lg:p-10">
-              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-red-200/75">
-                SPECIAL GUEST
-              </p>
-
-              <h2 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl">
-                Kubo was a{" "}
-                <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.45)]">
-                  special guest.
-                </span>
-              </h2>
-
-              <p className="mt-5 max-w-2xl text-base leading-8 text-white/70 sm:text-lg">
-                Featured on the gaming tab as part of the $MAD world. Tap below
-                to go straight back to Kubo on X.
-              </p>
-
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Pill tone="red">Guest Feature</Pill>
-                <Pill>Community Signal</Pill>
-                <Pill tone="green">Backlink Live</Pill>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={KUBO_LINK}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white shadow-[0_0_16px_rgba(255,0,0,0.3)] transition hover:scale-[1.02] hover:bg-red-400"
-                >
-                  Visit @Kubo100x →
-                </a>
-              </div>
-            </div>
-          </div>
-        </SectionShell>
-
+        {/* HOW IT WORKS */}
         <SectionShell className="mt-8 p-6 sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/45">
             HOW IT WORKS
@@ -224,36 +172,82 @@ export default function GamePage() {
           </div>
         </SectionShell>
 
+        {/* QUICK HELP + KUBO */}
         <SectionShell className="mt-8 p-6 sm:p-8">
-          <div className="max-w-4xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">
-              QUICK HELP
-            </p>
+          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+            {/* LEFT SIDE */}
+            <div>
+              <div className="max-w-4xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">
+                  QUICK HELP
+                </p>
 
-            <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">
-              Need help first?
-            </h2>
+                <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">
+                  Need help first?
+                </h2>
 
-            <p className="mt-4 max-w-3xl text-base leading-8 text-white/70">
-              Watch this quick setup video to get into Roblox and start playing
-              fast.
-            </p>
-          </div>
+                <p className="mt-4 max-w-3xl text-base leading-8 text-white/70">
+                  Watch this quick setup video to get into Roblox and start
+                  playing fast.
+                </p>
+              </div>
 
-          <div className="mt-8 overflow-hidden rounded-[1.6rem] border border-white/10 bg-black shadow-[0_0_24px_rgba(255,0,0,0.12)]">
-            <div className="relative aspect-video w-full">
-              <iframe
-                src={TUTORIAL_VIDEO}
-                title="Tutorial on how to make a Roblox account to play MAD Games"
-                className="absolute inset-0 h-full w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
+              <div className="mt-8 overflow-hidden rounded-[1.6rem] border border-white/10 bg-black shadow-[0_0_24px_rgba(255,0,0,0.12)]">
+                <div className="relative aspect-video w-full">
+                  <iframe
+                    src={TUTORIAL_VIDEO}
+                    title="Roblox Sign Up Tutorial"
+                    className="absolute inset-0 h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT SIDE */}
+            <div className="rounded-[1.8rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">
+                SPECIAL GUEST
+              </p>
+
+              <div className="mt-4 overflow-hidden rounded-[1.4rem] border border-white/10 bg-black">
+                <div className="relative aspect-square w-full">
+                  <Image
+                    src="/game/kubo-special-guest.jpg"
+                    alt="Kubo special guest"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+
+              <h3 className="mt-5 text-2xl font-black text-white sm:text-3xl">
+                Kubo was a{" "}
+                <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+                  special guest
+                </span>
+              </h3>
+
+              <p className="mt-3 text-sm leading-7 text-white/65">
+                Community supporter featured inside the $MAD gaming world.
+              </p>
+
+              <div className="mt-6">
+                <a
+                  href="https://x.com/Kubo100x"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
+                >
+                  Visit @Kubo100x →
+                </a>
+              </div>
             </div>
           </div>
         </SectionShell>
 
+        {/* COMING SOON */}
         <SectionShell className="mt-8 overflow-hidden p-0">
           <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr]">
             <div className="p-6 sm:p-8">
@@ -262,11 +256,7 @@ export default function GamePage() {
               </p>
 
               <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-6xl">
-                <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
-                  MAD
-                </span>
-                <br />
-                Tower Defense
+                MAD Tower Defense
               </h2>
 
               <p className="mt-5 max-w-xl text-base leading-8 text-white/68">
@@ -278,7 +268,7 @@ export default function GamePage() {
                   href="https://streamable.com/yc9dot"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 shadow-[0_0_12px_rgba(255,0,0,0.35)] transition hover:bg-red-500/25"
+                  className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 transition hover:bg-red-500/25"
                 >
                   Watch Teaser →
                 </a>
@@ -287,27 +277,14 @@ export default function GamePage() {
               </div>
             </div>
 
-            <div className="grid gap-0">
-              <div className="relative aspect-video w-full">
-                <iframe
-                  src={TOWER_DEFENSE_TEASER}
-                  title="MAD Tower Defense teaser"
-                  className="absolute inset-0 h-full w-full"
-                  allow="autoplay; fullscreen"
-                  allowFullScreen
-                />
-              </div>
-
-              <div className="relative aspect-[4/3] w-full">
-                <Image
-                  src="/game/mad-hazmat-turret.png"
-                  alt="MAD Tower Defense Hazmat Turret concept art"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 700px"
-                  className="object-cover"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-              </div>
+            <div className="relative aspect-video w-full">
+              <iframe
+                src={TOWER_DEFENSE_TEASER}
+                title="MAD Tower Defense teaser"
+                className="absolute inset-0 h-full w-full"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+              />
             </div>
           </div>
         </SectionShell>
