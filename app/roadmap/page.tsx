@@ -12,7 +12,8 @@ const STATUS_CARDS = [
   { label: "MAD Mind", value: "LIVE NOW", tone: "green", icon: "🧠" },
   { label: "Confessions", value: "LIVE NOW", tone: "green", icon: "💬" },
   { label: "400M Burn", value: "PROVEN", tone: "green", icon: "🔥" },
-  { label: "MAD AI", value: "IN PROGRESS", tone: "red", icon: "🤖" },
+  { label: "MAD AI", value: "COMPLETED", tone: "green", icon: "🤖" },
+  { label: "MAD Games", value: "IN PROGRESS", tone: "red", icon: "🎮" },
   { label: "Stickers", value: "LIVE", tone: "green", icon: "😈" },
   { label: "Clothing", value: "TESTING", tone: "red", icon: "👕" },
   { label: "800M Goal", value: "FINAL GOAL", tone: "red", icon: "🎯" },
@@ -97,6 +98,37 @@ function RoadmapPoster() {
   );
 }
 
+function CommunitySupport() {
+  return (
+    <Shell className="p-6 sm:p-8">
+      <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-300/85">
+            Alliance Expansion
+          </p>
+
+          <h2 className="mt-3 text-3xl font-black text-white sm:text-5xl">
+            Support 1 Community.
+          </h2>
+
+          <p className="mt-4 max-w-3xl text-base leading-8 text-white/75 sm:text-lg">
+            Buy 8M of their tokens and build strategic alignment through action,
+            not empty talk.
+          </p>
+        </div>
+
+        <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 px-8 py-6 text-center">
+          <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-300/80">
+            Target Size
+          </p>
+          <p className="mt-2 text-4xl font-black text-emerald-300">8M</p>
+          <p className="mt-1 text-sm text-white/55">Tokens</p>
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
 function CTASection() {
   return (
     <Shell className="p-6 sm:p-8">
@@ -147,7 +179,7 @@ export default function RoadmapPage() {
 
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
         <div className="grid gap-6">
-          <div className="grid gap-3 md:grid-cols-4 xl:grid-cols-8">
+          <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9">
             {STATUS_CARDS.map((card) => (
               <StatusMiniCard
                 key={card.label}
@@ -160,6 +192,8 @@ export default function RoadmapPage() {
           </div>
 
           <RoadmapPoster />
+
+          <CommunitySupport />
 
           <CTASection />
 
