@@ -16,13 +16,13 @@ const percentComplete = Math.round((PROGRESS.complete / PROGRESS.total) * 100);
 
 const STATUS_CARDS = [
   { label: "Website", value: "LIVE NOW", tone: "green", icon: "🌐" },
-  { label: "MAD Mind", value: "LIVE NOW", tone: "green", icon: "🧠" },
   { label: "Confessions", value: "LIVE NOW", tone: "green", icon: "💬" },
   { label: "400M Burn", value: "PROVEN", tone: "green", icon: "🔥" },
   { label: "MAD AI", value: "LIVE NOW", tone: "green", icon: "🤖" },
   { label: "MAD Games", value: "IN PROGRESS", tone: "red", icon: "🎮" },
   { label: "Stickers", value: "LIVE NOW", tone: "green", icon: "😈" },
   { label: "Clothing", value: "TESTING", tone: "red", icon: "👕" },
+  { label: "$MAD Art", value: "IN PROGRESS", tone: "red", icon: "🖼️" },
   { label: "800M Goal", value: "FINAL GOAL", tone: "red", icon: "🎯" },
 ] as const;
 
@@ -96,12 +96,14 @@ function ProgressStrip() {
           <p className="text-xs font-black uppercase tracking-[0.35em] text-white/45">
             Overall Progress
           </p>
+
           <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">
             {percentComplete}% complete
           </h2>
+
           <p className="mt-2 text-sm text-white/60">
             {PROGRESS.complete} of {PROGRESS.total} roadmap milestones are live,
-            proven, or locked in.
+            proven, or in motion.
           </p>
         </div>
 
@@ -160,7 +162,9 @@ function CommunitySupport() {
           <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-300/80">
             Target Size
           </p>
+
           <p className="mt-2 text-4xl font-black text-emerald-300">8M</p>
+
           <p className="mt-1 text-sm text-white/55">Tokens</p>
         </div>
       </div>
@@ -176,6 +180,7 @@ function CTASection() {
           <h2 className="text-4xl font-black text-white sm:text-6xl">
             THIS IS YOUR PATH.
           </h2>
+
           <p className="mt-4 max-w-2xl text-base leading-8 text-white/78 sm:text-lg">
             Build. Prove. Expand.
           </p>
