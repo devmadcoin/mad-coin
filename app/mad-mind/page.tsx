@@ -20,13 +20,15 @@ type ApiMeta = {
   lattice?: string[];
 };
 
+type OutputVariants = {
+  safe?: string;
+  savage?: string;
+  crashout?: string;
+};
+
 type ApiResponse = {
   output?: string;
-  outputs?: {
-    safe?: string;
-    savage?: string;
-    crashout?: string;
-  };
+  outputs?: OutputVariants;
   meta?: ApiMeta;
   error?: string;
 };
@@ -177,28 +179,20 @@ async function shareOrCopy(text: string): Promise<boolean> {
 
 function getDisplayOutput(
   truth: string,
-  outputs: ApiResponse["outputs"],
+  outputs: OutputVariants | null | undefined,
   tab: OutputTab,
 ): string {
-  if (tab === "safe") return outputs?.safe?.trim() || truth;
-  if (tab === "crashout") return outputs?.crashout?.trim() || truth;
-  return outputs?.savage?.trim() || truth;
-}
+  if (!outputs) return truth;
 
-function getCardTone(rarity?: "standard" | "rare" | "legendary"): string {
-  if (rarity === "legendary") {
-    return "border-yellow-400/30 bg-[linear-gradient(180deg,rgba(255,190,40,0.08),rgba(80,30,0,0.10))]";
-  }
-  if (rarity === "rare") {
-    return "border-red-400/25 bg-[linear-gradient(180deg,rgba(255,50,50,0.07),rgba(0,0,0,0.18))]";
-  }
-  return "border-red-500/20 bg-black/40";
+  if (tab === "safe") return outputs.safe?.trim() || truth;
+  if (tab === "crashout") return outputs.crashout?.trim() || truth;
+  return outputs.savage?.trim() || truth;
 }
 
 export default function MadMindPage() {
   const [input, setInput] = useState<string>("");
   const [truth, setTruth] = useState<string>("");
-  const [outputs, setOutputs] = useState<ApiResponse["outputs"] | null>(null);
+  const [outputs, setOutputs] = useState<OutputVariants | null>(null);
   const [count, setCount] = useState<number>(0);
   const [demoIndex, setDemoIndex] = useState<number>(0);
   const [patterns, setPatterns] = useState<string[]>([
@@ -258,7 +252,7 @@ export default function MadMindPage() {
   async function askMad(
     messageOverride?: string,
     styleOverride?: StyleMode,
-    forceMultiOutput?: boolean,
+    forceMultiOutput = true,
   ): Promise<void> {
     const finalInput =
       (messageOverride ?? input).trim() ||
@@ -267,7 +261,6 @@ export default function MadMindPage() {
     if (!finalInput || isLoading) return;
 
     const styleToUse = styleOverride ?? currentStyle;
-    const multiOutput = forceMultiOutput ?? true;
 
     setIsLoading(true);
     setLastPrompt(finalInput);
@@ -284,7 +277,7 @@ export default function MadMindPage() {
           sessionId,
           cookLevel: getCookLevel(styleToUse),
           preferredStyle: styleToUse,
-          multiOutput,
+          multiOutput: forceMultiOutput,
         }),
       });
 
@@ -332,7 +325,9 @@ export default function MadMindPage() {
     if (!truth && !lastPrompt) return;
 
     if (refinement === "share") {
-      const didShare = await shareOrCopy(displayTruth || "MAD says the truth hurts.");
+      const didShare = await shareOrCopy(
+        displayTruth || "MAD says the truth hurts.",
+      );
       setShareMessage(didShare ? "Copied." : "Could not share.");
       return;
     }
@@ -416,7 +411,7 @@ export default function MadMindPage() {
       </section>
 
       <section className="mx-auto max-w-5xl px-4 py-10 md:py-12">
-        <div className="grid gap-6 md:grid-cols-[1.6fr_0.9fr]">
+        <div className="grid gap-6 lg:grid-cols-[1.45fr_0.95fr]">
           <div className="rounded-3xl border border-red-500/20 bg-gradient-to-b from-red-950/25 to-black p-6">
             <div className="mb-3 text-xs uppercase tracking-[0.35em] text-red-300">
               Live Truth
@@ -439,7 +434,7 @@ export default function MadMindPage() {
                 </div>
               </div>
             ) : (
-              <div className={`rounded-2xl border p-6 ${getCardTone(meta?.rarityHint)}`}>
+              <div className="rounded-2xl border border-red-500/20 bg-black/40 p-6">
                 <div className="flex flex-wrap items-center gap-2 text-sm text-white/45">
                   <span>MAD says</span>
 
@@ -452,12 +447,6 @@ export default function MadMindPage() {
                   {meta?.rarityHint ? (
                     <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-red-200">
                       {rarityLabel(meta.rarityHint)}
-                    </span>
-                  ) : null}
-
-                  {meta?.mood ? (
-                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-white/65">
-                      {formatTag(meta.mood)}
                     </span>
                   ) : null}
                 </div>
@@ -492,8 +481,21 @@ export default function MadMindPage() {
                   </div>
                 ) : null}
 
-                <div className="mt-3 whitespace-pre-wrap text-3xl font-black leading-tight text-red-100 md:text-4xl">
-                  {displayTruth}
+                <div className="mt-4 rounded-[1.6rem] border border-white/10 bg-[#120606] p-5">
+                  <div className="text-xs uppercase tracking-[0.2em] text-white/35">
+                    You
+                  </div>
+                  <div className="mt-2 text-base text-white/80">{livePrompt}</div>
+                </div>
+
+                <div className="mt-4 rounded-[1.6rem] border border-red-500/20 bg-[linear-gradient(180deg,rgba(70,0,0,0.26),rgba(0,0,0,0.35))] p-5">
+                  <div className="text-xs uppercase tracking-[0.2em] text-red-200/70">
+                    MAD
+                  </div>
+
+                  <div className="mt-3 whitespace-pre-wrap text-2xl font-black leading-tight text-red-100 md:text-3xl">
+                    {displayTruth}
+                  </div>
                 </div>
 
                 {meta?.callback ? (
@@ -502,32 +504,7 @@ export default function MadMindPage() {
                   </div>
                 ) : null}
 
-                <div className="mt-4">
-                  <div className="text-xs uppercase tracking-[0.18em] text-white/30">
-                    Prompt
-                  </div>
-                  <div className="mt-1 text-sm text-white/55">{livePrompt}</div>
-                </div>
-
-                {meta?.lattice?.length ? (
-                  <div className="mt-5">
-                    <div className="text-xs uppercase tracking-[0.18em] text-white/30">
-                      Lattice Active
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {meta.lattice.map((node) => (
-                        <div
-                          key={node}
-                          className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-white/60"
-                        >
-                          {formatTag(node)}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-
-                <div className="mt-6 flex flex-wrap gap-3">
+                <div className="mt-5 flex flex-wrap gap-3">
                   <button
                     type="button"
                     onClick={() => void handleRefine("harder")}
@@ -609,13 +586,6 @@ export default function MadMindPage() {
               <div className="mt-3 text-xs text-white/45">
                 Savage Mode unlocks every 5 truths.
               </div>
-
-              {meta?.mood ? (
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
-                  Mood:{" "}
-                  <span className="text-white">{formatTag(meta.mood)}</span>
-                </div>
-              ) : null}
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
@@ -633,26 +603,14 @@ export default function MadMindPage() {
                   </div>
                 ))}
               </div>
+
+              {meta?.mood ? (
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+                  Mood:{" "}
+                  <span className="text-white">{formatTag(meta.mood)}</span>
+                </div>
+              ) : null}
             </div>
-
-            {meta?.lattice?.length ? (
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-                <div className="text-xs uppercase tracking-[0.35em] text-white/45">
-                  Internal Lattice
-                </div>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {meta.lattice.map((node) => (
-                    <div
-                      key={node}
-                      className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-red-200"
-                    >
-                      {formatTag(node)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : null}
           </div>
         </div>
       </section>
@@ -662,7 +620,7 @@ export default function MadMindPage() {
           {[
             ["Brutal Honesty", "No fake motivation. Real signal only."],
             ["Fast Clarity", "One message can shift your direction."],
-            ["Lattice Brain", "Multiple internal nodes pressure-test the final truth."],
+            ["Feels Instant", "Simple to use. Sharp enough to remember."],
           ].map(([title, text]) => (
             <div
               key={title}
