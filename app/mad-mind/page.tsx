@@ -17,6 +17,7 @@ type ApiMeta = {
   callback?: string | null;
   rarityHint?: "standard" | "rare" | "legendary";
   followUpBait?: string[];
+  lattice?: string[];
 };
 
 type ApiResponse = {
@@ -32,6 +33,7 @@ type ApiResponse = {
 
 type StyleMode = "safe" | "savage" | "crashout";
 type RefineMode = "harder" | "shorter" | "smarter" | "share";
+type OutputTab = "safe" | "savage" | "crashout";
 
 const DEMOS: Demo[] = [
   {
@@ -64,16 +66,39 @@ const PLACEHOLDERS = [
   "What’s my real problem?",
 ];
 
+function getOrCreateSessionId(): string {
+  if (typeof window === "undefined") return "web-user";
+
+  const existing = window.localStorage.getItem("madmind_session_id");
+  if (existing) return existing;
+
+  const next = `mad-${Math.random().toString(36).slice(2, 10)}`;
+  window.localStorage.setItem("madmind_session_id", next);
+  return next;
+}
+
+function getCookLevel(style: StyleMode): "mild" | "crashout" | "demon" {
+  if (style === "safe") return "mild";
+  if (style === "crashout") return "demon";
+  return "crashout";
+}
+
+function rarityLabel(rarity?: "standard" | "rare" | "legendary"): string {
+  if (rarity === "legendary") return "Legendary";
+  if (rarity === "rare") return "Rare";
+  return "Standard";
+}
+
+function formatTag(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 function inferPatterns(input: string, apiStates?: string[]): string[] {
   if (apiStates && apiStates.length > 0) {
-    return apiStates
-      .map((state) =>
-        state
-          .toLowerCase()
-          .replace(/_/g, " ")
-          .replace(/\b\w/g, (char) => char.toUpperCase()),
-      )
-      .slice(0, 3);
+    return apiStates.map(formatTag).slice(0, 3);
   }
 
   const text = input.toLowerCase();
@@ -120,38 +145,17 @@ function inferPatterns(input: string, apiStates?: string[]): string[] {
   }
 
   const finalPatterns = Array.from(patterns);
-
   return finalPatterns.length > 0
     ? finalPatterns.slice(0, 3)
     : ["Overthinking", "Hesitation", "Untapped Discipline"];
 }
 
-function rarityLabel(rarity?: "standard" | "rare" | "legendary"): string {
-  if (rarity === "legendary") return "Legendary";
-  if (rarity === "rare") return "Rare";
-  return "Standard";
-}
-
-function getCookLevel(style: StyleMode): "mild" | "crashout" | "demon" {
-  if (style === "safe") return "mild";
-  if (style === "crashout") return "demon";
-  return "crashout";
-}
-
-function getOrCreateSessionId(): string {
-  if (typeof window === "undefined") return "web-user";
-
-  const existing = window.localStorage.getItem("madmind_session_id");
-  if (existing) return existing;
-
-  const next = `mad-${Math.random().toString(36).slice(2, 10)}`;
-  window.localStorage.setItem("madmind_session_id", next);
-  return next;
-}
-
 async function shareOrCopy(text: string): Promise<boolean> {
   try {
-    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+    if (
+      typeof navigator !== "undefined" &&
+      typeof navigator.share === "function"
+    ) {
       await navigator.share({ text });
       return true;
     }
@@ -171,9 +175,30 @@ async function shareOrCopy(text: string): Promise<boolean> {
   return false;
 }
 
+function getDisplayOutput(
+  truth: string,
+  outputs: ApiResponse["outputs"],
+  tab: OutputTab,
+): string {
+  if (tab === "safe") return outputs?.safe?.trim() || truth;
+  if (tab === "crashout") return outputs?.crashout?.trim() || truth;
+  return outputs?.savage?.trim() || truth;
+}
+
+function getCardTone(rarity?: "standard" | "rare" | "legendary"): string {
+  if (rarity === "legendary") {
+    return "border-yellow-400/30 bg-[linear-gradient(180deg,rgba(255,190,40,0.08),rgba(80,30,0,0.10))]";
+  }
+  if (rarity === "rare") {
+    return "border-red-400/25 bg-[linear-gradient(180deg,rgba(255,50,50,0.07),rgba(0,0,0,0.18))]";
+  }
+  return "border-red-500/20 bg-black/40";
+}
+
 export default function MadMindPage() {
   const [input, setInput] = useState<string>("");
   const [truth, setTruth] = useState<string>("");
+  const [outputs, setOutputs] = useState<ApiResponse["outputs"] | null>(null);
   const [count, setCount] = useState<number>(0);
   const [demoIndex, setDemoIndex] = useState<number>(0);
   const [patterns, setPatterns] = useState<string[]>([
@@ -185,6 +210,7 @@ export default function MadMindPage() {
   const [meta, setMeta] = useState<ApiMeta | null>(null);
   const [lastPrompt, setLastPrompt] = useState<string>("");
   const [currentStyle, setCurrentStyle] = useState<StyleMode>("savage");
+  const [selectedTab, setSelectedTab] = useState<OutputTab>("savage");
   const [sessionId, setSessionId] = useState<string>("web-user");
   const [shareMessage, setShareMessage] = useState<string>("");
 
@@ -210,6 +236,10 @@ export default function MadMindPage() {
     return () => window.clearTimeout(timer);
   }, [shareMessage]);
 
+  useEffect(() => {
+    setSelectedTab(currentStyle);
+  }, [currentStyle]);
+
   const level = Math.floor(count / 5) + 1;
   const progress = ((count % 5) / 5) * 100;
 
@@ -217,9 +247,18 @@ export default function MadMindPage() {
     return lastPrompt || input || PLACEHOLDERS[count % PLACEHOLDERS.length];
   }, [lastPrompt, input, count]);
 
+  const displayTruth = useMemo(() => {
+    return getDisplayOutput(truth, outputs, selectedTab);
+  }, [truth, outputs, selectedTab]);
+
+  const hasVariants = Boolean(
+    outputs?.safe || outputs?.savage || outputs?.crashout,
+  );
+
   async function askMad(
     messageOverride?: string,
     styleOverride?: StyleMode,
+    forceMultiOutput?: boolean,
   ): Promise<void> {
     const finalInput =
       (messageOverride ?? input).trim() ||
@@ -228,6 +267,7 @@ export default function MadMindPage() {
     if (!finalInput || isLoading) return;
 
     const styleToUse = styleOverride ?? currentStyle;
+    const multiOutput = forceMultiOutput ?? true;
 
     setIsLoading(true);
     setLastPrompt(finalInput);
@@ -244,7 +284,7 @@ export default function MadMindPage() {
           sessionId,
           cookLevel: getCookLevel(styleToUse),
           preferredStyle: styleToUse,
-          multiOutput: false,
+          multiOutput,
         }),
       });
 
@@ -261,20 +301,26 @@ export default function MadMindPage() {
           data?.output || data?.error || `Request failed (${response.status})`;
 
         setTruth(errorMessage);
+        setOutputs(null);
         setMeta(data?.meta ?? null);
         setPatterns(inferPatterns(finalInput, data?.meta?.states));
         return;
       }
 
-      const nextTruth =
-        data?.output?.trim() || data?.error || "Signal broke.";
+      const nextTruth = data?.output?.trim() || data?.error || "Signal broke.";
 
       setTruth(nextTruth);
+      setOutputs(data?.outputs ?? null);
       setMeta(data?.meta ?? null);
       setPatterns(inferPatterns(finalInput, data?.meta?.states));
       setCount((prev) => prev + 1);
+
+      if (data?.outputs) {
+        setSelectedTab(styleToUse);
+      }
     } catch {
       setTruth("Could not reach MAD.");
+      setOutputs(null);
       setMeta(null);
       setPatterns(inferPatterns(finalInput));
     } finally {
@@ -286,7 +332,7 @@ export default function MadMindPage() {
     if (!truth && !lastPrompt) return;
 
     if (refinement === "share") {
-      const didShare = await shareOrCopy(truth || "MAD says the truth hurts.");
+      const didShare = await shareOrCopy(displayTruth || "MAD says the truth hurts.");
       setShareMessage(didShare ? "Copied." : "Could not share.");
       return;
     }
@@ -300,7 +346,7 @@ export default function MadMindPage() {
           ? `${base} make it shorter`
           : `${base} make it smarter`;
 
-    await askMad(mapped);
+    await askMad(mapped, currentStyle, true);
   }
 
   return (
@@ -393,23 +439,61 @@ export default function MadMindPage() {
                 </div>
               </div>
             ) : (
-              <div className="rounded-2xl border border-red-500/20 bg-black/40 p-6">
+              <div className={`rounded-2xl border p-6 ${getCardTone(meta?.rarityHint)}`}>
                 <div className="flex flex-wrap items-center gap-2 text-sm text-white/45">
                   <span>MAD says</span>
+
                   {meta?.intent ? (
                     <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-white/65">
                       {meta.intent}
                     </span>
                   ) : null}
+
                   {meta?.rarityHint ? (
                     <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-red-200">
                       {rarityLabel(meta.rarityHint)}
                     </span>
                   ) : null}
+
+                  {meta?.mood ? (
+                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-white/65">
+                      {formatTag(meta.mood)}
+                    </span>
+                  ) : null}
                 </div>
 
+                {hasVariants ? (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {(["safe", "savage", "crashout"] as const).map((tab) => {
+                      const available =
+                        tab === "safe"
+                          ? outputs?.safe
+                          : tab === "savage"
+                            ? outputs?.savage
+                            : outputs?.crashout;
+
+                      if (!available) return null;
+
+                      return (
+                        <button
+                          key={tab}
+                          type="button"
+                          onClick={() => setSelectedTab(tab)}
+                          className={`rounded-full border px-3 py-1.5 text-xs uppercase tracking-[0.2em] transition ${
+                            selectedTab === tab
+                              ? "border-red-500/40 bg-red-500/10 text-red-200"
+                              : "border-white/10 bg-white/[0.03] text-white/60 hover:border-white/20 hover:text-white"
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
+
                 <div className="mt-3 whitespace-pre-wrap text-3xl font-black leading-tight text-red-100 md:text-4xl">
-                  {truth}
+                  {displayTruth}
                 </div>
 
                 {meta?.callback ? (
@@ -418,12 +502,30 @@ export default function MadMindPage() {
                   </div>
                 ) : null}
 
-                <div className="mt-3 text-xs uppercase tracking-[0.18em] text-white/30">
-                  Prompt
+                <div className="mt-4">
+                  <div className="text-xs uppercase tracking-[0.18em] text-white/30">
+                    Prompt
+                  </div>
+                  <div className="mt-1 text-sm text-white/55">{livePrompt}</div>
                 </div>
-                <div className="mt-1 text-sm text-white/55">
-                  {livePrompt}
-                </div>
+
+                {meta?.lattice?.length ? (
+                  <div className="mt-5">
+                    <div className="text-xs uppercase tracking-[0.18em] text-white/30">
+                      Lattice Active
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {meta.lattice.map((node) => (
+                        <div
+                          key={node}
+                          className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-white/60"
+                        >
+                          {formatTag(node)}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
 
                 <div className="mt-6 flex flex-wrap gap-3">
                   <button
@@ -471,7 +573,7 @@ export default function MadMindPage() {
                         type="button"
                         onClick={() => {
                           setInput(item);
-                          void askMad(item);
+                          void askMad(item, currentStyle, true);
                         }}
                         disabled={isLoading}
                         className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/70 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white disabled:opacity-60"
@@ -511,9 +613,7 @@ export default function MadMindPage() {
               {meta?.mood ? (
                 <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
                   Mood:{" "}
-                  <span className="text-white">
-                    {meta.mood.charAt(0).toUpperCase() + meta.mood.slice(1)}
-                  </span>
+                  <span className="text-white">{formatTag(meta.mood)}</span>
                 </div>
               ) : null}
             </div>
@@ -534,6 +634,25 @@ export default function MadMindPage() {
                 ))}
               </div>
             </div>
+
+            {meta?.lattice?.length ? (
+              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+                <div className="text-xs uppercase tracking-[0.35em] text-white/45">
+                  Internal Lattice
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {meta.lattice.map((node) => (
+                    <div
+                      key={node}
+                      className="rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-red-200"
+                    >
+                      {formatTag(node)}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </section>
@@ -543,7 +662,7 @@ export default function MadMindPage() {
           {[
             ["Brutal Honesty", "No fake motivation. Real signal only."],
             ["Fast Clarity", "One message can shift your direction."],
-            ["Addictive Growth", "Each truth exposes another pattern."],
+            ["Lattice Brain", "Multiple internal nodes pressure-test the final truth."],
           ].map(([title, text]) => (
             <div
               key={title}
