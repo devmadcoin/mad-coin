@@ -6,6 +6,7 @@ const TUTORIAL_VIDEO = "https://www.youtube.com/embed/V0LBY-ZiklY";
 const GAME_LINK =
   "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD";
 const TOWER_DEFENSE_TEASER = "https://streamable.com/e/yc9dot";
+const KUBO_LINK = "https://x.com/Kubo100x";
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -148,6 +149,56 @@ export default function GamePage() {
                 className="object-cover"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            </div>
+          </div>
+        </SectionShell>
+
+        <SectionShell className="mt-8 overflow-hidden p-0">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.78fr_1.22fr]">
+            <div className="relative min-h-[300px] sm:min-h-[360px]">
+              <Image
+                src="/game/kubo-special-guest.jpg"
+                alt="Kubo special guest on the MAD gaming page"
+                fill
+                sizes="(max-width: 1024px) 100vw, 480px"
+                className="object-cover"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+            </div>
+
+            <div className="p-6 sm:p-8 lg:p-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-red-200/75">
+                SPECIAL GUEST
+              </p>
+
+              <h2 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl">
+                Kubo was a{" "}
+                <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.45)]">
+                  special guest.
+                </span>
+              </h2>
+
+              <p className="mt-5 max-w-2xl text-base leading-8 text-white/70 sm:text-lg">
+                Featured on the gaming tab as part of the $MAD world. Tap below
+                to go straight back to Kubo on X.
+              </p>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Pill tone="red">Guest Feature</Pill>
+                <Pill>Community Signal</Pill>
+                <Pill tone="green">Backlink Live</Pill>
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a
+                  href={KUBO_LINK}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white shadow-[0_0_16px_rgba(255,0,0,0.3)] transition hover:scale-[1.02] hover:bg-red-400"
+                >
+                  Visit @Kubo100x →
+                </a>
+              </div>
             </div>
           </div>
         </SectionShell>
