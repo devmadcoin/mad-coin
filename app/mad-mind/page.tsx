@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Demo = {
   q: string;
@@ -34,8 +34,15 @@ type ApiResponse = {
 };
 
 type StyleMode = "safe" | "savage" | "crashout";
-type RefineMode = "harder" | "shorter" | "smarter" | "share";
-type OutputTab = "safe" | "savage" | "crashout";
+type ChatRole = "user" | "mad";
+
+type ChatMessage = {
+  id: string;
+  role: ChatRole;
+  text: string;
+  meta?: ApiMeta | null;
+  outputs?: OutputVariants | null;
+};
 
 const DEMOS: Demo[] = [
   {
@@ -47,25 +54,16 @@ const DEMOS: Demo[] = [
     a: "Because comfort gets paid before discipline does.",
   },
   {
-    q: "Why am I anxious?",
-    a: "Because you rehearse fear more than action.",
-  },
-  {
     q: "Why am I stuck?",
     a: "Because thinking became your replacement for moving.",
-  },
-  {
-    q: "Why do I self sabotage?",
-    a: "Because your habits still serve your old identity.",
   },
 ];
 
 const PLACEHOLDERS = [
-  "What truth are you avoiding right now?",
+  "Ask what others avoid...",
   "Why am I stuck?",
-  "Why do I keep hesitating?",
-  "Why do I overthink everything?",
   "What’s my real problem?",
+  "Why do I keep hesitating?",
 ];
 
 function getOrCreateSessionId(): string {
@@ -85,12 +83,6 @@ function getCookLevel(style: StyleMode): "mild" | "crashout" | "demon" {
   return "crashout";
 }
 
-function rarityLabel(rarity?: "standard" | "rare" | "legendary"): string {
-  if (rarity === "legendary") return "Legendary";
-  if (rarity === "rare") return "Rare";
-  return "Standard";
-}
-
 function formatTag(value: string): string {
   return value
     .toLowerCase()
@@ -99,65 +91,41 @@ function formatTag(value: string): string {
 }
 
 function inferPatterns(input: string, apiStates?: string[]): string[] {
-  if (apiStates && apiStates.length > 0) {
-    return apiStates.map(formatTag).slice(0, 3);
-  }
+  if (apiStates?.length) return apiStates.map(formatTag).slice(0, 3);
 
   const text = input.toLowerCase();
-  const patterns = new Set<string>();
+  const tags = new Set<string>();
 
   if (
     text.includes("overthink") ||
     text.includes("anxious") ||
     text.includes("fear")
   ) {
-    patterns.add("Overthinking");
+    tags.add("Overthinking");
   }
 
   if (
     text.includes("stuck") ||
     text.includes("hesitate") ||
-    text.includes("hesitation") ||
-    text.includes("wait") ||
-    text.includes("win")
+    text.includes("wait")
   ) {
-    patterns.add("Hesitation");
+    tags.add("Hesitation");
   }
 
   if (
-    text.includes("lazy") ||
     text.includes("discipline") ||
-    text.includes("focus") ||
-    text.includes("consistent") ||
-    text.includes("consistency")
+    text.includes("lazy") ||
+    text.includes("focus")
   ) {
-    patterns.add("Untapped Discipline");
+    tags.add("Untapped Discipline");
   }
 
-  if (text.includes("money") || text.includes("broke")) {
-    patterns.add("Emotional Spending");
-  }
-
-  if (
-    text.includes("relationship") ||
-    text.includes("love") ||
-    text.includes("dating")
-  ) {
-    patterns.add("Confused Standards");
-  }
-
-  const finalPatterns = Array.from(patterns);
-  return finalPatterns.length > 0
-    ? finalPatterns.slice(0, 3)
-    : ["Overthinking", "Hesitation", "Untapped Discipline"];
+  return Array.from(tags).slice(0, 3);
 }
 
 async function shareOrCopy(text: string): Promise<boolean> {
   try {
-    if (
-      typeof navigator !== "undefined" &&
-      typeof navigator.share === "function"
-    ) {
+    if (typeof navigator !== "undefined" && navigator.share) {
       await navigator.share({ text });
       return true;
     }
@@ -177,36 +145,26 @@ async function shareOrCopy(text: string): Promise<boolean> {
   return false;
 }
 
-function getDisplayOutput(
-  truth: string,
-  outputs: OutputVariants | null | undefined,
-  tab: OutputTab,
-): string {
-  if (!outputs) return truth;
-
-  if (tab === "safe") return outputs.safe?.trim() || truth;
-  if (tab === "crashout") return outputs.crashout?.trim() || truth;
-  return outputs.savage?.trim() || truth;
+function messageId() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 export default function MadMindPage() {
-  const [input, setInput] = useState<string>("");
-  const [truth, setTruth] = useState<string>("");
-  const [outputs, setOutputs] = useState<OutputVariants | null>(null);
-  const [count, setCount] = useState<number>(0);
-  const [demoIndex, setDemoIndex] = useState<number>(0);
+  const [input, setInput] = useState("");
+  const [style, setStyle] = useState<StyleMode>("savage");
+  const [sessionId, setSessionId] = useState("web-user");
+  const [isLoading, setIsLoading] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
+  const [count, setCount] = useState(0);
   const [patterns, setPatterns] = useState<string[]>([
     "Overthinking",
     "Hesitation",
     "Untapped Discipline",
   ]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [meta, setMeta] = useState<ApiMeta | null>(null);
-  const [lastPrompt, setLastPrompt] = useState<string>("");
-  const [currentStyle, setCurrentStyle] = useState<StyleMode>("savage");
-  const [selectedTab, setSelectedTab] = useState<OutputTab>("savage");
-  const [sessionId, setSessionId] = useState<string>("web-user");
-  const [shareMessage, setShareMessage] = useState<string>("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [demoIndex, setDemoIndex] = useState(0);
+
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSessionId(getOrCreateSessionId());
@@ -215,55 +173,45 @@ export default function MadMindPage() {
   useEffect(() => {
     const timer = window.setInterval(() => {
       setDemoIndex((prev) => (prev + 1) % DEMOS.length);
-    }, 4000);
+    }, 3500);
 
     return () => window.clearInterval(timer);
   }, []);
 
   useEffect(() => {
     if (!shareMessage) return;
-
-    const timer = window.setTimeout(() => {
-      setShareMessage("");
-    }, 1800);
-
+    const timer = window.setTimeout(() => setShareMessage(""), 1600);
     return () => window.clearTimeout(timer);
   }, [shareMessage]);
 
   useEffect(() => {
-    setSelectedTab(currentStyle);
-  }, [currentStyle]);
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages, isLoading]);
 
+  const latestMad = [...messages].reverse().find((m) => m.role === "mad");
+  const latestMeta = latestMad?.meta ?? null;
   const level = Math.floor(count / 5) + 1;
   const progress = ((count % 5) / 5) * 100;
 
-  const livePrompt = useMemo(() => {
-    return lastPrompt || input || PLACEHOLDERS[count % PLACEHOLDERS.length];
-  }, [lastPrompt, input, count]);
-
-  const displayTruth = useMemo(() => {
-    return getDisplayOutput(truth, outputs, selectedTab);
-  }, [truth, outputs, selectedTab]);
-
-  const hasVariants = Boolean(
-    outputs?.safe || outputs?.savage || outputs?.crashout,
-  );
-
-  async function askMad(
-    messageOverride?: string,
-    styleOverride?: StyleMode,
-    forceMultiOutput = true,
-  ): Promise<void> {
-    const finalInput =
+  async function sendMessage(messageOverride?: string) {
+    const text =
       (messageOverride ?? input).trim() ||
       PLACEHOLDERS[count % PLACEHOLDERS.length];
 
-    if (!finalInput || isLoading) return;
+    if (!text || isLoading) return;
 
-    const styleToUse = styleOverride ?? currentStyle;
+    const userMessage: ChatMessage = {
+      id: messageId(),
+      role: "user",
+      text,
+    };
 
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
     setIsLoading(true);
-    setLastPrompt(finalInput);
     setShareMessage("");
 
     try {
@@ -273,11 +221,11 @@ export default function MadMindPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: finalInput,
+          message: text,
           sessionId,
-          cookLevel: getCookLevel(styleToUse),
-          preferredStyle: styleToUse,
-          multiOutput: forceMultiOutput,
+          cookLevel: getCookLevel(style),
+          preferredStyle: style,
+          multiOutput: false,
         }),
       });
 
@@ -289,389 +237,329 @@ export default function MadMindPage() {
         data = null;
       }
 
-      if (!response.ok) {
-        const errorMessage =
-          data?.output || data?.error || `Request failed (${response.status})`;
+      const botText = response.ok
+        ? data?.output?.trim() || data?.error || "Signal broke."
+        : data?.output || data?.error || `Request failed (${response.status})`;
 
-        setTruth(errorMessage);
-        setOutputs(null);
-        setMeta(data?.meta ?? null);
-        setPatterns(inferPatterns(finalInput, data?.meta?.states));
-        return;
-      }
+      const madMessage: ChatMessage = {
+        id: messageId(),
+        role: "mad",
+        text: botText,
+        meta: data?.meta ?? null,
+        outputs: data?.outputs ?? null,
+      };
 
-      const nextTruth = data?.output?.trim() || data?.error || "Signal broke.";
-
-      setTruth(nextTruth);
-      setOutputs(data?.outputs ?? null);
-      setMeta(data?.meta ?? null);
-      setPatterns(inferPatterns(finalInput, data?.meta?.states));
+      setMessages((prev) => [...prev, madMessage]);
+      setPatterns(inferPatterns(text, data?.meta?.states));
       setCount((prev) => prev + 1);
-
-      if (data?.outputs) {
-        setSelectedTab(styleToUse);
-      }
     } catch {
-      setTruth("Could not reach MAD.");
-      setOutputs(null);
-      setMeta(null);
-      setPatterns(inferPatterns(finalInput));
+      const madMessage: ChatMessage = {
+        id: messageId(),
+        role: "mad",
+        text: "Could not reach MAD.",
+        meta: null,
+      };
+
+      setMessages((prev) => [...prev, madMessage]);
+      setPatterns(inferPatterns(text));
     } finally {
       setIsLoading(false);
     }
   }
 
-  async function handleRefine(refinement: RefineMode): Promise<void> {
-    if (!truth && !lastPrompt) return;
-
-    if (refinement === "share") {
-      const didShare = await shareOrCopy(
-        displayTruth || "MAD says the truth hurts.",
-      );
-      setShareMessage(didShare ? "Copied." : "Could not share.");
-      return;
-    }
-
-    const base = livePrompt;
+  async function handleQuickReply(type: "harder" | "smarter" | "shorter") {
+    const lastUser = [...messages].reverse().find((m) => m.role === "user")?.text;
+    if (!lastUser) return;
 
     const mapped =
-      refinement === "harder"
-        ? `${base} go harder`
-        : refinement === "shorter"
-          ? `${base} make it shorter`
-          : `${base} make it smarter`;
+      type === "harder"
+        ? `${lastUser} go harder`
+        : type === "shorter"
+          ? `${lastUser} make it shorter`
+          : `${lastUser} make it smarter`;
 
-    await askMad(mapped, currentStyle, true);
+    await sendMessage(mapped);
+  }
+
+  async function handleShare() {
+    if (!latestMad?.text) return;
+    const didShare = await shareOrCopy(latestMad.text);
+    setShareMessage(didShare ? "Copied." : "Could not share.");
   }
 
   return (
     <main className="min-h-screen bg-black text-white">
-      <section className="relative overflow-hidden border-b border-white/10 bg-gradient-to-b from-red-950/40 via-black to-black">
+      <section className="relative border-b border-white/10 bg-gradient-to-b from-red-950/40 via-black to-black">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,40,40,0.16),transparent_38%)]" />
-        <div className="relative mx-auto max-w-5xl px-4 py-14 md:py-20">
-          <div className="mx-auto max-w-4xl text-center">
+        <div className="relative mx-auto max-w-6xl px-4 py-10 md:py-14">
+          <div className="mx-auto max-w-3xl text-center">
             <div className="mb-4 inline-flex rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.35em] text-red-300">
               MAD AI
             </div>
 
-            <h1 className="mx-auto max-w-4xl text-5xl font-black leading-tight md:text-7xl">
+            <h1 className="text-5xl font-black leading-tight md:text-7xl">
               The Truth Machine.
             </h1>
 
-            <p className="mx-auto mt-5 max-w-2xl text-lg text-white/65 md:text-xl">
-              Brutally honest insight for discipline, money, fear, excuses,
-              relationships, and growth.
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-white/65 md:text-xl">
+              A chat that tells you what you need to hear, not what you want to hear.
             </p>
+          </div>
+        </div>
+      </section>
 
-            <div className="mx-auto mt-10 max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-3 shadow-2xl shadow-red-950/20">
+      <section className="mx-auto grid max-w-6xl gap-6 px-4 py-6 lg:grid-cols-[1.45fr_0.8fr]">
+        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
+          <div className="border-b border-white/10 px-5 py-4">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div className="text-sm font-black uppercase tracking-[0.28em] text-red-300">
+                  Live Chat
+                </div>
+                <div className="mt-1 text-sm text-white/50">
+                  {messages.length === 0
+                    ? `Example: ${DEMOS[demoIndex].q}`
+                    : "Every message reveals how you think."}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {(["safe", "savage", "crashout"] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setStyle(mode)}
+                    className={`rounded-full border px-3 py-1.5 text-xs uppercase tracking-[0.2em] transition ${
+                      style === mode
+                        ? "border-red-500/40 bg-red-500/10 text-red-200"
+                        : "border-white/10 bg-white/[0.03] text-white/55 hover:border-white/20 hover:text-white"
+                    }`}
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div
+            ref={scrollRef}
+            className="h-[62vh] min-h-[480px] space-y-4 overflow-y-auto px-4 py-4 md:px-5"
+          >
+            {messages.length === 0 ? (
+              <div className="flex h-full items-center justify-center">
+                <div className="max-w-xl rounded-[1.8rem] border border-white/10 bg-black/30 p-6 text-center">
+                  <div className="text-sm uppercase tracking-[0.24em] text-white/35">
+                    MAD says
+                  </div>
+                  <div className="mt-3 text-2xl font-black leading-tight text-red-100">
+                    {DEMOS[demoIndex].a}
+                  </div>
+                  <div className="mt-4 text-sm text-white/40">
+                    Ask what others avoid.
+                  </div>
+                </div>
+              </div>
+            ) : (
+              messages.map((message) => {
+                const isUser = message.role === "user";
+
+                return (
+                  <div
+                    key={message.id}
+                    className={isUser ? "flex justify-end" : "flex justify-start"}
+                  >
+                    <div
+                      className={
+                        isUser
+                          ? "max-w-[82%] rounded-[1.6rem] border border-white/10 bg-[#141414] px-5 py-4 text-white"
+                          : "max-w-[88%] rounded-[1.6rem] border border-red-500/20 bg-[linear-gradient(180deg,rgba(70,0,0,0.22),rgba(0,0,0,0.38))] px-5 py-4 text-red-50"
+                      }
+                    >
+                      <div
+                        className={
+                          isUser
+                            ? "text-xs uppercase tracking-[0.2em] text-white/35"
+                            : "flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em] text-red-200/70"
+                        }
+                      >
+                        {isUser ? (
+                          "You"
+                        ) : (
+                          <>
+                            <span>MAD</span>
+                            {message.meta?.intent ? (
+                              <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 text-[10px] tracking-[0.18em] text-white/60">
+                                {message.meta.intent}
+                              </span>
+                            ) : null}
+                          </>
+                        )}
+                      </div>
+
+                      <div
+                        className={
+                          isUser
+                            ? "mt-2 text-base leading-7 text-white/85"
+                            : "mt-3 whitespace-pre-wrap text-2xl font-black leading-tight text-red-100 md:text-3xl"
+                        }
+                      >
+                        {message.text}
+                      </div>
+
+                      {!isUser && message.meta?.callback ? (
+                        <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+                          {message.meta.callback}
+                        </div>
+                      ) : null}
+
+                      {!isUser && message.meta?.followUpBait?.length ? (
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {message.meta.followUpBait.slice(0, 3).map((item) => (
+                            <button
+                              key={item}
+                              type="button"
+                              onClick={() => {
+                                setInput(item);
+                                void sendMessage(item);
+                              }}
+                              disabled={isLoading}
+                              className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/70 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white disabled:opacity-60"
+                            >
+                              {item}
+                            </button>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+
+            {isLoading ? (
+              <div className="flex justify-start">
+                <div className="max-w-[88%] rounded-[1.6rem] border border-red-500/20 bg-[linear-gradient(180deg,rgba(70,0,0,0.22),rgba(0,0,0,0.38))] px-5 py-4 text-red-50">
+                  <div className="text-xs uppercase tracking-[0.2em] text-red-200/70">
+                    MAD
+                  </div>
+                  <div className="mt-3 text-lg font-black text-red-100">
+                    MAD is reading you...
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="border-t border-white/10 px-4 py-4 md:px-5">
+            <div className="mb-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => void handleQuickReply("harder")}
+                disabled={isLoading || messages.length === 0}
+                className="rounded-full border border-red-500/30 px-4 py-2 text-sm text-white transition hover:border-red-400 hover:bg-red-500/10 disabled:opacity-50"
+              >
+                Harder
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleQuickReply("smarter")}
+                disabled={isLoading || messages.length === 0}
+                className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-50"
+              >
+                Smarter
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleQuickReply("shorter")}
+                disabled={isLoading || messages.length === 0}
+                className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-50"
+              >
+                Shorter
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleShare()}
+                disabled={messages.length === 0}
+                className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-50"
+              >
+                Share
+              </button>
+              {shareMessage ? (
+                <div className="self-center text-sm text-red-200">{shareMessage}</div>
+              ) : null}
+            </div>
+
+            <div className="flex gap-3">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    void askMad();
+                    void sendMessage();
                   }
                 }}
                 placeholder={PLACEHOLDERS[count % PLACEHOLDERS.length]}
-                className="mb-3 w-full rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-lg outline-none transition placeholder:text-white/30 focus:border-red-500/40"
+                className="flex-1 rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-base outline-none transition placeholder:text-white/30 focus:border-red-500/40"
               />
-
               <button
                 type="button"
-                onClick={() => void askMad()}
+                onClick={() => void sendMessage()}
                 disabled={isLoading}
-                className="w-full rounded-2xl bg-red-500 px-6 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.01] hover:bg-red-400 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
+                className="rounded-2xl bg-red-500 px-6 py-4 text-base font-black text-black transition hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isLoading ? "MAD is reading you..." : "Tell Me The MAD Truth"}
+                Send
               </button>
-
-              <div className="mt-3 text-sm text-white/45">
-                Brutal • Instant • No Sign Up
-              </div>
-
-              <div className="mt-4 flex flex-wrap justify-center gap-2">
-                {(["safe", "savage", "crashout"] as const).map((style) => (
-                  <button
-                    key={style}
-                    type="button"
-                    onClick={() => setCurrentStyle(style)}
-                    className={`rounded-full border px-3 py-1.5 text-xs uppercase tracking-[0.2em] transition ${
-                      currentStyle === style
-                        ? "border-red-500/40 bg-red-500/10 text-red-200"
-                        : "border-white/10 bg-white/[0.03] text-white/55 hover:border-white/20 hover:text-white"
-                    }`}
-                  >
-                    {style}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
         </div>
-      </section>
 
-      <section className="mx-auto max-w-5xl px-4 py-10 md:py-12">
-        <div className="grid gap-6 lg:grid-cols-[1.45fr_0.95fr]">
-          <div className="rounded-3xl border border-red-500/20 bg-gradient-to-b from-red-950/25 to-black p-6">
-            <div className="mb-3 text-xs uppercase tracking-[0.35em] text-red-300">
-              Live Truth
+        <div className="space-y-6">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+            <div className="text-xs uppercase tracking-[0.35em] text-white/45">
+              Your Growth Level
             </div>
 
-            {!truth ? (
-              <div className="rounded-2xl border border-white/10 bg-black/40 p-6">
-                <div className="text-sm text-white/45">Example prompt</div>
-                <div className="mt-2 text-xl font-semibold text-white">
-                  {DEMOS[demoIndex].q}
-                </div>
+            <div className="mt-4 text-4xl font-black">Level {level}</div>
 
-                <div className="mt-6 text-sm text-white/45">MAD says</div>
-                <div className="mt-2 text-3xl font-black leading-tight text-red-100">
-                  {DEMOS[demoIndex].a}
-                </div>
+            <div className="mt-2 text-sm text-white/55">
+              Truths Received: {count}
+            </div>
 
-                <div className="mt-6 text-sm text-white/35">
-                  Ask what others avoid.
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-red-500/20 bg-black/40 p-6">
-                <div className="flex flex-wrap items-center gap-2 text-sm text-white/45">
-                  <span>MAD says</span>
+            <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
+              <div
+                className="h-full rounded-full bg-red-500 transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
 
-                  {meta?.intent ? (
-                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-white/65">
-                      {meta.intent}
-                    </span>
-                  ) : null}
-
-                  {meta?.rarityHint ? (
-                    <span className="rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-red-200">
-                      {rarityLabel(meta.rarityHint)}
-                    </span>
-                  ) : null}
-                </div>
-
-                {hasVariants ? (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {(["safe", "savage", "crashout"] as const).map((tab) => {
-                      const available =
-                        tab === "safe"
-                          ? outputs?.safe
-                          : tab === "savage"
-                            ? outputs?.savage
-                            : outputs?.crashout;
-
-                      if (!available) return null;
-
-                      return (
-                        <button
-                          key={tab}
-                          type="button"
-                          onClick={() => setSelectedTab(tab)}
-                          className={`rounded-full border px-3 py-1.5 text-xs uppercase tracking-[0.2em] transition ${
-                            selectedTab === tab
-                              ? "border-red-500/40 bg-red-500/10 text-red-200"
-                              : "border-white/10 bg-white/[0.03] text-white/60 hover:border-white/20 hover:text-white"
-                          }`}
-                        >
-                          {tab}
-                        </button>
-                      );
-                    })}
-                  </div>
-                ) : null}
-
-                <div className="mt-4 rounded-[1.6rem] border border-white/10 bg-[#120606] p-5">
-                  <div className="text-xs uppercase tracking-[0.2em] text-white/35">
-                    You
-                  </div>
-                  <div className="mt-2 text-base text-white/80">{livePrompt}</div>
-                </div>
-
-                <div className="mt-4 rounded-[1.6rem] border border-red-500/20 bg-[linear-gradient(180deg,rgba(70,0,0,0.26),rgba(0,0,0,0.35))] p-5">
-                  <div className="text-xs uppercase tracking-[0.2em] text-red-200/70">
-                    MAD
-                  </div>
-
-                  <div className="mt-3 whitespace-pre-wrap text-2xl font-black leading-tight text-red-100 md:text-3xl">
-                    {displayTruth}
-                  </div>
-                </div>
-
-                {meta?.callback ? (
-                  <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
-                    {meta.callback}
-                  </div>
-                ) : null}
-
-                <div className="mt-5 flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    onClick={() => void handleRefine("harder")}
-                    disabled={isLoading}
-                    className="rounded-full border border-red-500/30 px-4 py-2 text-sm text-white transition hover:border-red-400 hover:bg-red-500/10 disabled:opacity-60"
-                  >
-                    Harder
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleRefine("smarter")}
-                    disabled={isLoading}
-                    className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
-                  >
-                    Smarter
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleRefine("shorter")}
-                    disabled={isLoading}
-                    className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-60"
-                  >
-                    Shorter
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleRefine("share")}
-                    className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5"
-                  >
-                    Share
-                  </button>
-                </div>
-
-                {shareMessage ? (
-                  <div className="mt-3 text-sm text-red-200">{shareMessage}</div>
-                ) : null}
-
-                {meta?.followUpBait?.length ? (
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {meta.followUpBait.slice(0, 3).map((item) => (
-                      <button
-                        key={item}
-                        type="button"
-                        onClick={() => {
-                          setInput(item);
-                          void askMad(item, currentStyle, true);
-                        }}
-                        disabled={isLoading}
-                        className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/70 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white disabled:opacity-60"
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            )}
+            <div className="mt-3 text-xs text-white/45">
+              Savage Mode unlocks every 5 truths.
+            </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-              <div className="text-xs uppercase tracking-[0.35em] text-white/45">
-                Your Growth Level
-              </div>
+          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+            <div className="text-xs uppercase tracking-[0.35em] text-white/45">
+              What MAD Sees
+            </div>
 
-              <div className="mt-4 text-4xl font-black">Level {level}</div>
-
-              <div className="mt-2 text-sm text-white/55">
-                Truths Received: {count}
-              </div>
-
-              <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/10">
+            <div className="mt-4 space-y-3 text-sm">
+              {patterns.map((pattern) => (
                 <div
-                  className="h-full rounded-full bg-red-500 transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-
-              <div className="mt-3 text-xs text-white/45">
-                Savage Mode unlocks every 5 truths.
-              </div>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-              <div className="text-xs uppercase tracking-[0.35em] text-white/45">
-                What MAD Sees
-              </div>
-
-              <div className="mt-4 space-y-3 text-sm">
-                {patterns.map((pattern) => (
-                  <div
-                    key={pattern}
-                    className="rounded-2xl bg-white/5 px-4 py-3"
-                  >
-                    {pattern}
-                  </div>
-                ))}
-              </div>
-
-              {meta?.mood ? (
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
-                  Mood:{" "}
-                  <span className="text-white">{formatTag(meta.mood)}</span>
+                  key={pattern}
+                  className="rounded-2xl bg-white/5 px-4 py-3"
+                >
+                  {pattern}
                 </div>
-              ) : null}
+              ))}
             </div>
+
+            {latestMeta?.mood ? (
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
+                Mood: <span className="text-white">{formatTag(latestMeta.mood)}</span>
+              </div>
+            ) : null}
           </div>
-        </div>
-      </section>
-
-      <section className="border-y border-white/10 bg-white/[0.02]">
-        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-14 md:grid-cols-3">
-          {[
-            ["Brutal Honesty", "No fake motivation. Real signal only."],
-            ["Fast Clarity", "One message can shift your direction."],
-            ["Feels Instant", "Simple to use. Sharp enough to remember."],
-          ].map(([title, text]) => (
-            <div
-              key={title}
-              className="rounded-3xl border border-white/10 bg-black/40 p-6"
-            >
-              <div className="text-xl font-black">{title}</div>
-              <div className="mt-3 text-white/60">{text}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 py-14 md:py-16">
-        <div className="mb-8 text-center text-3xl font-black">
-          People Keep Coming Back.
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          {[
-            "This called me out bad.",
-            "Why is this thing always right?",
-            "Better than fake motivation.",
-            "MAD just cooked me.",
-          ].map((quote) => (
-            <div
-              key={quote}
-              className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 text-white/80"
-            >
-              “{quote}”
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-t border-white/10 bg-gradient-to-b from-black to-red-950/20">
-        <div className="mx-auto max-w-4xl px-4 py-16 text-center md:py-20">
-          <h2 className="text-4xl font-black md:text-6xl">
-            Ready for the MAD truth?
-          </h2>
-
-          <p className="mt-4 text-white/60">
-            Stop guessing. Start seeing clearly.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="mt-8 rounded-2xl bg-red-500 px-8 py-4 text-lg font-black text-black transition duration-200 hover:scale-[1.03] hover:bg-red-400 active:scale-[0.99]"
-          >
-            Ask MAD
-          </button>
         </div>
       </section>
     </main>
