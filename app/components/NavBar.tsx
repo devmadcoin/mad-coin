@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
-type NavVariant = "default" | "primary" | "cta";
+type NavVariant = "default" | "primary" | "cta" | "ai";
 
 type NavItem = {
   href: string;
@@ -15,16 +15,22 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/", label: "Home" },
+  { href: "/", label: "Home", mobileLabel: "Home" },
+  {
+    href: "/mad-mind",
+    label: "MAD AI",
+    mobileLabel: "AI",
+    variant: "ai",
+  },
   {
     href: "/roadmap",
     label: "The Mad Path",
-    mobileLabel: "Mad Path",
+    mobileLabel: "Path",
     variant: "primary",
   },
-  { href: "/game", label: "Game" },
+  { href: "/game", label: "Game", mobileLabel: "Game" },
   { href: "/memes", label: "$MAD Art", mobileLabel: "Art" },
-  { href: "/merch", label: "Merch", variant: "cta" },
+  { href: "/merch", label: "Merch", mobileLabel: "Merch", variant: "cta" },
 ];
 
 function cn(...classes: Array<string | false | null | undefined>) {
@@ -35,11 +41,13 @@ function NavPill({
   href,
   pathname,
   variant = "default",
+  mobile = false,
   children,
 }: {
   href: string;
   pathname: string;
   variant?: NavVariant;
+  mobile?: boolean;
   children: ReactNode;
 }) {
   const active = pathname === href;
@@ -48,17 +56,20 @@ function NavPill({
     <Link
       href={href}
       className={cn(
-        "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-bold transition duration-300",
+        "inline-flex items-center justify-center rounded-full font-bold transition duration-300",
+        mobile ? "min-w-0 px-2 py-2 text-xs" : "px-4 py-2 text-sm",
         active
           ? "bg-white text-black shadow-[0_0_12px_rgba(255,255,255,0.08)]"
           : variant === "cta"
             ? "border border-red-500/30 bg-red-500 text-white hover:scale-105 hover:bg-red-400 hover:shadow-[0_0_20px_rgba(255,0,0,0.25)]"
-            : variant === "primary"
-              ? "border border-white/10 bg-white/5 text-white/85 hover:bg-white/10"
-              : "text-white/72 hover:bg-white/10 hover:text-white"
+            : variant === "ai"
+              ? "border border-red-500/20 bg-red-500/8 text-red-100 hover:border-red-400/35 hover:bg-red-500/12 hover:text-white"
+              : variant === "primary"
+                ? "border border-white/10 bg-white/5 text-white/85 hover:bg-white/10"
+                : "text-white/72 hover:bg-white/10 hover:text-white"
       )}
     >
-      {children}
+      <span className={cn("truncate", mobile && "max-w-full")}>{children}</span>
     </Link>
   );
 }
@@ -107,13 +118,14 @@ export default function NavBar() {
           </nav>
         </div>
 
-        <div className="no-scrollbar flex gap-2 overflow-x-auto pb-3 md:hidden">
+        <div className="grid grid-cols-6 gap-2 pb-3 md:hidden">
           {NAV_ITEMS.map((item) => (
             <NavPill
               key={item.href}
               href={item.href}
               pathname={pathname}
               variant={item.variant}
+              mobile
             >
               {item.mobileLabel ?? item.label}
             </NavPill>
