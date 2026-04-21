@@ -8,7 +8,7 @@ const LINKS = {
 } as const;
 
 const PROGRESS = {
-  complete: 7,
+  complete: 5,
   total: 9,
 };
 
