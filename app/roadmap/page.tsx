@@ -5,10 +5,12 @@ import type { ReactNode } from "react";
 
 const LINKS = {
   buy: "https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
+  communityProof:
+    "https://x.com/madrichclub_/status/2046716691867201953?s=20",
 } as const;
 
 const PROGRESS = {
-  complete: 5,
+  complete: 6,
   total: 9,
 };
 
@@ -19,11 +21,11 @@ const STATUS_CARDS = [
   { label: "Confessions", value: "LIVE NOW", tone: "green", icon: "💬" },
   { label: "400M Burn", value: "PROVEN", tone: "green", icon: "🔥" },
   { label: "MAD AI", value: "LIVE NOW", tone: "green", icon: "🤖" },
+  { label: "Community Support", value: "PROVEN", tone: "green", icon: "🤝" },
   { label: "MAD Games", value: "IN PROGRESS", tone: "red", icon: "🎮" },
   { label: "Stickers", value: "LIVE NOW", tone: "green", icon: "😈" },
   { label: "Clothing", value: "TESTING", tone: "red", icon: "👕" },
   { label: "$MAD Art", value: "IN PROGRESS", tone: "red", icon: "🖼️" },
-  { label: "800M Goal", value: "FINAL GOAL", tone: "red", icon: "🎯" },
 ] as const;
 
 function cn(...classes: Array<string | false | null | undefined>) {
@@ -142,30 +144,90 @@ function RoadmapPoster() {
 function CommunitySupport() {
   return (
     <Shell className="p-6 sm:p-8">
-      <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div>
-          <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-300/85">
-            Alliance Expansion
-          </p>
+      <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
+        <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),rgba(0,0,0,0.92))] p-6 sm:p-7">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-300/85">
+              Alliance Expansion
+            </p>
 
-          <h2 className="mt-3 text-3xl font-black text-white sm:text-5xl">
-            Support 1 Community.
-          </h2>
+            <h2 className="mt-3 text-3xl font-black text-white sm:text-5xl">
+              1 Community Supported.
+            </h2>
 
-          <p className="mt-4 max-w-3xl text-base leading-8 text-white/75 sm:text-lg">
-            Buy 8M of their tokens and build strategic alignment through action,
-            not empty talk.
-          </p>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-white/78 sm:text-lg">
+              Before asking people to trust the mission, we showed loyalty in
+              public. One community was supported through action, and the tokens
+              were locked to prove long-term conviction.
+            </p>
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 px-6 py-5">
+              <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-300/80">
+                Support Status
+              </p>
+              <p className="mt-2 text-3xl font-black text-emerald-300">
+                Completed
+              </p>
+              <p className="mt-1 text-sm text-white/55">
+                Backed publicly with receipts
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-5">
+              <p className="text-xs font-black uppercase tracking-[0.28em] text-white/55">
+                Signal Sent
+              </p>
+              <p className="mt-2 text-3xl font-black text-white">
+                Locked Up
+              </p>
+              <p className="mt-1 text-sm text-white/55">
+                Commitment over quick exits
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 px-8 py-6 text-center">
-          <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-300/80">
-            Target Size
-          </p>
+        <div className="rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-white/55">
+              Proof of Work
+            </p>
 
-          <p className="mt-2 text-4xl font-black text-emerald-300">8M</p>
+            <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-300">
+              Verified Signal
+            </span>
+          </div>
 
-          <p className="mt-1 text-sm text-white/55">Tokens</p>
+          <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-black/40 p-5">
+            <p className="text-lg font-black text-white sm:text-xl">
+              Supported one community.
+            </p>
+            <p className="mt-2 text-lg font-black text-emerald-300 sm:text-xl">
+              Locked all the tokens.
+            </p>
+
+            <p className="mt-4 text-sm leading-7 text-white/68 sm:text-base">
+              This milestone matters because it shows execution, patience, and
+              visible commitment. Not theory. Not hype. Proof.
+            </p>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              <a
+                href={LINKS.communityProof}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-300 transition hover:scale-[1.02] hover:bg-emerald-400/15"
+              >
+                View Proof →
+              </a>
+
+              <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-semibold text-white/65">
+                Public receipt on X
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </Shell>
