@@ -3,8 +3,11 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  timeout: 25000, // 25s timeout to prevent hanging requests
+  maxRetries: 2,
 });
 
+/* ─── TYPES ─── */
 type StyleTab = "safe" | "savage" | "crashout";
 type CookLevel = "mild" | "mean" | "crashout" | "demon";
 
@@ -16,10 +19,7 @@ type RequestBody = {
   multiOutput?: unknown;
 };
 
-type LatticeNodeResult = {
-  node: string;
-  output: string;
-};
+type LatticeNodeResult = { node: string; output: string };
 
 type ApiMeta = {
   intent: string;
@@ -43,10 +43,40 @@ type MemoryEntry = {
   moodHistory: string[];
   callbackNotes: string[];
   favoriteStyle?: StyleTab;
+  lastSeen: number; // timestamp for rate limiting
+  messageCount: number; // for rate limiting window
 };
 
+/* ─── MEMORY ─── */
 const memory = new Map<string, MemoryEntry>();
 
+// Simple in-memory rate limiter: 30 requests per minute per session
+function isRateLimited(sessionId: string): boolean {
+  const entry = memory.get(sessionId);
+  if (!entry) return false;
+
+  const now = Date.now();
+  const oneMinute = 60 * 1000;
+
+  // Reset counter if a minute has passed
+  if (now - entry.lastSeen > oneMinute) {
+    entry.messageCount = 0;
+    entry.lastSeen = now;
+    return false;
+  }
+
+  entry.lastSeen = now;
+  return entry.messageCount >= 30;
+}
+
+function incrementMessageCount(sessionId: string): void {
+  const entry = memory.get(sessionId);
+  if (entry) {
+    entry.messageCount += 1;
+  }
+}
+
+/* ─── INPUT SANITIZATION ─── */
 function sanitize(value: unknown, max = 700): string {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
@@ -66,6 +96,7 @@ function isSimilar(a: string, b: string): boolean {
   return na === nb || na.includes(nb) || nb.includes(na);
 }
 
+/* ─── PARSERS ─── */
 function parseStyle(value: unknown): StyleTab {
   return value === "safe" || value === "savage" || value === "crashout"
     ? value
@@ -85,6 +116,7 @@ function wantsMultiOutput(value: unknown): boolean {
   return value === true;
 }
 
+/* ─── INTENT DETECTION ─── */
 function detectIntent(text: string): string {
   const lower = text.toLowerCase();
 
@@ -93,26 +125,23 @@ function detectIntent(text: string): string {
     lower.includes("what is $mad") ||
     lower.includes("define") ||
     lower.includes("what does mad mean")
-  ) {
+  )
     return "DEFINITION";
-  }
 
   if (
     lower.includes("caption") ||
     lower.includes("instagram caption") ||
     lower.includes("ig caption")
-  ) {
+  )
     return "CAPTION";
-  }
 
   if (
     lower.includes("reply") ||
     lower.includes("comeback") ||
     lower.includes("roast") ||
     lower.includes("clap back")
-  ) {
+  )
     return "COMEBACK";
-  }
 
   if (
     lower.includes("tweet") ||
@@ -120,29 +149,27 @@ function detectIntent(text: string): string {
     lower.includes("telegram") ||
     lower.includes("write a post") ||
     lower.includes("shill")
-  ) {
+  )
     return "SHILL";
-  }
 
   if (
     lower.includes("truth about me") ||
     lower.includes("be honest") ||
     lower.includes("tell me the truth")
-  ) {
+  )
     return "CONFESSION";
-  }
 
   if (
     lower.includes("idea") ||
     lower.includes("content") ||
     lower.includes("brainstorm")
-  ) {
+  )
     return "CONTENT";
-  }
 
   return "GENERAL";
 }
 
+/* ─── STATE DETECTION ─── */
 function detectStates(text: string): string[] {
   const lower = text.toLowerCase();
   const states = new Set<string>();
@@ -153,9 +180,8 @@ function detectStates(text: string): string[] {
     lower.includes("anxious") ||
     lower.includes("panic") ||
     lower.includes("scared")
-  ) {
+  )
     states.add("FEAR");
-  }
 
   if (
     lower.includes("stuck") ||
@@ -164,9 +190,8 @@ function detectStates(text: string): string[] {
     lower.includes("tomorrow") ||
     lower.includes("wait") ||
     lower.includes("not ready")
-  ) {
+  )
     states.add("HESITATION");
-  }
 
   if (
     lower.includes("discipline") ||
@@ -174,9 +199,8 @@ function detectStates(text: string): string[] {
     lower.includes("focus") ||
     lower.includes("consistent") ||
     lower.includes("procrastinate")
-  ) {
+  )
     states.add("DISCIPLINE");
-  }
 
   if (
     lower.includes("money") ||
@@ -184,40 +208,37 @@ function detectStates(text: string): string[] {
     lower.includes("spend") ||
     lower.includes("income") ||
     lower.includes("debt")
-  ) {
+  )
     states.add("MONEY");
-  }
 
   if (
     lower.includes("ego") ||
     lower.includes("pride") ||
     lower.includes("i know") ||
     lower.includes("obviously")
-  ) {
+  )
     states.add("EGO");
-  }
 
   if (
     lower.includes("love") ||
     lower.includes("dating") ||
     lower.includes("relationship")
-  ) {
+  )
     states.add("RELATIONSHIP");
-  }
 
   if (
     lower.includes("success") ||
     lower.includes("winner") ||
     lower.includes("win") ||
     lower.includes("better")
-  ) {
+  )
     states.add("AMBITION");
-  }
 
   if (states.size === 0) states.add("GENERAL");
   return Array.from(states).slice(0, 3);
 }
 
+/* ─── MOOD & RARITY ─── */
 function getMood(style: StyleTab, escalation: number): string {
   if (style === "safe") return "disciplined";
   if (style === "crashout") return "predatory";
@@ -239,14 +260,13 @@ function scoreOutput(text: string): number {
   if (len >= 25 && len <= 140) score += 4;
   if (sentences <= 2) score += 3;
   if (!/\bmaybe|perhaps|kind of|sort of|i think\b/i.test(text)) score += 2;
-  if (/truth|fear|discipline|excuse|comfort|action|winner|weak/i.test(text)) {
-    score += 2;
-  }
+  if (/truth|fear|discipline|excuse|comfort|action|winner|weak/i.test(text)) score += 2;
   if (/[.!?]$/.test(text.trim())) score += 1;
 
   return score;
 }
 
+/* ─── FOLLOW-UP & CALLBACK ─── */
 function buildFollowUpBait(intent: string): string[] {
   if (intent === "COMEBACK") {
     return ["Make it harsher", "Make it cleaner", "One-line version"];
@@ -257,22 +277,32 @@ function buildFollowUpBait(intent: string): string[] {
   return ["Go deeper", "Hit me harder", "Make it shorter"];
 }
 
-function buildCallback(prev: MemoryEntry | undefined, states: string[]): string | null {
+function buildCallback(
+  prev: MemoryEntry | undefined,
+  states: string[],
+): string | null {
   if (!prev) return null;
 
   if (prev.recentStates.includes("FEAR") && states.includes("FEAR")) {
     return "Same fear. Different costume.";
   }
-  if (prev.recentStates.includes("HESITATION") && states.includes("HESITATION")) {
+  if (
+    prev.recentStates.includes("HESITATION") &&
+    states.includes("HESITATION")
+  ) {
     return "Again with hesitation pretending to be thought.";
   }
-  if (prev.recentStates.includes("DISCIPLINE") && states.includes("DISCIPLINE")) {
+  if (
+    prev.recentStates.includes("DISCIPLINE") &&
+    states.includes("DISCIPLINE")
+  ) {
     return "You already know discipline is the issue.";
   }
 
   return prev.callbackNotes[0] || null;
 }
 
+/* ─── LATTICE NODE SYSTEM ─── */
 function getNodeList(intent: string, states: string[]): string[] {
   const nodes = new Set<string>(["TRUTH", "PATTERN", "SAVAGE"]);
 
@@ -291,66 +321,49 @@ function getNodeList(intent: string, states: string[]): string[] {
 }
 
 function getNodeInstruction(node: string): string {
-  switch (node) {
-    case "TRUTH":
-      return "Give one short brutal truth under 12 words.";
-    case "PATTERN":
-      return "Name the user's loop in under 10 words.";
-    case "FEAR":
-      return "Expose the hidden fear in under 10 words.";
-    case "DISCIPLINE":
-      return "Point out the discipline failure in under 10 words.";
-    case "MONEY":
-      return "Expose the money leak or leverage failure in under 10 words.";
-    case "EGO":
-      return "Expose the ego lie in under 10 words.";
-    case "RELATIONSHIP":
-      return "Name the relationship trap in under 10 words.";
-    case "AMBITION":
-      return "Name what separates desire from winning in under 10 words.";
-    case "DEFINITION":
-      return "Define the concept in one clean sentence under 14 words.";
-    case "QUOTE":
-      return "Create one screenshot-worthy line under 12 words.";
-    case "SAVAGE":
-      return "Write the hardest intelligent line under 12 words.";
-    default:
-      return "Analyze the user input in under 10 words.";
-  }
+  const instructions: Record<string, string> = {
+    TRUTH: "Give one short brutal truth under 12 words.",
+    PATTERN: "Name the user's loop in under 10 words.",
+    FEAR: "Expose the hidden fear in under 10 words.",
+    DISCIPLINE: "Point out the discipline failure in under 10 words.",
+    MONEY: "Expose the money leak or leverage failure in under 10 words.",
+    EGO: "Expose the ego lie in under 10 words.",
+    RELATIONSHIP: "Name the relationship trap in under 10 words.",
+    AMBITION: "Name what separates desire from winning in under 10 words.",
+    DEFINITION: "Define the concept in one clean sentence under 14 words.",
+    QUOTE: "Create one screenshot-worthy line under 12 words.",
+    SAVAGE: "Write the hardest intelligent line under 12 words.",
+  };
+
+  return instructions[node] || "Analyze the user input in under 10 words.";
 }
 
+/* ─── VOICE & PROMPTS ─── */
 function getStyleVoice(style: StyleTab): string {
-  if (style === "safe") {
-    return `
-VOICE:
+  const voices: Record<StyleTab, string> = {
+    safe: `VOICE:
 Speak like a disciplined mentor.
 Calm. Sharp. Respectful.
-You still challenge weakness, but without theatrical cruelty.
-`;
-  }
+You still challenge weakness, but without theatrical cruelty.`,
 
-  if (style === "crashout") {
-    return `
-VOICE:
-Speak like a dark mastermind.
-Cold. Predatory. Unsettling.
-You sound like someone who sees through every excuse immediately.
-`;
-  }
-
-  return `
-VOICE:
+    savage: `VOICE:
 Speak like a ruthless elite strategist.
 Blend cold truth with Ego Jinpachi / Blue Lock energy.
 You respect winners, hunger, evolution, and discipline.
 You despise comfort, hesitation, average thinking, and excuse-making.
-Every line should feel like pressure.
-`;
+Every line should feel like pressure.`,
+
+    crashout: `VOICE:
+Speak like a dark mastermind.
+Cold. Predatory. Unsettling.
+You sound like someone who sees through every excuse immediately.`,
+  };
+
+  return voices[style];
 }
 
 function getFinalInstructions(style: StyleTab, cookLevel: CookLevel): string {
-  return `
-You are MAD AI.
+  return `You are MAD AI.
 
 You speak like a dangerous smart friend texting truth.
 
@@ -387,6 +400,7 @@ Cook level: ${cookLevel}
 `;
 }
 
+/* ─── OPENAI CALLS ─── */
 async function runNode(
   node: string,
   message: string,
@@ -466,43 +480,64 @@ async function generateVariant(params: {
 }): Promise<string> {
   const nodes = getNodeList(params.intent, params.states);
   const nodeOutputs = await Promise.all(
-    nodes.map((node) =>
-      runNode(node, params.message, params.variant, params.cookLevel),
-    ),
+    nodes.map((node) => runNode(node, params.message, params.variant, params.cookLevel)),
   );
 
-  return synthesizeFinal({
-    ...params,
-    style: params.variant,
-    nodeOutputs,
-  });
+  return synthesizeFinal({ ...params, style: params.variant, nodeOutputs });
 }
 
+/* ─── MAIN HANDLER ─── */
 export async function POST(req: Request) {
   try {
+    // Validate API key
     if (!process.env.OPENAI_API_KEY) {
+      console.error("[MAD API] OPENAI_API_KEY not configured");
       return NextResponse.json(
-        { output: "OpenAI key missing." },
+        { output: "MAD is offline. Configuration error.", error: "API key missing" },
         { status: 500 },
       );
     }
 
-    const body = (await req.json()) as RequestBody;
-    const message = sanitize(body.message, 700);
+    // Parse request
+    let body: RequestBody;
+    try {
+      body = (await req.json()) as RequestBody;
+    } catch {
+      return NextResponse.json(
+        { output: "Invalid request. Try again.", error: "Bad JSON" },
+        { status: 400 },
+      );
+    }
 
+    // Validate message
+    const message = sanitize(body.message, 700);
     if (!message) {
       return NextResponse.json({ output: "Say something real." });
     }
 
+    // Parse params
     const preferredStyle = parseStyle(body.preferredStyle);
     const cookLevel = parseCookLevel(body.cookLevel);
     const multiOutput = wantsMultiOutput(body.multiOutput);
     const sessionId = sanitize(body.sessionId, 120) || "anon";
 
+    // Rate limiting check
+    if (isRateLimited(sessionId)) {
+      return NextResponse.json(
+        {
+          output: "Slow down. MAD respects patience, not spam.",
+          error: "Rate limited",
+        },
+        { status: 429 },
+      );
+    }
+
+    // Detect intent & states
     const intent = detectIntent(message);
     const states = detectStates(message);
     const prev = memory.get(sessionId);
 
+    // Calculate escalation (repeated similar messages)
     const escalation =
       prev && isSimilar(prev.lastUser, message)
         ? Math.min(prev.repeatCount + 1, 3)
@@ -511,7 +546,11 @@ export async function POST(req: Request) {
     const mood = getMood(preferredStyle, escalation);
     const callback = buildCallback(prev, states);
 
+    let output: string;
+    let outputs: { safe?: string; savage?: string; crashout?: string } | undefined;
+
     if (multiOutput) {
+      // Generate all 3 variants in parallel
       const [safe, savage, crashout] = await Promise.all([
         generateVariant({
           message,
@@ -552,98 +591,119 @@ export async function POST(req: Request) {
             ? crashout
             : savage;
 
-      const rarityHint = getRarityHint(scoreOutput(chosen));
+      output = chosen;
+      outputs = { safe, savage, crashout };
+    } else {
+      // Single output path
       const lattice = getNodeList(intent, states);
+      const nodeOutputs = await Promise.all(
+        lattice.map((node) => runNode(node, message, preferredStyle, cookLevel)),
+      );
 
-      memory.set(sessionId, {
-        lastUser: message,
-        lastBot: chosen,
-        repeatCount: escalation,
-        recentStates: states,
-        recentIntent: intent,
-        moodHistory: [...(prev?.moodHistory || []), mood].slice(-8),
-        callbackNotes: [
-          ...(callback ? [callback] : []),
-          ...(prev?.callbackNotes || []),
-        ].slice(0, 5),
-        favoriteStyle: preferredStyle,
-      });
-
-      return NextResponse.json({
-        output: chosen,
-        outputs: {
-          safe,
-          savage,
-          crashout,
-        },
-        meta: {
-          intent,
-          states,
-          escalation,
-          favoriteStyle: preferredStyle,
-          multiOutput: true,
-          mood,
-          callback,
-          rarityHint,
-          followUpBait: buildFollowUpBait(intent),
-          lattice,
-        } satisfies ApiMeta,
+      output = await synthesizeFinal({
+        message,
+        intent,
+        states,
+        style: preferredStyle,
+        cookLevel,
+        nodeOutputs,
+        callback,
+        mood,
+        prevBot: prev?.lastBot,
       });
     }
 
-    const lattice = getNodeList(intent, states);
-    const nodeOutputs = await Promise.all(
-      lattice.map((node) => runNode(node, message, preferredStyle, cookLevel)),
-    );
-
-    const output = await synthesizeFinal({
-      message,
-      intent,
-      states,
-      style: preferredStyle,
-      cookLevel,
-      nodeOutputs,
-      callback,
-      mood,
-      prevBot: prev?.lastBot,
-    });
-
+    // Score and finalize
     const rarityHint = getRarityHint(scoreOutput(output));
+    const lattice = getNodeList(intent, states);
 
+    // Update memory
+    const existing = memory.get(sessionId);
     memory.set(sessionId, {
       lastUser: message,
       lastBot: output,
       repeatCount: escalation,
       recentStates: states,
       recentIntent: intent,
-      moodHistory: [...(prev?.moodHistory || []), mood].slice(-8),
+      moodHistory: [...(existing?.moodHistory || []), mood].slice(-8),
       callbackNotes: [
         ...(callback ? [callback] : []),
-        ...(prev?.callbackNotes || []),
+        ...(existing?.callbackNotes || []),
       ].slice(0, 5),
       favoriteStyle: preferredStyle,
+      lastSeen: Date.now(),
+      messageCount: (existing?.messageCount || 0) + 1,
     });
 
-    return NextResponse.json({
-      output,
-      meta: {
-        intent,
-        states,
-        escalation,
-        favoriteStyle: preferredStyle,
-        multiOutput: false,
-        mood,
-        callback,
-        rarityHint,
-        followUpBait: buildFollowUpBait(intent),
-        lattice,
-      } satisfies ApiMeta,
-    });
+    // Increment rate limit counter
+    incrementMessageCount(sessionId);
+
+    // Build response
+    const meta: ApiMeta = {
+      intent,
+      states,
+      escalation,
+      favoriteStyle: preferredStyle,
+      multiOutput,
+      mood,
+      callback,
+      rarityHint,
+      followUpBait: buildFollowUpBait(intent),
+      lattice,
+    };
+
+    const response: {
+      output: string;
+      meta: ApiMeta;
+      outputs?: typeof outputs;
+    } = { output, meta };
+
+    if (outputs) {
+      response.outputs = outputs;
+    }
+
+    return NextResponse.json(response);
   } catch (error) {
-    console.error("MAD Lattice Engine route error:", error);
+    // Classify errors for better UX
+    let errorMessage = "Signal broke.";
+    let statusCode = 500;
+
+    if (error instanceof OpenAI.APIError) {
+      if (error.status === 429) {
+        errorMessage = "MAD is overwhelmed. Try again in a moment.";
+        statusCode = 429;
+      } else if (error.status === 401 || error.status === 403) {
+        errorMessage = "MAD lost access. Configuration issue.";
+        statusCode = 500;
+      } else if (error.code === "context_length_exceeded") {
+        errorMessage = "Message too long. Keep it sharp.";
+        statusCode = 400;
+      } else if (error.code === "timeout") {
+        errorMessage = "MAD took too long. The signal is weak.";
+        statusCode = 504;
+      }
+    } else if (error instanceof Error) {
+      if (error.message.includes("timeout")) {
+        errorMessage = "Connection timed out. Try again.";
+        statusCode = 504;
+      }
+    }
+
+    console.error("[MAD API] Error:", error);
+
     return NextResponse.json(
-      { output: "Signal broke.", error: "Route failed." },
-      { status: 500 },
+      { output: errorMessage, error: "Route failed" },
+      { status: statusCode },
     );
   }
+}
+
+/* ─── HEALTH CHECK ─── */
+export async function GET() {
+  return NextResponse.json({
+    status: "MAD is listening.",
+    version: "2.0",
+    model: "gpt-4.1",
+    activeSessions: memory.size,
+  });
 }
