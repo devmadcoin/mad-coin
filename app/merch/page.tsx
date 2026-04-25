@@ -209,109 +209,19 @@ function Pill({ children, tone = "default" }: { children: React.ReactNode; tone?
   );
 }
 
-/* ─── TOKEN STATS ─── */
-function TokenStatsBar() {
-  const [liveStats, setLiveStats] = useState<{ price: string; change: string; mcap: string; volume: string } | null>(null);
-
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        const res = await fetch("https://api.dexscreener.com/latest/dex/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump");
-        const data = await res.json();
-        const pair = data.pairs?.[0];
-        if (pair) {
-          setLiveStats({
-            price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(8)}` : "—",
-            change: pair.priceChange?.h24 ? `${pair.priceChange.h24 > 0 ? "+" : ""}${pair.priceChange.h24}%` : "—",
-            mcap: pair.marketCap ? `$${(pair.marketCap / 1000).toFixed(1)}K` : "—",
-            volume: pair.volume?.h24 ? `$${(pair.volume.h24 / 1000).toFixed(1)}K` : "—",
-          });
-        }
-      } catch { /* silent fail */ }
-    }
-    fetchStats();
-    const interval = setInterval(fetchStats, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const stats = liveStats ? [
-    { label: "PRICE", value: liveStats.price, change: liveStats.change, isPositive: liveStats.change.startsWith("+") },
-    { label: "MARKET CAP", value: liveStats.mcap, change: "+8.2%", isPositive: true },
-    { label: "24H VOLUME", value: liveStats.volume, change: undefined, isPositive: true },
-    { label: "HOLDERS", value: "273", change: "+52", isPositive: true },
-  ] : [
-    { label: "PRICE", value: "$0.0002066", change: "+5.84%", isPositive: true },
-    { label: "MARKET CAP", value: "$106K", change: "+8.2%", isPositive: true },
-    { label: "24H VOLUME", value: "$12K", change: undefined, isPositive: true },
-    { label: "HOLDERS", value: "273", change: "+52", isPositive: true },
-  ];
-
-  return (
-    <section className="mt-10 rounded-[38px] border border-white/10 bg-black/40 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Live on Solana</p>
-          <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">Token <span className="text-red-500">Stats</span></h2>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
-          </span>
-          <span className="text-xs text-white/40">{liveStats ? "Live data" : "Loading..."}</span>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {stats.map((stat) => (
-          <div key={stat.label} className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 hover:border-white/15 transition duration-300 group">
-            <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 font-bold">{stat.label}</p>
-            <p className="mt-2 text-2xl font-black text-white group-hover:scale-[1.02] transition-transform origin-left">{stat.value}</p>
-            {stat.change && (
-              <p className={cn("mt-1 text-xs font-bold flex items-center gap-1", stat.isPositive ? "text-green-400" : "text-red-400")}>
-                {stat.isPositive ? "↑" : "↓"} {stat.change}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 /* ─── HERO ─── */
-/* ─── PROOF CAROUSEL ─── */
-function ProofCarousel() {
-  const [current, setCurrent] = useState(0);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
+/* ─── PROOF GRID ─── */
+function ProofGrid() {
   const proofImages = [
     { src: "/proof/mad-sticker-1.png", alt: "$MAD sticker on laptop", caption: "Got my sticker. Laptop game strong." },
     { src: "/proof/mad-sticker-2.png", alt: "$MAD sticker on water bottle", caption: "Hydrated and $MAD." },
     { src: "/proof/mad-sticker-3.png", alt: "$MAD sticker on phone case", caption: "Mobile $MAD energy." },
   ];
 
-  const next = () => setCurrent((prev) => (prev + 1) % proofImages.length);
-  const prev = () => setCurrent((prev) => (prev - 1 + proofImages.length) % proofImages.length);
-
-  const handleTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
-  const handleTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
-  const handleTouchEnd = () => {
-    if (touchStart - touchEnd > 50) next();
-    if (touchStart - touchEnd < -50) prev();
-  };
-
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    const interval = setInterval(next, 5000);
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, current]);
-
   return (
     <section className="py-8">
       <div className="mx-auto max-w-7xl px-4">
-        <div className="mb-6 text-center">
+        <div className="mb-8 text-center">
           <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300">
             Verified Holders
           </span>
@@ -321,94 +231,34 @@ function ProofCarousel() {
           <p className="mt-2 text-sm text-white/50">Community submitted proof. Not paid actors.</p>
         </div>
 
-        <div 
-          className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 shadow-[0_20px_80px_rgba(0,0,0,0.5)]"
-          onMouseEnter={() => setIsAutoPlaying(false)}
-          onMouseLeave={() => setIsAutoPlaying(true)}
-        >
-          <div
-            className="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-[2/1] overflow-hidden"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            {proofImages.map((item, i) => (
-              <div
-                key={i}
-                className={cn(
-                  "absolute inset-0 transition-all duration-700 ease-out",
-                  i === current ? "opacity-100 translate-x-0 scale-100" : "opacity-0",
-                  i < current ? "-translate-x-full scale-95" : i > current ? "translate-x-full scale-95" : ""
-                )}
-              >
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {proofImages.map((item, i) => (
+            <div
+              key={i}
+              className="group overflow-hidden rounded-[2rem] border border-white/10 bg-black/25 hover:border-white/20 hover:bg-black/35 transition-all duration-300"
+            >
+              <div className="relative aspect-square overflow-hidden">
                 <Image
                   src={item.src}
                   alt={item.alt}
                   fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                  priority={i === 0}
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <div className="absolute top-4 left-4">
                   <span className="rounded-full border border-red-500/30 bg-red-500/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-red-300">
                     Proof #{String(i + 1).padStart(2, "0")}
                   </span>
-                  <p className="mt-3 text-xl sm:text-3xl font-black text-white">{item.caption}</p>
-                  <p className="mt-1 text-sm text-white/50">{item.alt}</p>
                 </div>
               </div>
-            ))}
-          </div>
-
-          <button
-            onClick={prev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-black/80 transition-all hover:scale-110 z-10"
-            aria-label="Previous"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <button
-            onClick={next}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-black/80 transition-all hover:scale-110 z-10"
-            aria-label="Next"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
-
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
-            {proofImages.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrent(i)}
-                className={cn(
-                  "h-2.5 rounded-full transition-all duration-300",
-                  i === current ? "bg-red-500 w-8" : "bg-white/30 w-2.5 hover:bg-white/50"
-                )}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-5 flex items-center justify-center gap-3">
-          {proofImages.map((item, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              className={cn(
-                "relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 transition-all duration-300",
-                i === current ? "border-red-500 scale-105 shadow-[0_0_20px_rgba(255,0,0,0.3)]" : "border-white/10 opacity-50 hover:opacity-80"
-              )}
-            >
-              <Image src={item.src} alt={item.alt} fill className="object-cover" sizes="112px" />
-            </button>
+              <div className="p-5">
+                <p className="text-lg font-black text-white">{item.caption}</p>
+                <p className="mt-1 text-xs text-white/40">{item.alt}</p>
+              </div>
+            </div>
           ))}
         </div>
-
-        <p className="mt-4 text-center text-xs text-white/40 font-bold uppercase tracking-widest">
-          {current + 1} / {proofImages.length}
-        </p>
       </div>
     </section>
   );
@@ -787,8 +637,7 @@ export default function MerchPage() {
         <div className="h-20" />
 
         <MerchHero />
-        <ProofCarousel />
-        <TokenStatsBar />
+        <ProofGrid />
         <CustomerVideo />
         <FeaturedPiece />
         <Marquee />
