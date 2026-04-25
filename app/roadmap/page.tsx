@@ -13,7 +13,7 @@ const percentComplete = Math.round((PROGRESS.complete / PROGRESS.total) * 100);
 const STATUS_CARDS = [
   { label: "Website", value: "LIVE NOW", tone: "green" as const, icon: "🌐" },
   { label: "Confessions", value: "LIVE NOW", tone: "green" as const, icon: "💬" },
-  { label: "400M Burn", value: "PROVEN", tone: "green" as const, icon: "🔥" },
+  { label: "Token Burns", value: "ACTIVE", tone: "green" as const, icon: "🔥" },
   { label: "MAD AI", value: "LIVE NOW", tone: "green" as const, icon: "🤖" },
   { label: "Community Support", value: "PROVEN", tone: "green" as const, icon: "🤝" },
   { label: "MAD Games", value: "IN PROGRESS", tone: "red" as const, icon: "🎮" },
@@ -43,10 +43,11 @@ const EXITS = [
     items: [
       { text: "MAD Confessions live", done: true },
       { text: "Exchange visibility live", done: true },
-      { text: "400M tokens burned completed", done: true },
+      { text: "Supply reduced to ~513M", done: true },
+      { text: "Burn target set: 200M", done: true },
       { text: "Community growth active", done: true },
     ],
-    summary: "Proof of work. 400M burned. Community backed publicly.",
+    summary: "Supply shrinking. 513M → 200M. Community backed publicly.",
   },
   {
     mile: "MILE 50",
@@ -55,11 +56,12 @@ const EXITS = [
     color: "yellow",
     items: [
       { text: "Token utility expansion", done: true },
+      { text: "Burn #2 at 10K holders", done: false },
       { text: "Marketplace integration", done: false },
       { text: "Partnerships & alliances", done: false },
       { text: "MAD Games expansion", done: false },
     ],
-    summary: "Building utility. Expanding the ecosystem. In motion.",
+    summary: "Burn #2 locked in at 10K holders. Building utility. In motion.",
   },
   {
     mile: "MILE 100",
@@ -396,9 +398,4 @@ export default function RoadmapPage() {
           <Highway />
           <CommunitySupport />
           <CTASection />
-          <RiskNotice />
-        </div>
-      </main>
-    </div>
-  );
-}
+          <RiskNoti
