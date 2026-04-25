@@ -274,6 +274,7 @@ export default function Home() {
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.06),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
 
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 lg:px-8">
+        {/* ─── HERO ─── */}
         <section className="relative overflow-hidden rounded-[42px] border border-white/10 bg-black/40 p-6 shadow-[0_20px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10 lg:p-14">
           <HeroGlobe />
 
@@ -283,7 +284,7 @@ export default function Home() {
                 CONTROL YOURSELF
               </p>
 
-              <h1 className="mt-6 text-[3.2rem] font-black leading-[0.88] tracking-[-0.05em] sm:text-[5rem] lg:text-[6.3rem]">
+              <h1 className="mt-5 text-[3.2rem] font-black leading-[0.88] tracking-[-0.05em] sm:text-[5rem] lg:text-[6.3rem]">
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">
                   STOP
                 </span>
@@ -300,7 +301,7 @@ export default function Home() {
                 </span>
               </h1>
 
-              <div className="mt-6 max-w-xl">
+              <div className="mt-5 max-w-xl">
                 <p className="text-base font-semibold text-white/72">
                   Most people fold. $MAD builds.
                 </p>
@@ -311,7 +312,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-wrap gap-3">
                 <Btn href="/mad-mind" primary>
                   Enter MAD Mind
                 </Btn>
@@ -319,14 +320,14 @@ export default function Home() {
                 <Btn href={LINKS.buy}>Buy $MAD</Btn>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-2">
+              <div className="mt-6 flex flex-wrap gap-2">
                 <Chip>Real Project</Chip>
                 <Chip>Live Tech</Chip>
                 <Chip>Public Build</Chip>
                 <Chip>Meme Coin</Chip>
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-4">
+              <div className="mt-7 flex flex-wrap items-center gap-4">
                 <SocialIconButton
                   href={LINKS.telegram}
                   src="/logos/MAD-TELEGRAM.png"
@@ -373,6 +374,44 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ─── LIVE CHART (NEW) ─── */}
+        <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/40 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">
+                Real Time Data
+              </p>
+              <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">
+                Live Chart
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Btn href={LINKS.chart} primary>
+                DEX Screener
+              </Btn>
+              <Btn href={LINKS.birdeye}>Birdeye</Btn>
+              <Btn href={LINKS.jupiter}>Buy on Jupiter</Btn>
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black">
+            <iframe
+              src={`${LINKS.dexscreener}?embed=1&theme=dark&trades=0&info=0`}
+              className="aspect-[4/3] w-full sm:aspect-[16/9]"
+              allow="clipboard-write"
+              title="$MAD Chart"
+            />
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <Chip>DEX Screener</Chip>
+            <Chip>Birdeye</Chip>
+            <Chip>Solscan</Chip>
+            <Chip>Jupiter</Chip>
+          </div>
+        </section>
+
+        {/* ─── ART CAMPAIGN CARDS ─── */}
         <section className="mt-10 grid gap-4 lg:grid-cols-3">
           <ArtCampaignCard
             title="Mindset"
@@ -394,6 +433,7 @@ export default function Home() {
           />
         </section>
 
+        {/* ─── EXCHANGE MARQUEE ─── */}
         <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div>
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">
@@ -403,6 +443,10 @@ export default function Home() {
             <h2 className="mt-3 text-center text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">
               Trusted across real crypto platforms.
             </h2>
+
+            <p className="mx-auto mt-3 max-w-lg text-center text-sm text-white/50">
+              Track $MAD on Jupiter, DEX Screener, Birdeye, and Solscan.
+            </p>
           </div>
 
           <div className="mt-8 overflow-hidden rounded-[28px] bg-[linear-gradient(90deg,rgba(96,58,80,0.95),rgba(49,57,110,0.95))] px-4 py-8 sm:px-6">
@@ -422,12 +466,14 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ─── CONFESSIONS ─── */}
         <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(25,0,0,0.9),rgba(6,0,0,0.96))] p-4 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6 lg:p-8">
           <div className="min-w-0">
             <MadConfessions />
           </div>
         </section>
 
+        {/* ─── RISK NOTICE ─── */}
         <section className="mt-8 rounded-[26px] border border-yellow-400/15 bg-yellow-500/[0.07] px-5 py-5 text-center">
           <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-yellow-200/80">
             Risk Notice
