@@ -163,11 +163,12 @@ function Navbar() {
       >
         <div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-sm shadow-[0_0_20px_rgba(255,0,0,0.3)]">
+            <div className="w-9 h-9 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-sm">
               M
             </div>
+
             <div className="flex flex-col">
-              <span className="text-white font-black text-lg tracking-tight">$MAD</span>
+              <span className="text-white font-black text-lg">$MAD</span>
               <span className="text-white/40 text-[9px] tracking-[0.3em] uppercase">
                 Stay $MAD
               </span>
@@ -179,7 +180,7 @@ function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="px-4 py-2 text-sm font-bold text-white/50 hover:text-white transition-colors rounded-full hover:bg-white/5"
+                className="px-4 py-2 text-sm font-bold text-white/50 hover:text-white rounded-full hover:bg-white/5"
               >
                 {link.label}
               </Link>
@@ -191,14 +192,14 @@ function Navbar() {
               href={LINKS.buy}
               target="_blank"
               rel="noreferrer"
-              className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-black rounded-full transition-all hover:scale-[1.02]"
+              className="hidden sm:flex px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-black rounded-full"
             >
               Buy $MAD
             </a>
 
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 text-white/50 hover:text-white transition-colors"
+              className="lg:hidden p-2 text-white"
             >
               {mobileOpen ? "✕" : "☰"}
             </button>
@@ -207,27 +208,18 @@ function Navbar() {
       </nav>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-black/98 backdrop-blur-xl pt-24 px-6 lg:hidden">
+        <div className="fixed inset-0 z-40 bg-black/95 pt-24 px-6 lg:hidden">
           <div className="flex flex-col gap-2">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-2xl font-black text-white/80 hover:text-red-400 transition-colors py-3 border-b border-white/10"
+                className="text-2xl font-black text-white/80 py-3 border-b border-white/10"
               >
                 {link.label}
               </Link>
             ))}
-
-            <a
-              href={LINKS.buy}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-4 flex items-center justify-center gap-2 py-4 bg-red-500 text-white font-black rounded-full text-lg"
-            >
-              Buy $MAD
-            </a>
           </div>
         </div>
       )}
@@ -237,30 +229,30 @@ function Navbar() {
 
 function MerchHero() {
   return (
-    <section className="relative pt-32 pb-16 sm:pt-40 sm:pb-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300 mb-6 inline-flex">
+    <section className="pt-32 pb-16 text-center">
+      <div className="mx-auto max-w-7xl px-4">
+        <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300 inline-flex">
           Drop 001 — Limited
         </span>
 
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tight">
+        <h1 className="mt-6 text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9]">
           DON&apos;T JUST
           <br />
           HOLD <span className="text-red-500">$MAD</span>.
         </h1>
 
-        <p className="mt-4 text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-[0.95]">
+        <p className="mt-4 text-3xl sm:text-5xl lg:text-6xl font-black text-white">
           WEAR IT.
         </p>
 
-        <p className="mt-6 text-base sm:text-lg text-white/55 max-w-xl mx-auto leading-relaxed">
+        <p className="mt-6 text-white/55 max-w-xl mx-auto">
           Stickers, wraps, and signal pieces for the people carrying the brand into real life.
         </p>
 
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="#products"
-            className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-red-500 hover:bg-red-400 text-white text-lg font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,0,0,0.25)]"
+            className="px-8 py-4 bg-red-500 hover:bg-red-400 text-white font-black rounded-full"
           >
             Shop the Drop
           </a>
@@ -269,7 +261,7 @@ function MerchHero() {
             href={LINKS.buy}
             target="_blank"
             rel="noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border border-white/15 hover:border-white/30 bg-white/[0.04] hover:bg-white/[0.07] text-white text-sm font-black rounded-full transition-all"
+            className="px-8 py-4 border border-white/15 text-white rounded-full"
           >
             Buy $MAD First
           </a>
@@ -281,65 +273,41 @@ function MerchHero() {
 
 function FeaturedPiece() {
   return (
-    <section className="py-12 sm:py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="group overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-          <div className="grid lg:grid-cols-2 gap-0">
-            <div className="relative h-72 sm:h-96 lg:h-auto bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.08),transparent_60%)] flex items-center justify-center p-8">
-              <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,0,0,0.05),transparent,rgba(255,0,0,0.05))]" />
+    <section className="py-12">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-white/10 bg-white/[0.03] overflow-hidden">
+          <div className="p-8 flex items-center justify-center">
+            <img
+              src={FEATURED.image}
+              alt={FEATURED.name}
+              className="max-h-80 object-contain"
+            />
+          </div>
 
-              <div className="relative w-full max-w-sm aspect-square rounded-[2rem] border border-white/10 bg-[#0a0a0a] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,0,0,0.12),transparent_50%)]" />
-
-                <img
-                  src={FEATURED.image}
-                  alt={FEATURED.name}
-                  className="relative z-10 h-full w-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
-                />
-
-                <div className="absolute bottom-4 left-4 right-4 z-20">
-                  <span className="rounded-full border border-red-500/30 bg-red-500/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-red-300">
-                    Featured
-                  </span>
-                </div>
-              </div>
+          <div className="p-8 sm:p-12 flex flex-col justify-center">
+            <div className="flex gap-3 mb-4">
+              <span className="text-xs text-white/50">{FEATURED.tag}</span>
+              <StockBadge tone={FEATURED.stockTone}>{FEATURED.stock}</StockBadge>
             </div>
 
-            <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-12">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white/50">
-                  {FEATURED.tag}
-                </span>
-                <StockBadge tone={FEATURED.stockTone}>{FEATURED.stock}</StockBadge>
-              </div>
+            <h2 className="text-4xl font-black text-white">{FEATURED.name}</h2>
 
-              <h2 className="text-3xl sm:text-5xl font-black text-white leading-tight">
-                {FEATURED.name}
-              </h2>
+            <p className="mt-2 text-3xl font-black text-red-400">
+              {FEATURED.price}
+            </p>
 
-              <p className="mt-2 text-2xl sm:text-3xl font-black text-red-400">
-                {FEATURED.price}
-              </p>
+            <p className="mt-4 text-white/60 max-w-md">
+              {FEATURED.featuredText}
+            </p>
 
-              <p className="mt-4 text-base text-white/60 leading-relaxed max-w-md">
-                {FEATURED.featuredText}
-              </p>
-
-              <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <a
-                  href={FEATURED.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-red-500 hover:bg-red-400 text-white font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_20px_rgba(255,0,0,0.2)]"
-                >
-                  Grab the Sticker
-                </a>
-
-                <span className="text-white/30 text-xs font-bold uppercase tracking-wider">
-                  Easy entry. Big signal.
-                </span>
-              </div>
-            </div>
+            <a
+              href={FEATURED.url}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-8 inline-flex w-fit px-8 py-4 bg-red-500 hover:bg-red-400 text-white font-black rounded-full"
+            >
+              Grab the Sticker
+            </a>
           </div>
         </div>
       </div>
@@ -348,58 +316,20 @@ function FeaturedPiece() {
 }
 
 function Marquee() {
-  const text =
-    "NOT FOR EVERYONE • LIMITED DROP • WHILE SUPPLIES LAST • GRAB IT OR REGRET IT • ";
-
   return (
-    <div className="overflow-hidden border-y border-white/10 bg-white/[0.02] py-4">
-      <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite]">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <span
-            key={i}
-            className="text-xs sm:text-sm font-black uppercase tracking-[0.3em] text-white/30 mx-4"
-          >
-            {text}
-          </span>
-        ))}
-      </div>
-
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
+    <div className="border-y border-white/10 py-4 text-center text-xs font-black tracking-[0.3em] text-white/30">
+      NOT FOR EVERYONE • LIMITED DROP • WHILE SUPPLIES LAST •
     </div>
   );
 }
 
 function ProductGrid() {
   return (
-    <section id="products" className="py-16 sm:py-24 scroll-mt-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">
-              Storefront
-            </p>
-
-            <h2 className="mt-2 text-3xl sm:text-5xl font-black text-white">
-              The <span className="text-red-500">$MAD</span> Drop.
-            </h2>
-
-            <p className="mt-2 text-sm text-white/50">
-              Pick a piece and open the product directly.
-            </p>
-          </div>
-
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/10 rounded-full text-sm font-bold text-white/60 hover:text-white hover:border-white/20 transition-all"
-          >
-            Return Home
-          </Link>
-        </div>
+    <section id="products" className="py-16">
+      <div className="mx-auto max-w-7xl px-4">
+        <h2 className="text-4xl font-black text-white mb-10">
+          The <span className="text-red-500">$MAD</span> Drop.
+        </h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {PRODUCTS.map((product) => (
@@ -408,45 +338,28 @@ function ProductGrid() {
               href={product.url}
               target="_blank"
               rel="noreferrer"
-              className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.05] transition-all duration-300"
+              className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 hover:border-white/20"
             >
-              <div className="relative h-56 sm:h-64 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.06),transparent_60%)] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,0,0,0.03),transparent,rgba(255,0,0,0.03))]" />
+              <img
+                src={product.image}
+                alt={product.name}
+                className="h-48 w-full object-contain"
+              />
 
-                <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-3xl border border-white/10 bg-[#0a0a0a] flex items-center justify-center overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="relative z-10 h-full w-full object-contain p-5 transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-
-                <div className="absolute inset-0 bg-red-500/0 group-hover:bg-red-500/5 transition-colors" />
+              <div className="mt-5 flex justify-between items-center">
+                <span className="text-xs text-white/40">{product.tier}</span>
+                <StockBadge tone={product.stockTone}>{product.stock}</StockBadge>
               </div>
 
-              <div className="p-5 sm:p-6">
-                <div className="flex items-center justify-between mb-3 gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
-                    {product.tier}
-                  </span>
+              <h3 className="mt-4 text-xl font-black text-white">
+                {product.name}
+              </h3>
 
-                  <StockBadge tone={product.stockTone}>{product.stock}</StockBadge>
-                </div>
+              <p className="mt-2 text-2xl font-black text-white">
+                {product.price}
+              </p>
 
-                <h3 className="text-xl font-black text-white group-hover:text-red-400 transition-colors">
-                  {product.name}
-                </h3>
-
-                <p className="mt-3 text-2xl font-black text-white">{product.price}</p>
-
-                <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                  {product.desc}
-                </p>
-
-                <div className="mt-5 inline-flex items-center gap-2 text-sm font-black text-red-400 group-hover:gap-3 transition-all">
-                  Open Product →
-                </div>
-              </div>
+              <p className="mt-2 text-sm text-white/50">{product.desc}</p>
             </a>
           ))}
         </div>
@@ -457,104 +370,30 @@ function ProductGrid() {
 
 function ApparelTeaser() {
   return (
-    <section className="py-16 sm:py-24 border-t border-white/10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-          <div className="grid lg:grid-cols-2 gap-0">
-            <div className="flex flex-col justify-center p-8 sm:p-12 lg:p-16 order-2 lg:order-1">
-              <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white/50 w-fit mb-6">
-                Drop 002
-              </span>
+    <section className="py-16 border-t border-white/10">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-white/10 bg-white/[0.03] overflow-hidden">
+          <div className="p-8 sm:p-12 flex flex-col justify-center">
+            <span className="text-xs text-white/50 uppercase">Drop 002</span>
 
-              <h2 className="text-3xl sm:text-5xl font-black text-white leading-tight">
-                $MAD isn&apos;t just held.
-                <br />
-                It&apos;s <span className="text-red-500">worn</span>.
-              </h2>
+            <h2 className="mt-4 text-4xl font-black text-white">
+              $MAD isn&apos;t just held.
+              <br />
+              It&apos;s <span className="text-red-500">worn</span>.
+            </h2>
 
-              <p className="mt-4 text-base sm:text-lg text-white/55 leading-relaxed max-w-md">
-                The first apparel pieces are on the way. Sharp, minimal, high-contrast.
-              </p>
-
-              <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <span className="inline-flex items-center gap-2 px-6 py-3 border border-white/15 rounded-full text-sm font-black text-white/50">
-                  Coming Soon
-                </span>
-
-                <span className="text-white/30 text-xs font-bold uppercase tracking-wider">
-                  MAD RICH apparel loading...
-                </span>
-              </div>
-            </div>
-
-            <div className="relative h-72 sm:h-96 lg:h-auto bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.08),transparent_60%)] flex items-center justify-center p-8 order-1 lg:order-2">
-              <div className="relative w-full max-w-sm aspect-square rounded-[2rem] border border-white/10 bg-[#0a0a0a] flex items-center justify-center overflow-hidden">
-                <img
-                  src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
-                  alt="MAD Rich apparel preview"
-                  className="relative z-10 h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                />
-
-                <div className="absolute bottom-6 left-6 right-6 flex justify-center z-20">
-                  <span className="rounded-full border border-red-500/30 bg-black/70 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-red-300 backdrop-blur-md">
-                    Drop 002 — Loading
-                  </span>
-                </div>
-              </div>
-            </div>
+            <p className="mt-4 text-white/55">
+              The first apparel pieces are on the way.
+            </p>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
-function ApparelPreview() {
-  const pillars = [
-    {
-      title: "Signal",
-      desc: "Instantly reads as part of the $MAD universe.",
-    },
-    {
-      title: "Style",
-      desc: "Sharp, minimal, high-contrast presentation.",
-    },
-    {
-      title: "Collectible",
-      desc: "Built to feel worth keeping.",
-    },
-  ];
-
-  return (
-    <section className="py-16 sm:py-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">
-            Built for the Culture
-          </p>
-
-          <h2 className="mt-2 text-3xl sm:text-4xl font-black text-white">
-            More than merch.
-            <br className="hidden sm:block" /> It&apos;s{" "}
-            <span className="text-red-500">$MAD</span> you can wear.
-          </h2>
-        </div>
-
-        <div className="grid sm:grid-cols-3 gap-5">
-          {pillars.map((p) => (
-            <div
-              key={p.title}
-              className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-8 hover:border-white/15 transition-colors"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-5">
-                ★
-              </div>
-
-              <h3 className="text-xl font-black text-white">{p.title}</h3>
-
-              <p className="mt-2 text-sm text-white/55 leading-relaxed">{p.desc}</p>
-            </div>
-          ))}
+          <div className="p-8 flex items-center justify-center">
+            <img
+              src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
+              alt="MAD Rich apparel preview"
+              className="max-h-96 object-cover rounded-2xl"
+            />
+          </div>
         </div>
       </div>
     </section>
@@ -564,17 +403,15 @@ function ApparelPreview() {
 function RiskNotice() {
   return (
     <section className="py-8">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-[2rem] border border-yellow-400/15 bg-yellow-500/[0.07] px-6 py-8 sm:px-10 sm:py-10 text-center">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="rounded-[2rem] border border-yellow-400/15 bg-yellow-500/[0.07] px-6 py-8 text-center">
           <p className="text-[11px] font-black uppercase tracking-[0.34em] text-yellow-200/80">
             Risk Notice
           </p>
 
-          <p className="mx-auto mt-4 max-w-4xl text-sm sm:text-base leading-8 text-yellow-100/85">
-            $MAD is a meme coin and speculative digital asset. Nothing on this website is
-            financial advice or a guarantee of returns. Merch purchases are processed through
-            our retail partner. Crypto is risky and volatile. Never risk money you cannot
-            afford to lose.
+          <p className="mt-4 text-yellow-100/85 max-w-4xl mx-auto">
+            $MAD is a meme coin and speculative digital asset. Nothing on this
+            website is financial advice or a guarantee of returns.
           </p>
         </div>
       </div>
@@ -585,105 +422,46 @@ function RiskNotice() {
 function Footer() {
   return (
     <footer className="border-t border-white/10">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <div className="mx-auto max-w-7xl px-4 py-16">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-lg">
-                M
-              </div>
+            <h3 className="text-white font-black text-xl">$MAD</h3>
+            <p className="text-white/50 mt-3">Limited. Exclusive. Cult.</p>
+          </div>
 
-              <div>
-                <span className="text-white font-black text-xl">$MAD</span>
-                <span className="block text-white/40 text-[10px] tracking-[0.3em] uppercase">
-                  Stay $MAD
-                </span>
-              </div>
+          <div>
+            <h4 className="text-white font-bold mb-4">Navigation</h4>
+            <div className="space-y-2 text-white/50">
+              <Link href="/mad-mind">MAD Mind</Link><br />
+              <Link href="/roadmap">Roadmap</Link><br />
+              <Link href="/game">Game</Link><br />
+              <Link href="/memes">Memes</Link>
             </div>
-
-            <p className="text-white/50 text-sm leading-relaxed mb-6">
-              Limited. Exclusive. Cult.
-            </p>
           </div>
 
           <div>
-            <h4 className="text-white font-bold text-sm mb-4 tracking-wide">
-              NAVIGATION
-            </h4>
-
-            <ul className="space-y-2.5">
-              {[
-                { l: "MAD Mind", h: "/mad-mind" },
-                { l: "Roadmap", h: "/roadmap" },
-                { l: "Game", h: "/game" },
-                { l: "Memes", h: "/memes" },
-                { l: "Merch", h: "/merch" },
-              ].map((link) => (
-                <li key={link.l}>
-                  <Link
-                    href={link.h}
-                    className="text-white/50 hover:text-white text-sm font-medium transition-colors"
-                  >
-                    {link.l}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <h4 className="text-white font-bold mb-4">Buy</h4>
+            <a
+              href={LINKS.buy}
+              target="_blank"
+              rel="noreferrer"
+              className="text-white/50"
+            >
+              Buy on Jupiter
+            </a>
           </div>
 
           <div>
-            <h4 className="text-white font-bold text-sm mb-4 tracking-wide">
-              BUY & TRACK
-            </h4>
-
-            <ul className="space-y-2.5">
-              <li>
-                <a
-                  href={LINKS.buy}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-white/50 hover:text-white text-sm font-medium transition-colors"
-                >
-                  Buy on Jupiter
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href={LINKS.solscan}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-white/50 hover:text-white text-sm font-medium transition-colors"
-                >
-                  Solscan
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-white font-bold text-sm mb-4 tracking-wide">
-              CONTRACT ADDRESS
-            </h4>
-
-            <div className="p-4 bg-white/[0.02] border border-white/10 rounded-xl">
-              <code className="text-xs text-red-400 font-mono break-all block mb-3">
-                {CA}
-              </code>
-
+            <h4 className="text-white font-bold mb-4">Contract</h4>
+            <code className="text-xs text-red-400 break-all">{CA}</code>
+            <div className="mt-4">
               <CopyButton />
             </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-xs">
-            &copy; {new Date().getFullYear()} $MAD. All rights reserved.
-          </p>
-
-          <p className="text-white/40 text-xs">
-            Stay $MAD. Limited. Exclusive. Cult.
-          </p>
+        <div className="mt-10 pt-8 border-t border-white/10 text-white/40 text-xs">
+          © {new Date().getFullYear()} $MAD. All rights reserved.
         </div>
       </div>
     </footer>
@@ -692,9 +470,7 @@ function Footer() {
 
 export default function MerchPage() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,0,0.10),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.08),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.03),transparent_25%),linear-gradient(180deg,#050505,#020202)]" />
-
+    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
       <Navbar />
 
       <main>
@@ -703,7 +479,6 @@ export default function MerchPage() {
         <Marquee />
         <ProductGrid />
         <ApparelTeaser />
-        <ApparelPreview />
         <RiskNotice />
       </main>
 
