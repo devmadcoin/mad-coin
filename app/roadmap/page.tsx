@@ -1,6 +1,84 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useState, useEffect, useRef } from "react";
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION UTILITIES (inlined — zero external deps)
+   ═══════════════════════════════════════════════════════════ */
+
+function useInView(options?: IntersectionObserverInit) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsInView(true); observer.disconnect(); } },
+      { threshold: 0.12, ...options }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [options]);
+  return { ref, isInView };
+}
+
+function FadeIn({
+  children, className = "", delay = 0, direction = "up", duration = 0.5, distance = 24,
+}: { children: ReactNode; className?: string; delay?: number; direction?: "up" | "down" | "left" | "right"; duration?: number; distance?: number; }) {
+  const { ref, isInView } = useInView();
+  const transforms = {
+    up: `translateY(${distance}px)`, down: `translateY(-${distance}px)`,
+    left: `translateX(${distance}px)`, right: `translateX(-${distance}px)`,
+  };
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: isInView ? 1 : 0, transform: isInView ? "translate(0)" : transforms[direction],
+      transition: `opacity ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s, transform ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s`,
+      willChange: "opacity, transform",
+    }}>{children}</div>
+  );
+}
+
+function StaggerGrid({
+  children, className = "", staggerDelay = 0.08, baseDelay = 0,
+}: { children: ReactNode; className?: string; staggerDelay?: number; baseDelay?: number; }) {
+  const { ref, isInView } = useInView();
+  return (
+    <div ref={ref} className={className}>
+      {Array.isArray(children) ? children.map((child, i) => (
+        <div key={i} style={{
+          opacity: isInView ? 1 : 0, transform: isInView ? "translateY(0)" : "translateY(20px)",
+          transition: `opacity 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s, transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s`,
+          willChange: "opacity, transform",
+        }}>{child}</div>
+      )) : children}
+    </div>
+  );
+}
+
+function GlowPulse({ children, className = "" }: { children: ReactNode; className?: string; }) {
+  return (
+    <div className={className} style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
+      {children}
+      <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,0,0,0.15)} 50%{box-shadow:0 0 35px rgba(255,0,0,0.28)}`}</style>
+    </div>
+  );
+}
+
+function HoverLift({ children, className = "" }: { children: ReactNode; className?: string; }) {
+  return (
+    <div className={className} style={{ transition: "transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)" }}
+      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; }}>
+      {children}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE DATA & SHARED
+   ═══════════════════════════════════════════════════════════ */
 
 const LINKS = {
   buy: "https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
@@ -24,10 +102,7 @@ const STATUS_CARDS = [
 
 const EXITS = [
   {
-    mile: "MILE 0",
-    title: "Foundation",
-    status: "COMPLETE" as const,
-    color: "emerald",
+    mile: "MILE 0", title: "Foundation", status: "COMPLETE" as const, color: "emerald",
     items: [
       { text: "Core brand philosophy established", done: true },
       { text: "Smart contract framework built", done: true },
@@ -36,10 +111,7 @@ const EXITS = [
     summary: "The groundwork. Philosophy locked. Community born.",
   },
   {
-    mile: "MILE 25",
-    title: "Proof + Community",
-    status: "COMPLETE" as const,
-    color: "emerald",
+    mile: "MILE 25", title: "Proof + Community", status: "COMPLETE" as const, color: "emerald",
     items: [
       { text: "MAD Confessions live", done: true },
       { text: "Exchange visibility live", done: true },
@@ -50,10 +122,7 @@ const EXITS = [
     summary: "Supply shrinking. 513M → 800M. Community backed publicly.",
   },
   {
-    mile: "MILE 50",
-    title: "Build",
-    status: "IN PROGRESS" as const,
-    color: "yellow",
+    mile: "MILE 50", title: "Build", status: "IN PROGRESS" as const, color: "yellow",
     items: [
       { text: "Token utility expansion", done: true },
       { text: "Burn #2 at 10K holders", done: false },
@@ -64,10 +133,7 @@ const EXITS = [
     summary: "Burn #2 locked in at 10K holders. Building utility. In motion.",
   },
   {
-    mile: "MILE 100",
-    title: "Expand",
-    status: "UP NEXT" as const,
-    color: "red",
+    mile: "MILE 100", title: "Expand", status: "UP NEXT" as const, color: "red",
     items: [
       { text: "Global marketing campaign", done: false },
       { text: "CEX listings", done: false },
@@ -92,10 +158,15 @@ function Shell({ children, className = "" }: { children: ReactNode; className?: 
   );
 }
 
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS
+   ═══════════════════════════════════════════════════════════ */
+
 function StatusMiniCard({ label, value, tone, icon }: { label: string; value: string; tone: "red" | "green"; icon: string }) {
   return (
+    <HoverLift>
     <div className={cn(
-      "rounded-[1.25rem] border p-4 transition duration-300 hover:-translate-y-0.5",
+      "rounded-[1.25rem] border p-4 transition duration-300",
       tone === "green"
         ? "border-emerald-400/35 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.2),rgba(0,0,0,0.92))] shadow-[0_0_25px_rgba(16,185,129,0.12)]"
         : "border-red-500/25 bg-[radial-gradient(circle_at_top_left,rgba(255,0,0,0.14),rgba(0,0,0,0.92))] shadow-[0_0_20px_rgba(255,0,0,0.08)]",
@@ -108,6 +179,7 @@ function StatusMiniCard({ label, value, tone, icon }: { label: string; value: st
         {value}
       </p>
     </div>
+    </HoverLift>
   );
 }
 
@@ -129,25 +201,20 @@ function ProgressStrip() {
   );
 }
 
-/* ─── ROAD SIGN COMPONENT ─── */
 function RoadSign({ mile, title, color }: { mile: string; title: string; color: string }) {
   const colorMap: Record<string, { bg: string; border: string; text: string; glow: string }> = {
     emerald: { bg: "bg-emerald-600", border: "border-emerald-500", text: "text-white", glow: "shadow-[0_0_30px_rgba(16,185,129,0.4)]" },
     yellow: { bg: "bg-yellow-500", border: "border-yellow-400", text: "text-black", glow: "shadow-[0_0_30px_rgba(234,179,8,0.5)]" },
     red: { bg: "bg-red-600", border: "border-red-500", text: "text-white", glow: "shadow-[0_0_30px_rgba(239,68,68,0.3)]" },
   };
-
   const c = colorMap[color] || colorMap.emerald;
 
   return (
     <div className={`relative ${c.glow}`}>
-      {/* Sign pole */}
       <div className="absolute left-1/2 -translate-x-1/2 top-full w-1.5 h-8 bg-neutral-600" />
-      {/* Sign board */}
       <div className={cn("relative rounded-xl border-2 px-4 py-2 text-center min-w-[140px]", c.bg, c.border)}>
         <p className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-75", c.text)}>{mile}</p>
         <p className={cn("text-sm font-black leading-tight", c.text)}>{title}</p>
-        {/* Sign bolts */}
         <div className="absolute top-1 left-2 w-1.5 h-1.5 rounded-full bg-white/30" />
         <div className="absolute top-1 right-2 w-1.5 h-1.5 rounded-full bg-white/30" />
         <div className="absolute bottom-1 left-2 w-1.5 h-1.5 rounded-full bg-white/30" />
@@ -157,7 +224,6 @@ function RoadSign({ mile, title, color }: { mile: string; title: string; color: 
   );
 }
 
-/* ─── EXIT CARD (phase details at each mile marker) ─── */
 function ExitCard({ exit, side }: { exit: typeof EXITS[0]; side: "left" | "right" }) {
   const isComplete = exit.status === "COMPLETE";
   const isProgress = exit.status === "IN PROGRESS";
@@ -169,24 +235,21 @@ function ExitCard({ exit, side }: { exit: typeof EXITS[0]; side: "left" | "right
       : "border-white/10 bg-white/5 text-white/40";
 
   return (
+    <HoverLift>
     <div className={cn("relative", side === "left" ? "lg:pr-8" : "lg:pl-8")}>
       <div className="rounded-[1.4rem] border border-white/10 bg-neutral-900/80 p-5 sm:p-6 hover:border-white/15 transition-all">
-        {/* Mile + Status */}
         <div className={cn("flex items-center gap-3 mb-3 flex-wrap", side === "left" ? "lg:justify-end" : "")}>
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">{exit.mile}</span>
           <span className={cn("px-2.5 py-1 rounded-full border text-[10px] font-black tracking-wider", statusBadge)}>
             {exit.status}
           </span>
         </div>
-
         <h3 className={cn("text-2xl sm:text-3xl font-black text-white mb-1", side === "left" ? "lg:text-right" : "")}>
           {exit.title}
         </h3>
         <p className={cn("text-sm text-white/50 mb-5", side === "left" ? "lg:text-right" : "")}>
           {exit.summary}
         </p>
-
-        {/* Checklist */}
         <div className={cn("space-y-2", side === "left" ? "lg:ml-auto" : "", "max-w-sm")}>
           {exit.items.map((item) => (
             <div key={item.text} className={cn("flex items-center gap-3 p-3 rounded-xl border",
@@ -201,60 +264,41 @@ function ExitCard({ exit, side }: { exit: typeof EXITS[0]; side: "left" | "right
         </div>
       </div>
     </div>
+    </HoverLift>
   );
 }
 
-/* ─── THE HIGHWAY (literal road) ─── */
 function Highway() {
   return (
     <Shell className="p-0 overflow-visible">
-      {/* Road surface */}
       <div className="relative py-10 sm:py-16">
-        {/* Asphalt background */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#1a1a1a_0%,#111_50%,#1a1a1a_100%)]" />
-
-        {/* Road texture lines (subtle) */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.5) 40px, rgba(255,255,255,0.5) 41px)`,
         }} />
-
-        {/* Edge lines - left */}
         <div className="absolute left-4 sm:left-8 top-0 bottom-0 w-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0.1)_100%)]" />
-        {/* Edge lines - right */}
         <div className="absolute right-4 sm:right-8 top-0 bottom-0 w-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0.1)_100%)]" />
-
-        {/* Center dashed lane markings */}
         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-1 flex flex-col">
           {Array.from({ length: 30 }).map((_, i) => (
             <div key={i} className="h-6 sm:h-8 my-1 sm:my-1.5 bg-[linear-gradient(180deg,#fbbf24,#f59e0b)] rounded-sm opacity-80" style={{ boxShadow: "0 0 8px rgba(251,191,36,0.3)" }} />
           ))}
         </div>
-
-        {/* Road content */}
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8">
-          {/* Header */}
           <div className="text-center mb-10">
             <p className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30">The Mad Highway</p>
             <h2 className="mt-2 text-3xl sm:text-4xl font-black text-white">Four exits. One destination.</h2>
           </div>
-
-          {/* Exits along the road */}
           <div className="space-y-16 sm:space-y-20">
             {EXITS.map((exit, i) => {
               const side = i % 2 === 0 ? "left" : "right";
-
               return (
                 <div key={exit.mile} className="relative">
-                  {/* Road sign on the side */}
                   <div className={cn("hidden lg:flex absolute top-0 z-20", side === "left" ? "right-[calc(50%+24px)]" : "left-[calc(50%+24px)]")}>
                     <RoadSign mile={exit.mile} title={exit.title} color={exit.color} />
                   </div>
-
-                  {/* Car marker on the road at current progress */}
                   {exit.status === "IN PROGRESS" && (
                     <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-30">
                       <div className="relative">
-                        {/* Car icon */}
                         <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.6)] animate-pulse">
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                             <path d="M5 17h14M6 17v-5l3-4h6l3 4v5M9 8V6a2 2 0 012-2h2a2 2 0 012 2v2" />
@@ -262,28 +306,17 @@ function Highway() {
                             <circle cx="16.5" cy="17" r="1.5" fill="white" stroke="none" />
                           </svg>
                         </div>
-                        {/* Headlights glow */}
                         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-20 h-8 bg-[linear-gradient(180deg,rgba(255,200,100,0.3),transparent)] rounded-full" />
                       </div>
                     </div>
                   )}
-
-                  {/* Phase card */}
-                  <div className={cn("grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-start", side === "left" ? "" : "")}>
+                  <div className={cn("grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-start")}>
                     {side === "left" ? (
-                      <>
-                        <ExitCard exit={exit} side="left" />
-                        <div className="hidden lg:block" /> {/* spacer */}
-                      </>
+                      <><ExitCard exit={exit} side="left" /><div className="hidden lg:block" /></>
                     ) : (
-                      <>
-                        <div className="hidden lg:block" /> {/* spacer */}
-                        <ExitCard exit={exit} side="right" />
-                      </>
+                      <><div className="hidden lg:block" /><ExitCard exit={exit} side="right" /></>
                     )}
                   </div>
-
-                  {/* Mile marker post on the road edge */}
                   <div className={cn("hidden lg:flex absolute top-0 items-start gap-2 z-20", side === "left" ? "left-[calc(50%-40px)] flex-row-reverse" : "left-[calc(50%+16px)]")}>
                     <div className="w-6 h-16 bg-[linear-gradient(180deg,#22c55e,#15803d)] rounded-sm border border-white/20 flex flex-col items-center justify-center shadow-lg">
                       <span className="text-[8px] font-black text-white/80 uppercase tracking-wider rotate-180" style={{ writingMode: "vertical-rl" }}>{exit.mile}</span>
@@ -293,8 +326,6 @@ function Highway() {
               );
             })}
           </div>
-
-          {/* End of road marker */}
           <div className="mt-16 text-center">
             <div className="inline-block rounded-2xl border-2 border-white/20 bg-neutral-800 px-6 py-3">
               <p className="text-xs font-black uppercase tracking-[0.3em] text-white/40">End of Road</p>
@@ -364,9 +395,11 @@ function CTASection() {
           <h2 className="text-4xl font-black text-white sm:text-6xl">THIS IS YOUR PATH.</h2>
           <p className="mt-4 max-w-2xl text-base leading-8 text-white/78 sm:text-lg">Build. Prove. Expand.</p>
         </div>
+        <GlowPulse>
         <a href={LINKS.buy} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-8 py-4 text-base font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400">
           Start Your Journey →
         </a>
+        </GlowPulse>
       </div>
     </Shell>
   );
@@ -383,22 +416,36 @@ function RiskNotice() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════
+   PAGE
+   ═══════════════════════════════════════════════════════════ */
+
 export default function RoadmapPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,0,0.10),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.08),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.03),transparent_25%),linear-gradient(180deg,#050505,#020202)]" />
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
         <div className="grid gap-6">
-          <ProgressStrip />
-          <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9">
+          <FadeIn>
+            <ProgressStrip />
+          </FadeIn>
+          <StaggerGrid className="grid gap-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9" staggerDelay={0.06}>
             {STATUS_CARDS.map((card) => (
               <StatusMiniCard key={card.label} label={card.label} value={card.value} tone={card.tone} icon={card.icon} />
             ))}
-          </div>
-          <Highway />
-          <CommunitySupport />
-          <CTASection />
-          <RiskNotice />
+          </StaggerGrid>
+          <FadeIn delay={0.1}>
+            <Highway />
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <CommunitySupport />
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <CTASection />
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <RiskNotice />
+          </FadeIn>
         </div>
       </main>
     </div>
