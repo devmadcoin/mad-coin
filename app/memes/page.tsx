@@ -104,95 +104,6 @@ function SectionShell({ children, className = "" }: { children: React.ReactNode;
   );
 }
 
-/* ─── NAVBAR ─── */
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "MAD Mind", href: "/mad-mind" },
-    { label: "Roadmap", href: "/roadmap" },
-    { label: "Game", href: "/game" },
-    { label: "Memes", href: "/memes" },
-    { label: "Merch", href: "/merch" },
-  ];
-
-  return (
-    <>
-      <nav className={[
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled ? "bg-black/95 backdrop-blur-xl border-b border-white/10" : "bg-transparent",
-      ].join(" ")}>
-        {scrolled && (
-          <div className="border-b border-white/10 bg-white/[0.02]">
-            <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-center gap-3">
-              <span className="text-white/40 text-xs font-bold">CA:</span>
-              <code className="text-red-400 font-mono text-xs truncate max-w-[180px] sm:max-w-sm">{CA}</code>
-              <CopyButton />
-            </div>
-          </div>
-        )}
-
-        <div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-sm shadow-[0_0_20px_rgba(255,0,0,0.3)]">
-              M
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white font-black text-lg tracking-tight">$MAD</span>
-              <span className="text-white/40 text-[9px] tracking-[0.3em] uppercase">Stay $MAD</span>
-            </div>
-          </Link>
-
-          <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link key={link.label} href={link.href} className="px-4 py-2 text-sm font-bold text-white/50 hover:text-white transition-colors rounded-full hover:bg-white/5">
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <a href={LINKS.buy} target="_blank" rel="noreferrer" className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-black rounded-full transition-all hover:scale-[1.02]">
-              Buy $MAD
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-            </a>
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2 text-white/50 hover:text-white transition-colors">
-              {mobileOpen ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg> : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 8h16M4 16h16"/></svg>}
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-black/98 backdrop-blur-xl pt-24 px-6 lg:hidden">
-          <div className="flex flex-col gap-2">
-            {navLinks.map((link) => (
-              <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-2xl font-black text-white/80 hover:text-red-400 transition-colors py-3 border-b border-white/10">
-                {link.label}
-              </Link>
-            ))}
-            <div className="mt-6 p-4 bg-white/[0.03] border border-white/10 rounded-2xl">
-              <p className="text-white/40 text-sm font-bold mb-2">Contract Address</p>
-              <code className="text-red-400 text-xs break-all font-mono">{CA}</code>
-              <div className="mt-3"><CopyButton /></div>
-            </div>
-            <a href={LINKS.buy} target="_blank" rel="noreferrer" className="mt-4 flex items-center justify-center gap-2 py-4 bg-red-500 text-white font-black rounded-full text-lg">
-              Buy $MAD
-            </a>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
 
 /* ─── HERO ─── */
 function ArtHero() {
@@ -514,7 +425,6 @@ export default function MemesPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,0,0.10),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.08),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.03),transparent_25%),linear-gradient(180deg,#050505,#020202)]" />
-      <Navbar />
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-0 sm:px-6 lg:px-8">
         <ArtHero />
         <Marquee />
