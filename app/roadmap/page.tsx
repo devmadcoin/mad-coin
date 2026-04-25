@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import type { ReactNode } from "react";
 
 const LINKS = {
@@ -220,12 +219,10 @@ function PhaseRoadmap() {
         <div className="space-y-8 lg:space-y-0">
           {PHASES.map((phase, i) => {
             const isLeft = i % 2 === 0;
-            const statusIcon =
-              phase.status === "COMPLETE" || phase.status === "COMPLETE"
-                ? "✓"
-                : phase.status === "IN PROGRESS"
-                  ? "●"
-                  : "○";
+            const statusIconMap: Record<string, string> = {
+              COMPLETE: "✓", COMPLETED: "✓", "IN PROGRESS": "●", "UP NEXT": "○",
+            };
+            const statusIcon = statusIconMap[phase.status] ?? "○";
 
             return (
               <div
