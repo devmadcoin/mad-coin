@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MadConfessions from "./components/MadConfessions";
-import { FadeIn, StaggerGrid, GlowPulse, HoverLift } from "./components/MadAnimations";
 
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
@@ -21,7 +20,83 @@ const LINKS = {
   dexscreener: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs",
 } as const;
 
-/* ─── HOOKS ─── */
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION UTILITIES (inlined — zero external deps)
+   ═══════════════════════════════════════════════════════════ */
+
+function useInView(options?: IntersectionObserverInit) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsInView(true); observer.disconnect(); } },
+      { threshold: 0.12, ...options }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [options]);
+  return { ref, isInView };
+}
+
+function FadeIn({
+  children, className = "", delay = 0, direction = "up", duration = 0.5, distance = 24,
+}: { children: React.ReactNode; className?: string; delay?: number; direction?: "up" | "down" | "left" | "right"; duration?: number; distance?: number; }) {
+  const { ref, isInView } = useInView();
+  const transforms = {
+    up: `translateY(${distance}px)`, down: `translateY(-${distance}px)`,
+    left: `translateX(${distance}px)`, right: `translateX(-${distance}px)`,
+  };
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: isInView ? 1 : 0, transform: isInView ? "translate(0)" : transforms[direction],
+      transition: `opacity ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s, transform ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s`,
+      willChange: "opacity, transform",
+    }}>{children}</div>
+  );
+}
+
+function StaggerGrid({
+  children, className = "", staggerDelay = 0.08, baseDelay = 0,
+}: { children: React.ReactNode; className?: string; staggerDelay?: number; baseDelay?: number; }) {
+  const { ref, isInView } = useInView();
+  return (
+    <div ref={ref} className={className}>
+      {Array.isArray(children) ? children.map((child, i) => (
+        <div key={i} style={{
+          opacity: isInView ? 1 : 0, transform: isInView ? "translateY(0)" : "translateY(20px)",
+          transition: `opacity 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s, transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s`,
+          willChange: "opacity, transform",
+        }}>{child}</div>
+      )) : children}
+    </div>
+  );
+}
+
+function GlowPulse({ children, className = "" }: { children: React.ReactNode; className?: string; }) {
+  return (
+    <div className={className} style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
+      {children}
+      <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,0,0,0.15)} 50%{box-shadow:0 0 35px rgba(255,0,0,0.28)}`}</style>
+    </div>
+  );
+}
+
+function HoverLift({ children, className = "" }: { children: React.ReactNode; className?: string; }) {
+  return (
+    <div className={className} style={{ transition: "transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)" }}
+      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; }}>
+      {children}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SHARED COMPONENTS
+   ═══════════════════════════════════════════════════════════ */
+
 function useCopyToClipboard(timeout = 2000) {
   const [copied, setCopied] = useState(false);
   const copy = async (text: string) => {
@@ -31,14 +106,11 @@ function useCopyToClipboard(timeout = 2000) {
   return { copied, copy };
 }
 
-/* ─── SHARED COMPONENTS ─── */
 function Btn({ href, children, primary = false }: { href: string; children: React.ReactNode; primary?: boolean }) {
   const external = href.startsWith("http");
   const className = [
     "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-black transition duration-300",
-    primary
-      ? "bg-red-500 text-white hover:scale-[1.02] hover:bg-red-400"
-      : "border border-white/10 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]",
+    primary ? "bg-red-500 text-white hover:scale-[1.02] hover:bg-red-400" : "border border-white/10 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]",
   ].join(" ");
   if (!external) return <Link href={href} className={className}>{children}</Link>;
   return <a href={href} target="_blank" rel="noreferrer" className={className}>{children}</a>;
@@ -51,15 +123,10 @@ function Chip({ children }: { children: React.ReactNode }) {
 function CopyButton({ text = CA }: { text?: string }) {
   const { copied, copy } = useCopyToClipboard();
   return (
-    <button
-      onClick={() => copy(text)}
-      className={[
-        "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition duration-300",
-        copied
-          ? "border border-green-400/30 bg-green-400/10 text-green-400"
-          : "border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20",
-      ].join(" ")}
-    >
+    <button onClick={() => copy(text)} className={[
+      "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition duration-300",
+      copied ? "border border-green-400/30 bg-green-400/10 text-green-400" : "border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20",
+    ].join(" ")}>
       {copied ? (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
       ) : (
@@ -92,12 +159,7 @@ function Navbar() {
 
   return (
     <>
-      <nav
-        className={[
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          scrolled ? "bg-black/95 backdrop-blur-xl border-b border-white/10" : "bg-transparent",
-        ].join(" ")}
-      >
+      <nav className={["fixed top-0 left-0 right-0 z-50 transition-all duration-300", scrolled ? "bg-black/95 backdrop-blur-xl border-b border-white/10" : "bg-transparent"].join(" ")}>
         {scrolled && (
           <div className="border-b border-white/10 bg-white/[0.02]">
             <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-center gap-3">
@@ -107,28 +169,19 @@ function Navbar() {
             </div>
           </div>
         )}
-
         <div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative">
-              <div className="w-9 h-9 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-sm shadow-[0_0_20px_rgba(255,0,0,0.3)]">
-                M
-              </div>
-            </div>
+            <div className="w-9 h-9 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-sm shadow-[0_0_20px_rgba(255,0,0,0.3)]">M</div>
             <div className="flex flex-col">
               <span className="text-white font-black text-lg tracking-tight">$MAD</span>
               <span className="text-white/40 text-[9px] tracking-[0.3em] uppercase">Stay $MAD</span>
             </div>
           </Link>
-
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link key={link.label} href={link.href} className="px-4 py-2 text-sm font-bold text-white/50 hover:text-white transition-colors rounded-full hover:bg-white/5">
-                {link.label}
-              </Link>
+              <Link key={link.label} href={link.href} className="px-4 py-2 text-sm font-bold text-white/50 hover:text-white transition-colors rounded-full hover:bg-white/5">{link.label}</Link>
             ))}
           </div>
-
           <div className="flex items-center gap-3">
             <a href={LINKS.buy} target="_blank" rel="noreferrer" className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-black rounded-full transition-all hover:scale-[1.02]">
               Buy $MAD
@@ -140,23 +193,18 @@ function Navbar() {
           </div>
         </div>
       </nav>
-
       {mobileOpen && (
         <div className="fixed inset-0 z-40 bg-black/98 backdrop-blur-xl pt-24 px-6 lg:hidden">
           <div className="flex flex-col gap-2">
             {navLinks.map((link) => (
-              <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-2xl font-black text-white/80 hover:text-red-400 transition-colors py-3 border-b border-white/10">
-                {link.label}
-              </Link>
+              <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-2xl font-black text-white/80 hover:text-red-400 transition-colors py-3 border-b border-white/10">{link.label}</Link>
             ))}
             <div className="mt-6 p-4 bg-white/[0.03] border border-white/10 rounded-2xl">
               <p className="text-white/40 text-sm font-bold mb-2">Contract Address</p>
               <code className="text-red-400 text-xs break-all font-mono">{CA}</code>
               <div className="mt-3"><CopyButton /></div>
             </div>
-            <a href={LINKS.buy} target="_blank" rel="noreferrer" className="mt-4 flex items-center justify-center gap-2 py-4 bg-red-500 text-white font-black rounded-full text-lg">
-              Buy $MAD
-            </a>
+            <a href={LINKS.buy} target="_blank" rel="noreferrer" className="mt-4 flex items-center justify-center gap-2 py-4 bg-red-500 text-white font-black rounded-full text-lg">Buy $MAD</a>
           </div>
         </div>
       )}
@@ -242,12 +290,8 @@ function HowToBuyStep({ number, title, description, link, linkText, icon }: { nu
   return (
     <HoverLift>
     <div className="relative p-6 bg-white/[0.02] border border-white/10 rounded-[24px] hover:border-white/15 transition-all duration-300 group">
-      <div className="absolute -top-3 -left-2 w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-lg shadow-red-500/20">
-        {number}
-      </div>
-      <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-center text-red-400 mb-4 mt-2 group-hover:scale-110 transition-transform">
-        {icon}
-      </div>
+      <div className="absolute -top-3 -left-2 w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-lg shadow-red-500/20">{number}</div>
+      <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-center text-red-400 mb-4 mt-2 group-hover:scale-110 transition-transform">{icon}</div>
       <h3 className="text-lg font-black text-white mb-2">{title}</h3>
       <p className="text-sm text-white/50 mb-4 leading-relaxed">{description}</p>
       <a href={link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-bold text-red-400 hover:text-red-300 transition-colors">
@@ -280,7 +324,10 @@ function HeroGlobe() {
   );
 }
 
-/* ─── MAIN PAGE ─── */
+/* ═══════════════════════════════════════════════════════════
+   MAIN PAGE
+   ═══════════════════════════════════════════════════════════ */
+
 export default function Home() {
   const exchangeItems = [
     { href: LINKS.birdeye, src: "/logos/birdeye.png", alt: "Birdeye", label: "Birdeye" },
@@ -299,35 +346,27 @@ export default function Home() {
 
   const howToBuySteps = [
     {
-      number: "01",
-      title: "Get Phantom Wallet",
+      number: "01", title: "Get Phantom Wallet",
       description: "Download Phantom from your app store or browser. Create a wallet. Save your recovery phrase.",
-      link: "https://phantom.app",
-      linkText: "Get Phantom →",
+      link: "https://phantom.app", linkText: "Get Phantom →",
       icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 12V8H6a2 2 0 00-2 2v8a2 2 0 002 2h12v-4"/><path d="M16 6l4 4-4 4"/></svg>,
     },
     {
-      number: "02",
-      title: "Buy SOL",
+      number: "02", title: "Buy SOL",
       description: "Purchase SOL on Coinbase, Binance, or Kraken. Send it to your Phantom wallet address.",
-      link: "https://coinbase.com",
-      linkText: "Buy on Coinbase →",
+      link: "https://coinbase.com", linkText: "Buy on Coinbase →",
       icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M9 12h6m-3-3v6"/></svg>,
     },
     {
-      number: "03",
-      title: "Connect Jupiter",
+      number: "03", title: "Connect Jupiter",
       description: "Open Jupiter Exchange. Connect your Phantom wallet. Make sure you're on Solana.",
-      link: "https://jup.ag",
-      linkText: "Open Jupiter →",
+      link: "https://jup.ag", linkText: "Open Jupiter →",
       icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>,
     },
     {
-      number: "04",
-      title: "Swap for $MAD",
+      number: "04", title: "Swap for $MAD",
       description: "Paste the contract address below. Choose how much SOL. Swap. Welcome to the club.",
-      link: LINKS.buy,
-      linkText: "Buy $MAD Now →",
+      link: LINKS.buy, linkText: "Buy $MAD Now →",
       icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>,
     },
   ];
@@ -351,11 +390,9 @@ export default function Home() {
         <FadeIn>
         <section className="relative overflow-hidden rounded-[42px] border border-white/10 bg-black/40 p-6 shadow-[0_20px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10 lg:p-14">
           <HeroGlobe />
-
           <div className="relative z-10 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">CONTROL YOURSELF</p>
-
               <h1 className="mt-5 text-[3.2rem] font-black leading-[0.88] tracking-[-0.05em] sm:text-[5rem] lg:text-[6.3rem]">
                 <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">STOP</span>
                 <br />PANICKING.
@@ -363,15 +400,12 @@ export default function Home() {
                 <br /><span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">$MAD</span>{" "}
                 <span className="text-green-400 drop-shadow-[0_0_18px_rgba(34,197,94,0.35)]">RICH.</span>
               </h1>
-
               <div className="mt-5 max-w-xl">
                 <p className="text-base font-semibold text-white/72">Most people fold. $MAD builds.</p>
                 <p className="mt-3 text-sm leading-7 text-white/55 sm:text-base">
                   $MAD Rich means staying calm under pressure, building while others panic, and turning discipline into wealth.
                 </p>
               </div>
-
-              {/* DRUNK-PROOF CTAS: BIGGER, FEWER, IMPOSSIBLE TO MISS */}
               <div className="mt-7 flex flex-col sm:flex-row gap-3">
                 <GlowPulse>
                 <a href={LINKS.buy} target="_blank" rel="noreferrer" className="group flex items-center justify-center gap-3 px-10 py-5 bg-red-500 hover:bg-red-400 text-white text-xl font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_40px_rgba(255,0,0,0.35)]">
@@ -384,14 +418,12 @@ export default function Home() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
                 </a>
               </div>
-
               <div className="mt-6 flex flex-wrap gap-2">
                 <Chip>Real Project</Chip>
                 <Chip>Live Tech</Chip>
                 <Chip>513M Supply</Chip>
                 <Chip>800M Target</Chip>
               </div>
-
               <div className="mt-7 flex flex-wrap items-center gap-4">
                 <SocialIconButton href={LINKS.telegram} src="/logos/MAD-TELEGRAM.png" alt="Telegram" />
                 <SocialIconButton href={LINKS.x} src="/logos/MAD-X-LOGO.png" alt="X" />
@@ -399,7 +431,6 @@ export default function Home() {
                 <SocialIconButton href={LINKS.tiktok} src="/logos/MAD-TIKTOK-LOGO.png" alt="TikTok" />
               </div>
             </div>
-
             <div className="relative rounded-[34px] border border-white/10 bg-white/[0.03] p-4">
               <div className="overflow-hidden rounded-[28px] border border-white/10 bg-black">
                 <video autoPlay muted loop playsInline preload="auto" className="aspect-[16/10] w-full object-cover">
@@ -453,8 +484,6 @@ export default function Home() {
               <HowToBuyStep key={step.number} {...step} />
             ))}
           </StaggerGrid>
-
-          {/* CONTRACT ADDRESS - BIG, OBVIOUS, IMPOSSIBLE TO MISS */}
           <div className="mt-8 p-6 bg-white/[0.02] border-2 border-red-500/20 rounded-[24px]">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-center sm:text-left">
@@ -534,9 +563,7 @@ export default function Home() {
             </div>
             <Btn href="#">View All</Btn>
           </div>
-          <div className="min-w-0">
-            <MadConfessions />
-          </div>
+          <div className="min-w-0"><MadConfessions /></div>
         </section>
         </FadeIn>
 
@@ -555,7 +582,6 @@ export default function Home() {
       <footer className="border-t border-white/10">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-            {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-lg">M</div>
@@ -571,8 +597,6 @@ export default function Home() {
                 ))}
               </div>
             </div>
-
-            {/* Nav */}
             <div>
               <h4 className="text-white font-bold text-sm mb-4 tracking-wide">NAVIGATION</h4>
               <ul className="space-y-2.5">
@@ -581,8 +605,6 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-
-            {/* Resources */}
             <div>
               <h4 className="text-white font-bold text-sm mb-4 tracking-wide">BUY & TRACK</h4>
               <ul className="space-y-2.5">
@@ -591,8 +613,6 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-
-            {/* Contract */}
             <div>
               <h4 className="text-white font-bold text-sm mb-4 tracking-wide">CONTRACT ADDRESS</h4>
               <div className="p-4 bg-white/[0.02] border border-white/10 rounded-xl">
@@ -605,7 +625,6 @@ export default function Home() {
               </a>
             </div>
           </div>
-
           <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-white/40 text-xs">&copy; {new Date().getFullYear()} $MAD. All rights reserved.</p>
             <p className="text-white/40 text-xs">Stay $MAD. Limited. Exclusive. Cult.</p>
