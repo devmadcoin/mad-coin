@@ -44,10 +44,10 @@ const EXITS = [
       { text: "MAD Confessions live", done: true },
       { text: "Exchange visibility live", done: true },
       { text: "Supply reduced to ~513M", done: true },
-      { text: "Burn target set: 200M", done: true },
+      { text: "Burn target set: 800M", done: true },
       { text: "Community growth active", done: true },
     ],
-    summary: "Supply shrinking. 513M → 200M. Community backed publicly.",
+    summary: "Supply shrinking. 513M → 800M. Community backed publicly.",
   },
   {
     mile: "MILE 50",
