@@ -219,7 +219,7 @@ function ProofGrid() {
   ];
 
   return (
-    <section className="py-8">
+    <section id="proof" className="py-8">
       <div className="mx-auto max-w-7xl px-4">
         <div className="mb-8 text-center">
           <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300">
@@ -295,7 +295,7 @@ function MerchHero() {
           </a>
 
           <a
-            href="/proof"
+            href="#proof"
             className="px-8 py-4 border border-white/15 text-white rounded-full hover:bg-white/[0.05] transition-all"
           >
             See Proof
@@ -417,7 +417,7 @@ function FeaturedPiece() {
                 Grab the Sticker
               </a>
               <a
-                href="/proof"
+                href="#proof"
                 className="inline-flex w-fit px-6 py-4 border border-white/15 text-white rounded-full hover:bg-white/[0.05] transition-all text-sm font-bold"
               >
                 View Customer Proof
