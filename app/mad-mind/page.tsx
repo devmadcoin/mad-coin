@@ -1,6 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
+
+const MAD_HEAD_IMAGE = "/MAD-MIND-HEAD.png";
 
 function useInView(options?: IntersectionObserverInit) {
   const ref = useRef<HTMLDivElement>(null);
@@ -53,11 +56,7 @@ function FadeIn({
   );
 }
 
-function GlowPulse({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function GlowPulse({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
       {children}
@@ -72,11 +71,7 @@ function GlowPulse({
 }
 
 function HoverLift({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="transition-transform duration-300 hover:-translate-y-1">
-      {children}
-    </div>
-  );
+  return <div className="transition-transform duration-300 hover:-translate-y-1">{children}</div>;
 }
 
 function useTypewriter(text: string, speed = 24, enabled = true) {
@@ -114,7 +109,6 @@ type ApiMeta = {
   intent?: string;
   states?: string[];
   mood?: string;
-  followUpBait?: string[];
 };
 
 type OutputVariants = {
@@ -271,19 +265,41 @@ function StyleSelector({
   );
 }
 
+function MadHeadHero() {
+  return (
+    <div className="relative mx-auto mt-10 h-[280px] w-full max-w-[440px] md:mt-0 md:h-[420px]">
+      <div className="absolute inset-8 rounded-full bg-red-500/20 blur-[90px]" />
+      <div className="absolute inset-0 rounded-[3rem] border border-red-500/10 bg-[radial-gradient(circle_at_center,rgba(255,0,0,.14),transparent_60%)]" />
+      <Image
+        src={MAD_HEAD_IMAGE}
+        alt="MAD Mind AI fiery brain"
+        fill
+        priority
+        className="object-contain drop-shadow-[0_0_45px_rgba(255,0,0,.35)]"
+      />
+    </div>
+  );
+}
+
 function LuxuryLoading() {
   return (
     <div className="flex justify-start">
       <div className="max-w-[88%] rounded-[1.6rem] border border-red-500/20 bg-[linear-gradient(180deg,rgba(70,0,0,.22),rgba(0,0,0,.38))] px-6 py-5 text-red-50">
         <div className="mb-3 flex items-center gap-3">
-          <div className="relative h-8 w-8">
-            <div className="absolute inset-0 rounded-full border-2 border-red-500/20" />
-            <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-red-500" />
+          <div className="relative h-12 w-12">
+            <div className="absolute inset-0 rounded-full bg-red-500/15 blur-md" />
+            <Image
+              src={MAD_HEAD_IMAGE}
+              alt="MAD thinking"
+              fill
+              className="animate-pulse object-contain"
+            />
           </div>
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-red-200/70">
             MAD is reading your signal
           </span>
         </div>
+
         <div className="h-1.5 w-48 overflow-hidden rounded-full bg-white/10">
           <div className="h-full w-[60%] animate-pulse rounded-full bg-red-500/60" />
         </div>
@@ -490,7 +506,6 @@ export default function MadMindPage() {
             sessionId,
             cookLevel: getCookLevel(style),
             preferredStyle: style,
-            multiOutput: false,
           }),
         });
 
@@ -550,29 +565,42 @@ export default function MadMindPage() {
       <AmbientBackground />
 
       <FadeIn>
-        <section className="relative border-b border-white/[0.08] pb-12 pt-16 md:pb-16 md:pt-24">
-          <div className="mx-auto max-w-6xl px-4 text-center">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-red-500/25 bg-red-500/10 px-5 py-2.5">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
-              </span>
-              <span className="text-xs font-bold uppercase tracking-[0.3em] text-red-300">
-                MAD AI is Live
-              </span>
+        <section className="relative overflow-hidden border-b border-white/[0.08] pb-12 pt-16 md:pb-16 md:pt-24">
+          <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 md:grid-cols-[1.05fr_.95fr]">
+            <div className="text-center md:text-left">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-red-500/25 bg-red-500/10 px-5 py-2.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                </span>
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-red-300">
+                  MAD AI is Live
+                </span>
+              </div>
+
+              <h1 className="text-6xl font-black leading-[0.9] tracking-tight text-white sm:text-7xl md:text-8xl">
+                The Truth
+                <br />
+                <span className="text-red-500 drop-shadow-[0_0_30px_rgba(255,0,0,.35)]">
+                  Machine.
+                </span>
+              </h1>
+
+              <p className="mt-6 max-w-xl text-lg text-white/50 md:text-xl">
+                A chat that tells you what you need to hear. Not what you want to hear.
+              </p>
+
+              <div className="mt-7 flex flex-wrap justify-center gap-3 md:justify-start">
+                <div className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-white/55">
+                  Pattern Reader
+                </div>
+                <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-red-200">
+                  Pressure Engine
+                </div>
+              </div>
             </div>
 
-            <h1 className="text-6xl font-black leading-[0.9] tracking-tight text-white sm:text-7xl md:text-8xl">
-              The Truth
-              <br />
-              <span className="text-red-500 drop-shadow-[0_0_30px_rgba(255,0,0,.35)]">
-                Machine.
-              </span>
-            </h1>
-
-            <p className="mx-auto mt-6 max-w-xl text-lg text-white/50 md:text-xl">
-              A chat that tells you what you need to hear. Not what you want to hear.
-            </p>
+            <MadHeadHero />
           </div>
         </section>
       </FadeIn>
