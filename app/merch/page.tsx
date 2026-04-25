@@ -26,6 +26,8 @@ const PRODUCTS = [
     stock: "In Stock",
     stockTone: "green" as const,
     image: "/stickers/Mad-Sticker-logo.png",
+    featuredText:
+      "The easiest way to carry $MAD into the real world. Simple, loud, collectible, and built for instant signal.",
   },
   {
     id: "card-wrap",
@@ -38,6 +40,8 @@ const PRODUCTS = [
     stock: "Selling Fast",
     stockTone: "yellow" as const,
     image: "/stickers/Mad-Premium-Embossed-Card-Wrap.png",
+    featuredText:
+      "A sharper premium piece with texture, attitude, and clean $MAD energy.",
   },
   {
     id: "rich-wrap",
@@ -50,6 +54,8 @@ const PRODUCTS = [
     stock: "Low Stock",
     stockTone: "red" as const,
     image: "/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png",
+    featuredText:
+      "The louder luxury version for people who want their $MAD to look richer and cleaner.",
   },
   {
     id: "peeker",
@@ -62,10 +68,12 @@ const PRODUCTS = [
     stock: "In Stock",
     stockTone: "green" as const,
     image: "/stickers/Mad-Peeker.png",
+    featuredText:
+      "Small piece, big signal. Built to catch attention fast.",
   },
 ] as const;
 
-const FEATURED = PRODUCTS[2];
+const FEATURED = PRODUCTS[0];
 
 function useCopyToClipboard(timeout = 2000) {
   const [copied, setCopied] = useState(false);
@@ -291,7 +299,7 @@ function FeaturedPiece() {
 
                 <div className="absolute bottom-4 left-4 right-4 z-20">
                   <span className="rounded-full border border-red-500/30 bg-red-500/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-red-300">
-                    Bestseller
+                    Featured
                   </span>
                 </div>
               </div>
@@ -314,8 +322,7 @@ function FeaturedPiece() {
               </p>
 
               <p className="mt-4 text-base text-white/60 leading-relaxed max-w-md">
-                {FEATURED.desc} The premium flex piece for the people who want their $MAD to
-                look louder and cleaner.
+                {FEATURED.featuredText}
               </p>
 
               <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -325,11 +332,11 @@ function FeaturedPiece() {
                   rel="noreferrer"
                   className="inline-flex items-center justify-center px-8 py-4 bg-red-500 hover:bg-red-400 text-white font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_20px_rgba(255,0,0,0.2)]"
                 >
-                  Grab It Now
+                  Grab the Sticker
                 </a>
 
                 <span className="text-white/30 text-xs font-bold uppercase tracking-wider">
-                  Once it&apos;s gone, it&apos;s gone.
+                  Easy entry. Big signal.
                 </span>
               </div>
             </div>
