@@ -88,19 +88,6 @@ function StatCard({ value, label, icon }: { value: string; label: string; icon: 
   );
 }
 
-function LeaderboardRow({ rank, name, score, highlight = false }: { rank: number; name: string; score: string; highlight?: boolean }) {
-  const rankColor = rank === 1 ? "text-yellow-400" : rank === 2 ? "text-gray-300" : rank === 3 ? "text-orange-400" : "text-white/50";
-  const rankBg = rank === 1 ? "bg-yellow-500/5 border-yellow-500/10" : highlight ? "bg-red-500/5 border-red-500/10" : "bg-white/[0.02] border-white/5";
-
-  return (
-    <div className={`flex items-center gap-4 rounded-xl border px-4 py-3 ${rankBg} transition-colors`}>
-      <span className={`text-lg font-black w-6 text-center ${rankColor}`}>{rank}</span>
-      <span className="flex-1 text-sm font-semibold text-white">{name}</span>
-      <span className="text-sm font-bold text-red-300">{score}</span>
-    </div>
-  );
-}
-
 function RiskNotice() {
   return (
     <SectionShell className="border-yellow-500/20 bg-[linear-gradient(180deg,rgba(255,208,0,0.05),rgba(255,208,0,0.02))] px-6 py-8 sm:px-10 sm:py-10">
@@ -299,53 +286,6 @@ export default function GamePage() {
                 <a href="https://x.com/Kubo100x" target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02] hover:bg-red-400">
                   Visit @Kubo100x →
                 </a>
-              </div>
-            </div>
-          </div>
-        </SectionShell>
-
-        {/* ─── LEADERBOARD + STATS ─── */}
-        <SectionShell className="mt-8 p-6 sm:p-8">
-          <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr]">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-yellow-200/75">TOP PLAYERS</p>
-              <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">
-                <span className="text-yellow-400">Leaderboard</span>
-              </h2>
-              <p className="mt-2 text-sm text-white/50 mb-6">
-                The most disciplined players in the $MAD universe. Updated weekly.
-              </p>
-              <div className="space-y-2">
-                <LeaderboardRow rank={1} name="MAD_King_42" score="12,450" />
-                <LeaderboardRow rank={2} name="DiamondHODL" score="11,280" />
-                <LeaderboardRow rank={3} name="StayMAD_99" score="10,115" />
-                <LeaderboardRow rank={4} name="ChaosCtrl" score="9,840" />
-                <LeaderboardRow rank={5} name="BuildNotFold" score="8,620" highlight />
-              </div>
-              <p className="mt-4 text-xs text-white/30">Season 1 · Ends in 14 days</p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.02] p-6 text-center">
-                <div className="w-12 h-12 mx-auto rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-3">
-                  {Icons.users}
-                </div>
-                <div className="text-3xl font-black text-white">2,400+</div>
-                <div className="text-xs uppercase tracking-[0.2em] text-white/40 mt-1">Total Players</div>
-              </div>
-              <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.02] p-6 text-center">
-                <div className="w-12 h-12 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-3">
-                  {Icons.chart}
-                </div>
-                <div className="text-3xl font-black text-white">18.5K</div>
-                <div className="text-xs uppercase tracking-[0.2em] text-white/40 mt-1">Games Played</div>
-              </div>
-              <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.02] p-6 text-center">
-                <div className="w-12 h-12 mx-auto rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 mb-3">
-                  {Icons.trophy}
-                </div>
-                <div className="text-3xl font-black text-white">142</div>
-                <div className="text-xs uppercase tracking-[0.2em] text-white/40 mt-1">This Week</div>
               </div>
             </div>
           </div>
