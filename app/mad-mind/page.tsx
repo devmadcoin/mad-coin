@@ -2,6 +2,83 @@
 
 import { useEffect, useRef, useState } from "react";
 
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION UTILITIES (inlined — zero external deps)
+   ═══════════════════════════════════════════════════════════ */
+
+function useInView(options?: IntersectionObserverInit) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsInView(true); observer.disconnect(); } },
+      { threshold: 0.12, ...options }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [options]);
+  return { ref, isInView };
+}
+
+function FadeIn({
+  children, className = "", delay = 0, direction = "up", duration = 0.5, distance = 24,
+}: { children: React.ReactNode; className?: string; delay?: number; direction?: "up" | "down" | "left" | "right"; duration?: number; distance?: number; }) {
+  const { ref, isInView } = useInView();
+  const transforms = {
+    up: `translateY(${distance}px)`, down: `translateY(-${distance}px)`,
+    left: `translateX(${distance}px)`, right: `translateX(-${distance}px)`,
+  };
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: isInView ? 1 : 0, transform: isInView ? "translate(0)" : transforms[direction],
+      transition: `opacity ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s, transform ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s`,
+      willChange: "opacity, transform",
+    }}>{children}</div>
+  );
+}
+
+function StaggerGrid({
+  children, className = "", staggerDelay = 0.08, baseDelay = 0,
+}: { children: React.ReactNode; className?: string; staggerDelay?: number; baseDelay?: number; }) {
+  const { ref, isInView } = useInView();
+  return (
+    <div ref={ref} className={className}>
+      {Array.isArray(children) ? children.map((child, i) => (
+        <div key={i} style={{
+          opacity: isInView ? 1 : 0, transform: isInView ? "translateY(0)" : "translateY(20px)",
+          transition: `opacity 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s, transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s`,
+          willChange: "opacity, transform",
+        }}>{child}</div>
+      )) : children}
+    </div>
+  );
+}
+
+function GlowPulse({ children, className = "" }: { children: React.ReactNode; className?: string; }) {
+  return (
+    <div className={className} style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
+      {children}
+      <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,0,0,0.15)} 50%{box-shadow:0 0 35px rgba(255,0,0,0.28)}`}</style>
+    </div>
+  );
+}
+
+function HoverLift({ children, className = "" }: { children: React.ReactNode; className?: string; }) {
+  return (
+    <div className={className} style={{ transition: "transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)" }}
+      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; }}>
+      {children}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TYPES & DATA
+   ═══════════════════════════════════════════════════════════ */
+
 type Demo = { q: string; a: string };
 
 type ApiMeta = {
@@ -54,7 +131,6 @@ const SUGGESTED_PROMPTS = [
   "What's holding me back?",
 ];
 
-// Pre-loaded example conversation so the chat isn't empty
 const WELCOME_MESSAGES: ChatMessage[] = [
   {
     id: "welcome-user-1",
@@ -79,6 +155,10 @@ const WELCOME_MESSAGES: ChatMessage[] = [
     meta: { intent: "reframe", mood: "savage" },
   },
 ];
+
+/* ═══════════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════════ */
 
 function getOrCreateSessionId(): string {
   if (typeof window === "undefined") return "web-user";
@@ -129,7 +209,10 @@ function messageId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/* ─── WELCOME BANNER ─── */
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS
+   ═══════════════════════════════════════════════════════════ */
+
 function WelcomeBanner({ onPromptClick }: { onPromptClick: (prompt: string) => void }) {
   return (
     <div className="rounded-[1.8rem] border border-red-500/15 bg-[linear-gradient(180deg,rgba(40,0,0,0.4),rgba(10,0,0,0.6))] p-6 text-center mb-4">
@@ -140,13 +223,11 @@ function WelcomeBanner({ onPromptClick }: { onPromptClick: (prompt: string) => v
         </span>
         <span className="text-xs font-bold uppercase tracking-[0.3em] text-red-300">MAD is Live</span>
       </div>
-      <p className="text-lg font-black text-red-100 mb-2">
-        Ask what others avoid.
-      </p>
+      <p className="text-lg font-black text-red-100 mb-2">Ask what others avoid.</p>
       <p className="text-sm text-white/50 mb-4">
         MAD doesn't comfort you. It exposes the pattern. Pick a prompt or type your own truth.
       </p>
-      <div className="flex flex-wrap justify-center gap-2">
+      <StaggerGrid className="flex flex-wrap justify-center gap-2" staggerDelay={0.04}>
         {SUGGESTED_PROMPTS.map((prompt) => (
           <button
             key={prompt}
@@ -156,29 +237,33 @@ function WelcomeBanner({ onPromptClick }: { onPromptClick: (prompt: string) => v
             {prompt}
           </button>
         ))}
-      </div>
+      </StaggerGrid>
     </div>
   );
 }
 
-/* ─── SIDEBAR: STYLE INFO ─── */
 function StyleInfoCard({ style }: { style: StyleMode }) {
   const info = {
     safe: { label: "Safe Mode", desc: "Gentle truths. Encouraging but honest.", color: "text-green-300", border: "border-green-500/20", bg: "bg-green-500/5" },
     savage: { label: "Savage Mode", desc: "Raw honesty. No sugarcoating.", color: "text-red-300", border: "border-red-500/20", bg: "bg-red-500/5" },
     crashout: { label: "Crashout Mode", desc: "Maximum intensity. Brutal truth.", color: "text-orange-300", border: "border-orange-500/20", bg: "bg-orange-500/5" },
   };
-
   const i = info[style];
 
   return (
+    <HoverLift>
     <div className={`rounded-3xl border ${i.border} ${i.bg} p-5`}>
       <div className="text-xs uppercase tracking-[0.35em] text-white/45 mb-2">Current Mode</div>
       <div className={`text-lg font-black ${i.color}`}>{i.label}</div>
       <p className="mt-1 text-sm text-white/55">{i.desc}</p>
     </div>
+    </HoverLift>
   );
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE
+   ═══════════════════════════════════════════════════════════ */
 
 export default function MadMindPage() {
   const [input, setInput] = useState("");
@@ -186,7 +271,7 @@ export default function MadMindPage() {
   const [sessionId, setSessionId] = useState("web-user");
   const [isLoading, setIsLoading] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
-  const [count, setCount] = useState(2); // Start at 2 because of welcome messages
+  const [count, setCount] = useState(2);
   const [patterns, setPatterns] = useState<string[]>(["Pattern Repeats", "Comfort Addiction", "Avoidance"]);
   const [messages, setMessages] = useState<ChatMessage[]>(WELCOME_MESSAGES);
   const [demoIndex, setDemoIndex] = useState(0);
@@ -219,8 +304,6 @@ export default function MadMindPage() {
   async function sendMessage(messageOverride?: string) {
     const text = (messageOverride ?? input).trim() || PLACEHOLDERS[count % PLACEHOLDERS.length];
     if (!text || isLoading) return;
-
-    // Hide welcome banner on first real message
     if (showWelcome) setShowWelcome(false);
 
     const userMessage: ChatMessage = { id: messageId(), role: "user", text };
@@ -290,6 +373,7 @@ export default function MadMindPage() {
   return (
     <main className="min-h-screen bg-black text-white">
       {/* ─── HERO ─── */}
+      <FadeIn>
       <section className="relative border-b border-white/10 bg-gradient-to-b from-red-950/40 via-black to-black">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,40,40,0.16),transparent_38%)]" />
         <div className="relative mx-auto max-w-6xl px-4 py-10 md:py-14">
@@ -304,9 +388,11 @@ export default function MadMindPage() {
           </div>
         </div>
       </section>
+      </FadeIn>
 
       <section className="mx-auto grid max-w-6xl gap-6 px-4 py-6 lg:grid-cols-[1.45fr_0.8fr]">
         {/* ─── CHAT AREA ─── */}
+        <FadeIn delay={0.1}>
         <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
           {/* Header */}
           <div className="border-b border-white/10 px-5 py-4">
@@ -340,7 +426,6 @@ export default function MadMindPage() {
 
           {/* Messages */}
           <div ref={scrollRef} className="h-[62vh] min-h-[480px] space-y-4 overflow-y-auto px-4 py-4 md:px-5">
-            {/* Welcome banner with suggested prompts */}
             {showWelcome && messages.length <= WELCOME_MESSAGES.length && (
               <WelcomeBanner onPromptClick={handlePromptClick} />
             )}
@@ -358,7 +443,6 @@ export default function MadMindPage() {
                         : "max-w-[88%] rounded-[1.6rem] border border-red-500/20 bg-[linear-gradient(180deg,rgba(70,0,0,0.22),rgba(0,0,0,0.38))] px-5 py-4 text-red-50"
                     }
                   >
-                    {/* Label */}
                     <div className={isUser ? "text-xs uppercase tracking-[0.2em] text-white/35" : "flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em] text-red-200/70"}>
                       {isUser ? (
                         "You"
@@ -379,19 +463,16 @@ export default function MadMindPage() {
                       )}
                     </div>
 
-                    {/* Text */}
                     <div className={isUser ? "mt-2 text-base leading-7 text-white/85" : "mt-3 whitespace-pre-wrap text-2xl font-black leading-tight text-red-100 md:text-3xl"}>
                       {message.text}
                     </div>
 
-                    {/* Callback */}
                     {!isUser && message.meta?.callback ? (
                       <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white/60">
                         {message.meta.callback}
                       </div>
                     ) : null}
 
-                    {/* Follow-up bait */}
                     {!isUser && message.meta?.followUpBait?.length ? (
                       <div className="mt-4 flex flex-wrap gap-2">
                         {message.meta.followUpBait.slice(0, 3).map((item) => (
@@ -412,7 +493,6 @@ export default function MadMindPage() {
               );
             })}
 
-            {/* Loading */}
             {isLoading ? (
               <div className="flex justify-start">
                 <div className="max-w-[88%] rounded-[1.6rem] border border-red-500/20 bg-[linear-gradient(180deg,rgba(70,0,0,0.22),rgba(0,0,0,0.38))] px-5 py-4 text-red-50">
@@ -430,7 +510,6 @@ export default function MadMindPage() {
 
           {/* Input Area */}
           <div className="border-t border-white/10 px-4 py-4 md:px-5">
-            {/* Quick actions */}
             <div className="mb-3 flex flex-wrap gap-2">
               <button type="button" onClick={() => void handleQuickReply("harder")} disabled={isLoading || messages.length === 0} className="rounded-full border border-red-500/30 px-4 py-2 text-sm text-white transition hover:border-red-400 hover:bg-red-500/10 disabled:opacity-50">Harder</button>
               <button type="button" onClick={() => void handleQuickReply("smarter")} disabled={isLoading || messages.length === 0} className="rounded-full border border-white/15 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/5 disabled:opacity-50">Smarter</button>
@@ -439,7 +518,6 @@ export default function MadMindPage() {
               {shareMessage ? <div className="self-center text-sm text-red-200">{shareMessage}</div> : null}
             </div>
 
-            {/* Suggested prompts row */}
             {!isLoading && (
               <div className="mb-3 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                 {SUGGESTED_PROMPTS.slice(0, 4).map((prompt) => (
@@ -454,7 +532,6 @@ export default function MadMindPage() {
               </div>
             )}
 
-            {/* Text input */}
             <div className="flex gap-3">
               <input
                 value={input}
@@ -463,6 +540,7 @@ export default function MadMindPage() {
                 placeholder={PLACEHOLDERS[count % PLACEHOLDERS.length]}
                 className="flex-1 rounded-2xl border border-white/10 bg-black/70 px-5 py-4 text-base outline-none transition placeholder:text-white/30 focus:border-red-500/40"
               />
+              <GlowPulse>
               <button
                 type="button"
                 onClick={() => void sendMessage()}
@@ -471,16 +549,20 @@ export default function MadMindPage() {
               >
                 Send
               </button>
+              </GlowPulse>
             </div>
           </div>
         </div>
+        </FadeIn>
 
         {/* ─── SIDEBAR ─── */}
         <div className="space-y-6">
-          {/* Style Info */}
-          <StyleInfoCard style={style} />
+          <FadeIn delay={0.15}>
+            <StyleInfoCard style={style} />
+          </FadeIn>
 
-          {/* Growth Level */}
+          <FadeIn delay={0.2}>
+          <HoverLift>
           <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
             <div className="text-xs uppercase tracking-[0.35em] text-white/45">Your Growth Level</div>
             <div className="mt-4 text-4xl font-black">Level {level}</div>
@@ -490,8 +572,11 @@ export default function MadMindPage() {
             </div>
             <div className="mt-3 text-xs text-white/45">Savage Mode unlocks every 5 truths.</div>
           </div>
+          </HoverLift>
+          </FadeIn>
 
-          {/* What MAD Sees */}
+          <FadeIn delay={0.25}>
+          <HoverLift>
           <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
             <div className="text-xs uppercase tracking-[0.35em] text-white/45">What MAD Sees</div>
             <div className="mt-4 space-y-3 text-sm">
@@ -508,14 +593,19 @@ export default function MadMindPage() {
               </div>
             ) : null}
           </div>
+          </HoverLift>
+          </FadeIn>
 
-          {/* Pro Tip */}
+          <FadeIn delay={0.3}>
+          <HoverLift>
           <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
             <div className="text-xs uppercase tracking-[0.35em] text-white/45 mb-3">Pro Tip</div>
             <p className="text-sm text-white/60 leading-relaxed">
               The deeper you go, the harder MAD hits. Use <span className="text-red-300 font-bold">Harder</span> to escalate, <span className="text-white font-bold">Smarter</span> for strategy, or <span className="text-white font-bold">Shorter</span> to cut the noise.
             </p>
           </div>
+          </HoverLift>
+          </FadeIn>
         </div>
       </section>
     </main>
