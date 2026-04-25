@@ -132,101 +132,6 @@ function StockBadge({
   );
 }
 
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "MAD Mind", href: "/mad-mind" },
-    { label: "Roadmap", href: "/roadmap" },
-    { label: "Game", href: "/game" },
-    { label: "Memes", href: "/memes" },
-    { label: "Merch", href: "/merch" },
-  ];
-
-  return (
-    <>
-      <nav
-        className={[
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          scrolled
-            ? "bg-black/95 backdrop-blur-xl border-b border-white/10"
-            : "bg-transparent",
-        ].join(" ")}
-      >
-        <div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-sm">
-              M
-            </div>
-
-            <div className="flex flex-col">
-              <span className="text-white font-black text-lg">$MAD</span>
-              <span className="text-white/40 text-[9px] tracking-[0.3em] uppercase">
-                Stay $MAD
-              </span>
-            </div>
-          </Link>
-
-          <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="px-4 py-2 text-sm font-bold text-white/50 hover:text-white rounded-full hover:bg-white/5"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <a
-              href={LINKS.buy}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden sm:flex px-5 py-2.5 bg-red-500 hover:bg-red-400 text-white text-sm font-black rounded-full"
-            >
-              Buy $MAD
-            </a>
-
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 text-white"
-            >
-              {mobileOpen ? "✕" : "☰"}
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-black/95 pt-24 px-6 lg:hidden">
-          <div className="flex flex-col gap-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="text-2xl font-black text-white/80 py-3 border-b border-white/10"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
 function MerchHero() {
   return (
     <section className="pt-32 pb-16 text-center">
@@ -266,6 +171,38 @@ function MerchHero() {
             Buy $MAD First
           </a>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── CUSTOMER LOVE ─── */
+function CustomerVideo() {
+  return (
+    <section className="py-8">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mb-6 text-center">
+          <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300">
+            Customer Love
+          </span>
+          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-white">
+            Real People. Real <span className="text-red-500">$MAD</span> Energy.
+          </h2>
+        </div>
+        <div className="mx-auto max-w-2xl rounded-[2rem] border border-white/10 bg-black/40 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
+          <div className="relative aspect-[9/16] w-full sm:aspect-video">
+            <iframe
+              src="https://www.youtube.com/embed/s-eE7s_bGoc?autoplay=0&mute=1&loop=1&playlist=s-eE7s_bGoc&rel=0&modestbranding=1"
+              title="$MAD Customer Sticker Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+        </div>
+        <p className="mt-4 text-center text-sm text-white/40">
+          Watch the $MAD sticker in action. #madrichenergy
+        </p>
       </div>
     </section>
   );
@@ -363,6 +300,38 @@ function ProductGrid() {
             </a>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── MORE CUSTOMER LOVE ─── */
+function CustomerVideoTwo() {
+  return (
+    <section className="py-8">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mb-6 text-center">
+          <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300">
+            More $MAD Energy
+          </span>
+          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-white">
+            The Hype Is <span className="text-red-500">Real</span>.
+          </h2>
+        </div>
+        <div className="mx-auto max-w-2xl rounded-[2rem] border border-white/10 bg-black/40 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
+          <div className="relative aspect-[9/16] w-full sm:aspect-video">
+            <iframe
+              src="https://www.youtube.com/embed/osW5w0b2Lp4?autoplay=0&mute=1&loop=1&playlist=osW5w0b2Lp4&rel=0&modestbranding=1"
+              title="$MAD Customer Sticker Video 2"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+        </div>
+        <p className="mt-4 text-center text-sm text-white/40">
+          Another $MAD holder showing love. #madrichenergy
+        </p>
       </div>
     </section>
   );
@@ -471,13 +440,13 @@ function Footer() {
 export default function MerchPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
-      <Navbar />
-
       <main>
         <MerchHero />
+        <CustomerVideo />
         <FeaturedPiece />
         <Marquee />
         <ProductGrid />
+        <CustomerVideoTwo />
         <ApparelTeaser />
         <RiskNotice />
       </main>
