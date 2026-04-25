@@ -398,4 +398,9 @@ export default function RoadmapPage() {
           <Highway />
           <CommunitySupport />
           <CTASection />
-          <RiskNoti
+          <RiskNotice />
+        </div>
+      </main>
+    </div>
+  );
+}
