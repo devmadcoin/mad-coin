@@ -639,10 +639,10 @@ export default function MerchPage() {
         <MerchHero />
         <ProofGrid />
         <CustomerVideo />
+        <CustomerVideoTwo />
         <FeaturedPiece />
         <Marquee />
         <ProductGrid />
-        <CustomerVideoTwo />
         <ApparelTeaser />
         <RiskNotice />
       </main>
