@@ -25,7 +25,7 @@ const PRODUCTS = [
     desc: "Clean, bold, and easy to place anywhere.",
     stock: "In Stock",
     stockTone: "green" as const,
-    image: "/images/merch/stickers.jpg",
+    image: "/stickers/Mad-Sticker-logo.png",
   },
   {
     id: "card-wrap",
@@ -37,7 +37,7 @@ const PRODUCTS = [
     desc: "A sharper premium look with texture and attitude.",
     stock: "Selling Fast",
     stockTone: "yellow" as const,
-    image: "/images/merch/card-wrap.jpg",
+    image: "/stickers/Mad-Premium-Embossed-Card-Wrap.png",
   },
   {
     id: "rich-wrap",
@@ -49,7 +49,7 @@ const PRODUCTS = [
     desc: "The louder luxury version with richer flex energy.",
     stock: "Low Stock",
     stockTone: "red" as const,
-    image: "/images/merch/rich-wrap.jpg",
+    image: "/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png",
   },
   {
     id: "peeker",
@@ -61,7 +61,7 @@ const PRODUCTS = [
     desc: "Small piece. Fast attention. Big signal.",
     stock: "In Stock",
     stockTone: "green" as const,
-    image: "/images/merch/peeker.jpg",
+    image: "/stickers/Mad-Peeker.png",
   },
 ] as const;
 
@@ -448,57 +448,6 @@ function ProductGrid() {
   );
 }
 
-function BuyMADBanner() {
-  return (
-    <section className="py-12 sm:py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[2.5rem] border border-red-500/20 bg-[radial-gradient(circle_at_top_right,rgba(255,0,0,0.10),rgba(6,0,0,0.95))] p-8 sm:p-12 text-center">
-          <p className="text-[11px] font-black uppercase tracking-[0.34em] text-red-300/80">
-            Step One
-          </p>
-
-          <h2 className="mt-3 text-3xl sm:text-5xl font-black text-white">
-            YOU NEED $MAD
-            <br className="hidden sm:block" /> BEFORE YOU CAN FLEX IT.
-          </h2>
-
-          <p className="mt-4 text-base sm:text-lg text-white/60 max-w-xl mx-auto">
-            Buy the token first. Then come back and grab the merch.
-          </p>
-
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href={LINKS.buy}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center px-8 py-4 bg-red-500 hover:bg-red-400 text-white text-lg font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,0,0,0.25)]"
-            >
-              Buy $MAD Now
-            </a>
-
-            <a
-              href={LINKS.solscan}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center px-6 py-4 border border-white/15 rounded-full text-sm font-bold text-white/70 hover:text-white hover:border-white/30 transition-all"
-            >
-              View on Solscan
-            </a>
-          </div>
-
-          <div className="mt-8 inline-flex flex-col sm:flex-row items-center gap-3 px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.03]">
-            <span className="text-white/40 text-xs font-bold">CA:</span>
-            <code className="text-red-400 font-mono text-xs sm:text-sm break-all">
-              {CA}
-            </code>
-            <CopyButton />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function ApparelTeaser() {
   return (
     <section className="py-16 sm:py-24 border-t border-white/10">
@@ -533,10 +482,14 @@ function ApparelTeaser() {
 
             <div className="relative h-72 sm:h-96 lg:h-auto bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.08),transparent_60%)] flex items-center justify-center p-8 order-1 lg:order-2">
               <div className="relative w-full max-w-sm aspect-square rounded-[2rem] border border-white/10 bg-[#0a0a0a] flex items-center justify-center overflow-hidden">
-                <span className="text-white/10 text-9xl font-black select-none">M</span>
+                <img
+                  src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
+                  alt="MAD Rich apparel preview"
+                  className="relative z-10 h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                />
 
-                <div className="absolute bottom-6 left-6 right-6 flex justify-center">
-                  <span className="rounded-full border border-red-500/30 bg-red-500/15 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-red-300">
+                <div className="absolute bottom-6 left-6 right-6 flex justify-center z-20">
+                  <span className="rounded-full border border-red-500/30 bg-black/70 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-red-300 backdrop-blur-md">
                     Drop 002 — Loading
                   </span>
                 </div>
@@ -742,7 +695,6 @@ export default function MerchPage() {
         <FeaturedPiece />
         <Marquee />
         <ProductGrid />
-        <BuyMADBanner />
         <ApparelTeaser />
         <ApparelPreview />
         <RiskNotice />
