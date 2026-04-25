@@ -309,26 +309,6 @@ export default function GamePage() {
         </SectionShell>
         </FadeIn>
 
-        {/* ─── GAME MECHANICS ─── */}
-        <FadeIn delay={0.1}>
-        <SectionShell className="mt-8 p-6 sm:p-8">
-          <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">GAMEPLAY</p>
-            <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">
-              What You <span className="text-red-500">Do</span>
-            </h2>
-            <p className="mt-2 text-sm text-white/50 max-w-lg">
-              Build your MAD empire. Every decision matters. The higher the Global Rage Index goes, the crazier the world gets.
-            </p>
-          </div>
-          <StaggerGrid className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" staggerDelay={0.08}>
-            {GAME_MECHANICS.map((m) => (
-              <FeatureCard key={m.title} title={m.title} desc={m.desc} icon={m.icon} />
-            ))}
-          </StaggerGrid>
-        </SectionShell>
-        </FadeIn>
-
         {/* ─── GAME RISKS ─── */}
         <FadeIn delay={0.1}>
         <SectionShell className="mt-8 p-6 sm:p-8">
