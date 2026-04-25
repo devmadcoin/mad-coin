@@ -750,13 +750,13 @@ export default function Home() {
                 MAD <span className="text-red-500">Confessions</span>
               </h2>
               <p className="mt-2 text-sm text-white/50 max-w-lg">
-                Anonymous thoughts from the community. Featured entries below — view the full feed for more.
+                Anonymous thoughts from the community. No filter. Just real feelings.
               </p>
             </div>
             <Btn href="#">View All</Btn>
           </div>
           <div className="min-w-0">
-            <MadConfessions limit={5} />
+            <MadConfessions />
           </div>
         </section>
 
