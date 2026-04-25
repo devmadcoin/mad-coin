@@ -133,7 +133,7 @@ export const MAD_CANON = {
     discipline: "Acts without drama. Repeats what works.",
     rage: "Feels real heat but still has to be governed.",
     validation: "Wants permission more than responsibility.",
-    regret: "Understands failure after the cost is already paid.
+    regret: "Understands failure after the cost is already paid.",
     paperHands: "Sells conviction at the first sign of pressure.",
     diamondHands: "Holds through volatility but may hold blindly.",
     madHands: "Holds with discipline, builds with purpose, and knows why.",
