@@ -322,33 +322,56 @@ function MerchHero() {
   );
 }
 
-/* ─── CUSTOMER VIDEO 1 ─── */
-function CustomerVideo() {
+/* ─── VIDEO GRID ─── */
+function VideoGrid() {
+  const videos = [
+    {
+      src: "https://www.youtube.com/embed/s-eE7s_bGoc?autoplay=0&mute=1&loop=1&playlist=s-eE7s_bGoc&rel=0&modestbranding=1",
+      title: "$MAD Customer Sticker Video",
+      label: "Customer Love",
+      heading: "Real People. Real $MAD Energy.",
+      caption: "Watch the $MAD sticker in action. #madrichenergy",
+    },
+    {
+      src: "https://www.youtube.com/embed/osW5w0b2Lp4?autoplay=0&mute=1&loop=1&playlist=osW5w0b2Lp4&rel=0&modestbranding=1",
+      title: "$MAD Customer Sticker Video 2",
+      label: "More $MAD Energy",
+      heading: "The Hype Is Real.",
+      caption: "Another $MAD holder showing love. #madrichenergy",
+    },
+  ];
+
   return (
     <section className="py-8">
       <div className="mx-auto max-w-7xl px-4">
         <div className="mb-6 text-center">
           <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300">
-            Customer Love
+            Customer Proof
           </span>
           <h2 className="mt-4 text-2xl sm:text-3xl font-black text-white">
-            Real People. Real <span className="text-red-500">$MAD</span> Energy.
+            Real <span className="text-red-500">$MAD</span> Energy In Action.
           </h2>
         </div>
-        <div className="mx-auto max-w-2xl rounded-[2rem] border border-white/10 bg-black/40 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
-          <div className="relative aspect-[9/16] w-full sm:aspect-video">
-            <iframe
-              src="https://www.youtube.com/embed/s-eE7s_bGoc?autoplay=0&mute=1&loop=1&playlist=s-eE7s_bGoc&rel=0&modestbranding=1"
-              title="$MAD Customer Sticker Video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 w-full h-full"
-            />
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {videos.map((video, i) => (
+            <div key={i} className="rounded-[2rem] border border-white/10 bg-black/40 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
+              <div className="relative aspect-[9/16] w-full sm:aspect-video">
+                <iframe
+                  src={video.src}
+                  title={video.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                />
+              </div>
+              <div className="p-5 text-center">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-300">{video.label}</span>
+                <p className="mt-2 text-lg font-black text-white">{video.heading}</p>
+                <p className="mt-1 text-sm text-white/40">{video.caption}</p>
+              </div>
+            </div>
+          ))}
         </div>
-        <p className="mt-4 text-center text-sm text-white/40">
-          Watch the $MAD sticker in action. #madrichenergy
-        </p>
       </div>
     </section>
   );
@@ -475,37 +498,7 @@ function ProductGrid() {
   );
 }
 
-/* ─── CUSTOMER VIDEO 2 ─── */
-function CustomerVideoTwo() {
-  return (
-    <section className="py-8">
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="mb-6 text-center">
-          <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300">
-            More $MAD Energy
-          </span>
-          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-white">
-            The Hype Is <span className="text-red-500">Real</span>.
-          </h2>
-        </div>
-        <div className="mx-auto max-w-2xl rounded-[2rem] border border-white/10 bg-black/40 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
-          <div className="relative aspect-[9/16] w-full sm:aspect-video">
-            <iframe
-              src="https://www.youtube.com/embed/osW5w0b2Lp4?autoplay=0&mute=1&loop=1&playlist=osW5w0b2Lp4&rel=0&modestbranding=1"
-              title="$MAD Customer Sticker Video 2"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 w-full h-full"
-            />
-          </div>
-        </div>
-        <p className="mt-4 text-center text-sm text-white/40">
-          Another $MAD holder showing love. #madrichenergy
-        </p>
-      </div>
-    </section>
-  );
-}
+
 
 /* ─── APPAREL TEASER ─── */
 function ApparelTeaser() {
@@ -638,8 +631,7 @@ export default function MerchPage() {
 
         <MerchHero />
         <ProofGrid />
-        <CustomerVideo />
-        <CustomerVideoTwo />
+        <VideoGrid />
         <FeaturedPiece />
         <Marquee />
         <ProductGrid />
