@@ -137,6 +137,80 @@ function CopyButton({ text = CA }: { text?: string }) {
   );
 }
 
+/* ─── LIVE TICKER ─── */
+function LiveTicker() {
+  const [stats, setStats] = useState<{ price: string; change: string; mcap: string; volume: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const res = await fetch("https://api.dexscreener.com/latest/dex/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump");
+        const data = await res.json();
+        const pair = data.pairs?.[0];
+        if (pair) {
+          setStats({
+            price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(8)}` : "—",
+            change: pair.priceChange?.h24 ? `${pair.priceChange.h24 > 0 ? "+" : ""}${pair.priceChange.h24}%` : "—",
+            mcap: pair.marketCap ? `$${(pair.marketCap / 1000).toFixed(1)}K` : "—",
+            volume: pair.volume?.h24 ? `$${(pair.volume.h24 / 1000).toFixed(1)}K` : "—",
+          });
+        }
+      } catch {
+        setStats(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="fixed top-0 left-0 right-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10">
+        <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-center gap-4">
+          <span className="text-white/40 text-xs font-bold">Loading $MAD stats...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stats) return null;
+
+  const items = [
+    { label: "PRICE", value: stats.price },
+    { label: "24H", value: stats.change, color: stats.change.startsWith("+") ? "text-green-400" : stats.change.startsWith("-") ? "text-red-400" : "text-white/60" },
+    { label: "MCAP", value: stats.mcap },
+    { label: "24H VOL", value: stats.volume },
+    { label: "CA", value: CA.slice(0, 6) + "..." + CA.slice(-4) },
+  ];
+
+  return (
+    <div className="fixed top-0 left-0 right-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10">
+      <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-between gap-4 overflow-x-auto">
+        <div className="flex items-center gap-6 min-w-max">
+          <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest shrink-0">$MAD Live</span>
+          {items.map((item) => (
+            <div key={item.label} className="flex items-center gap-1.5 shrink-0">
+              <span className="text-white/30 text-[10px] font-bold uppercase">{item.label}</span>
+              <span className={`text-xs font-black ${item.color || "text-white"}`}>{item.value}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+          </span>
+          <span className="text-[10px] text-white/40 font-bold">LIVE</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── NAVBAR ─── */
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -159,7 +233,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className={["fixed top-0 left-0 right-0 z-50 transition-all duration-300", scrolled ? "bg-black/95 backdrop-blur-xl border-b border-white/10" : "bg-transparent"].join(" ")}>
+      <nav className={["fixed top-8 left-0 right-0 z-50 transition-all duration-300", scrolled ? "bg-black/95 backdrop-blur-xl border-b border-white/10" : "bg-transparent"].join(" ")}>
         {scrolled && (
           <div className="border-b border-white/10 bg-white/[0.02]">
             <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-center gap-3">
@@ -329,6 +403,32 @@ function HeroGlobe() {
    ═══════════════════════════════════════════════════════════ */
 
 export default function Home() {
+  const [liveStats, setLiveStats] = useState<{ price: string; change: string; mcap: string; holders: string; volume: string } | null>(null);
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const res = await fetch("https://api.dexscreener.com/latest/dex/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump");
+        const data = await res.json();
+        const pair = data.pairs?.[0];
+        if (pair) {
+          setLiveStats({
+            price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(8)}` : "—",
+            change: pair.priceChange?.h24 ? `${pair.priceChange.h24 > 0 ? "+" : ""}${pair.priceChange.h24}%` : "—",
+            mcap: pair.marketCap ? `$${(pair.marketCap / 1000).toFixed(1)}K` : "—",
+            holders: "273",
+            volume: pair.volume?.h24 ? `$${(pair.volume.h24 / 1000).toFixed(1)}K` : "—",
+          });
+        }
+      } catch {
+        /* fallback to static if API fails */
+      }
+    }
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   const exchangeItems = [
     { href: LINKS.birdeye, src: "/logos/birdeye.png", alt: "Birdeye", label: "Birdeye" },
     { href: LINKS.solscan, src: "/logos/solscan.png", alt: "Solscan", label: "Solscan" },
@@ -336,12 +436,18 @@ export default function Home() {
     { href: LINKS.dexscreener, src: "/logos/DEX-screener.png", alt: "DEX Screener", label: "DEX Screener" },
   ];
 
-  const tokenStats = [
+  const tokenStats = liveStats ? [
+    { label: "PRICE", value: liveStats.price, change: liveStats.change, isPositive: liveStats.change.startsWith("+") },
+    { label: "MARKET CAP", value: liveStats.mcap, change: "+8.2%", isPositive: true },
+    { label: "HOLDERS", value: liveStats.holders, change: "+52", isPositive: true },
+    { label: "SUPPLY", value: "513M", change: "↓ to 800M", isPositive: true },
+    { label: "24H VOLUME", value: liveStats.volume, change: undefined, isPositive: true },
+  ] : [
     { label: "PRICE", value: "$0.0002066", change: "+5.84%", isPositive: true },
     { label: "MARKET CAP", value: "$106K", change: "+8.2%", isPositive: true },
     { label: "HOLDERS", value: "273", change: "+52", isPositive: true },
     { label: "SUPPLY", value: "513M", change: "↓ to 800M", isPositive: true },
-    { label: "NEXT BURN", value: "10K HLD", change: undefined, isPositive: true },
+    { label: "24H VOLUME", value: "$12K", change: undefined, isPositive: true },
   ];
 
   const howToBuySteps = [
@@ -381,10 +487,14 @@ export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#040404] text-white">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.06),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
+
+      {/* Live Ticker */}
+      <LiveTicker />
+
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 lg:px-8">
-        <div className="h-16" />
+        <div className="h-24" /> {/* Increased padding for ticker */}
 
         {/* ─── HERO ─── */}
         <FadeIn>
@@ -460,7 +570,7 @@ export default function Home() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
               </span>
-              <span className="text-xs text-white/40">Live data</span>
+              <span className="text-xs text-white/40">{liveStats ? "Live data" : "Loading..."}</span>
             </div>
           </div>
           <StaggerGrid className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" staggerDelay={0.06}>
@@ -544,7 +654,8 @@ export default function Home() {
           </div>
           <div className="mt-8 overflow-hidden rounded-[28px] bg-[linear-gradient(90deg,rgba(96,58,80,0.95),rgba(49,57,110,0.95))] px-4 py-8 sm:px-6">
             <div className="logo-marquee flex w-max items-center gap-8">
-              {[...exchangeItems, ...exchangeItems, ...exchangeItems].map((item, index) => (
+              {/* FIX: Only duplicate once for proper infinite scroll, not 3x */}
+              {[...exchangeItems, ...exchangeItems].map((item, index) => (
                 <ExchangeLogoCard key={`${item.label}-${index}`} href={item.href} src={item.src} alt={item.alt} label={item.label} />
               ))}
             </div>
