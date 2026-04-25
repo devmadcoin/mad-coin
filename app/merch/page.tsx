@@ -630,11 +630,11 @@ export default function MerchPage() {
         <div className="h-20" />
 
         <MerchHero />
-        <ProofGrid />
-        <VideoGrid />
         <FeaturedPiece />
         <Marquee />
         <ProductGrid />
+        <ProofGrid />
+        <VideoGrid />
         <ApparelTeaser />
         <RiskNotice />
       </main>
