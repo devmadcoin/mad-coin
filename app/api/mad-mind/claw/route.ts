@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 /* ═══════════════════════════════════════════════════════════
-   MAD CLAW INTEGRATION — Async Polling Backend
+   MAD CLAW INTEGRATION — Async Polling Backend (Stable)
    ═══════════════════════════════════════════════════════════
 
    How it works:
@@ -13,6 +13,12 @@ import * as path from "path";
    4. MadClaw (me) polls GET /api/mad-mind/claw to find pending requests
    5. MadClaw writes response to /tmp/mad-claw/out/{requestId}.json
    6. Frontend polls GET /api/mad-mind/claw?requestId=xxx until response ready
+
+   STABILITY FEATURES:
+   - All file ops wrapped in try/catch — never crash the API
+   - Graceful degradation if /tmp is unavailable
+   - Request timeout after 60s (frontend should retry)
+   - Auto-cleanup of old requests (older than 10 minutes)
 
    NOTE: /tmp is ephemeral on Vercel. For production, swap to Redis/DB.
    ═══════════════════════════════════════════════════════════ */
@@ -46,7 +52,7 @@ function ensureDirs() {
     if (!fs.existsSync(IN_DIR)) fs.mkdirSync(IN_DIR, { recursive: true });
     if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
   } catch {
-    /* ignore */
+    /* ignore — /tmp may not be writable */
   }
 }
 
@@ -61,6 +67,30 @@ function readJson<T>(filePath: string): T | null {
 function writeJson(filePath: string, data: unknown) {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function deleteOldRequests() {
+  const CUTOFF = Date.now() - 10 * 60 * 1000; // 10 minutes
+  try {
+    for (const dir of [IN_DIR, OUT_DIR]) {
+      if (!fs.existsSync(dir)) continue;
+      const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+      for (const file of files) {
+        const filePath = path.join(dir, file);
+        try {
+          const stat = fs.statSync(filePath);
+          if (stat.mtimeMs < CUTOFF) {
+            fs.unlinkSync(filePath);
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+    }
   } catch {
     /* ignore */
   }
@@ -110,6 +140,7 @@ export async function POST(req: Request) {
 /* ─── GET: Poll for response OR list pending for Claw ─── */
 export async function GET(req: Request) {
   ensureDirs();
+  deleteOldRequests(); // Clean up stale requests
 
   const { searchParams } = new URL(req.url);
   const requestId = searchParams.get("requestId");
@@ -133,7 +164,17 @@ export async function GET(req: Request) {
     const request = readJson<ClawRequest>(inPath);
 
     if (!request) {
-      return NextResponse.json({ error: "Request not found" }, { status: 404 });
+      return NextResponse.json({ error: "Request not found or expired" }, { status: 404 });
+    }
+
+    // Check if request is too old (stuck)
+    const age = Date.now() - request.timestamp;
+    if (age > 90000) { // 90 seconds
+      return NextResponse.json({
+        requestId,
+        status: "timeout",
+        output: "MadClaw is taking too long. Try again in a moment.",
+      });
     }
 
     return NextResponse.json({
