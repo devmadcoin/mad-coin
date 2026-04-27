@@ -3,13 +3,12 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
 /* ═══════════════════════════════════════════════════════════
-   MAD DEN — Chao Garden Style Interface
-   A pixel-art room where the MAD creature walks around.
-   Chat bubble appears above its head when responding.
+   MAD CHAO GARDEN — Sonic Advance GBA Style
+   Pixel-art checkerboard garden with a cute MAD creature.
    ═══════════════════════════════════════════════════════════ */
 
 type StyleMode = "safe" | "savage" | "crashout";
-type Mood = "idle" | "walking" | "talking" | "thinking" | "reacting";
+type Mood = "idle" | "walking" | "talking" | "thinking";
 
 interface ChatMessage {
   id: string;
@@ -26,203 +25,450 @@ const PLACEHOLDERS = [
   "Roast my excuse.",
 ];
 
-/* ─── UTILS ─── */
 function uid() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE CREATURE — CSS Pixel-Art Flame Character
+   THE GARDEN — GBA Chao Garden Background
+   ═══════════════════════════════════════════════════════════ */
+
+function Garden() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        overflow: "hidden",
+        borderRadius: "20px",
+      }}
+    >
+      {/* Sky — blue gradient */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(180deg, #5ca8e8 0%, #7ec8f0 40%, #a8d8f0 100%)",
+        }}
+      />
+
+      {/* Clouds — pixelated blobs */}
+      <div style={{ position: "absolute", top: "12%", left: "15%", width: "48px", height: "20px", background: "#fff", borderRadius: "10px", opacity: 0.7 }} />
+      <div style={{ position: "absolute", top: "8%", left: "60%", width: "36px", height: "16px", background: "#fff", borderRadius: "8px", opacity: 0.6 }} />
+      <div style={{ position: "absolute", top: "18%", left: "80%", width: "56px", height: "22px", background: "#fff", borderRadius: "12px", opacity: 0.5 }} />
+
+      {/* Dirt / tree area (top right corner) */}
+      <div
+        style={{
+          position: "absolute",
+          top: "-20px",
+          right: "-20px",
+          width: "140px",
+          height: "120px",
+          background: "#8B6914",
+          borderRadius: "50%",
+          opacity: 0.9,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "30px",
+          width: "60px",
+          height: "80px",
+          background: "#228B22",
+          borderRadius: "50% 50% 45% 45%",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: "5px",
+          right: "50px",
+          width: "40px",
+          height: "50px",
+          background: "#32CD32",
+          borderRadius: "50%",
+        }}
+      />
+
+      {/* Ground / grass — checkerboard */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "55%",
+          background: `
+            repeating-linear-gradient(
+              0deg,
+              #3cb043 0px,
+              #3cb043 16px,
+              #32a03d 16px,
+              #32a03d 32px
+            ),
+            repeating-linear-gradient(
+              90deg,
+              #3cb043 0px,
+              #3cb043 16px,
+              #32a03d 16px,
+              #32a03d 32px
+            )
+          `,
+          backgroundBlendMode: "multiply",
+        }}
+      >
+        {/* Grass top edge */}
+        <div
+          style={{
+            position: "absolute",
+            top: "-6px",
+            left: 0,
+            right: 0,
+            height: "12px",
+            background: "linear-gradient(180deg, #2d8a33 0%, #3cb043 100%)",
+          }}
+        />
+      </div>
+
+      {/* Water pond (bottom left) */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "5%",
+          left: "3%",
+          width: "100px",
+          height: "70px",
+          background: "#1E90FF",
+          borderRadius: "50%",
+          border: "3px solid #0066CC",
+          boxShadow: "inset 0 0 10px rgba(0,100,200,0.3)",
+        }}
+      >
+        {/* Water shine */}
+        <div
+          style={{
+            position: "absolute",
+            top: "15%",
+            left: "25%",
+            width: "30px",
+            height: "8px",
+            background: "rgba(255,255,255,0.4)",
+            borderRadius: "4px",
+          }}
+        />
+      </div>
+
+      {/* Grass tufts scattered */}
+      {[
+        { x: "20%", y: "58%" },
+        { x: "45%", y: "52%" },
+        { x: "70%", y: "60%" },
+        { x: "85%", y: "55%" },
+        { x: "55%", y: "65%" },
+      ].map((pos, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            left: pos.x,
+            top: pos.y,
+            width: "12px",
+            height: "14px",
+            background: "#228B22",
+            borderRadius: "50% 50% 0 0",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              left: "3px",
+              top: "-4px",
+              width: "4px",
+              height: "8px",
+              background: "#32CD32",
+              borderRadius: "2px",
+            }}
+          />
+        </div>
+      ))}
+
+      {/* Small flowers */}
+      {[
+        { x: "30%", y: "62%", color: "#FF69B4" },
+        { x: "60%", y: "58%", color: "#FFD700" },
+        { x: "75%", y: "68%", color: "#FF69B4" },
+      ].map((flower, i) => (
+        <div
+          key={`f-${i}`}
+          style={{
+            position: "absolute",
+            left: flower.x,
+            top: flower.y,
+            width: "8px",
+            height: "8px",
+            background: flower.color,
+            borderRadius: "50%",
+            boxShadow: "0 0 4px rgba(255,255,255,0.3)",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              bottom: "-6px",
+              left: "2px",
+              width: "4px",
+              height: "8px",
+              background: "#228B22",
+            }}
+          />
+        </div>
+      ))}
+
+      {/* Small apple / item on ground */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "30%",
+          left: "40%",
+          width: "14px",
+          height: "14px",
+          background: "#FF4444",
+          borderRadius: "50%",
+          border: "1px solid #CC0000",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: "-3px",
+            left: "4px",
+            width: "4px",
+            height: "4px",
+            background: "#32CD32",
+            borderRadius: "50%",
+          }}
+        />
+      </div>
+
+      {/* Shadow beneath where creature walks */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "28%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "40px",
+          height: "10px",
+          background: "rgba(0,0,0,0.15)",
+          borderRadius: "50%",
+        }}
+      />
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THE CREATURE — Cute Chao-Style MAD Character
    ═══════════════════════════════════════════════════════════ */
 
 function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
-  const flameColor =
+  const bodyColor =
     style === "crashout"
-      ? "#ff4500"
+      ? "#ff3300"
       : style === "safe"
-        ? "#ff8c42"
-        : "#ff2200";
+        ? "#ff8844"
+        : "#ff2222";
 
-  const eyeExpression =
+  const haloColor =
+    style === "crashout"
+      ? "#ff6600"
+      : style === "safe"
+        ? "#ffaa44"
+        : "#ff4444";
+
+  const eyeState =
     mood === "thinking"
-      ? "thinking"
-      : mood === "reacting"
-        ? "angry"
-        : mood === "talking"
-          ? "open"
-          : "normal";
+      ? "closed"
+      : mood === "talking"
+        ? "open"
+        : "normal";
 
   return (
     <div
-      className={`creature ${mood === "walking" ? "walking" : ""} ${mood === "talking" ? "talking" : ""}`}
+      className={mood === "walking" ? "walking-chao" : ""}
       style={{
-        width: "64px",
-        height: "80px",
+        width: "52px",
+        height: "58px",
         position: "relative",
-        transition: "transform 0.3s ease",
+        transition: "transform 0.2s ease",
+        animation:
+          mood === "walking"
+            ? "chaoBounce 0.35s ease-in-out infinite"
+            : mood === "thinking"
+              ? "chaoThink 1.5s ease-in-out infinite"
+              : "chaoIdle 2s ease-in-out infinite",
       }}
     >
-      {/* Body */}
+      {/* Body — round, cute */}
       <div
         style={{
-          width: "48px",
-          height: "48px",
-          background: flameColor,
-          borderRadius: "50% 50% 45% 45%",
+          width: "44px",
+          height: "40px",
+          background: bodyColor,
+          borderRadius: "50% 50% 48% 48%",
           position: "absolute",
-          bottom: "16px",
-          left: "8px",
-          boxShadow: `0 0 20px ${flameColor}80, 0 0 40px ${flameColor}40`,
-          animation:
-            mood === "walking"
-              ? "creatureBounce 0.4s ease-in-out infinite"
-              : mood === "thinking"
-                ? "creaturePulse 2s ease-in-out infinite"
-                : "creatureIdle 3s ease-in-out infinite",
+          bottom: "10px",
+          left: "4px",
+          boxShadow: `0 3px 8px rgba(0,0,0,0.2), inset -4px -4px 8px rgba(0,0,0,0.1), inset 4px 4px 8px rgba(255,255,255,0.2)`,
         }}
       >
         {/* Eyes */}
         <div
           style={{
             display: "flex",
-            gap: "6px",
+            gap: "10px",
             position: "absolute",
-            top: "14px",
+            top: "12px",
             left: "50%",
             transform: "translateX(-50%)",
           }}
         >
-          {/* Left Eye */}
           <div
             style={{
-              width: "10px",
-              height: eyeExpression === "open" ? "12px" : eyeExpression === "thinking" ? "3px" : "10px",
-              background: "#fff",
-              borderRadius: "50%",
+              width: eyeState === "closed" ? "10px" : "8px",
+              height: eyeState === "closed" ? "2px" : "10px",
+              background: eyeState === "closed" ? "#333" : "#fff",
+              borderRadius: eyeState === "closed" ? "0" : "50%",
               position: "relative",
             }}
           >
-            <div
-              style={{
-                width: "5px",
-                height: "5px",
-                background: "#000",
-                borderRadius: "50%",
-                position: "absolute",
-                top: eyeExpression === "thinking" ? "0" : "3px",
-                left: "2px",
-              }}
-            />
+            {eyeState !== "closed" && (
+              <div
+                style={{
+                  width: "4px",
+                  height: "5px",
+                  background: "#111",
+                  borderRadius: "50%",
+                  position: "absolute",
+                  top: "2px",
+                  left: "2px",
+                }}
+              />
+            )}
           </div>
-          {/* Right Eye */}
           <div
             style={{
-              width: "10px",
-              height: eyeExpression === "open" ? "12px" : eyeExpression === "thinking" ? "3px" : "10px",
-              background: "#fff",
-              borderRadius: "50%",
+              width: eyeState === "closed" ? "10px" : "8px",
+              height: eyeState === "closed" ? "2px" : "10px",
+              background: eyeState === "closed" ? "#333" : "#fff",
+              borderRadius: eyeState === "closed" ? "0" : "50%",
               position: "relative",
             }}
           >
-            <div
-              style={{
-                width: "5px",
-                height: "5px",
-                background: "#000",
-                borderRadius: "50%",
-                position: "absolute",
-                top: eyeExpression === "thinking" ? "0" : "3px",
-                left: "2px",
-              }}
-            />
+            {eyeState !== "closed" && (
+              <div
+                style={{
+                  width: "4px",
+                  height: "5px",
+                  background: "#111",
+                  borderRadius: "50%",
+                  position: "absolute",
+                  top: "2px",
+                  left: "2px",
+                }}
+              />
+            )}
           </div>
         </div>
 
         {/* Mouth */}
         <div
           style={{
-            width: mood === "talking" ? "16px" : "12px",
-            height: mood === "talking" ? "10px" : "4px",
-            background: mood === "talking" ? "#000" : "none",
-            borderBottom: mood === "talking" ? "none" : "2px solid #000",
+            width: mood === "talking" ? "10px" : "6px",
+            height: mood === "talking" ? "6px" : "3px",
+            background: mood === "talking" ? "#222" : "transparent",
+            borderBottom: mood === "talking" ? "none" : "2px solid #333",
             borderRadius: mood === "talking" ? "0 0 50% 50%" : "0",
             position: "absolute",
             bottom: "10px",
             left: "50%",
             transform: "translateX(-50%)",
-            transition: "all 0.2s ease",
+            transition: "all 0.15s ease",
           }}
         />
       </div>
 
-      {/* Flame tip / hair */}
+      {/* Flame halo / tuft on head */}
       <div
         style={{
-          width: "16px",
-          height: "24px",
-          background: "#ff6600",
-          borderRadius: "50% 50% 20% 20%",
           position: "absolute",
-          top: "0",
+          top: "-4px",
           left: "50%",
           transform: "translateX(-50%)",
-          boxShadow: "0 0 15px #ff660060",
-          animation: "flameFlicker 0.8s ease-in-out infinite alternate",
+          width: "20px",
+          height: "14px",
+          background: haloColor,
+          borderRadius: "50% 50% 30% 30%",
+          boxShadow: `0 0 10px ${haloColor}80`,
+          animation: "flameWiggle 0.6s ease-in-out infinite alternate",
         }}
       />
 
-      {/* Arms */}
+      {/* Tiny arms */}
       <div
         style={{
-          width: "14px",
-          height: "8px",
-          background: flameColor,
-          borderRadius: "4px",
           position: "absolute",
-          bottom: "24px",
+          bottom: "18px",
           left: "-2px",
-          transform: mood === "walking" ? "rotate(-20deg)" : "rotate(0deg)",
-          transition: "transform 0.3s ease",
+          width: "10px",
+          height: "6px",
+          background: bodyColor,
+          borderRadius: "50%",
+          transform: mood === "walking" ? "rotate(-15deg)" : "rotate(0deg)",
+          transition: "transform 0.2s ease",
         }}
       />
       <div
         style={{
-          width: "14px",
-          height: "8px",
-          background: flameColor,
-          borderRadius: "4px",
           position: "absolute",
-          bottom: "24px",
+          bottom: "18px",
           right: "-2px",
-          transform: mood === "walking" ? "rotate(20deg)" : "rotate(0deg)",
-          transition: "transform 0.3s ease",
+          width: "10px",
+          height: "6px",
+          background: bodyColor,
+          borderRadius: "50%",
+          transform: mood === "walking" ? "rotate(15deg)" : "rotate(0deg)",
+          transition: "transform 0.2s ease",
         }}
       />
 
-      {/* Feet */}
+      {/* Tiny feet */}
       <div
         style={{
-          width: "12px",
-          height: "6px",
-          background: "#cc1100",
-          borderRadius: "50%",
           position: "absolute",
-          bottom: "10px",
-          left: "12px",
+          bottom: "6px",
+          left: "14px",
+          width: "10px",
+          height: "6px",
+          background: "#cc1111",
+          borderRadius: "50%",
         }}
       />
       <div
         style={{
-          width: "12px",
-          height: "6px",
-          background: "#cc1100",
-          borderRadius: "50%",
           position: "absolute",
-          bottom: "10px",
-          right: "12px",
+          bottom: "6px",
+          right: "14px",
+          width: "10px",
+          height: "6px",
+          background: "#cc1111",
+          borderRadius: "50%",
         }}
       />
-
     </div>
   );
 }
@@ -257,7 +503,7 @@ function ChatBubble({
         setDone(true);
         clearInterval(interval);
       }
-    }, 30);
+    }, 25);
     return () => clearInterval(interval);
   }, [visible, text]);
 
@@ -270,53 +516,50 @@ function ChatBubble({
         bottom: "100%",
         left: "50%",
         transform: "translateX(-50%)",
-        marginBottom: "12px",
+        marginBottom: "10px",
         zIndex: 50,
         minWidth: "200px",
-        maxWidth: "320px",
+        maxWidth: "300px",
       }}
     >
-      {/* Bubble tail */}
       <div
         style={{
           position: "absolute",
-          bottom: "-8px",
+          bottom: "-6px",
           left: "50%",
           transform: "translateX(-50%)",
           width: "0",
           height: "0",
-          borderLeft: "8px solid transparent",
-          borderRight: "8px solid transparent",
+          borderLeft: "6px solid transparent",
+          borderRight: "6px solid transparent",
           borderTop: isUser
-            ? "8px solid rgba(255,255,255,0.1)"
-            : "8px solid rgba(255,30,30,0.25)",
+            ? "6px solid rgba(255,255,255,0.12)"
+            : "6px solid rgba(255,30,30,0.25)",
         }}
       />
-      {/* Bubble body */}
       <div
         style={{
           background: isUser
-            ? "rgba(255,255,255,0.08)"
+            ? "rgba(255,255,255,0.1)"
             : "rgba(255,30,30,0.15)",
           border: isUser
             ? "1px solid rgba(255,255,255,0.15)"
             : "1px solid rgba(255,50,50,0.3)",
-          borderRadius: "16px",
-          padding: "12px 16px",
-          backdropFilter: "blur(8px)",
-          boxShadow: isUser
-            ? "0 4px 20px rgba(0,0,0,0.3)"
-            : "0 4px 20px rgba(255,0,0,0.15)",
+          borderRadius: "14px",
+          padding: "10px 14px",
+          backdropFilter: "blur(6px)",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
         }}
       >
         <p
           style={{
             color: "#fff",
-            fontSize: "13px",
+            fontSize: "12px",
             fontWeight: 700,
-            lineHeight: 1.5,
+            lineHeight: 1.4,
             margin: 0,
             whiteSpace: "pre-wrap",
+            textShadow: "0 1px 2px rgba(0,0,0,0.5)",
           }}
         >
           {displayed}
@@ -324,129 +567,16 @@ function ChatBubble({
             <span
               style={{
                 display: "inline-block",
-                width: "6px",
-                height: "12px",
+                width: "5px",
+                height: "10px",
                 background: "#ff4444",
                 marginLeft: "2px",
-                animation: "blink 0.8s infinite",
+                animation: "blinkCursor 0.7s infinite",
               }}
             />
           )}
         </p>
       </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   THE ROOM — Pixel Art Garden / Den Background
-   ═══════════════════════════════════════════════════════════ */
-
-function MadDen({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-        maxWidth: "600px",
-        height: "320px",
-        background: "#0a0a0a",
-        borderRadius: "24px",
-        border: "2px solid rgba(255,50,50,0.2)",
-        overflow: "hidden",
-        margin: "0 auto",
-        boxShadow: "0 0 40px rgba(255,0,0,0.1), inset 0 0 60px rgba(255,0,0,0.05)",
-      }}
-    >
-      {/* Floor grid — pixel art style */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: `
-            repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 39px,
-              rgba(255,50,50,0.03) 39px,
-              rgba(255,50,50,0.03) 40px
-            ),
-            repeating-linear-gradient(
-              90deg,
-              transparent,
-              transparent 39px,
-              rgba(255,50,50,0.03) 39px,
-              rgba(255,50,50,0.03) 40px
-            )
-          `,
-        }}
-      />
-
-      {/* Corner accents */}
-      <div
-        style={{
-          position: "absolute",
-          top: "16px",
-          left: "16px",
-          width: "24px",
-          height: "24px",
-          borderTop: "2px solid rgba(255,50,50,0.3)",
-          borderLeft: "2px solid rgba(255,50,50,0.3)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "16px",
-          right: "16px",
-          width: "24px",
-          height: "24px",
-          borderTop: "2px solid rgba(255,50,50,0.3)",
-          borderRight: "2px solid rgba(255,50,50,0.3)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "16px",
-          left: "16px",
-          width: "24px",
-          height: "24px",
-          borderBottom: "2px solid rgba(255,50,50,0.3)",
-          borderLeft: "2px solid rgba(255,50,50,0.3)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "16px",
-          right: "16px",
-          width: "24px",
-          height: "24px",
-          borderBottom: "2px solid rgba(255,50,50,0.3)",
-          borderRight: "2px solid rgba(255,50,50,0.3)",
-        }}
-      />
-
-      {/* Ambient glow */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "0",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "200px",
-          height: "100px",
-          background: "radial-gradient(ellipse, rgba(255,50,50,0.15), transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {children}
     </div>
   );
 }
@@ -517,19 +647,17 @@ export default function MadMindPage() {
   const [bubbleIsUser, setBubbleIsUser] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [count, setCount] = useState(0);
-  const creatureRef = useRef<HTMLDivElement>(null);
 
-  /* Creature walks around when idle */
+  /* Creature walks when idle */
   useEffect(() => {
     if (mood === "idle" || mood === "walking") {
       const interval = setInterval(() => {
         setMood((prev) => (prev === "walking" ? "idle" : "walking"));
-      }, 4000);
+      }, 3000);
       return () => clearInterval(interval);
     }
   }, [mood]);
 
-  /* Send message */
   const sendMessage = useCallback(
     async (textOverride?: string) => {
       const text = (textOverride ?? input).trim() || PLACEHOLDERS[count % PLACEHOLDERS.length];
@@ -544,20 +672,11 @@ export default function MadMindPage() {
       setBubbleIsUser(true);
       setShowBubble(true);
 
-      /* Hide user bubble after a moment, then show thinking */
       setTimeout(() => {
         setShowBubble(false);
         setMood("thinking");
 
-        /* Queue to claw backend */
         queueMessage(text, style).then(async (queueData) => {
-          if (!queueData.requestId) {
-            setMood("idle");
-            setIsProcessing(false);
-            return;
-          }
-
-          /* Poll for response */
           if (!queueData.pollUrl) {
             setMood("idle");
             setIsProcessing(false);
@@ -578,15 +697,14 @@ export default function MadMindPage() {
           setBubbleIsUser(false);
           setShowBubble(true);
 
-          /* After response finishes typing, go back to walking */
-          const typeDuration = Math.min(madText.length * 30 + 1000, 8000);
+          const typeDuration = Math.min(madText.length * 25 + 1000, 8000);
           setTimeout(() => {
             setShowBubble(false);
             setMood("walking");
             setIsProcessing(false);
           }, typeDuration);
         });
-      }, 1500);
+      }, 1200);
     },
     [input, isProcessing, count, style]
   );
@@ -595,7 +713,7 @@ export default function MadMindPage() {
     <main
       style={{
         minHeight: "100vh",
-        background: "#050505",
+        background: "#0a0a0a",
         color: "#fff",
         display: "flex",
         flexDirection: "column",
@@ -606,39 +724,40 @@ export default function MadMindPage() {
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            @keyframes creatureIdle {
+            @keyframes chaoIdle {
               0%, 100% { transform: translateY(0); }
-              50% { transform: translateY(-3px); }
+              50% { transform: translateY(-2px); }
             }
-            @keyframes creatureBounce {
+            @keyframes chaoBounce {
               0%, 100% { transform: translateY(0) scaleY(1); }
-              50% { transform: translateY(-6px) scaleY(0.95); }
+              50% { transform: translateY(-4px) scaleY(0.97); }
             }
-            @keyframes creaturePulse {
+            @keyframes chaoThink {
               0%, 100% { transform: scale(1); }
-              50% { transform: scale(1.05); }
+              50% { transform: scale(1.03); }
             }
-            @keyframes flameFlicker {
-              0% { transform: translateX(-50%) scaleY(1); }
-              100% { transform: translateX(-50%) scaleY(1.2) scaleX(0.9); }
+            @keyframes flameWiggle {
+              0% { transform: translateX(-50%) rotate(-3deg); }
+              100% { transform: translateX(-50%) rotate(3deg); }
             }
-            @keyframes creatureWalk {
+            @keyframes walkingChao {
               0% { transform: translateX(0); }
-              50% { transform: translateX(40px); }
+              50% { transform: translateX(30px); }
               100% { transform: translateX(0); }
             }
-            @keyframes blink {
+            @keyframes blinkCursor {
               0%, 100% { opacity: 1; }
               50% { opacity: 0; }
             }
-            .walking {
-              animation: creatureWalk 3s linear infinite;
+            .walking-chao {
+              animation: walkingChao 3s linear infinite;
             }
           `,
         }}
       />
+
       {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: "24px" }}>
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
         <p
           style={{
             fontSize: "10px",
@@ -646,14 +765,14 @@ export default function MadMindPage() {
             textTransform: "uppercase",
             letterSpacing: "0.3em",
             color: "rgba(255,50,50,0.6)",
-            marginBottom: "8px",
+            marginBottom: "6px",
           }}
         >
-          [ MAD AI ]
+          [ MAD CHAO GARDEN ]
         </p>
         <h1
           style={{
-            fontSize: "2.5rem",
+            fontSize: "2rem",
             fontWeight: 900,
             lineHeight: 1,
             margin: 0,
@@ -662,28 +781,31 @@ export default function MadMindPage() {
           MAD{" "}
           <span style={{ color: "#ff4444" }}>DEN</span>
         </h1>
-        <p
-          style={{
-            fontSize: "14px",
-            color: "rgba(255,255,255,0.5)",
-            marginTop: "8px",
-          }}
-        >
-          A creature walks here. Talk to it.
-        </p>
       </div>
 
-      {/* Style Selector */}
       <StyleSelector style={style} onChange={setStyle} />
 
-      {/* The Den — Chao Garden Style */}
-      <MadDen>
+      {/* The Garden */}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "520px",
+          height: "340px",
+          borderRadius: "20px",
+          border: "3px solid #2d8a33",
+          overflow: "hidden",
+          margin: "0 auto",
+          boxShadow: "0 0 30px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Garden />
+
         {/* Creature container */}
         <div
-          ref={creatureRef}
           style={{
             position: "absolute",
-            bottom: "60px",
+            bottom: "70px",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10,
@@ -701,34 +823,35 @@ export default function MadMindPage() {
         <div
           style={{
             position: "absolute",
-            bottom: "12px",
+            bottom: "8px",
             left: "50%",
             transform: "translateX(-50%)",
-            fontSize: "10px",
+            fontSize: "9px",
             fontWeight: 800,
             textTransform: "uppercase",
-            letterSpacing: "0.2em",
-            color: "rgba(255,255,255,0.3)",
+            letterSpacing: "0.15em",
+            color: "rgba(255,255,255,0.4)",
             zIndex: 5,
+            textShadow: "0 1px 2px rgba(0,0,0,0.5)",
           }}
         >
           {mood === "thinking"
-            ? "Processing..."
+            ? "Thinking..."
             : mood === "talking"
-              ? "Responding..."
+              ? "Talking..."
               : "Walking around..."}
         </div>
-      </MadDen>
+      </div>
 
-      {/* Input Area */}
+      {/* Input */}
       <div
         style={{
           width: "100%",
-          maxWidth: "600px",
-          marginTop: "24px",
+          maxWidth: "520px",
+          marginTop: "20px",
         }}
       >
-        <div style={{ display: "flex", gap: "12px" }}>
+        <div style={{ display: "flex", gap: "10px" }}>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -739,103 +862,36 @@ export default function MadMindPage() {
             disabled={isProcessing}
             style={{
               flex: 1,
-              padding: "14px 18px",
-              borderRadius: "16px",
+              padding: "12px 16px",
+              borderRadius: "14px",
               border: "1px solid rgba(255,255,255,0.1)",
               background: "rgba(255,255,255,0.03)",
               color: "#fff",
-              fontSize: "15px",
+              fontSize: "14px",
               fontWeight: 600,
               outline: "none",
-              transition: "border-color 0.2s",
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,50,50,0.4)";
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
             }}
           />
           <button
             onClick={() => void sendMessage()}
             disabled={isProcessing}
             style={{
-              padding: "14px 24px",
-              borderRadius: "16px",
+              padding: "12px 20px",
+              borderRadius: "14px",
               border: "none",
               background: "#ff4444",
               color: "#fff",
-              fontSize: "14px",
+              fontSize: "13px",
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.05em",
               cursor: isProcessing ? "wait" : "pointer",
               opacity: isProcessing ? 0.6 : 1,
-              transition: "opacity 0.2s",
-              whiteSpace: "nowrap",
             }}
           >
             {isProcessing ? "..." : "Send"}
           </button>
         </div>
-
-        {/* Suggested prompts */}
-        {!isProcessing && messages.length < 2 && (
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-              marginTop: "12px",
-              flexWrap: "wrap",
-              justifyContent: "center",
-            }}
-          >
-            {PLACEHOLDERS.slice(0, 3).map((prompt) => (
-              <button
-                key={prompt}
-                onClick={() => void sendMessage(prompt)}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: "20px",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  background: "rgba(255,255,255,0.02)",
-                  color: "rgba(255,255,255,0.4)",
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,50,50,0.3)";
-                  e.currentTarget.style.color = "#ff8888";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.4)";
-                }}
-              >
-                {prompt}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Stats */}
-      <div
-        style={{
-          marginTop: "20px",
-          display: "flex",
-          gap: "24px",
-          fontSize: "11px",
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.15em",
-          color: "rgba(255,255,255,0.3)",
-        }}
-      >
-        <span>Messages: {messages.length}</span>
-        <span>Style: {style}</span>
       </div>
     </main>
   );
@@ -878,4 +934,4 @@ async function pollForResponse(
     }
   }
   return null;
-}// force rebuild Mon Apr 27 07:44:22 PM CST 2026
+}
