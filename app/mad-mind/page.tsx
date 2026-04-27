@@ -1010,27 +1010,36 @@ export default function MadMindPage() {
           <Creature mood={mood} style={style} />
         </div>
 
-        {/* Status label */}
+        {/* Status label — readable against busy background */}
         <div
           style={{
             position: "absolute",
-            bottom: "8px",
+            bottom: "12px",
             left: "50%",
             transform: "translateX(-50%)",
-            fontSize: "9px",
-            fontWeight: 800,
-            textTransform: "uppercase",
-            letterSpacing: "0.15em",
-            color: "rgba(255,255,255,0.4)",
             zIndex: 5,
-            textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+            background: "rgba(0,0,0,0.65)",
+            borderRadius: "12px",
+            padding: "6px 14px",
+            backdropFilter: "blur(4px)",
+            border: "1px solid rgba(255,255,255,0.1)",
           }}
         >
-          {mood === "thinking"
-            ? "Thinking..."
-            : mood === "talking"
-              ? "Talking..."
-              : "Walking around..."}
+          <span
+            style={{
+              fontSize: "10px",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.15em",
+              color: mood === "thinking" ? "#ffaa44" : mood === "talking" ? "#ff4444" : "#aaa",
+            }}
+          >
+            {mood === "thinking"
+              ? "● Thinking..."
+              : mood === "talking"
+                ? "● Talking..."
+                : "● Walking around..."}
+          </span>
         </div>
       </div>
 
