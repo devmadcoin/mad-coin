@@ -57,7 +57,7 @@ function NavPill({
       href={href}
       className={cn(
         "inline-flex items-center justify-center rounded-full font-bold transition duration-300",
-        mobile ? "min-w-0 px-2 py-2 text-xs" : "px-4 py-2 text-sm",
+        mobile ? "min-w-0 px-3 py-3 text-sm sm:px-4 sm:py-2 sm:text-xs" : "px-4 py-2 text-sm",
         active
           ? "bg-white text-black shadow-[0_0_12px_rgba(255,255,255,0.08)]"
           : variant === "cta"
@@ -118,7 +118,7 @@ export default function NavBar() {
           </nav>
         </div>
 
-        <div className="grid grid-cols-6 gap-2 pb-3 md:hidden">
+        <div className="grid grid-cols-3 gap-2 pb-3 md:hidden sm:grid-cols-6">
           {NAV_ITEMS.map((item) => (
             <NavPill
               key={item.href}
