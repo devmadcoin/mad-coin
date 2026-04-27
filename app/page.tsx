@@ -21,79 +21,6 @@ const LINKS = {
 } as const;
 
 /* ═══════════════════════════════════════════════════════════
-   ANIMATION UTILITIES (inlined — zero external deps)
-   ═══════════════════════════════════════════════════════════ */
-
-function useInView(options?: IntersectionObserverInit) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isInView, setIsInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setIsInView(true); observer.disconnect(); } },
-      { threshold: 0.12, ...options }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [options]);
-  return { ref, isInView };
-}
-
-function FadeIn({
-  children, className = "", delay = 0, direction = "up", duration = 0.5, distance = 24,
-}: { children: React.ReactNode; className?: string; delay?: number; direction?: "up" | "down" | "left" | "right"; duration?: number; distance?: number; }) {
-  const { ref, isInView } = useInView();
-  const transforms = {
-    up: `translateY(${distance}px)`, down: `translateY(-${distance}px)`,
-    left: `translateX(${distance}px)`, right: `translateX(-${distance}px)`,
-  };
-  return (
-    <div ref={ref} className={className} style={{
-      opacity: isInView ? 1 : 0, transform: isInView ? "translate(0)" : transforms[direction],
-      transition: `opacity ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s, transform ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s`,
-      willChange: "opacity, transform",
-    }}>{children}</div>
-  );
-}
-
-function StaggerGrid({
-  children, className = "", staggerDelay = 0.08, baseDelay = 0,
-}: { children: React.ReactNode; className?: string; staggerDelay?: number; baseDelay?: number; }) {
-  const { ref, isInView } = useInView();
-  return (
-    <div ref={ref} className={className}>
-      {Array.isArray(children) ? children.map((child, i) => (
-        <div key={i} style={{
-          opacity: isInView ? 1 : 0, transform: isInView ? "translateY(0)" : "translateY(20px)",
-          transition: `opacity 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s, transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s`,
-          willChange: "opacity, transform",
-        }}>{child}</div>
-      )) : children}
-    </div>
-  );
-}
-
-function GlowPulse({ children, className = "" }: { children: React.ReactNode; className?: string; }) {
-  return (
-    <div className={className} style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
-      {children}
-      <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,0,0,0.15)} 50%{box-shadow:0 0 35px rgba(255,0,0,0.28)}`}</style>
-    </div>
-  );
-}
-
-function HoverLift({ children, className = "" }: { children: React.ReactNode; className?: string; }) {
-  return (
-    <div className={className} style={{ transition: "transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)" }}
-      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; }}>
-      {children}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
    SHARED COMPONENTS
    ═══════════════════════════════════════════════════════════ */
 
@@ -258,7 +185,6 @@ function ArtCampaignCard({ title, text, image, accent = "red" }: { title: string
   const tintClass = accent === "red" ? "bg-red-500/10" : accent === "green" ? "bg-emerald-500/10" : "bg-black/10";
 
   return (
-    <HoverLift>
     <div className={`group relative overflow-hidden rounded-[28px] border ${borderClass} min-h-[220px] transition duration-300 hover:scale-[1.01]`}>
       <div className="absolute inset-0"><Image src={image} alt={title} fill className="object-cover transition duration-500 group-hover:scale-[1.04]" sizes="(max-width: 1024px) 100vw, 33vw" /></div>
       <div className={`absolute inset-0 ${overlayClass}`} />
@@ -270,25 +196,21 @@ function ArtCampaignCard({ title, text, image, accent = "red" }: { title: string
         <p className="mt-3 max-w-sm text-2xl font-black leading-tight text-white sm:text-[2rem]">{text}</p>
       </div>
     </div>
-    </HoverLift>
   );
 }
 
 /* ─── EXCHANGE LOGO CARD ─── */
 function ExchangeLogoCard({ href, src, alt, label }: { href: string; src: string; alt: string; label: string }) {
   return (
-    <HoverLift>
     <a href={href} target="_blank" rel="noreferrer" className="flex min-w-[240px] items-center justify-center rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.018))] px-8 py-10 shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition duration-300 hover:scale-[1.01] hover:border-white/20 hover:bg-white/[0.06]" aria-label={label} title={label}>
       <Image src={src} alt={alt} width={180} height={56} className="h-12 w-auto object-contain opacity-95" />
     </a>
-    </HoverLift>
   );
 }
 
 /* ─── HOW TO BUY STEP ─── */
 function HowToBuyStep({ number, title, description, link, linkText, icon }: { number: string; title: string; description: string; link: string; linkText: string; icon: React.ReactNode }) {
   return (
-    <HoverLift>
     <div className="relative p-6 bg-white/[0.02] border border-white/10 rounded-[24px] hover:border-white/15 transition-all duration-300 group">
       <div className="absolute -top-3 -left-2 w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-lg shadow-red-500/20">{number}</div>
       <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-center text-red-400 mb-4 mt-2 group-hover:scale-110 transition-transform">{icon}</div>
@@ -299,7 +221,6 @@ function HowToBuyStep({ number, title, description, link, linkText, icon }: { nu
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
     </div>
-    </HoverLift>
   );
 }
 
@@ -420,7 +341,6 @@ export default function Home() {
         <div className="h-20" /> {/* Spacer for ticker */}
 
         {/* ─── HERO ─── */}
-        <FadeIn>
         <section className="relative overflow-hidden rounded-[42px] border border-white/10 bg-black/40 p-6 shadow-[0_20px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10 lg:p-14">
           <HeroGlobe />
           <div className="relative z-10 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
@@ -440,12 +360,10 @@ export default function Home() {
                 </p>
               </div>
               <div className="mt-7 flex flex-col sm:flex-row gap-3">
-                <GlowPulse>
                 <a href={LINKS.buy} target="_blank" rel="noreferrer" className="group flex items-center justify-center gap-3 px-10 py-5 bg-red-500 hover:bg-red-400 text-white text-xl font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_40px_rgba(255,0,0,0.35)]">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                   Buy $MAD Now
                 </a>
-                </GlowPulse>
                 <a href="#how-to-buy" className="flex items-center justify-center gap-2 px-8 py-5 border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-white text-lg font-black rounded-full transition-all">
                   How to Buy
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
@@ -478,10 +396,8 @@ export default function Home() {
             </div>
           </div>
         </section>
-        </FadeIn>
 
         {/* ─── TOKEN STATS ─── */}
-        <FadeIn delay={0.1}>
         <section className="mt-10 rounded-[38px] border border-white/10 bg-black/40 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
@@ -496,27 +412,25 @@ export default function Home() {
               <span className="text-xs text-white/40">{liveStats ? "Live data" : "Loading..."}</span>
             </div>
           </div>
-          <StaggerGrid className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" staggerDelay={0.06}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {tokenStats.map((stat) => (
               <TokenStatCard key={stat.label} label={stat.label} value={stat.value} change={stat.change} isPositive={stat.isPositive} />
             ))}
-          </StaggerGrid>
+          </div>
         </section>
-        </FadeIn>
 
         {/* ─── HOW TO BUY ─── */}
-        <FadeIn delay={0.1}>
         <section id="how-to-buy" className="mt-10 rounded-[38px] border border-white/10 bg-black/40 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div className="mb-8">
             <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Get Started</p>
             <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">How to <span className="text-red-500">Buy $MAD</span></h2>
             <p className="mt-3 text-sm text-white/50 max-w-xl">4 steps. No complex DeFi knowledge needed.</p>
           </div>
-          <StaggerGrid className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" staggerDelay={0.1}>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {howToBuySteps.map((step) => (
               <HowToBuyStep key={step.number} {...step} />
             ))}
-          </StaggerGrid>
+          </div>
           <div className="mt-8 p-6 bg-white/[0.02] border-2 border-red-500/20 rounded-[24px]">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-center sm:text-left">
@@ -530,45 +444,15 @@ export default function Home() {
             </div>
           </div>
         </section>
-        </FadeIn>
-
-        {/* ─── LIVE CHART ─── */}
-        <FadeIn delay={0.1}>
-        <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/40 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
-          <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Real Time Data</p>
-              <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">Live Chart</h2>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Btn href={LINKS.chart} primary>DEX Screener</Btn>
-              <Btn href={LINKS.birdeye}>Birdeye</Btn>
-              <Btn href={LINKS.jupiter} primary>Buy on Jupiter</Btn>
-            </div>
-          </div>
-          <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black">
-            <iframe src={`${LINKS.dexscreener}?embed=1&theme=dark&trades=0&info=0`} className="aspect-[4/3] w-full sm:aspect-[16/9]" allow="clipboard-write" title="$MAD Chart" />
-          </div>
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <Chip>DEX Screener</Chip>
-            <Chip>Birdeye</Chip>
-            <Chip>Solscan</Chip>
-            <Chip>Jupiter</Chip>
-          </div>
-        </section>
-        </FadeIn>
 
         {/* ─── ART CAMPAIGN CARDS ─── */}
-        <FadeIn delay={0.1}>
-        <StaggerGrid className="mt-10 grid gap-4 lg:grid-cols-3" staggerDelay={0.12}>
+        <div className="mt-10 grid gap-4 lg:grid-cols-3">
           <ArtCampaignCard title="Mindset" text="Pressure reveals the real ones." image="/memes/MAD-KINGS-ONLY.png" accent="red" />
           <ArtCampaignCard title="Signal" text="Not noise. Not panic. Signal." image="/memes/MAD-YOU-SIDELINED.png" accent="white" />
           <ArtCampaignCard title="Wealth" text="Rich starts in the mind first." image="/memes/MAD-RICH-OR-BROKE.png" accent="green" />
-        </StaggerGrid>
-        </FadeIn>
+        </div>
 
         {/* ─── EXCHANGE MARQUEE ─── */}
-        <FadeIn delay={0.1}>
         <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div>
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">Verified on exchanges</p>
@@ -584,10 +468,8 @@ export default function Home() {
             </div>
           </div>
         </section>
-        </FadeIn>
 
         {/* ─── CONFESSIONS ─── */}
-        <FadeIn delay={0.1}>
         <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(25,0,0,0.9),rgba(6,0,0,0.96))] p-4 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6 lg:p-8">
           <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
@@ -599,17 +481,14 @@ export default function Home() {
           </div>
           <div className="min-w-0"><MadConfessions /></div>
         </section>
-        </FadeIn>
 
         {/* ─── RISK NOTICE ─── */}
-        <FadeIn delay={0.1}>
         <section className="mt-8 rounded-[26px] border border-yellow-400/15 bg-yellow-500/[0.07] px-5 py-5 text-center">
           <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-yellow-200/80">Risk Notice</p>
           <p className="mt-3 text-sm leading-7 text-yellow-100/85">
             $MAD is a meme coin and speculative digital asset. Nothing on this website is financial advice or a guarantee of returns. Crypto is risky and volatile. Never risk money you cannot afford to lose. Always do your own research.
           </p>
         </section>
-        </FadeIn>
       </main>
 
       {/* ─── FOOTER ─── */}
