@@ -745,6 +745,8 @@ function ChatBubble({
 /* ═══════════════════════════════════════════════════════════
    STYLE SELECTOR
    ═══════════════════════════════════════════════════════════ */
+
+function StyleSelector({
   style,
   onChange,
 }: {
