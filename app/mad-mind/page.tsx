@@ -621,8 +621,8 @@ export default function MadMindPage() {
             margin: 0,
           }}
         >
-          The Truth{" "}
-          <span style={{ color: "#ff4444" }}>Machine</span>
+          MAD{" "}
+          <span style={{ color: "#ff4444" }}>DEN</span>
         </h1>
         <p
           style={{
@@ -631,7 +631,7 @@ export default function MadMindPage() {
             marginTop: "8px",
           }}
         >
-          Talk to the creature. It sees your patterns.
+          A creature walks here. Talk to it.
         </p>
       </div>
 
