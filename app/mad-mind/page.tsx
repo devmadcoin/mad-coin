@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import "./mad-den.css";
 
 /* ═══════════════════════════════════════════════════════════
    MAD DEN — Chao Garden Style Interface
@@ -599,6 +598,40 @@ export default function MadMindPage() {
         padding: "24px 16px",
       }}
     >
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes creatureIdle {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-3px); }
+            }
+            @keyframes creatureBounce {
+              0%, 100% { transform: translateY(0) scaleY(1); }
+              50% { transform: translateY(-6px) scaleY(0.95); }
+            }
+            @keyframes creaturePulse {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.05); }
+            }
+            @keyframes flameFlicker {
+              0% { transform: translateX(-50%) scaleY(1); }
+              100% { transform: translateX(-50%) scaleY(1.2) scaleX(0.9); }
+            }
+            @keyframes creatureWalk {
+              0% { transform: translateX(0); }
+              50% { transform: translateX(40px); }
+              100% { transform: translateX(0); }
+            }
+            @keyframes blink {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0; }
+            }
+            .walking {
+              animation: creatureWalk 3s linear infinite;
+            }
+          `,
+        }}
+      />
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "24px" }}>
         <p
