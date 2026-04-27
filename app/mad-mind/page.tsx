@@ -757,6 +757,8 @@ export default function MadMindPage() {
   const [bubbleIsUser, setBubbleIsUser] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [count, setCount] = useState(0);
+  const [responsePanelVisible, setResponsePanelVisible] = useState(false);
+  const [latestMadResponse, setLatestMadResponse] = useState("");
 
   /* Creature walks around when idle */
   useEffect(() => {
@@ -834,13 +836,14 @@ export default function MadMindPage() {
               style,
             };
             setMessages((prev) => [...prev, madMsg]);
-            setCurrentResponse(madText);
+            setLatestMadResponse(madText);
+            setResponsePanelVisible(true);
+            setCurrentResponse("");
             setBubbleIsUser(false);
-            setShowBubble(true);
+            setShowBubble(false);
 
             const typeDuration = Math.min(madText.length * 25 + 1000, 8000);
             setTimeout(() => {
-              setShowBubble(false);
               setMood("walking");
               setIsProcessing(false);
             }, typeDuration);
@@ -855,11 +858,12 @@ export default function MadMindPage() {
               style,
             };
             setMessages((prev) => [...prev, madMsg]);
-            setCurrentResponse(fallback);
+            setLatestMadResponse(fallback);
+            setResponsePanelVisible(true);
+            setCurrentResponse("");
             setBubbleIsUser(false);
-            setShowBubble(true);
+            setShowBubble(false);
             setTimeout(() => {
-              setShowBubble(false);
               setMood("walking");
               setIsProcessing(false);
             }, 3000);
@@ -909,6 +913,11 @@ export default function MadMindPage() {
             @keyframes blinkCursor {
               0%, 100% { opacity: 1; }
               50% { opacity: 0; }
+            }
+            @keyframes responsePulse {
+              0% { transform: scale(0.95); opacity: 0; }
+              50% { transform: scale(1.02); }
+              100% { transform: scale(1); opacity: 1; }
             }
             .walking-chao {
               animation: walkingChao 3s linear infinite;
@@ -1012,6 +1021,47 @@ export default function MadMindPage() {
           </span>
         </div>
       </div>
+
+      {/* Response Panel — ADHD-friendly, high contrast, impossible to miss */}
+      {responsePanelVisible && latestMadResponse && (
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "520px",
+            margin: "16px auto 0",
+            padding: "16px 20px",
+            background: "#1a1a1a",
+            borderRadius: "14px",
+            border: "2px solid #ff4444",
+            boxShadow: "0 0 20px rgba(255,68,68,0.2)",
+            animation: "responsePulse 0.5s ease-out",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "10px",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.2em",
+              color: "#ff4444",
+              marginBottom: "8px",
+            }}
+          >
+            MAD SAYS
+          </div>
+          <p
+            style={{
+              fontSize: "16px",
+              fontWeight: 600,
+              lineHeight: 1.5,
+              color: "#fff",
+              margin: 0,
+            }}
+          >
+            {latestMadResponse}
+          </p>
+        </div>
+      )}
 
       {/* Input */}
       <div
