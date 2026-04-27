@@ -873,27 +873,57 @@ export default function MadMindPage() {
             setIsProcessing(false);
             return;
           }
-          const response = await pollForResponse(queueData.pollUrl);
-          setMood("talking");
+          
+          // Timeout guard — never stay stuck longer than 45 seconds
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("timeout")), 45000)
+          );
+          
+          try {
+            const response = await Promise.race([
+              pollForResponse(queueData.pollUrl),
+              timeoutPromise,
+            ]) as any;
+            setMood("talking");
 
-          const madText = response?.output || "Signal broke.";
-          const madMsg: ChatMessage = {
-            id: uid(),
-            role: "mad",
-            text: madText,
-            style,
-          };
-          setMessages((prev) => [...prev, madMsg]);
-          setCurrentResponse(madText);
-          setBubbleIsUser(false);
-          setShowBubble(true);
+            const madText = response?.output || "Signal broke.";
+            const madMsg: ChatMessage = {
+              id: uid(),
+              role: "mad",
+              text: madText,
+              style,
+            };
+            setMessages((prev) => [...prev, madMsg]);
+            setCurrentResponse(madText);
+            setBubbleIsUser(false);
+            setShowBubble(true);
 
-          const typeDuration = Math.min(madText.length * 25 + 1000, 8000);
-          setTimeout(() => {
-            setShowBubble(false);
-            setMood("walking");
-            setIsProcessing(false);
-          }, typeDuration);
+            const typeDuration = Math.min(madText.length * 25 + 1000, 8000);
+            setTimeout(() => {
+              setShowBubble(false);
+              setMood("walking");
+              setIsProcessing(false);
+            }, typeDuration);
+          } catch (err) {
+            // Timeout or error — show fallback
+            setMood("talking");
+            const fallback = "Connection slow. Try again?";
+            const madMsg: ChatMessage = {
+              id: uid(),
+              role: "mad",
+              text: fallback,
+              style,
+            };
+            setMessages((prev) => [...prev, madMsg]);
+            setCurrentResponse(fallback);
+            setBubbleIsUser(false);
+            setShowBubble(true);
+            setTimeout(() => {
+              setShowBubble(false);
+              setMood("walking");
+              setIsProcessing(false);
+            }, 3000);
+          }
         });
       }, 1200);
     },
