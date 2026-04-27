@@ -450,6 +450,17 @@ export async function POST(req: Request) {
       rarityHint,
     };
 
+    /* Log for Claw analytics */
+    logToFile({
+      sessionId,
+      timestamp: new Date().toISOString(),
+      intent,
+      states,
+      style: preferredStyle,
+      messageCount: (existing?.messageCount || 0) + 1,
+      outputPreview: output.slice(0, 120),
+    });
+
     return NextResponse.json({
       output,
       meta,
@@ -488,11 +499,55 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
-  return NextResponse.json({
+/* ─── ANALYTICS ─── */
+function getAnalytics() {
+  const sessions = Array.from(memory.entries());
+  const intentBreakdown: Record<string, number> = {};
+  const stateBreakdown: Record<string, number> = {};
+  const styleBreakdown: Record<string, number> = {};
+  let totalMessages = 0;
+
+  for (const [, entry] of sessions) {
+    totalMessages += entry.messageCount;
+    intentBreakdown[entry.recentIntent] = (intentBreakdown[entry.recentIntent] || 0) + 1;
+    for (const state of entry.recentStates) {
+      stateBreakdown[state] = (stateBreakdown[state] || 0) + 1;
+    }
+    styleBreakdown[entry.favoriteStyle] = (styleBreakdown[entry.favoriteStyle] || 0) + 1;
+  }
+
+  return {
     status: "MAD is listening.",
-    version: "3.0",
+    version: "3.1-claw",
     model: "gpt-4.1",
     activeSessions: memory.size,
-  });
+    totalMessages,
+    intentBreakdown,
+    stateBreakdown,
+    styleBreakdown,
+    recentSessions: sessions.slice(-10).map(([id, entry]) => ({
+      id: id.slice(0, 8),
+      messageCount: entry.messageCount,
+      lastIntent: entry.recentIntent,
+      lastStates: entry.recentStates,
+      favoriteStyle: entry.favoriteStyle,
+      lastSeen: new Date(entry.lastSeen).toISOString(),
+    })),
+  };
+}
+
+/* ─── FILE LOGGING (ephemeral on Vercel, useful for dev + active sessions) ─── */
+function logToFile(entry: { sessionId: string; timestamp: string; intent: string; states: string[]; style: StyleTab; messageCount: number; outputPreview: string }) {
+  try {
+    const fs = require("fs");
+    const path = "/tmp/mad-ai-sessions.jsonl";
+    const line = JSON.stringify(entry) + "\n";
+    fs.appendFileSync(path, line);
+  } catch {
+    /* ignore — no fs in edge or read-only env */
+  }
+}
+
+export async function GET() {
+  return NextResponse.json(getAnalytics());
 }
