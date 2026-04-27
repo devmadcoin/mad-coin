@@ -403,23 +403,13 @@ function Garden() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE CREATURE — Detailed Chao-Style MAD Character
+   THE CREATURE — $MAD Chao (Sonic Advance Style)
+   Blue body, yellow oval, small wings, big eyes, walks around
    ═══════════════════════════════════════════════════════════ */
 
-function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
-  const bodyColor =
-    style === "crashout"
-      ? "#ff3300"
-      : style === "safe"
-        ? "#ff8844"
-        : "#ff2222";
-
-  const haloColor =
-    style === "crashout"
-      ? "#ff6600"
-      : style === "safe"
-        ? "#ffaa44"
-        : "#ff4444";
+function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: number }) {
+  const bodyColor = "#5eb8f0"; // Sky blue like Chao
+  const bellyColor = "#fff8dc"; // Cream/yellow oval
 
   const eyeState =
     mood === "thinking"
@@ -430,76 +420,123 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
 
   return (
     <div
-      className={mood === "walking" ? "walking-chao" : ""}
       style={{
         width: "48px",
-        height: "56px",
+        height: "52px",
         position: "relative",
-        transition: "transform 0.2s ease",
+        left: `${xPos}px`,
+        bottom: "8px",
+        transition: "left 0.6s ease-in-out",
         animation:
           mood === "walking"
-            ? "chaoBounce 0.35s ease-in-out infinite"
+            ? "chaoBounce 0.3s ease-in-out infinite"
             : mood === "thinking"
               ? "chaoThink 1.5s ease-in-out infinite"
               : "chaoIdle 2s ease-in-out infinite",
       }}
     >
-      {/* Body — round with shading */}
+      {/* Wings — small bat-like wings behind body */}
       <div
         style={{
-          width: "42px",
-          height: "38px",
-          background: bodyColor,
-          borderRadius: "50% 50% 46% 46%",
           position: "absolute",
-          bottom: "10px",
-          left: "3px",
-          boxShadow: `0 3px 8px rgba(0,0,0,0.2), inset -3px -3px 6px rgba(0,0,0,0.15), inset 3px 3px 6px rgba(255,255,255,0.25)`,
+          top: "14px",
+          left: "-8px",
+          width: "14px",
+          height: "18px",
+          background: "#4a90c2",
+          borderRadius: "50% 0 50% 50%",
+          transform: mood === "walking" ? "rotate(-20deg)" : "rotate(-5deg)",
+          transition: "transform 0.3s ease",
+          zIndex: 1,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: "14px",
+          right: "-8px",
+          width: "14px",
+          height: "18px",
+          background: "#4a90c2",
+          borderRadius: "0 50% 50% 50%",
+          transform: mood === "walking" ? "rotate(20deg)" : "rotate(5deg)",
+          transition: "transform 0.3s ease",
+          zIndex: 1,
+        }}
+      />
+
+      {/* Body — round blue Chao shape */}
+      <div
+        style={{
+          width: "44px",
+          height: "36px",
+          background: bodyColor,
+          borderRadius: "50% 50% 48% 48%",
+          position: "absolute",
+          bottom: "8px",
+          left: "2px",
+          zIndex: 2,
+          boxShadow: `0 2px 6px rgba(0,0,0,0.15), inset -2px -2px 4px rgba(0,0,0,0.1), inset 2px 2px 4px rgba(255,255,255,0.3)`,
         }}
       >
-        {/* Eyes with more detail */}
+        {/* Yellow/cream oval on chest */}
+        <div
+          style={{
+            position: "absolute",
+            top: "14px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "18px",
+            height: "12px",
+            background: bellyColor,
+            borderRadius: "50%",
+            opacity: 0.8,
+          }}
+        />
+
+        {/* Eyes — big round Sonic-style */}
         <div
           style={{
             display: "flex",
-            gap: "8px",
+            gap: "4px",
             position: "absolute",
-            top: "10px",
+            top: "6px",
             left: "50%",
             transform: "translateX(-50%)",
           }}
         >
           <div
             style={{
-              width: eyeState === "closed" ? "10px" : "9px",
-              height: eyeState === "closed" ? "2px" : "11px",
+              width: eyeState === "closed" ? "12px" : "13px",
+              height: eyeState === "closed" ? "2px" : "14px",
               background: eyeState === "closed" ? "#333" : "#fff",
               borderRadius: eyeState === "closed" ? "0" : "50%",
               position: "relative",
-              border: eyeState !== "closed" ? "1px solid #ddd" : "none",
+              border: eyeState !== "closed" ? "1px solid #ccc" : "none",
             }}
           >
             {eyeState !== "closed" && (
               <>
                 <div
                   style={{
-                    width: "5px",
-                    height: "6px",
+                    width: "7px",
+                    height: "8px",
                     background: "#111",
-                    borderRadius: "50%",
-                    position: "absolute",
-                    top: "2px",
-                    left: "2px",
-                  }}
-                />
-                <div
-                  style={{
-                    width: "2px",
-                    height: "2px",
-                    background: "#fff",
                     borderRadius: "50%",
                     position: "absolute",
                     top: "3px",
                     left: "3px",
+                  }}
+                />
+                <div
+                  style={{
+                    width: "3px",
+                    height: "3px",
+                    background: "#fff",
+                    borderRadius: "50%",
+                    position: "absolute",
+                    top: "4px",
+                    left: "4px",
                   }}
                 />
               </>
@@ -507,36 +544,36 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
           </div>
           <div
             style={{
-              width: eyeState === "closed" ? "10px" : "9px",
-              height: eyeState === "closed" ? "2px" : "11px",
+              width: eyeState === "closed" ? "12px" : "13px",
+              height: eyeState === "closed" ? "2px" : "14px",
               background: eyeState === "closed" ? "#333" : "#fff",
               borderRadius: eyeState === "closed" ? "0" : "50%",
               position: "relative",
-              border: eyeState !== "closed" ? "1px solid #ddd" : "none",
+              border: eyeState !== "closed" ? "1px solid #ccc" : "none",
             }}
           >
             {eyeState !== "closed" && (
               <>
                 <div
                   style={{
-                    width: "5px",
-                    height: "6px",
+                    width: "7px",
+                    height: "8px",
                     background: "#111",
-                    borderRadius: "50%",
-                    position: "absolute",
-                    top: "2px",
-                    left: "2px",
-                  }}
-                />
-                <div
-                  style={{
-                    width: "2px",
-                    height: "2px",
-                    background: "#fff",
                     borderRadius: "50%",
                     position: "absolute",
                     top: "3px",
                     left: "3px",
+                  }}
+                />
+                <div
+                  style={{
+                    width: "3px",
+                    height: "3px",
+                    background: "#fff",
+                    borderRadius: "50%",
+                    position: "absolute",
+                    top: "4px",
+                    left: "4px",
                   }}
                 />
               </>
@@ -544,16 +581,15 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
           </div>
         </div>
 
-        {/* Mouth with expression */}
+        {/* Mouth */}
         <div
           style={{
-            width: mood === "talking" ? "10px" : mood === "thinking" ? "4px" : "6px",
-            height: mood === "talking" ? "6px" : mood === "thinking" ? "4px" : "3px",
-            background: mood === "talking" ? "#222" : mood === "thinking" ? "#333" : "transparent",
-            borderBottom: mood === "talking" || mood === "thinking" ? "none" : "2px solid #333",
+            width: mood === "talking" ? "10px" : mood === "thinking" ? "4px" : "5px",
+            height: mood === "talking" ? "5px" : mood === "thinking" ? "3px" : "2px",
+            background: mood === "talking" ? "#222" : "#333",
             borderRadius: mood === "talking" ? "0 0 50% 50%" : "50%",
             position: "absolute",
-            bottom: "9px",
+            bottom: "7px",
             left: "50%",
             transform: "translateX(-50%)",
             transition: "all 0.15s ease",
@@ -561,103 +597,31 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
         />
       </div>
 
-      {/* Flame halo / tuft on head */}
-      <div
-        style={{
-          position: "absolute",
-          top: "-6px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "18px",
-          height: "12px",
-          background: haloColor,
-          borderRadius: "50% 50% 30% 30%",
-          boxShadow: `0 0 8px ${haloColor}80`,
-          animation: "flameWiggle 0.6s ease-in-out infinite alternate",
-        }}
-      />
-
-      {/* Small wings / ears */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "22px",
-          left: "-3px",
-          width: "10px",
-          height: "14px",
-          background: bodyColor,
-          borderRadius: "50% 0 50% 50%",
-          opacity: 0.8,
-          transform: mood === "walking" ? "rotate(-10deg)" : "rotate(0deg)",
-          transition: "transform 0.2s ease",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "22px",
-          right: "-3px",
-          width: "10px",
-          height: "14px",
-          background: bodyColor,
-          borderRadius: "0 50% 50% 50%",
-          opacity: 0.8,
-          transform: mood === "walking" ? "rotate(10deg)" : "rotate(0deg)",
-          transition: "transform 0.2s ease",
-        }}
-      />
-
-      {/* Tiny arms */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "16px",
-          left: "0px",
-          width: "8px",
-          height: "6px",
-          background: bodyColor,
-          borderRadius: "50%",
-          transform: mood === "walking" ? "rotate(-15deg)" : "rotate(0deg)",
-          transition: "transform 0.2s ease",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "16px",
-          right: "0px",
-          width: "8px",
-          height: "6px",
-          background: bodyColor,
-          borderRadius: "50%",
-          transform: mood === "walking" ? "rotate(15deg)" : "rotate(0deg)",
-          transition: "transform 0.2s ease",
-        }}
-      />
-
       {/* Tiny feet */}
       <div
         style={{
           position: "absolute",
-          bottom: "5px",
-          left: "12px",
-          width: "9px",
+          bottom: "4px",
+          left: "10px",
+          width: "10px",
           height: "6px",
-          background: "#cc1111",
+          background: "#3d8bc0",
           borderRadius: "50%",
-          boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
+          zIndex: 2,
+          boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
         }}
       />
       <div
         style={{
           position: "absolute",
-          bottom: "5px",
-          right: "12px",
-          width: "9px",
+          bottom: "4px",
+          right: "10px",
+          width: "10px",
           height: "6px",
-          background: "#cc1111",
+          background: "#3d8bc0",
           borderRadius: "50%",
-          boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
+          zIndex: 2,
+          boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
         }}
       />
     </div>
@@ -832,6 +796,8 @@ export default function MadMindPage() {
   const [input, setInput] = useState("");
   const [style, setStyle] = useState<StyleMode>("savage");
   const [mood, setMood] = useState<Mood>("walking");
+  const [creatureX, setCreatureX] = useState(0);
+  const [creatureDirection, setCreatureDirection] = useState(1); // 1 = right, -1 = left
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [currentResponse, setCurrentResponse] = useState("");
   const [showBubble, setShowBubble] = useState(false);
@@ -839,7 +805,7 @@ export default function MadMindPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [count, setCount] = useState(0);
 
-  /* Creature walks when idle */
+  /* Creature walks around when idle */
   useEffect(() => {
     if (mood === "idle" || mood === "walking") {
       const interval = setInterval(() => {
@@ -848,6 +814,27 @@ export default function MadMindPage() {
       return () => clearInterval(interval);
     }
   }, [mood]);
+
+  /* Creature wanders left and right */
+  useEffect(() => {
+    if (mood === "walking") {
+      const interval = setInterval(() => {
+        setCreatureX((prev) => {
+          const next = prev + creatureDirection * 15;
+          if (next > 120) {
+            setCreatureDirection(-1);
+            return 120;
+          }
+          if (next < -120) {
+            setCreatureDirection(1);
+            return -120;
+          }
+          return next;
+        });
+      }, 800);
+      return () => clearInterval(interval);
+    }
+  }, [mood, creatureDirection]);
 
   const sendMessage = useCallback(
     async (textOverride?: string) => {
@@ -1037,10 +1024,10 @@ export default function MadMindPage() {
             visible={showBubble}
             isUser={bubbleIsUser}
           />
-          <Creature mood={mood} style={style} />
+          <Creature mood={mood} style={style} xPos={creatureX} />
         </div>
 
-        {/* Status label — readable against busy background */}
+        {/* Status label */}
         <div
           style={{
             position: "absolute",
@@ -1065,10 +1052,10 @@ export default function MadMindPage() {
             }}
           >
             {mood === "thinking"
-              ? "● Thinking..."
+              ? "$MAD Chao is thinking..."
               : mood === "talking"
-                ? "● Talking..."
-                : "● Walking around..."}
+                ? "$MAD Chao is talking..."
+                : "$MAD Chao is exploring..."}
           </span>
         </div>
       </div>
