@@ -403,12 +403,12 @@ function Garden() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE CREATURE — $MAD Chao (Low, Round, Squat like GBA Chao)
+   THE CREATURE — $MAD Chao (Big head, small body, like GBA)
    ═══════════════════════════════════════════════════════════ */
 
 function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: number }) {
-  const bodyColor = "#e61919"; // Deep red
-  const bellyColor = "#ff9933"; // Warm orange belly
+  const bodyColor = "#e61919";
+  const bellyColor = "#ff9933";
 
   const eyeState =
     mood === "thinking"
@@ -420,8 +420,8 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
   return (
     <div
       style={{
-        width: "42px",
-        height: "34px",
+        width: "44px",
+        height: "40px",
         position: "relative",
         left: `${xPos}px`,
         bottom: "2px",
@@ -434,14 +434,14 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
               : "chaoIdle 2s ease-in-out infinite",
       }}
     >
-      {/* Tiny wing nubs — barely visible tufts */}
+      {/* Wing nubs */}
       <div
         style={{
           position: "absolute",
-          top: "6px",
-          left: "-3px",
-          width: "8px",
-          height: "10px",
+          top: "2px",
+          left: "-2px",
+          width: "9px",
+          height: "11px",
           background: "#cc1111",
           borderRadius: "50%",
           opacity: 0.7,
@@ -451,10 +451,10 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
       <div
         style={{
           position: "absolute",
-          top: "6px",
-          right: "-3px",
-          width: "8px",
-          height: "10px",
+          top: "2px",
+          right: "-2px",
+          width: "9px",
+          height: "11px",
           background: "#cc1111",
           borderRadius: "50%",
           opacity: 0.7,
@@ -462,42 +462,42 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
         }}
       />
 
-      {/* Body — very round, very squat, low to ground */}
+      {/* HEAD — dominates (~75% of visual) */}
       <div
         style={{
-          width: "38px",
-          height: "28px",
+          width: "40px",
+          height: "34px",
           background: bodyColor,
-          borderRadius: "50% 50% 45% 45%",
+          borderRadius: "50%",
           position: "absolute",
-          bottom: "2px",
+          top: "0px",
           left: "2px",
-          zIndex: 2,
-          boxShadow: `0 1px 4px rgba(0,0,0,0.2), inset -1px -1px 3px rgba(0,0,0,0.15), inset 1px 1px 3px rgba(255,255,255,0.25)`,
+          zIndex: 3,
+          boxShadow: `0 1px 4px rgba(0,0,0,0.15), inset -1px -1px 3px rgba(0,0,0,0.1), inset 1px 1px 3px rgba(255,255,255,0.25)`,
         }}
       >
-        {/* Belly patch — small and centered */}
+        {/* Belly patch */}
         <div
           style={{
             position: "absolute",
-            top: "12px",
+            top: "18px",
             left: "50%",
             transform: "translateX(-50%)",
-            width: "14px",
-            height: "9px",
+            width: "18px",
+            height: "10px",
             background: bellyColor,
             borderRadius: "50%",
             opacity: 0.85,
           }}
         />
 
-        {/* Eyes — lower on the body, proportional */}
+        {/* Eyes */}
         <div
           style={{
             display: "flex",
             gap: "3px",
             position: "absolute",
-            top: "5px",
+            top: "7px",
             left: "50%",
             transform: "translateX(-50%)",
           }}
@@ -578,7 +578,7 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
           </div>
         </div>
 
-        {/* Tiny mouth */}
+        {/* Mouth */}
         <div
           style={{
             width: mood === "talking" ? "8px" : mood === "thinking" ? "3px" : "4px",
@@ -594,147 +594,49 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
         />
       </div>
 
-      {/* Tiny feet — barely visible */}
+      {/* BODY — small, tucked under head */}
       <div
         style={{
+          width: "28px",
+          height: "16px",
+          background: bodyColor,
+          borderRadius: "50%",
           position: "absolute",
-          bottom: "0px",
+          bottom: "4px",
           left: "8px",
+          zIndex: 2,
+          boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+        }}
+      />
+
+      {/* Tiny feet */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "2px",
+          left: "11px",
           width: "8px",
           height: "4px",
           background: "#b30000",
           borderRadius: "50%",
-          zIndex: 2,
+          zIndex: 4,
         }}
       />
       <div
         style={{
           position: "absolute",
-          bottom: "0px",
-          right: "8px",
+          bottom: "2px",
+          right: "11px",
           width: "8px",
           height: "4px",
           background: "#b30000",
           borderRadius: "50%",
-          zIndex: 2,
+          zIndex: 4,
         }}
       />
     </div>
   );
 }
-
-/* ═══════════════════════════════════════════════════════════
-   CHAT BUBBLE — RPG Dialogue Style
-   ═══════════════════════════════════════════════════════════ */
-
-function ChatBubble({
-  text,
-  visible,
-  isUser,
-}: {
-  text: string;
-  visible: boolean;
-  isUser: boolean;
-}) {
-  const [displayed, setDisplayed] = useState("");
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    if (!visible) {
-      setDisplayed("");
-      setDone(false);
-      return;
-    }
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      setDisplayed(text.slice(0, i));
-      if (i >= text.length) {
-        setDone(true);
-        clearInterval(interval);
-      }
-    }, 25);
-    return () => clearInterval(interval);
-  }, [visible, text]);
-
-  if (!visible) return null;
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        bottom: "100%",
-        left: "50%",
-        transform: "translateX(-50%)",
-        marginBottom: "10px",
-        zIndex: 50,
-        minWidth: "200px",
-        maxWidth: "300px",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          bottom: "-6px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "0",
-          height: "0",
-          borderLeft: "6px solid transparent",
-          borderRight: "6px solid transparent",
-          borderTop: isUser
-            ? "6px solid rgba(255,255,255,0.12)"
-            : "6px solid rgba(255,30,30,0.25)",
-        }}
-      />
-      <div
-        style={{
-          background: isUser
-            ? "rgba(255,255,255,0.1)"
-            : "rgba(255,30,30,0.15)",
-          border: isUser
-            ? "1px solid rgba(255,255,255,0.15)"
-            : "1px solid rgba(255,50,50,0.3)",
-          borderRadius: "14px",
-          padding: "10px 14px",
-          backdropFilter: "blur(6px)",
-          boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-        }}
-      >
-        <p
-          style={{
-            color: "#fff",
-            fontSize: "12px",
-            fontWeight: 700,
-            lineHeight: 1.4,
-            margin: 0,
-            whiteSpace: "pre-wrap",
-            textShadow: "0 1px 2px rgba(0,0,0,0.5)",
-          }}
-        >
-          {displayed}
-          {!done && (
-            <span
-              style={{
-                display: "inline-block",
-                width: "5px",
-                height: "10px",
-                background: "#ff4444",
-                marginLeft: "2px",
-                animation: "blinkCursor 0.7s infinite",
-              }}
-            />
-          )}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   STYLE SELECTOR
-   ═══════════════════════════════════════════════════════════ */
-
 function StyleSelector({
   style,
   onChange,
