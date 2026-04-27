@@ -558,6 +558,11 @@ export default function MadMindPage() {
           }
 
           /* Poll for response */
+          if (!queueData.pollUrl) {
+            setMood("idle");
+            setIsProcessing(false);
+            return;
+          }
           const response = await pollForResponse(queueData.pollUrl);
           setMood("talking");
 
