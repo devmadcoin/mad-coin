@@ -3,25 +3,100 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import MadConfessions from "./components/MadConfessions";
 
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
 const LINKS = {
-  buy: "https://jup.ag/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
-  chart: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs",
-  phantom: "https://phantom.app",
-  coinbase: "https://coinbase.com",
-  jupiter: "https://jup.ag",
   telegram: "https://t.me/MadOfficalChannel",
   x: "https://x.com/madrichclub_",
-  madMind: "/mad-mind",
-  roadmap: "/roadmap",
-  game: "/game",
-  memes: "/memes",
-  merch: "/merch",
+  instagram: "https://www.instagram.com/madrichclub/",
+  tiktok: "https://www.tiktok.com/@madrichclub",
+  buy: "https://jup.ag/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
+  chart: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs",
+  jupiter: "https://jup.ag/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
+  solscan: "https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
+  birdeye: "https://birdeye.so/solana/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
+  dexscreener: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs",
 } as const;
 
-/* ─── UTILS ─── */
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION UTILITIES (inlined — zero external deps)
+   ═══════════════════════════════════════════════════════════ */
+
+function useInView(options?: IntersectionObserverInit) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsInView(true); observer.disconnect(); } },
+      { threshold: 0.12, ...options }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [options]);
+  return { ref, isInView };
+}
+
+function FadeIn({
+  children, className = "", delay = 0, direction = "up", duration = 0.5, distance = 24,
+}: { children: React.ReactNode; className?: string; delay?: number; direction?: "up" | "down" | "left" | "right"; duration?: number; distance?: number; }) {
+  const { ref, isInView } = useInView();
+  const transforms = {
+    up: `translateY(${distance}px)`, down: `translateY(-${distance}px)`,
+    left: `translateX(${distance}px)`, right: `translateX(-${distance}px)`,
+  };
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: isInView ? 1 : 0, transform: isInView ? "translate(0)" : transforms[direction],
+      transition: `opacity ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s, transform ${duration}s cubic-bezier(0.25,0.46,0.45,0.94) ${delay}s`,
+      willChange: "opacity, transform",
+    }}>{children}</div>
+  );
+}
+
+function StaggerGrid({
+  children, className = "", staggerDelay = 0.08, baseDelay = 0,
+}: { children: React.ReactNode; className?: string; staggerDelay?: number; baseDelay?: number; }) {
+  const { ref, isInView } = useInView();
+  return (
+    <div ref={ref} className={className}>
+      {Array.isArray(children) ? children.map((child, i) => (
+        <div key={i} style={{
+          opacity: isInView ? 1 : 0, transform: isInView ? "translateY(0)" : "translateY(20px)",
+          transition: `opacity 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s, transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s`,
+          willChange: "opacity, transform",
+        }}>{child}</div>
+      )) : children}
+    </div>
+  );
+}
+
+function GlowPulse({ children, className = "" }: { children: React.ReactNode; className?: string; }) {
+  return (
+    <div className={className} style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
+      {children}
+      <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,0,0,0.15)} 50%{box-shadow:0 0 35px rgba(255,0,0,0.28)}`}</style>
+    </div>
+  );
+}
+
+function HoverLift({ children, className = "" }: { children: React.ReactNode; className?: string; }) {
+  return (
+    <div className={className} style={{ transition: "transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)" }}
+      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; }}>
+      {children}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SHARED COMPONENTS
+   ═══════════════════════════════════════════════════════════ */
+
 function useCopyToClipboard(timeout = 2000) {
   const [copied, setCopied] = useState(false);
   const copy = async (text: string) => {
@@ -31,487 +106,565 @@ function useCopyToClipboard(timeout = 2000) {
   return { copied, copy };
 }
 
-/* ─── GRAIN TEXTURE — injected once in layout, referenced here ─── */
-export function GrainOverlay() {
+function Btn({ href, children, primary = false }: { href: string; children: React.ReactNode; primary?: boolean }) {
+  const external = href.startsWith("http");
+  const className = [
+    "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-black transition duration-300",
+    primary ? "bg-red-500 text-white hover:scale-[1.02] hover:bg-red-400" : "border border-white/10 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.07]",
+  ].join(" ");
+  if (!external) return <Link href={href} className={className}>{children}</Link>;
+  return <a href={href} target="_blank" rel="noreferrer" className={className}>{children}</a>;
+}
+
+function Chip({ children }: { children: React.ReactNode }) {
+  return <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/55">{children}</span>;
+}
+
+function CopyButton({ text = CA }: { text?: string }) {
+  const { copied, copy } = useCopyToClipboard();
   return (
-    <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.035] mix-blend-overlay"
-      style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} />
+    <button onClick={() => copy(text)} className={[
+      "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition duration-300",
+      copied ? "border border-green-400/30 bg-green-400/10 text-green-400" : "border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20",
+    ].join(" ")}>
+      {copied ? (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+      ) : (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      )}
+      {copied ? "Copied!" : "Copy CA"}
+    </button>
   );
 }
 
 /* ─── LIVE TICKER ─── */
 function LiveTicker() {
-  const [stats, setStats] = useState<{ price: string; change: string; mcap: string; volume: string; buys: string; sells: string } | null>(null);
+  const [stats, setStats] = useState<{ price: string; change: string; mcap: string; volume: string } | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchStats() {
       try {
-        const res = await fetch("https://api.dexscreener.com/latest/dex/pairs/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs");
+        const res = await fetch("https://api.dexscreener.com/latest/dex/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump");
         const data = await res.json();
         const pair = data.pairs?.[0];
         if (pair) {
-          const b24 = pair.txns?.h24?.buys || 0;
-          const s24 = pair.txns?.h24?.sells || 0;
           setStats({
             price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(8)}` : "—",
             change: pair.priceChange?.h24 ? `${pair.priceChange.h24 > 0 ? "+" : ""}${pair.priceChange.h24}%` : "—",
             mcap: pair.marketCap ? `$${(pair.marketCap / 1000).toFixed(1)}K` : "—",
             volume: pair.volume?.h24 ? `$${(pair.volume.h24 / 1000).toFixed(1)}K` : "—",
-            buys: String(b24),
-            sells: String(s24),
           });
         }
-      } catch { /* silent */ }
+      } catch {
+        setStats(null);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchStats();
     const interval = setInterval(fetchStats, 30000);
     return () => clearInterval(interval);
   }, []);
 
+  if (loading) {
+    return (
+      <div className="fixed top-0 left-0 right-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10">
+        <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-center gap-4">
+          <span className="text-white/40 text-xs font-bold">Loading $MAD stats...</span>
+        </div>
+      </div>
+    );
+  }
+
   if (!stats) return null;
 
+  const items = [
+    { label: "PRICE", value: stats.price },
+    { label: "24H", value: stats.change, color: stats.change.startsWith("+") ? "text-green-400" : stats.change.startsWith("-") ? "text-red-400" : "text-white/60" },
+    { label: "MCAP", value: stats.mcap },
+    { label: "24H VOL", value: stats.volume },
+    { label: "CA", value: CA.slice(0, 6) + "..." + CA.slice(-4) },
+  ];
+
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-black/95 border-b border-white/10">
-      <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-4 overflow-x-auto">
+    <div className="fixed top-0 left-0 right-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10">
+      <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-between gap-4 overflow-x-auto">
         <div className="flex items-center gap-6 min-w-max">
-          <span className="text-white/30 text-[10px] font-black uppercase tracking-widest shrink-0">[ $MAD ]</span>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-white/30 text-[10px] font-bold uppercase">PRICE</span>
-            <span className="text-sm font-black text-white">{stats.price}</span>
-          </div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-white/30 text-[10px] font-bold uppercase">24H</span>
-            <span className={`text-sm font-black ${stats.change.startsWith("+") ? "text-green-400" : stats.change.startsWith("-") ? "text-red-400" : "text-white/60"}`}>{stats.change}</span>
-          </div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-white/30 text-[10px] font-bold uppercase">BUYS</span>
-            <span className="text-sm font-black text-green-400">{stats.buys}</span>
-          </div>
-          <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-white/30 text-[10px] font-bold uppercase">SELLS</span>
-            <span className="text-sm font-black text-red-400">{stats.sells}</span>
-          </div>
+          <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest shrink-0">$MAD Live</span>
+          {items.map((item) => (
+            <div key={item.label} className="flex items-center gap-1.5 shrink-0">
+              <span className="text-white/30 text-[10px] font-bold uppercase">{item.label}</span>
+              <span className={`text-xs font-black ${item.color || "text-white"}`}>{item.value}</span>
+            </div>
+          ))}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="inline-flex rounded-full h-2 w-2 bg-green-400" />
-          <span className="text-[10px] text-white/40 font-black">LIVE</span>
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+          </span>
+          <span className="text-[10px] text-white/40 font-bold">LIVE</span>
         </div>
       </div>
     </div>
   );
 }
 
-/* ─── GIANT BUTTON ─── */
-function GiantButton({ href, children, primary = false, onClick }: { href?: string; children: React.ReactNode; primary?: boolean; onClick?: () => void }) {
-  const className = [
-    "inline-flex items-center justify-center gap-3 rounded-full font-black transition-all duration-300",
-    "px-10 py-5 text-lg sm:text-xl sm:px-14 sm:py-6",
-    primary
-      ? "bg-red-600 text-white hover:bg-red-500 hover:scale-[1.03] shadow-[0_0_50px_rgba(255,0,0,0.25)]"
-      : "border-2 border-white/20 bg-white/[0.03] text-white hover:border-white/40 hover:bg-white/[0.06] hover:scale-[1.03]",
-  ].join(" ");
 
-  if (onClick) return <button onClick={onClick} className={className}>{children}</button>;
-  if (href?.startsWith("http")) return <a href={href} target="_blank" rel="noreferrer" className={className}>{children}</a>;
-  return <Link href={href || "/"} className={className}>{children}</Link>;
+/* ─── SOCIAL BUTTON ─── */
+function SocialIconButton({ href, src, alt }: { href: string; src: string; alt: string }) {
+  return (
+    <a href={href} target="_blank" rel="noreferrer" aria-label={alt} title={alt} className="group flex h-16 w-16 items-center justify-center rounded-full border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition duration-300 hover:scale-105 hover:border-white/20 hover:bg-white/[0.08]">
+      <Image src={src} alt={alt} width={34} height={34} className="h-9 w-9 object-contain transition duration-300 group-hover:scale-110" />
+    </a>
+  );
 }
 
-/* ─── STAT CARD ─── */
-function StatCard({ label, value, sub, color = "white" }: { label: string; value: string; sub?: string; color?: "white" | "green" | "red" }) {
-  const colorClass = color === "green" ? "text-green-400" : color === "red" ? "text-red-400" : "text-white";
+/* ─── METRIC CARD ─── */
+function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col items-center text-center p-6">
-      <p className={`text-4xl sm:text-5xl font-black ${colorClass}`}>{value}</p>
-      <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.24em] text-white/40">{label}</p>
-      {sub && <p className="mt-1 text-xs font-bold text-white/50">{sub}</p>}
+    <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5">
+      <p className="text-2xl font-black text-white">{value}</p>
+      <p className="mt-1 text-[11px] uppercase tracking-[0.24em] text-white/42">{label}</p>
     </div>
   );
 }
 
-/* ─── STEP CARD ─── */
-function StepCard({ number, title, icon, link, linkText }: { number: string; title: string; icon: React.ReactNode; link: string; linkText: string }) {
+/* ─── TOKEN STAT CARD ─── */
+function TokenStatCard({ label, value, change, isPositive }: { label: string; value: string; change?: string; isPositive?: boolean }) {
   return (
-    <div className="flex flex-col items-center text-center p-6">
-      <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/70 mb-4">
-        {icon}
+    <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 hover:border-white/15 transition duration-300 group">
+      <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 font-bold">{label}</p>
+      <p className="mt-2 text-2xl font-black text-white group-hover:scale-[1.02] transition-transform origin-left">{value}</p>
+      {change && (
+        <p className={`mt-1 text-xs font-bold flex items-center gap-1 ${isPositive ? "text-green-400" : "text-red-400"}`}>
+          {isPositive ? (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17l5-5 5 5M7 7h10"/></svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 7l5 5 5-5M7 17h10"/></svg>
+          )}
+          {change}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* ─── ART CAMPAIGN CARD ─── */
+function ArtCampaignCard({ title, text, image, accent = "red" }: { title: string; text: string; image: string; accent?: "red" | "green" | "white" }) {
+  const borderClass = accent === "red" ? "border-red-500/20" : accent === "green" ? "border-emerald-400/20" : "border-white/10";
+  const overlayClass = accent === "red" ? "bg-[linear-gradient(180deg,rgba(10,10,10,0.2),rgba(20,0,0,0.58)_50%,rgba(0,0,0,0.92))]" : accent === "green" ? "bg-[linear-gradient(180deg,rgba(10,10,10,0.2),rgba(0,24,10,0.52)_50%,rgba(0,0,0,0.92))]" : "bg-[linear-gradient(180deg,rgba(10,10,10,0.22),rgba(12,12,12,0.56)_50%,rgba(0,0,0,0.92))]";
+  const tintClass = accent === "red" ? "bg-red-500/10" : accent === "green" ? "bg-emerald-500/10" : "bg-black/10";
+
+  return (
+    <HoverLift>
+    <div className={`group relative overflow-hidden rounded-[28px] border ${borderClass} min-h-[220px] transition duration-300 hover:scale-[1.01]`}>
+      <div className="absolute inset-0"><Image src={image} alt={title} fill className="object-cover transition duration-500 group-hover:scale-[1.04]" sizes="(max-width: 1024px) 100vw, 33vw" /></div>
+      <div className={`absolute inset-0 ${overlayClass}`} />
+      <div className={`absolute inset-0 ${tintClass}`} />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+      <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/8 blur-3xl" />
+      <div className="relative z-10 flex h-full flex-col justify-end p-6">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/55">{title}</p>
+        <p className="mt-3 max-w-sm text-2xl font-black leading-tight text-white sm:text-[2rem]">{text}</p>
       </div>
-      <p className="text-white/30 font-black text-2xl mb-2">{number}</p>
-      <p className="text-white font-black text-lg mb-3">{title}</p>
-      <a href={link} target="_blank" rel="noreferrer" className="text-sm font-bold text-white/50 hover:text-white transition-colors inline-flex items-center gap-1">
+    </div>
+    </HoverLift>
+  );
+}
+
+/* ─── EXCHANGE LOGO CARD ─── */
+function ExchangeLogoCard({ href, src, alt, label }: { href: string; src: string; alt: string; label: string }) {
+  return (
+    <HoverLift>
+    <a href={href} target="_blank" rel="noreferrer" className="flex min-w-[240px] items-center justify-center rounded-[24px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.018))] px-8 py-10 shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition duration-300 hover:scale-[1.01] hover:border-white/20 hover:bg-white/[0.06]" aria-label={label} title={label}>
+      <Image src={src} alt={alt} width={180} height={56} className="h-12 w-auto object-contain opacity-95" />
+    </a>
+    </HoverLift>
+  );
+}
+
+/* ─── HOW TO BUY STEP ─── */
+function HowToBuyStep({ number, title, description, link, linkText, icon }: { number: string; title: string; description: string; link: string; linkText: string; icon: React.ReactNode }) {
+  return (
+    <HoverLift>
+    <div className="relative p-6 bg-white/[0.02] border border-white/10 rounded-[24px] hover:border-white/15 transition-all duration-300 group">
+      <div className="absolute -top-3 -left-2 w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-lg shadow-red-500/20">{number}</div>
+      <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-center text-red-400 mb-4 mt-2 group-hover:scale-110 transition-transform">{icon}</div>
+      <h3 className="text-lg font-black text-white mb-2">{title}</h3>
+      <p className="text-sm text-white/50 mb-4 leading-relaxed">{description}</p>
+      <a href={link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm font-bold text-red-400 hover:text-red-300 transition-colors">
         {linkText}
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
     </div>
+    </HoverLift>
   );
 }
 
-/* ─── MEME SCROLL ─── */
-function MemeScroll() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const memes = [
-    { src: "/memes/MAD-KINGS-ONLY.png", alt: "Kings Only" },
-    { src: "/memes/MAD-YOU-SIDELINED.png", alt: "You Sideline" },
-    { src: "/memes/MAD-RICH-OR-BROKE.png", alt: "Rich or Broke" },
-    { src: "/memes/MAD-BELIEVE.png", alt: "Believe" },
-    { src: "/memes/MAD-ARMY.png", alt: "Army" },
-    { src: "/memes/YOU-WILL-BE-MAD.png", alt: "You Will Be MAD" },
-  ];
-
+/* ─── HERO GLOBE ─── */
+function HeroGlobe() {
   return (
-    <div className="relative">
-      <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-        {memes.map((meme) => (
-          <div key={meme.src} className="snap-start shrink-0 w-[280px] sm:w-[320px] rounded-[24px] border border-white/10 bg-white/[0.02] overflow-hidden">
-            <div className="aspect-square relative">
-              <Image src={meme.src} alt={meme.alt} fill className="object-cover" sizes="320px" />
-            </div>
-          </div>
-        ))}
-        <Link href={LINKS.memes} className="snap-start shrink-0 w-[280px] sm:w-[320px] rounded-[24px] border border-white/10 bg-white/[0.02] flex items-center justify-center">
-          <div className="text-center p-8">
-            <p className="text-4xl mb-2 text-white/30">→</p>
-            <p className="text-white/70 font-black text-lg">VIEW ALL</p>
-            <p className="text-white/30 text-xs mt-1">29 MEMES</p>
-          </div>
-        </Link>
-      </div>
-      <div className="text-center mt-2">
-        <p className="text-white/20 text-xs font-bold tracking-widest">← SWIPE TO EXPLORE →</p>
-      </div>
+    <div className="pointer-events-none absolute right-[-120px] top-[-90px] hidden h-[520px] w-[520px] overflow-hidden rounded-full opacity-20 lg:block">
+      <div className="absolute inset-0 rounded-full border border-red-500/20 bg-[radial-gradient(circle_at_35%_35%,rgba(255,0,0,0.22),rgba(255,0,0,0.06)_38%,transparent_65%)] shadow-[0_0_70px_rgba(255,0,0,0.18)]" />
+      <div className="absolute inset-0 rounded-full bg-[repeating-linear-gradient(to_right,rgba(255,0,0,0.18)_0px,rgba(255,0,0,0.18)_1px,transparent_1px,transparent_40px),repeating-linear-gradient(to_bottom,rgba(255,0,0,0.14)_0px,rgba(255,0,0,0.14)_1px,transparent_1px,transparent_40px)] opacity-55" />
+      <div className="absolute inset-[8%] rounded-full border border-red-500/18" />
+      <div className="absolute inset-[22%] rounded-full border border-red-500/14" />
+      <div className="absolute inset-[36%] rounded-full border border-red-500/10" />
+      <div className="absolute left-[12%] top-[16%] h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
+      <div className="absolute left-[28%] top-[34%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
+      <div className="absolute left-[60%] top-[24%] h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
+      <div className="absolute left-[74%] top-[40%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
+      <div className="absolute left-[52%] top-[62%] h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_16px_rgba(255,0,0,0.8)]" />
+      <div className="absolute left-[30%] top-[70%] h-2 w-2 rounded-full bg-red-400 shadow-[0_0_12px_rgba(255,0,0,0.75)]" />
+      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/20 to-transparent" />
+      <div className="absolute inset-0 rounded-full border border-red-500/8" />
     </div>
   );
-}
-
-/* ─── TEASER CARD ─── */
-function TeaserCard({ href, title, sub, emoji }: { href: string; title: string; sub: string; emoji: string }) {
-  return (
-    <Link href={href} className="group flex flex-col items-center text-center p-8 rounded-[28px] border border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300">
-      <p className="text-5xl mb-4 group-hover:scale-110 transition-transform">{emoji}</p>
-      <p className="text-white font-black text-xl mb-2">{title}</p>
-      <p className="text-white/50 text-sm">{sub}</p>
-      <p className="mt-4 text-white/30 font-bold text-sm group-hover:text-white/60 group-hover:translate-x-1 transition-all">Enter →</p>
-    </Link>
-  );
-}
-
-/* ─── CONFESSION BANNER ─── */
-function ConfessionBanner() {
-  const confessions = [
-    "I panic sold Bitcoin at $16k. $MAD is my redemption arc.",
-    "My family thinks I'm crazy. My wallet says I'm early.",
-    "Sold my gaming PC to buy more $MAD. No regrets.",
-    "I told my therapist about $MAD. She bought some.",
-  ];
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => setIndex((i) => (i + 1) % confessions.length), 6000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="rounded-[24px] border border-white/10 bg-white/[0.02] p-6 sm:p-8 text-center">
-      <p className="text-white/30 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">[ Anonymous Confession ]</p>
-      <p className="text-xl sm:text-2xl font-black text-white leading-tight">"{confessions[index]}"</p>
-      <p className="mt-4 text-white/20 text-xs font-bold">— Holder #{273 + index}</p>
-    </div>
-  );
-}
-
-/* ─── SINGLE SCROLL REVEAL (stats section only) ─── */
-function useInViewOnce() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isInView, setIsInView] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setIsInView(true); observer.disconnect(); } },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return { ref, isInView };
 }
 
 /* ═══════════════════════════════════════════════════════════
- LUXURY REDESIGN — Grain + Brackets + One Reveal
- ═══════════════════════════════════════════════════════════ */
+   MAIN PAGE
+   ═══════════════════════════════════════════════════════════ */
 
 export default function Home() {
-  const [liveStats, setLiveStats] = useState<{ price: string; change: string; mcap: string; volume: string; buys: string; sells: string } | null>(null);
-  const { copied, copy } = useCopyToClipboard();
-  const { ref: statsRef, isInView: statsVisible } = useInViewOnce();
+  const [liveStats, setLiveStats] = useState<{ price: string; change: string; mcap: string; holders: string; volume: string } | null>(null);
 
   useEffect(() => {
     async function fetchStats() {
       try {
-        const res = await fetch("https://api.dexscreener.com/latest/dex/pairs/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs");
+        const res = await fetch("https://api.dexscreener.com/latest/dex/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump");
         const data = await res.json();
         const pair = data.pairs?.[0];
         if (pair) {
-          const b24 = pair.txns?.h24?.buys || 0;
-          const s24 = pair.txns?.h24?.sells || 0;
           setLiveStats({
             price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(8)}` : "—",
             change: pair.priceChange?.h24 ? `${pair.priceChange.h24 > 0 ? "+" : ""}${pair.priceChange.h24}%` : "—",
             mcap: pair.marketCap ? `$${(pair.marketCap / 1000).toFixed(1)}K` : "—",
+            holders: "273",
             volume: pair.volume?.h24 ? `$${(pair.volume.h24 / 1000).toFixed(1)}K` : "—",
-            buys: String(b24),
-            sells: String(s24),
           });
         }
-      } catch { /* silent */ }
+      } catch {
+        /* fallback to static if API fails */
+      }
     }
     fetchStats();
     const interval = setInterval(fetchStats, 30000);
     return () => clearInterval(interval);
   }, []);
 
+  const exchangeItems = [
+    { href: LINKS.birdeye, src: "/logos/birdeye.png", alt: "Birdeye", label: "Birdeye" },
+    { href: LINKS.solscan, src: "/logos/solscan.png", alt: "Solscan", label: "Solscan" },
+    { href: LINKS.jupiter, src: "/logos/jupiter.png", alt: "Jupiter", label: "Jupiter" },
+    { href: LINKS.dexscreener, src: "/logos/DEX-screener.png", alt: "DEX Screener", label: "DEX Screener" },
+  ];
+
+  const tokenStats = liveStats ? [
+    { label: "PRICE", value: liveStats.price, change: liveStats.change, isPositive: liveStats.change.startsWith("+") },
+    { label: "MARKET CAP", value: liveStats.mcap, change: "+8.2%", isPositive: true },
+    { label: "HOLDERS", value: liveStats.holders, change: "+52", isPositive: true },
+    { label: "SUPPLY", value: "513M", change: "↓ to 800M", isPositive: true },
+    { label: "24H VOLUME", value: liveStats.volume, change: undefined, isPositive: true },
+  ] : [
+    { label: "PRICE", value: "$0.0002066", change: "+5.84%", isPositive: true },
+    { label: "MARKET CAP", value: "$106K", change: "+8.2%", isPositive: true },
+    { label: "HOLDERS", value: "273", change: "+52", isPositive: true },
+    { label: "SUPPLY", value: "513M", change: "↓ to 800M", isPositive: true },
+    { label: "24H VOLUME", value: "$12K", change: undefined, isPositive: true },
+  ];
+
+  const howToBuySteps = [
+    {
+      number: "01", title: "Get Phantom Wallet",
+      description: "Download Phantom from your app store or browser. Create a wallet. Save your recovery phrase.",
+      link: "https://phantom.app", linkText: "Get Phantom →",
+      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 12V8H6a2 2 0 00-2 2v8a2 2 0 002 2h12v-4"/><path d="M16 6l4 4-4 4"/></svg>,
+    },
+    {
+      number: "02", title: "Buy SOL",
+      description: "Purchase SOL on Coinbase, Binance, or Kraken. Send it to your Phantom wallet address.",
+      link: "https://coinbase.com", linkText: "Buy on Coinbase →",
+      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M9 12h6m-3-3v6"/></svg>,
+    },
+    {
+      number: "03", title: "Connect Jupiter",
+      description: "Open Jupiter Exchange. Connect your Phantom wallet. Make sure you're on Solana.",
+      link: "https://jup.ag", linkText: "Open Jupiter →",
+      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>,
+    },
+    {
+      number: "04", title: "Swap for $MAD",
+      description: "Paste the contract address below. Choose how much SOL. Swap. Welcome to the club.",
+      link: LINKS.buy, linkText: "Buy $MAD Now →",
+      icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>,
+    },
+  ];
+
+  const socials = [
+    { name: "Telegram", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.2 2L2 10.8l5.6 2.4L16.8 6 9.6 14.8l.8 5.2L13 16.8l4.8 3.2L22 2.8"/></svg>, href: LINKS.telegram },
+    { name: "X", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>, href: LINKS.x },
+    { name: "Instagram", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>, href: LINKS.instagram },
+    { name: "TikTok", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.24 4.97v-7.36a8.24 8.24 0 004.55 1.37V10.4a4.85 4.85 0 01-3.77-4.25c.02-.15.04-.31.04-.47V2h3.45v3.45c0 .16.02.32.04.47a4.83 4.83 0 003.77 4.25c.28.06.56.1.85.1v-3.5a1.5 1.5 0 01-.85.1z"/></svg>, href: LINKS.tiktok },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#040404] text-white">
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(0,255,120,0.06),transparent_28%),linear-gradient(180deg,#080808,#030303)]" />
+
       <LiveTicker />
-      <GrainOverlay />
 
-      <main className="pt-16">
-        {/* ═══════════════════════════════════════════
-         HERO — 100vh, instant impact
-        ═══════════════════════════════════════════ */}
-        <section className="min-h-[100dvh] flex flex-col items-center justify-center px-4 py-20 relative">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.10),transparent_50%)]" />
+      <main className="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 lg:px-8">
+        <div className="h-20" /> {/* Spacer for ticker */}
 
-          <div className="relative z-10 text-center max-w-4xl mx-auto">
-            <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.4em] mb-8">
-              [ Solana · 513M Supply · Limited ]
-            </p>
-
-            <h1 className="text-[18vw] sm:text-[14vw] md:text-[12vw] font-black leading-[0.8] tracking-[-0.04em] text-white"
-              style={{ textShadow: "0 0 80px rgba(255,0,0,0.15)" }}
-            >
-              $MAD
-            </h1>
-
-            <p className="mt-8 text-xl sm:text-2xl font-bold text-white/60 max-w-lg mx-auto leading-relaxed">
-              Most people fold. We build.
-            </p>
-
-            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <GiantButton href={LINKS.buy} primary>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                BUY $MAD
-              </GiantButton>
-              <GiantButton href={LINKS.chart}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-                VIEW CHART
-              </GiantButton>
-            </div>
-
-            <div className="mt-16 max-w-xl mx-auto">
-              <ConfessionBanner />
-            </div>
-          </div>
-
-          <div className="absolute bottom-8 left-0 right-0 text-center">
-            <p className="text-white/15 text-xs font-bold tracking-widest">[ SCROLL DOWN ]</p>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════
-         THE NUMBERS — One scroll reveal
-        ═══════════════════════════════════════════ */}
-        <section ref={statsRef} className="py-24 px-4 sm:px-6">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16"
-              style={{
-                opacity: statsVisible ? 1 : 0,
-                transform: statsVisible ? "translateY(0)" : "translateY(24px)",
-                transition: "opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94)",
-              }}
-            >
-              <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.4em] mb-3">[ 24 Hour Activity ]</p>
-              <h2 className="text-4xl sm:text-5xl font-black text-white">The Numbers Don't Lie</h2>
-            </div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4"
-              style={{
-                opacity: statsVisible ? 1 : 0,
-                transform: statsVisible ? "translateY(0)" : "translateY(24px)",
-                transition: "opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94) 0.15s, transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94) 0.15s",
-              }}
-            >
-              <div className="rounded-[28px] border border-white/10 bg-white/[0.02] p-6">
-                <StatCard label="Price" value={liveStats?.price || "—"} sub="USD" />
+        {/* ─── HERO ─── */}
+        <FadeIn>
+        <section className="relative overflow-hidden rounded-[42px] border border-white/10 bg-black/40 p-6 shadow-[0_20px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-10 lg:p-14">
+          <HeroGlobe />
+          <div className="relative z-10 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">CONTROL YOURSELF</p>
+              <h1 className="mt-5 text-[3.2rem] font-black leading-[0.88] tracking-[-0.05em] sm:text-[5rem] lg:text-[6.3rem]">
+                <span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">STOP</span>
+                <br />PANICKING.
+                <br />GET
+                <br /><span className="text-red-500 drop-shadow-[0_0_18px_rgba(255,0,0,0.45)]">$MAD</span>{" "}
+                <span className="text-green-400 drop-shadow-[0_0_18px_rgba(34,197,94,0.35)]">RICH.</span>
+              </h1>
+              <div className="mt-5 max-w-xl">
+                <p className="text-base font-semibold text-white/72">Most people fold. $MAD builds.</p>
+                <p className="mt-3 text-sm leading-7 text-white/55 sm:text-base">
+                  $MAD Rich means staying calm under pressure, building while others panic, and turning discipline into wealth.
+                </p>
               </div>
-              <div className="rounded-[28px] border border-white/10 bg-white/[0.02] p-6">
-                <StatCard label="24H Change" value={liveStats?.change || "—"} color={liveStats?.change?.startsWith("+") ? "green" : "red"} />
+              <div className="mt-7 flex flex-col sm:flex-row gap-3">
+                <GlowPulse>
+                <a href={LINKS.buy} target="_blank" rel="noreferrer" className="group flex items-center justify-center gap-3 px-10 py-5 bg-red-500 hover:bg-red-400 text-white text-xl font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_40px_rgba(255,0,0,0.35)]">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  Buy $MAD Now
+                </a>
+                </GlowPulse>
+                <a href="#how-to-buy" className="flex items-center justify-center gap-2 px-8 py-5 border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-white text-lg font-black rounded-full transition-all">
+                  How to Buy
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                </a>
               </div>
-              <div className="rounded-[28px] border border-white/10 bg-white/[0.02] p-6">
-                <StatCard label="Buys" value={liveStats?.buys || "—"} sub="transactions" color="green" />
+              <div className="mt-6 flex flex-wrap gap-2">
+                <Chip>Real Project</Chip>
+                <Chip>Live Tech</Chip>
+                <Chip>513M Supply</Chip>
+                <Chip>800M Target</Chip>
               </div>
-              <div className="rounded-[28px] border border-white/10 bg-white/[0.02] p-6">
-                <StatCard label="Sells" value={liveStats?.sells || "—"} sub="transactions" color="red" />
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <SocialIconButton href={LINKS.telegram} src="/logos/MAD-TELEGRAM.png" alt="Telegram" />
+                <SocialIconButton href={LINKS.x} src="/logos/MAD-X-LOGO.png" alt="X" />
+                <SocialIconButton href={LINKS.instagram} src="/logos/MAD-INSTAGRAM-LOGO.png" alt="Instagram" />
+                <SocialIconButton href={LINKS.tiktok} src="/logos/MAD-TIKTOK-LOGO.png" alt="TikTok" />
               </div>
             </div>
-
-            {liveStats && liveStats.buys !== "—" && (
-              <div className="mt-6 rounded-[24px] border border-white/10 bg-white/[0.02] p-6"
-                style={{
-                  opacity: statsVisible ? 1 : 0,
-                  transform: statsVisible ? "translateY(0)" : "translateY(24px)",
-                  transition: "opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94) 0.3s, transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94) 0.3s",
-                }}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-white/30 text-xs font-bold uppercase">[ Buy Pressure ]</span>
-                  <span className="text-green-400 text-sm font-black">
-                    {Math.round((parseInt(liveStats.buys) / (parseInt(liveStats.buys) + parseInt(liveStats.sells))) * 100)}% BUY
-                  </span>
-                </div>
-                <div className="w-full h-4 rounded-full bg-white/10 overflow-hidden flex">
-                  <div className="h-full bg-green-500 rounded-full transition-all" style={{ width: `${Math.round((parseInt(liveStats.buys) / (parseInt(liveStats.buys) + parseInt(liveStats.sells))) * 100)}%` }} />
-                  <div className="h-full bg-red-500 rounded-full transition-all" style={{ width: `${Math.round((parseInt(liveStats.sells) / (parseInt(liveStats.buys) + parseInt(liveStats.sells))) * 100)}%` }} />
-                </div>
-                <div className="flex justify-between mt-2">
-                  <span className="text-green-400 text-xs font-bold">{liveStats.buys} BUYS</span>
-                  <span className="text-red-400 text-xs font-bold">{liveStats.sells} SELLS</span>
-                </div>
+            <div className="relative rounded-[34px] border border-white/10 bg-white/[0.03] p-4">
+              <div className="overflow-hidden rounded-[28px] border border-white/10 bg-black">
+                <video autoPlay muted loop playsInline preload="auto" className="aspect-[16/10] w-full object-cover">
+                  <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+                </video>
               </div>
-            )}
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════
-         HOW TO GET IT
-        ═══════════════════════════════════════════ */}
-        <section className="py-24 px-4 sm:px-6 bg-[linear-gradient(180deg,transparent,rgba(255,0,0,0.02),transparent)]">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16">
-              <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.4em] mb-3">[ Get Started ]</p>
-              <h2 className="text-4xl sm:text-5xl font-black text-white">Get $MAD in 30 Seconds</h2>
-            </div>
-
-            <div className="grid sm:grid-cols-3 gap-6">
-              <div className="rounded-[28px] border border-white/10 bg-white/[0.02] p-8 text-center">
-                <StepCard
-                  number="01"
-                  title="Get Phantom"
-                  icon={<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 12V8H6a2 2 0 00-2 2v8a2 2 0 002 2h12v-4"/><path d="M16 6l4 4-4 4"/></svg>}
-                  link={LINKS.phantom}
-                  linkText="Download →"
-                />
-              </div>
-              <div className="rounded-[28px] border border-white/10 bg-white/[0.02] p-8 text-center">
-                <StepCard
-                  number="02"
-                  title="Buy SOL"
-                  icon={<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M9 12h6m-3-3v6"/></svg>}
-                  link={LINKS.coinbase}
-                  linkText="Buy SOL →"
-                />
-              </div>
-              <div className="rounded-[28px] border border-white/10 bg-white/[0.02] p-8 text-center">
-                <StepCard
-                  number="03"
-                  title="Swap on Jupiter"
-                  icon={<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>}
-                  link={LINKS.buy}
-                  linkText="Buy $MAD →"
-                />
-              </div>
-            </div>
-
-            <div className="mt-8 rounded-[24px] border-2 border-white/10 bg-white/[0.02] p-6 sm:p-8">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="text-center sm:text-left">
-                  <p className="text-white/30 text-xs font-bold uppercase tracking-widest mb-2">[ Contract Address ]</p>
-                  <code className="text-white/60 font-mono text-sm sm:text-base break-all">{CA}</code>
-                </div>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => copy(CA)}
-                    className={[
-                      "inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition duration-300",
-                      copied ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-white/[0.05] text-white/60 border border-white/10 hover:bg-white/[0.08] hover:text-white",
-                    ].join(" ")}
-                  >
-                    {copied ? "Copied!" : "Copy CA"}
-                  </button>
-                  <GiantButton href={LINKS.buy} primary>BUY NOW</GiantButton>
-                </div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <MetricCard label="Website" value="LIVE" />
+                <MetricCard label="MAD Mind" value="AI" />
+                <MetricCard label="Build" value="DAILY" />
               </div>
             </div>
           </div>
         </section>
+        </FadeIn>
 
-        {/* ═══════════════════════════════════════════
-         THE ART
-        ═══════════════════════════════════════════ */}
-        <section className="py-24 px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.4em] mb-3">[ $MAD Art ]</p>
-              <h2 className="text-4xl sm:text-5xl font-black text-white">The Gallery</h2>
-              <p className="mt-3 text-white/40 text-lg">Swipe. Laugh. Share.</p>
+        {/* ─── TOKEN STATS ─── */}
+        <FadeIn delay={0.1}>
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-black/40 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Live on Solana</p>
+              <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">Token <span className="text-red-500">Stats</span></h2>
             </div>
-            <MemeScroll />
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════
-         EXPLORE
-        ═══════════════════════════════════════════ */}
-        <section className="py-24 px-4 sm:px-6 bg-[linear-gradient(180deg,transparent,rgba(255,0,0,0.015),transparent)]">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.4em] mb-3">[ Explore ]</p>
-              <h2 className="text-4xl sm:text-5xl font-black text-white">Go Deeper</h2>
-            </div>
-
-            <div className="grid sm:grid-cols-3 gap-4">
-              <TeaserCard href={LINKS.madMind} title="MAD AI" sub="Chat with the machine" emoji="🤖" />
-              <TeaserCard href={LINKS.roadmap} title="The Mad Path" sub="Where we're going" emoji="🗺️" />
-              <TeaserCard href={LINKS.game} title="The Game" sub="Play. Win. Earn." emoji="🎮" />
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+              </span>
+              <span className="text-xs text-white/40">{liveStats ? "Live data" : "Loading..."}</span>
             </div>
           </div>
+          <StaggerGrid className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" staggerDelay={0.06}>
+            {tokenStats.map((stat) => (
+              <TokenStatCard key={stat.label} label={stat.label} value={stat.value} change={stat.change} isPositive={stat.isPositive} />
+            ))}
+          </StaggerGrid>
         </section>
+        </FadeIn>
 
-        {/* ═══════════════════════════════════════════
-         FINAL CTA
-        ═══════════════════════════════════════════ */}
-        <section className="py-24 px-4 sm:px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-5xl sm:text-6xl font-black text-white mb-6">Still Here?</h2>
-            <p className="text-xl text-white/50 mb-10">The chart doesn't care about your hesitation.</p>
-            <GiantButton href={LINKS.buy} primary>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              GET $MAD NOW
-            </GiantButton>
-            <div className="mt-8 flex items-center justify-center gap-6">
-              <a href={LINKS.telegram} target="_blank" rel="noreferrer" className="text-white/20 hover:text-white transition-colors">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M21.2 2L2 10.8l5.6 2.4L16.8 6 9.6 14.8l.8 5.2L13 16.8l4.8 3.2L22 2.8"/></svg>
-              </a>
-              <a href={LINKS.x} target="_blank" rel="noreferrer" className="text-white/20 hover:text-white transition-colors">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              </a>
+        {/* ─── HOW TO BUY ─── */}
+        <FadeIn delay={0.1}>
+        <section id="how-to-buy" className="mt-10 rounded-[38px] border border-white/10 bg-black/40 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="mb-8">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Get Started</p>
+            <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">How to <span className="text-red-500">Buy $MAD</span></h2>
+            <p className="mt-3 text-sm text-white/50 max-w-xl">4 steps. No complex DeFi knowledge needed.</p>
+          </div>
+          <StaggerGrid className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" staggerDelay={0.1}>
+            {howToBuySteps.map((step) => (
+              <HowToBuyStep key={step.number} {...step} />
+            ))}
+          </StaggerGrid>
+          <div className="mt-8 p-6 bg-white/[0.02] border-2 border-red-500/20 rounded-[24px]">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-center sm:text-left">
+                <p className="text-white/40 text-sm font-bold mb-1 uppercase tracking-widest">Contract Address (Solana)</p>
+                <code className="text-red-400 font-mono text-sm sm:text-base break-all">{CA}</code>
+              </div>
+              <div className="flex gap-3 shrink-0">
+                <CopyButton />
+                <Btn href={LINKS.solscan}>View on Solscan</Btn>
+              </div>
             </div>
           </div>
         </section>
+        </FadeIn>
 
-        {/* ═══════════════════════════════════════════
-         RISK NOTICE
-        ═══════════════════════════════════════════ */}
-        <section className="px-4 sm:px-6 pb-24">
-          <div className="max-w-3xl mx-auto rounded-[24px] border border-white/10 bg-white/[0.02] px-6 py-8 text-center">
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 mb-3">[ Risk Notice ]</p>
-            <p className="text-sm text-white/50 leading-relaxed">
-              $MAD is a meme coin. Nothing here is financial advice. Crypto is volatile. Never risk money you can't afford to lose. DYOR.
-            </p>
+        {/* ─── LIVE CHART ─── */}
+        <FadeIn delay={0.1}>
+        <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/40 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Real Time Data</p>
+              <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">Live Chart</h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Btn href={LINKS.chart} primary>DEX Screener</Btn>
+              <Btn href={LINKS.birdeye}>Birdeye</Btn>
+              <Btn href={LINKS.jupiter} primary>Buy on Jupiter</Btn>
+            </div>
+          </div>
+          <div className="overflow-hidden rounded-[24px] border border-white/10 bg-black">
+            <iframe src={`${LINKS.dexscreener}?embed=1&theme=dark&trades=0&info=0`} className="aspect-[4/3] w-full sm:aspect-[16/9]" allow="clipboard-write" title="$MAD Chart" />
+          </div>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <Chip>DEX Screener</Chip>
+            <Chip>Birdeye</Chip>
+            <Chip>Solscan</Chip>
+            <Chip>Jupiter</Chip>
           </div>
         </section>
+        </FadeIn>
+
+        {/* ─── ART CAMPAIGN CARDS ─── */}
+        <FadeIn delay={0.1}>
+        <StaggerGrid className="mt-10 grid gap-4 lg:grid-cols-3" staggerDelay={0.12}>
+          <ArtCampaignCard title="Mindset" text="Pressure reveals the real ones." image="/memes/MAD-KINGS-ONLY.png" accent="red" />
+          <ArtCampaignCard title="Signal" text="Not noise. Not panic. Signal." image="/memes/MAD-YOU-SIDELINED.png" accent="white" />
+          <ArtCampaignCard title="Wealth" text="Rich starts in the mind first." image="/memes/MAD-RICH-OR-BROKE.png" accent="green" />
+        </StaggerGrid>
+        </FadeIn>
+
+        {/* ─── EXCHANGE MARQUEE ─── */}
+        <FadeIn delay={0.1}>
+        <section className="mt-10 overflow-hidden rounded-[38px] border border-white/10 bg-black/30 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div>
+            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.34em] text-white/42">Verified on exchanges</p>
+            <h2 className="mt-3 text-center text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">Trusted across real crypto platforms.</h2>
+            <p className="mx-auto mt-3 max-w-lg text-center text-sm text-white/50">Track $MAD on Jupiter, DEX Screener, Birdeye, and Solscan.</p>
+          </div>
+          <div className="mt-8 overflow-hidden rounded-[28px] bg-[linear-gradient(90deg,rgba(96,58,80,0.95),rgba(49,57,110,0.95))] px-4 py-8 sm:px-6">
+            <div className="logo-marquee flex w-max items-center gap-8">
+              {/* FIX: Only duplicate once for proper infinite scroll, not 3x */}
+              {[...exchangeItems, ...exchangeItems].map((item, index) => (
+                <ExchangeLogoCard key={`${item.label}-${index}`} href={item.href} src={item.src} alt={item.alt} label={item.label} />
+              ))}
+            </div>
+          </div>
+        </section>
+        </FadeIn>
+
+        {/* ─── CONFESSIONS ─── */}
+        <FadeIn delay={0.1}>
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(25,0,0,0.9),rgba(6,0,0,0.96))] p-4 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6 lg:p-8">
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Community</p>
+              <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">MAD <span className="text-red-500">Confessions</span></h2>
+              <p className="mt-2 text-sm text-white/50 max-w-lg">Anonymous thoughts. No filter. Just real feelings.</p>
+            </div>
+            <Btn href="#">View All</Btn>
+          </div>
+          <div className="min-w-0"><MadConfessions /></div>
+        </section>
+        </FadeIn>
+
+        {/* ─── RISK NOTICE ─── */}
+        <FadeIn delay={0.1}>
+        <section className="mt-8 rounded-[26px] border border-yellow-400/15 bg-yellow-500/[0.07] px-5 py-5 text-center">
+          <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-yellow-200/80">Risk Notice</p>
+          <p className="mt-3 text-sm leading-7 text-yellow-100/85">
+            $MAD is a meme coin and speculative digital asset. Nothing on this website is financial advice or a guarantee of returns. Crypto is risky and volatile. Never risk money you cannot afford to lose. Always do your own research.
+          </p>
+        </section>
+        </FadeIn>
       </main>
+
+      {/* ─── FOOTER ─── */}
+      <footer className="border-t border-white/10">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+            <div className="sm:col-span-2 lg:col-span-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-lg">M</div>
+                <div>
+                  <span className="text-white font-black text-xl">$MAD</span>
+                  <span className="block text-white/40 text-[10px] tracking-[0.3em] uppercase">Stay $MAD</span>
+                </div>
+              </div>
+              <p className="text-white/50 text-sm leading-relaxed mb-6">The Supreme of Solana. Limited. Exclusive. Cult.</p>
+              <div className="flex items-center gap-2">
+                {socials.map((s) => (
+                  <a key={s.name} href={s.href} target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 hover:bg-red-500/10 border border-white/5 hover:border-red-500/20 rounded-xl flex items-center justify-center text-white/40 hover:text-red-400 transition-all" title={s.name}>{s.icon}</a>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-white font-bold text-sm mb-4 tracking-wide">NAVIGATION</h4>
+              <ul className="space-y-2.5">
+                {[{l:"MAD AI",h:"/mad-mind"},{l:"Roadmap",h:"/roadmap"},{l:"Game",h:"/game"},{l:"Memes",h:"/memes"},{l:"Merch",h:"/merch"}].map((link)=>(
+                  <li key={link.l}><Link href={link.h} className="text-white/50 hover:text-white text-sm font-medium transition-colors">{link.l}</Link></li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-bold text-sm mb-4 tracking-wide">BUY & TRACK</h4>
+              <ul className="space-y-2.5">
+                {[{l:"Buy on Jupiter",h:LINKS.jupiter},{l:"DEX Screener",h:LINKS.dexscreener},{l:"Birdeye",h:LINKS.birdeye},{l:"Solscan",h:LINKS.solscan}].map((link)=>(
+                  <li key={link.l}><a href={link.h} target="_blank" rel="noreferrer" className="text-white/50 hover:text-white text-sm font-medium transition-colors inline-flex items-center gap-1">{link.l}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a></li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-bold text-sm mb-4 tracking-wide">CONTRACT ADDRESS</h4>
+              <div className="p-4 bg-white/[0.02] border border-white/10 rounded-xl">
+                <code className="text-xs text-red-400 font-mono break-all block mb-3">{CA}</code>
+                <CopyButton />
+              </div>
+              <a href={LINKS.telegram} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white text-sm font-bold transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.2 2L2 10.8l5.6 2.4L16.8 6 9.6 14.8l.8 5.2L13 16.8l4.8 3.2L22 2.8"/></svg>
+                Join Telegram
+              </a>
+            </div>
+          </div>
+          <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-white/40 text-xs">&copy; {new Date().getFullYear()} $MAD. All rights reserved.</p>
+            <p className="text-white/40 text-xs">Stay $MAD. Limited. Exclusive. Cult.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
