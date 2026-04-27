@@ -408,8 +408,8 @@ function Garden() {
    ═══════════════════════════════════════════════════════════ */
 
 function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: number }) {
-  const bodyColor = "#5eb8f0"; // Sky blue like Chao
-  const bellyColor = "#fff8dc"; // Cream/yellow oval
+  const bodyColor = "#ff2222"; // Red — this is MAD Chao, the flame creature
+  const bellyColor = "#ffaa44"; // Warm orange belly
 
   const eyeState =
     mood === "thinking"
@@ -435,7 +435,7 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
               : "chaoIdle 2s ease-in-out infinite",
       }}
     >
-      {/* Wings — small bat-like wings behind body */}
+      {/* Wings — small red wings behind body */}
       <div
         style={{
           position: "absolute",
@@ -443,7 +443,7 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
           left: "-8px",
           width: "14px",
           height: "18px",
-          background: "#4a90c2",
+          background: "#cc1111",
           borderRadius: "50% 0 50% 50%",
           transform: mood === "walking" ? "rotate(-20deg)" : "rotate(-5deg)",
           transition: "transform 0.3s ease",
@@ -457,7 +457,7 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
           right: "-8px",
           width: "14px",
           height: "18px",
-          background: "#4a90c2",
+          background: "#cc1111",
           borderRadius: "0 50% 50% 50%",
           transform: mood === "walking" ? "rotate(20deg)" : "rotate(5deg)",
           transition: "transform 0.3s ease",
@@ -605,7 +605,7 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
           left: "10px",
           width: "10px",
           height: "6px",
-          background: "#3d8bc0",
+          background: "#aa0000",
           borderRadius: "50%",
           zIndex: 2,
           boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
@@ -618,7 +618,7 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
           right: "10px",
           width: "10px",
           height: "6px",
-          background: "#3d8bc0",
+          background: "#aa0000",
           borderRadius: "50%",
           zIndex: 2,
           boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
