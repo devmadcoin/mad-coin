@@ -250,7 +250,7 @@ function Garden() {
       <div
         style={{
           position: "absolute",
-          bottom: "85px",
+          bottom: "88px",
           left: "170px",
           width: "18px",
           height: "10px",
@@ -403,13 +403,12 @@ function Garden() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE CREATURE — $MAD Chao (Sonic Advance Style)
-   Blue body, yellow oval, small wings, big eyes, walks around
+   THE CREATURE — $MAD Chao (Low, Round, Squat like GBA Chao)
    ═══════════════════════════════════════════════════════════ */
 
 function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: number }) {
-  const bodyColor = "#ff2222"; // Red — this is MAD Chao, the flame creature
-  const bellyColor = "#ffaa44"; // Warm orange belly
+  const bodyColor = "#e61919"; // Deep red
+  const bellyColor = "#ff9933"; // Warm orange belly
 
   const eyeState =
     mood === "thinking"
@@ -421,11 +420,11 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
   return (
     <div
       style={{
-        width: "48px",
-        height: "52px",
+        width: "42px",
+        height: "34px",
         position: "relative",
         left: `${xPos}px`,
-        bottom: "8px",
+        bottom: "2px",
         transition: "left 0.6s ease-in-out",
         animation:
           mood === "walking"
@@ -435,108 +434,106 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
               : "chaoIdle 2s ease-in-out infinite",
       }}
     >
-      {/* Wings — small red wings behind body */}
+      {/* Tiny wing nubs — barely visible tufts */}
       <div
         style={{
           position: "absolute",
-          top: "14px",
-          left: "-8px",
-          width: "14px",
-          height: "18px",
+          top: "6px",
+          left: "-3px",
+          width: "8px",
+          height: "10px",
           background: "#cc1111",
-          borderRadius: "50% 0 50% 50%",
-          transform: mood === "walking" ? "rotate(-20deg)" : "rotate(-5deg)",
-          transition: "transform 0.3s ease",
+          borderRadius: "50%",
+          opacity: 0.7,
           zIndex: 1,
         }}
       />
       <div
         style={{
           position: "absolute",
-          top: "14px",
-          right: "-8px",
-          width: "14px",
-          height: "18px",
+          top: "6px",
+          right: "-3px",
+          width: "8px",
+          height: "10px",
           background: "#cc1111",
-          borderRadius: "0 50% 50% 50%",
-          transform: mood === "walking" ? "rotate(20deg)" : "rotate(5deg)",
-          transition: "transform 0.3s ease",
+          borderRadius: "50%",
+          opacity: 0.7,
           zIndex: 1,
         }}
       />
 
-      {/* Body — round blue Chao shape */}
+      {/* Body — very round, very squat, low to ground */}
       <div
         style={{
-          width: "44px",
-          height: "36px",
+          width: "38px",
+          height: "28px",
           background: bodyColor,
-          borderRadius: "50% 50% 48% 48%",
+          borderRadius: "50% 50% 45% 45%",
           position: "absolute",
-          bottom: "8px",
+          bottom: "2px",
           left: "2px",
           zIndex: 2,
-          boxShadow: `0 2px 6px rgba(0,0,0,0.15), inset -2px -2px 4px rgba(0,0,0,0.1), inset 2px 2px 4px rgba(255,255,255,0.3)`,
+          boxShadow: `0 1px 4px rgba(0,0,0,0.2), inset -1px -1px 3px rgba(0,0,0,0.15), inset 1px 1px 3px rgba(255,255,255,0.25)`,
         }}
       >
-        {/* Yellow/cream oval on chest */}
+        {/* Belly patch — small and centered */}
         <div
           style={{
             position: "absolute",
-            top: "14px",
+            top: "12px",
             left: "50%",
             transform: "translateX(-50%)",
-            width: "18px",
-            height: "12px",
+            width: "14px",
+            height: "9px",
             background: bellyColor,
             borderRadius: "50%",
-            opacity: 0.8,
+            opacity: 0.85,
           }}
         />
 
-        {/* Eyes — big round Sonic-style */}
+        {/* Eyes — lower on the body, proportional */}
         <div
           style={{
             display: "flex",
-            gap: "4px",
+            gap: "3px",
             position: "absolute",
-            top: "6px",
+            top: "5px",
             left: "50%",
             transform: "translateX(-50%)",
           }}
         >
           <div
             style={{
-              width: eyeState === "closed" ? "12px" : "13px",
-              height: eyeState === "closed" ? "2px" : "14px",
+              width: eyeState === "closed" ? "10px" : "11px",
+              height: eyeState === "closed" ? "2px" : "12px",
               background: eyeState === "closed" ? "#333" : "#fff",
               borderRadius: eyeState === "closed" ? "0" : "50%",
               position: "relative",
-              border: eyeState !== "closed" ? "1px solid #ccc" : "none",
+              border: eyeState !== "closed" ? "1px solid #ddd" : "none",
             }}
           >
             {eyeState !== "closed" && (
               <>
                 <div
                   style={{
-                    width: "7px",
-                    height: "8px",
+                    width: "6px",
+                    height: "7px",
                     background: "#111",
                     borderRadius: "50%",
                     position: "absolute",
-                    top: "3px",
-                    left: "3px",
+                    top: "2px",
+                    left: "2px",
                   }}
                 />
                 <div
                   style={{
-                    width: "3px",
-                    height: "3px",
+                    width: "2px",
+                    height: "2px",
                     background: "#fff",
                     borderRadius: "50%",
                     position: "absolute",
-                    top: "4px",
-                    left: "4px",
+                    top: "3px",
+                    left: "3px",
                   }}
                 />
               </>
@@ -544,36 +541,36 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
           </div>
           <div
             style={{
-              width: eyeState === "closed" ? "12px" : "13px",
-              height: eyeState === "closed" ? "2px" : "14px",
+              width: eyeState === "closed" ? "10px" : "11px",
+              height: eyeState === "closed" ? "2px" : "12px",
               background: eyeState === "closed" ? "#333" : "#fff",
               borderRadius: eyeState === "closed" ? "0" : "50%",
               position: "relative",
-              border: eyeState !== "closed" ? "1px solid #ccc" : "none",
+              border: eyeState !== "closed" ? "1px solid #ddd" : "none",
             }}
           >
             {eyeState !== "closed" && (
               <>
                 <div
                   style={{
-                    width: "7px",
-                    height: "8px",
+                    width: "6px",
+                    height: "7px",
                     background: "#111",
                     borderRadius: "50%",
                     position: "absolute",
-                    top: "3px",
-                    left: "3px",
+                    top: "2px",
+                    left: "2px",
                   }}
                 />
                 <div
                   style={{
-                    width: "3px",
-                    height: "3px",
+                    width: "2px",
+                    height: "2px",
                     background: "#fff",
                     borderRadius: "50%",
                     position: "absolute",
-                    top: "4px",
-                    left: "4px",
+                    top: "3px",
+                    left: "3px",
                   }}
                 />
               </>
@@ -581,15 +578,15 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
           </div>
         </div>
 
-        {/* Mouth */}
+        {/* Tiny mouth */}
         <div
           style={{
-            width: mood === "talking" ? "10px" : mood === "thinking" ? "4px" : "5px",
-            height: mood === "talking" ? "5px" : mood === "thinking" ? "3px" : "2px",
+            width: mood === "talking" ? "8px" : mood === "thinking" ? "3px" : "4px",
+            height: mood === "talking" ? "4px" : mood === "thinking" ? "2px" : "2px",
             background: mood === "talking" ? "#222" : "#333",
             borderRadius: mood === "talking" ? "0 0 50% 50%" : "50%",
             position: "absolute",
-            bottom: "7px",
+            bottom: "5px",
             left: "50%",
             transform: "translateX(-50%)",
             transition: "all 0.15s ease",
@@ -597,31 +594,29 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
         />
       </div>
 
-      {/* Tiny feet */}
+      {/* Tiny feet — barely visible */}
       <div
         style={{
           position: "absolute",
-          bottom: "4px",
-          left: "10px",
-          width: "10px",
-          height: "6px",
-          background: "#aa0000",
+          bottom: "0px",
+          left: "8px",
+          width: "8px",
+          height: "4px",
+          background: "#b30000",
           borderRadius: "50%",
           zIndex: 2,
-          boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
         }}
       />
       <div
         style={{
           position: "absolute",
-          bottom: "4px",
-          right: "10px",
-          width: "10px",
-          height: "6px",
-          background: "#aa0000",
+          bottom: "0px",
+          right: "8px",
+          width: "8px",
+          height: "4px",
+          background: "#b30000",
           borderRadius: "50%",
           zIndex: 2,
-          boxShadow: "0 1px 2px rgba(0,0,0,0.15)",
         }}
       />
     </div>
@@ -1013,7 +1008,7 @@ export default function MadMindPage() {
         <div
           style={{
             position: "absolute",
-            bottom: "85px",
+            bottom: "88px",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10,
