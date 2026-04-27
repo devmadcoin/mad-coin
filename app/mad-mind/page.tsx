@@ -637,7 +637,114 @@ function Creature({ mood, style, xPos }: { mood: Mood; style: StyleMode; xPos: n
     </div>
   );
 }
-function StyleSelector({
+
+function ChatBubble({
+  text,
+  visible,
+  isUser,
+}: {
+  text: string;
+  visible: boolean;
+  isUser: boolean;
+}) {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!visible) {
+      setDisplayed("");
+      setDone(false);
+      return;
+    }
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      setDisplayed(text.slice(0, i));
+      if (i >= text.length) {
+        setDone(true);
+        clearInterval(interval);
+      }
+    }, 25);
+    return () => clearInterval(interval);
+  }, [visible, text]);
+
+  if (!visible) return null;
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        bottom: "100%",
+        left: "50%",
+        transform: "translateX(-50%)",
+        marginBottom: "10px",
+        zIndex: 50,
+        minWidth: "200px",
+        maxWidth: "300px",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-6px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "0",
+          height: "0",
+          borderLeft: "6px solid transparent",
+          borderRight: "6px solid transparent",
+          borderTop: isUser
+            ? "6px solid rgba(255,255,255,0.12)"
+            : "6px solid rgba(255,30,30,0.25)",
+        }}
+      />
+      <div
+        style={{
+          background: isUser
+            ? "rgba(255,255,255,0.1)"
+            : "rgba(255,30,30,0.15)",
+          border: isUser
+            ? "1px solid rgba(255,255,255,0.15)"
+            : "1px solid rgba(255,50,50,0.3)",
+          borderRadius: "14px",
+          padding: "10px 14px",
+          backdropFilter: "blur(6px)",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+        }}
+      >
+        <p
+          style={{
+            color: "#fff",
+            fontSize: "12px",
+            fontWeight: 700,
+            lineHeight: 1.4,
+            margin: 0,
+            whiteSpace: "pre-wrap",
+            textShadow: "0 1px 2px rgba(0,0,0,0.5)",
+          }}
+        >
+          {displayed}
+          {!done && (
+            <span
+              style={{
+                display: "inline-block",
+                width: "5px",
+                height: "10px",
+                background: "#ff4444",
+                marginLeft: "2px",
+                animation: "blinkCursor 0.7s infinite",
+              }}
+            />
+          )}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STYLE SELECTOR
+   ═══════════════════════════════════════════════════════════ */
   style,
   onChange,
 }: {
