@@ -804,6 +804,7 @@ export default function MadMindPage() {
       setCurrentResponse(text);
       setBubbleIsUser(true);
       setShowBubble(true);
+      setResponsePanelVisible(false); // Hide panel while new message processes
 
       setTimeout(() => {
         setShowBubble(false);
@@ -1025,6 +1026,7 @@ export default function MadMindPage() {
       {/* Response Panel — ADHD-friendly, high contrast, impossible to miss */}
       {responsePanelVisible && latestMadResponse && (
         <div
+          key={latestMadResponse.slice(0, 20)}
           style={{
             width: "100%",
             maxWidth: "520px",
