@@ -296,7 +296,7 @@ function LuxuryLoading() {
             />
           </div>
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-red-200/70">
-            MAD is reading your signal
+            MadClaw is processing your signal
           </span>
         </div>
 
@@ -498,40 +498,57 @@ export default function MadMindPage() {
       setIsLoading(true);
 
       try {
-        const response = await fetch("/api/mad-mind", {
+        /* ─── Claw Mode: Queue message, poll for response ─── */
+        const queueRes = await fetch("/api/mad-mind/claw", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             message: text,
             sessionId,
-            cookLevel: getCookLevel(style),
-            preferredStyle: style,
+            style,
           }),
         });
 
-        let data: ApiResponse | null = null;
+        const queueData = await queueRes.json();
 
-        try {
-          data = (await response.json()) as ApiResponse;
-        } catch {
-          data = null;
+        if (!queueRes.ok || !queueData.requestId) {
+          throw new Error(queueData.error || "Failed to queue message");
         }
 
-        const botText = response.ok
-          ? data?.output?.trim() || data?.error || "Signal broke."
-          : data?.output || data?.error || `Request failed (${response.status})`;
+        const { requestId, pollUrl } = queueData;
+
+        /* Poll for response (max 60 attempts ~ 3 minutes) */
+        let attempts = 0;
+        const maxAttempts = 60;
+        let responseData = null;
+
+        while (attempts < maxAttempts) {
+          await new Promise((r) => setTimeout(r, 3000));
+          const pollRes = await fetch(pollUrl);
+          const pollData = await pollRes.json();
+
+          if (pollData.status === "done") {
+            responseData = pollData;
+            break;
+          }
+
+          attempts++;
+        }
+
+        if (!responseData) {
+          throw new Error("MadClaw is taking longer than expected. Try again.");
+        }
 
         const madMessage: ChatMessage = {
           id: messageId(),
           role: "mad",
-          text: botText,
-          meta: data?.meta ?? null,
-          outputs: data?.outputs ?? null,
+          text: responseData.output?.trim() || "Signal broke.",
+          meta: responseData.meta ?? null,
           isNew: true,
         };
 
         setMessages((prev) => [...prev, madMessage]);
-        setPatterns(inferPatterns(text, data?.meta?.states));
+        setPatterns(inferPatterns(text, responseData.meta?.states));
         setCount((prev) => prev + 1);
       } catch {
         setMessages((prev) => [
