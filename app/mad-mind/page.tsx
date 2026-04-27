@@ -30,7 +30,7 @@ function uid() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE GARDEN — GBA Chao Garden Background
+   THE GARDEN — Authentic GBA Chao Garden Background
    ═══════════════════════════════════════════════════════════ */
 
 function Garden() {
@@ -41,229 +41,360 @@ function Garden() {
         inset: 0,
         overflow: "hidden",
         borderRadius: "20px",
+        background: "#4ba8e8",
       }}
     >
-      {/* Sky — blue gradient */}
+      {/* Sky */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background: "linear-gradient(180deg, #5ca8e8 0%, #7ec8f0 40%, #a8d8f0 100%)",
+          background: "linear-gradient(180deg, #5eb8f0 0%, #7ec8f0 35%, #90d0f0 100%)",
         }}
       />
 
-      {/* Clouds — pixelated blobs */}
-      <div style={{ position: "absolute", top: "12%", left: "15%", width: "48px", height: "20px", background: "#fff", borderRadius: "10px", opacity: 0.7 }} />
-      <div style={{ position: "absolute", top: "8%", left: "60%", width: "36px", height: "16px", background: "#fff", borderRadius: "8px", opacity: 0.6 }} />
-      <div style={{ position: "absolute", top: "18%", left: "80%", width: "56px", height: "22px", background: "#fff", borderRadius: "12px", opacity: 0.5 }} />
+      {/* Diagonal cloud streaks */}
+      <div style={{ position: "absolute", top: "8%", left: "10%", width: "60px", height: "3px", background: "rgba(255,255,255,0.6)", borderRadius: "2px" }} />
+      <div style={{ position: "absolute", top: "12%", left: "50%", width: "40px", height: "2px", background: "rgba(255,255,255,0.5)", borderRadius: "2px" }} />
+      <div style={{ position: "absolute", top: "6%", left: "75%", width: "50px", height: "3px", background: "rgba(255,255,255,0.4)", borderRadius: "2px" }} />
 
-      {/* Dirt / tree area (top right corner) */}
+      {/* Fence across the top */}
       <div
         style={{
           position: "absolute",
-          top: "-20px",
-          right: "-20px",
-          width: "140px",
-          height: "120px",
-          background: "#8B6914",
-          borderRadius: "50%",
-          opacity: 0.9,
+          top: "8px",
+          left: "10px",
+          right: "10px",
+          height: "24px",
+          display: "flex",
+          gap: "2px",
+          zIndex: 2,
         }}
-      />
+      >
+        {Array.from({ length: 14 }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              flex: 1,
+              height: "100%",
+              background: "linear-gradient(180deg, #c4953a 0%, #a0782c 100%)",
+              borderRadius: "3px 3px 0 0",
+              borderTop: "2px solid #d4a84a",
+              borderLeft: "1px solid #8b6914",
+              borderRight: "1px solid #8b6914",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Top rail of fence */}
       <div
         style={{
           position: "absolute",
-          top: "10px",
-          right: "30px",
-          width: "60px",
-          height: "80px",
-          background: "#228B22",
-          borderRadius: "50% 50% 45% 45%",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "5px",
-          right: "50px",
-          width: "40px",
-          height: "50px",
-          background: "#32CD32",
-          borderRadius: "50%",
+          top: "4px",
+          left: "8px",
+          right: "8px",
+          height: "6px",
+          background: "linear-gradient(180deg, #d4a84a 0%, #c4953a 100%)",
+          borderRadius: "3px",
+          zIndex: 3,
         }}
       />
 
-      {/* Ground / grass — checkerboard */}
+      {/* Ground — checkerboard grass (GBA style) */}
       <div
         style={{
           position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
-          height: "55%",
+          height: "75%",
           background: `
-            repeating-linear-gradient(
-              0deg,
-              #3cb043 0px,
-              #3cb043 16px,
-              #32a03d 16px,
-              #32a03d 32px
-            ),
-            repeating-linear-gradient(
-              90deg,
-              #3cb043 0px,
-              #3cb043 16px,
-              #32a03d 16px,
-              #32a03d 32px
+            conic-gradient(
+              #3cb843 0deg 90deg,
+              #2da035 90deg 180deg,
+              #3cb843 180deg 270deg,
+              #2da035 270deg 360deg
             )
           `,
-          backgroundBlendMode: "multiply",
+          backgroundSize: "24px 24px",
         }}
-      >
-        {/* Grass top edge */}
-        <div
-          style={{
-            position: "absolute",
-            top: "-6px",
-            left: 0,
-            right: 0,
-            height: "12px",
-            background: "linear-gradient(180deg, #2d8a33 0%, #3cb043 100%)",
-          }}
-        />
-      </div>
+      />
 
-      {/* Water pond (bottom left) */}
+      {/* Dirt / tree mound (top right) */}
       <div
         style={{
           position: "absolute",
-          bottom: "5%",
-          left: "3%",
-          width: "100px",
-          height: "70px",
+          top: "40px",
+          right: "-10px",
+          width: "160px",
+          height: "130px",
+          background: "#8B6914",
+          borderRadius: "60% 40% 50% 50%",
+          boxShadow: "inset 4px 4px 12px rgba(0,0,0,0.2)",
+        }}
+      />
+      {/* Tree trunk */}
+      <div
+        style={{
+          position: "absolute",
+          top: "30px",
+          right: "50px",
+          width: "20px",
+          height: "50px",
+          background: "#654321",
+          borderRadius: "4px",
+        }}
+      />
+      {/* Tree canopy layers */}
+      <div
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "20px",
+          width: "80px",
+          height: "40px",
+          background: "#228B22",
+          borderRadius: "50%",
+          boxShadow: "-4px 4px 0 #1a6b1a",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: "5px",
+          right: "40px",
+          width: "50px",
+          height: "35px",
+          background: "#2e8b2e",
+          borderRadius: "50%",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: "15px",
+          right: "5px",
+          width: "45px",
+          height: "30px",
+          background: "#1e7b1e",
+          borderRadius: "50%",
+        }}
+      />
+
+      {/* Bush clusters (top left) */}
+      <div style={{ position: "absolute", top: "50px", left: "10px", width: "50px", height: "35px", background: "#1e7b1e", borderRadius: "50%" }} />
+      <div style={{ position: "absolute", top: "55px", left: "30px", width: "40px", height: "30px", background: "#228B22", borderRadius: "50%" }} />
+      <div style={{ position: "absolute", top: "45px", left: "-5px", width: "35px", height: "25px", background: "#1a6b1a", borderRadius: "50%" }} />
+
+      {/* Water pond (large, bottom left) */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "-20px",
+          left: "-20px",
+          width: "220px",
+          height: "160px",
           background: "#1E90FF",
           borderRadius: "50%",
-          border: "3px solid #0066CC",
-          boxShadow: "inset 0 0 10px rgba(0,100,200,0.3)",
         }}
       >
-        {/* Water shine */}
+        {/* Water surface lighter */}
         <div
           style={{
             position: "absolute",
-            top: "15%",
-            left: "25%",
-            width: "30px",
-            height: "8px",
-            background: "rgba(255,255,255,0.4)",
-            borderRadius: "4px",
+            top: "10px",
+            left: "20px",
+            width: "60px",
+            height: "20px",
+            background: "rgba(255,255,255,0.25)",
+            borderRadius: "50%",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: "30px",
+            left: "80px",
+            width: "40px",
+            height: "12px",
+            background: "rgba(255,255,255,0.15)",
+            borderRadius: "50%",
           }}
         />
       </div>
 
-      {/* Grass tufts scattered */}
+      {/* Gold/brown shoreline around water */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "100px",
+          left: "130px",
+          width: "20px",
+          height: "10px",
+          background: "#c4953a",
+          borderRadius: "50%",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "115px",
+          left: "155px",
+          width: "15px",
+          height: "8px",
+          background: "#b08030",
+          borderRadius: "50%",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "85px",
+          left: "170px",
+          width: "18px",
+          height: "10px",
+          background: "#c4953a",
+          borderRadius: "50%",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "135px",
+          left: "175px",
+          width: "12px",
+          height: "8px",
+          background: "#d4a84a",
+          borderRadius: "50%",
+        }}
+      />
+
+      {/* Grass tufts */}
       {[
-        { x: "20%", y: "58%" },
-        { x: "45%", y: "52%" },
-        { x: "70%", y: "60%" },
-        { x: "85%", y: "55%" },
-        { x: "55%", y: "65%" },
+        { x: "35%", y: "58%" },
+        { x: "55%", y: "55%" },
+        { x: "75%", y: "60%" },
+        { x: "85%", y: "52%" },
       ].map((pos, i) => (
         <div
-          key={i}
+          key={`tuft-${i}`}
           style={{
             position: "absolute",
             left: pos.x,
             top: pos.y,
-            width: "12px",
-            height: "14px",
-            background: "#228B22",
+            width: "10px",
+            height: "12px",
+            background: "#1e7b1e",
             borderRadius: "50% 50% 0 0",
           }}
         >
           <div
             style={{
               position: "absolute",
-              left: "3px",
-              top: "-4px",
-              width: "4px",
-              height: "8px",
-              background: "#32CD32",
+              left: "2px",
+              top: "-3px",
+              width: "3px",
+              height: "6px",
+              background: "#2e9b2e",
               borderRadius: "2px",
             }}
           />
         </div>
       ))}
 
-      {/* Small flowers */}
+      {/* Flower clusters */}
       {[
-        { x: "30%", y: "62%", color: "#FF69B4" },
-        { x: "60%", y: "58%", color: "#FFD700" },
-        { x: "75%", y: "68%", color: "#FF69B4" },
+        { x: "28%", y: "62%", color: "#FF69B4" },
+        { x: "30%", y: "65%", color: "#FF69B4" },
+        { x: "26%", y: "65%", color: "#FFB6C1" },
+        { x: "65%", y: "58%", color: "#FFD700" },
+        { x: "67%", y: "61%", color: "#FFD700" },
+        { x: "63%", y: "61%", color: "#FFA500" },
+        { x: "82%", y: "68%", color: "#FF69B4" },
+        { x: "84%", y: "71%", color: "#FFB6C1" },
       ].map((flower, i) => (
         <div
-          key={`f-${i}`}
+          key={`fl-${i}`}
           style={{
             position: "absolute",
             left: flower.x,
             top: flower.y,
-            width: "8px",
-            height: "8px",
+            width: "6px",
+            height: "6px",
             background: flower.color,
             borderRadius: "50%",
-            boxShadow: "0 0 4px rgba(255,255,255,0.3)",
           }}
         >
           <div
             style={{
               position: "absolute",
-              bottom: "-6px",
-              left: "2px",
-              width: "4px",
-              height: "8px",
-              background: "#228B22",
+              bottom: "-4px",
+              left: "1px",
+              width: "3px",
+              height: "6px",
+              background: "#1e7b1e",
             }}
           />
         </div>
       ))}
 
-      {/* Small apple / item on ground */}
+      {/* Apple on ground */}
       <div
         style={{
           position: "absolute",
-          bottom: "30%",
-          left: "40%",
-          width: "14px",
-          height: "14px",
+          bottom: "35%",
+          left: "42%",
+          width: "12px",
+          height: "12px",
           background: "#FF4444",
           borderRadius: "50%",
           border: "1px solid #CC0000",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
         }}
       >
         <div
           style={{
             position: "absolute",
             top: "-3px",
-            left: "4px",
-            width: "4px",
-            height: "4px",
+            left: "3px",
+            width: "3px",
+            height: "3px",
             background: "#32CD32",
             borderRadius: "50%",
           }}
         />
       </div>
 
-      {/* Shadow beneath where creature walks */}
+      {/* Item box / toy (like the cube in screenshot) */}
       <div
         style={{
           position: "absolute",
-          bottom: "28%",
+          bottom: "38%",
+          left: "58%",
+          width: "16px",
+          height: "14px",
+          background: "#ddd",
+          border: "2px solid #999",
+          borderRadius: "2px",
+        }}
+      >
+        <div style={{ position: "absolute", top: "2px", left: "2px", width: "5px", height: "5px", background: "#bbb" }} />
+        <div style={{ position: "absolute", top: "2px", right: "2px", width: "5px", height: "5px", background: "#bbb" }} />
+        <div style={{ position: "absolute", bottom: "2px", left: "2px", width: "5px", height: "5px", background: "#bbb" }} />
+        <div style={{ position: "absolute", bottom: "2px", right: "2px", width: "5px", height: "5px", background: "#bbb" }} />
+      </div>
+
+      {/* Shadow beneath creature area */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "25%",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "40px",
-          height: "10px",
-          background: "rgba(0,0,0,0.15)",
+          width: "36px",
+          height: "8px",
+          background: "rgba(0,0,0,0.12)",
           borderRadius: "50%",
         }}
       />
@@ -272,7 +403,7 @@ function Garden() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE CREATURE — Cute Chao-Style MAD Character
+   THE CREATURE — Detailed Chao-Style MAD Character
    ═══════════════════════════════════════════════════════════ */
 
 function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
@@ -301,8 +432,8 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
     <div
       className={mood === "walking" ? "walking-chao" : ""}
       style={{
-        width: "52px",
-        height: "58px",
+        width: "48px",
+        height: "56px",
         position: "relative",
         transition: "transform 0.2s ease",
         animation:
@@ -313,88 +444,116 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
               : "chaoIdle 2s ease-in-out infinite",
       }}
     >
-      {/* Body — round, cute */}
+      {/* Body — round with shading */}
       <div
         style={{
-          width: "44px",
-          height: "40px",
+          width: "42px",
+          height: "38px",
           background: bodyColor,
-          borderRadius: "50% 50% 48% 48%",
+          borderRadius: "50% 50% 46% 46%",
           position: "absolute",
           bottom: "10px",
-          left: "4px",
-          boxShadow: `0 3px 8px rgba(0,0,0,0.2), inset -4px -4px 8px rgba(0,0,0,0.1), inset 4px 4px 8px rgba(255,255,255,0.2)`,
+          left: "3px",
+          boxShadow: `0 3px 8px rgba(0,0,0,0.2), inset -3px -3px 6px rgba(0,0,0,0.15), inset 3px 3px 6px rgba(255,255,255,0.25)`,
         }}
       >
-        {/* Eyes */}
+        {/* Eyes with more detail */}
         <div
           style={{
             display: "flex",
-            gap: "10px",
+            gap: "8px",
             position: "absolute",
-            top: "12px",
+            top: "10px",
             left: "50%",
             transform: "translateX(-50%)",
           }}
         >
           <div
             style={{
-              width: eyeState === "closed" ? "10px" : "8px",
-              height: eyeState === "closed" ? "2px" : "10px",
+              width: eyeState === "closed" ? "10px" : "9px",
+              height: eyeState === "closed" ? "2px" : "11px",
               background: eyeState === "closed" ? "#333" : "#fff",
               borderRadius: eyeState === "closed" ? "0" : "50%",
               position: "relative",
+              border: eyeState !== "closed" ? "1px solid #ddd" : "none",
             }}
           >
             {eyeState !== "closed" && (
-              <div
-                style={{
-                  width: "4px",
-                  height: "5px",
-                  background: "#111",
-                  borderRadius: "50%",
-                  position: "absolute",
-                  top: "2px",
-                  left: "2px",
-                }}
-              />
+              <>
+                <div
+                  style={{
+                    width: "5px",
+                    height: "6px",
+                    background: "#111",
+                    borderRadius: "50%",
+                    position: "absolute",
+                    top: "2px",
+                    left: "2px",
+                  }}
+                />
+                <div
+                  style={{
+                    width: "2px",
+                    height: "2px",
+                    background: "#fff",
+                    borderRadius: "50%",
+                    position: "absolute",
+                    top: "3px",
+                    left: "3px",
+                  }}
+                />
+              </>
             )}
           </div>
           <div
             style={{
-              width: eyeState === "closed" ? "10px" : "8px",
-              height: eyeState === "closed" ? "2px" : "10px",
+              width: eyeState === "closed" ? "10px" : "9px",
+              height: eyeState === "closed" ? "2px" : "11px",
               background: eyeState === "closed" ? "#333" : "#fff",
               borderRadius: eyeState === "closed" ? "0" : "50%",
               position: "relative",
+              border: eyeState !== "closed" ? "1px solid #ddd" : "none",
             }}
           >
             {eyeState !== "closed" && (
-              <div
-                style={{
-                  width: "4px",
-                  height: "5px",
-                  background: "#111",
-                  borderRadius: "50%",
-                  position: "absolute",
-                  top: "2px",
-                  left: "2px",
-                }}
-              />
+              <>
+                <div
+                  style={{
+                    width: "5px",
+                    height: "6px",
+                    background: "#111",
+                    borderRadius: "50%",
+                    position: "absolute",
+                    top: "2px",
+                    left: "2px",
+                  }}
+                />
+                <div
+                  style={{
+                    width: "2px",
+                    height: "2px",
+                    background: "#fff",
+                    borderRadius: "50%",
+                    position: "absolute",
+                    top: "3px",
+                    left: "3px",
+                  }}
+                />
+              </>
             )}
           </div>
         </div>
 
-        {/* Mouth */}
+        {/* Mouth with expression */}
         <div
           style={{
-            width: mood === "talking" ? "10px" : "6px",
-            height: mood === "talking" ? "6px" : "3px",
-            background: mood === "talking" ? "#222" : "transparent",
-            borderBottom: mood === "talking" ? "none" : "2px solid #333",
-            borderRadius: mood === "talking" ? "0 0 50% 50%" : "0",
+            width: mood === "talking" ? "10px" : mood === "thinking" ? "4px" : "6px",
+            height: mood === "talking" ? "6px" : mood === "thinking" ? "4px" : "3px",
+            background: mood === "talking" ? "#222" : mood === "thinking" ? "#333" : "transparent",
+            borderBottom: mood === "talking" || mood === "thinking" ? "none" : "2px solid #333",
+            borderRadius: mood === "talking" ? "0 0 50% 50%" : "50%",
             position: "absolute",
-            bottom: "10px",
+            bottom: "9px",
             left: "50%",
             transform: "translateX(-50%)",
             transition: "all 0.15s ease",
@@ -406,15 +565,45 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
       <div
         style={{
           position: "absolute",
-          top: "-4px",
+          top: "-6px",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "20px",
-          height: "14px",
+          width: "18px",
+          height: "12px",
           background: haloColor,
           borderRadius: "50% 50% 30% 30%",
-          boxShadow: `0 0 10px ${haloColor}80`,
+          boxShadow: `0 0 8px ${haloColor}80`,
           animation: "flameWiggle 0.6s ease-in-out infinite alternate",
+        }}
+      />
+
+      {/* Small wings / ears */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "22px",
+          left: "-3px",
+          width: "10px",
+          height: "14px",
+          background: bodyColor,
+          borderRadius: "50% 0 50% 50%",
+          opacity: 0.8,
+          transform: mood === "walking" ? "rotate(-10deg)" : "rotate(0deg)",
+          transition: "transform 0.2s ease",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "22px",
+          right: "-3px",
+          width: "10px",
+          height: "14px",
+          background: bodyColor,
+          borderRadius: "0 50% 50% 50%",
+          opacity: 0.8,
+          transform: mood === "walking" ? "rotate(10deg)" : "rotate(0deg)",
+          transition: "transform 0.2s ease",
         }}
       />
 
@@ -422,9 +611,9 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
       <div
         style={{
           position: "absolute",
-          bottom: "18px",
-          left: "-2px",
-          width: "10px",
+          bottom: "16px",
+          left: "0px",
+          width: "8px",
           height: "6px",
           background: bodyColor,
           borderRadius: "50%",
@@ -435,9 +624,9 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
       <div
         style={{
           position: "absolute",
-          bottom: "18px",
-          right: "-2px",
-          width: "10px",
+          bottom: "16px",
+          right: "0px",
+          width: "8px",
           height: "6px",
           background: bodyColor,
           borderRadius: "50%",
@@ -450,23 +639,25 @@ function Creature({ mood, style }: { mood: Mood; style: StyleMode }) {
       <div
         style={{
           position: "absolute",
-          bottom: "6px",
-          left: "14px",
-          width: "10px",
+          bottom: "5px",
+          left: "12px",
+          width: "9px",
           height: "6px",
           background: "#cc1111",
           borderRadius: "50%",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
         }}
       />
       <div
         style={{
           position: "absolute",
-          bottom: "6px",
-          right: "14px",
-          width: "10px",
+          bottom: "5px",
+          right: "12px",
+          width: "9px",
           height: "6px",
           background: "#cc1111",
           borderRadius: "50%",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.2)",
         }}
       />
     </div>
@@ -791,12 +982,12 @@ export default function MadMindPage() {
           position: "relative",
           width: "100%",
           maxWidth: "520px",
-          height: "340px",
-          borderRadius: "20px",
-          border: "3px solid #2d8a33",
+          height: "360px",
+          borderRadius: "4px",
+          border: "4px solid #8B6914",
           overflow: "hidden",
           margin: "0 auto",
-          boxShadow: "0 0 30px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.1)",
+          boxShadow: "0 0 20px rgba(0,0,0,0.5), inset 0 0 30px rgba(0,0,0,0.1)",
         }}
       >
         <Garden />
@@ -805,7 +996,7 @@ export default function MadMindPage() {
         <div
           style={{
             position: "absolute",
-            bottom: "70px",
+            bottom: "85px",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10,
