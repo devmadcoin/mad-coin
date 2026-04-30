@@ -164,18 +164,18 @@ function HoverLift({
 
 const TUTORIAL_VIDEO = "https://www.youtube.com/embed/V0LBY-ZiklY";
 const GAME_LINK =
-  "https://www.roblox.com/games/133907998204829/Will-You-Get-RICH-Or-Stay-MAD";
+  "https://www.roblox.com/share?code=308df55a498da44b90cef2d5eab15c04&type=ExperienceDetails&stamp=1777522847383";
 const TOWER_DEFENSE_TEASER = "https://streamable.com/e/yc9dot";
 const CREATOR = "@CoffeeCollectsBlox";
 const CREATOR_LINK = "https://www.roblox.com/users/5183792958/profile";
 
 const GAME_STATS = {
-  visits: 106,
-  favorites: 3,
+  visits: 0,
+  favorites: 0,
   active: 0,
   serverSize: 50,
-  created: "2/6/2026",
-  updated: "2/8/2026",
+  created: "4/30/2026",
+  updated: "4/30/2026",
 };
 
 function cn(...classes: Array<string | false | null | undefined>) {
@@ -352,31 +352,29 @@ export default function GamePage() {
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.95fr]">
               <div className="p-6 sm:p-8 lg:p-10">
                 <p className="text-xs font-semibold uppercase tracking-[0.34em] text-red-200/75">
-                  PLAY NOW ON ROBLOX
+                  FIRST OFFICIAL $MAD EXPERIENCE — NOW LIVE
                 </p>
 
                 <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl">
-                  Will You Get{" "}
+                  MAD{" "}
                   <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.45)]">
-                    RICH
+                    GAMES
                   </span>
-                  ...
                   <br />
-                  Or Stay{" "}
+                  Is Live on{" "}
                   <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.45)]">
-                    $MAD
+                    Roblox
                   </span>
-                  ?
                 </h1>
 
                 <p className="mt-5 max-w-2xl text-base leading-8 text-white/70 sm:text-lg">
-                  The market moves. You follow it. Build your MAD, time your
-                  buys, and climb the Goal Ladder. But be careful — paper hands
-                  will hit you.
+                  The first official $MAD game just dropped. Play, compete, and
+                  stack rewards. This is where the community proves itself — not
+                  on the chart, in the arena.
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-3">
-                  <Pill tone="green">Easy Start</Pill>
+                  <Pill tone="green">Official Launch</Pill>
                   <Pill tone="red">By {CREATOR}</Pill>
                   <Pill>Server Size {GAME_STATS.serverSize}</Pill>
                 </div>
@@ -389,7 +387,7 @@ export default function GamePage() {
                       rel="noreferrer"
                       className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
                     >
-                      Play on Roblox →
+                      Launch MAD Games →
                     </a>
                   </GlowPulse>
 
