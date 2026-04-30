@@ -164,7 +164,7 @@ function HoverLift({
 
 const TUTORIAL_VIDEO = "https://www.youtube.com/embed/V0LBY-ZiklY";
 const GAME_LINK =
-  "https://www.roblox.com/share?code=308df55a498da44b90cef2d5eab15c04&type=ExperienceDetails&stamp=1777522847383";
+  "https://www.roblox.com/share?code=308df55a498da44b90cef2d5eab15c04&type=ExperienceDetails&stamp=1777522847383"; // official MAD Games launch
 const TOWER_DEFENSE_TEASER = "https://streamable.com/e/yc9dot";
 const CREATOR = "@CoffeeCollectsBlox";
 const CREATOR_LINK = "https://www.roblox.com/users/5183792958/profile";
