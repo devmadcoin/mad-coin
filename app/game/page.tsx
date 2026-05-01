@@ -170,12 +170,12 @@ const CREATOR = "@CoffeeCollectsBlox";
 const CREATOR_LINK = "https://www.roblox.com/users/5183792958/profile";
 
 const GAME_STATS = {
-  visits: 106,
-  favorites: 3,
-  active: 0,
-  serverSize: 50,
-  created: "2/6/2026",
-  updated: "2/8/2026",
+  visits: 7426,
+  favorites: 12,
+  active: 5,
+  serverSize: 25,
+  created: "4/14/2026",
+  updated: "5/1/2026",
 };
 
 function cn(...classes: Array<string | false | null | undefined>) {
