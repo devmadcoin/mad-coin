@@ -755,7 +755,7 @@ export default function MadMindPage() {
         setMood("thinking");
 
         queueMessage(text, style).then(async (queueData) => {
-          if (!queueData.requestId) {
+          if (!queueData.requestId || !queueData.pollUrl) {
             setMood("idle");
             setIsProcessing(false);
             return;
