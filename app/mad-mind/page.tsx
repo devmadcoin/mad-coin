@@ -537,7 +537,7 @@ function ChaoPanel({ chao, onFeed, onAffirm, loading }: {
     : chao.form === "mad" ? "🌈 MAD CHAO"
     : chao.form?.toUpperCase().replace("_", " ");
 
-  const dist: Record<ChaoPath, number> = chao.distribution || {};
+  const dist: Record<ChaoPath, number> = chao.distribution || { abundance: 0, chaos: 0, dark: 0, hero: 0 };
   const canFeed = chao.can_feed;
 
   return (
