@@ -159,9 +159,9 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 }
 
 /* ─── TOKEN STAT CARD ─── */
-function TokenStatCard({ label, value, change, isPositive }: { label: string; value: string; change?: string; isPositive?: boolean }) {
-  return (
-    <div className="rounded-[24px] border border-white/10 bg-white/[0.03] p-5 hover:border-white/15 transition duration-300 group">
+function TokenStatCard({ label, value, change, isPositive, href }: { label: string; value: string; change?: string; isPositive?: boolean; href?: string }) {
+  const Card = (
+    <div className={`rounded-[24px] border border-white/10 bg-white/[0.03] p-5 hover:border-white/15 transition duration-300 group ${href ? "cursor-pointer" : ""}`}>
       <p className="text-[11px] uppercase tracking-[0.24em] text-white/40 font-bold">{label}</p>
       <p className="mt-2 text-2xl font-black text-white group-hover:scale-[1.02] transition-transform origin-left">{value}</p>
       {change && (
@@ -176,6 +176,8 @@ function TokenStatCard({ label, value, change, isPositive }: { label: string; va
       )}
     </div>
   );
+  if (href) return <a href={href} target="_blank" rel="noreferrer">{Card}</a>;
+  return Card;
 }
 
 /* ─── ART CAMPAIGN CARD ─── */
@@ -263,7 +265,7 @@ export default function Home() {
             price: pair.priceUsd ? `$${parseFloat(pair.priceUsd).toFixed(8)}` : "—",
             change: pair.priceChange?.h24 ? `${pair.priceChange.h24 > 0 ? "+" : ""}${pair.priceChange.h24}%` : "—",
             mcap: pair.marketCap ? `$${(pair.marketCap / 1000).toFixed(1)}K` : "—",
-            holders: "273",
+            holders: "265",
             volume: pair.volume?.h24 ? `$${(pair.volume.h24 / 1000).toFixed(1)}K` : "—",
           });
         }
@@ -285,16 +287,16 @@ export default function Home() {
 
   const tokenStats = liveStats ? [
     { label: "PRICE", value: liveStats.price, change: liveStats.change, isPositive: liveStats.change.startsWith("+") },
-    { label: "MARKET CAP", value: liveStats.mcap, change: "+8.2%", isPositive: true },
-    { label: "HOLDERS", value: liveStats.holders, change: "+52", isPositive: true },
-    { label: "SUPPLY", value: "513M", change: "↓ to 800M", isPositive: true },
+    { label: "MARKET CAP", value: liveStats.mcap, change: "+7.7%", isPositive: true },
+    { label: "HOLDERS", value: "265", change: "+44", isPositive: true },
+    { label: "SUPPLY", value: "504.76M", change: "↓ to 800M", isPositive: true, href: "https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump" },
     { label: "24H VOLUME", value: liveStats.volume, change: undefined, isPositive: true },
   ] : [
-    { label: "PRICE", value: "$0.0002066", change: "+5.84%", isPositive: true },
-    { label: "MARKET CAP", value: "$106K", change: "+8.2%", isPositive: true },
-    { label: "HOLDERS", value: "273", change: "+52", isPositive: true },
-    { label: "SUPPLY", value: "513M", change: "↓ to 800M", isPositive: true },
-    { label: "24H VOLUME", value: "$12K", change: undefined, isPositive: true },
+    { label: "PRICE", value: "$0.0002599", change: "+7.70%", isPositive: true },
+    { label: "MARKET CAP", value: "$131.2K", change: "+7.7%", isPositive: true },
+    { label: "HOLDERS", value: "265", change: "+44", isPositive: true },
+    { label: "SUPPLY", value: "504.76M", change: "↓ to 800M", isPositive: true, href: "https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump" },
+    { label: "24H VOLUME", value: "$4.5K", change: undefined, isPositive: true },
   ];
 
   const howToBuySteps = [
@@ -372,7 +374,7 @@ export default function Home() {
               <div className="mt-6 flex flex-wrap gap-2">
                 <Chip>Real Project</Chip>
                 <Chip>Live Tech</Chip>
-                <Chip>513M Supply</Chip>
+                <Chip>504.76M Supply</Chip>
                 <Chip>800M Target</Chip>
               </div>
               <div className="mt-7 flex flex-wrap items-center gap-4">
