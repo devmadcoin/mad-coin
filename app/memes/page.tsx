@@ -37,7 +37,6 @@ const ART_FILES = [
   "YOU-MAKE-ME-MAD.png",
   "YOU-WILL-BE-MAD.png",
   "MAD-RICH-BATH.png",
-  "MAD-BATH-SCENE.png",
 ] as const;
 
 function cleanTitle(name: string) {
