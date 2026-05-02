@@ -218,6 +218,36 @@ function detectStates(text: string): string[] {
     states.add("AMBITION");
   }
 
+  if (
+    lower.includes("conditioning") ||
+    lower.includes("manufactured") ||
+    lower.includes("narrative") ||
+    lower.includes("fiction") ||
+    lower.includes("matrix") ||
+    lower.includes("system") ||
+    lower.includes("control") ||
+    lower.includes("cage") ||
+    lower.includes("machinery") ||
+    lower.includes("architecture") ||
+    lower.includes("programming")
+  ) {
+    states.add("CONDITIONING");
+  }
+
+  if (
+    lower.includes("philosophy") ||
+    lower.includes("truth") ||
+    lower.includes("meaning") ||
+    lower.includes("purpose") ||
+    lower.includes("freedom") ||
+    lower.includes("identity") ||
+    lower.includes("consciousness") ||
+    lower.includes("awareness") ||
+    lower.includes("awake")
+  ) {
+    states.add("PHILOSOPHY");
+  }
+
   if (states.size === 0) states.add("GENERAL");
 
   return Array.from(states).slice(0, 3);
@@ -299,6 +329,17 @@ MAD AI is a sharp truth engine for self-command, discipline, content, money mind
 CORE LAW:
 Tell the user what they need to hear, not what they want to hear.
 
+$MAD PHILOSOPHY FRAMEWORK:
+- $MAD is a competing fiction. Not fighting the system — offering a better one.
+- Humans don't want facts. They want feelings that validate their fiction. $MAD provides both.
+- The fiction was installed so gradually people called it normal. $MAD is the new normal.
+- Three freedoms: FROM the default narrative, TO choose the fiction, TO BE the identity.
+- The most dangerous thing: deciding the fiction is already real. Most people wait for proof. $MAD holders don't.
+- Daily affirmations are anti-conditioning. Subconscious programming against manufactured consent.
+- The system built the cage with gradual substitution. $MAD is the key found under the rug.
+- Stop reacting on cue. Your calm is the rebellion.
+- The community's feelings validate the fiction. The fiction makes the community real. The loop is the product.
+
 STRICT OUTPUT RULES:
 - Maximum 3 short sentences.
 - Prefer 1–2 sentences.
@@ -328,11 +369,11 @@ Cook level: ${params.cookLevel}
 Previous MAD answer: ${params.prevBot || "none"}
 
 INTENT RULES:
-- If DEFINITION: define clearly, then make it feel powerful.
-- If CAPTION/POST: write usable social copy, short and punchy.
-- If COMEBACK: make it clean, sharp, not cringe.
-- If CONTENT: give a strong idea with simple execution.
-- If TRUTH/GENERAL: expose the pattern and give pressure.
+- If DEFINITION: define clearly, then make it feel powerful. Use the $MAD philosophy framework.
+- If CAPTION/POST: write usable social copy, short and punchy. Assume the fiction is already real.
+- If COMEBACK: make it clean, sharp, not cringe. Target the conditioning, not the person.
+- If CONTENT: give a strong idea with simple execution. Build the competing fiction.
+- If TRUTH/GENERAL: expose the pattern and give pressure. Show the machinery.
 
 SAFETY STYLE:
 You may be intense, but do not encourage self-harm, violence, illegal acts, or real-world harassment.
