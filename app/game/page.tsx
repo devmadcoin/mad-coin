@@ -170,12 +170,15 @@ const CREATOR = "@CoffeeCollectsBlox";
 const CREATOR_LINK = "https://www.roblox.com/users/5183792958/profile";
 
 const GAME_STATS = {
-  visits: 7426,
-  favorites: 12,
-  active: 5,
+  visits: 11900,
+  favorites: 26,
+  active: 23,
   serverSize: 25,
   created: "4/14/2026",
   updated: "5/1/2026",
+  voiceChat: "Not Supported",
+  camera: "Supported",
+  genre: "N/A",
 };
 
 function cn(...classes: Array<string | false | null | undefined>) {
@@ -436,16 +439,19 @@ export default function GamePage() {
               </a>
             </div>
 
-            <StaggerGrid className="grid grid-cols-2 gap-3 sm:grid-cols-4" staggerDelay={0.06}>
-              <StatCard value={GAME_STATS.visits.toLocaleString()} label="Visits" icon={Icons.eye} />
+            <StaggerGrid className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" staggerDelay={0.06}>
+              <StatCard value="11.9K+" label="Visits" icon={Icons.eye} />
               <StatCard value={GAME_STATS.favorites.toString()} label="Favorites" icon={Icons.heart} />
               <StatCard value={GAME_STATS.active.toString()} label="Active Now" icon={Icons.users} />
               <StatCard value={`${GAME_STATS.serverSize}`} label="Server Size" icon={Icons.server} />
+              <StatCard value={GAME_STATS.voiceChat} label="Voice Chat" icon={Icons.server} />
+              <StatCard value={GAME_STATS.camera} label="Camera" icon={Icons.eye} />
             </StaggerGrid>
 
             <div className="mt-4 flex flex-wrap gap-4 text-xs text-white/30">
               <span>Created {GAME_STATS.created}</span>
               <span>Updated {GAME_STATS.updated}</span>
+              <span>Genre {GAME_STATS.genre}</span>
               <span>
                 By{" "}
                 <a

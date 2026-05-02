@@ -145,7 +145,8 @@ function Creature({ mood, style, form }: { mood: Mood; style: StyleMode; form?: 
             🥚
           </div>
         </div>
-        <style jsx>{`
+        {/* @ts-ignore styled-jsx */}
+      <style jsx>{`
           @keyframes creaturePulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -345,6 +346,7 @@ function Creature({ mood, style, form }: { mood: Mood; style: StyleMode; form?: 
         }}
       />
 
+      {/* @ts-ignore styled-jsx */}
       <style jsx>{`
         @keyframes creatureIdle {
           0%, 100% { transform: translateY(0); }
@@ -448,6 +450,7 @@ function ChatBubble({ text, visible, isUser }: { text: string; visible: boolean;
           {!done && <span style={{ display: "inline-block", width: "6px", height: "12px", background: "#ff4444", marginLeft: "2px", animation: "blink 0.8s infinite" }} />}
         </p>
       </div>
+      {/* @ts-ignore styled-jsx */}
       <style jsx>{`
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
       `}</style>
