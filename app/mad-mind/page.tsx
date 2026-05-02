@@ -119,37 +119,178 @@ function Creature({ mood, style, form }: { mood: Mood; style: StyleMode; form?: 
           transition: "transform 0.3s ease",
         }}
       >
+        {/* Floating aura */}
         <div
           style={{
-            width: "48px",
-            height: "56px",
-            background: "radial-gradient(ellipse, #444, #111)",
-            borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%",
             position: "absolute",
-            bottom: "12px",
-            left: "8px",
-            boxShadow: `0 0 30px ${glowColor}, inset 0 0 20px rgba(255,255,255,0.05)`,
-            animation: "creaturePulse 2s ease-in-out infinite",
+            top: "-4px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "56px",
+            height: "56px",
+            borderRadius: "50%",
+            border: `1.5px solid ${flameColor}30`,
+            boxShadow: `0 0 20px ${glowColor}40`,
+            animation: "auraSpin 6s linear infinite",
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* Wings */}
+        <div
+          style={{
+            position: "absolute",
+            top: "22px",
+            left: "2px",
+            width: "14px",
+            height: "10px",
+            background: flameColor,
+            borderRadius: "50% 0 50% 0",
+            opacity: 0.6,
+            transform: "rotate(-20deg)",
+            animation: "wingFlap 1.5s ease-in-out infinite",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: "22px",
+            right: "2px",
+            width: "14px",
+            height: "10px",
+            background: flameColor,
+            borderRadius: "0 50% 0 50%",
+            opacity: 0.6,
+            transform: "rotate(20deg)",
+            animation: "wingFlap 1.5s ease-in-out infinite reverse",
+          }}
+        />
+
+        {/* Body — round, not egg */}
+        <div
+          style={{
+            width: "44px",
+            height: "42px",
+            background: `radial-gradient(circle at 35% 30%, ${flameColor}, #1a1a1a)`,
+            borderRadius: "50%",
+            position: "absolute",
+            bottom: "18px",
+            left: "10px",
+            boxShadow: `0 0 25px ${glowColor}60, inset 0 -4px 8px rgba(0,0,0,0.3)`,
+            animation: "creatureIdle 3s ease-in-out infinite",
           }}
         >
+          {/* Eyes */}
           <div
             style={{
+              display: "flex",
+              gap: "8px",
               position: "absolute",
-              top: "50%",
+              top: "12px",
               left: "50%",
-              transform: "translate(-50%, -50%)",
-              fontSize: "20px",
-              opacity: 0.3,
+              transform: "translateX(-50%)",
             }}
           >
-            🥚
+            <div
+              style={{
+                width: "12px",
+                height: "14px",
+                background: "#fff",
+                borderRadius: "50%",
+                position: "relative",
+                boxShadow: "0 0 6px rgba(255,255,255,0.4)",
+              }}
+            >
+              <div
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  background: "#000",
+                  borderRadius: "50%",
+                  position: "absolute",
+                  top: "4px",
+                  left: "3px",
+                }}
+              />
+            </div>
+            <div
+              style={{
+                width: "12px",
+                height: "14px",
+                background: "#fff",
+                borderRadius: "50%",
+                position: "relative",
+                boxShadow: "0 0 6px rgba(255,255,255,0.4)",
+              }}
+            >
+              <div
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  background: "#000",
+                  borderRadius: "50%",
+                  position: "absolute",
+                  top: "4px",
+                  left: "3px",
+                }}
+              />
+            </div>
           </div>
+
+          {/* Mouth */}
+          <div
+            style={{
+              width: "8px",
+              height: "3px",
+              background: "rgba(0,0,0,0.4)",
+              borderRadius: "0 0 50% 50%",
+              position: "absolute",
+              bottom: "10px",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          />
         </div>
+
+        {/* Feet */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "12px",
+            left: "16px",
+            width: "10px",
+            height: "6px",
+            background: flameColor,
+            borderRadius: "50%",
+            opacity: 0.5,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "12px",
+            right: "16px",
+            width: "10px",
+            height: "6px",
+            background: flameColor,
+            borderRadius: "50%",
+            opacity: 0.5,
+          }}
+        />
+
         {/* @ts-ignore styled-jsx */}
       <style jsx>{`
-          @keyframes creaturePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+          @keyframes creatureIdle {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-2px) scale(1.02); }
+          }
+          @keyframes wingFlap {
+            0%, 100% { transform: rotate(-20deg) scaleY(1); }
+            50% { transform: rotate(-25deg) scaleY(0.7); }
+          }
+          @keyframes auraSpin {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
           }
         `}</style>
       </div>
