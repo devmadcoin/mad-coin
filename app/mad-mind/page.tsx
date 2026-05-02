@@ -604,13 +604,10 @@ function ChatBubble({ text, visible, isUser }: { text: string; visible: boolean;
    ═══════════════════════════════════════════════════════════ */
 
 function MadDen({ gardenMode, children }: { gardenMode?: string; children: React.ReactNode }) {
-  const modeColors: Record<string, { bg: string; accent: string; glow: string; sky: string; ground: string }> = {
-    neutral: { bg: "#0a0a0a", accent: "rgba(255,50,50,0.2)", glow: "rgba(255,0,0,0.1)", sky: "radial-gradient(ellipse at 50% 0%, #1a0a0a 0%, #050505 60%)", ground: "rgba(255,50,50,0.08)" },
-    hero:    { bg: "#1a1505", accent: "rgba(255,200,50,0.2)", glow: "rgba(255,200,0,0.1)", sky: "radial-gradient(ellipse at 50% 0%, #2a2010 0%, #0a0800 60%)", ground: "rgba(255,200,50,0.08)" },
-    dark:    { bg: "#050510", accent: "rgba(80,30,180,0.3)", glow: "rgba(80,30,180,0.15)", sky: "radial-gradient(ellipse at 50% 0%, #1a0a2a 0%, #020205 60%)", ground: "rgba(80,30,180,0.12)" },
-    chaos:   { bg: "#150505", accent: "rgba(255,60,0,0.3)", glow: "rgba(255,60,0,0.15)", sky: "radial-gradient(ellipse at 50% 0%, #2a0a0a 0%, #050000 60%)", ground: "rgba(255,60,0,0.1)" },
-  };
-  const colors = modeColors[gardenMode || "neutral"];
+  // Neutral Garden — bright tropical Chao Garden aesthetic
+  const skyGradient = "linear-gradient(180deg, #4a90d9 0%, #6bb6ff 40%, #87ceeb 70%, #a8d8ea 100%)";
+  const grassColor = "#4ade80";
+  const grassDark = "#22c55e";
 
   return (
     <div
@@ -619,86 +616,139 @@ function MadDen({ gardenMode, children }: { gardenMode?: string; children: React
         width: "100%",
         maxWidth: "600px",
         height: "320px",
-        background: colors.sky,
+        background: skyGradient,
         borderRadius: "24px",
-        border: `2px solid ${colors.accent}`,
+        border: "3px solid #fbbf24",
         overflow: "hidden",
         margin: "0 auto",
-        boxShadow: `0 0 40px ${colors.glow}, inset 0 0 60px ${colors.glow}`,
+        boxShadow: "0 0 30px rgba(251,191,36,0.3), inset 0 0 20px rgba(255,255,255,0.1)",
         transition: "all 1s ease",
       }}
     >
-      {/* Stars / particles */}
+      {/* Clouds */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              width: `${2 + (i % 3)}px`,
-              height: `${2 + (i % 3)}px`,
-              borderRadius: "50%",
-              background: i % 2 === 0 ? "rgba(255,100,100,0.6)" : "rgba(180,100,255,0.4)",
-              top: `${10 + (i * 7) % 40}%`,
-              left: `${5 + (i * 13) % 90}%`,
-              animation: `gardenTwinkle ${3 + (i % 4)}s ease-in-out infinite`,
-              animationDelay: `${i * 0.4}s`,
-            }}
-          />
-        ))}
+        <div style={{ position: "absolute", top: "8%", left: "10%", width: "80px", height: "30px", background: "rgba(255,255,255,0.7)", borderRadius: "40px", filter: "blur(2px)" }} />
+        <div style={{ position: "absolute", top: "5%", left: "25%", width: "50px", height: "20px", background: "rgba(255,255,255,0.5)", borderRadius: "30px", filter: "blur(1px)" }} />
+        <div style={{ position: "absolute", top: "12%", left: "55%", width: "100px", height: "35px", background: "rgba(255,255,255,0.6)", borderRadius: "50px", filter: "blur(2px)" }} />
+        <div style={{ position: "absolute", top: "6%", left: "75%", width: "60px", height: "25px", background: "rgba(255,255,255,0.5)", borderRadius: "30px", filter: "blur(1px)" }} />
+        <div style={{ position: "absolute", top: "15%", left: "80%", width: "40px", height: "15px", background: "rgba(255,255,255,0.4)", borderRadius: "20px", filter: "blur(1px)" }} />
       </div>
 
-      {/* Distant trees silhouettes */}
-      <svg style={{ position: "absolute", bottom: "60px", left: 0, width: "100%", height: "40px", opacity: 0.15, pointerEvents: "none" }} viewBox="0 0 600 40" preserveAspectRatio="none">
-        <path d="M0,40 L0,20 Q15,5 30,20 Q45,0 60,20 Q75,10 90,20 Q105,0 120,20 Q135,10 150,20 Q165,0 180,20 Q195,10 210,20 Q225,0 240,20 Q255,10 270,20 Q285,0 300,20 Q315,10 330,20 Q345,0 360,20 Q375,10 390,20 Q405,0 420,20 Q435,10 450,20 Q465,0 480,20 Q495,10 510,20 Q525,0 540,20 Q555,10 570,20 Q585,0 600,20 L600,40 Z" fill={colors.accent.replace(/[0-9.]+$/, "0.15")} />
+      {/* Ground — rolling hills */}
+      <svg style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "120px", pointerEvents: "none" }} viewBox="0 0 600 120" preserveAspectRatio="none">
+        <path d="M0,80 Q150,40 300,70 T600,60 L600,120 L0,120 Z" fill={grassColor} />
+        <path d="M0,100 Q200,60 400,90 T600,80 L600,120 L0,120 Z" fill={grassDark} opacity="0.6" />
       </svg>
 
-      {/* Ground island */}
+      {/* Grass texture overlay */}
       <div
         style={{
           position: "absolute",
-          bottom: "0",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "140%",
-          height: "70px",
-          background: `radial-gradient(ellipse at 50% 0%, ${colors.ground}, transparent 70%)`,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "120px",
+          background: `
+            repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(34,197,94,0.1) 3px, rgba(34,197,94,0.1) 4px)
+          `,
           pointerEvents: "none",
         }}
       />
 
-      {/* Subtle garden tile grid */}
+      {/* Palm trees */}
+      <div style={{ position: "absolute", bottom: "80px", left: "8%", pointerEvents: "none" }}>
+        {/* Trunk */}
+        <div style={{ width: "8px", height: "50px", background: "linear-gradient(180deg, #8B4513, #654321)", borderRadius: "4px", margin: "0 auto" }} />
+        {/* Leaves */}
+        <div style={{ position: "absolute", top: "-25px", left: "50%", transform: "translateX(-50%)", width: "60px", height: "30px" }}>
+          <div style={{ position: "absolute", width: "25px", height: "8px", background: "#22c55e", borderRadius: "50%", transform: "rotate(-30deg)", left: "0", top: "10px" }} />
+          <div style={{ position: "absolute", width: "25px", height: "8px", background: "#22c55e", borderRadius: "50%", transform: "rotate(30deg)", right: "0", top: "10px" }} />
+          <div style={{ position: "absolute", width: "20px", height: "8px", background: "#16a34a", borderRadius: "50%", transform: "rotate(-60deg)", left: "5px", top: "5px" }} />
+          <div style={{ position: "absolute", width: "20px", height: "8px", background: "#16a34a", borderRadius: "50%", transform: "rotate(60deg)", right: "5px", top: "5px" }} />
+          <div style={{ position: "absolute", width: "15px", height: "8px", background: "#22c55e", borderRadius: "50%", left: "50%", transform: "translateX(-50%)", top: "0" }} />
+        </div>
+        {/* Coconuts */}
+        <div style={{ position: "absolute", top: "5px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "2px" }}>
+          <div style={{ width: "6px", height: "7px", background: "#d97706", borderRadius: "50%" }} />
+          <div style={{ width: "6px", height: "7px", background: "#d97706", borderRadius: "50%" }} />
+        </div>
+      </div>
+
+      <div style={{ position: "absolute", bottom: "90px", left: "28%", pointerEvents: "none", transform: "scale(0.8)" }}>
+        <div style={{ width: "8px", height: "45px", background: "linear-gradient(180deg, #8B4513, #654321)", borderRadius: "4px", margin: "0 auto" }} />
+        <div style={{ position: "absolute", top: "-20px", left: "50%", transform: "translateX(-50%)", width: "50px", height: "25px" }}>
+          <div style={{ position: "absolute", width: "22px", height: "7px", background: "#22c55e", borderRadius: "50%", transform: "rotate(-35deg)", left: "0", top: "8px" }} />
+          <div style={{ position: "absolute", width: "22px", height: "7px", background: "#22c55e", borderRadius: "50%", transform: "rotate(35deg)", right: "0", top: "8px" }} />
+          <div style={{ position: "absolute", width: "18px", height: "7px", background: "#16a34a", borderRadius: "50%", transform: "rotate(-55deg)", left: "3px", top: "3px" }} />
+          <div style={{ position: "absolute", width: "18px", height: "7px", background: "#16a34a", borderRadius: "50%", transform: "rotate(55deg)", right: "3px", top: "3px" }} />
+        </div>
+      </div>
+
+      {/* Flowers */}
+      <div style={{ position: "absolute", bottom: "70px", left: "18%", pointerEvents: "none" }}>
+        <div style={{ width: "8px", height: "8px", background: "#f472b6", borderRadius: "50%", boxShadow: "0 0 4px rgba(244,114,182,0.5)" }} />
+        <div style={{ width: "3px", height: "8px", background: "#16a34a", margin: "-2px auto 0", borderRadius: "2px" }} />
+      </div>
+      <div style={{ position: "absolute", bottom: "65px", left: "45%", pointerEvents: "none" }}>
+        <div style={{ width: "10px", height: "10px", background: "#60a5fa", borderRadius: "50%", boxShadow: "0 0 4px rgba(96,165,250,0.5)" }} />
+        <div style={{ width: "3px", height: "10px", background: "#16a34a", margin: "-3px auto 0", borderRadius: "2px" }} />
+      </div>
+      <div style={{ position: "absolute", bottom: "75px", left: "65%", pointerEvents: "none" }}>
+        <div style={{ width: "7px", height: "7px", background: "#fbbf24", borderRadius: "50%", boxShadow: "0 0 4px rgba(251,191,36,0.5)" }} />
+        <div style={{ width: "2px", height: "6px", background: "#16a34a", margin: "-1px auto 0", borderRadius: "2px" }} />
+      </div>
+      <div style={{ position: "absolute", bottom: "60px", left: "82%", pointerEvents: "none" }}>
+        <div style={{ width: "9px", height: "9px", background: "#c084fc", borderRadius: "50%", boxShadow: "0 0 4px rgba(192,132,252,0.5)" }} />
+        <div style={{ width: "3px", height: "8px", background: "#16a34a", margin: "-2px auto 0", borderRadius: "2px" }} />
+      </div>
+      <div style={{ position: "absolute", bottom: "85px", left: "38%", pointerEvents: "none" }}>
+        <div style={{ width: "6px", height: "6px", background: "#fb7185", borderRadius: "50%" }} />
+      </div>
+
+      {/* Water pool (bottom right) */}
       <div
         style={{
           position: "absolute",
-          inset: 0,
-          background: `
-            repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.015) 59px, rgba(255,255,255,0.015) 60px),
-            repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.015) 59px, rgba(255,255,255,0.015) 60px)
-          `,
-          opacity: 0.5,
+          bottom: "50px",
+          right: "5%",
+          width: "100px",
+          height: "50px",
+          background: "radial-gradient(ellipse, rgba(96,165,250,0.6), rgba(59,130,246,0.3) 60%, transparent)",
+          borderRadius: "50%",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "55px",
+          right: "8%",
+          width: "60px",
+          height: "30px",
+          background: "radial-gradient(ellipse, rgba(147,197,253,0.4), transparent)",
+          borderRadius: "50%",
+          animation: "waterShimmer 3s ease-in-out infinite",
+          pointerEvents: "none",
         }}
       />
 
-      {/* Corner brackets */}
-      <div style={{ position: "absolute", top: "16px", left: "16px", width: "24px", height: "24px", borderTop: `2px solid ${colors.accent}`, borderLeft: `2px solid ${colors.accent}` }} />
-      <div style={{ position: "absolute", top: "16px", right: "16px", width: "24px", height: "24px", borderTop: `2px solid ${colors.accent}`, borderRight: `2px solid ${colors.accent}` }} />
-      <div style={{ position: "absolute", bottom: "16px", left: "16px", width: "24px", height: "24px", borderBottom: `2px solid ${colors.accent}`, borderLeft: `2px solid ${colors.accent}` }} />
-      <div style={{ position: "absolute", bottom: "16px", right: "16px", width: "24px", height: "24px", borderBottom: `2px solid ${colors.accent}`, borderRight: `2px solid ${colors.accent}` }} />
+      {/* Stone structure (right side ruins) */}
+      <div style={{ position: "absolute", bottom: "60px", right: "0", pointerEvents: "none" }}>
+        <div style={{ width: "80px", height: "50px", background: "linear-gradient(180deg, #9ca3af, #6b7280)", borderRadius: "8px 0 0 8px", opacity: 0.7 }} />
+        <div style={{ width: "50px", height: "30px", background: "linear-gradient(180deg, #d1d5db, #9ca3af)", borderRadius: "4px", position: "absolute", bottom: "40px", right: "10px", opacity: 0.6 }} />
+      </div>
 
-      {/* Water pool at bottom */}
+      {/* Sun glow */}
       <div
         style={{
           position: "absolute",
-          bottom: "30px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "120px",
-          height: "20px",
-          background: `radial-gradient(ellipse, ${colors.glow}, transparent 70%)`,
+          top: "-20px",
+          right: "-20px",
+          width: "100px",
+          height: "100px",
+          background: "radial-gradient(circle, rgba(251,191,36,0.3), transparent 70%)",
           borderRadius: "50%",
-          opacity: 0.6,
-          animation: "poolShimmer 4s ease-in-out infinite",
+          pointerEvents: "none",
         }}
       />
 
@@ -709,13 +759,9 @@ function MadDen({ gardenMode, children }: { gardenMode?: string; children: React
 
       {/* @ts-ignore styled-jsx */}
       <style jsx>{`
-        @keyframes gardenTwinkle {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.3); }
-        }
-        @keyframes poolShimmer {
-          0%, 100% { opacity: 0.4; transform: translateX(-50%) scale(1); }
-          50% { opacity: 0.7; transform: translateX(-50%) scale(1.1); }
+        @keyframes waterShimmer {
+          0%, 100% { opacity: 0.4; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.1); }
         }
       `}</style>
     </div>
