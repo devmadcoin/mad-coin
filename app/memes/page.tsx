@@ -37,6 +37,7 @@ const ART_FILES = [
   "YOU-MAKE-ME-MAD.png",
   "YOU-WILL-BE-MAD.png",
   "MAD-RICH-BATH.png",
+  "MAD-BATH-SCENE.png",
 ] as const;
 
 function cleanTitle(name: string) {
@@ -199,7 +200,7 @@ function FeaturedPiece() {
 
         <div className="flex flex-col justify-center min-w-0 p-5 sm:p-8 lg:p-10">
           <p className="text-[11px] font-black uppercase tracking-[0.3em] text-white/45">
-            Piece 01 / 20
+            Piece 01 / 21
           </p>
           <h2 className="mt-4 break-words text-3xl font-black leading-[0.95] text-white sm:text-5xl">
             Pressure.
@@ -301,7 +302,7 @@ function BuyMADBanner() {
             BUY THE TOKEN.<br className="hidden sm:block" /> THEN SHARE THE ART.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-white/60 max-w-xl mx-auto">
-            All 20 pieces are free. But the real flex is holding $MAD while you post them.
+            All 21 pieces are free. But the real flex is holding $MAD while you post them.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
