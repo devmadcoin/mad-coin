@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "mad-mind-chao.tsx", "mad-mind-chao-v2.tsx", "page-optimized.tsx", "page-luxury.tsx", "page-redesigned.tsx"]
 }

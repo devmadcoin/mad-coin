@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  timeout: 25000,
-  maxRetries: 2,
-});
+let _client: OpenAI | null = null;
+function getClient(): OpenAI {
+  if (!_client) {
+    _client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      timeout: 25000,
+      maxRetries: 2,
+    });
+  }
+  return _client;
+}
 
 type StyleTab = "safe" | "savage" | "crashout";
 type CookLevel = "mild" | "crashout" | "demon";
@@ -347,7 +353,7 @@ async function generateMadAnswer(params: {
   escalation: number;
   prevBot?: string;
 }): Promise<string> {
-  const response = await client.responses.create({
+  const response = await getClient().responses.create({
     model: "gpt-4.1",
     instructions: getSystemPrompt(params),
     input: params.message,
