@@ -604,11 +604,11 @@ function ChatBubble({ text, visible, isUser }: { text: string; visible: boolean;
    ═══════════════════════════════════════════════════════════ */
 
 function MadDen({ gardenMode, children }: { gardenMode?: string; children: React.ReactNode }) {
-  const modeColors: Record<string, { bg: string; accent: string; glow: string }> = {
-    neutral: { bg: "#0a0a0a", accent: "rgba(255,50,50,0.2)", glow: "rgba(255,0,0,0.1)" },
-    hero:    { bg: "#1a1505", accent: "rgba(255,200,50,0.2)", glow: "rgba(255,200,0,0.1)" },
-    dark:    { bg: "#050510", accent: "rgba(80,30,180,0.3)", glow: "rgba(80,30,180,0.15)" },
-    chaos:   { bg: "#150505", accent: "rgba(255,60,0,0.3)", glow: "rgba(255,60,0,0.15)" },
+  const modeColors: Record<string, { bg: string; accent: string; glow: string; sky: string; ground: string }> = {
+    neutral: { bg: "#0a0a0a", accent: "rgba(255,50,50,0.2)", glow: "rgba(255,0,0,0.1)", sky: "radial-gradient(ellipse at 50% 0%, #1a0a0a 0%, #050505 60%)", ground: "rgba(255,50,50,0.08)" },
+    hero:    { bg: "#1a1505", accent: "rgba(255,200,50,0.2)", glow: "rgba(255,200,0,0.1)", sky: "radial-gradient(ellipse at 50% 0%, #2a2010 0%, #0a0800 60%)", ground: "rgba(255,200,50,0.08)" },
+    dark:    { bg: "#050510", accent: "rgba(80,30,180,0.3)", glow: "rgba(80,30,180,0.15)", sky: "radial-gradient(ellipse at 50% 0%, #1a0a2a 0%, #020205 60%)", ground: "rgba(80,30,180,0.12)" },
+    chaos:   { bg: "#150505", accent: "rgba(255,60,0,0.3)", glow: "rgba(255,60,0,0.15)", sky: "radial-gradient(ellipse at 50% 0%, #2a0a0a 0%, #050000 60%)", ground: "rgba(255,60,0,0.1)" },
   };
   const colors = modeColors[gardenMode || "neutral"];
 
@@ -619,7 +619,7 @@ function MadDen({ gardenMode, children }: { gardenMode?: string; children: React
         width: "100%",
         maxWidth: "600px",
         height: "320px",
-        background: colors.bg,
+        background: colors.sky,
         borderRadius: "24px",
         border: `2px solid ${colors.accent}`,
         overflow: "hidden",
@@ -628,33 +628,96 @@ function MadDen({ gardenMode, children }: { gardenMode?: string; children: React
         transition: "all 1s ease",
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: `
-            repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px),
-            repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px)
-          `,
-        }}
-      />
-      <div style={{ position: "absolute", top: "16px", left: "16px", width: "24px", height: "24px", borderTop: `2px solid ${colors.accent}`, borderLeft: `2px solid ${colors.accent}` }} />
-      <div style={{ position: "absolute", top: "16px", right: "16px", width: "24px", height: "24px", borderTop: `2px solid ${colors.accent}`, borderRight: `2px solid ${colors.accent}` }} />
-      <div style={{ position: "absolute", bottom: "16px", left: "16px", width: "24px", height: "24px", borderBottom: `2px solid ${colors.accent}`, borderLeft: `2px solid ${colors.accent}` }} />
-      <div style={{ position: "absolute", bottom: "16px", right: "16px", width: "24px", height: "24px", borderBottom: `2px solid ${colors.accent}`, borderRight: `2px solid ${colors.accent}` }} />
+      {/* Stars / particles */}
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              width: `${2 + (i % 3)}px`,
+              height: `${2 + (i % 3)}px`,
+              borderRadius: "50%",
+              background: i % 2 === 0 ? "rgba(255,100,100,0.6)" : "rgba(180,100,255,0.4)",
+              top: `${10 + (i * 7) % 40}%`,
+              left: `${5 + (i * 13) % 90}%`,
+              animation: `gardenTwinkle ${3 + (i % 4)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.4}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Distant trees silhouettes */}
+      <svg style={{ position: "absolute", bottom: "60px", left: 0, width: "100%", height: "40px", opacity: 0.15, pointerEvents: "none" }} viewBox="0 0 600 40" preserveAspectRatio="none">
+        <path d="M0,40 L0,20 Q15,5 30,20 Q45,0 60,20 Q75,10 90,20 Q105,0 120,20 Q135,10 150,20 Q165,0 180,20 Q195,10 210,20 Q225,0 240,20 Q255,10 270,20 Q285,0 300,20 Q315,10 330,20 Q345,0 360,20 Q375,10 390,20 Q405,0 420,20 Q435,10 450,20 Q465,0 480,20 Q495,10 510,20 Q525,0 540,20 Q555,10 570,20 Q585,0 600,20 L600,40 Z" fill={colors.accent.replace(/[0-9.]+$/, "0.15")} />
+      </svg>
+
+      {/* Ground island */}
       <div
         style={{
           position: "absolute",
           bottom: "0",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "200px",
-          height: "100px",
-          background: `radial-gradient(ellipse, ${colors.glow}, transparent 70%)`,
+          width: "140%",
+          height: "70px",
+          background: `radial-gradient(ellipse at 50% 0%, ${colors.ground}, transparent 70%)`,
           pointerEvents: "none",
         }}
       />
-      {children}
+
+      {/* Subtle garden tile grid */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `
+            repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.015) 59px, rgba(255,255,255,0.015) 60px),
+            repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.015) 59px, rgba(255,255,255,0.015) 60px)
+          `,
+          opacity: 0.5,
+        }}
+      />
+
+      {/* Corner brackets */}
+      <div style={{ position: "absolute", top: "16px", left: "16px", width: "24px", height: "24px", borderTop: `2px solid ${colors.accent}`, borderLeft: `2px solid ${colors.accent}` }} />
+      <div style={{ position: "absolute", top: "16px", right: "16px", width: "24px", height: "24px", borderTop: `2px solid ${colors.accent}`, borderRight: `2px solid ${colors.accent}` }} />
+      <div style={{ position: "absolute", bottom: "16px", left: "16px", width: "24px", height: "24px", borderBottom: `2px solid ${colors.accent}`, borderLeft: `2px solid ${colors.accent}` }} />
+      <div style={{ position: "absolute", bottom: "16px", right: "16px", width: "24px", height: "24px", borderBottom: `2px solid ${colors.accent}`, borderRight: `2px solid ${colors.accent}` }} />
+
+      {/* Water pool at bottom */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "30px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "120px",
+          height: "20px",
+          background: `radial-gradient(ellipse, ${colors.glow}, transparent 70%)`,
+          borderRadius: "50%",
+          opacity: 0.6,
+          animation: "poolShimmer 4s ease-in-out infinite",
+        }}
+      />
+
+      {/* Content */}
+      <div style={{ position: "relative", zIndex: 10, width: "100%", height: "100%" }}>
+        {children}
+      </div>
+
+      {/* @ts-ignore styled-jsx */}
+      <style jsx>{`
+        @keyframes gardenTwinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.3); }
+        }
+        @keyframes poolShimmer {
+          0%, 100% { opacity: 0.4; transform: translateX(-50%) scale(1); }
+          50% { opacity: 0.7; transform: translateX(-50%) scale(1.1); }
+        }
+      `}</style>
     </div>
   );
 }
