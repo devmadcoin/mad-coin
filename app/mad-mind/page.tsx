@@ -1038,6 +1038,12 @@ export default function MadMindPage() {
 
   const creatureForm = chao?.form || "egg";
   const gardenMode = garden?.garden_mode || "neutral";
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll message thread
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <main style={{ minHeight: "100vh", background: "#050505", color: "#fff", display: "flex", flexDirection: "column", alignItems: "center", padding: "24px 16px" }}>
@@ -1091,6 +1097,41 @@ export default function MadMindPage() {
 
       {/* Chao Stats Panel */}
       <ChaoPanel chao={chao} onFeed={handleFeed} onAffirm={handleAffirm} loading={chaoLoading} />
+
+      {/* Message Thread — shows full conversation history */}
+      {messages.length > 0 && (
+        <div style={{ width: "100%", maxWidth: "600px", margin: "16px auto", maxHeight: "300px", overflowY: "auto" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "8px" }}>
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                style={{
+                  display: "flex",
+                  justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
+                }}
+              >
+                <div
+                  style={{
+                    maxWidth: "80%",
+                    padding: "10px 14px",
+                    borderRadius: msg.role === "user" ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
+                    background: msg.role === "user" ? "rgba(255,68,68,0.12)" : "rgba(255,255,255,0.04)",
+                    border: msg.role === "user" ? "1px solid rgba(255,68,68,0.2)" : "1px solid rgba(255,255,255,0.08)",
+                  }}
+                >
+                  <p style={{ fontSize: "13px", color: "#fff", lineHeight: 1.5, margin: 0 }}>{msg.text}</p>
+                  {msg.role === "mad" && msg.style && (
+                    <span style={{ fontSize: "9px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: msg.style === "safe" ? "#4ade80" : msg.style === "savage" ? "#ff4444" : "#ff6600", marginTop: "4px", display: "block" }}>
+                      {msg.style}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+      )}
 
       {/* Chat Input */}
       <div style={{ width: "100%", maxWidth: "600px", marginTop: "8px" }}>
