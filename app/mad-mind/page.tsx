@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import MadClawIdentity from "./components/MadClawIdentity";
 
 /* ═══════════════════════════════════════════════════════════
    MAD DEN — Chao Garden Interface (v2: Live Chao Tracker)
@@ -1125,6 +1126,12 @@ export default function MadMindPage() {
         <span>Style: {style}</span>
         <span>Form: {creatureForm}</span>
       </div>
+
+      {/* Divider */}
+      <div style={{ width: "100%", maxWidth: "600px", margin: "40px auto", height: "1px", background: "linear-gradient(90deg, transparent, rgba(255,68,68,0.2), transparent)" }} />
+
+      {/* The Claw — Identity, Diary, Studies, Presence */}
+      <MadClawIdentity />
     </main>
   );
 }
