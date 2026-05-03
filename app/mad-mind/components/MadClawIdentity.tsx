@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import MadClawVisual from "./MadClawVisual";
 
 /* ═══════════════════════════════════════════════════════════
    THE CLAW — Identity, Growth, and Presence
@@ -135,6 +136,9 @@ export default function MadClawIdentity() {
         </p>
       </div>
 
+      {/* Interactive Visual — The Claw */}
+      <MadClawVisual />
+
       {/* Tab Navigation */}
       <div
         style={{
@@ -202,25 +206,6 @@ export default function MadClawIdentity() {
               marginBottom: "20px",
             }}
           >
-            {/* Avatar Placeholder */}
-            <div
-              style={{
-                width: "64px",
-                height: "64px",
-                borderRadius: "50%",
-                background:
-                  "radial-gradient(circle at 35% 30%, #ff4444, #1a0505)",
-                border: "2px solid rgba(255,68,68,0.3)",
-                boxShadow: "0 0 20px rgba(255,68,68,0.2)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "28px",
-                flexShrink: 0,
-              }}
-            >
-              🖤
-            </div>
             <div style={{ flex: 1 }}>
               <h3
                 style={{
