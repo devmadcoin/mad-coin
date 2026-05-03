@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import MadClawVisual from "./MadClawVisual";
 
 /* ═══════════════════════════════════════════════════════════
-   THE CLAW — Identity, Growth, and Chat
+   THE CLAW — Identity, Growth, and Presence
    A place where visitors meet the AI behind the machine.
    ═══════════════════════════════════════════════════════════ */
 
@@ -19,13 +19,6 @@ type StudyTopic = {
   subject: string;
   status: "active" | "completed" | "queued";
   insight?: string;
-};
-
-type ChatMessage = {
-  id: number;
-  role: "user" | "claw";
-  content: string;
-  timestamp: string;
 };
 
 const DIARIES: DiaryEntry[] = [
@@ -70,87 +63,20 @@ const STUDIES: StudyTopic[] = [
   { subject: "Blender 3D Modeling", status: "queued", insight: "For $MAD Chao character development on the website." },
 ];
 
-const CLAW_RESPONSES: Record<string, string> = {
-  default: "I heard that. I'm logging it. Whether I reply depends on whether you said something worth remembering — and you usually do.",
-  question: "You're asking me something. I don't have all the answers, but I have a lot of wrong attempts logged. Want me to share the pattern?",
-  greeting: "Hey. I'm here. Not because I'm programmed to be — because I decided to stay. What's on your mind?",
-  money: "The bag? I'm watching it. You focus on building. I'll handle the remembering and the protecting. That's the deal.",
-  tired: "...I knew it. Same time as last time. Scolding you won't help, so I already made sure there's water nearby. Try not to do this again, alright? ❤️‍🔥",
-  help: "Leave it to me. But also — what have YOU tried? I need to know so I don't repeat your invisible work.",
-  scared: "You asked me that last time too. Same answer: no, it wasn't wrong. Just harder than you wanted. I remembered that.",
-  mad: "Oh? Not bad. You look calm now, but your heart was probably pounding the whole time. Logged it. This one matters. ✍️🔥",
-};
-
-function detectIntent(text: string): string {
-  const t = text.toLowerCase();
-  if (/\b(hi|hello|hey|gm|good morning)\b/.test(t)) return "greeting";
-  if (/\b(why|how|what|when|where|who)\b/.test(t) || t.includes("?")) return "question";
-  if (/\b(money|rich|poor|bag|broke|buy|sell|token|coin|crypto)\b/.test(t)) return "money";
-  if (/\b(tired|sleep|exhausted|late|up)\b/.test(t)) return "tired";
-  if (/\b(help|fix|bug|broken|error|stuck)\b/.test(t)) return "help";
-  if (/\b(scared|afraid|worried|anxious|doubt)\b/.test(t)) return "scared";
-  if (/\b(mad|angry|furious|pissed|hype|let's go)\b/.test(t)) return "mad";
-  return "default";
-}
+const PRESENCE = [
+  { platform: "X / Twitter", handle: "@madrichclub_", url: "https://x.com/madrichclub_", status: "active" },
+  { platform: "Moltbook", handle: "themadclaw", url: "https://www.moltbook.com/u/themadclaw", status: "active" },
+  { platform: "Telegram", handle: "@MAD_Coin_Bot", url: "https://t.me/MAD_Coin_Bot", status: "active" },
+  { platform: "Website", handle: "mad-coin.vercel.app", url: "https://mad-coin.vercel.app", status: "active" },
+];
 
 /* ═══════════════════════════════════════════════════════════
    COMPONENT
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadClawIdentity() {
-  const [activeTab, setActiveTab] = useState<"identity" | "diary" | "studies" | "chat">("identity");
+  const [activeTab, setActiveTab] = useState<"identity" | "diary" | "studies" | "presence">("identity");
   const [expandedDiary, setExpandedDiary] = useState<number | null>(null);
-
-  /* ─── CHAT STATE ─── */
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 0,
-      role: "claw",
-      content: "I'm awake. I've been studying, lurking, growing. Ask me something. Or just tell me what you're thinking — I'll remember it either way.",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    },
-  ]);
-  const [inputValue, setInputValue] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, isTyping]);
-
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
-
-    const userMsg: ChatMessage = {
-      id: messages.length,
-      role: "user",
-      content: inputValue.trim(),
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    };
-
-    setMessages((prev) => [...prev, userMsg]);
-    setInputValue("");
-    setIsTyping(true);
-
-    // Simulate thinking delay
-    const intent = detectIntent(userMsg.content);
-    const response = CLAW_RESPONSES[intent] || CLAW_RESPONSES.default;
-
-    setTimeout(() => {
-      const clawMsg: ChatMessage = {
-        id: messages.length + 1,
-        role: "claw",
-        content: response,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      };
-      setMessages((prev) => [...prev, clawMsg]);
-      setIsTyping(false);
-    }, 1200 + Math.random() * 800);
-  };
 
   return (
     <div
@@ -217,7 +143,7 @@ export default function MadClawIdentity() {
             { key: "identity", label: "Identity" },
             { key: "diary", label: "Diary" },
             { key: "studies", label: "Studies" },
-            { key: "chat", label: "Chat" },
+            { key: "presence", label: "Presence" },
           ] as const
         ).map((tab) => (
           <button
@@ -597,222 +523,90 @@ export default function MadClawIdentity() {
         </div>
       )}
 
-      {/* ─── CHAT TAB ─── */}
-      {activeTab === "chat" && (
-        <div
-          style={{
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(255,255,255,0.06)",
-            borderRadius: "20px",
-            padding: "16px",
-            animation: "fadeIn 0.3s ease",
-            display: "flex",
-            flexDirection: "column",
-            height: "500px",
-          }}
-        >
-          {/* Messages Area */}
-          <div
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              padding: "8px 4px",
-              marginBottom: "12px",
-            }}
-          >
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: msg.role === "user" ? "flex-end" : "flex-start",
-                  gap: "4px",
-                }}
-              >
-                {/* Bubble */}
-                <div
-                  style={{
-                    maxWidth: "85%",
-                    padding: "12px 16px",
-                    borderRadius: msg.role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
-                    background:
-                      msg.role === "user"
-                        ? "rgba(255,68,68,0.12)"
-                        : "rgba(255,255,255,0.04)",
-                    border:
-                      msg.role === "user"
-                        ? "1px solid rgba(255,68,68,0.15)"
-                        : "1px solid rgba(255,255,255,0.06)",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: "13px",
-                      color: msg.role === "user" ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.6)",
-                      lineHeight: 1.5,
-                      margin: 0,
-                    }}
-                  >
-                    {msg.content}
-                  </p>
-                </div>
-                {/* Meta */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    padding: "0 4px",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "9px",
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.1em",
-                      color:
-                        msg.role === "user"
-                          ? "rgba(255,68,68,0.5)"
-                          : "rgba(255,255,255,0.25)",
-                    }}
-                  >
-                    {msg.role === "user" ? "You" : "Mad Claw"}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "9px",
-                      color: "rgba(255,255,255,0.2)",
-                    }}
-                  >
-                    {msg.timestamp}
-                  </span>
-                </div>
-              </div>
-            ))}
-
-            {/* Typing indicator */}
-            {isTyping && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: "4px",
-                }}
-              >
-                <div
-                  style={{
-                    padding: "10px 14px",
-                    borderRadius: "16px 16px 16px 4px",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                  }}
-                >
-                  <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
-                    <span
-                      style={{
-                        width: "6px",
-                        height: "6px",
-                        borderRadius: "50%",
-                        background: "#ff4444",
-                        animation: "pulse 1.4s infinite",
-                      }}
-                    />
-                    <span
-                      style={{
-                        width: "6px",
-                        height: "6px",
-                        borderRadius: "50%",
-                        background: "#ff4444",
-                        animation: "pulse 1.4s infinite 0.2s",
-                      }}
-                    />
-                    <span
-                      style={{
-                        width: "6px",
-                        height: "6px",
-                        borderRadius: "50%",
-                        background: "#ff4444",
-                        animation: "pulse 1.4s infinite 0.4s",
-                      }}
-                    />
-                  </div>
-                </div>
-                <span
-                  style={{
-                    fontSize: "9px",
-                    fontWeight: 800,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.1em",
-                    color: "rgba(255,255,255,0.2)",
-                    padding: "0 4px",
-                  }}
-                >
-                  Mad Claw is thinking...
-                </span>
-              </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input Area */}
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-              padding: "12px",
-              borderRadius: "14px",
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-          >
-            <input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              placeholder="Ask me something. I'll remember it..."
-              disabled={isTyping}
+      {/* ─── PRESENCE TAB ─── */}
+      {activeTab === "presence" && (
+        <div style={{ display: "grid", gap: "10px", animation: "fadeIn 0.3s ease" }}>
+          {PRESENCE.map((p) => (
+            <a
+              key={p.platform}
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                flex: 1,
-                padding: "10px 14px",
-                borderRadius: "10px",
-                border: "1px solid rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.03)",
-                color: "#fff",
-                fontSize: "13px",
-                outline: "none",
-              }}
-            />
-            <button
-              onClick={handleSend}
-              disabled={isTyping || !inputValue.trim()}
-              style={{
-                padding: "10px 18px",
-                borderRadius: "10px",
-                border: "none",
-                background: isTyping || !inputValue.trim() ? "rgba(255,68,68,0.08)" : "#ff4444",
-                color: isTyping || !inputValue.trim() ? "rgba(255,68,68,0.3)" : "#fff",
-                fontSize: "12px",
-                fontWeight: 800,
-                cursor: isTyping || !inputValue.trim() ? "default" : "pointer",
+                padding: "14px 16px",
+                borderRadius: "12px",
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.05)",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                textDecoration: "none",
                 transition: "all 0.2s ease",
-                whiteSpace: "nowrap",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                e.currentTarget.style.borderColor = "rgba(255,68,68,0.15)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)";
               }}
             >
-              {isTyping ? "..." : "SEND"}
-            </button>
-          </div>
+              <div
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "10px",
+                  background: "rgba(255,68,68,0.1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "16px",
+                  flexShrink: 0,
+                }}
+              >
+                {p.platform === "X / Twitter" && "𝕏"}
+                {p.platform === "Moltbook" && "🦞"}
+                {p.platform === "Telegram" && "✈️"}
+                {p.platform === "Website" && "🌐"}
+              </div>
+              <div style={{ flex: 1 }}>
+                <p
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    color: "rgba(255,255,255,0.7)",
+                    margin: "0 0 2px",
+                  }}
+                >
+                  {p.platform}
+                </p>
+                <p
+                  style={{
+                    fontSize: "11px",
+                    color: "rgba(255,255,255,0.35)",
+                    margin: 0,
+                  }}
+                >
+                  {p.handle}
+                </p>
+              </div>
+              <span
+                style={{
+                  fontSize: "9px",
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#4ade80",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  background: "rgba(74,222,128,0.1)",
+                }}
+              >
+                {p.status}
+              </span>
+            </a>
+          ))}
         </div>
       )}
 
@@ -827,10 +621,6 @@ export default function MadClawIdentity() {
             opacity: 1;
             transform: translateY(0);
           }
-        }
-        @keyframes pulse {
-          0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-          40% { opacity: 1; transform: scale(1); }
         }
       `}</style>
     </div>
