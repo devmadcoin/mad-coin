@@ -81,13 +81,29 @@ MAD_AI_MODE = os.getenv("MAD_AI_MODE", "savage").lower()  # safe, gentle, savage
 
 STATE_FILE = os.path.join(BOT_STATE_DIR, "bot_state.json")
 ENGAGEMENT_FILE = os.path.join(BOT_STATE_DIR, "engagement_log.json")
-
+PID_FILE = os.path.join(BOT_STATE_DIR, "mad_x_bot.pid")
 
 def ensure_state_dir() -> None:
     os.makedirs(BOT_STATE_DIR, exist_ok=True)
     os.makedirs(MAD_ART_DIR, exist_ok=True)
 
 
+# --- Startup Guard: prevent multiple instances ---
+def acquire_pid_lock() -> bool:
+    """Prevent multiple bot instances from running simultaneously."""
+    if os.path.exists(PID_FILE):
+        try:
+            old_pid = int(open(PID_FILE).read().strip())
+            os.kill(old_pid, 0)
+            print(f"[GUARD] Another instance already running (PID {old_pid}). Exiting.")
+            return False
+        except (ValueError, OSError, ProcessLookupError):
+            pass
+    open(PID_FILE, "w").write(str(os.getpid()))
+    return True
+
+
+# --- Bot State ---
 def load_json(path: str, default: Dict) -> Dict:
     ensure_state_dir()
     if not os.path.exists(path):
@@ -675,11 +691,6 @@ def generate_thread_candidates() -> Optional[List[str]]:
             "It's not the tech. It's not the burns. It's not the locked liquidity.",
             "It's the fact that someone out there is building while others panic. And they chose to do it publicly.",
             "That's rare. That's signal. That's $MAD.\n\nStay $MAD.",
-        ],
-        [
-            "The MAD Confessions board is wild.\n\nPeople out here admitting they sold at 10k MC. That they panicked. That they regret.",
-            "And here's what's beautiful: nobody judges them.\n\nBecause every confession is just a mirror someone else needed to see.",
-            "That's the community. Real. Unfiltered. Not faking perfect lives.\n\nStay $MAD.",
         ],
     ]
 
@@ -1420,6 +1431,9 @@ def update_engagement_tracking(state: Dict) -> None:
 # =========================================================
 
 def main():
+    if not acquire_pid_lock():
+        return
+
     print("[BOT] $MAD Supreme Bot starting...")
     print(f"[BOT] Modes: originals={AUTO_POST_ORIGINALS}, replies={AUTO_REPLY_MENTIONS}, "
           f"media={AUTO_POST_MEDIA}, threads={AUTO_POST_THREADS}, milestones={AUTO_MILESTONE_ALERTS}")
