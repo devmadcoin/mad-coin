@@ -98,11 +98,11 @@ const EXITS = [
     items: [
       { text: "MAD Confessions live", done: true },
       { text: "Exchange visibility live", done: true },
-      { text: "Supply reduced to ~513M", done: true },
+      { text: "Supply reduced to ~503M", done: true },
       { text: "Burn target set: 800M", done: true },
       { text: "Community growth active", done: true },
     ],
-    summary: "Supply shrinking. 513M → 800M. Community backed publicly.",
+    summary: "Supply shrinking. 503M → 800M. Community backed publicly.",
   },
   {
     mile: "MILE 50", title: "Build", status: "IN PROGRESS" as const, color: "yellow",
@@ -156,7 +156,7 @@ function ChaosMeter() {
 
   useEffect(() => {
     // Animate burn progress from 0 to ~64% (513M/800M)
-    const target = 64;
+    const target = 62;
     const interval = setInterval(() => {
       setBurnProgress((prev) => {
         if (prev >= target) return target;
