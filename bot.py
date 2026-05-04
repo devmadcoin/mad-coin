@@ -1847,12 +1847,15 @@ def check_and_post_milestones(state: Dict) -> bool:
 
 
 # =========================================================
-# MAIN LOOP
+# MAIN LOOP — Moltbook-Informed Posting Schedule
 # =========================================================
+# Old: every 60-70 min (fire hose)
+# New: 2-3 posts/day, spaced 8-12 hours apart
+# Lets each post breathe and accumulate replies
 
-MIN_POST_INTERVAL_SECONDS = int(os.getenv("MIN_POST_INTERVAL_SECONDS", "3600"))   # 60 min
-MAX_POST_INTERVAL_SECONDS = int(os.getenv("MAX_POST_INTERVAL_SECONDS", "4200"))   # 70 min
-MAIN_LOOP_TICK = 60  # check every minute
+MIN_POST_INTERVAL_SECONDS = int(os.getenv("MIN_POST_INTERVAL_SECONDS", "28800"))   # 8 hours
+MAX_POST_INTERVAL_SECONDS = int(os.getenv("MAX_POST_INTERVAL_SECONDS", "43200"))   # 12 hours
+MAIN_LOOP_TICK = 300  # check every 5 minutes (was 60 — unnecessary wakeups)
 PID_FILE = os.path.join(BOT_STATE_DIR, "bot.pid")
 
 def acquire_pid_lock() -> bool:
