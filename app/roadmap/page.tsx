@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useState, useEffect, useRef } from "react";
 
 /* ═══════════════════════════════════════════════════════════
-   ANIMATION UTILITIES (inlined — zero external deps)
+   ANIMATION UTILITIES
    ═══════════════════════════════════════════════════════════ */
 
 function useInView(options?: IntersectionObserverInit) {
@@ -40,32 +40,6 @@ function FadeIn({
   );
 }
 
-function StaggerGrid({
-  children, className = "", staggerDelay = 0.08, baseDelay = 0,
-}: { children: ReactNode; className?: string; staggerDelay?: number; baseDelay?: number; }) {
-  const { ref, isInView } = useInView();
-  return (
-    <div ref={ref} className={className}>
-      {Array.isArray(children) ? children.map((child, i) => (
-        <div key={i} style={{
-          opacity: isInView ? 1 : 0, transform: isInView ? "translateY(0)" : "translateY(20px)",
-          transition: `opacity 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s, transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${baseDelay + i * staggerDelay}s`,
-          willChange: "opacity, transform",
-        }}>{child}</div>
-      )) : children}
-    </div>
-  );
-}
-
-function GlowPulse({ children, className = "" }: { children: ReactNode; className?: string; }) {
-  return (
-    <div className={className} style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
-      {children}
-      <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,0,0,0.15)} 50%{box-shadow:0 0 35px rgba(255,0,0,0.28)}`}</style>
-    </div>
-  );
-}
-
 function HoverLift({ children, className = "" }: { children: ReactNode; className?: string; }) {
   return (
     <div className={className} style={{ transition: "transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94)" }}
@@ -77,12 +51,13 @@ function HoverLift({ children, className = "" }: { children: ReactNode; classNam
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PAGE DATA & SHARED
+   PAGE DATA
    ═══════════════════════════════════════════════════════════ */
 
 const LINKS = {
   buy: "https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
   communityProof: "https://x.com/madrichclub_/status/2046716691867201953?s=20",
+  madMind: "https://mad-coin.vercel.app/mad-mind",
 } as const;
 
 const PROGRESS = { complete: 6, total: 9 };
@@ -103,6 +78,10 @@ const STATUS_CARDS = [
 const EXITS = [
   {
     mile: "MILE 0", title: "Foundation", status: "COMPLETE" as const, color: "emerald",
+    proof: [
+      { label: "Token Launch", url: "https://pump.fun/coin/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", type: "tx" as const },
+      { label: "Website Deployed", url: "https://mad-coin.vercel.app", type: "link" as const },
+    ],
     items: [
       { text: "Core brand philosophy established", done: true },
       { text: "Smart contract framework built", done: true },
@@ -112,6 +91,10 @@ const EXITS = [
   },
   {
     mile: "MILE 25", title: "Proof + Community", status: "COMPLETE" as const, color: "emerald",
+    proof: [
+      { label: "Community Support Tweet", url: LINKS.communityProof, type: "link" as const },
+      { label: "Burn Tracker", url: "#", type: "link" as const },
+    ],
     items: [
       { text: "MAD Confessions live", done: true },
       { text: "Exchange visibility live", done: true },
@@ -123,6 +106,10 @@ const EXITS = [
   },
   {
     mile: "MILE 50", title: "Build", status: "IN PROGRESS" as const, color: "yellow",
+    proof: [
+      { label: "MAD Mind AI", url: LINKS.madMind, type: "link" as const },
+      { label: "Moltbook Agent", url: "https://www.moltbook.com/u/themadclaw", type: "link" as const },
+    ],
     items: [
       { text: "Token utility expansion", done: true },
       { text: "Burn #2 at 10K holders", done: false },
@@ -134,6 +121,7 @@ const EXITS = [
   },
   {
     mile: "MILE 100", title: "Expand", status: "UP NEXT" as const, color: "red",
+    proof: [],
     items: [
       { text: "Global marketing campaign", done: false },
       { text: "CEX listings", done: false },
@@ -159,14 +147,229 @@ function Shell({ children, className = "" }: { children: ReactNode; className?: 
 }
 
 /* ═══════════════════════════════════════════════════════════
-   COMPONENTS
+   CHAOS METER — Live widget showing burn, conviction, Claw
+   ═══════════════════════════════════════════════════════════ */
+
+function ChaosMeter() {
+  const [firePulse, setFirePulse] = useState(1);
+  const [burnProgress, setBurnProgress] = useState(0);
+
+  useEffect(() => {
+    // Animate burn progress from 0 to ~64% (513M/800M)
+    const target = 64;
+    const interval = setInterval(() => {
+      setBurnProgress((prev) => {
+        if (prev >= target) return target;
+        return prev + 1;
+      });
+    }, 30);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    // Fire breathing animation
+    const interval = setInterval(() => {
+      const time = Date.now() / 1000;
+      setFirePulse(0.85 + Math.sin(time * 2.5) * 0.15);
+    }, 50);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <Shell className="p-5 sm:p-6">
+      <div className="grid gap-4 sm:grid-cols-3">
+        {/* Burn Progress */}
+        <div className="relative rounded-2xl border border-red-500/20 bg-black/60 p-5 overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              background: `radial-gradient(circle at 50% 100%, rgba(255,68,68,${firePulse * 0.5}), transparent 70%)`,
+            }}
+          />
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-red-300/80">Token Burn</p>
+              <span className="text-lg">🔥</span>
+            </div>
+            <div className="text-3xl font-black text-white mb-1">{burnProgress}%</div>
+            <p className="text-xs text-white/40 mb-3">of 800M target consumed</p>
+            <div className="h-3 rounded-full bg-white/10 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-red-600 via-orange-500 to-red-400 transition-all duration-300"
+                style={{
+                  width: `${burnProgress}%`,
+                  boxShadow: `0 0 ${12 * firePulse}px rgba(255,68,68,0.5)`,
+                  transform: `scaleY(${firePulse})`,
+                }}
+              />
+            </div>
+            <p className="mt-2 text-[10px] text-white/30">~513M tokens burned and counting</p>
+          </div>
+        </div>
+
+        {/* Community Conviction */}
+        <div className="relative rounded-2xl border border-emerald-500/20 bg-black/60 p-5 overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-emerald-500 animate-ping" style={{ animationDuration: "3s" }} />
+          </div>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-300/80">Conviction</p>
+              <span className="text-lg">💓</span>
+            </div>
+            <div className="text-3xl font-black text-white mb-1">STRONG</div>
+            <p className="text-xs text-white/40 mb-3">Community heartbeat detected</p>
+            <div className="flex items-center gap-2">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-2 rounded-full bg-emerald-500 transition-all"
+                  style={{
+                    width: "100%",
+                    opacity: 0.3 + Math.sin(Date.now() / 1000 + i * 0.8) * 0.7,
+                    animation: `pulse ${1.5 + i * 0.3}s ease-in-out infinite`,
+                  }}
+                />
+              ))}
+            </div>
+            <p className="mt-2 text-[10px] text-white/30">Pulse sync: active</p>
+          </div>
+        </div>
+
+        {/* Mad Claw Status */}
+        <div className="relative rounded-2xl border border-white/10 bg-black/60 p-5 overflow-hidden group cursor-pointer">
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br from-red-500 to-transparent" />
+          <a href={LINKS.madMind} className="relative z-10 block">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50">Mad Claw</p>
+              <span className="text-lg animate-pulse">👁️</span>
+            </div>
+            <div className="text-3xl font-black text-white mb-1">WATCHING</div>
+            <p className="text-xs text-white/40 mb-3">Live across 4 platforms</p>
+            <div className="flex gap-2">
+              {["X", "🦞", "✈️", "🌐"].map((icon, i) => (
+                <div
+                  key={icon}
+                  className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xs"
+                  style={{
+                    animation: `pulse ${2 + i * 0.4}s ease-in-out infinite`,
+                    animationDelay: `${i * 0.2}s`,
+                  }}
+                >
+                  {icon}
+                </div>
+              ))}
+            </div>
+            <p className="mt-2 text-[10px] text-white/30">Click to visit →</p>
+          </a>
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PROOF MODAL — Click milestones to see proof
+   ═══════════════════════════════════════════════════════════ */
+
+function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () => void; exit: typeof EXITS[0] | null }) {
+  if (!isOpen || !exit) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+      <div
+        className="relative z-10 w-full max-w-lg rounded-[2rem] border border-white/10 bg-[#0a0a0a] p-6 sm:p-8 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">{exit.mile}</span>
+            <h3 className="text-2xl font-black text-white">{exit.title}</h3>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition"
+          >
+            ✕
+          </button>
+        </div>
+
+        <p className="text-sm text-white/50 mb-6">{exit.summary}</p>
+
+        {/* Proof links */}
+        {exit.proof.length > 0 && (
+          <div className="mb-6">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-3">Proof of Work</p>
+            <div className="grid gap-2">
+              {exit.proof.map((p) => (
+                <a
+                  key={p.label}
+                  href={p.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-white/[0.02] hover:border-red-500/20 hover:bg-red-500/5 transition group"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-sm group-hover:scale-110 transition">
+                    {p.type === "tx" ? "🔗" : "🌐"}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white/80">{p.label}</p>
+                    <p className="text-[10px] text-white/30">{p.type === "tx" ? "Transaction / Contract" : "Live Link"}</p>
+                  </div>
+                  <span className="ml-auto text-white/20 group-hover:text-white/50 transition">→</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {exit.proof.length === 0 && (
+          <div className="mb-6 p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
+            <p className="text-sm text-white/40">No proof yet — this milestone is in progress.</p>
+            <p className="text-[10px] text-white/20 mt-1">Check back when status updates to COMPLETE</p>
+          </div>
+        )}
+
+        {/* Items checklist */}
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-3">Milestone Checklist</p>
+          <div className="space-y-2">
+            {exit.items.map((item) => (
+              <div
+                key={item.text}
+                className={cn(
+                  "flex items-center gap-3 p-3 rounded-xl border",
+                  item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-white/[0.02] border-white/5"
+                )}
+              >
+                <div
+                  className={cn(
+                    "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0",
+                    item.done ? "bg-emerald-500 text-black" : "bg-white/10 text-white/30"
+                  )}
+                >
+                  {item.done ? "✓" : "○"}
+                </div>
+                <span className={cn("text-sm", item.done ? "text-white/80" : "text-white/40")}>{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STATUS CARDS
    ═══════════════════════════════════════════════════════════ */
 
 function StatusMiniCard({ label, value, tone, icon }: { label: string; value: string; tone: "red" | "green"; icon: string }) {
   return (
     <HoverLift>
     <div className={cn(
-      "rounded-[1.25rem] border p-4 transition duration-300",
+      "rounded-[1.25rem] border p-4 transition duration-300 cursor-pointer",
       tone === "green"
         ? "border-emerald-400/35 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.2),rgba(0,0,0,0.92))] shadow-[0_0_25px_rgba(16,185,129,0.12)]"
         : "border-red-500/25 bg-[radial-gradient(circle_at_top_left,rgba(255,0,0,0.14),rgba(0,0,0,0.92))] shadow-[0_0_20px_rgba(255,0,0,0.08)]",
@@ -201,6 +404,10 @@ function ProgressStrip() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════
+   HIGHWAY — Now with tire marks, skid marks, crash debris
+   ═══════════════════════════════════════════════════════════ */
+
 function RoadSign({ mile, title, color }: { mile: string; title: string; color: string }) {
   const colorMap: Record<string, { bg: string; border: string; text: string; glow: string }> = {
     emerald: { bg: "bg-emerald-600", border: "border-emerald-500", text: "text-white", glow: "shadow-[0_0_30px_rgba(16,185,129,0.4)]" },
@@ -224,7 +431,7 @@ function RoadSign({ mile, title, color }: { mile: string; title: string; color: 
   );
 }
 
-function ExitCard({ exit, side }: { exit: typeof EXITS[0]; side: "left" | "right" }) {
+function ExitCard({ exit, side, onClick }: { exit: typeof EXITS[0]; side: "left" | "right"; onClick: () => void }) {
   const isComplete = exit.status === "COMPLETE";
   const isProgress = exit.status === "IN PROGRESS";
 
@@ -237,7 +444,13 @@ function ExitCard({ exit, side }: { exit: typeof EXITS[0]; side: "left" | "right
   return (
     <HoverLift>
     <div className={cn("relative", side === "left" ? "lg:pr-8" : "lg:pl-8")}>
-      <div className="rounded-[1.4rem] border border-white/10 bg-neutral-900/80 p-5 sm:p-6 hover:border-white/15 transition-all">
+      <div
+        onClick={onClick}
+        className="rounded-[1.4rem] border border-white/10 bg-neutral-900/80 p-5 sm:p-6 hover:border-red-500/20 hover:bg-neutral-900/90 transition-all cursor-pointer group"
+      >
+        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition">
+          <span className="text-[10px] font-black uppercase tracking-wider text-red-400">Click for proof →</span>
+        </div>
         <div className={cn("flex items-center gap-3 mb-3 flex-wrap", side === "left" ? "lg:justify-end" : "")}>
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">{exit.mile}</span>
           <span className={cn("px-2.5 py-1 rounded-full border text-[10px] font-black tracking-wider", statusBadge)}>
@@ -268,25 +481,58 @@ function ExitCard({ exit, side }: { exit: typeof EXITS[0]; side: "left" | "right
   );
 }
 
-function Highway() {
+function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void }) {
   return (
     <Shell className="p-0 overflow-visible">
       <div className="relative py-10 sm:py-16">
+        {/* Base asphalt */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#1a1a1a_0%,#111_50%,#1a1a1a_100%)]" />
+        
+        {/* Tire tracks overlay */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: `
+            repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.3) 60px, rgba(255,255,255,0.3) 62px),
+            repeating-linear-gradient(85deg, transparent, transparent 120px, rgba(255,255,255,0.15) 120px, rgba(255,255,255,0.15) 124px)
+          `,
+        }} />
+        
+        {/* Skid marks near Mile 0 */}
+        <div className="absolute top-[12%] left-[20%] w-40 h-40 opacity-10" style={{
+          background: "radial-gradient(ellipse, rgba(255,255,255,0.3) 0%, transparent 70%)",
+          transform: "rotate(-30deg) scaleY(0.3)",
+        }} />
+        
+        {/* Crash debris at Mile 0 */}
+        <div className="absolute top-[8%] left-1/2 -translate-x-1/2 z-20 flex items-center gap-1">
+          <span className="text-2xl opacity-60">💀</span>
+          <span className="text-xl opacity-40">🔥</span>
+          <span className="text-lg opacity-30">⚠️</span>
+        </div>
+        <div className="absolute top-[10%] left-1/2 -translate-x-1/2 z-20 mt-6">
+          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20 text-center">Some launch casualties.<br />We kept driving.</p>
+        </div>
+
+        {/* Lane markers */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.5) 40px, rgba(255,255,255,0.5) 41px)`,
         }} />
+        
+        {/* Road edges */}
         <div className="absolute left-4 sm:left-8 top-0 bottom-0 w-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0.1)_100%)]" />
         <div className="absolute right-4 sm:right-8 top-0 bottom-0 w-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0.1)_100%)]" />
+        
+        {/* Center dashed line */}
         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-1 flex flex-col">
           {Array.from({ length: 30 }).map((_, i) => (
             <div key={i} className="h-6 sm:h-8 my-1 sm:my-1.5 bg-[linear-gradient(180deg,#fbbf24,#f59e0b)] rounded-sm opacity-80" style={{ boxShadow: "0 0 8px rgba(251,191,36,0.3)" }} />
           ))}
         </div>
+
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8">
           <div className="text-center mb-10">
-            <p className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30">The Mad Highway</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30">The Burn Trail</p>
             <h2 className="mt-2 text-3xl sm:text-4xl font-black text-white">Four exits. One destination.</h2>
+            <p className="mt-2 text-sm text-white/30">⚠️ Some casualties at Mile 0. We kept driving.</p>
           </div>
           <div className="space-y-16 sm:space-y-20">
             {EXITS.map((exit, i) => {
@@ -312,9 +558,9 @@ function Highway() {
                   )}
                   <div className={cn("grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-start")}>
                     {side === "left" ? (
-                      <><ExitCard exit={exit} side="left" /><div className="hidden lg:block" /></>
+                      <><ExitCard exit={exit} side="left" onClick={() => onCardClick(exit)} /><div className="hidden lg:block" /></>
                     ) : (
-                      <><div className="hidden lg:block" /><ExitCard exit={exit} side="right" /></>
+                      <><div className="hidden lg:block" /><ExitCard exit={exit} side="right" onClick={() => onCardClick(exit)} /></>
                     )}
                   </div>
                   <div className={cn("hidden lg:flex absolute top-0 items-start gap-2 z-20", side === "left" ? "left-[calc(50%-40px)] flex-row-reverse" : "left-[calc(50%+16px)]")}>
@@ -337,6 +583,10 @@ function Highway() {
     </Shell>
   );
 }
+
+/* ═══════════════════════════════════════════════════════════
+   COMMUNITY SUPPORT & CTA
+   ═══════════════════════════════════════════════════════════ */
 
 function CommunitySupport() {
   return (
@@ -395,11 +645,12 @@ function CTASection() {
           <h2 className="text-4xl font-black text-white sm:text-6xl">THIS IS YOUR PATH.</h2>
           <p className="mt-4 max-w-2xl text-base leading-8 text-white/78 sm:text-lg">Build. Prove. Expand.</p>
         </div>
-        <GlowPulse>
-        <a href={LINKS.buy} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-8 py-4 text-base font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400">
-          Start Your Journey →
-        </a>
-        </GlowPulse>
+        <div style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
+          <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,0,0,0.15)} 50%{box-shadow:0 0 35px rgba(255,0,0,0.28)}`}</style>
+          <a href={LINKS.buy} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-8 py-4 text-base font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400">
+            Start Your Journey →
+          </a>
+        </div>
       </div>
     </Shell>
   );
@@ -421,6 +672,14 @@ function RiskNotice() {
    ═══════════════════════════════════════════════════════════ */
 
 export default function RoadmapPage() {
+  const [selectedExit, setSelectedExit] = useState<typeof EXITS[0] | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openProof = (exit: typeof EXITS[0]) => {
+    setSelectedExit(exit);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,0,0.10),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.08),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.03),transparent_25%),linear-gradient(180deg,#050505,#020202)]" />
@@ -429,13 +688,18 @@ export default function RoadmapPage() {
           <FadeIn>
             <ProgressStrip />
           </FadeIn>
-          <StaggerGrid className="grid gap-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9" staggerDelay={0.06}>
-            {STATUS_CARDS.map((card) => (
-              <StatusMiniCard key={card.label} label={card.label} value={card.value} tone={card.tone} icon={card.icon} />
-            ))}
-          </StaggerGrid>
+          <FadeIn delay={0.05}>
+            <ChaosMeter />
+          </FadeIn>
+          <FadeIn delay={0.08}>
+            <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-9">
+              {STATUS_CARDS.map((card) => (
+                <StatusMiniCard key={card.label} label={card.label} value={card.value} tone={card.tone} icon={card.icon} />
+              ))}
+            </div>
+          </FadeIn>
           <FadeIn delay={0.1}>
-            <Highway />
+            <Highway onCardClick={openProof} />
           </FadeIn>
           <FadeIn delay={0.1}>
             <CommunitySupport />
@@ -448,6 +712,13 @@ export default function RoadmapPage() {
           </FadeIn>
         </div>
       </main>
+
+      {/* Proof Modal */}
+      <ProofModal
+        isOpen={isModalOpen}
+        onClose={() => { setIsModalOpen(false); setSelectedExit(null); }}
+        exit={selectedExit}
+      />
     </div>
   );
 }
