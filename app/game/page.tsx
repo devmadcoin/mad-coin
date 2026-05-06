@@ -475,6 +475,54 @@ export default function GamePage() {
           </SectionShell>
         </FadeIn>
 
+        {/* YouTube Video Section */}
+        <FadeIn delay={0.15}>
+          <SectionShell className="mt-8 overflow-hidden p-0">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="flex flex-col justify-center p-6 sm:p-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">
+                  WATCH THE MADNESS
+                </p>
+
+                <h2 className="mt-4 text-3xl font-black leading-[0.95] text-white sm:text-4xl">
+                  10K ROBUX Spent
+                </h2>
+
+                <p className="mt-5 max-w-xl text-base leading-8 text-white/68">
+                  Coffee Blox just dropped 10,000 ROBUX into Mad Phonk Awakening. 
+                  Unlocking crazy auras, evolving from weak to overpowered. 
+                  Real gameplay. Real chaos. Real $MAD.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <GlowPulse>
+                    <a
+                      href="https://www.youtube.com/watch?v=Pte0bOa16xI"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
+                    >
+                      Watch on YouTube →
+                    </a>
+                  </GlowPulse>
+
+                  <Pill tone="red">NEW</Pill>
+                </div>
+              </div>
+
+              <div className="relative aspect-video w-full bg-black">
+                <iframe
+                  src="https://www.youtube.com/embed/Pte0bOa16xI"
+                  title="I Spent 10,000 ROBUX In Mad Phonk Awakening! (ROBLOX)"
+                  className="absolute inset-0 h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </SectionShell>
+        </FadeIn>
+
         <FadeIn delay={0.1}>
           <SectionShell className="mt-8 p-6 sm:p-8">
             <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/45">
