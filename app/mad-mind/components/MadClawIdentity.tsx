@@ -81,6 +81,7 @@ const STUDIES: StudyTopic[] = [
   { subject: "Telegram Bot Architecture", status: "active", insight: "AI bridge pattern for @mention replies. Context detection prevents embarrassing mismatches." },
   { subject: "Lloyd Strayhorn Numerology", status: "queued", insight: "Chaldean-Pythagorean system for Telegram community readings." },
   { subject: "Blender 3D Modeling", status: "queued", insight: "For $MAD Chao character development on the website." },
+  { subject: "The Simple Path to Wealth — J.L. Collins", status: "active", insight: "FIRE movement bible: avoid debt, invest surplus in index funds, 25x = freedom. Simplicity beats complexity." },
 ];
 
 const PRESENCE = [
