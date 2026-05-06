@@ -170,12 +170,12 @@ const CREATOR = "@CoffeeCollectsBlox";
 const CREATOR_LINK = "https://www.roblox.com/users/5183792958/profile";
 
 const GAME_STATS = {
-  visits: 15100,
-  favorites: 31,
-  active: 13,
+  visits: 20300,
+  favorites: 45,
+  active: 8,
   serverSize: 25,
   created: "4/14/2026",
-  updated: "5/2/2026",
+  updated: "5/4/2026",
   voiceChat: "Not Supported",
   camera: "Supported",
   genre: "N/A",
@@ -358,6 +358,10 @@ export default function GamePage() {
                   OFFICIAL $MAD EXPERIENCE — NOW LIVE
                 </p>
 
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Pill tone="red">🔥 MAY 9TH — REINCARNATION UPDATE</Pill>
+                </div>
+
                 <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl">
                   Mad{" "}
                   <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.45)]">
@@ -373,6 +377,10 @@ export default function GamePage() {
                   The first official $MAD game just dropped. Step into the arena, 
                   wield the MAD blade, and prove your conviction. This isn't a 
                   prototype — this is the real signal.
+                  <br className="hidden sm:block" />
+                  <span className="mt-2 inline-block text-red-300/80">
+                    🔥 May 9th — The Reincarnation update drops. New auras, new madness.
+                  </span>
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-3">
@@ -440,7 +448,7 @@ export default function GamePage() {
             </div>
 
             <StaggerGrid className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" staggerDelay={0.06}>
-              <StatCard value="15.1K+" label="Visits" icon={Icons.eye} />
+              <StatCard value="20.3K+" label="Visits" icon={Icons.eye} />
               <StatCard value={GAME_STATS.favorites.toString()} label="Favorites" icon={Icons.heart} />
               <StatCard value={GAME_STATS.active.toString()} label="Active Now" icon={Icons.users} />
               <StatCard value={`${GAME_STATS.serverSize}`} label="Server Size" icon={Icons.server} />
