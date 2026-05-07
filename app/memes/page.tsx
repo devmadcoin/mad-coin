@@ -37,6 +37,10 @@ const ART_FILES = [
   "YOU-MAKE-ME-MAD.png",
   "YOU-WILL-BE-MAD.png",
   "MAD-RICH-BATH.png",
+  "MAD-ART-1.png",
+  "MAD-ART-2.png",
+  "MAD-ART-3.png",
+  "MAD-ART-4.png",
 ] as const;
 
 function cleanTitle(name: string) {
@@ -113,7 +117,7 @@ function ArtHero() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
           <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300 mb-6">
-            21 Pieces. All Rare.
+            25 Pieces. All Rare.
           </span>
           <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tight">
             THE <span className="text-red-500">$MAD</span><br />
@@ -127,7 +131,7 @@ function ArtHero() {
             <Pill tone="red">Official Art</Pill>
             <Pill tone="green">Free Download</Pill>
             <Pill>High Res</Pill>
-            <Pill tone="yellow">21 Total</Pill>
+            <Pill tone="yellow">25 Total</Pill>
           </div>
 
           {/* Contract box — drunk proof */}
@@ -154,7 +158,7 @@ function ArtHero() {
 
 /* ─── MARQUEE ─── */
 function Marquee() {
-  const text = "RARE ART • FREE TO GRAB • NOT FOR EVERYONE • SHARE THE SIGNAL • DOWNLOAD ALL 21 • ";
+  const text = "RARE ART • FREE TO GRAB • NOT FOR EVERYONE • SHARE THE SIGNAL • DOWNLOAD ALL 25 • ";
   return (
     <div className="overflow-hidden border-y border-white/10 bg-white/[0.02] py-4">
       <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite]">
