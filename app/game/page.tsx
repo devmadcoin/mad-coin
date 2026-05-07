@@ -587,7 +587,7 @@ export default function GamePage() {
                 <div className="mt-4 overflow-hidden rounded-[1.4rem] border border-white/10 bg-black">
                   <div className="relative aspect-square w-full">
                     <Image
-                      src="/game/kubo-special-guest.jpg"
+                      src="/game/kubo-special-guest.png"
                       alt="Kubo special guest"
                       fill
                       className="object-cover"
