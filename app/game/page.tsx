@@ -497,7 +497,7 @@ export default function GamePage() {
                 <div className="mt-8 flex flex-wrap gap-3">
                   <GlowPulse>
                     <a
-                      href="https://www.youtube.com/watch?v=Pte0bOa16xI"
+                      href="https://www.youtube.com/watch?v=Pte0bOa16xI&t=840s"
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
@@ -512,7 +512,7 @@ export default function GamePage() {
 
               <div className="relative aspect-video w-full bg-black">
                 <iframe
-                  src="https://www.youtube.com/embed/Pte0bOa16xI"
+                  src="https://www.youtube.com/embed/Pte0bOa16xI?start=840"
                   title="I Spent 10,000 ROBUX In Mad Phonk Awakening! (ROBLOX)"
                   className="absolute inset-0 h-full w-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
