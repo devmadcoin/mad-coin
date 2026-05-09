@@ -624,6 +624,18 @@ function CommunitySupport() {
           <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-black/40 p-5">
             <p className="text-lg font-black text-white sm:text-xl">Supported two communities.</p>
             <p className="mt-2 text-lg font-black text-emerald-300 sm:text-xl">Locked all the tokens.</p>
+            {/* Proof image */}
+            <div className="mt-4 rounded-[1.25rem] border border-white/10 overflow-hidden">
+              <img
+                src="/rndy-lock-proof.png"
+                alt="1,754,679 RNDY tokens locked via Streamflow until 2060"
+                className="w-full h-auto"
+              />
+              <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Latest Lock — May 8, 2026</p>
+                <p className="text-xs text-white/50 mt-0.5">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
+              </div>
+            </div>
             <p className="mt-4 text-sm leading-7 text-white/68 sm:text-base">
               This milestone matters because it shows execution, patience, and visible commitment. Not theory. Not hype. Proof. Twice.
             </p>
