@@ -624,16 +624,31 @@ function CommunitySupport() {
           <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-black/40 p-5">
             <p className="text-lg font-black text-white sm:text-xl">Supported two communities.</p>
             <p className="mt-2 text-lg font-black text-emerald-300 sm:text-xl">Locked all the tokens.</p>
-            {/* Proof image */}
-            <div className="mt-4 rounded-[1.25rem] border border-white/10 overflow-hidden">
-              <img
-                src="/rndy-lock-proof.png"
-                alt="1,754,679 RNDY tokens locked via Streamflow until 2060"
-                className="w-full h-auto"
-              />
-              <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Latest Lock — May 8, 2026</p>
-                <p className="text-xs text-white/50 mt-0.5">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
+            {/* Proof images — both locks */}
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {/* Proof #1 — DERPYDAVE */}
+              <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
+                <img
+                  src="/derpydave-lock-proof.png"
+                  alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060"
+                  className="w-full h-auto"
+                />
+                <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Proof #1 — Apr 21, 2026</p>
+                  <p className="text-xs text-white/50 mt-0.5">8,155,311 $DERPYDAVE · Streamflow · Non-cancelable until 2060</p>
+                </div>
+              </div>
+              {/* Proof #2 — RNDY */}
+              <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
+                <img
+                  src="/rndy-lock-proof.png"
+                  alt="1,754,679 RNDY tokens locked via Streamflow until 2060"
+                  className="w-full h-auto"
+                />
+                <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Proof #2 — May 8, 2026</p>
+                  <p className="text-xs text-white/50 mt-0.5">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
+                </div>
               </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-white/68 sm:text-base">
