@@ -624,8 +624,8 @@ function CommunitySupport() {
           <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-black/40 p-5">
             <p className="text-lg font-black text-white sm:text-xl">Supported two communities.</p>
             <p className="mt-2 text-lg font-black text-emerald-300 sm:text-xl">Locked all the tokens.</p>
-            {/* Proof images — both locks */}
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {/* Proof images — both locks, stacked for readability */}
+            <div className="mt-4 grid gap-4">
               {/* Proof #1 — DERPYDAVE */}
               <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
                 <img
