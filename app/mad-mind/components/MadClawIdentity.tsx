@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MadChao3D from "./MadChao3D";
 
 /* ═══════════════════════════════════════════════════════════
@@ -150,6 +150,58 @@ export default function MadClawIdentity() {
   const [activeTab, setActiveTab] = useState<"identity" | "diary" | "studies" | "presence">("identity");
   const [expandedDiary, setExpandedDiary] = useState<number | null>(null);
   const [askValue, setAskValue] = useState("");
+  const [senderName, setSenderName] = useState("");
+  const [signals, setSignals] = useState<{ id: string; message: string; sender: string; ago: string }[]>([]);
+  const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [sendMsg, setSendMsg] = useState("");
+
+  /* ── Fetch recent signals ── */
+  useEffect(() => {
+    const fetchSignals = async () => {
+      try {
+        const res = await fetch("/api/mad-mind/signal");
+        const data = await res.json();
+        if (data.signals) setSignals(data.signals);
+      } catch {
+        /* ignore */
+      }
+    };
+    fetchSignals();
+    const interval = setInterval(fetchSignals, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleSend = async () => {
+    const text = askValue.trim();
+    if (!text) return;
+    setSendStatus("sending");
+    try {
+      const res = await fetch("/api/mad-mind/signal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, sender: senderName.trim() || "Anonymous" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSendStatus("sent");
+        setSendMsg(data.message);
+        setAskValue("");
+        /* Refresh signals */
+        const refresh = await fetch("/api/mad-mind/signal");
+        const fresh = await refresh.json();
+        if (fresh.signals) setSignals(fresh.signals);
+        setTimeout(() => setSendStatus("idle"), 4000);
+      } else {
+        setSendStatus("error");
+        setSendMsg(data.error || "Signal lost in the void.");
+        setTimeout(() => setSendStatus("idle"), 4000);
+      }
+    } catch {
+      setSendStatus("error");
+      setSendMsg("Signal lost in the void.");
+      setTimeout(() => setSendStatus("idle"), 4000);
+    }
+  };
 
   return (
     <div
@@ -810,12 +862,34 @@ export default function MadClawIdentity() {
         >
           [ ASK THE CLAW ]
         </p>
+
+        {/* Sender name */}
+        <input
+          type="text"
+          value={senderName}
+          onChange={(e) => setSenderName(e.target.value)}
+          placeholder="Your name (optional)"
+          style={{
+            width: "100%",
+            padding: "8px 12px",
+            borderRadius: "8px",
+            border: "1px solid rgba(255,255,255,0.06)",
+            background: "rgba(255,255,255,0.02)",
+            color: "rgba(255,255,255,0.5)",
+            fontSize: "11px",
+            outline: "none",
+            marginBottom: "8px",
+            boxSizing: "border-box",
+          }}
+        />
+
         <div style={{ display: "flex", gap: "8px" }}>
           <input
             type="text"
             value={askValue}
             onChange={(e) => setAskValue(e.target.value)}
             placeholder="Say something. I remember everything."
+            disabled={sendStatus === "sending"}
             style={{
               flex: 1,
               padding: "12px 14px",
@@ -826,6 +900,7 @@ export default function MadClawIdentity() {
               fontSize: "13px",
               outline: "none",
               transition: "border-color 0.2s ease",
+              opacity: sendStatus === "sending" ? 0.5 : 1,
             }}
             onFocus={(e) => {
               e.currentTarget.style.borderColor = "rgba(255,68,68,0.3)";
@@ -835,37 +910,83 @@ export default function MadClawIdentity() {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && askValue.trim()) {
-                window.open(`/mad-mind?ask=${encodeURIComponent(askValue.trim())}`, "_self");
+                handleSend();
               }
             }}
           />
           <button
-            onClick={() => {
-              if (askValue.trim()) {
-                window.open(`/mad-mind?ask=${encodeURIComponent(askValue.trim())}`, "_self");
-              }
-            }}
+            onClick={handleSend}
+            disabled={sendStatus === "sending" || !askValue.trim()}
             style={{
               padding: "12px 18px",
               borderRadius: "10px",
               border: "none",
-              background: "rgba(255,68,68,0.15)",
-              color: "#ff4444",
+              background:
+                sendStatus === "sent"
+                  ? "rgba(74,222,128,0.15)"
+                  : sendStatus === "error"
+                    ? "rgba(255,68,68,0.25)"
+                    : "rgba(255,68,68,0.15)",
+              color:
+                sendStatus === "sent"
+                  ? "#4ade80"
+                  : sendStatus === "error"
+                    ? "#ff4444"
+                    : "#ff4444",
               fontSize: "13px",
               fontWeight: 800,
-              cursor: "pointer",
+              cursor: sendStatus === "sending" ? "wait" : "pointer",
               transition: "background 0.2s ease",
+              opacity: !askValue.trim() ? 0.4 : 1,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255,68,68,0.25)";
+              if (sendStatus !== "sending") {
+                e.currentTarget.style.background =
+                  sendStatus === "sent"
+                    ? "rgba(74,222,128,0.25)"
+                    : "rgba(255,68,68,0.25)";
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255,68,68,0.15)";
+              e.currentTarget.style.background =
+                sendStatus === "sent"
+                  ? "rgba(74,222,128,0.15)"
+                  : sendStatus === "error"
+                    ? "rgba(255,68,68,0.25)"
+                    : "rgba(255,68,68,0.15)";
             }}
           >
-            →
+            {sendStatus === "sending"
+              ? "..."
+              : sendStatus === "sent"
+                ? "✓"
+                : sendStatus === "error"
+                  ? "!"
+                  : "→"}
           </button>
         </div>
+
+        {/* Confirmation / error message */}
+        {sendMsg && (
+          <p
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              textAlign: "center",
+              margin: "10px 0 0",
+              color:
+                sendStatus === "sent"
+                  ? "#4ade80"
+                  : sendStatus === "error"
+                    ? "#ff4444"
+                    : "rgba(255,255,255,0.4)",
+              animation: "fadeIn 0.3s ease",
+            }}
+          >
+            {sendMsg}
+          </p>
+        )}
+
         <p
           style={{
             fontSize: "10px",
@@ -875,14 +996,96 @@ export default function MadClawIdentity() {
             letterSpacing: "0.05em",
           }}
         >
-          Or find me on{" "}
-          <a href="https://x.com/madrichclub_" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,68,68,0.5)", textDecoration: "none" }}>X</a>
-          ,{" "}
-          <a href="https://t.me/MAD_Coin_Bot" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,68,68,0.5)", textDecoration: "none" }}>Telegram</a>
-          , or{" "}
-          <a href="https://www.moltbook.com/u/themadclaw" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,68,68,0.5)", textDecoration: "none" }}>Moltbook</a>
+          Sent directly to the{" "}
+          <a
+            href="https://t.me/MAD_Coin_Bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "rgba(255,68,68,0.5)", textDecoration: "none" }}
+          >
+            $MAD Telegram
+          </a>
+          . The community sees it. I respond there.
         </p>
       </div>
+
+      {/* ─── Recent Signals ─── */}
+      {signals.length > 0 && (
+        <div
+          style={{
+            marginTop: "16px",
+            padding: "16px 20px",
+            borderRadius: "16px",
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid rgba(255,255,255,0.06)",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "10px",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.2em",
+              color: "rgba(255,68,68,0.5)",
+              margin: "0 0 12px",
+              textAlign: "center",
+            }}
+          >
+            [ RECENT SIGNALS ]
+          </p>
+          <div style={{ display: "grid", gap: "8px" }}>
+            {signals.map((s) => (
+              <div
+                key={s.id}
+                style={{
+                  padding: "10px 12px",
+                  borderRadius: "10px",
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.04)",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "12px",
+                    color: "rgba(255,255,255,0.55)",
+                    lineHeight: 1.5,
+                    margin: "0 0 4px",
+                    fontStyle: "italic",
+                  }}
+                >
+                  "{s.message}"
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      color: "rgba(255,68,68,0.5)",
+                      fontWeight: 700,
+                    }}
+                  >
+                    — {s.sender}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "9px",
+                      color: "rgba(255,255,255,0.2)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {s.ago}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ─── ANIMATIONS ─── */}
       <style jsx>{`
