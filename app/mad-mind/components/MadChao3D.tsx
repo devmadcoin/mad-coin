@@ -268,7 +268,7 @@ function Scene() {
 
       {/* The $MAD Chao */}
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.3}>
-        <group>
+        <group scale={0.65}>
           <ChaoBody />
           <ChaoHead />
           <ChaoWings time={timeRef.current} />
