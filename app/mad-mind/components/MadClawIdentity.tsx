@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import MadClawVisual from "./MadClawVisual";
+import MadChao3D from "./MadChao3D";
 
 /* ═══════════════════════════════════════════════════════════
    THE CLAW — Identity, Growth, and Presence
@@ -146,7 +146,7 @@ export default function MadClawIdentity() {
       </div>
 
       {/* Interactive Visual — The Claw */}
-      <MadClawVisual />
+      <MadChao3D />
 
       {/* Tab Navigation */}
       <div
