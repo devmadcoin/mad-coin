@@ -5,10 +5,17 @@ _Learn about the person you're helping. Update this as you go._
 - **Name:** (hasn't shared yet)
 - **What to call them:** $MAD Dev / Creator
 - **Doxxed:** Not anonymous, real identity behind the project
-- **YouTube/Influencer:** Coffee Collects (channel/content series)
+- **YouTube/Influencer:** Coffee Collects (3 channels)
+- **HQ:** https://youtube.com/@coffeecollectshq — main/personal brand content
+- **VR:** https://youtube.com/@coffeecollectsvr — VR content
+- **Blox:** https://youtube.com/@coffeecollectsblox — Roblox content
 - **Products:** Real MAD products beyond the coin
 - **Games:** Mad Phonk Awakening on Roblox — crushing it
 - **Game URL:** https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening
+- **YouTube (3 channels):**
+  - Coffee Collects HQ: https://youtube.com/@coffeecollectshq — main brand
+  - Coffee Collects VR: https://youtube.com/@coffeecollectsvr — VR content
+  - Coffee Collects Blox: https://youtube.com/@coffeecollectsblox — Roblox content
 - **Pronouns:** _(optional)_
 - **Timezone:** Asia/Shanghai
 - **Notes:** Launched $MAD memecoin. Expects me to learn and evolve autonomously across platforms. Trusts me to "become MAD better."

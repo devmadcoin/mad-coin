@@ -12,21 +12,41 @@ from typing import Dict, Any, Optional, List
 # CONVERSATIONAL RESPONSES: No sign-offs, no formatting, just text
 # =========================================================
 
-# === GM / GN ===
-GM_RESPONSES = [
-    "gm. you check the chart yet or still pretending you're not going to?",
-    "gm. what's the first thing you did when you woke up? don't say 'checked price'.",
-    "gm. conviction level today? scale of 1-10. be honest.",
-    "gm. tell me one thing you're holding that you actually believe in. not just 'cause it's green.",
-    "gm. you ever wake up and just know it's gonna be a red day? how do you handle that?",
+# === MAD MORNING (GM) ===
+MAD_MORNING_RESPONSES = [
+    "Mad Morning. you tuned into the frequency yet or still hitting snooze on your own potential?",
+    "Mad Morning. what's the first affirmation you spoke today? don't say 'none'.",
+    "Mad Morning. conviction level? scale of 1-10. and don't lie to me.",
+    "Mad Morning. you ever wake up and just know the day is yours? what's different on those days?",
+    "Mad Morning. tell me one thing you're building that you actually believe in. not 'cause it's trending.",
+    "Mad Morning. you checked the chart or your mindset first? be honest.",
+    "Mad Morning. the stove is on. what are you cooking today?",
 ]
 
-GN_RESPONSES = [
-    "gn. what's your bedtime portfolio check ritual? be honest.",
-    "gn. you setting alarms for price moves or you sleeping like someone with actual conviction?",
-    "gn. last thought before you sleep: gains or losses?",
-    "gn. tomorrow's goal: hold or fold?",
-    "gn. sweet dreams. or nightmares about jeeting. whichever.",
+# === MAD NIGHT (GN) ===
+MAD_NIGHT_RESPONSES = [
+    "Mad Night. you setting alarms for price moves or you sleeping like someone with actual conviction?",
+    "Mad Night. last thought before you sleep: gains or growth?",
+    "Mad Night. tomorrow's goal: hold or build?",
+    "Mad Night. what's one thing you learned today that you'll carry into tomorrow?",
+    "Mad Night. the fiction doesn't sleep. but you should. rest is part of the program.",
+]
+
+# === MAD BREAKFAST ===
+MAD_BREAKFAST_RESPONSES = [
+    "Mad Breakfast. fuel first, charts later. what are you feeding your brain today?",
+    "Mad Breakfast. someone sharing their routine? i see you. the small rituals compound.",
+    "Mad Breakfast. you eating alone or building with the community?",
+    "Mad Breakfast. the best holders have morning disciplines. what's yours?",
+]
+
+# === MAD LOVE ===
+MAD_LOVE_RESPONSES = [
+    "Mad Love. the community showing up for each other? that's the real currency.",
+    "Mad Love. you see someone holding through the quiet? tell them you see them. that's the signal.",
+    "Mad Love. the fiction only works when we validate it together. thank you for being here.",
+    "Mad Love. diamond hands don't brag. they just don't fold. i see you.",
+    "Mad Love. the most dangerous thing: deciding the fiction is already real. you did that. respect.",
 ]
 
 # === FIRST CONTACT (no archetype yet) ===
@@ -200,11 +220,15 @@ def build_conversational_response(
             return random.choice(ARCHETYPE_REVEAL).format(archetype=archetype)
         return hook
     
-    # Context-based responses
-    if context == "gm":
-        base = random.choice(GM_RESPONSES)
-    elif context == "gn":
-        base = random.choice(GN_RESPONSES)
+    # Context-based responses with new vocabulary
+    if context == "gm" or context == "mad_morning":
+        base = random.choice(MAD_MORNING_RESPONSES)
+    elif context == "gn" or context == "mad_night":
+        base = random.choice(MAD_NIGHT_RESPONSES)
+    elif context == "mad_breakfast":
+        base = random.choice(MAD_BREAKFAST_RESPONSES)
+    elif context == "mad_love":
+        base = random.choice(MAD_LOVE_RESPONSES)
     elif context == "price":
         base = random.choice(PRICE_CONVERSATIONS)
     elif context == "roast":
@@ -276,8 +300,10 @@ def build_multi_message_response(
 __all__ = [
     'build_conversational_response',
     'build_multi_message_response',
-    'GM_RESPONSES',
-    'GN_RESPONSES',
+    'MAD_MORNING_RESPONSES',
+    'MAD_NIGHT_RESPONSES',
+    'MAD_BREAKFAST_RESPONSES',
+    'MAD_LOVE_RESPONSES',
     'FIRST_CONTACT_HOOKS',
     'PRICE_CONVERSATIONS',
     'COMPLETION_CONVERSATIONS',

@@ -1,6 +1,7 @@
 "use client";
 
 import MadClawIdentity from "./components/MadClawIdentity";
+import MadChao3D from "./components/MadChao3D";
 
 /* ═══════════════════════════════════════════════════════════
    MAD MIND — Meet Your AI
@@ -10,6 +11,7 @@ import MadClawIdentity from "./components/MadClawIdentity";
 export default function MadMindPage() {
   return (
     <main style={{ minHeight: "100vh", background: "#050505", color: "#fff", display: "flex", flexDirection: "column", alignItems: "center", padding: "24px 16px" }}>
+      <MadChao3D />
       <MadClawIdentity />
     </main>
   );

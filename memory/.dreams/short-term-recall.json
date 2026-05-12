@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "updatedAt": "2026-05-12T07:36:05.134Z",
+  "entries": {
+    "memory:memory/2026-05-07.md:83:112": {
+      "key": "memory:memory/2026-05-07.md:83:112",
+      "path": "memory/2026-05-07.md",
+      "startLine": 83,
+      "endLine": 112,
+      "source": "memory",
+      "snippet": "- **\"Let it work, rather than make it work\"** — trust the mechanism, don't force - **Dehypnotize from negative beliefs** — most people are hypnotized by past failures - **Happiness is a habit** — deliberately think pleasant thoughts **$MAD Application:** The daily affirmation practice IS the thermostat reset. \"$MAD Abundant\" with feeling = mental rehearsal. After 21 days, it becomes automatic. **Study notes saved:** `studies/psycho_cybernetics.md` --- ## 07:17 — Telegram Bot: Vocabulary-First Routing Fix (CRITICAL) **Bug:** \"Mad Morning\" was hitting the autonomous AI engine (`mad_autonomous.py`) instead of conversational pools. The AI engine doesn't know about \"Mad Morning\" — it generat",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3555727034807205,
+      "maxScore": 0.3555727034807205,
+      "firstRecalledAt": "2026-05-12T07:36:05.134Z",
+      "lastRecalledAt": "2026-05-12T07:36:05.134Z",
+      "queryHashes": [
+        "e980815d3d0a"
+      ],
+      "recallDays": [
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "studies/psycho-cybernetics.md",
+        "vocabulary-first",
+        "mad-autonomous.py",
+        "let",
+        "rather",
+        "trust",
+        "the",
+        "mechanism"
+      ]
+    }
+  }
+}
