@@ -301,11 +301,11 @@ export default function MadChao3D() {
 
   return (
     <div
-      style={{ width: "100%", height: "380px", borderRadius: "20px", overflow: "hidden", marginBottom: "24px", border: "1px solid rgba(255,255,255,0.06)" }}
+      style={{ width: "100%", height: "420px", borderRadius: "20px", overflow: "hidden", marginBottom: "24px", border: "1px solid rgba(255,255,255,0.06)" }}
       onPointerMove={handlePointerMove}
     >
       <Canvas
-        camera={{ position: [0, 1, 4], fov: 45 }}
+        camera={{ position: [0, 0.2, 4.5], fov: 45 }}
         style={{ background: "#050505" }}
         gl={{ antialias: true, alpha: true }}
       >
