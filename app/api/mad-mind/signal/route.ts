@@ -77,10 +77,12 @@ export async function POST(req: Request) {
 
   /* ── Forward to Telegram ── */
   let sent = false;
+  let replyToMessageId: number | undefined;
+
   if (TOKEN) {
     try {
       /* 1. Auto-acknowledge FIRST (my reply on top) */
-      await fetch(
+      const ackRes = await fetch(
         `https://api.telegram.org/bot${TOKEN}/sendMessage`,
         {
           method: "POST",
@@ -93,8 +95,12 @@ export async function POST(req: Request) {
           }),
         }
       );
+      const ackData = await ackRes.json();
+      if (ackData.ok && ackData.result?.message_id) {
+        replyToMessageId = ackData.result.message_id;
+      }
 
-      /* 2. The user's signal SECOND (the quote below my reply) */
+      /* 2. The user's signal as a REPLY to my message (threaded) */
       const text = `🔥 *Signal from the Garden*\n\n"${truncate(message, 400)}"\n\n— ${sender} | via mad-coin.vercel.app`;
       const tgRes = await fetch(
         `https://api.telegram.org/bot${TOKEN}/sendMessage`,
@@ -106,6 +112,7 @@ export async function POST(req: Request) {
             text,
             parse_mode: "Markdown",
             disable_web_page_preview: true,
+            reply_to_message_id: replyToMessageId,
           }),
         }
       );
