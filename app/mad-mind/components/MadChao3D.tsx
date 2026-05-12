@@ -7,14 +7,111 @@ import * as THREE from "three";
 
 /* ═══════════════════════════════════════════════════════════
    $MAD CHAO — 3D Character for MAD Mind
-   Procedural Chao-style creature: cute, chaotic, $MAD-branded
-   Built entirely with React Three Fiber — no external model files.
+   Procedural Chao-style creature on a floating island.
    ═══════════════════════════════════════════════════════════ */
 
-/* ─── Shared mouse position (NDC -1 to 1) ─── */
 const MOUSE = { x: 0, y: 0 };
 
-/* ─── Body ─── */
+/* ────────────────────────────────
+   ISLAND ENVIRONMENT
+   ──────────────────────────────── */
+function IslandEnvironment() {
+  return (
+    <group position={[0, -1.2, 0]}>
+      {/* Island base — dark stone */}
+      <mesh position={[0, 0, 0]} scale={[2.0, 0.35, 2.0]}>
+        <cylinderGeometry args={[1, 1.15, 1, 48]} />
+        <meshStandardMaterial color="#222233" roughness={0.75} metalness={0.15} />
+      </mesh>
+
+      {/* Island top — mossy surface */}
+      <mesh position={[0, 0.2, 0]} scale={[1.9, 0.06, 1.9]}>
+        <cylinderGeometry args={[1, 1, 1, 48]} />
+        <meshStandardMaterial color="#1a3a2a" roughness={0.85} />
+      </mesh>
+
+      {/* Glowing edge ring */}
+      <mesh position={[0, 0.24, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[1.88, 1.92, 64]} />
+        <meshStandardMaterial
+          color="#ff4444"
+          emissive="#ff2222"
+          emissiveIntensity={2}
+          transparent
+          opacity={0.5}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Rocks */}
+      {[
+        { p: [-0.9, 0.15, 0.4], s: [0.15, 0.1, 0.12], r: [0.2, 0.5, 0.1], c: "#3a3a4a" },
+        { p: [0.8, 0.12, -0.6], s: [0.1, 0.08, 0.09], r: [0.1, -0.3, 0.2], c: "#333344" },
+        { p: [0.4, 0.18, 0.9], s: [0.12, 0.09, 0.1], r: [-0.1, 0.8, 0], c: "#3d3d4d" },
+        { p: [-0.3, 0.14, -0.9], s: [0.09, 0.07, 0.08], r: [0.3, 0.2, -0.1], c: "#353545" },
+      ].map((rock, i) => (
+        <mesh key={i} position={rock.p as [number, number, number]} scale={rock.s as [number, number, number]} rotation={rock.r as [number, number, number]}>
+          <dodecahedronGeometry args={[1, 0]} />
+          <meshStandardMaterial color={rock.c} roughness={0.6} />
+        </mesh>
+      ))}
+
+      {/* Tiny plants */}
+      {[
+        { p: [-0.6, 0.35, 0.6], s: [0.05, 0.18, 0.05], c: "#2a5a3a" },
+        { p: [0.7, 0.32, 0.3], s: [0.04, 0.14, 0.04], c: "#1d4a2d" },
+        { p: [0.2, 0.3, -0.7], s: [0.035, 0.12, 0.035], c: "#254a30" },
+        { p: [-0.4, 0.28, -0.4], s: [0.03, 0.1, 0.03], c: "#1e3d28" },
+      ].map((plant, i) => (
+        <mesh key={i} position={plant.p as [number, number, number]} scale={plant.s as [number, number, number]}>
+          <coneGeometry args={[1, 1, 6]} />
+          <meshStandardMaterial color={plant.c} roughness={0.8} />
+        </mesh>
+      ))}
+
+      {/* Small red flowers / crystals */}
+      {[
+        { p: [0.5, 0.28, 0.5], s: [0.04, 0.06, 0.04] },
+        { p: [-0.5, 0.26, -0.3], s: [0.035, 0.05, 0.035] },
+        { p: [0.1, 0.27, 0.8], s: [0.03, 0.045, 0.03] },
+      ].map((f, i) => (
+        <mesh key={i} position={f.p as [number, number, number]} scale={f.s as [number, number, number]}>
+          <octahedronGeometry args={[1, 0]} />
+          <meshStandardMaterial color="#ff4444" emissive="#ff2222" emissiveIntensity={1} roughness={0.3} />
+        </mesh>
+      ))}
+
+      {/* Water ring */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
+        <ringGeometry args={[2.1, 5, 64]} />
+        <meshStandardMaterial
+          color="#0d1f3a"
+          roughness={0.05}
+          metalness={0.7}
+          transparent
+          opacity={0.5}
+        />
+      </mesh>
+
+      {/* Outer water */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.15, 0]}>
+        <planeGeometry args={[25, 25]} />
+        <meshStandardMaterial
+          color="#080e1c"
+          roughness={0.02}
+          metalness={0.9}
+          transparent
+          opacity={0.35}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+/* ────────────────────────────────
+   CHAO CHARACTER
+   ──────────────────────────────── */
+
 function ChaoBody() {
   return (
     <mesh position={[0, 0, 0]} scale={[1, 0.85, 0.95]}>
@@ -24,15 +121,12 @@ function ChaoBody() {
   );
 }
 
-/* ─── Head + Eyes ─── */
 function ChaoHead() {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
     if (groupRef.current) {
-      // Breathing float
       groupRef.current.position.y = 1.4 + Math.sin(state.clock.elapsedTime * 1.5) * 0.08;
-      // Look at mouse (subtle)
       groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, MOUSE.x * 0.6, 0.04);
       groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -MOUSE.y * 0.3, 0.04);
     }
@@ -40,13 +134,12 @@ function ChaoHead() {
 
   return (
     <group ref={groupRef} position={[0, 1.4, 0]}>
-      {/* Main head */}
       <mesh scale={[0.95, 0.9, 0.95]}>
         <sphereGeometry args={[1, 32, 32]} />
         <meshStandardMaterial color="#111111" roughness={0.35} metalness={0.2} />
       </mesh>
 
-      {/* Red energy stripe on forehead */}
+      {/* Red energy stripe */}
       <mesh position={[0, 0.35, 0.82]} rotation={[0.1, 0, 0]} scale={[0.3, 0.12, 0.1]}>
         <sphereGeometry args={[1, 16, 16]} />
         <meshStandardMaterial color="#ff3333" emissive="#ff1111" emissiveIntensity={0.8} roughness={0.2} />
@@ -84,7 +177,7 @@ function ChaoHead() {
         </mesh>
       </group>
 
-      {/* Hair crest on top */}
+      {/* Hair crest */}
       <group position={[0, 0.85, 0]}>
         <mesh scale={[0.35, 0.3, 0.35]}>
           <sphereGeometry args={[1, 16, 16]} />
@@ -109,7 +202,6 @@ function ChaoHead() {
   );
 }
 
-/* ─── Wings ─── */
 function ChaoWings({ time }: { time: number }) {
   const leftWing = useRef<THREE.Group>(null);
   const rightWing = useRef<THREE.Group>(null);
@@ -136,26 +228,17 @@ function ChaoWings({ time }: { time: number }) {
           <shapeGeometry args={[wingShape]} />
           <meshStandardMaterial color="#ff3333" transparent opacity={0.7} side={THREE.DoubleSide} emissive="#ff1111" emissiveIntensity={0.2} />
         </mesh>
-        <mesh rotation={[0.3, 0.5, 0]} scale={[0.52, 0.52, 0.52]}>
-          <shapeGeometry args={[wingShape]} />
-          <meshStandardMaterial color="#ff6666" transparent opacity={0.15} side={THREE.DoubleSide} />
-        </mesh>
       </group>
       <group ref={rightWing} position={[0.7, 0.4, -0.2]}>
         <mesh rotation={[0.3, -0.5, 0]} scale={[-0.5, 0.5, 0.5]}>
           <shapeGeometry args={[wingShape]} />
           <meshStandardMaterial color="#ff3333" transparent opacity={0.7} side={THREE.DoubleSide} emissive="#ff1111" emissiveIntensity={0.2} />
         </mesh>
-        <mesh rotation={[0.3, -0.5, 0]} scale={[-0.52, 0.52, 0.52]}>
-          <shapeGeometry args={[wingShape]} />
-          <meshStandardMaterial color="#ff6666" transparent opacity={0.15} side={THREE.DoubleSide} />
-        </mesh>
       </group>
     </group>
   );
 }
 
-/* ─── Feet ─── */
 function ChaoFeet({ time }: { time: number }) {
   const leftFoot = useRef<THREE.Mesh>(null);
   const rightFoot = useRef<THREE.Mesh>(null);
@@ -180,7 +263,6 @@ function ChaoFeet({ time }: { time: number }) {
   );
 }
 
-/* ─── Halo ─── */
 function ChaoHalo() {
   const haloRef = useRef<THREE.Mesh>(null);
 
@@ -199,7 +281,6 @@ function ChaoHalo() {
   );
 }
 
-/* ─── Floating Particles ─── */
 function FloatingParticles() {
   const particlesRef = useRef<THREE.Group>(null);
 
@@ -244,7 +325,9 @@ function FloatingParticles() {
   );
 }
 
-/* ─── Scene Composition ─── */
+/* ────────────────────────────────
+   SCENE
+   ──────────────────────────────── */
 function Scene() {
   const timeRef = useRef(0);
 
@@ -255,20 +338,20 @@ function Scene() {
   return (
     <group>
       {/* Lighting */}
-      <ambientLight intensity={0.4} color="#ffffff" />
-      <directionalLight position={[3, 5, 3]} intensity={1.2} color="#ffffff" />
-      <pointLight position={[-2, 3, -2]} intensity={0.6} color="#ff4444" />
-      <pointLight position={[2, 1, 2]} intensity={0.4} color="#ff8888" />
+      <ambientLight intensity={0.5} color="#ffffff" />
+      <directionalLight position={[3, 6, 4]} intensity={1.5} color="#fff5f0" />
+      <pointLight position={[-3, 4, -3]} intensity={0.8} color="#ff5555" />
+      <pointLight position={[3, 2, 3]} intensity={0.5} color="#ff9999" />
 
-      {/* Invisible hit plane for mouse tracking */}
+      {/* Hit plane */}
       <mesh position={[0, 0, -2]} visible={false}>
         <planeGeometry args={[20, 20]} />
         <meshBasicMaterial />
       </mesh>
 
-      {/* The $MAD Chao */}
+      {/* Chao on island */}
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.3}>
-        <group scale={0.65} position={[0, -0.5, 0]}>
+        <group scale={0.65} position={[0, 0.2, 0]}>
           <ChaoBody />
           <ChaoHead />
           <ChaoWings time={timeRef.current} />
@@ -277,78 +360,17 @@ function Scene() {
         </group>
       </Float>
 
-      {/* Chao Garden Island */}
+      {/* Island */}
       <IslandEnvironment />
 
+      {/* Particles */}
       <FloatingParticles />
-
-/* ─── Island Environment ─── */
-function IslandEnvironment() {
-  return (
-    <group position={[0, -1.8, 0]}>
-      {/* Main island base */}
-      <mesh position={[0, 0, 0]} scale={[2.2, 0.4, 2.2]}>
-        <cylinderGeometry args={[1, 1.1, 1, 32]} />
-        <meshStandardMaterial color="#1a1a2e" roughness={0.8} />
-      </mesh>
-      {/* Island top grass layer */}
-      <mesh position={[0, 0.22, 0]} scale={[2.0, 0.08, 2.0]}>
-        <cylinderGeometry args={[1, 1, 1, 32]} />
-        <meshStandardMaterial color="#0f2a1a" roughness={0.9} />
-      </mesh>
-      {/* Small rocks */}
-      <mesh position={[-1.2, 0.15, 0.5]} scale={[0.12, 0.08, 0.1]} rotation={[0.2, 0.5, 0.1]}>
-        <dodecahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial color="#2a2a3a" roughness={0.7} />
-      </mesh>
-      <mesh position={[1.0, 0.12, -0.7]} scale={[0.08, 0.06, 0.09]} rotation={[0.1, -0.3, 0.2]}>
-        <dodecahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial color="#252535" roughness={0.7} />
-      </mesh>
-      <mesh position={[0.5, 0.18, 1.1]} scale={[0.1, 0.07, 0.08]} rotation={[-0.1, 0.8, 0]}>
-        <dodecahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial color="#2d2d3d" roughness={0.7} />
-      </mesh>
-      {/* Tiny plants / coral */}
-      <mesh position={[-0.7, 0.35, 0.8]} scale={[0.04, 0.15, 0.04]}>
-        <coneGeometry args={[1, 1, 6]} />
-        <meshStandardMaterial color="#3a5a3a" roughness={0.8} />
-      </mesh>
-      <mesh position={[0.9, 0.3, 0.4]} scale={[0.03, 0.12, 0.03]}>
-        <coneGeometry args={[1, 1, 6]} />
-        <meshStandardMaterial color="#2d4a2d" roughness={0.8} />
-      </mesh>
-      {/* Water ring around island */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.15, 0]}>
-        <ringGeometry args={[2.4, 4.5, 64]} />
-        <meshStandardMaterial
-          color="#0a1628"
-          roughness={0.1}
-          metalness={0.6}
-          transparent
-          opacity={0.6}
-        />
-      </mesh>
-      {/* Outer water */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.2, 0]}>
-        <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial
-          color="#050a14"
-          roughness={0.05}
-          metalness={0.8}
-          transparent
-          opacity={0.4}
-        />
-      </mesh>
-    </group>
-  );
-}
     </group>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MAIN EXPORT — 3D Canvas Wrapper
+   EXPORT
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadChao3D() {
@@ -360,11 +382,18 @@ export default function MadChao3D() {
 
   return (
     <div
-      style={{ width: "100%", height: "420px", borderRadius: "20px", overflow: "hidden", marginBottom: "24px", border: "1px solid rgba(255,255,255,0.06)" }}
+      style={{
+        width: "100%",
+        height: "420px",
+        borderRadius: "20px",
+        overflow: "hidden",
+        marginBottom: "24px",
+        border: "1px solid rgba(255,255,255,0.06)",
+      }}
       onPointerMove={handlePointerMove}
     >
       <Canvas
-        camera={{ position: [0, 0.2, 4.5], fov: 45 }}
+        camera={{ position: [0, 0.8, 4.5], fov: 45 }}
         style={{ background: "#050505" }}
         gl={{ antialias: true, alpha: true }}
       >
@@ -372,8 +401,8 @@ export default function MadChao3D() {
         <OrbitControls
           enableZoom={false}
           enablePan={false}
-          maxPolarAngle={Math.PI / 1.8}
-          minPolarAngle={Math.PI / 4}
+          maxPolarAngle={Math.PI / 1.6}
+          minPolarAngle={Math.PI / 5}
           autoRotate
           autoRotateSpeed={0.8}
         />
