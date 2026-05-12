@@ -58,6 +58,7 @@ const LINKS = {
   buy: "https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
   communityProof: "https://x.com/madrichclub_/status/2046716691867201953?s=20",
   communityProof2: "https://x.com/madrichclub_/status/2052921091342107024?s=20",
+  communityProof3: "https://x.com/madrichclub_/status/2053391015109955771?s=20",
   madMind: "https://mad-coin.vercel.app/mad-mind",
 } as const;
 
@@ -69,7 +70,7 @@ const STATUS_CARDS = [
   { label: "Confessions", value: "LIVE NOW", tone: "green" as const, icon: "💬" },
   { label: "Token Burns", value: "ACTIVE", tone: "green" as const, icon: "🔥" },
   { label: "MAD AI", value: "LIVE NOW", tone: "green" as const, icon: "🤖" },
-  { label: "Community Support", value: "2 LOCKED", tone: "green" as const, icon: "🤝" },
+  { label: "Community Support", value: "3 LOCKED", tone: "green" as const, icon: "🤝" },
   { label: "MAD Games", value: "IN PROGRESS", tone: "red" as const, icon: "🎮" },
   { label: "Stickers", value: "LIVE NOW", tone: "green" as const, icon: "😈" },
   { label: "Clothing", value: "TESTING", tone: "red" as const, icon: "👕" },
@@ -103,7 +104,7 @@ const EXITS = [
       { text: "Supply reduced to ~503M", done: true },
       { text: "Burn target set: 800M", done: true },
       { text: "Community growth active", done: true },
-      { text: "2nd community locked in", done: true },
+      { text: "3rd community locked in", done: true },
     ],
     summary: "Supply shrinking. 503M → 800M. Two communities backed publicly. Tokens locked.",
   },
@@ -598,7 +599,7 @@ function CommunitySupport() {
         <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),rgba(0,0,0,0.92))] p-6 sm:p-7">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-300/85">Alliance Expansion</p>
-            <h2 className="mt-3 text-3xl font-black text-white sm:text-5xl">2 Communities Supported.</h2>
+            <h2 className="mt-3 text-3xl font-black text-white sm:text-5xl">3 Communities Supported.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-white/78 sm:text-lg">
               Before asking people to trust the mission, we showed loyalty in public. Two communities were supported through action, and the tokens were locked to prove long-term conviction.
             </p>
@@ -606,7 +607,7 @@ function CommunitySupport() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 px-6 py-5">
               <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-300/80">Support Status</p>
-              <p className="mt-2 text-3xl font-black text-emerald-300">2 Locked</p>
+              <p className="mt-2 text-3xl font-black text-emerald-300">3 Locked</p>
               <p className="mt-1 text-sm text-white/55">Backed publicly with receipts</p>
             </div>
             <div className="rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-5">
@@ -622,7 +623,7 @@ function CommunitySupport() {
             <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-300">Verified Signal</span>
           </div>
           <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-black/40 p-5">
-            <p className="text-lg font-black text-white sm:text-xl">Supported two communities.</p>
+            <p className="text-lg font-black text-white sm:text-xl">Supported three communities.</p>
             <p className="mt-2 text-lg font-black text-emerald-300 sm:text-xl">Locked all the tokens.</p>
             {/* Proof images — both locks, stacked for readability */}
             <div className="mt-4 grid gap-4">
@@ -650,9 +651,21 @@ function CommunitySupport() {
                   <p className="text-xs text-white/50 mt-0.5">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
+              {/* Proof #3 — TOUCHGRASS */}
+              <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
+                <img
+                  src="/touchgrass-lock-proof.png"
+                  alt="1,019,634 TOUCHGRASS tokens locked via Streamflow until 2060"
+                  className="w-full h-auto"
+                />
+                <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Proof #3 — May 10, 2026</p>
+                  <p className="text-xs text-white/50 mt-0.5">1,019,634 $TOUCHGRASS · Streamflow · Non-cancelable until 2060</p>
+                </div>
+              </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-white/68 sm:text-base">
-              This milestone matters because it shows execution, patience, and visible commitment. Not theory. Not hype. Proof. Twice.
+              This milestone matters because it shows execution, patience, and visible commitment. Not theory. Not hype. Proof. Three times.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <a href={LINKS.communityProof} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-300 transition hover:scale-[1.02] hover:bg-emerald-400/15">
@@ -660,6 +673,9 @@ function CommunitySupport() {
               </a>
               <a href={LINKS.communityProof2} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-300 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #2 →
+              </a>
+              <a href={LINKS.communityProof3} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-300 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+                Proof #3 →
               </a>
               <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-semibold text-white/65">Public receipts on X</span>
             </div>
