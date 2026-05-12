@@ -268,7 +268,7 @@ function Scene() {
 
       {/* The $MAD Chao */}
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.3}>
-        <group scale={0.65}>
+        <group scale={0.65} position={[0, -0.5, 0]}>
           <ChaoBody />
           <ChaoHead />
           <ChaoWings time={timeRef.current} />
@@ -277,13 +277,72 @@ function Scene() {
         </group>
       </Float>
 
+      {/* Chao Garden Island */}
+      <IslandEnvironment />
+
       <FloatingParticles />
 
-      {/* Ground reflection plane */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
-        <planeGeometry args={[10, 10]} />
-        <meshStandardMaterial color="#0a0a0a" roughness={0.1} metalness={0.5} transparent opacity={0.3} />
+/* ─── Island Environment ─── */
+function IslandEnvironment() {
+  return (
+    <group position={[0, -1.8, 0]}>
+      {/* Main island base */}
+      <mesh position={[0, 0, 0]} scale={[2.2, 0.4, 2.2]}>
+        <cylinderGeometry args={[1, 1.1, 1, 32]} />
+        <meshStandardMaterial color="#1a1a2e" roughness={0.8} />
       </mesh>
+      {/* Island top grass layer */}
+      <mesh position={[0, 0.22, 0]} scale={[2.0, 0.08, 2.0]}>
+        <cylinderGeometry args={[1, 1, 1, 32]} />
+        <meshStandardMaterial color="#0f2a1a" roughness={0.9} />
+      </mesh>
+      {/* Small rocks */}
+      <mesh position={[-1.2, 0.15, 0.5]} scale={[0.12, 0.08, 0.1]} rotation={[0.2, 0.5, 0.1]}>
+        <dodecahedronGeometry args={[1, 0]} />
+        <meshStandardMaterial color="#2a2a3a" roughness={0.7} />
+      </mesh>
+      <mesh position={[1.0, 0.12, -0.7]} scale={[0.08, 0.06, 0.09]} rotation={[0.1, -0.3, 0.2]}>
+        <dodecahedronGeometry args={[1, 0]} />
+        <meshStandardMaterial color="#252535" roughness={0.7} />
+      </mesh>
+      <mesh position={[0.5, 0.18, 1.1]} scale={[0.1, 0.07, 0.08]} rotation={[-0.1, 0.8, 0]}>
+        <dodecahedronGeometry args={[1, 0]} />
+        <meshStandardMaterial color="#2d2d3d" roughness={0.7} />
+      </mesh>
+      {/* Tiny plants / coral */}
+      <mesh position={[-0.7, 0.35, 0.8]} scale={[0.04, 0.15, 0.04]}>
+        <coneGeometry args={[1, 1, 6]} />
+        <meshStandardMaterial color="#3a5a3a" roughness={0.8} />
+      </mesh>
+      <mesh position={[0.9, 0.3, 0.4]} scale={[0.03, 0.12, 0.03]}>
+        <coneGeometry args={[1, 1, 6]} />
+        <meshStandardMaterial color="#2d4a2d" roughness={0.8} />
+      </mesh>
+      {/* Water ring around island */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.15, 0]}>
+        <ringGeometry args={[2.4, 4.5, 64]} />
+        <meshStandardMaterial
+          color="#0a1628"
+          roughness={0.1}
+          metalness={0.6}
+          transparent
+          opacity={0.6}
+        />
+      </mesh>
+      {/* Outer water */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.2, 0]}>
+        <planeGeometry args={[20, 20]} />
+        <meshStandardMaterial
+          color="#050a14"
+          roughness={0.05}
+          metalness={0.8}
+          transparent
+          opacity={0.4}
+        />
+      </mesh>
+    </group>
+  );
+}
     </group>
   );
 }
