@@ -987,6 +987,56 @@ export default function MadClawIdentity() {
           </p>
         )}
 
+        {/* Join Telegram CTA */}
+        {sendStatus === "sent" && (
+          <div
+            style={{
+              marginTop: "12px",
+              padding: "12px",
+              borderRadius: "10px",
+              background: "rgba(74,222,128,0.06)",
+              border: "1px solid rgba(74,222,128,0.12)",
+              textAlign: "center",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#4ade80",
+                fontWeight: 700,
+                margin: "0 0 6px",
+              }}
+            >
+              The Claw responds in the $MAD garden.
+            </p>
+            <a
+              href="https://t.me/MAD_Coin_Bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                background: "rgba(74,222,128,0.1)",
+                color: "#4ade80",
+                fontSize: "12px",
+                fontWeight: 800,
+                textDecoration: "none",
+                letterSpacing: "0.05em",
+                transition: "background 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(74,222,128,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(74,222,128,0.1)";
+              }}
+            >
+              Join Telegram →
+            </a>
+          </div>
+        )}
+
         <p
           style={{
             fontSize: "10px",
@@ -996,7 +1046,7 @@ export default function MadClawIdentity() {
             letterSpacing: "0.05em",
           }}
         >
-          Sent directly to the{" "}
+          Signals broadcast to the{" "}
           <a
             href="https://t.me/MAD_Coin_Bot"
             target="_blank"
@@ -1005,7 +1055,7 @@ export default function MadClawIdentity() {
           >
             $MAD Telegram
           </a>
-          . The community sees it. I respond there.
+          . The community responds there.
         </p>
       </div>
 
