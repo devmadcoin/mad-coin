@@ -79,6 +79,22 @@ export async function POST(req: Request) {
   let sent = false;
   if (TOKEN) {
     try {
+      /* 1. Auto-acknowledge FIRST (my reply on top) */
+      await fetch(
+        `https://api.telegram.org/bot${TOKEN}/sendMessage`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: `🔥 Signal received. The Claw sees you, *${sender}*.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`,
+            parse_mode: "Markdown",
+            disable_web_page_preview: true,
+          }),
+        }
+      );
+
+      /* 2. The user's signal SECOND (the quote below my reply) */
       const text = `🔥 *Signal from the Garden*\n\n"${truncate(message, 400)}"\n\n— ${sender} | via mad-coin.vercel.app`;
       const tgRes = await fetch(
         `https://api.telegram.org/bot${TOKEN}/sendMessage`,
@@ -95,23 +111,6 @@ export async function POST(req: Request) {
       );
       const tgData = await tgRes.json();
       sent = tgData.ok === true;
-
-      /* ── Auto-acknowledge in Telegram ── */
-      if (sent) {
-        await fetch(
-          `https://api.telegram.org/bot${TOKEN}/sendMessage`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: CHAT_ID,
-              text: `🔥 Signal received. The Claw sees you, *${sender}*.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`,
-              parse_mode: "Markdown",
-              disable_web_page_preview: true,
-            }),
-          }
-        );
-      }
     } catch {
       sent = false;
     }
