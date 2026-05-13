@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import * as fs from "fs";
 
 /* ═══════════════════════════════════════════════════════════
-   MAD SIGNAL — Website → Telegram Group Bridge (Kimi-Powered)
+   MAD SIGNAL — Website → Telegram Group Bridge (ChatGPT-Powered)
    
    What it does:
    1. Visitor types something on mad-coin.vercel.app/mad-mind
    2. Frontend POSTs to /api/mad-mind/signal
-   3. Backend calls Kimi API to generate a real Mad Claw response
+   3. Backend calls OpenAI API to generate a real Mad Claw response
    4. Backend forwards message + reply to $MAD Telegram group
    5. Backend stores message in /tmp/mad-signals.json
    6. "Recent Signals" wall reads from this file
@@ -15,7 +15,7 @@ import * as fs from "fs";
    ENV VARS (set in Vercel dashboard):
    - TELEGRAM_BOT_TOKEN — bot token from @BotFather
    - TELEGRAM_GROUP_ID — group chat ID (e.g. -1003812770009)
-   - MOONSHOT_API_KEY — Moonshot API key for Kimi-powered replies
+   - OPENAI_API_KEY — OpenAI API key for ChatGPT-powered replies
    ═══════════════════════════════════════════════════════════ */
 
 const SIGNALS_FILE = "/tmp/mad-signals.json";
@@ -23,7 +23,7 @@ const MAX_SIGNALS = 50;
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_GROUP_ID || "-1003812770009";
-const MOONSHOT_KEY = process.env.MOONSHOT_API_KEY;
+const OPENAI_KEY = process.env.OPENAI_API_KEY;
 
 interface Signal {
   id: string;
@@ -128,19 +128,19 @@ function hardcodedResponse(message: string, sender: string): string | null {
   return null;
 }
 
-/* ─── Kimi API call for original response ─── */
-async function kimiClawResponse(message: string, sender: string): Promise<string | null> {
-  if (!MOONSHOT_KEY) return null;
+/* ─── ChatGPT API call for original response ─── */
+async function chatgptClawResponse(message: string, sender: string): Promise<string | null> {
+  if (!OPENAI_KEY) return null;
 
   try {
-    const res = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${MOONSHOT_KEY}`,
+        "Authorization": `Bearer ${OPENAI_KEY}`,
       },
       body: JSON.stringify({
-        model: "kimi-k2-5",
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: CLAW_SYSTEM_PROMPT },
           { role: "user", content: `Someone named "${sender}" just sent this signal to the $MAD community:\n\n"${message}"\n\nReply as Mad Claw.` },
@@ -151,7 +151,7 @@ async function kimiClawResponse(message: string, sender: string): Promise<string
     });
 
     if (!res.ok) {
-      console.error("Kimi API error:", res.status, await res.text());
+      console.error("OpenAI API error:", res.status, await res.text());
       return null;
     }
 
@@ -159,7 +159,7 @@ async function kimiClawResponse(message: string, sender: string): Promise<string
     const raw = data.choices?.[0]?.message?.content?.trim();
     if (!raw) return null;
 
-    /* If Kimi didn't include the header/footer, wrap it */
+    /* If ChatGPT didn't include the header/footer, wrap it */
     let reply = raw;
     if (!reply.startsWith("🔥 Signal received")) {
       reply = `🔥 Signal received. The Claw sees you, ${sender}.\n\n${reply}`;
@@ -169,16 +169,16 @@ async function kimiClawResponse(message: string, sender: string): Promise<string
     }
     return reply;
   } catch (err) {
-    console.error("Kimi call failed:", err);
+    console.error("OpenAI call failed:", err);
     return null;
   }
 }
 
-/* ─── Generate response: try Kimi first, fallback to hardcoded ─── */
+/* ─── Generate response: try ChatGPT first, fallback to hardcoded ─── */
 async function generateClawResponse(message: string, sender: string): Promise<string> {
-  /* Try Kimi for an original reply */
-  const kimiReply = await kimiClawResponse(message, sender);
-  if (kimiReply) return kimiReply;
+  /* Try ChatGPT for an original reply */
+  const gptReply = await chatgptClawResponse(message, sender);
+  if (gptReply) return gptReply;
 
   /* Fallback: hardcoded triggers */
   const hardcoded = hardcodedResponse(message, sender);
@@ -300,9 +300,9 @@ export async function POST(req: Request) {
     success: true,
     id,
     sent,
-    kimi: !!MOONSHOT_KEY,
+    kimi: !!OPENAI_KEY,
     message: sent
-      ? `Signal sent to the garden. The Claw sees you. 🔥${MOONSHOT_KEY ? " (Kimi-powered)" : ""}`
+      ? `Signal sent to the garden. The Claw sees you. 🔥${OPENAI_KEY ? " (ChatGPT-powered)" : ""}`
       : "Signal stored. Telegram bridge offline — but the Claw still sees you.",
   });
 }
