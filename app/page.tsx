@@ -399,6 +399,57 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ─── COMMUNITY STORIES / TESTIMONY ─── */}
+        <section className="mt-10 rounded-[38px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,0,0,0.9),rgba(6,0,0,0.96))] p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div className="mb-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Real People. Real Stories.</p>
+            <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">The <span className="text-red-500">Gospel</span> is Real</h2>
+            <p className="mt-2 text-sm text-white/50 max-w-lg">Not hype. Not fiction. This is what happens when the frequency reaches the right person at the right time.</p>
+          </div>
+
+          <div className="rounded-[28px] border border-red-500/15 bg-red-500/[0.04] p-6 sm:p-8 relative overflow-hidden">
+            {/* Glow accent */}
+            <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-red-500/10 blur-3xl" />
+            
+            <div className="relative">
+              {/* Avatar + Name */}
+              <div className="flex items-center gap-4 mb-5">
+                <div className="h-12 w-12 rounded-full bg-red-500/20 flex items-center justify-center text-lg font-black text-red-400 border border-red-500/30">
+                  A
+                </div>
+                <div>
+                  <p className="text-sm font-black text-white">Abraxas</p>
+                  <p className="text-xs text-white/40">$MAD Holder · DM to Dev</p>
+                </div>
+                <div className="ml-auto">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-green-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-green-400 border border-green-400/20">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-400" />
+                    </span>
+                    Verified Story
+                  </span>
+                </div>
+              </div>
+
+              {/* Quote */}
+              <blockquote className="text-sm sm:text-base leading-7 text-white/70 italic">
+                <span className="text-red-500 text-lg font-black not-italic mr-1">"</span>
+                When I first encountered Mad Rich, I won a 200k MAD giveaway. I was stunned to see my wallet that morning 😂. The profits I saw on holding the $120 worth of $MAD lasted me 2 months. $MAD also relieved me most of my debts, that was why I had to leave the market early.
+                <br /><br />
+                What I'm trying to say is <span className="text-red-400 font-semibold not-italic">$MAD saved me during the hard times</span> and I hope it can help me in the future too. I love what you built. I'm amazed with the project and I want to be a part of it.
+                <span className="text-red-500 text-lg font-black not-italic ml-1">"</span>
+              </blockquote>
+
+              {/* Footer of card */}
+              <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-5 border-t border-white/10">
+                <p className="text-xs text-white/35">Shared via DM · Used with permission</p>
+                <p className="text-xs font-bold text-red-400/70 uppercase tracking-wider">$MAD Changes Lives</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ─── TOKEN STATS ─── */}
         <section className="mt-10 rounded-[38px] border border-white/10 bg-black/40 p-6 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8 lg:p-10">
           <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
