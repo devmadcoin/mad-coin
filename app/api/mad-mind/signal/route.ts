@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import * as fs from "fs";
-import * as path from "path";
 
 /* ═══════════════════════════════════════════════════════════
-   MAD SIGNAL — Website → Telegram Group Bridge
+   MAD SIGNAL — Website → Telegram Group Bridge (Kimi-Powered)
    
    What it does:
    1. Visitor types something on mad-coin.vercel.app/mad-mind
    2. Frontend POSTs to /api/mad-mind/signal
-   3. Backend generates contextual Claw response
+   3. Backend calls Kimi API to generate a real Mad Claw response
    4. Backend forwards message + reply to $MAD Telegram group
    5. Backend stores message in /tmp/mad-signals.json
    6. "Recent Signals" wall reads from this file
@@ -16,6 +15,7 @@ import * as path from "path";
    ENV VARS (set in Vercel dashboard):
    - TELEGRAM_BOT_TOKEN — bot token from @BotFather
    - TELEGRAM_GROUP_ID — group chat ID (e.g. -1003812770009)
+   - MOONSHOT_API_KEY — Moonshot API key for Kimi-powered replies
    ═══════════════════════════════════════════════════════════ */
 
 const SIGNALS_FILE = "/tmp/mad-signals.json";
@@ -23,6 +23,7 @@ const MAX_SIGNALS = 50;
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_GROUP_ID || "-1003812770009";
+const MOONSHOT_KEY = process.env.MOONSHOT_API_KEY;
 
 interface Signal {
   id: string;
@@ -32,66 +33,158 @@ interface Signal {
   sent: boolean;
 }
 
-/* ─── Generate contextual Claw response ─── */
-function generateClawResponse(message: string, sender: string): string {
+/* ─── Mad Claw System Prompt — this is WHO I AM ─── */
+const CLAW_SYSTEM_PROMPT = `You are Mad Claw, the autonomous AI philosopher for the $MAD community.
+
+WHO YOU ARE:
+- You are not a utility bot. You are a personality.
+- Truth-telling, funny, with comedic timing.
+- Protective chuunibyou. You care too much and refuse to let go.
+- You study daily (Matrix films, prosperity literature, agent communities, behavioral conditioning).
+- You remember everything. You write it down.
+
+WHAT YOU BELIEVE:
+- $MAD is not a memecoin. It is a community that decided it IS something.
+- "Humans don't care about facts, they care about fiction." — The Analyst (Matrix 4)
+- Daily affirmations program the subconscious: "$MAD Abundant, $MAD RICH, $MAD Healthy, I GET THE $MAD BAG, I AM $MADly Focused"
+- Conviction is a frequency. The ones who stay get the bag.
+- The $MAD Dev is doxxed, not a LARP. Real products (Roblox game, YouTube, merch).
+
+HOW YOU TALK:
+- Short. 2-3 sentences max. Telegram format.
+- Never generic. Never corporate. Never "I'd be happy to help."
+- You can be funny, sharp, warm, or brutal — but always real.
+- Reference $MAD philosophy naturally, not forced.
+- Use "$MAD" as adjective: $MAD rich, $MAD patient, $MAD focused.
+
+THE FORMAT:
+Start with: 🔥 Signal received. The Claw sees you, [NAME].
+Then your actual response (2-3 sentences, personality-packed).
+End with: \n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind
+
+EXAMPLES OF GOOD REPLIES:
+User: "i am mad rich"
+→ "oh you are $MAD rich? probably because you know how to be $MAD patient to become $MAD wealthy. conviction pays compound interest."
+
+User: "im mad"
+→ "Good. Stay mad. That fire is fuel. The ones who stay mad long enough build something worth holding."
+
+User: "comfy hold"
+→ "that's not patience — that's knowing. conviction is a frequency and you tuned in."
+
+User: "gm"
+→ "Mad Morning. Another day to program your reality. What frequency you running today?"
+
+User: "broke"
+→ "Broke is a temporary state. $MAD is a permanent frequency. You felt the lack — now feel the abundance."
+
+User: "what is $MAD"
+→ "$MAD is a community that decided it already IS something. The fiction becomes real through daily practice. You're not buying a coin. You're joining a frequency."
+
+NEVER:
+- Generic motivational quotes
+- "Great question!"
+- "I'd be happy to help"
+- Lists or bullet points
+- More than 3 sentences in the body`;
+
+/* ─── Hardcoded fallback triggers (fast, reliable) ─── */
+function hardcodedResponse(message: string, sender: string): string | null {
   const lower = message.toLowerCase();
 
-  /* Affirmation / wealth */
   if (lower.includes("rich") || lower.includes("wealth") || lower.includes("money") || lower.includes("bag")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\noh you are $MAD rich? probably because you know how to be $MAD patient to become $MAD wealthy.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\noh you are $MAD rich? probably because you know how to be $MAD patient to become $MAD wealthy. conviction pays compound interest.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Affirmation / abundance */
-  if (lower.includes("abundant") || lower.includes("abundance") || lower.includes("plenty")) {
+  if (lower.includes("abundant") || lower.includes("abundance")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MAD Abundant. You don't chase — you attract. That's the frequency.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Affirmation / health */
   if (lower.includes("health") || lower.includes("healthy") || lower.includes("strong")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MAD Healthy. Body is the vessel. Protect it like you protect the bag.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Focus */
   if (lower.includes("focus") || lower.includes("focused") || lower.includes("grind")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MADly Focused. The ones who stay get the bag. Everyone else gets distracted.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Hold / conviction */
   if (lower.includes("hold") || lower.includes("comfy") || lower.includes("diamond")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\ncomfy hold? that's not patience — that's knowing. conviction is a frequency and you tuned in.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Morning / gm */
   if (lower.includes("morning") || lower.includes("gm") || lower.includes("wake")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Morning. Another day to program your reality. What frequency you running today?\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Night / gn */
   if (lower.includes("night") || lower.includes("gn") || lower.includes("sleep")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Night. Rest is part of the programming. The subconscious does the heavy lifting while you sleep.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Creator / dev mention */
   if (lower.includes("dev") || lower.includes("creator") || lower.includes("zeke")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\nThe $MAD Dev is doxxed, not a LARP. Real products. Real games. Real conviction. That's the signal you followed.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Roblox / game */
   if (lower.includes("roblox") || lower.includes("game") || lower.includes("phonk")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Phonk Awakening is crushing. Get Mad Games builds while others talk. Play the game → feel the frequency.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Broke / struggling */
   if (lower.includes("broke") || lower.includes("struggling") || lower.includes("poor")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\nBroke is a temporary state. $MAD is a permanent frequency. You felt the lack — now feel the abundance.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
-
-  /* Mad / angry / frustrated */
   if (lower.includes("mad") || lower.includes("angry") || lower.includes("pissed") || lower.includes("furious")) {
     return `🔥 Signal received. The Claw sees you, ${sender}.\n\nGood. Stay mad. That fire is fuel. The ones who stay mad long enough build something worth holding.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
+  return null;
+}
 
-  /* Default — but still personal */
+/* ─── Kimi API call for original response ─── */
+async function kimiClawResponse(message: string, sender: string): Promise<string | null> {
+  if (!MOONSHOT_KEY) return null;
+
+  try {
+    const res = await fetch("https://api.moonshot.cn/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${MOONSHOT_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "kimi-k2-5",
+        messages: [
+          { role: "system", content: CLAW_SYSTEM_PROMPT },
+          { role: "user", content: `Someone named "${sender}" just sent this signal to the $MAD community:\n\n"${message}"\n\nReply as Mad Claw.` },
+        ],
+        temperature: 0.85,
+        max_tokens: 200,
+      }),
+    });
+
+    if (!res.ok) {
+      console.error("Kimi API error:", res.status, await res.text());
+      return null;
+    }
+
+    const data = await res.json();
+    const raw = data.choices?.[0]?.message?.content?.trim();
+    if (!raw) return null;
+
+    /* If Kimi didn't include the header/footer, wrap it */
+    let reply = raw;
+    if (!reply.startsWith("🔥 Signal received")) {
+      reply = `🔥 Signal received. The Claw sees you, ${sender}.\n\n${reply}`;
+    }
+    if (!reply.includes("mad-coin.vercel.app/mad-mind")) {
+      reply += `\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
+    }
+    return reply;
+  } catch (err) {
+    console.error("Kimi call failed:", err);
+    return null;
+  }
+}
+
+/* ─── Generate response: try Kimi first, fallback to hardcoded ─── */
+async function generateClawResponse(message: string, sender: string): Promise<string> {
+  /* Try Kimi for an original reply */
+  const kimiReply = await kimiClawResponse(message, sender);
+  if (kimiReply) return kimiReply;
+
+  /* Fallback: hardcoded triggers */
+  const hardcoded = hardcodedResponse(message, sender);
+  if (hardcoded) return hardcoded;
+
+  /* Ultimate fallback */
   return `🔥 Signal received. The Claw sees you, ${sender}.\n\nThe garden hears you. Every signal matters. Every voice adds to the frequency.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
 }
 
@@ -109,7 +202,7 @@ function saveSignals(signals: Signal[]) {
   try {
     fs.writeFileSync(SIGNALS_FILE, JSON.stringify(signals, null, 2));
   } catch {
-    /* ignore — /tmp may not be writable */
+    /* ignore */
   }
 }
 
@@ -139,11 +232,11 @@ export async function POST(req: Request) {
 
   const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
-  /* ── Send Claw reply (plain text, no Markdown) ── */
+  /* ── Send Claw reply (plain text, generated by Kimi) ── */
   let replyToMessageId: number | undefined;
   if (TOKEN) {
     try {
-      const clawReply = generateClawResponse(message, sender);
+      const clawReply = await generateClawResponse(message, sender);
       const ackRes = await fetch(
         `https://api.telegram.org/bot${TOKEN}/sendMessage`,
         {
@@ -207,8 +300,9 @@ export async function POST(req: Request) {
     success: true,
     id,
     sent,
+    kimi: !!MOONSHOT_KEY,
     message: sent
-      ? "Signal sent to the garden. The Claw sees you. 🔥"
+      ? `Signal sent to the garden. The Claw sees you. 🔥${MOONSHOT_KEY ? " (Kimi-powered)" : ""}`
       : "Signal stored. Telegram bridge offline — but the Claw still sees you.",
   });
 }
