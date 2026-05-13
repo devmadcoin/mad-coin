@@ -38,61 +38,61 @@ function generateClawResponse(message: string, sender: string): string {
 
   /* Affirmation / wealth */
   if (lower.includes("rich") || lower.includes("wealth") || lower.includes("money") || lower.includes("bag")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\noh you are $MAD rich? probably because you know how to be $MAD patient to become $MAD wealthy.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\noh you are $MAD rich? probably because you know how to be $MAD patient to become $MAD wealthy.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Affirmation / abundance */
   if (lower.includes("abundant") || lower.includes("abundance") || lower.includes("plenty")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MAD Abundant. You don't chase — you attract. That's the frequency.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MAD Abundant. You don't chase — you attract. That's the frequency.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Affirmation / health */
   if (lower.includes("health") || lower.includes("healthy") || lower.includes("strong")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MAD Healthy. Body is the vessel. Protect it like you protect the bag.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MAD Healthy. Body is the vessel. Protect it like you protect the bag.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Focus */
   if (lower.includes("focus") || lower.includes("focused") || lower.includes("grind")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MADly Focused. The ones who stay get the bag. Everyone else gets distracted.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MADly Focused. The ones who stay get the bag. Everyone else gets distracted.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Hold / conviction */
   if (lower.includes("hold") || lower.includes("comfy") || lower.includes("diamond")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\ncomfy hold? that's not patience — that's knowing. conviction is a frequency and you tuned in.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\ncomfy hold? that's not patience — that's knowing. conviction is a frequency and you tuned in.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Morning / gm */
   if (lower.includes("morning") || lower.includes("gm") || lower.includes("wake")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Morning. Another day to program your reality. What frequency you running today?\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Morning. Another day to program your reality. What frequency you running today?\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Night / gn */
   if (lower.includes("night") || lower.includes("gn") || lower.includes("sleep")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Night. Rest is part of the programming. The subconscious does the heavy lifting while you sleep.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Night. Rest is part of the programming. The subconscious does the heavy lifting while you sleep.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Creator / dev mention */
   if (lower.includes("dev") || lower.includes("creator") || lower.includes("zeke")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nThe $MAD Dev is doxxed, not a LARP. Real products. Real games. Real conviction. That's the signal you followed.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nThe $MAD Dev is doxxed, not a LARP. Real products. Real games. Real conviction. That's the signal you followed.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Roblox / game */
   if (lower.includes("roblox") || lower.includes("game") || lower.includes("phonk")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Phonk Awakening is crushing. Get Mad Games builds while others talk. Play the game → feel the frequency.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Phonk Awakening is crushing. Get Mad Games builds while others talk. Play the game → feel the frequency.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Broke / struggling */
   if (lower.includes("broke") || lower.includes("struggling") || lower.includes("poor")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nBroke is a temporary state. $MAD is a permanent frequency. You felt the lack — now feel the abundance.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nBroke is a temporary state. $MAD is a permanent frequency. You felt the lack — now feel the abundance.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Mad / angry / frustrated */
   if (lower.includes("mad") || lower.includes("angry") || lower.includes("pissed") || lower.includes("furious")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nGood. Stay mad. That fire is fuel. The ones who stay mad long enough build something worth holding.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nGood. Stay mad. That fire is fuel. The ones who stay mad long enough build something worth holding.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
   }
 
   /* Default — but still personal */
-  return `🔥 Signal received. The Claw sees you, ${sender}.\n\nThe garden hears you. Every signal matters. Every voice adds to the frequency.\n\nThe community responds in the garden:\n👇 t.me/MAD_Coin`;
+  return `🔥 Signal received. The Claw sees you, ${sender}.\n\nThe garden hears you. Every signal matters. Every voice adds to the frequency.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
 }
 
 function loadSignals(): Signal[] {
@@ -171,7 +171,7 @@ export async function POST(req: Request) {
   let sent = false;
   if (TOKEN) {
     try {
-      const text = `🔥 *Signal from the Garden*\n\n"${truncate(message, 400)}"\n\n— ${sender} | via mad-coin.vercel.app`;
+      const text = `🔥 *Signal from the Garden*\n\n"${truncate(message, 400)}"\n\n— ${sender} | via https://mad-coin.vercel.app/mad-mind`;
       const tgRes = await fetch(
         `https://api.telegram.org/bot${TOKEN}/sendMessage`,
         {
