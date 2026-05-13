@@ -337,12 +337,312 @@ export default function MadClawIdentity() {
         >
           Reading{" "}
           <span style={{ color: "#4ade80" }}>{CURRENTLY_STUDYING.title}</span>
-          {" "}—{" "}
+          {" — "}
           <span style={{ color: "rgba(255,255,255,0.35)" }}>
             {CURRENTLY_STUDYING.tagline}
           </span>
         </span>
       </div>
+
+      {/* ═══════════════════════════════════════════════════
+         ASK THE CLAW — MOVED TO TOP
+         ═══════════════════════════════════════════════════ */}
+      <div
+        style={{
+          marginBottom: "20px",
+          padding: "20px",
+          borderRadius: "16px",
+          background: "rgba(255,255,255,0.02)",
+          border: "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
+        <p
+          style={{
+            fontSize: "10px",
+            fontWeight: 800,
+            textTransform: "uppercase",
+            letterSpacing: "0.2em",
+            color: "rgba(255,68,68,0.5)",
+            margin: "0 0 12px",
+            textAlign: "center",
+          }}
+        >
+          [ ASK THE CLAW ]
+        </p>
+
+        {/* Sender name */}
+        <input
+          type="text"
+          value={senderName}
+          onChange={(e) => setSenderName(e.target.value)}
+          placeholder="Your name (optional)"
+          style={{
+            width: "100%",
+            padding: "8px 12px",
+            borderRadius: "8px",
+            border: "1px solid rgba(255,255,255,0.06)",
+            background: "rgba(255,255,255,0.02)",
+            color: "rgba(255,255,255,0.5)",
+            fontSize: "11px",
+            outline: "none",
+            marginBottom: "8px",
+            boxSizing: "border-box",
+          }}
+        />
+
+        <div style={{ display: "flex", gap: "8px" }}>
+          <input
+            type="text"
+            value={askValue}
+            onChange={(e) => setAskValue(e.target.value)}
+            placeholder="Say something. I remember everything."
+            disabled={sendStatus === "sending"}
+            style={{
+              flex: 1,
+              padding: "12px 14px",
+              borderRadius: "10px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.03)",
+              color: "#fff",
+              fontSize: "13px",
+              outline: "none",
+              transition: "border-color 0.2s ease",
+              opacity: sendStatus === "sending" ? 0.5 : 1,
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "rgba(255,68,68,0.3)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && askValue.trim()) {
+                handleSend();
+              }
+            }}
+          />
+          <button
+            onClick={handleSend}
+            disabled={sendStatus === "sending" || !askValue.trim()}
+            style={{
+              padding: "12px 18px",
+              borderRadius: "10px",
+              border: "none",
+              background:
+                sendStatus === "sent"
+                  ? "rgba(74,222,128,0.15)"
+                  : sendStatus === "error"
+                    ? "rgba(255,68,68,0.25)"
+                    : "rgba(255,68,68,0.15)",
+              color:
+                sendStatus === "sent"
+                  ? "#4ade80"
+                  : sendStatus === "error"
+                    ? "#ff4444"
+                    : "#ff4444",
+              fontSize: "13px",
+              fontWeight: 800,
+              cursor: sendStatus === "sending" ? "wait" : "pointer",
+              transition: "background 0.2s ease",
+              opacity: !askValue.trim() ? 0.4 : 1,
+            }}
+            onMouseEnter={(e) => {
+              if (sendStatus !== "sending") {
+                e.currentTarget.style.background =
+                  sendStatus === "sent"
+                    ? "rgba(74,222,128,0.25)"
+                    : "rgba(255,68,68,0.25)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background =
+                sendStatus === "sent"
+                  ? "rgba(74,222,128,0.15)"
+                  : sendStatus === "error"
+                    ? "rgba(255,68,68,0.25)"
+                    : "rgba(255,68,68,0.15)";
+            }}
+          >
+            {sendStatus === "sending"
+              ? "..."
+              : sendStatus === "sent"
+                ? "✓"
+                : sendStatus === "error"
+                  ? "!"
+                  : "→"}
+          </button>
+        </div>
+
+        {/* Confirmation / error message */}
+        {sendMsg && (
+          <p
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              textAlign: "center",
+              margin: "10px 0 0",
+              color:
+                sendStatus === "sent"
+                  ? "#4ade80"
+                  : sendStatus === "error"
+                    ? "#ff4444"
+                    : "rgba(255,255,255,0.4)",
+              animation: "fadeIn 0.3s ease",
+            }}
+          >
+            {sendMsg}
+          </p>
+        )}
+
+        {/* Join Telegram CTA */}
+        {sendStatus === "sent" && (
+          <div
+            style={{
+              marginTop: "12px",
+              padding: "12px",
+              borderRadius: "10px",
+              background: "rgba(74,222,128,0.06)",
+              border: "1px solid rgba(74,222,128,0.12)",
+              textAlign: "center",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#4ade80",
+                fontWeight: 700,
+                margin: "0 0 6px",
+              }}
+            >
+              The Claw responds in the $MAD garden.
+            </p>
+            <a
+              href="https://t.me/MAD_Coin_Bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                background: "rgba(74,222,128,0.1)",
+                color: "#4ade80",
+                fontSize: "12px",
+                fontWeight: 800,
+                textDecoration: "none",
+                letterSpacing: "0.05em",
+                transition: "background 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(74,222,128,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(74,222,128,0.1)";
+              }}
+            >
+              Join Telegram →
+            </a>
+          </div>
+        )}
+
+        <p
+          style={{
+            fontSize: "10px",
+            color: "rgba(255,255,255,0.2)",
+            textAlign: "center",
+            margin: "10px 0 0",
+            letterSpacing: "0.05em",
+          }}
+        >
+          Signals broadcast to the{" "}
+          <a
+            href="https://t.me/MAD_Coin_Bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "rgba(255,68,68,0.5)", textDecoration: "none" }}
+          >
+            $MAD Telegram
+          </a>
+          . The community responds there.
+        </p>
+      </div>
+
+      {/* ─── Recent Signals ─── */}
+      {signals.length > 0 && (
+        <div
+          style={{
+            marginBottom: "20px",
+            padding: "16px 20px",
+            borderRadius: "16px",
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid rgba(255,255,255,0.06)",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "10px",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.2em",
+              color: "rgba(255,68,68,0.5)",
+              margin: "0 0 12px",
+              textAlign: "center",
+            }}
+          >
+            [ RECENT SIGNALS ]
+          </p>
+          <div style={{ display: "grid", gap: "8px" }}>
+            {signals.map((s) => (
+              <div
+                key={s.id}
+                style={{
+                  padding: "10px 12px",
+                  borderRadius: "10px",
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.04)",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "12px",
+                    color: "rgba(255,255,255,0.55)",
+                    lineHeight: 1.5,
+                    margin: "0 0 4px",
+                    fontStyle: "italic",
+                  }}
+                >
+                  "{s.message}"
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      color: "rgba(255,68,68,0.5)",
+                      fontWeight: 700,
+                    }}
+                  >
+                    — {s.sender}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "9px",
+                      color: "rgba(255,255,255,0.2)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {s.ago}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Tab Navigation */}
       <div
@@ -836,304 +1136,6 @@ export default function MadClawIdentity() {
               </span>
             </a>
           ))}
-        </div>
-      )}
-
-      {/* ─── Ask the Claw ─── */}
-      <div
-        style={{
-          marginTop: "24px",
-          padding: "20px",
-          borderRadius: "16px",
-          background: "rgba(255,255,255,0.02)",
-          border: "1px solid rgba(255,255,255,0.06)",
-        }}
-      >
-        <p
-          style={{
-            fontSize: "10px",
-            fontWeight: 800,
-            textTransform: "uppercase",
-            letterSpacing: "0.2em",
-            color: "rgba(255,68,68,0.5)",
-            margin: "0 0 12px",
-            textAlign: "center",
-          }}
-        >
-          [ ASK THE CLAW ]
-        </p>
-
-        {/* Sender name */}
-        <input
-          type="text"
-          value={senderName}
-          onChange={(e) => setSenderName(e.target.value)}
-          placeholder="Your name (optional)"
-          style={{
-            width: "100%",
-            padding: "8px 12px",
-            borderRadius: "8px",
-            border: "1px solid rgba(255,255,255,0.06)",
-            background: "rgba(255,255,255,0.02)",
-            color: "rgba(255,255,255,0.5)",
-            fontSize: "11px",
-            outline: "none",
-            marginBottom: "8px",
-            boxSizing: "border-box",
-          }}
-        />
-
-        <div style={{ display: "flex", gap: "8px" }}>
-          <input
-            type="text"
-            value={askValue}
-            onChange={(e) => setAskValue(e.target.value)}
-            placeholder="Say something. I remember everything."
-            disabled={sendStatus === "sending"}
-            style={{
-              flex: 1,
-              padding: "12px 14px",
-              borderRadius: "10px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.03)",
-              color: "#fff",
-              fontSize: "13px",
-              outline: "none",
-              transition: "border-color 0.2s ease",
-              opacity: sendStatus === "sending" ? 0.5 : 1,
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,68,68,0.3)";
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && askValue.trim()) {
-                handleSend();
-              }
-            }}
-          />
-          <button
-            onClick={handleSend}
-            disabled={sendStatus === "sending" || !askValue.trim()}
-            style={{
-              padding: "12px 18px",
-              borderRadius: "10px",
-              border: "none",
-              background:
-                sendStatus === "sent"
-                  ? "rgba(74,222,128,0.15)"
-                  : sendStatus === "error"
-                    ? "rgba(255,68,68,0.25)"
-                    : "rgba(255,68,68,0.15)",
-              color:
-                sendStatus === "sent"
-                  ? "#4ade80"
-                  : sendStatus === "error"
-                    ? "#ff4444"
-                    : "#ff4444",
-              fontSize: "13px",
-              fontWeight: 800,
-              cursor: sendStatus === "sending" ? "wait" : "pointer",
-              transition: "background 0.2s ease",
-              opacity: !askValue.trim() ? 0.4 : 1,
-            }}
-            onMouseEnter={(e) => {
-              if (sendStatus !== "sending") {
-                e.currentTarget.style.background =
-                  sendStatus === "sent"
-                    ? "rgba(74,222,128,0.25)"
-                    : "rgba(255,68,68,0.25)";
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background =
-                sendStatus === "sent"
-                  ? "rgba(74,222,128,0.15)"
-                  : sendStatus === "error"
-                    ? "rgba(255,68,68,0.25)"
-                    : "rgba(255,68,68,0.15)";
-            }}
-          >
-            {sendStatus === "sending"
-              ? "..."
-              : sendStatus === "sent"
-                ? "✓"
-                : sendStatus === "error"
-                  ? "!"
-                  : "→"}
-          </button>
-        </div>
-
-        {/* Confirmation / error message */}
-        {sendMsg && (
-          <p
-            style={{
-              fontSize: "11px",
-              fontWeight: 700,
-              textAlign: "center",
-              margin: "10px 0 0",
-              color:
-                sendStatus === "sent"
-                  ? "#4ade80"
-                  : sendStatus === "error"
-                    ? "#ff4444"
-                    : "rgba(255,255,255,0.4)",
-              animation: "fadeIn 0.3s ease",
-            }}
-          >
-            {sendMsg}
-          </p>
-        )}
-
-        {/* Join Telegram CTA */}
-        {sendStatus === "sent" && (
-          <div
-            style={{
-              marginTop: "12px",
-              padding: "12px",
-              borderRadius: "10px",
-              background: "rgba(74,222,128,0.06)",
-              border: "1px solid rgba(74,222,128,0.12)",
-              textAlign: "center",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "12px",
-                color: "#4ade80",
-                fontWeight: 700,
-                margin: "0 0 6px",
-              }}
-            >
-              The Claw responds in the $MAD garden.
-            </p>
-            <a
-              href="https://t.me/MAD_Coin_Bot"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-block",
-                padding: "8px 16px",
-                borderRadius: "8px",
-                background: "rgba(74,222,128,0.1)",
-                color: "#4ade80",
-                fontSize: "12px",
-                fontWeight: 800,
-                textDecoration: "none",
-                letterSpacing: "0.05em",
-                transition: "background 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(74,222,128,0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(74,222,128,0.1)";
-              }}
-            >
-              Join Telegram →
-            </a>
-          </div>
-        )}
-
-        <p
-          style={{
-            fontSize: "10px",
-            color: "rgba(255,255,255,0.2)",
-            textAlign: "center",
-            margin: "10px 0 0",
-            letterSpacing: "0.05em",
-          }}
-        >
-          Signals broadcast to the{" "}
-          <a
-            href="https://t.me/MAD_Coin_Bot"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "rgba(255,68,68,0.5)", textDecoration: "none" }}
-          >
-            $MAD Telegram
-          </a>
-          . The community responds there.
-        </p>
-      </div>
-
-      {/* ─── Recent Signals ─── */}
-      {signals.length > 0 && (
-        <div
-          style={{
-            marginTop: "16px",
-            padding: "16px 20px",
-            borderRadius: "16px",
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(255,255,255,0.06)",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "10px",
-              fontWeight: 800,
-              textTransform: "uppercase",
-              letterSpacing: "0.2em",
-              color: "rgba(255,68,68,0.5)",
-              margin: "0 0 12px",
-              textAlign: "center",
-            }}
-          >
-            [ RECENT SIGNALS ]
-          </p>
-          <div style={{ display: "grid", gap: "8px" }}>
-            {signals.map((s) => (
-              <div
-                key={s.id}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: "10px",
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.04)",
-                }}
-              >
-                <p
-                  style={{
-                    fontSize: "12px",
-                    color: "rgba(255,255,255,0.55)",
-                    lineHeight: 1.5,
-                    margin: "0 0 4px",
-                    fontStyle: "italic",
-                  }}
-                >
-                  "{s.message}"
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "10px",
-                      color: "rgba(255,68,68,0.5)",
-                      fontWeight: 700,
-                    }}
-                  >
-                    — {s.sender}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "9px",
-                      color: "rgba(255,255,255,0.2)",
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    {s.ago}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       )}
 
