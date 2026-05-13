@@ -345,29 +345,61 @@ export default function MadClawIdentity() {
       </div>
 
       {/* ═══════════════════════════════════════════════════
-         ASK THE CLAW — MOVED TO TOP
+         ASK THE CLAW — PRIMARY ACTION, MADE UNMISSABLE
          ═══════════════════════════════════════════════════ */}
       <div
         style={{
           marginBottom: "20px",
-          padding: "20px",
-          borderRadius: "16px",
-          background: "rgba(255,255,255,0.02)",
-          border: "1px solid rgba(255,255,255,0.06)",
+          padding: "24px",
+          borderRadius: "20px",
+          background: "rgba(255,68,68,0.03)",
+          border: "1.5px solid rgba(255,68,68,0.25)",
+          boxShadow: "0 0 30px rgba(255,68,68,0.08), inset 0 0 60px rgba(255,68,68,0.02)",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
+        {/* Animated glow ring */}
+        <div
+          style={{
+            position: "absolute",
+            top: "-50%",
+            left: "-50%",
+            width: "200%",
+            height: "200%",
+            background: "radial-gradient(circle, rgba(255,68,68,0.06) 0%, transparent 70%)",
+            animation: "claw-glow 4s ease-in-out infinite",
+            pointerEvents: "none",
+          }}
+        />
+
         <p
           style={{
-            fontSize: "10px",
+            fontSize: "11px",
             fontWeight: 800,
             textTransform: "uppercase",
-            letterSpacing: "0.2em",
-            color: "rgba(255,68,68,0.5)",
-            margin: "0 0 12px",
+            letterSpacing: "0.25em",
+            color: "#ff4444",
+            margin: "0 0 6px",
             textAlign: "center",
+            position: "relative",
+            textShadow: "0 0 20px rgba(255,68,68,0.3)",
           }}
         >
-          [ ASK THE CLAW ]
+          🔥 TALK TO THE CLAW 🔥
+        </p>
+        <p
+          style={{
+            fontSize: "13px",
+            fontWeight: 700,
+            color: "rgba(255,255,255,0.6)",
+            margin: "0 0 16px",
+            textAlign: "center",
+            position: "relative",
+            letterSpacing: "0.02em",
+          }}
+        >
+          Say something. I respond in the $MAD garden.
         </p>
 
         {/* Sender name */}
@@ -378,42 +410,47 @@ export default function MadClawIdentity() {
           placeholder="Your name (optional)"
           style={{
             width: "100%",
-            padding: "8px 12px",
-            borderRadius: "8px",
-            border: "1px solid rgba(255,255,255,0.06)",
-            background: "rgba(255,255,255,0.02)",
-            color: "rgba(255,255,255,0.5)",
-            fontSize: "11px",
+            padding: "10px 14px",
+            borderRadius: "10px",
+            border: "1px solid rgba(255,68,68,0.12)",
+            background: "rgba(0,0,0,0.3)",
+            color: "rgba(255,255,255,0.6)",
+            fontSize: "12px",
             outline: "none",
-            marginBottom: "8px",
+            marginBottom: "10px",
             boxSizing: "border-box",
+            position: "relative",
           }}
         />
 
-        <div style={{ display: "flex", gap: "8px" }}>
+        <div style={{ display: "flex", gap: "10px", position: "relative" }}>
           <input
             type="text"
             value={askValue}
             onChange={(e) => setAskValue(e.target.value)}
-            placeholder="Say something. I remember everything."
+            placeholder="Drop a signal..."
             disabled={sendStatus === "sending"}
             style={{
               flex: 1,
-              padding: "12px 14px",
-              borderRadius: "10px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.03)",
+              padding: "14px 16px",
+              borderRadius: "12px",
+              border: "1.5px solid rgba(255,68,68,0.2)",
+              background: "rgba(0,0,0,0.4)",
               color: "#fff",
-              fontSize: "13px",
+              fontSize: "14px",
+              fontWeight: 500,
               outline: "none",
-              transition: "border-color 0.2s ease",
+              transition: "all 0.2s ease",
               opacity: sendStatus === "sending" ? 0.5 : 1,
+              boxShadow: "inset 0 0 20px rgba(255,68,68,0.03)",
             }}
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,68,68,0.3)";
+              e.currentTarget.style.borderColor = "rgba(255,68,68,0.5)";
+              e.currentTarget.style.boxShadow = "0 0 20px rgba(255,68,68,0.1), inset 0 0 20px rgba(255,68,68,0.05)";
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+              e.currentTarget.style.borderColor = "rgba(255,68,68,0.2)";
+              e.currentTarget.style.boxShadow = "inset 0 0 20px rgba(255,68,68,0.03)";
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && askValue.trim()) {
@@ -425,42 +462,45 @@ export default function MadClawIdentity() {
             onClick={handleSend}
             disabled={sendStatus === "sending" || !askValue.trim()}
             style={{
-              padding: "12px 18px",
-              borderRadius: "10px",
+              padding: "14px 22px",
+              borderRadius: "12px",
               border: "none",
               background:
                 sendStatus === "sent"
-                  ? "rgba(74,222,128,0.15)"
+                  ? "rgba(74,222,128,0.2)"
                   : sendStatus === "error"
-                    ? "rgba(255,68,68,0.25)"
-                    : "rgba(255,68,68,0.15)",
+                    ? "rgba(255,68,68,0.3)"
+                    : "rgba(255,68,68,0.2)",
               color:
                 sendStatus === "sent"
                   ? "#4ade80"
                   : sendStatus === "error"
                     ? "#ff4444"
                     : "#ff4444",
-              fontSize: "13px",
-              fontWeight: 800,
+              fontSize: "16px",
+              fontWeight: 900,
               cursor: sendStatus === "sending" ? "wait" : "pointer",
-              transition: "background 0.2s ease",
+              transition: "all 0.2s ease",
               opacity: !askValue.trim() ? 0.4 : 1,
+              boxShadow: "0 0 20px rgba(255,68,68,0.15)",
             }}
             onMouseEnter={(e) => {
               if (sendStatus !== "sending") {
                 e.currentTarget.style.background =
                   sendStatus === "sent"
-                    ? "rgba(74,222,128,0.25)"
-                    : "rgba(255,68,68,0.25)";
+                    ? "rgba(74,222,128,0.3)"
+                    : "rgba(255,68,68,0.35)";
+                e.currentTarget.style.transform = "scale(1.05)";
               }
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background =
                 sendStatus === "sent"
-                  ? "rgba(74,222,128,0.15)"
+                  ? "rgba(74,222,128,0.2)"
                   : sendStatus === "error"
-                    ? "rgba(255,68,68,0.25)"
-                    : "rgba(255,68,68,0.15)";
+                    ? "rgba(255,68,68,0.3)"
+                    : "rgba(255,68,68,0.2)";
+              e.currentTarget.style.transform = "scale(1)";
             }}
           >
             {sendStatus === "sending"
@@ -544,25 +584,27 @@ export default function MadClawIdentity() {
           </div>
         )}
 
+        {/* Footer */}
         <p
           style={{
             fontSize: "10px",
             color: "rgba(255,255,255,0.2)",
             textAlign: "center",
-            margin: "10px 0 0",
+            margin: "12px 0 0",
             letterSpacing: "0.05em",
+            position: "relative",
           }}
         >
-          Signals broadcast to the{" "}
+          Signals broadcast to{" "}
           <a
             href="https://t.me/MAD_Coin_Bot"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "rgba(255,68,68,0.5)", textDecoration: "none" }}
+            style={{ color: "rgba(255,68,68,0.6)", textDecoration: "none", fontWeight: 700 }}
           >
             $MAD Telegram
           </a>
-          . The community responds there.
+          . The Claw responds there.
         </p>
       </div>
 
@@ -1154,6 +1196,11 @@ export default function MadClawIdentity() {
         @keyframes pulse-dot {
           0%, 100% { opacity: 1; transform: scale(1); }
           50% { opacity: 0.5; transform: scale(1.3); }
+        }
+        @keyframes claw-glow {
+          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+          33% { transform: translate(5%, 5%) scale(1.1); opacity: 0.7; }
+          66% { transform: translate(-5%, -3%) scale(0.95); opacity: 0.4; }
         }
       `}</style>
     </div>
