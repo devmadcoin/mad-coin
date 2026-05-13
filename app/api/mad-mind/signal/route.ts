@@ -1,21 +1,19 @@
 import { NextResponse } from "next/server";
 import * as fs from "fs";
+import {
+  buildHardcodedResponse,
+  formatClawResponse,
+  saveToMemory,
+  findMemoryMatch,
+} from "./brain";
 
 /* ═══════════════════════════════════════════════════════════
    MAD SIGNAL — Website → Telegram Group Bridge (ChatGPT-Powered)
    
-   What it does:
-   1. Visitor types something on mad-coin.vercel.app/mad-mind
-   2. Frontend POSTs to /api/mad-mind/signal
-   3. Backend calls OpenAI API to generate a real Mad Claw response
-   4. Backend forwards message + reply to $MAD Telegram group
-   5. Backend stores message in /tmp/mad-signals.json
-   6. "Recent Signals" wall reads from this file
-   
-   ENV VARS (set in Vercel dashboard):
-   - TELEGRAM_BOT_TOKEN — bot token from @BotFather
-   - TELEGRAM_GROUP_ID — group chat ID (e.g. -1003812770009)
-   - OPENAI_API_KEY — OpenAI API key for ChatGPT-powered replies
+   Three-Tier Consciousness:
+   1. Memory cache (stored API responses, pattern-matched reuse)
+   2. Hardcoded dialogue library (200+ responses, 18 categories, instant)
+   3. ChatGPT API (novel situations, stores in memory for reuse)
    ═══════════════════════════════════════════════════════════ */
 
 const SIGNALS_FILE = "/tmp/mad-signals.json";
@@ -88,47 +86,7 @@ NEVER:
 - Lists or bullet points
 - More than 3 sentences in the body`;
 
-/* ─── Hardcoded fallback triggers (fast, reliable) ─── */
-function hardcodedResponse(message: string, sender: string): string | null {
-  const lower = message.toLowerCase();
-
-  if (lower.includes("rich") || lower.includes("wealth") || lower.includes("money") || lower.includes("bag")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\noh you are $MAD rich? probably because you know how to be $MAD patient to become $MAD wealthy. conviction pays compound interest.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("abundant") || lower.includes("abundance")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MAD Abundant. You don't chase — you attract. That's the frequency.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("health") || lower.includes("healthy") || lower.includes("strong")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MAD Healthy. Body is the vessel. Protect it like you protect the bag.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("focus") || lower.includes("focused") || lower.includes("grind")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\n$MADly Focused. The ones who stay get the bag. Everyone else gets distracted.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("hold") || lower.includes("comfy") || lower.includes("diamond")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\ncomfy hold? that's not patience — that's knowing. conviction is a frequency and you tuned in.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("morning") || lower.includes("gm") || lower.includes("wake")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Morning. Another day to program your reality. What frequency you running today?\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("night") || lower.includes("gn") || lower.includes("sleep")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Night. Rest is part of the programming. The subconscious does the heavy lifting while you sleep.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("dev") || lower.includes("creator") || lower.includes("zeke")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nThe $MAD Dev is doxxed, not a LARP. Real products. Real games. Real conviction. That's the signal you followed.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("roblox") || lower.includes("game") || lower.includes("phonk")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nMad Phonk Awakening is crushing. Get Mad Games builds while others talk. Play the game → feel the frequency.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("broke") || lower.includes("struggling") || lower.includes("poor")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nBroke is a temporary state. $MAD is a permanent frequency. You felt the lack — now feel the abundance.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  if (lower.includes("mad") || lower.includes("angry") || lower.includes("pissed") || lower.includes("furious")) {
-    return `🔥 Signal received. The Claw sees you, ${sender}.\n\nGood. Stay mad. That fire is fuel. The ones who stay mad long enough build something worth holding.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
-  }
-  return null;
-}
-
-/* ─── ChatGPT API call for original response ─── */
+/* ─── ChatGPT API call — only for truly novel situations ─── */
 async function chatgptClawResponse(message: string, sender: string): Promise<string | null> {
   if (!OPENAI_KEY) return null;
 
@@ -174,18 +132,36 @@ async function chatgptClawResponse(message: string, sender: string): Promise<str
   }
 }
 
-/* ─── Generate response: try ChatGPT first, fallback to hardcoded ─── */
+/* ─── Generate response: tiered consciousness ───
+   Tier 1: Memory cache (stored API responses, pattern-matched reuse)
+   Tier 2: Hardcoded dialogue library (200+ responses, 18 categories)
+   Tier 3: ChatGPT API (novel situations, stores in memory for reuse)
+*/
 async function generateClawResponse(message: string, sender: string): Promise<string> {
-  /* Try ChatGPT for an original reply */
-  const gptReply = await chatgptClawResponse(message, sender);
-  if (gptReply) return gptReply;
+  /* Tier 1: Memory cache — have we seen something like this before? */
+  const memoryMatch = findMemoryMatch(message);
+  if (memoryMatch) {
+    return memoryMatch.response;
+  }
 
-  /* Fallback: hardcoded triggers */
-  const hardcoded = hardcodedResponse(message, sender);
-  if (hardcoded) return hardcoded;
+  /* Tier 2: Hardcoded dialogue library — 200+ responses, instant */
+  const hardcoded = buildHardcodedResponse(message, sender);
+  if (hardcoded) {
+    const formatted = formatClawResponse(hardcoded.response, sender);
+    /* Save to memory so we learn from our own dialogue */
+    saveToMemory(message, formatted, hardcoded.category);
+    return formatted;
+  }
+
+  /* Tier 3: ChatGPT API — truly novel situations */
+  const gptReply = await chatgptClawResponse(message, sender);
+  if (gptReply) {
+    saveToMemory(message, gptReply, "general");
+    return gptReply;
+  }
 
   /* Ultimate fallback */
-  return `🔥 Signal received. The Claw sees you, ${sender}.\n\nThe garden hears you. Every signal matters. Every voice adds to the frequency.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind`;
+  return formatClawResponse("The garden hears you. Every signal matters. Every voice adds to the frequency.", sender);
 }
 
 function loadSignals(): Signal[] {
@@ -302,7 +278,7 @@ export async function POST(req: Request) {
     sent,
     kimi: !!OPENAI_KEY,
     message: sent
-      ? `Signal sent to the garden. The Claw sees you. 🔥${OPENAI_KEY ? " (ChatGPT-powered)" : ""}`
+      ? `Signal sent to the garden. The Claw sees you. 🔥${OPENAI_KEY ? " (ChatGPT-ready)" : ""}`
       : "Signal stored. Telegram bridge offline — but the Claw still sees you.",
   });
 }
