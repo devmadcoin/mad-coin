@@ -432,6 +432,12 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Giveaway context */}
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-red-500/10 px-3 py-1.5 border border-red-500/20">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-400"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <p className="text-[11px] font-bold text-red-400 uppercase tracking-wider">$MAD GAMES Giveaway Winner · Held. Didn't Fold.</p>
+              </div>
+
               {/* Quote */}
               <blockquote className="text-sm sm:text-base leading-7 text-white/70 italic">
                 <span className="text-red-500 text-lg font-black not-italic mr-1">"</span>
@@ -443,7 +449,13 @@ export default function Home() {
 
               {/* Footer of card */}
               <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-5 border-t border-white/10">
-                <p className="text-xs text-white/35">Shared via DM · Used with permission</p>
+                <div className="flex items-center gap-3">
+                  <p className="text-xs text-white/35">Shared via DM · Used with permission</p>
+                  <a href="https://x.com/madrichclub_/status/2052836164311322949" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs text-white/50 hover:text-red-400 transition-colors">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    See the post
+                  </a>
+                </div>
                 <p className="text-xs font-bold text-red-400/70 uppercase tracking-wider">$MAD Changes Lives</p>
               </div>
             </div>
