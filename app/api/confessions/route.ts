@@ -184,15 +184,31 @@ function rankConfession(confession: Confession) {
   return quality + engagement + freshnessBoost;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const url = new URL(req.url);
+    const mode = url.searchParams.get("mode") || "hot";
+    const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+    const pageSize = Math.max(1, Math.min(50, parseInt(url.searchParams.get("pageSize") || "10", 10)));
+
     const rawIds = (await kv.lrange(KEY, 0, MAX_ITEMS - 1)) ?? [];
     const ids = rawIds
       .map(normalizeId)
       .filter((id): id is string => Boolean(id));
 
     if (ids.length === 0) {
-      return json({ confessions: [] });
+      return json({
+        confessions: [],
+        pagination: {
+          page,
+          pageSize,
+          totalItems: 0,
+          totalPages: 0,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
+        mode,
+      });
     }
 
     const seen = new Set<string>();
@@ -206,12 +222,37 @@ export async function GET() {
       uniqueIds.map((id) => kv.get<Confession>(ITEM(id))),
     );
 
-    const confessions = items
+    let confessions = items
       .map((item) => normalizeConfession(item))
-      .filter((item): item is Confession => Boolean(item))
-      .sort((a, b) => rankConfession(b) - rankConfession(a));
+      .filter((item): item is Confession => Boolean(item));
 
-    return json({ confessions });
+    // Sort based on mode
+    if (mode === "latest") {
+      confessions.sort((a, b) => b.createdAt - a.createdAt);
+    } else {
+      confessions.sort((a, b) => rankConfession(b) - rankConfession(a));
+    }
+
+    // Pagination
+    const totalItems = confessions.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    const safePage = Math.min(page, totalPages);
+    const start = (safePage - 1) * pageSize;
+    const end = start + pageSize;
+    const paginatedConfessions = confessions.slice(start, end);
+
+    return json({
+      confessions: paginatedConfessions,
+      pagination: {
+        page: safePage,
+        pageSize,
+        totalItems,
+        totalPages,
+        hasNextPage: safePage < totalPages,
+        hasPrevPage: safePage > 1,
+      },
+      mode,
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : "KV error";
     return json({ confessions: [], error: message }, 500);

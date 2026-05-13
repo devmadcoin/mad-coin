@@ -373,9 +373,9 @@ export default function MadConfessions() {
   }, [pagination.page, pagination.totalPages]);
 
   const visibleConfessions = useMemo(() => {
-    return confessions.filter(
-      (confession) => !looksLikeWalletSpam(confession.text),
-    );
+    return confessions
+      .filter((confession) => !looksLikeWalletSpam(confession.text))
+      .sort((a, b) => b.createdAt - a.createdAt);
   }, [confessions]);
 
   const featuredConfession = useMemo(() => {
