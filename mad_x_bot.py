@@ -692,9 +692,53 @@ def generate_thread_candidates() -> Optional[List[str]]:
             "It's the fact that someone out there is building while others panic. And they chose to do it publicly.",
             "That's rare. That's signal. That's $MAD.\n\nStay $MAD.",
         ],
+        [
+            "3 things $MAD holders know that tourists don't:\n\n1/ Conviction isn't a feeling. It's a practice. You don't wait for it. You build it.",
+            "2/ The dip isn't danger. It's data. Everyone else's panic is your signal.",
+            "3/ The ones who make it don't have better information. They have better emotional regulation.\n\nStay $MAD.",
+        ],
+        [
+            "Every jeeter is a case study. Every holder is a thesis.\n\n1/ Jeeters trade their ego. Holders trade their plan.",
+            "2/ Jeeters need validation. Holders need patience.",
+            "3/ Jeeters celebrate exits. Holders celebrate entries.\n\nSame chart. Different psychology. Stay $MAD.",
+        ],
+        [
+            "The $MAD mindset in 3 parts — no fluff:\n\n1/ You don't need more strategy. You need less emotional trading.",
+            "2/ You don't need insider info. You need insider conviction.",
+            "3/ You don't need to time the market. You need to outlast the weak.\n\nStay $MAD.",
+        ],
+        [
+            "Why $MAD? Because the alternative is this:\n\n1/ Chasing pumps that already happened.",
+            "2/ Panic-selling at the bottom and calling it 'risk management.'",
+            "3/ Repeating the same cycle and blaming the market.\n\n$MAD is the exit. Stay $MAD.",
+        ],
+        [
+            "3 signs you're actually $MAD (not just holding):\n\n1/ You don't check the price every 5 minutes. You check your conviction.",
+            "2/ You don't celebrate green candles. You celebrate another day of discipline.",
+            "3/ You don't need the community to validate your hold. You validate theirs.\n\nStay $MAD.",
+        ],
+        [
+            "What $MAD actually means:\n\n1/ It's not a ticker. It's a filter. It separates the builders from the tourists.",
+            "2/ It's not a community. It's a frequency. You either tune in or you don't.",
+            "3/ It's not about getting rich. It's about getting real.\n\nStay $MAD.",
+        ],
     ]
 
-    thread = random.choice(threads)
+    # Check recent posts to avoid repetition within 72 hours
+    state = load_state()
+    recent_texts = state.get("recent_generated_or_posted_texts", [])
+    recent_fingerprints = {t[:50] for t in recent_texts[-30:]}
+
+    available_threads = []
+    for thread in threads:
+        fingerprint = thread[0][:50]
+        if fingerprint not in recent_fingerprints:
+            available_threads.append(thread)
+
+    if not available_threads:
+        available_threads = threads  # fallback if all were recent
+
+    thread = random.choice(available_threads)
     return [finalize_post_text(t) for t in thread]
 
 
@@ -800,6 +844,32 @@ OVERUSED_TEMPLATE_PATTERNS = [
     r"execution beats excitement",
     r"calm gets paid before noise does",
     r"stay \$mad",
+    r"the \$mad framework in 3 parts",
+    r"most people think discipline is boring",
+    r"the only thing that compounds faster than hype",
+    r"pressure doesn't break you",
+    r"the market is just a mirror",
+    r"you don't need more alpha",
+    r"you need less emotion",
+    r"control yourself",
+    r"someone asked.*why \$mad",
+    r"it's not the tech",
+    r"it's the fact that someone out there is building",
+    r"stay \$mad",
+    r"jeeters trade their ego",
+    r"holders trade their plan",
+    r"same chart\. different psychology",
+    r"you don't need more strategy",
+    r"you need less emotional trading",
+    r"chasing pumps that already happened",
+    r"panic-selling at the bottom",
+    r"repeating the same cycle",
+    r"you don't check the price every 5 minutes",
+    r"you check your conviction",
+    r"it's not a ticker",
+    r"it's a filter",
+    r"it's not a community",
+    r"it's a frequency",
 ]
 
 CONTRAST_WORDS = ["but", "instead", "before", "not", "while", "yet", "until", "because"]
@@ -1482,7 +1552,18 @@ def main():
                     recent_texts=recent_texts,
                 )
 
-                print(f"[QUEUE] generated_count={len(texts)}")
+                # HARD BLOCK: skip anything >60% similar to recent posts
+                filtered = []
+                for item in ranked:
+                    sim_max = item.get("similarity_details", {}).get("max_similarity", 0)
+                    if sim_max >= 0.60:
+                        print(f"[BLOCK] Similarity {sim_max:.2f} to recent post. Skipping: {item['text'][:60]}...")
+                        continue
+                    filtered.append(item)
+
+                ranked = filtered
+
+                print(f"[QUEUE] generated_count={len(texts)} | after_block={len(ranked)}")
                 for item in ranked:
                     print(item["log_line"])
                     print(item["match_log"])
