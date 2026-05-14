@@ -427,6 +427,9 @@ OPENERS = [
     "Jeeters",
     "$MAD holders",
     "The trenches",
+    "Time",
+    "Wealth",
+    "Everyone",
 ]
 
 CLAUSE_A = [
@@ -450,6 +453,11 @@ CLAUSE_A = [
     "hold on hope instead of on thesis",
     "let a red candle rewrite their whole story",
     "forget why they started when it gets hard",
+    "want the bag without the discipline",
+    "want the exit without the hold",
+    "want to be rich but won't act like one",
+    "fold while the builders keep building",
+    "call time wasted when it's actually proof",
 ]
 
 CLAUSE_B = [
@@ -473,6 +481,13 @@ CLAUSE_B = [
     "You don't need more information. You need more restraint.",
     "The market doesn't reward feelings. It rewards follow-through.",
     "Control yourself. The rest follows.",
+    "Time is the real flex.",
+    "Discipline does.",
+    "The dollar doesn't make you rich. Discipline does.",
+    "Building while others folded. That's the signal.",
+    "Your behavior writes your net worth.",
+    "Wealth is a habit, not an event.",
+    "The ones who make it don't have better information. They have better emotional regulation.",
 ]
 
 # --- $MAD-Specific Content Templates ---
@@ -492,6 +507,15 @@ MAD_SPECIFIC_TEMPLATES = [
     "No taxes. No tricks. Just supply shrinking and conviction growing. Stay $MAD.",
     "Your emotions are front-running your plan. MAD AI sees the pattern. You should too. Stay $MAD.",
     "The vault has 23 pieces. Free to grab. The real flex is holding $MAD while you post them. Stay $MAD.",
+    "Everyone wants the $MAD bag. Not everyone wants the $MAD discipline.",
+    "The dollar doesn't make you rich. Discipline does. Stay $MAD.",
+    "Everyone wants to be $MAD Rich. Not everyone is willing to act like one.",
+    "Time is the real flex. Stay $MAD.",
+    "Building while others folded. That's the signal. Stay $MAD.",
+    "Wealth is a habit, not an event. Stay $MAD.",
+    "Your behavior writes your net worth. Stay $MAD.",
+    "The ones who make it don't have better information. They have better emotional regulation. Stay $MAD.",
+    "Everyone wants the exit. Not everyone wants the hold. Stay $MAD.",
 ]
 
 # --- Community Celebration Templates ---
@@ -590,7 +614,7 @@ def generate_philosophy_candidates(count: int = 4) -> List[str]:
         # Natural transitions based on opener
         if opener.lower() == "you":
             text = f"You {a}. {b}"
-        elif opener.lower() in ["most people", "winners", "losers", "panickers", "jeeters"]:
+        elif opener.lower() in ["most people", "winners", "losers", "panickers", "jeeters", "everyone"]:
             text = f"{opener} {a}. {b}"
         elif opener.lower() in ["pressure", "greed", "fear", "pain", "regret", "emotion", "noise"]:
             text = f"{opener} makes you {a}. {b}"
@@ -600,6 +624,10 @@ def generate_philosophy_candidates(count: int = 4) -> List[str]:
             text = f"{opener} doesn't {a}. {b}"
         elif opener.lower() == "$mad holders":
             text = f"{opener} don't {a}. {b}"
+        elif opener.lower() == "time":
+            text = f"{opener} {a}. {b}"
+        elif opener.lower() == "wealth":
+            text = f"{opener} {a}. {b}"
         else:
             text = f"{opener} {a}. {b}"
 
