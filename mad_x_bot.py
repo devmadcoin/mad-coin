@@ -208,10 +208,10 @@ def template_for_hash(text: str) -> str:
 # =========================================================
 
 ART_CATALOG = {
-    "mad-2-months": [
-        "Two months of building while others folded. Time is the real flex. Stay $MAD.",
-        "Month two. Still here. Still building. Still $MAD.",
-        "They counted days. We stacked conviction. Stay $MAD.",
+    "mad-3-months": [
+        "Three months of building while others folded. Time is the real flex. Stay $MAD.",
+        "Month three. Still here. Still building. Still $MAD.",
+        "They counted days. We stacked conviction. Three months deep. Stay $MAD.",
     ],
     "mad-army": [
         "The MAD Army doesn't sleep. We don't fold. We build. Stay $MAD.",

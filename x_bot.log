@@ -1,0 +1,76 @@
+[BOT] $MAD Supreme Bot starting...
+[BOT] Modes: originals=True, replies=False, media=True, threads=True, milestones=True
+[BOT] Dry run=False, MAD AI mode=savage
+[04:33:08] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7
+[SCORE] total=9.20 | base=4.60 + anger=1.65 + pain=0.00 + flex=0.50 + combo=0.65 + hook=0.90 + structure=0.90 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['coping', 'weak', 'weak hands'] | pain=[] | flex=['strong'] | sim={'max_similarity': 0.3468, 'avg_top3_similarity': 0.1904}
+[QUEUE CANDIDATE] Most people call coping a plan. What breaks weak hands forges strong ones.
+[SCORE] total=8.95 | base=5.60 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.25 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.0681, 'avg_top3_similarity': 0.067}
+[QUEUE CANDIDATE] From the $MAD vault. Free to grab. The real flex is holding while you post it. #Solana
+[SCORE] total=8.95 | base=5.80 + anger=0.00 + pain=0.00 + flex=2.00 + combo=0.00 + hook=0.90 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad', 'stay $mad', 'community'] | sim={'max_similarity': 0.2426, 'avg_top3_similarity': 0.228}
+[QUEUE CANDIDATE] Real people. Real chaos. Real conviction. That's the $MAD community. Stay $MAD.
+[SCORE] total=8.65 | base=4.70 + anger=1.10 + pain=0.00 + flex=0.00 + combo=0.00 + hook=1.30 + structure=1.55 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=[] | flex=[] | sim={'max_similarity': 0.2148, 'avg_top3_similarity': 0.1579}
+[QUEUE CANDIDATE] Jeeters confuse urgency with edge. The market doesn't reward feelings. It rewards follow-through. #Crypto
+[SCORE] total=7.10 | base=6.00 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.90 + structure=1.25 + media=0.00 + brand=0.40 + conf=0.35 - novelty=2.40 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad', 'community'] | sim={'max_similarity': 1.0, 'avg_top3_similarity': 0.4593}
+[QUEUE CANDIDATE] Another confession posted. Another truth told. This community doesn't fake it. Stay $MAD.
+[SCORE] total=6.40 | base=6.20 + anger=0.00 + pain=0.00 + flex=2.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=2.40 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad', 'holders'] | sim={'max_similarity': 1.0, 'avg_top3_similarity': 0.4445}
+[QUEUE CANDIDATE] 273 holders. +52 this cycle. Small number? No. Proof the signal is spreading. Stay $MAD.
+[SCORE] total=6.20 | base=5.70 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=1.25 + media=0.00 + brand=0.40 + conf=0.00 - novelty=2.40 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad', 'community'] | sim={'max_similarity': 0.9393, 'avg_top3_similarity': 0.4761}
+[QUEUE CANDIDATE] The community backed another project publicly. Tokens locked. Receipts posted. That's $MAD energy. Stay $MAD.
+[QUEUE] best_score=9.20
+[QUEUE] best_text=Most people call coping a plan. What breaks weak hands forges strong ones.
+[POST] Posted to X. tweet_id=2054661245056565625
+[AUTO POST] Posted successfully.
+[THREAD] Generated thread of 3 tweets
+[POST] Posted to X. tweet_id=2054661246486753386
+[POST] Posted to X. tweet_id=2054661247921238440
+[POST] Posted to X. tweet_id=2054661249422733525
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[07:33:10] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7
+[SCORE] total=10.85 | base=5.50 + anger=0.00 + pain=0.55 + flex=1.50 + combo=0.65 + hook=1.40 + structure=1.25 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=['mistake'] | flex=['conviction', 'signal', 'control'] | sim={'max_similarity': 0.1931, 'avg_top3_similarity': 0.1631}
+[QUEUE CANDIDATE] Pressure makes you mistake noise for signal. Conviction means nothing without control.
+[SCORE] total=7.75 | base=5.30 + anger=1.65 + pain=0.00 + flex=1.50 + combo=0.65 + hook=0.65 + structure=0.90 + media=0.00 + brand=0.40 + conf=0.00 - novelty=2.40 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['coping', 'jeeter', 'jeeters'] | pain=[] | flex=['$mad', 'stay $mad', 'holders'] | sim={'max_similarity': 1.0, 'avg_top3_similarity': 0.4372}
+[QUEUE CANDIDATE] Holders growing. Jeeters coping. Same chart, different psychology. Stay $MAD.
+[SCORE] total=7.70 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.25 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.1918, 'avg_top3_similarity': 0.1899}
+[QUEUE CANDIDATE] MAD Tower Defense is coming. Not soon™. Actually coming. Stay $MAD.
+[SCORE] total=7.35 | base=6.50 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.90 + structure=1.70 + media=0.00 + brand=0.40 + conf=0.00 - novelty=2.40 - repeat=0.90 - hashtags=0.00 - weak=0.35 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad'] | sim={'max_similarity': 1.0, 'avg_top3_similarity': 0.4636}
+[QUEUE CANDIDATE] Someone just grabbed a bigger bag. Not telling you to. Just noticing the signal. Stay $MAD.
+[SCORE] total=6.85 | base=4.60 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.25 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['structure', 'calm'] | sim={'max_similarity': 0.1365, 'avg_top3_similarity': 0.1032}
+[QUEUE CANDIDATE] Most people quit before the structure pays. Calm gets paid before noise does.
+[SCORE] total=6.80 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2662, 'avg_top3_similarity': 0.242}
+[QUEUE CANDIDATE] Kings don't chase. Kings command. Stay $MAD.
+[SCORE] total=6.75 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.00 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2155, 'avg_top3_similarity': 0.2037}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD. #Trading
+[QUEUE] best_score=10.85
+[QUEUE] best_text=Pressure makes you mistake noise for signal. Conviction means nothing without control.
+[POST] Posted to X. tweet_id=2054706556198175072
+[AUTO POST] Posted successfully.
+[THREAD] Generated thread of 4 tweets
+[POST] Posted to X. tweet_id=2054706557674508712
+[POST] Posted to X. tweet_id=2054706559306052095
+[POST] Posted to X. tweet_id=2054706561029943634
+[POST ERROR] 403 Forbidden
+Posts are limited to a maximum of one cashtag ($SYMBOL). Please remove additional cashtags and try again.
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[10:33:13] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7
+[SCORE] total=9.40 | base=5.70 + anger=0.00 + pain=0.00 + flex=2.00 + combo=0.00 + hook=0.65 + structure=1.25 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad', 'build', 'building'] | sim={'max_similarity': 0.1565, 'avg_top3_similarity': 0.1565}
+[QUEUE CANDIDATE] Two months of building while others folded. Time is the real flex. Stay $MAD. #Crypto

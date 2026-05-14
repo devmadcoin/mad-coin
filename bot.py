@@ -267,7 +267,7 @@ def hash_template(text: str) -> str:
 # =========================================================
 
 ART_CATALOG = {
-    "mad-2-months": ["Two months of building while others folded. Time is the real flex. Stay $MAD.", "Month two. Still here. Still building. Still $MAD.", "They counted days. We stacked conviction. Stay $MAD."],
+    "mad-3-months": ["Three months of building while others folded. Time is the real flex. Stay $MAD.", "Month three. Still here. Still building. Still $MAD.", "They counted days. We stacked conviction. Three months deep. Stay $MAD."],
     "mad-army": ["The MAD Army doesn't sleep. We don't fold. We build. Stay $MAD.", "Every soldier in this army chose discipline over dopamine. Stay $MAD.", "Not an army of noise. An army of signal. Stay $MAD."],
     "mad-at-bears": ["Bears want you scared. We want you ready. Stay $MAD.", "The bear market doesn't break MAD holders. It reveals them. Stay $MAD.", "They hibernate. We build. Same forest. Different species. Stay $MAD."],
     "mad-believes": ["Belief without discipline is just hope. And hope doesn't pay. Stay $MAD.", "We believe in the build. Not the promise. Stay $MAD.", "Believe in the process. The price follows. Stay $MAD."],
