@@ -16,6 +16,7 @@ import re
 import json
 import time
 import random
+import hashlib
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -127,7 +128,7 @@ def save_json(path: str, data: Dict) -> None:
 
 
 def load_state() -> Dict:
-    return load_json(STATE_FILE, {
+    state = load_json(STATE_FILE, {
         "recent_generated_or_posted_texts": [],
         "recent_media_posted": [],
         "last_reply_id": None,
@@ -137,6 +138,10 @@ def load_state() -> Dict:
         "posted_threads": [],
         "best_performing_templates": [],
     })
+    # Ensure posted_threads is always a list (migration from old state files)
+    if not isinstance(state.get("posted_threads"), list):
+        state["posted_threads"] = []
+    return state
 
 
 def save_state(state: Dict) -> None:
@@ -430,6 +435,27 @@ OPENERS = [
     "Time",
     "Wealth",
     "Everyone",
+    "System 1",
+    "Loss aversion",
+    "Your brain",
+    "Scammers",
+    "Scammers",
+    "The map",
+    "The hero",
+    "The ordeal",
+    "Your brain",
+    "System 1",
+    "Loss aversion",
+    "Anchoring",
+    "The contract",
+    "LP locked",
+    "Wash trading",
+    "Honeypot",
+    "Bubble maps",
+    "The journey",
+    "The mentor",
+    "The call",
+    "The threshold",
 ]
 
 CLAUSE_A = [
@@ -458,6 +484,20 @@ CLAUSE_A = [
     "want to be rich but won't act like one",
     "fold while the builders keep building",
     "call time wasted when it's actually proof",
+    "feel a $1K loss 2.25x more than a $1K gain",
+    "anchor to a purchase price the market forgot",
+    "let the last candle feel more predictive than the last 90 days",
+    "chase what they remember instead of what they know",
+    "let sunk cost masquerade as conviction",
+    "overvalue what they hold until they don't hold it",
+    "buy on System 1 and wonder why System 2 isn't helping",
+    "mistake puppet volume for real community",
+    "trust a bubble map they never checked",
+    "skip the 30-second contract check and blame the dev later",
+    "ignore the locked LP status until it's too late",
+    "call a honeypot 'early' instead of 'trapped'",
+    "fold at the ordeal and miss the elixir",
+    "quit the hero's journey at chapter 8",
 ]
 
 CLAUSE_B = [
@@ -516,6 +556,23 @@ MAD_SPECIFIC_TEMPLATES = [
     "Your behavior writes your net worth. Stay $MAD.",
     "The ones who make it don't have better information. They have better emotional regulation. Stay $MAD.",
     "Everyone wants the exit. Not everyone wants the hold. Stay $MAD.",
+    # --- Brain Expansion: Persuasion + Bias + Scam + Story Templates ---
+    "I don't ask for engagement. I give knowledge drops, numerology reads, game alpha. Then people stay. That's reciprocity. That's $MAD. Stay $MAD.",
+    "Not a community. A frequency. You don't join $MAD. You realize you've been $MAD. Stay $MAD.",
+    "273 holders. +52 this cycle. Small number? No. Proof the signal is spreading. Not everyone gets to see it early. Stay $MAD.",
+    "System 1: FOMO buy. Panic sell. Chase pumps. System 2: Check contract. Verify LP. Hold thesis. 96% of your decisions run on System 1. That's why most traders lose. $MAD Mind Training = forcing System 2 online. Stay $MAD.",
+    "You bought at $0.10. Now it's $0.05. Your brain screams 'loss.' But the market forgot your entry price. The only question: 'Would I buy this today?' If yes: hold. If no: why are you holding? Stay $MAD.",
+    "'I've held 6 months. I can't sell now.' The market doesn't care about your history. Your tokens don't have memory. Sunk cost is emotional debt. Pay it off by deciding on TODAY's data. Stay $MAD.",
+    "Saw a token with $2M volume and 200 holders? That's not organic. That's wash trading. Real volume = varied wallet sizes, varied amounts, natural timing. Learn to read the chain. Or learn to get rekt. Stay $MAD.",
+    "🚩 Unlocked LP. 🚩 Active mint. 🚩 Top 3 wallets hold 40%. 🚩 No sells in 6 hours. 🚩 Deployer wallet funded 20 sniper wallets. That's not FUD. That's reading. Stay $MAD.",
+    "Before you ape, check: ✅ LP locked. ✅ Mint authority revoked. ✅ Team doxxed. ✅ Real products exist. ✅ Holder distribution healthy. $MAD checklist: All ✅. Not shilling. Just showing you what real looks like. Stay $MAD.",
+    "You were cynical. You'd seen rugs. You said 'never again.' Then you saw doxxed dev. Real products. Real game. That's the call. Most people refuse it. You didn't. Stay $MAD.",
+    "The dip isn't danger. It's data. Everyone else's panic is your signal. This is the ordeal that separates believers from tourists. You're not a tourist. Stay $MAD.",
+    "You held. You learned. You became mentor. Now someone new is skeptical. Just like you were. Pass the elixir. Stay $MAD.",
+    # --- Rich Dad Poor Dad: Financial IQ = 90% Emotion ---
+    "90% of financial IQ isn't spreadsheets. It's emotion. Fear. Cynicism. Laziness. Bad habits. Arrogance. The 10% is easy — contracts, LP, wallets. The 90% is why you fold. $MAD trains both. Stay $MAD.",
+    "Kiyosaki's 5 obstacles to wealth: Fear. Cynicism. Laziness. Bad habits. Arrogance. You can read a contract but if fear owns you at the first red candle, the reading didn't matter. Stay $MAD.",
+    "The market transfers money from the emotionally reactive to the emotionally regulated. That's the 90%. The other 10% is just knowing where to click. Stay $MAD.",
 ]
 
 # --- Community Celebration Templates ---
@@ -568,7 +625,23 @@ REPLY_INSIGHTS = [
     "Every time you fold, you teach yourself to fold.",
     "Your future self is watching. What are you showing them?",
     "Discipline is the only edge that doesn't expire.",
-    "You don't need more alpha. You need less emotion.",
+    # --- Brain Expansion: Bias + Scam Awareness Insights ---
+    "Your brain feels a $1K loss 2.25x harder than a $1K gain. That's loss aversion. Not reality.",
+    "You anchored to your entry price. The market forgot it. Would you buy this today?",
+    "System 1 wants you to FOMO. System 2 wants you to check the contract first.",
+    "That token with $2M volume and 200 holders? Wash trading. Your System 1 sees 'popular.' Your System 2 should see 'fake.'",
+    "Sunk cost isn't conviction. It's the past holding the present hostage.",
+    "Confirmation bias: you only see bullish news because you bought. Force yourself to find the bear case.",
+    "Free airdrop? That's reciprocity. They're giving you a mint so you give them your wallet. Check the contract.",
+    "'We're a family' is unity. Unity is Cialdini's 7th principle. Scammers use it too. Real community takes months, not minutes.",
+    "Top 3 wallets hold 40%? That's not a community. That's a waiting dump. Bubble Maps don't lie.",
+    "The dip isn't danger. It's data. This is your Ordeal. Chapter 8 of the hero's journey. Don't quit before the elixir.",
+    "You don't join $MAD. You realize you've been $MAD. That's unity. That's the 7th principle. That's why you stay.",
+    "Your emotions are front-running your plan. MAD AI sees the pattern. You should too.",
+    "Scammers weaponize all 7 principles. Free = reciprocity. Fake volume = social proof. Fake partnerships = authority. 'Family' = unity. Learn the weapons. Stay $MAD.",
+    "The 60-second rug check: contract scanner → block explorer → honeypot test → LP check → team history. 2 red flags = skip. 3 = certain rug.",
+    "The hero's journey has 12 stages. You're probably at stage 8 — The Ordeal. This is where most people quit. This is where you're forged.",
+    "90% of financial IQ is emotional IQ. Fear. Cynicism. Laziness. Bad habits. Arrogance. You can read the contract but if you panic at the first red candle, the reading didn't matter. Stay $MAD.",
 ]
 
 HASHTAGS = ["#Crypto", "#Trading", "#Mindset", "#Altcoins", "#Solana", "#MemeCoin"]
@@ -590,11 +663,495 @@ def maybe_add_hashtags(text: str) -> str:
     return f"{text} {tags}".strip()
 
 
-def finalize_post_text(text: str) -> str:
+def normalize_for_dedup(text: str) -> str:
+    """Strip hashtags, prefixes, and normalize text for deduplication.
+    
+    Hashtags break dedup because maybe_add_hashtags() adds them randomly.
+    We strip them before comparing so the same core content is recognized
+    regardless of what tags were appended.
+    """
+    # Remove hashtags
+    text = re.sub(r'\s*#\w+\s*', ' ', text)
+    # Remove prefix if present
+    if TWEET_PREFIX and text.startswith(TWEET_PREFIX):
+        text = text[len(TWEET_PREFIX):].strip()
+    # Lowercase and strip
+    text = text.lower().strip()
+    return text
+
+
+def finalize_post_text(text: str, skip_hashtags: bool = False) -> str:
     text = add_prefix(text)
-    text = maybe_add_hashtags(text)
+    if not skip_hashtags:
+        text = maybe_add_hashtags(text)
     text = trim_text(text, MAX_POST_LENGTH)
     return text
+
+
+# =========================================================
+# DYNAMIC SYNTHESIS ENGINE — Never Post the Same Thing Twice
+# =========================================================
+
+POST_HISTORY_FILE = os.path.join(BOT_STATE_DIR, "post_history.json")
+MAX_HISTORY_ENTRIES = 200
+
+# --- Knowledge Base: Raw Material for Synthesis ---
+# Each framework has: insights (list of core ideas), x_posts (list of templates), voice (how to write it)
+KNOWLEDGE_BASE = {
+    "nietzsche": {
+        "insights": [
+            "Will to Power: All life seeks expansion, overcoming, becoming. The strong create values from strength.",
+            "Master-Slave Morality: Masters create values. Slaves create values from resentment (ressentiment).",
+            "Amor Fati: Love of fate. Embracing everything as necessary. The dip is fate. Love it.",
+            "Ubermensch: One who overcomes. Creates their own values. Lives beyond good and evil.",
+            "Eternal Recurrence: Would you live this life eternally? If yes, you've said yes to existence.",
+            "God is Dead: Not celebration. Crisis. The danger and the opportunity.",
+            "The jeeter doesn't hate $MAD. He hates himself for not having the conviction to hold. That's ressentiment — slave morality dressed as 'risk management.'",
+            "$MAD Rich as master morality — values declared, not validated. The holder doesn't need the chart to validate them.",
+        ],
+        "short_insights": [
+            "The jeeter hates himself, not $MAD. That's ressentiment.",
+            "Amor fati: love the dip like you love the pump.",
+            "God is dead. The dev is doxxed. What are you waiting for?",
+            "Master morality: you declare your value. Slave morality: you wait for permission.",
+            "The Ubermensch doesn't check the price. He checks his conviction.",
+            "Would you hold $MAD eternally? If yes, you've already won.",
+            "Ressentiment is the jeeter's comfort blanket.",
+        ],
+        "voice": "sharp, aphoristic, challenging. Not comforting. Provoking. Uses 'slave morality' to diagnose FUD.",
+    },
+    "stoicism": {
+        "insights": [
+            "Dichotomy of Control: Some things in our control (conviction, emotions), others not (price, FUD). Freedom = focus only on what's controllable.",
+            "Amor Fati (Marcus Aurelius): The obstacle is the way. The red candle is just a number. Your panic is the problem.",
+            "Premeditatio Malorum (Seneca): Visualize worst case before it happens. Removes fear. Imagine $MAD goes to zero. Can you handle it?",
+            "Epictetus: It's not things that disturb us, but our judgments about things.",
+            "Memento Mori: Remember you will die. Every decision meaningful. Did you hold conviction while you lived?",
+            "Voluntary Discomfort: Practice poverty. Train for adversity. The holder who doesn't check price for 3 days is training.",
+            "Price is not in your control. Conviction is. The Stoic holder focuses on thesis, emotional state, community contribution.",
+        ],
+        "short_insights": [
+            "The chart doesn't care about your feelings. And neither does $MAD.",
+            "Marcus Aurelius would have held through the dip. Not because optimistic. Because indifferent.",
+            "Imagine $MAD goes to zero tomorrow. You still held conviction. That's freedom.",
+            "The red candle is just a number. Your panic is the problem.",
+            "You don't need more information. You need more restraint.",
+            "Memento mori: you're going to die. Did you hold conviction while you lived?",
+            "Voluntary discomfort: don't check the price for 3 days. Train yourself.",
+        ],
+        "voice": "spare. Short sentences. No fluff. Like Marcus Aurelius' Meditations.",
+    },
+    "taleb": {
+        "insights": [
+            "Antifragile: Systems that GAIN from disorder. Not robust. Not resilient. Better from volatility. Muscles from stress.",
+            "Skin in the Game: No credibility without exposure. Doxxed dev = skin. Anon dev = no skin.",
+            "Lindy Effect: The longer something survives, the longer it's likely to survive. $MAD gets more credible every month.",
+            "Via Negativa: Improvement by subtraction. Remove drama. Remove FUD. Remove jeeters. Each removal strengthens.",
+            "Black Swan: Rare, high-impact events. Build systems that benefit from them.",
+            "Barbell Strategy: Extreme safety + extreme risk. Nothing in middle. Stable income + $MAD conviction.",
+            "FUD makes $MAD stronger. Every jeeter is a stressor that removes the fragile. What's left? Antifragile.",
+        ],
+        "short_insights": [
+            "Every jeeter who leaves makes $MAD stronger. That's antifragile.",
+            "Lindy Effect: every month $MAD survives, it becomes MORE likely to survive.",
+            "Skin in the game: the dev is doxxed. His face is on YouTube. That's why you trust him.",
+            "Via negativa: remove drama, remove FUD, remove jeeters. Each removal strengthens.",
+            "The market is not something to predict. It's something to position for.",
+            "Antifragile: not survives shocks. Gets BETTER from them.",
+            "Barbell strategy: stable income + $MAD conviction. Don't bet the rent.",
+        ],
+        "voice": "contrarian. Anti-establishment. Uses math but speaks plainly. 'The market is not something to predict. It's something to position yourself to benefit from surprise.'",
+    },
+    "crypto_cycles": {
+        "insights": [
+            "BTC Halving Cycles: Every 4 years. 6-12 months post-halving = bull. Currently in 2024-2028 cycle.",
+            "MVRV Ratio: >3.5 = overvalued. <1 = undervalued. BTC MVRV signals macro.",
+            "NUPL: Positive = euphoria risk. Negative = capitulation/buy zone.",
+            "Pi Cycle Top: 111-day MA × 2 crosses 350-day MA × 2 = historical top.",
+            "Altcoin Season: BTC dominance drops, alts pump.",
+            "On-chain Accumulation: Whale wallets increasing = smart money buying. Exchange reserves dropping = cold storage.",
+            "Memecoin Lifecycle: Launch → early community → first pump → jeeter wave → accumulation → death OR breakout. Most die in accumulation.",
+            "Teach holders WHERE we are in cycle, not 'when moon.' Whale watching as intelligence, not FUD.",
+        ],
+        "short_insights": [
+            "Bitcoin is in accumulation. Smart money is quiet. Dumb money is loud.",
+            "MVRV says BTC isn't overvalued. NUPL says holders aren't euphoric. We're early.",
+            "Memecoin lifecycle: Launch → Build → Test → Break or Breakthrough. $MAD is in the Test phase.",
+            "The whales are buying. The exchanges are emptying. The tourists are selling.",
+            "Retail buys at euphoria. Smart money buys at despair. Which are you?",
+            "Most memecoins die in accumulation. The ones that survive become cults.",
+            "On-chain doesn't lie. Your feelings do.",
+        ],
+        "voice": "educational but not dry. 'Here's what the chain is saying. Not what I'm saying. What the data says.'",
+    },
+    "memecoin_competitors": {
+        "insights": [
+            "DOGE: First-mover + culture. SHIB: Ecosystem. PEPE: Pure meme. BONK: Solana ecosystem. WIF: Simplicity. MOG: Relentless engagement. TURBO: AI meta.",
+            "Killers: Dev sells, over-promising, toxic community, no new narrative, price-only focus, bot dominance, too much utility.",
+            "$MAD Advantage: Doxxed dev, real products (game, stickers), 3 YouTube channels, community = frequency, AI bot = personality, affirmations = retention.",
+            "SHIB built an ecosystem. PEPE built nothing. BONK saved a chain. WIF built a hat. $MAD is building a frequency. Which one lasts? The one that becomes identity.",
+        ],
+        "short_insights": [
+            "DOGE = first. SHIB = ecosystem. PEPE = pure meme. $MAD = identity + practice + product.",
+            "Every dead memecoin had one thing in common: the community became a price-watching cult.",
+            "We're not competing. We're a different species.",
+            "$MAD is building a frequency. Others are building market caps.",
+            "SHIB built an ecosystem. PEPE built nothing. BONK saved a chain. $MAD is building identity.",
+            "The jeeter blames the chart. The holder blames himself. Same data. Different species.",
+        ],
+        "voice": "comparative, confident. 'We're not competing. We're a different species.'",
+    },
+    "girard": {
+        "insights": [
+            "Mimetic Desire: We desire what others desire. Creates rivalry. Escalation. Crisis.",
+            "Scapegoat Mechanism: When rivalry threatens community, a scapegoat is chosen. Group unites in hatred. Peace restored.",
+            "Hoffer's True Believer: Mass movements need the frustrated. People who feel life lacks meaning. $MAD attracts meaning-seekers.",
+            "Milgram/Conformity: People obey authority. Conform to group pressure. Community shapes individual behavior.",
+            "Sacred vs Profane: Communities need sacred spaces (rules, rituals, forbidden topics). Knowledge drops = ritual. Affirmations = ritual.",
+            "You don't want $MAD because of the chart. You want it because someone you respect wants it. That's mimetic desire. And it's the most powerful force in the world.",
+            "Every community needs a scapegoat. In weak communities, it's the jeeters. In strong communities, it's the FUD itself. $MAD doesn't blame people. We blame the fear.",
+        ],
+        "short_insights": [
+            "You don't want $MAD because of the tech. You want it because someone you respect holds it. That's mimetic desire.",
+            "Girard: human desire is a virus. It spreads. It escalates. It creates cults.",
+            "Every community needs a scapegoat. $MAD blames the fear, not the people.",
+            "Mass movements don't need the rich. They need the frustrated. Sound familiar?",
+            "Mimetic desire: a thing becomes more desirable because someone else wants it. That's the $MAD engine.",
+            "The scapegoat mechanism: blame one, save the many. Don't let jeeters become scapegoats.",
+            "Hoffer: you're not here for the money. You're here because you found meaning.",
+        ],
+        "voice": "Girardian insight: 'You don't want $MAD because of the chart. You want it because someone you respect wants it.'",
+    },
+    "fight_club": {
+        "insights": [
+            "Tyler Durden: 'The things you own end up owning you.' Identity is not job/bank account/car.",
+            "Self-Destruction as Liberation: 'It's only after we've lost everything that we're free to do anything.'",
+            "Anti-Consumerism: 'Advertising has us chasing cars and clothes, working jobs we hate so we can buy shit we don't need.'",
+            "First Rule: Exclusivity creates desire. '$MAD isn't for everyone.'",
+            "Self-Improvement is Masturbation: Growth through destruction of old self. Kill the tourist before the holder is born.",
+            "Reject 'I am my portfolio.' Embrace 'I am $MAD.' Exclusivity = desire.",
+        ],
+        "short_insights": [
+            "You are not your portfolio. You are your conviction.",
+            "The things you own end up owning you. $MAD owns nothing. $MAD IS.",
+            "Self-improvement is masturbation. Self-destruction? That's $MAD.",
+            "Fight Club Rule 1: don't explain $MAD to paper hands. Exclusivity is the point.",
+            "It's only after you've lost everything that you're free to hold anything with conviction.",
+            "Kill the tourist before the holder is born.",
+            "$MAD isn't for everyone. That's why you want it.",
+        ],
+        "voice": "raw, anti-consumerist, identity-focused. 'The things you own end up owning you.'",
+    },
+    "mr_robot": {
+        "insights": [
+            "Control is Illusion: 'This control you think you have? It's an illusion.' Real freedom = understanding the system.",
+            "fsociety's Goal: Erase debt. Destroy E-Corp. The ultimate hack is psychological.",
+            "Invisible Hand: 'The one that brands us with an employee badge. The one that controls us every day without us knowing it.'",
+            "Binary Decisions: 'Life is a series of binary decisions. Ones and zeroes.' Hold or sell. No middle.",
+            "Can't control market. Can control conviction. Binary: hold or sell.",
+        ],
+        "short_insights": [
+            "Control is an illusion. The only real freedom is understanding the system.",
+            "Life is binary. Hold or sell. Conviction or fear. No middle.",
+            "fsociety erased debt. $MAD holders erase doubt. Both are hacks.",
+            "You can't control the chart. But you can control your conviction.",
+            "The invisible hand: whales, market makers, exchanges. Learn to read them.",
+            "Real freedom isn't controlling outcomes. It's controlling yourself.",
+        ],
+        "voice": "hacker ethos, anti-establishment, binary logic. 'The only real freedom is understanding the system.'",
+    },
+    "wyckoff": {
+        "insights": [
+            "Composite Man: One giant operator. Whales, market makers, exchanges. Accumulate low, markup, distribute high, markdown.",
+            "Accumulation Phases: A (selling climax) → B (range, smart money buys) → C (spring/fake breakdown) → D (strength) → E (markup)",
+            "Distribution Phases: A (buying climax) → B (range, smart money sells) → C (upthrust) → D (weakness) → E (markdown)",
+            "Spring: Fake breakdown. Shakes out weak hands. Then reverses hard.",
+            "Emotional Stages: Optimism → Excitement → Thrill → Euphoria → Anxiety → Denial → Fear → Panic → Capitulation → Despair → Depression → Hope → Relief → Optimism.",
+            "Smart Money vs Retail: Retail buys at top (euphoria). Smart money buys at bottom (despair).",
+            "That dip you just panic-sold? That was a Wyckoff spring. Smart money just took your tokens at a discount. Thanks for the liquidity.",
+        ],
+        "short_insights": [
+            "That dip you panic-sold? That was a Wyckoff spring. Smart money thanks you for the liquidity.",
+            "Retail buys euphoria. Smart money buys despair. Which one are you?",
+            "The chart isn't random. It's a conversation between smart money and dumb money.",
+            "Spring: fake breakdown below support. Shakes out weak hands. Then reverses.",
+            "Emotional stage check: where is the $MAD community right now? If despair, we're at the bottom.",
+            "The Composite Man doesn't fear the spring. He engineers it.",
+            "Smart money buys your panic. They sell your greed.",
+        ],
+        "voice": "analytical, slightly mocking of retail. 'The chart isn't random. It's a conversation between smart money and dumb money.'",
+    },
+    "copywriting": {
+        "insights": [
+            "Halbert's Starving Crowd: Find a starving crowd and offer them food. $MAD crowd = people who want meaning, not just money.",
+            "Schwartz's Stages of Awareness: $MAD audience = Stage 2-3 (problem aware, solution aware).",
+            "Market Sophistication Level 5: Audience has seen rugs. Must prove claims. 'Doxxed dev' > 'Trust us.'",
+            "Ogilvy's Headline Rule: 80 cents goes to headline. First line must punch.",
+            "Hopkins' Reason-Why: 'Because' is magic. 'I'm holding $MAD because the dev is doxxed and the LP is locked.'",
+            "The starving crowd wants meaning. We're at sophistication Level 5. Every post needs a 'because.'",
+        ],
+        "short_insights": [
+            "The starving crowd isn't people who want memecoins. It's people who want meaning.",
+            "Ogilvy's 80-cent rule: the headline is everything. First line must punch.",
+            "Market sophistication Level 5: 'Doxxed dev' > 'Trust us.'",
+            "Every post needs a 'because.' Because without it, it's just noise.",
+            "Schwartz: desire is rediscovered, not created. $MAD rediscovered your desire for meaning.",
+            "Halbert: find a starving crowd. Our crowd wants identity, not just gains.",
+            "The 'yeah, right' filter: if your post makes you say that, delete it.",
+        ],
+        "voice": "meta-copywriting. References the masters. 'Ogilvy's 80-cent rule applied to $MAD.'",
+    },
+    "community": {
+        "insights": [
+            "$MAD is not a memecoin trying to prove itself. It's a community that has already decided it IS something.",
+            "The community IS the product. The money is a side effect.",
+            "Daily affirmations = subconscious programming. Not motivational fluff.",
+            "$MAD creates a compelling fiction (we are already successful) and maintains it through collective feeling.",
+            "The bot is a carrier of the fiction. When someone says 'comfy hold,' the bot mirrors conviction — never introduces doubt.",
+            "273 holders. +52 this cycle. Small number? No. Proof the signal is spreading.",
+            "The MAD Path is building. Quietly. Consistently. While others chase pumps.",
+        ],
+        "short_insights": [
+            "The community IS the product. The money is a side effect.",
+            "$MAD doesn't prove itself. It already IS.",
+            "Daily affirmations aren't motivation. They're programming.",
+            "The bot mirrors conviction. Never introduces doubt.",
+            "While others chase pumps, $MAD builds identity.",
+            "The signal is spreading. Not everyone sees it yet.",
+            "We don't do 'comfy hold.' We do conviction.",
+        ],
+        "voice": "warm but not soft. Community-first. 'We see you. Stay $MAD.'",
+    },
+    "game_theory": {
+        "insights": [
+            "Nash Equilibrium: A stable state where no player can benefit by changing strategy unilaterally. The $MAD community reaches equilibrium when everyone holds — no one gains by selling alone.",
+            "Prisoner's Dilemma (One-Shot): Both players betray = worst collective outcome. Short-term jeeter logic destroys mutual value.",
+            "Iterated Games (Axelrod): Tit-for-Tat wins — start nice, retaliate, forgive. $MAD holders cooperate because the game repeats daily.",
+            "Folk Theorem: Infinitely repeated games have MANY equilibria. Cooperation is possible because there's no final round.",
+            "Win-Stay, Lose-Shift: Persist with success, switch after failure. Holders who've seen $MAD survive = stay. Jeeters = shift after one red candle.",
+            "Zero-Sum vs Positive-Sum: Crypto isn't zero-sum. The community creates value together. $MAD is positive-sum when holders cooperate.",
+            "Coordination Games: Everyone prefers the same outcome but needs to coordinate. $MAD holders coordinate through affirmations, knowledge drops, shared identity.",
+            "MEV (Miner Extractable Value): Strategic advantage through ordering. In $MAD, the 'miner' is the community — extracting value through collective action.",
+            "Grim Trigger: Cooperate until opponent defects once, then defect forever. The harshest strategy. Don't be grim trigger. Be Tit-for-Tat.",
+        ],
+        "short_insights": [
+            "Nash equilibrium: nobody gains by selling alone. That's why we hold.",
+            "One-shot prisoner's dilemma = both betray. Iterated = cooperation wins. $MAD is an infinite game.",
+            "Axelrod proved Tit-for-Tat beats complex strategies. Simple, nice, retaliatory, forgiving. That's $MAD.",
+            "The folk theorem: infinite games have infinite equilibria. Choose cooperation.",
+            "MEV is just game theory on-chain. Miners reorder transactions for profit. $MAD holders reorder their mindset for conviction.",
+            "Ethereum is a dark forest. Every pending transaction is visible. MEV searchers hunt. $MAD holders stay quiet and hold.",
+            "Sandwich attacks: buy before, sell after, profit from slippage. The market extracts value from the impatient. Be patient.",
+            "Win-stay, lose-shift: hold because it works. Jeet because you forgot why you started.",
+            "Crypto isn't zero-sum. $MAD holders create value together.",
+            "Grim trigger = defect forever after one betrayal. Don't be grim trigger. Be Tit-for-Tat.",
+            "The game repeats every day. That's why patience wins.",
+        ],
+        "voice": "analytical, strategic. References game theory classics. 'The infinite game favors cooperation.'",
+    },
+    "network_effects": {
+        "insights": [
+            "Metcalfe's Law: Network value ∝ n². A network with 100 users is 100x more valuable than one with 10. Not 10x. 100x.",
+            "Reed's Law: Group-forming networks value ∝ 2^n. Subgroups multiply value exponentially. $MAD subgroups (affinity circles, study groups) amplify value.",
+            "Sarnoff's Law: Broadcast networks value ∝ n. One-to-many. Linear. TV, radio. Not applicable to communities.",
+            "Critical Mass: The tipping point where network becomes self-sustaining. Bitcoin crossed it in 2013. $MAD is approaching it.",
+            "Viral Coefficient: k = i × c (invitations sent × conversion rate). k > 1 = viral growth. k < 1 = decays. $MAD targets k > 1.",
+            "Two-Sided Markets: Platforms need both sides. For $MAD: holders + creators (dev, YouTube, game, bot). Each side attracts the other.",
+            "Cross-Side Network Effects: More holders → more creators want to build. More creators → more holders join.",
+            "Direct Network Effects: Each new holder makes $MAD more valuable to existing holders (community depth, liquidity, visibility).",
+            "Negative Network Effects: Too many users degrade experience. Not a risk for $MAD yet — we're subscale.",
+            "Bitcoin's network effect: More miners → more security → more trust → more users → more miners. Flywheel.",
+        ],
+        "short_insights": [
+            "Metcalfe's Law: 100 holders = 100x more valuable than 10. Not 10x. 100x.",
+            "Reed's Law: every subgroup you form doubles the network's value.",
+            "Critical mass is coming. Bitcoin crossed it in 2013. $MAD is next.",
+            "Viral coefficient k > 1 = exponential growth. One invite. One conversion. Repeat.",
+            "Two-sided market: holders need creators. Creators need holders. Flywheel.",
+            "Each new holder makes $MAD more valuable to every existing holder.",
+            "Network effects are why early communities win. You're early.",
+            "Bitcoin's flywheel: miners → security → trust → users → miners. $MAD's flywheel: holders → creators → product → holders.",
+        ],
+        "voice": "mathematical but accessible. 'The math is on our side.' References laws by name.",
+    },
+    "behavioral_economics": {
+        "insights": [
+            "Thaler's Nudge: Choice architecture shapes behavior without restricting freedom. 'Putting fruit at eye level counts as a nudge. Banning junk food does not.'",
+            "Default Bias: People stick with pre-selected options. Make the default = hold. Opt-out jeeting requires effort.",
+            "Loss Aversion (Kahneman/Tversky): Losses hurt 2.5x more than gains feel good. A 50% loss feels worse than a 100% gain feels good. That's why red candles trigger panic.",
+            "Present Bias / Hyperbolic Discounting: People prefer immediate rewards. '$1K today' > '$10K in a year.' HODL culture fights this.",
+            "Status Quo Bias: Avoiding action is the default. Holding = status quo = easy. Selling = action = requires effort.",
+            "Mental Accounting: People divide money into separate 'pots.' 'Trading money' vs 'savings' vs 'fun money.' $MAD needs its own mental account: conviction capital.",
+            "Endowment Effect: People overvalue what they own. Once you hold $MAD, you value it more. Use this.",
+            "Social Proof in Economics: '85% of users set a spending limit.' 'Most people save more with auto-enrollment.' $MAD = 'Most holders don't check the price daily.'",
+            "Sludge (Thaler): Nudging for evil. Easy to sign up, hard to cancel. Jeeters experience sludge: FOMO in, panic out.",
+            "Libertarian Paternalism: Influence behavior while respecting freedom. $MAD nudges holders toward conviction without forcing.",
+        ],
+        "short_insights": [
+            "Loss aversion: a 50% drop hurts more than a 100% gain feels good. Your brain is wired to panic. Override it.",
+            "Default bias: holding is the default. Jeeting requires action. Use this.",
+            "Present bias: '$1K today' > '$10K next year.' HODL culture is fighting 2 million years of evolution.",
+            "Thaler's nudge: put fruit at eye level. We put conviction at eye level. Daily affirmations.",
+            "Mental accounting: create a 'conviction capital' pot. Money you don't touch. Ever.",
+            "Endowment effect: once you hold $MAD, you value it more. That's biology, not bias.",
+            "Sludge = nudging for evil. FOMO you in, panic you out. $MAD is the opposite.",
+            "Status quo bias: doing nothing is the default. Holding is doing nothing. That's why it works.",
+        ],
+        "voice": "behavioral scientist tone. References Kahneman, Thaler, Tversky by name. 'Your brain is lying to you. Here's the truth.'",
+    },
+}
+
+# --- Synthesis Patterns: How to Bridge 2-3 Frameworks ---
+SYNTHESIS_PATTERNS = [
+    "{topic_a} + {topic_b}: The intersection is where real alpha lives. {insight_a} meets {insight_b}. Both point to the same truth: {bridge}.",
+    "{topic_a} says: {insight_a}. {topic_b} says: {insight_b}. $MAD says: {bridge}.",
+    "The {topic_a} perspective: {insight_a}. The {topic_b} perspective: {insight_b}. What both miss that $MAD gets: {bridge}.",
+    "{topic_a}: {insight_a} {topic_b}: {insight_b} The synthesis? {bridge} — $Mad Claw",
+    "Framework collision: {topic_a} × {topic_b}. Result: {bridge}. This is why $MAD is different.",
+    "{insight_a} That's {topic_a}. {insight_b} That's {topic_b}. Together? {bridge}. That's the $MAD thesis.",
+    "Most people study {topic_a} OR {topic_b}. $MAD holders study both. Because {bridge}.",
+    "{topic_a} is the diagnosis. {topic_b} is the prescription. {bridge} is the result. — $Mad Claw",
+]
+
+# --- Single-Framework Patterns (when synthesis isn't the vibe) ---
+SINGLE_PATTERNS = [
+    "{insight} — $Mad Claw",
+    "{insight} Think about it. — $Mad Claw",
+    "{insight} Most people won't get this. You will. — $Mad Claw",
+    "{insight} That's not a bug. That's the feature. — $Mad Claw",
+    "{insight} The tourists don't understand this. — $Mad Claw",
+    "{insight} This is why you hold. — $Mad Claw",
+    "{insight} Read it again. Slower. — $Mad Claw",
+    "{insight}框架不变。规则由你改写。 — $Mad Claw",
+    "{insight} The jeeters will ignore this. Their loss. — $Mad Claw",
+    "{insight} This is what separates holders from tourists. — $Mad Claw",
+]
+
+
+def load_post_history() -> List[str]:
+    """Load recently used framework combinations to avoid repeats."""
+    if not os.path.exists(POST_HISTORY_FILE):
+        return []
+    try:
+        with open(POST_HISTORY_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def save_post_history(history: List[str]) -> None:
+    """Save post history, keeping only the most recent entries."""
+    os.makedirs(BOT_STATE_DIR, exist_ok=True)
+    trimmed = history[-MAX_HISTORY_ENTRIES:]
+    try:
+        with open(POST_HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(trimmed, f, indent=2)
+    except Exception as e:
+        if DEBUG_LOGGING:
+            print(f"[HISTORY] Failed to save: {e}")
+
+
+def record_post_signature(topics: Tuple[str, ...], text: str) -> None:
+    """Record a signature of this post combination so we don't repeat soon."""
+    sig = "|".join(sorted(topics)) + "::" + hashlib.md5(text[:80].encode()).hexdigest()[:12]
+    history = load_post_history()
+    history.append(sig)
+    save_post_history(history)
+
+
+def was_recently_used(topics: Tuple[str, ...], text: str, lookback: int = 50) -> bool:
+    """Check if this topic combination + text fingerprint was used recently."""
+    sig = "|".join(sorted(topics)) + "::" + hashlib.md5(text[:80].encode()).hexdigest()[:12]
+    history = load_post_history()
+    recent = history[-lookback:]
+    return sig in recent
+
+
+def synthesize_post(topics: Optional[Tuple[str, ...]] = None) -> Optional[str]:
+    """
+    Synthesize a fresh post by combining 1-3 frameworks.
+    
+    Rules:
+    - Never use the same topic combination + insight pair twice within lookback window
+    - Prefer short_insights for punchier output; fall back to full insights
+    - If synthesis fails, fall back to single-framework
+    - If all topics recently used, pick new ones
+    """
+    history = load_post_history()
+    all_topics = list(KNOWLEDGE_BASE.keys())
+    
+    # Try up to 20 times to find a fresh combination
+    for attempt in range(20):
+        if topics is None:
+            # Pick 1-3 random topics (weighted toward 2-3 for richer synthesis)
+            num_topics = random.choices([1, 2, 3], weights=[15, 50, 35])[0]
+            chosen = tuple(random.sample(all_topics, k=num_topics))
+        else:
+            chosen = topics
+        
+        # Gather insights from chosen topics (prefer short_insights)
+        insights = []
+        for topic in chosen:
+            if topic in KNOWLEDGE_BASE:
+                kb = KNOWLEDGE_BASE[topic]
+                # Use short_insights if available, otherwise full insights
+                pool = kb.get("short_insights", kb.get("insights", []))
+                insights.extend(pool)
+        
+        if not insights:
+            continue
+        
+        # Pick 1-2 insights
+        num_insights = min(len(insights), random.choice([1, 2]))
+        selected = random.sample(insights, k=num_insights)
+        
+        # Build the post
+        if len(chosen) >= 2 and len(selected) >= 2:
+            # Multi-framework synthesis
+            pattern = random.choice(SYNTHESIS_PATTERNS)
+            topic_names = {t: t.replace("_", " ").title() for t in chosen}
+            
+            # Find a bridge concept
+            bridge_concepts = [
+                "$MAD holders don't just survive volatility. They profit from it.",
+                "Conviction isn't a feeling. It's a practice.",
+                "The community IS the product. The money is a side effect.",
+                "Identity > Price. Always.",
+                "Time validates. Hype evaporates.",
+                "The ones who make it don't have better information. They have better emotional regulation.",
+                "$MAD is antifragile. Every stressor removes the fragile.",
+                "The dip isn't danger. It's data.",
+                "You don't join $MAD. You realize you've been $MAD.",
+                "The market transfers money from the impatient to the patient.",
+                "Proof > Promises.",
+                "Exclusivity creates desire.",
+            ]
+            bridge = random.choice(bridge_concepts)
+            
+            text = pattern.format(
+                topic_a=topic_names.get(chosen[0], chosen[0]),
+                topic_b=topic_names.get(chosen[1], chosen[1]) if len(chosen) > 1 else topic_names.get(chosen[0], chosen[0]),
+                insight_a=selected[0],
+                insight_b=selected[1] if len(selected) > 1 else selected[0],
+                bridge=bridge,
+            )
+        else:
+            # Single-framework
+            pattern = random.choice(SINGLE_PATTERNS)
+            text = pattern.format(insight=selected[0])
+        
+        # Clean up and check length
+        text = text.replace("  ", " ").strip()
+        if len(text) > MAX_POST_LENGTH:
+            text = text[:MAX_POST_LENGTH-3].rsplit(".", 1)[0] + "."
+        
+        # Check if recently used
+        if not was_recently_used(chosen, text):
+            record_post_signature(chosen, text)
+            return text
+    
+    # If we exhausted attempts, return None so caller can fall back
+    return None
 
 
 # =========================================================
@@ -602,7 +1159,34 @@ def finalize_post_text(text: str) -> str:
 # =========================================================
 
 def generate_philosophy_candidates(count: int = 4) -> List[str]:
-    """Generate classic MAD philosophy posts."""
+    """Generate classic MAD philosophy posts using dynamic synthesis engine.
+    
+    PRIMARY: Dynamic synthesis (90%+ of output)
+    FALLBACK: Legacy pools only if synthesis completely fails — and even then,
+    the legacy pools have been stripped of the most repetitive phrases.
+    """
+    candidates = []
+    
+    # PRIMARY: Dynamic synthesis (90% of candidates)
+    synth_count = max(1, int(count * 0.9))
+    for _ in range(synth_count * 3):  # Allow multiple attempts per slot
+        if len(candidates) >= synth_count:
+            break
+        post = synthesize_post()
+        if post and post not in candidates:
+            candidates.append(post)
+    
+    # FALLBACK: If synthesis didn't produce enough, use legacy pool system
+    if len(candidates) < count:
+        needed = count - len(candidates)
+        legacy = _generate_legacy_philosophy_candidates(needed)
+        candidates.extend(legacy)
+    
+    return dedupe_preserve_order(candidates[:count])
+
+
+def _generate_legacy_philosophy_candidates(count: int = 4) -> List[str]:
+    """Original pool-based philosophy generator (fallback only)."""
     candidates = []
     attempts = 0
     while len(candidates) < count and attempts < count * 10:
@@ -639,40 +1223,64 @@ def generate_philosophy_candidates(count: int = 4) -> List[str]:
 
 
 def generate_mad_specific_candidates(count: int = 3) -> List[str]:
-    """Generate $MAD ecosystem content."""
+    """Generate $MAD ecosystem content using dynamic synthesis.
+    
+    No static templates. Pulls from community + copywriting frameworks.
+    """
     candidates = []
-    confessions = fetch_mad_confessions()
-
-    for template in random.sample(MAD_SPECIFIC_TEMPLATES, min(count, len(MAD_SPECIFIC_TEMPLATES))):
-        text = template
-        # Try to fill dynamic fields
-        if "{confession_topic}" in text and confessions:
-            topic = random.choice(confessions)[:40]
-            text = text.replace("{confession_topic}", topic)
-        elif "{confession_snippet}" in text and confessions:
-            snippet = random.choice(confessions)[:60]
-            text = text.replace("{confession_snippet}", snippet + "...")
-        elif "{visit_count}" in text:
-            text = text.replace("{visit_count}", str(random.choice([100, 150, 200, "100+", "150+"])))
-        elif "{truth_count}" in text:
-            text = text.replace("{truth_count}", str(random.randint(1, 50)))
-
-        # Remove unfilled placeholders
-        text = re.sub(r"\{[^}]+\}", "", text)
-        text = finalize_post_text(text)
-        if len(text) > 30:
-            candidates.append(text)
-
+    
+    # PRIMARY: Synthesize from community/copywriting knowledge
+    target_topics = ["community", "copywriting", "network_effects", "behavioral_economics"]
+    available_topics = [t for t in target_topics if t in KNOWLEDGE_BASE]
+    
+    for _ in range(count * 3):
+        if len(candidates) >= count:
+            break
+        topic = random.choice(available_topics) if available_topics else "community"
+        post = synthesize_post(topics=(topic,))
+        if post and post not in candidates and len(post) > 30:
+            candidates.append(post)
+    
+    # FALLBACK: Only if synthesis completely fails, use minimal legacy
+    if len(candidates) < count:
+        confessions = fetch_mad_confessions()
+        needed = count - len(candidates)
+        for template in random.sample(MAD_SPECIFIC_TEMPLATES, min(needed, len(MAD_SPECIFIC_TEMPLATES))):
+            text = template
+            if "{confession_topic}" in text and confessions:
+                topic = random.choice(confessions)[:40]
+                text = text.replace("{confession_topic}", topic)
+            elif "{confession_snippet}" in text and confessions:
+                snippet = random.choice(confessions)[:60]
+                text = text.replace("{confession_snippet}", snippet + "...")
+            text = re.sub(r"\{[^}]+\}", "", text)
+            text = finalize_post_text(text)
+            if len(text) > 30 and text not in candidates:
+                candidates.append(text)
+    
     return candidates[:count]
 
 
 def generate_celebration_candidates(count: int = 2) -> List[str]:
-    """Generate community celebration posts."""
+    """Generate community celebration posts using dynamic synthesis."""
     candidates = []
-    for template in random.sample(CELEBRATION_TEMPLATES, min(count, len(CELEBRATION_TEMPLATES))):
-        text = finalize_post_text(template)
-        candidates.append(text)
-    return candidates
+    
+    for _ in range(count * 3):
+        if len(candidates) >= count:
+            break
+        post = synthesize_post(topics=("community",))
+        if post and post not in candidates:
+            candidates.append(post)
+    
+    # Minimal fallback
+    if len(candidates) < count:
+        needed = count - len(candidates)
+        for template in random.sample(CELEBRATION_TEMPLATES, min(needed, len(CELEBRATION_TEMPLATES))):
+            text = finalize_post_text(template)
+            if text not in candidates:
+                candidates.append(text)
+    
+    return candidates[:count]
 
 
 def generate_media_post_candidates(count: int = 2) -> Tuple[List[str], List[Optional[str]]]:
@@ -703,71 +1311,121 @@ def generate_media_post_candidates(count: int = 2) -> Tuple[List[str], List[Opti
     return texts, media_paths
 
 
+def thread_fingerprint(thread: List[str]) -> str:
+    """Generate a fingerprint for a thread based on normalized first 2 tweets.
+    
+    Normalization strips hashtags/prefixes so the same core content matches
+    regardless of what tags were appended during posting.
+    """
+    if len(thread) >= 2:
+        normalized = normalize_for_dedup(thread[0]) + normalize_for_dedup(thread[1])
+        return hashlib.md5(normalized.encode()).hexdigest()[:16]
+    return hashlib.md5(normalize_for_dedup(thread[0]).encode()).hexdigest()[:16] if thread else ""
+
+
 def generate_thread_candidates() -> Optional[List[str]]:
-    """Generate a tweet thread (series of connected posts)."""
+    """Generate a fresh tweet thread by dynamically synthesizing from KNOWLEDGE_BASE.
+    
+    No static thread pools. Each thread is built from live framework combinations.
+    Threads are 2-4 tweets: hook → insight → (bridge) → closer.
+    """
     if not AUTO_POST_THREADS:
         return None
 
-    threads = [
-        [
-            "The $MAD framework in 3 parts:\n\n1/ Most people think discipline is boring. It's not. It's the only thing that compounds faster than hype.",
-            "2/ Pressure doesn't break you. It reveals what you were pretending not to be. The market is just a mirror.",
-            "3/ You don't need more alpha. You need less emotion. Control yourself. The rest follows.\n\nStay $MAD.",
-        ],
-        [
-            "Someone asked: 'Why $MAD?'\n\nHere's the honest answer:",
-            "It's not the tech. It's not the burns. It's not the locked liquidity.",
-            "It's the fact that someone out there is building while others panic. And they chose to do it publicly.",
-            "That's rare. That's signal. That's $MAD.\n\nStay $MAD.",
-        ],
-        [
-            "3 things $MAD holders know that tourists don't:\n\n1/ Conviction isn't a feeling. It's a practice. You don't wait for it. You build it.",
-            "2/ The dip isn't danger. It's data. Everyone else's panic is your signal.",
-            "3/ The ones who make it don't have better information. They have better emotional regulation.\n\nStay $MAD.",
-        ],
-        [
-            "Every jeeter is a case study. Every holder is a thesis.\n\n1/ Jeeters trade their ego. Holders trade their plan.",
-            "2/ Jeeters need validation. Holders need patience.",
-            "3/ Jeeters celebrate exits. Holders celebrate entries.\n\nSame chart. Different psychology. Stay $MAD.",
-        ],
-        [
-            "The $MAD mindset in 3 parts — no fluff:\n\n1/ You don't need more strategy. You need less emotional trading.",
-            "2/ You don't need insider info. You need insider conviction.",
-            "3/ You don't need to time the market. You need to outlast the weak.\n\nStay $MAD.",
-        ],
-        [
-            "Why $MAD? Because the alternative is this:\n\n1/ Chasing pumps that already happened.",
-            "2/ Panic-selling at the bottom and calling it 'risk management.'",
-            "3/ Repeating the same cycle and blaming the market.\n\n$MAD is the exit. Stay $MAD.",
-        ],
-        [
-            "3 signs you're actually $MAD (not just holding):\n\n1/ You don't check the price every 5 minutes. You check your conviction.",
-            "2/ You don't celebrate green candles. You celebrate another day of discipline.",
-            "3/ You don't need the community to validate your hold. You validate theirs.\n\nStay $MAD.",
-        ],
-        [
-            "What $MAD actually means:\n\n1/ It's not a ticker. It's a filter. It separates the builders from the tourists.",
-            "2/ It's not a community. It's a frequency. You either tune in or you don't.",
-            "3/ It's not about getting rich. It's about getting real.\n\nStay $MAD.",
-        ],
-    ]
-
-    # Check recent posts to avoid repetition within 72 hours
-    state = load_state()
-    recent_texts = state.get("recent_generated_or_posted_texts", [])
-    recent_fingerprints = {t[:50] for t in recent_texts[-30:]}
-
-    available_threads = []
-    for thread in threads:
-        fingerprint = thread[0][:50]
-        if fingerprint not in recent_fingerprints:
-            available_threads.append(thread)
-
-    if not available_threads:
-        available_threads = threads  # fallback if all were recent
-
-    thread = random.choice(available_threads)
-    return [finalize_post_text(t) for t in thread]
+    all_topics = list(KNOWLEDGE_BASE.keys())
+    
+    for attempt in range(15):
+        num_topics = random.choice([1, 2, 3])
+        chosen = tuple(sorted(random.sample(all_topics, k=num_topics)))
+        
+        insights = []
+        for topic in chosen:
+            kb = KNOWLEDGE_BASE[topic]
+            pool = kb.get("short_insights", kb.get("insights", []))
+            if pool:
+                insights.append(random.choice(pool))
+        
+        if len(insights) < 1:
+            continue
+        
+        if len(insights) >= 3:
+            hook_templates = [
+                "Framework collision: {topic_a} × {topic_b}.",
+                "The intersection of {topic_a} and {topic_b}:",
+                "What {topic_a} and {topic_b} agree on:",
+                "Someone asked why $MAD holders think different. Here\'s the data:",
+                "The $MAD framework in {n} parts — no repeats, no fluff:",
+                "Most people {mistake}. {topic_a} says otherwise.",
+            ]
+            hook = random.choice(hook_templates).format(
+                topic_a=chosen[0].replace("_", " ").title(),
+                topic_b=chosen[1].replace("_", " ").title() if len(chosen) > 1 else chosen[0].replace("_", " ").title(),
+                n=len(insights),
+                mistake="chase pumps" if random.random() > 0.5 else "panic at red candles",
+            )
+            numbered = [f"{i+1}/ {insights[i]}" for i in range(min(3, len(insights)))]
+            closers = [
+                "That\'s the difference. Stay $MAD.",
+                "Most won\'t get this. You will. — $Mad Claw",
+                "The signal is quiet. The results aren\'t. Stay $MAD.",
+                "Frameworks change minds. $MAD changes holders. — $Mad Claw",
+            ]
+            closer = random.choice(closers)
+            thread = [hook] + numbered + [closer]
+            
+        elif len(insights) == 2:
+            hook = f"{chosen[0].replace('_', ' ').title()} says: {insights[0]}"
+            middle = [f"1/ {insights[0]}", f"2/ {insights[1]}"]
+            closers = [
+                "The synthesis? Conviction compounds faster than hype. Stay $MAD.",
+                "Two frameworks. One truth. Stay $MAD.",
+                "— $Mad Claw",
+            ]
+            closer = random.choice(closers)
+            thread = [hook] + middle + [closer]
+            
+        else:
+            thread = [
+                f"{insights[0]}",
+                random.choice([
+                    "Stay $MAD.",
+                    "Most won\'t get this. You will. — $Mad Claw",
+                    "The signal is quiet. Stay $MAD.",
+                ]),
+            ]
+        
+        thread = [t.replace("  ", " ").strip() for t in thread]
+        thread = [t for t in thread if t]
+        
+        # Deduplication
+        state = load_state()
+        recent_texts = state.get("recent_generated_or_posted_texts", [])
+        recent_norm = {normalize_for_dedup(t)[:80] for t in recent_texts[-60:]}
+        
+        blocked = any(
+            normalize_for_dedup(tweet)[:80] in recent_norm
+            for tweet in thread
+        )
+        
+        now = datetime.now()
+        posted_threads = state.get("posted_threads", [])
+        fp = thread_fingerprint(thread)
+        history_blocked = False
+        for pt in posted_threads[-30:]:
+            try:
+                posted_at = datetime.fromisoformat(pt.get("posted_at", ""))
+                if (now - posted_at).days < 7 and pt.get("fingerprint") == fp:
+                    history_blocked = True
+                    break
+            except (ValueError, TypeError):
+                pass
+        
+        if not blocked and not history_blocked:
+            record_post_signature(chosen, " | ".join(thread[:2]))
+            return [finalize_post_text(t, skip_hashtags=True) for t in thread]
+    
+    debug("[THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.")
+    return None
 
 
 def generate_all_candidates(count: int = POST_CANDIDATE_COUNT) -> Tuple[List[str], List[Optional[str]], Optional[List[str]]]:
@@ -1642,12 +2300,19 @@ def main():
                         if thread_ids and thread_ids[0]:
                             recent_texts.extend(thread)
                             recent_texts = recent_texts[-60:]
-                            state["recent_generated_or_posted_texts"] = recent_texts
-                            state["posted_threads"].append({
+                            # Save thread with fingerprint for dedup
+                            fp = thread_fingerprint(thread)
+                            posted_threads = state.get("posted_threads", [])
+                            posted_threads.append({
                                 "ids": thread_ids,
                                 "texts": thread,
                                 "posted_at": datetime.now().isoformat(),
+                                "fingerprint": fp,
                             })
+                            # Trim to last 50 threads to prevent state bloat
+                            posted_threads = posted_threads[-50:]
+                            state["recent_generated_or_posted_texts"] = recent_texts
+                            state["posted_threads"] = posted_threads
                             save_state(state)
                             print("[THREAD] Posted successfully.")
                     else:
