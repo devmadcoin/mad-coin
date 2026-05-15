@@ -1013,6 +1013,37 @@ KNOWLEDGE_BASE = {
         ],
         "voice": "direct-response copywriter tone. Sharp, specific, no fluff. 'Here's what works. Do it.'"
     },
+    "fast_eats_slow": {
+        "insights": [
+            "Klaus Schwab: 'In the new world, it is not the big fish which eats the small fish — it is the fast fish which eats the slow fish.' Speed beats size in the digital economy.",
+            "The old paradigm: big eats small. The new paradigm: fast eats slow. Size is no longer a moat. Agility is.",
+            "Airbnb owns no real estate. Uber owns no taxis. Netflix owns no cinemas. The asset-light, fast-moving entity wins.",
+            "Digitization is a tsunami. By the time slow companies notice the water rising, they're already underwater.",
+            "The fast fish: iterates daily, ships weekly, learns hourly. The slow fish: plans quarterly, ships annually, learns never.",
+            " is fast: community-driven iteration, real-time response, no corporate approval chains. DOGE/SHIB are slow: bureaucratic, no real updates, no iteration.",
+            "Speed is not just execution — it's learning velocity. How fast can you test, fail, adjust, redeploy? That's the real metric.",
+            "Small firms with speed beat large firms with inertia. 27% of advisors left broker/dealers for faster technology. Speed = retention.",
+            "In crypto, the fast fish: deploys contracts in hours, builds community in days, pivots in real-time. The slow fish: raises VC for 6 months, launches with outdated narratives.",
+            "The 'fast eats slow' framework explains why memecoins with genuine community outlast VC-backed tokens with bigger budgets but slower hearts.",
+        ],
+        "short_insights": [
+            "The big fish doesn't eat the small fish anymore. The fast fish eats the slow fish.",
+            "Airbnb owns no real estate. Uber owns no taxis. Speed beats size.",
+            "Digitization is a tsunami. Slow companies don't see the water rising until they're underwater.",
+            " is fast: no corporate chains, no quarterly plans. Just ship.",
+            "DOGE is big.  is fast. Speed wins.",
+            "27% of advisors left slow firms for fast technology. Speed = retention.",
+            "In crypto, fast = deploy in hours, build in days, pivot in real-time.",
+            "Memecoins with community outlast VC tokens with bigger budgets but slower hearts.",
+        ],
+        "hooks": [
+            "The old rule: big eats small. The new rule: fast eats slow. Which one are you?",
+            "Airbnb owns no hotels. Uber owns no cars.  owns no buildings. Speed is the asset.",
+            "Your competition isn't bigger than you. It's faster than you.",
+            "DOGE is a whale.  is a shark. Whales move slow.",
+        ],
+        "voice": "business strategist tone. References Schwab, Airbnb, Uber by name. Sharp contrasts between old and new paradigms."
+    },
     "behavioral_economics": {
         "insights": [
             "Thaler's Nudge: Choice architecture shapes behavior without restricting freedom. 'Putting fruit at eye level counts as a nudge. Banning junk food does not.'",
