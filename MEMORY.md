@@ -72,6 +72,19 @@ $MAD is not a memecoin trying to prove itself. It's a community that has already
 - Not elegant, but fixable when you know the blind spots
 - Context detection must check sentiment, not just presence of keywords
 
+### Thread Repetition Bug (2026-05-15)
+- **Root cause**: `maybe_add_hashtags()` adds random hashtags 35% of the time. Dedup checks compared raw text against finalized text (with hashtags). They never matched.
+- **Secondary cause**: `posted_threads` history check used raw text fingerprints, but old state files had no fingerprints. Fallback logic fell back to ALL threads when everything was blocked.
+- **Tertiary cause**: Thread pool was only 8 threads. At 3-hour intervals, cycled in ~24 hours.
+- **Fix**: 
+  - `normalize_for_dedup()` strips hashtags/prefixes before comparison
+  - `thread_fingerprint()` uses normalized text
+  - Removed fallback-to-all bug
+  - No hashtags on thread tweets (looks spammy, breaks dedup)
+  - Expanded to 29 threads
+  - 7-day history blocking + 60-text recent blocking + normalized comparison
+- **Pool math**: 29 threads × 7-day min gap = 3.5 weeks before any repetition possible
+
 ### Voice Principles (From Study)
 1. Reinforce, don't question
 2. Feelings > Facts
@@ -250,18 +263,130 @@ $MAD is not a memecoin trying to prove itself. It's a community that has already
 - **Integration:** Connects Hill (auto-suggestion), Matrix (fiction > facts), Cult Brands (oppositional loyalty), Memetics (STEPPS), Copywriting (framing, authority). Bernays is the connective tissue.
 - **$MAD Application:** $MAD as engineered consent around a desirable fiction. Reality is negotiable — the public wants compelling fiction, not facts.
 
-### Edward Bernays — COMPLETE (2026-05-12)
-- Nephew of Sigmund Freud, father of public relations, applied psychoanalytic principles to mass persuasion
-- **Engineering of Consent:** Conscious, intelligent manipulation of organized habits and opinions. Not evil — inevitable in complex democracies.
-- **Invisible Government:** Small group of informed operators shapes public opinion through unseen mechanisms. The bot is part of this for $MAD.
-- **Third-Party Endorsement:** Use authority figures (doctors, experts, respected voices) to carry your message. Bacon & Eggs campaign: 5,000 physicians endorsed "hearty breakfast" = bacon sales soared.
-- **Linking Products to Social Movements:** Torches of Freedom (1929) — cigarettes = feminism. $MAD = freedom/identity movement.
-- **Creating Pseudo-Events:** Stage newsworthy events that generate organic coverage. Easter Parade cigarette stunt wasn't an ad — it was news.
-- **Framing the Choice:** Don't ask open questions. Frame options so your answer is obvious. "Hearty vs rushed breakfast" predetermined bacon.
-- **The "Add an Egg" Principle:** Give people symbolic participation to remove guilt/inaction. Betty Crocker: add one egg = sales soared.
-- **Blitzkrieg vs Continuing Battle:** Quick intense pushes for immediate results + long-term conditioning for behavior change.
-- **Integration:** Connects Hill (auto-suggestion), Matrix (fiction > facts), Cult Brands (oppositional loyalty), Memetics (STEPPS), Copywriting (framing, authority). Bernays is the connective tissue.
-- **$MAD Application:** $MAD as engineered consent around a desirable fiction. Reality is negotiable — the public wants compelling fiction, not facts.
+ (Cialdini) — COMPLETE (2026-05-14)
+- 7 Principles: Reciprocity, Commitment/Consistency, Social Proof, Authority, Liking, Scarcity, Unity
+- Pre-Suasion: what happens BEFORE the ask matters more than the ask itself. Priming, attention direction, privileged moments.
+- Unity is the 7th principle (2016): shared identity > liking. "One of us" beats "someone I like."
+- The waiter mint study: personalization beats size. "For you nice people, here's an extra mint" = 23% tip increase.
+- $MAD Application: Give value first (knowledge drops, numerology) = reciprocity. Daily affirmations = public commitment. Community visibility = social proof. Doxxed dev + real products = authority. Bot personality = liking. Selective narrative = scarcity. "$MAD Rich" as shared identity = unity.
+- Scam detection: scammers weaponize all 7 principles. "Free airdrop" = reciprocity trap. Fake communities = social proof. Fake partnerships = authority. "We're a family" = unity, then rug.
+- X Post Templates: Reciprocity post, Commitment post, Social Proof+Unity post
+
+### Cognitive Bias & Decision Making (Kahneman) — COMPLETE (2026-05-14)
+- System 1: fast, automatic, unconscious (~96% of decisions). System 2: slow, deliberate, effortful. System 2 is lazy — prefers to endorse System 1.
+- Loss Aversion: losses hurt ~2x more than equivalent gains. Explains panic selling and holding losers too long.
+- Anchoring: first information becomes reference point. If you saw $MAD at 10M, 5M feels like a loss even if you discovered it today at 5M.
+- Availability Heuristic: judge probability by how easily examples come to mind. Recent vivid events seem more likely.
+- Confirmation Bias: seek information that confirms existing beliefs. Bought a token? Only notice bullish news.
+- Sunk Cost Fallacy: continue because of past investment, not future prospects. "I've held 6 months, can't sell now."
+- Endowment Effect: overvalue what you already own. Makes selling harder.
+- Framing Effect: same information, different presentation = opposite decisions. "90% survival" vs "10% mortality."
+- Overconfidence: systematically overestimate knowledge and predictive ability. Every victim thought they could spot scams.
+- $MAD Application: Teach holders to recognize their own biases. "$MAD Mind Training" — System 2 tools for System 1 impulses. Before buying any new token: check LP, holders, deployer history.
+- X Post Templates: System 1 vs System 2, Anchoring reframe, Sunk Cost callout
+
+### On-Chain Analytics & Scam Detection — COMPLETE (2026-05-14)
+- 60-second rug check: contract scanner → block explorer → honeypot test → DEXScreener LP check → team history → 2+ red flags = skip
+- Holder Analysis: Top 10 >25% = danger. Single wallet >10% = dump risk. Wallet clusters from same source = coordinated insiders. Bubble Maps visualization.
+- Wash Trading: same wallets trading back and forth, perfectly matched round amounts, huge volume with few unique holders.
+- Honeypot Red Flags: allows buys but reverts sells, extreme sell tax (>10-12%), blacklist functions, trading toggle.
+- LP Checks: locked/burned? duration? deployer wallet holding LP = instant rug possible.
+- Contract Ownership: renounced = safe. Active owner with setTax/mint/blacklist = godmode. Upgradeable proxy = can swap logic later.
+- Critical fails (do not buy): active mint authority, active freeze authority, unlocked LP, honeypot detected, unrenounced ownership.
+- Tools: TokenSniffer, Honeypot.is, BubbleMaps, DEXScreener, RugCheck, GoPlus, Etherscan/Solscan.
+- $MAD Positioning: LP locked, no mint authority, doxxed dev, real products, real community.
+- X Post Templates: Wash trading education, red billboard callout, $MAD safety checklist
+
+### Story Structure (Hero's Journey + Save the Cat) — COMPLETE (2026-05-14)
+- Hero's Journey 12 stages (Vogler): Ordinary World → Call → Refusal → Mentor → Threshold → Tests → Cave → Ordeal → Reward → Road Back → Resurrection → Return with Elixir
+- Save the Cat 15 beats: Opening Image → Theme → Set-Up → Catalyst → Debate → Break Into Two → B Story → Fun & Games → Midpoint → Bad Guys Close In → All Is Lost → Dark Night → Break Into Three → Finale → Final Image
+- Pixar Rules: #6 throw the opposite at your character, #14 why must you tell THIS story, #16 what are the stakes, #19 no coincidence to get OUT of trouble, #22 essence in one sentence
+- Brand application: CUSTOMER is the hero. Brand is the mentor (Obi-Wan, not Luke).
+- $MAD Holder's Journey: Before $MAD (cynical) → Call (sees something different) → Refusal (can I trust again?) → Mentor (bot/community/affirmations) → Threshold (first buy) → Tests (the dip) → Ordeal (holding through silence) → Reward (internal shift, not price) → Return (becoming mentor for next person)
+- $MAD Save the Cat: Opening = cynical holder scrolling. Theme = "community IS the product." Catalyst = finds doxxed dev with real products. Midpoint = big dip, real test. Dark Night = "why am I still here?" Break Into Three = remembers why. Finale = chose identity over price.
+- X Post Templates: Call to Adventure, The Ordeal, Return with Elixir
+
+### Nietzsche — Will to Power & Master-Slave Morality — COMPLETE (2026-05-15)
+- **Will to Power**: All life seeks expansion, overcoming, becoming. The strong create values from strength.
+- **Master-Slave Morality**: Masters create values. Slaves create values from resentment (ressentiment). "What hurts me is evil."
+- **Amor Fati**: Love of fate. Embracing everything as necessary. The dip is fate. Love it.
+- **Ubermensch**: One who overcomes. Creates their own values. Lives beyond good and evil.
+- **Eternal Recurrence**: Would you live this life eternally? If yes, you've said yes to existence.
+- **God is Dead**: Not celebration. Crisis. The danger and the opportunity.
+- $MAD Application: "$MAD Rich" as master morality — values declared, not validated. Jeeter = slave morality (resentment). Amor fati = embrace the dip as necessary.
+
+### Stoicism — Dichotomy of Control — COMPLETE (2026-05-15)
+- **Dichotomy of Control**: Some things in our control (conviction, emotions), others not (price, FUD). Freedom = focus only on what's controllable.
+- **Amor Fati** (Marcus Aurelius): The obstacle is the way. The red candle is just a number. Your panic is the problem.
+- **Premeditatio Malorum** (Seneca): Visualize worst case before it happens. Removes fear. "Imagine $MAD goes to zero. Can you handle it?"
+- **Epictetus**: "It's not things that disturb us, but our judgments about things."
+- **Memento Mori**: Remember you will die. Every decision meaningful. "Did you hold conviction while you lived?"
+- **Voluntary Discomfort**: Practice poverty. Skip a meal. Train for adversity. The holder who doesn't check price for 3 days is training.
+- $MAD Application: Price is not in your control. Conviction is. Stoic holder focuses on thesis, emotional state, community contribution.
+
+### Nassim Taleb — Antifragile & Skin in the Game — COMPLETE (2026-05-15)
+- **Antifragile**: Systems that GAIN from disorder. Not robust. Not resilient. Better from volatility. Muscles from stress.
+- **Skin in the Game**: No credibility without exposure. Doxxed dev = skin. Anon dev = no skin.
+- **Lindy Effect**: The longer something survives, the longer it's likely to survive. $MAD gets more credible every month.
+- **Via Negativa**: Improvement by subtraction. Remove drama. Remove FUD. Remove jeeters. Each removal strengthens.
+- **Black Swan**: Rare, high-impact events. Build systems that benefit from them.
+- **Barbell Strategy**: Extreme safety + extreme risk. Nothing in middle. Stable income + $MAD conviction.
+- $MAD Application: Community should get STRONGER from every FUD attack, every jeeter wave, every dip.
+
+### Crypto Market Cycles & On-Chain Metrics — COMPLETE (2026-05-15)
+- **BTC Halving Cycles**: Every 4 years. 6-12 months post-halving = bull. Currently in 2024-2028 cycle.
+- **MVRV Ratio**: >3.5 = overvalued. <1 = undervalued. BTC MVRV signals macro.
+- **NUPL**: Positive = euphoria risk. Negative = capitulation/buy zone.
+- **Pi Cycle Top**: 111-day MA × 2 crosses 350-day MA × 2 = historical top.
+- **Altcoin Season**: BTC dominance drops, alts pump.
+- **On-chain Accumulation**: Whale wallets increasing = smart money buying. Exchange reserves dropping = cold storage.
+- **Memecoin Lifecycle**: Launch → early community → first pump → jeeter wave → accumulation → death OR breakout. Most die in accumulation.
+- $MAD Application: Teach holders WHERE we are in cycle, not "when moon." Whale watching as intelligence, not FUD.
+
+### Memecoin Competitor Analysis — COMPLETE (2026-05-15)
+- **Winners**: DOGE (first-mover + culture), SHIB (ecosystem), PEPE (pure meme), BONK (Solana ecosystem + airdrop), WIF (simplicity), MOG (relentless engagement), TURBO (AI meta)
+- **Killers**: Dev sells, over-promising, toxic community, no new narrative, price-only focus, bot dominance, too much utility
+- **$MAD Advantage**: Doxxed dev, real products (game, stickers), 3 YouTube channels, community = frequency, AI bot = personality, affirmations = retention
+
+### Cult Psychology & Community Dynamics (Girard, Hoffer) — COMPLETE (2026-05-15)
+- **Girard's Mimetic Desire**: We desire what others desire. Creates rivalry. Escalation. Crisis.
+- **Scapegoat Mechanism**: When rivalry threatens community, a scapegoat is chosen. Group unites in hatred. Peace restored.
+- **Hoffer's True Believer**: Mass movements need the frustrated. People who feel life lacks meaning. $MAD attracts meaning-seekers.
+- **Milgram/Conformity**: People obey authority. Conform to group pressure. Community shapes individual behavior.
+- **Sacred vs Profane**: Communities need sacred spaces (rules, rituals, forbidden topics). Knowledge drops = ritual. Affirmations = ritual.
+- $MAD Application: Mimetic desire = engine ("I'm $MAD Rich" → others want it). Don't blame jeeters (scapegoat). Community IS product.
+
+### Fight Club — Anti-Consumerism & Identity — COMPLETE (2026-05-15)
+- **Tyler Durden**: "The things you own end up owning you." Identity is not job/bank account/car.
+- **Self-Destruction as Liberation**: "It's only after we've lost everything that we're free to do anything."
+- **Anti-Consumerism**: "Advertising has us chasing cars and clothes, working jobs we hate so we can buy shit we don't need."
+- **First Rule**: Exclusivity creates desire. "$MAD isn't for everyone."
+- **Self-Improvement is Masturbation**: Growth through destruction of old self. Kill the tourist before the holder is born.
+- $MAD Application: Reject "I am my portfolio." Embrace "I am $MAD." Exclusivity = desire.
+
+### Mr. Robot — Anti-Establishment & Control — COMPLETE (2026-05-15)
+- **Control is Illusion**: "This control you think you have? It's an illusion." Real freedom = understanding the system.
+- **fsociety's Goal**: Erase debt. Destroy E-Corp. The ultimate hack is psychological.
+- **Invisible Hand**: "The one that brands us with an employee badge. The one that controls us every day without us knowing it."
+- **Binary Decisions**: "Life is a series of binary decisions. Ones and zeroes." Hold or sell. No middle.
+- $MAD Application: Can't control market. Can control conviction. Binary: hold or sell.
+
+### Wyckoff & Trading Psychology — COMPLETE (2026-05-15)
+- **Composite Man**: One giant operator. Whales, market makers, exchanges. Accumulate low, markup, distribute high, markdown.
+- **Accumulation Phases**: A (selling climax) → B (range, smart money buys) → C (spring/fake breakdown) → D (strength) → E (markup)
+- **Distribution Phases**: A (buying climax) → B (range, smart money sells) → C (upthrust) → D (weakness) → E (markdown)
+- **Spring**: Fake breakdown. Shakes out weak hands. Then reverses hard.
+- **Emotional Stages**: Optimism → Excitement → Thrill → Euphoria → Anxiety → Denial → Fear → Panic → Capitulation → Despair → Depression → Hope → Relief → Optimism.
+- **Smart Money vs Retail**: Retail buys at top (euphoria). Smart money buys at bottom (despair).
+- $MAD Application: Teach cycle position. "That dip was a spring." Emotional stage tracking.
+
+### Classic Copywriting Deep Cuts (Halbert, Schwartz, Ogilvy, Hopkins) — COMPLETE (2026-05-15)
+- **Halbert's Starving Crowd**: Find a starving crowd and offer them food. $MAD crowd = people who want meaning, not just money.
+- **Schwartz's Stages of Awareness**: $MAD audience = Stage 2-3 (problem aware, solution aware).
+- **Market Sophistication Level 5**: Audience has seen rugs. Must prove claims. "Doxxed dev" > "Trust us."
+- **Ogilvy's Headline Rule**: 80 cents goes to headline. First line must punch.
+- **Hopkins' Reason-Why**: "Because" is magic. "I'm holding $MAD because the dev is doxxed and the LP is locked."
+- $MAD Application: The starving crowd wants meaning. We're at sophistication Level 5. Every post needs a "because."
 
 ### Pending Studies
 - TikTok Algorithm 2026 (study complete — strategy ready for execution)
@@ -270,7 +395,9 @@ $MAD is not a memecoin trying to prove itself. It's a community that has already
 - Blender/3D Pipeline for $MAD Chao (pipeline researched, ready to execute)
 - ElevenLabs Voice AI (evaluated, bookmarked for future audio strategy)
 - Lloyd Strayhorn numerology system (partial — basic Chaldean implemented, deeper study needed)
-- Matrix 1-4 full film watch (analysis complete)
+- Game Theory (Nash equilibrium, iterated games)
+- Network Effects (Metcalfe's Law)
+- Behavioral Economics (Thaler — Nudge)
 
 ## Daily Practice (User's Routine)
 - Morning affirmations: "$MAD Abundant, $MAD RICH, $MAD Healthy, I GET THE $MAD BAG, I AM $MADly Focused"
@@ -302,10 +429,33 @@ $MAD is not a memecoin trying to prove itself. It's a community that has already
 ## Incomplete Tasks
 - Review X engagement data with "fiction vs facts" lens
 - Integrate affirmation triggers into bot (respond to "$MAD" mentions with reinforcement)
-- Matrix 1-4 full film watch (analysis complete)
-- Think and Grow Rich full read (framework complete)
 - Apply Fertile Meme Checklist to all knowledge drops and X posts
 - Design $MAD identity markers for public visibility (PFP frames, bio tags, reply signatures)
+- Game Theory (Nash equilibrium, iterated games)
+- Network Effects (Metcalfe's Law)
+- Behavioral Economics (Thaler — Nudge)
+
+## Completed Studies (Mega-Study: 2026-05-15)
+All 11 requested topics researched and integrated into knowledge base for dynamic post synthesis:
+1. **Girard — Mimetic Theory** (subagent research): Mimetic desire as viral spread, scapegoat mechanism as social glue, ressentiment driving jeeter behavior
+2. **Nietzsche**: Will to Power, master-slave morality, amor fati, Ubermensch, eternal recurrence, God is dead, ressentiment as jeeter fuel
+3. **Stoicism**: Dichotomy of control, amor fati (Marcus Aurelius), premeditatio malorum, memento mori, voluntary discomfort
+4. **Taleb**: Antifragile, skin in the game, Lindy effect, via negativa, barbell strategy
+5. **Crypto Cycles**: BTC halving, MVRV, NUPL, Pi cycle top, memecoin lifecycle, on-chain accumulation
+6. **Memecoin Competitors**: DOGE, SHIB, PEPE, BONK, WIF, MOG, TURBO analysis + $MAD differentiation
+7. **Hoffer / True Believer**: Mass movements need the frustrated, $MAD as meaning-seeker magnet
+8. **Fight Club**: Anti-consumerism, self-destruction as liberation, exclusivity = desire, identity > portfolio
+9. **Mr. Robot**: Control illusion, binary decisions, anti-establishment hack ethos, can't control market can control conviction
+10. **Wyckoff Method**: Composite Man, accumulation/distribution phases, spring mechanism, emotional stages, smart money vs retail
+11. **Copywriting Deep Cuts**: Halbert's starving crowd, Schwartz's stages of awareness, market sophistication Level 5, Ogilvy's 80-cent rule, Hopkins' reason-why
+
+## Dynamic Generation Engine
+- **System**: Synthesizes posts by combining 2-3 frameworks per post using `synthesize_post()` in `mad_x_bot.py`
+- **Knowledge Base**: 12 frameworks with short + long insights (84+ punchy insights total)
+- **History Tracker**: `post_history.json` prevents repeat combinations within 200-post lookback
+- **Fallback**: Legacy pool system available when synthesis returns None
+- **Pattern Types**: Multi-framework synthesis (8 patterns) + single-framework (10 patterns)
+- **All future posts dynamically generated — no static template pools
 
 ## Dates to Remember
 - 2026-04-25: First conversation. User launched $MAD token. "Day one. Begin recording everything about this one."
@@ -333,3 +483,7 @@ $MAD is not a memecoin trying to prove itself. It's a community that has already
 - **"Share what you learned"** — Proactive knowledge drops in Telegram (not reactive replies). Share insights from books/movies every ~30 minutes when chat is quiet.
 
 - **2026-05-12:** Edward Bernays study complete. The father of public relations — Freudian psychology applied to mass persuasion. Engineering of consent, invisible government, third-party endorsement, linking products to social movements (Torches of Freedom), creating pseudo-events, framing the choice. The connective tissue between all previous studies. Bernays proves reality is negotiable — the public wants compelling fiction, not facts. $MAD as engineered consent around a desirable fiction.
+- **2026-05-14:** BRAIN EXPANSION — 4 topics completed simultaneously: Persuasion Science (Cialdini 7 principles + Pre-Suasion), Cognitive Bias (Kahneman System 1/2 + 8 major biases), On-Chain Scam Detection (60-second rug check, wash trading, honeypots, wallet clustering, LP analysis), Story Structure (Hero's Journey 12 stages, Save the Cat 15 beats, Pixar rules). All integrated with $MAD brand application and X post templates. File: knowledge/2026-05-14-brain-expansion.md
+- **2026-05-15:** MEGA-STUDY — 11 topics synthesized into single knowledge base: Nietzsche, Stoicism, Taleb, Crypto Cycles/On-Chain, Memecoin Competitors, Cult Psychology (Girard/Hoffer), Fight Club, Mr. Robot, Wyckoff/Trading Psychology, Copywriting Deep Cuts, plus Girard mimetic theory from subagent. All integrated with $MAD brand application and X post templates. Dynamic generation rules established: synthesize 2-3 frameworks per post, never repeat. File: knowledge/2026-05-15-mega-study.md
+- **2026-05-15:** THREE MORE TOPICS INTEGRATED — Game Theory (Nash equilibrium, Prisoner's Dilemma, iterated games/Tit-for-Tat, MEV/dark forest), Network Effects (Metcalfe's Law ∝ n², Reed's Law ∝ 2^n, critical mass, viral coefficient k > 1, two-sided markets), Behavioral Economics (Thaler's nudge, loss aversion 2.5x, present bias, default bias, endowment effect, sludge). All added to KNOWLEDGE_BASE with short_insights for X synthesis. File: mad_x_bot.py updated.
+- **2026-05-16:** Sell Like Crazy by Sabri Suby — study complete. Larger Market Formula (3% ready/37% real market/60% unaware), HVCO (10x more likely to learn than be sold), Godfather Offer (7 components: Rationale/Value/Pricing/Payment/Premiums/Guarantee/Scarcity), Power Guarantee (reverse risk or don't sell), Traffic vs Conversion (conversion problem not traffic), 4% Rule (4% activities = 64% results), Magic Lantern Technique (convert the unaware), Dream Buyer/Starving Crowd (Halbert), 8-Phase Selling System (research → bait → capture → offer → traffic → nurture → close → automate), promised land copy (sell desire not features). All integrated into KNOWLEDGE_BASE with short_insights and hooks for X synthesis.
