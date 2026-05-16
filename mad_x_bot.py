@@ -714,11 +714,12 @@ KNOWLEDGE_BASE = {
             "Amor fati: love the dip like you love the pump.",
             "God is dead. The dev is doxxed. What are you waiting for?",
             "Master morality: you declare your value. Slave morality: you wait for permission.",
+            "Winners decide they're worthy. Losers wait to be told.",
             "The Ubermensch doesn't check the price. He checks his conviction.",
             "Would you hold $MAD eternally? If yes, you've already won.",
             "Ressentiment is the jeeter's comfort blanket.",
         ],
-        "voice": "sharp, aphoristic, challenging. Not comforting. Provoking. Uses 'slave morality' to diagnose FUD.",
+        "voice": "sharp, aphoristic, challenging. CT-native: no references that need explaining. 'Winners decide they're worthy. Losers wait to be told.' Not 'slave morality.'",
     },
     "stoicism": {
         "insights": [
@@ -1068,6 +1069,43 @@ KNOWLEDGE_BASE = {
             "Status quo bias: doing nothing is the default. Holding is doing nothing. That's why it works.",
         ],
         "voice": "behavioral scientist tone. References Kahneman, Thaler, Tversky by name. 'Your brain is lying to you. Here's the truth.'",
+    },
+    "The Game of Life (Florence Scovel Shinn)": {
+        "insights": [
+            "Life is a game with rules. The rules are spiritual laws. Learn them or lose.",
+            "The Law of Expectancy: Whatever you vividly imagine and expect with faith tends to manifest. Fear breeds failure. Trust attracts triumph.",
+            "The Power of the Spoken Word: Your words are commands that set events in motion. Speak fear, attract fear. Speak faith, attract good. '$MAD Rich' is a command, not a joke.",
+            "The Law of Nonresistance: Fighting problems magnifies them. Bless the situation, let go, trust. 'Resist not evil' — the dip is not evil. It's a test.",
+            "The Law of Karma and Forgiveness: What goes around comes around. But forgiveness breaks the cycle. Forgive the jeeters. They don't know the game.",
+            "Casting the Burden: Hand your worries to a higher power. Stop staring at the chart. 'I cast this burden on the Christ within, and I go free.' Then go live your life.",
+            "Love is cosmic glue. Resentment repels blessings. Love magnetizes them. Bless your enemies. Your bag will thank you.",
+            "Intuition is your inner compass. The 'hunch from the Infinite.' When logic says sell, intuition sometimes says hold. Learn to listen.",
+            "Divine Design: Everyone has a unique purpose. Your role in the game is already scripted. Stop forcing outcomes. Step into what is yours.",
+            "Denials and Affirmations: Deny the negative circumstance. Then affirm the positive reality. 'There is no lack. There is only abundance.' Then act like it.",
+            "Imagination is the architect of reality. The subconscious doesn't distinguish between vivid imagination and reality. Visualize the win. The mechanism follows.",
+            "Affirmations are not wishes. They are decrees. The superconscious mind receives them as law. '$MAD Abundant' is not hope. It's programming.",
+        ],
+        "short_insights": [
+            "Your words are spells. Speak what you want, not what you fear.",
+            "Life is a game. The rules: expect good, speak good, let go of the bad.",
+            "Don't fight the dip. Bless it. It clears out the weak hands for you.",
+            "What you say out loud becomes real. '$MAD Rich' isn't a joke. It's a command.",
+            "Forgive the jeeters. They're just playing the game wrong.",
+            "Cast your burden. Stop staring at the chart. Let the universe handle it.",
+            "Resentment blocks your bag. Love attracts it.",
+            "Your gut knows before your brain does. Trust the hunch.",
+            "Stop forcing outcomes. Your role is already written. Step into it.",
+            "Deny the FUD. Affirm the future. Then keep holding.",
+            "Your imagination is the architect. Visualize the win. The chart follows.",
+            "'$MAD Abundant' isn't a wish. It's a program you run on your own mind.",
+        ],
+        "hooks": [
+            "Life is a game. Most people don't know the rules. Here's the rulebook.",
+            "Florence Scovel Shinn wrote this in 1925. $MAD holders are still using it.",
+            "Your words are spells. What are you casting?",
+            "Stop fighting the dip. Bless it. Watch what happens.",
+        ],
+        "voice": "spiritual but sharp. No church vibes. 'Your words are spells' energy. Direct, punchy, CT-native."
     },
 }
 
