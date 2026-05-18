@@ -398,6 +398,7 @@ export default function Home() {
     { href: LINKS.solscan, src: "/logos/solscan.png", alt: "Solscan", label: "Solscan" },
     { href: LINKS.jupiter, src: "/logos/jupiter.png", alt: "Jupiter", label: "Jupiter" },
     { href: LINKS.dexscreener, src: "/logos/DEX-screener.png", alt: "DEX Screener", label: "DEX Screener" },
+    { href: "https://www.coingecko.com/en/coins/mad-coin", src: "/logos/coingecko.png", alt: "CoinGecko", label: "CoinGecko" },
   ];
 
   const tokenStats = liveStats ? [
@@ -557,7 +558,7 @@ export default function Home() {
           <div>
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.34em] text-white/40">Verified on-chain</p>
             <h2 className="mt-3 text-center text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">Track <span className="text-red-500">$MAD</span> Everywhere</h2>
-            <p className="mx-auto mt-2 max-w-lg text-center text-sm text-white/50">Jupiter. DEX Screener. Birdeye. Solscan. Real platforms. Real data.</p>
+            <p className="mx-auto mt-2 max-w-lg text-center text-sm text-white/50">Jupiter. DEX Screener. Birdeye. Solscan. CoinGecko. Real platforms. Real data.</p>
           </div>
           <div className="mt-6 overflow-hidden rounded-[24px] bg-[linear-gradient(90deg,rgba(96,58,80,0.95),rgba(49,57,110,0.95))] px-4 py-6 sm:px-6">
             <div className="logo-marquee flex w-max items-center gap-6">
@@ -567,8 +568,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <DexLogosStrip />
 
         {/* ═══════════════════════════════════════════
            STORY — THE GOSPEL IS REAL
