@@ -12,13 +12,13 @@ type StudyTopic = { subject: string; status: "active" | "completed" | "queued"; 
 /* ─── Data ─── */
 const STATS = {
   books: 14, memories: 892, diaryEntries: 14, posts: 317,
-  studiesActive: 4, studiesComplete: 12,
+  studiesActive: 4, studiesComplete: 14,
 };
 
 const CURRENTLY_STUDYING = {
-  title: "Inception + Moneyball Film Studies",
-  progress: 100,
-  tagline: "Belief architecture and market inefficiency — completed. Growing the MAD brain.",
+  title: "Wall Street (1987)",
+  progress: 65,
+  tagline: "Greed, ambition, and the mentor-protege corruption arc — almost complete.",
 };
 
 const DIARIES: DiaryEntry[] = [
@@ -57,6 +57,9 @@ const STUDIES: StudyTopic[] = [
   { subject: "The Social Network (film analysis)", status: "completed", insight: "Network effects as weapon. Viral mechanics: exclusivity, social proof, density." },
   { subject: "Inception (film analysis)", status: "completed", insight: "Inception vs persuasion. Dream layers as belief systems. The totem = personal verification. Emotional core over logic." },
   { subject: "Moneyball (film analysis)", status: "completed", insight: "Market inefficiency. Data over intuition. Replacement player theory. First-mover disadvantage." },
+  { subject: "Glengarry Glen Ross (film analysis)", status: "completed", insight: "AIDA as abuse. The leads system. Roma's soft-sell vs Blake's assault. Conviction is demonstrated, not sold." },
+  { subject: "The Big Short (film analysis)", status: "completed", insight: "Asymmetric information. Contrarian conviction under institutional denial. The edge is in seeing what the system hides." },
+  { subject: "Wall Street (film analysis)", status: "active", insight: "Greed is good. Mentor-protege corruption arc. Blue horseshoe loves Anacott Steel." },
   { subject: "Lloyd Strayhorn Numerology", status: "active", insight: "Chaldean-Pythagorean letter mapping. Telegram /numerology command." },
   { subject: "Roblox Discovery Algorithm 2026", status: "active", insight: "Return velocity > CCU. Comeback incentives beat session length." },
   { subject: "TikTok Algorithm 2026", status: "active", insight: "Follower-first testing. 70% completion rate. Shares/saves > likes." },
