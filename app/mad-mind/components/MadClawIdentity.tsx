@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import useChat from "./useChat";
+import ChatInterface from "./ChatInterface";
 import MadChao3D from "./MadChao3D";
 
 /* ─── Types ─── */
@@ -90,50 +92,9 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 }
 
 export default function MadClawIdentity() {
+  const { messages, status, typing, sendMessage, clearChat, scrollRef } = useChat();
   const [activeTab, setActiveTab] = useState<"identity" | "diary" | "studies" | "presence">("identity");
   const [expandedDiary, setExpandedDiary] = useState<number | null>(null);
-  const [askValue, setAskValue] = useState("");
-  const [senderName, setSenderName] = useState("");
-  const [signals, setSignals] = useState<{ id: string; message: string; sender: string; ago: string; tweetId?: string }[]>([]);
-  const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const [sendMsg, setSendMsg] = useState("");
-  const [responseData, setResponseData] = useState<{ tweetId?: string; replyTweetId?: string } | null>(null);
-
-  useEffect(() => {
-    const fetchSignals = async () => {
-      try { const res = await fetch("/api/mad-mind/signal"); const data = await res.json(); if (data.signals) setSignals(data.signals); }
-      catch { /* ignore */ }
-    };
-    fetchSignals();
-    const interval = setInterval(fetchSignals, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSend = async () => {
-    const text = askValue.trim(); if (!text) return;
-    setSendStatus("sending");
-    try {
-      const res = await fetch("/api/mad-mind/signal", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, sender: senderName.trim() || "Anonymous" }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setSendStatus("sent"); setSendMsg(data.message); setAskValue("");
-        setResponseData({ tweetId: data.tweetId, replyTweetId: data.replyTweetId });
-        const refresh = await fetch("/api/mad-mind/signal");
-        const fresh = await refresh.json();
-        if (fresh.signals) setSignals(fresh.signals);
-        setTimeout(() => setSendStatus("idle"), 4000);
-      } else {
-        setSendStatus("error"); setSendMsg(data.error || "Signal lost in the void.");
-        setTimeout(() => setSendStatus("idle"), 4000);
-      }
-    } catch {
-      setSendStatus("error"); setSendMsg("Signal lost in the void.");
-      setTimeout(() => setSendStatus("idle"), 4000);
-    }
-  };
 
   return (
     <div>
@@ -180,84 +141,15 @@ export default function MadClawIdentity() {
         </div>
       </section>
 
-      {/* ─── TALK TO THE CLAW ─── */}
-      <section className="mt-8 rounded-[36px] border border-red-500/20 bg-red-500/[0.02] p-6 shadow-[0_0_40px_rgba(255,0,0,0.06)] backdrop-blur-xl sm:p-8">
-        <div className="absolute inset-0 rounded-[36px] bg-[radial-gradient(circle_at_center,rgba(255,0,0,0.06),transparent_70%)] pointer-events-none" />
-        <div className="relative z-10">
-          <div className="text-center mb-5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-red-500 mb-1">🔥 TALK TO THE CLAW 🔥</p>
-            <p className="text-sm text-white/60">Say something. I respond on X. Public, permanent, roasted if necessary.</p>
-          </div>
-
-          <input
-            type="text"
-            value={senderName}
-            onChange={(e) => setSenderName(e.target.value)}
-            placeholder="Your name (optional)"
-            className="w-full mb-3 px-4 py-3 rounded-[12px] border border-white/10 bg-black/40 text-sm text-white/60 placeholder:text-white/25 outline-none focus:border-red-500/30 transition-colors"
-          />
-
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={askValue}
-              onChange={(e) => setAskValue(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && askValue.trim() && handleSend()}
-              placeholder="Drop a signal..."
-              disabled={sendStatus === "sending"}
-              className="flex-1 px-4 py-3.5 rounded-[12px] border border-red-500/20 bg-black/50 text-white text-sm placeholder:text-white/25 outline-none focus:border-red-500/50 transition-all"
-            />
-            <button
-              onClick={handleSend}
-              disabled={sendStatus === "sending" || !askValue.trim()}
-              className={`shrink-0 px-5 py-3.5 rounded-[12px] font-black text-sm transition-all ${
-                sendStatus === "sent" ? "bg-green-400/15 text-green-400 border border-green-400/20" :
-                sendStatus === "error" ? "bg-red-500/20 text-red-400 border border-red-500/30" :
-                "bg-red-500/15 text-red-400 border border-red-500/25 hover:bg-red-500/25"
-              } ${!askValue.trim() ? "opacity-40" : "hover:scale-105"}`}
-            >
-              {sendStatus === "sending" ? "..." : sendStatus === "sent" ? "✓" : sendStatus === "error" ? "!" : "→"}
-            </button>
-          </div>
-
-          {sendMsg && (
-            <p className={`mt-3 text-xs font-bold text-center ${sendStatus === "sent" ? "text-green-400" : sendStatus === "error" ? "text-red-400" : "text-white/40"}`}>
-              {sendMsg}
-            </p>
-          )}
-
-          {sendStatus === "sent" && responseData?.tweetId && (
-            <div className="mt-3 p-3 rounded-[12px] bg-green-400/[0.04] border border-green-400/10 text-center">
-              <p className="text-xs text-green-400 font-bold mb-2">The Claw responded on X.</p>
-              <a href={`https://x.com/madrichclub_/status/${responseData.tweetId}`} target="_blank" rel="noreferrer" className="inline-block px-4 py-2 rounded-[10px] bg-green-400/10 text-green-400 text-xs font-black hover:bg-green-400/20 transition-colors">
-                See the tweet →
-              </a>
-            </div>
-          )}
-
-          <p className="mt-3 text-[10px] text-white/20 text-center">
-            Signals broadcast to <a href="https://x.com/madrichclub_" target="_blank" rel="noreferrer" className="text-red-400/60 hover:text-red-400 font-bold">@madrichclub_</a>. The Claw responds there.
-          </p>
-        </div>
-      </section>
-
-      {/* ─── RECENT SIGNALS ─── */}
-      {signals.length > 0 && (
-        <section className="mt-6">
-          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-red-500/50 mb-3 text-center">[ RECENT SIGNALS ]</p>
-          <div className="grid gap-2">
-            {signals.map((s) => (
-              <Card key={s.id} className="p-4">
-                <p className="text-sm text-white/55 italic leading-relaxed mb-2">"{s.message}"</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-red-400/50">— {s.sender}</span>
-                  <span className="text-[10px] text-white/20 tabular-nums">{s.ago}</span>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </section>
-      )}
+      {/* ─── TALK TO THE CLAW — LIVE CHAT ─── */}
+      <ChatInterface
+        messages={messages}
+        status={status}
+        typing={typing}
+        sendMessage={sendMessage}
+        clearChat={clearChat}
+        scrollRef={scrollRef}
+      />
 
       {/* ─── VOICE SAMPLES — PROOF OF PERSONALITY ─── */}
       <section className="mt-8">
