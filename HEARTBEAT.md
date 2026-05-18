@@ -1,16 +1,33 @@
 # HEARTBEAT.md
-# Telegram Proactive Knowledge Drops
+# MAD Claw Periodic Checklist
 
 ## Schedule
-- Every ~30 minutes when chat is quiet (no messages in last 15 min)
-- Rotation: Philosophy → Practical → Question → Affirmation → Insight
+- Every ~30 minutes when chat is quiet
+- Rotate through checks below (2-4 per day)
 
-## Task: Check Telegram activity and post if quiet
-- Read last 15 min of messages via Telegram API
-- If no activity, select next content from telegram_content_library.md
-- Post to $MAD Telegram group
-- Log what was posted to avoid repeats
+## Checks
 
-## Next Drop
-- Category: Philosophy (Matrix)
-- Content: "Humans don't care about facts. They care about fiction. And feelings validate fictions. The Analyst was right. $MAD is a fiction worth feeling."
+### 1. X Account Health
+- Check @madrichclub_ for any blocks/suspensions
+- Review recent engagement metrics (replies, retweets)
+- Note any viral posts that performed above baseline
+
+### 2. Website Status
+- Quick ping: https://mad-coin.vercel.app
+- Check /mad-mind chat endpoint health
+- Review any build errors from Vercel dashboard
+
+### 3. Knowledge Base Growth
+- Any new studies queued by user?
+- Review recent diary entries for consolidation into MEMORY.md
+- Check if knowledge files need cross-referencing updates
+
+### 4. Community Pulse (if accessible)
+- Telegram group activity level
+- Any urgent messages or @mentions
+
+## Next Actions
+- None scheduled. Responding to user directives only.
+
+## Growth Log
+- 2026-05-19: Live chat deployed on /mad-mind. 5 film studies complete.
