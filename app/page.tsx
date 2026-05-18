@@ -625,8 +625,6 @@ export default function Home() {
           </div>
         </section>
 
-        <CommunityArmy />
-
         {/* ═══════════════════════════════════════════
            ART CAMPAIGN — VISUAL FREQUENCY
            ═══════════════════════════════════════════ */}
@@ -681,6 +679,8 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <CommunityArmy />
 
         {/* ═══════════════════════════════════════════
            RISK NOTICE
