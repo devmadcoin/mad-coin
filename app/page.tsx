@@ -346,8 +346,7 @@ function DexLogosStrip() {
     { name: "DEX Screener", src: "/logos/DEX-screener.png" },
     { name: "Birdeye", src: "/logos/birdeye.png" },
     { name: "Solscan", src: "/logos/solscan.png" },
-    { name: "Pump.fun", src: "/logos/pumpfun.png" },
-    { name: "Phantom", src: "/logos/phantom.png" },
+    { name: "CoinGecko", src: "/logos/coingecko.png" },
   ];
   return (
     <section className="mt-8 rounded-[36px] border border-white/10 bg-black/30 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8">
