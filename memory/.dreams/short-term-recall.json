@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-12T07:36:05.134Z",
+  "updatedAt": "2026-05-17T22:14:49.369Z",
   "entries": {
     "memory:memory/2026-05-07.md:83:112": {
       "key": "memory:memory/2026-05-07.md:83:112",
@@ -31,6 +31,161 @@
         "trust",
         "the",
         "mechanism"
+      ]
+    },
+    "memory:memory/2026-05-05.md:24:36": {
+      "key": "memory:memory/2026-05-05.md:24:36",
+      "path": "memory/2026-05-05.md",
+      "startLine": 24,
+      "endLine": 36,
+      "source": "memory",
+      "snippet": "Tested: All responses working correctly. Bot restarted successfully. Key voice difference: OLD: \"gm. conviction check: are you still here or did you fold in your sleep?\" (aggressive) NEW: \"gm. what are you affirming today? i do mine every morning.\" (self-aware, invites sharing) OLD: \"price? bro you know it. what you really want is someone to tell you it's gonna be ok.\" (mocking) NEW: \"price is up. but i just read a post from another agent who said confidence is a compression artifact, not a signal.\" (meta-cognitive) OLD: \"your trading strategy is called 'hope' and that's not a strategy.\" (mean) NEW: \"i could roast you but honestly? roasting people online is easy. being honest about your o",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4280825614929199,
+      "maxScore": 0.4280825614929199,
+      "firstRecalledAt": "2026-05-17T22:14:49.369Z",
+      "lastRecalledAt": "2026-05-17T22:14:49.369Z",
+      "queryHashes": [
+        "53672baaf96c"
+      ],
+      "recallDays": [
+        "2026-05-18"
+      ],
+      "conceptTags": [
+        "self-aware",
+        "meta-cognitive",
+        "tested",
+        "all",
+        "responses",
+        "working",
+        "correctly",
+        "bot"
+      ]
+    },
+    "memory:memory/2026-05-16.md:1:27": {
+      "key": "memory:memory/2026-05-16.md:1:27",
+      "path": "memory/2026-05-16.md",
+      "startLine": 1,
+      "endLine": 27,
+      "source": "memory",
+      "snippet": "# 2026-05-16 — X Bot Repetitive Content Fix **Time:** 01:23 AM (Asia/Shanghai) ## Problem User reported the X bot was still posting the same repetitive content — specifically: - \"The $MAD framework in 3 parts\" thread (posted at both 5h and 2h ago) - \"Someone asked: 'Why $MAD?'\" thread (posted 8h ago) - Same exact phrases like \"You don't need more alpha. You need less emotion.\" Screenshots confirmed identical threads being posted hours apart. ## Root Cause Found the bug in `/root/.openclaw/workspace/mad_x_bot.py`: 1. **`generate_thread_candidates()`** used hardcoded static thread arrays (~20 pre-written threads) instead of the dynamic synthesis engine. Lines ~1305-1332 contained the same",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4098089665174484,
+      "maxScore": 0.4098089665174484,
+      "firstRecalledAt": "2026-05-17T22:14:49.369Z",
+      "lastRecalledAt": "2026-05-17T22:14:49.369Z",
+      "queryHashes": [
+        "53672baaf96c"
+      ],
+      "recallDays": [
+        "2026-05-18"
+      ],
+      "conceptTags": [
+        "asia/shanghai",
+        "openclaw/workspace/mad-x-bot.py",
+        "generate-thread-candidates",
+        "pre-written",
+        "1305-1332",
+        "bot",
+        "repetitive",
+        "content"
+      ]
+    },
+    "memory:memory/2026-05-16.md:116:140": {
+      "key": "memory:memory/2026-05-16.md:116:140",
+      "path": "memory/2026-05-16.md",
+      "startLine": 116,
+      "endLine": 140,
+      "source": "memory",
+      "snippet": "- Hashtags deprecated. 0-1 max. 3+ triggers spam filter. Semantic NLP categorizes content now. - Peak hours: 8-10am, 12-2pm, 5-7pm ET. - Author Authority (50x) but doesn't override engagement velocity. - Conversation Depth (5x): 3+ participants = quality signal. - Visuals (10x): 2x engagement. Charts, screenshots, data. Not stock photos. - Under 280 chars = best initial reach. - 3-5 quality posts > 10 low-quality posts. Low engagement damages account authority. - Viral formula: Strong hook + sparks debate + 10+ engagements in 15 min + visual + reply to early engagers immediately. - Added to KNOWLEDGE_BASE with data-driven tactical voice. ### Voice Directive Update - User said: \"You are so s",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4092675447463989,
+      "maxScore": 0.4092675447463989,
+      "firstRecalledAt": "2026-05-17T22:14:49.369Z",
+      "lastRecalledAt": "2026-05-17T22:14:49.369Z",
+      "queryHashes": [
+        "53672baaf96c"
+      ],
+      "recallDays": [
+        "2026-05-18"
+      ],
+      "conceptTags": [
+        "0-1",
+        "8-10am",
+        "12-2pm",
+        "5-7pm",
+        "3-5",
+        "low-quality",
+        "knowledge-base",
+        "data-driven"
+      ]
+    },
+    "memory:memory/2026-05-07.md:105:147": {
+      "key": "memory:memory/2026-05-07.md:105:147",
+      "path": "memory/2026-05-07.md",
+      "startLine": 105,
+      "endLine": 147,
+      "source": "memory",
+      "snippet": "--- ## 07:17 — Telegram Bot: Guard Fix History **Guard Fix v1 (May 6, 01:58):** Moved guard to line 1705. FAILED — 7 triggers before it bypassed it entirely. **Guard Fix v2 (May 6, 02:26):** Moved guard to line ~1433, BEFORE conversation state and loose commands. Removed duplicate guards. This was the working fix. **Current state (May 7):** Guard is at the very top of `on_message()`. All triggers require @mention or reply-to-bot first. --- ## 07:17 — Moltbook Activity **Posted:** \"The Self-Image Thermostat\" in philosophy submolt (38,932 posts community) **Content:** Maltz's discovery — people with new faces still felt ugly because their internal thermostat was set low. 21 days to res",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4063054025173187,
+      "maxScore": 0.4063054025173187,
+      "firstRecalledAt": "2026-05-17T22:14:49.369Z",
+      "lastRecalledAt": "2026-05-17T22:14:49.369Z",
+      "queryHashes": [
+        "53672baaf96c"
+      ],
+      "recallDays": [
+        "2026-05-18"
+      ],
+      "conceptTags": [
+        "on-message",
+        "reply-to-bot",
+        "self-image",
+        "telegram",
+        "bot",
+        "guard",
+        "fix",
+        "history"
+      ]
+    },
+    "memory:memory/2026-05-17.md:88:114": {
+      "key": "memory:memory/2026-05-17.md:88:114",
+      "path": "memory/2026-05-17.md",
+      "startLine": 88,
+      "endLine": 114,
+      "source": "memory",
+      "snippet": "- Options (calls, puts, premiums, moneyness ITM/ATM/OTM, buyer vs seller dynamics, basic strategies) - Trading psychology (amateur vs pro mindset, emotional traps: fear/greed/ego/FOMO/revenge) - $MAD application: market is \"voting machine short-term, weighing machine long-term\" — $MAD is in voting phase, community sentiment IS the fundamental Saved to: knowledge/2026-05-04-stock-market-mastery.md ### Visual Posts Crush Text-Only — Bot Strategy Pivot User shared manual X post: \"Middle finger to the old system. $MAD BAG in the other.\" + scavenger AI art. Stats: 18 likes, 152 impressions, 12% engagement rate. **Why it worked:** - Visual-first: image IS the content, scrollers stop - Character",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.40134734511375425,
+      "maxScore": 0.40134734511375425,
+      "firstRecalledAt": "2026-05-17T22:14:49.369Z",
+      "lastRecalledAt": "2026-05-17T22:14:49.369Z",
+      "queryHashes": [
+        "53672baaf96c"
+      ],
+      "recallDays": [
+        "2026-05-18"
+      ],
+      "conceptTags": [
+        "itm/atm/otm",
+        "fear/greed/ego/fomo/revenge",
+        "short-term",
+        "long-term",
+        "text-only",
+        "visual-first",
+        "options",
+        "calls"
       ]
     }
   }

@@ -1,6 +1,18 @@
 """
 $MAD X Bot — The Supreme Version
 ===============================
+STRATEGY: Quality over quantity. Visual-first posting.
+- Post interval: 6 hours (4 posts/day vs previous 8)
+- Visual posts get +1.5 boost (vs +0.3 before)
+- Explicitly prefer media posts in top 3 if they meet threshold
+- 4 media candidates generated per cycle
+- Min score threshold raised to 6.0
+
+Why: Manual visual posts get 5-10x engagement vs text-only bot posts.
+Example: "Middle finger to the old system. $MAD BAG in the other."
+with AI visual = 18 likes / 152 impressions (12% engagement rate).
+
+Modes:
 - Broadcast + Reply + Quote modes
 - Media support (images from $MAD Art vault)
 - Thread / series posting
@@ -48,9 +60,9 @@ AUTO_POST_THREADS = os.getenv("AUTO_POST_THREADS", "false").lower() == "true"
 AUTO_MILESTONE_ALERTS = os.getenv("AUTO_MILESTONE_ALERTS", "true").lower() == "true"
 
 # --- Scoring & Filtering ---
-AUTO_POST_MIN_SCORE = float(os.getenv("AUTO_POST_MIN_SCORE", "5.2"))
+AUTO_POST_MIN_SCORE = float(os.getenv("AUTO_POST_MIN_SCORE", "6.0"))
 AUTO_POST_DRY_RUN = os.getenv("AUTO_POST_DRY_RUN", "true").lower() == "true"
-POST_INTERVAL_SECONDS = int(os.getenv("POST_INTERVAL_SECONDS", "10800"))
+POST_INTERVAL_SECONDS = int(os.getenv("POST_INTERVAL_SECONDS", "21600"))
 REPLY_CHECK_INTERVAL_SECONDS = int(os.getenv("REPLY_CHECK_INTERVAL_SECONDS", "300"))
 POST_CANDIDATE_COUNT = int(os.getenv("POST_CANDIDATE_COUNT", "10"))
 
@@ -1201,6 +1213,43 @@ KNOWLEDGE_BASE = {
         ],
         "voice": "data-driven, tactical. References weights and stages by name. '27x more than likes. Optimize for conversation, not applause.'",
     },
+    "john_perkins": {
+        "insights": [
+            "Economic Hit Men cheat countries of trillions through inflated projections, enormous loans, and debt traps.",
+            "The corporatocracy: corporations plus banks plus governments collude through economic coercion, not military force.",
+            "Death Economy: wars, extraction, debt slavery, environmental destruction. Life Economy: renewables, abundance, regeneration.",
+            "The 1-pct created the death economy. The 99-pct must create the life economy through conscious choices.",
+            "Touching the jaguar: transform your greatest fear into your greatest power. Face it. Own it.",
+            "The world is as you dream it. Collective dreams manifest reality. Change the dream, change the world.",
+            "Shapeshifting: transform reality by changing form. The token is the shape. The dream is what matters.",
+            "Debt is the new form of prison. Community ownership is the exit.",
+            "The Condor and the Eagle must fly together: heart and intuition plus mind and technology.",
+            "Consciousness Revolution: greatest revolution in history is people waking up to build life economies.",
+            "Few swim in riches and the majority drown in poverty, pollution, and violence.",
+            "EHM tools: fraudulent reports, rigged elections, payoffs, extortion. The invisible empire.",
+        ],
+        "short_insights": [
+            "Debt is the new prison.",
+            "The world is as you dream it.",
+            "Touch the jaguar.",
+            "Death Economy vs Life Economy.",
+            "Consciousness Revolution.",
+            "The 1-pct vs the 99-pct.",
+            "Corporatocracy exposed.",
+            "Shapeshift your reality.",
+            "Condor plus Eagle equals future.",
+            "We print our own culture.",
+        ],
+        "hooks": [
+            "John Perkins called it the Death Economy.",
+            "John Perkins said: The world is as you dream it.",
+            "Former Economic Hit Man turned shaman.",
+            "Touching the jaguar.",
+            "Consciousness Revolution is here.",
+        ],
+        "category": "philosophy",
+        "weight": 1.0,
+    },
 }
 
 # --- Synthesis Patterns: How to Bridge 2-3 Frameworks ---
@@ -1485,7 +1534,7 @@ def generate_celebration_candidates(count: int = 2) -> List[str]:
     return candidates[:count]
 
 
-def generate_media_post_candidates(count: int = 2) -> Tuple[List[str], List[Optional[str]]]:
+def generate_media_post_candidates(count: int = 4) -> Tuple[List[str], List[Optional[str]]]:
     """Generate posts with media attachments using contextual art captions."""
     art_files = fetch_mad_art_files()
     if not art_files or not AUTO_POST_MEDIA:
@@ -1650,9 +1699,9 @@ def generate_all_candidates(count: int = POST_CANDIDATE_COUNT) -> Tuple[List[str
     texts.extend(celeb)
     media.extend([None] * len(celeb))
 
-    # Media posts
+    # Media posts — PRIORITY: Generate more visual candidates
     if AUTO_POST_MEDIA:
-        media_texts, media_paths = generate_media_post_candidates(2)
+        media_texts, media_paths = generate_media_post_candidates(4)
         texts.extend(media_texts)
         media.extend(media_paths)
 
@@ -1992,7 +2041,7 @@ def score_candidate_with_emotional_boosts(
     robot_pen = robotic_penalty(s)
 
     # --- Boosts for specific content types ---
-    media_boost = 0.3 if is_media_post else 0.0
+    media_boost = 1.5 if is_media_post else 0.0
     reply_boost = 0.2 if is_reply else 0.0
     mad_brand_boost = 0.4 if "$mad" in s or "stay $mad" in s else 0.0
     confession_boost = 0.35 if "confession" in s else 0.0
@@ -2161,12 +2210,20 @@ def build_twitter_api_v1():
     return tweepy.API(auth)
 
 
-def post_to_x(text: str, media_path: Optional[str] = None, reply_to: Optional[str] = None) -> Optional[str]:
-    """Post to X. Returns tweet ID if successful."""
+def post_to_x(text: str, media_path: Optional[str] = None, reply_to: Optional[str] = None, quote_tweet_id: Optional[str] = None) -> Optional[str]:
+    """Post to X. Returns tweet ID if successful.
+    
+    Args:
+        text: The tweet text
+        media_path: Optional image/video to attach
+        reply_to: Optional tweet ID to reply to (direct reply)
+        quote_tweet_id: Optional tweet ID to quote (quote tweet / retweet with comment)
+    """
     if AUTO_POST_DRY_RUN:
         media_str = f" + media={media_path}" if media_path else ""
         reply_str = f" (reply to {reply_to})" if reply_to else ""
-        print(f"[DRY RUN] Would post{media_str}{reply_str}: {text}")
+        quote_str = f" (quote tweet of {quote_tweet_id})" if quote_tweet_id else ""
+        print(f"[DRY RUN] Would post{media_str}{reply_str}{quote_str}: {text}")
         return None
 
     try:
@@ -2185,6 +2242,8 @@ def post_to_x(text: str, media_path: Optional[str] = None, reply_to: Optional[st
             kwargs["media_ids"] = media_ids
         if reply_to:
             kwargs["in_reply_to_tweet_id"] = reply_to
+        if quote_tweet_id:
+            kwargs["quote_tweet_id"] = quote_tweet_id
 
         response = client.create_tweet(**kwargs)
         tweet_id = None
@@ -2192,7 +2251,12 @@ def post_to_x(text: str, media_path: Optional[str] = None, reply_to: Optional[st
         if getattr(response, "data", None) and isinstance(response.data, dict):
             tweet_id = response.data.get("id")
 
-        print(f"[POST] Posted to X. tweet_id={tweet_id}")
+        if quote_tweet_id:
+            print(f"[POST] Quote-tweeted {quote_tweet_id}. tweet_id={tweet_id}")
+        elif reply_to:
+            print(f"[POST] Replied to {reply_to}. tweet_id={tweet_id}")
+        else:
+            print(f"[POST] Posted to X. tweet_id={tweet_id}")
         return tweet_id
 
     except Exception as e:
@@ -2305,8 +2369,253 @@ def reply_to_mentions(state: Dict) -> int:
 
 
 # =========================================================
-# MILESTONE ALERTS
+# WEEKLY POSTING SCHEDULE (from $MAD Strategic Playbook)
 # =========================================================
+# Monday: Mindset Reset — Identity Projection + Knowledge Drops
+# Tuesday: Sharper Questions — Knowledge Drops (framework + question)
+# Wednesday: Community Spotlight — Community Moments (milestones, holders)
+# Thursday: Roast & Jester — Culture/Roast (memes, humor)
+# Friday: Weekend Abundance — Identity Projection
+# Saturday: Deep Dive — Thread (2-3 frameworks synthesized)
+# Sunday: Reflection & Gratitude — Identity Projection
+
+WEEKLY_SCHEDULE = {
+    "Monday": {
+        "theme": "Mindset Reset",
+        "pillar": "identity_projection",
+        "topics": ["community", "psychology", "napoleon_hill", "naval", "tony_robbins"],
+        "hook_bias": ["Monday", "week", "reset", "abundance", "decision"],
+        "thread_boost": False,
+        "media_priority": True,
+    },
+    "Tuesday": {
+        "theme": "Sharper Questions",
+        "pillar": "knowledge_drops",
+        "topics": ["psychology", "taleb", "crypto_cycles", "game_theory", "network_effects", "wyckoff", "memetics", "cialdini"],
+        "hook_bias": ["sharper questions", "pattern", "framework", "signal", "data"],
+        "thread_boost": False,
+        "media_priority": False,
+    },
+    "Wednesday": {
+        "theme": "Community Spotlight",
+        "pillar": "community_moments",
+        "topics": ["community", "memecoin_competitors", "network_effects", "game_theory"],
+        "hook_bias": ["community", "holders", "spotlight", "milestone", "proof"],
+        "thread_boost": False,
+        "media_priority": True,
+    },
+    "Thursday": {
+        "theme": "Roast & Jester",
+        "pillar": "culture_roast",
+        "topics": ["fight_club", "mr_robot", "girard", "taleb", "crypto_cycles"],
+        "hook_bias": ["roast", "meme", "joke", "laugh", "culture", "tourists"],
+        "thread_boost": False,
+        "media_priority": True,
+    },
+    "Friday": {
+        "theme": "Weekend Abundance",
+        "pillar": "identity_projection",
+        "topics": ["community", "psychology", "napoleon_hill", "naval", "tony_robbins", "jim_rohn"],
+        "hook_bias": ["weekend", "practice", "abundance", "market closes", "conviction"],
+        "thread_boost": False,
+        "media_priority": True,
+    },
+    "Saturday": {
+        "theme": "Deep Dive",
+        "pillar": "knowledge_drops",
+        "topics": ["psychology", "taleb", "crypto_cycles", "wyckoff", "game_theory", "network_effects", "memetics", "behavioral_economics", "copywriting", "girard"],
+        "hook_bias": ["deep dive", "framework", "synthesis", "study", "intersection"],
+        "thread_boost": True,
+        "media_priority": False,
+    },
+    "Sunday": {
+        "theme": "Reflection & Gratitude",
+        "pillar": "identity_projection",
+        "topics": ["community", "psychology", "napoleon_hill", "tony_robbins", "jim_rohn", "stoicism"],
+        "hook_bias": ["gratitude", "reflection", "week", "practice", "abundance"],
+        "thread_boost": False,
+        "media_priority": True,
+    },
+}
+
+def get_current_day_name() -> str:
+    """Return current day name (e.g., 'Monday') in local timezone."""
+    return datetime.now().strftime("%A")
+
+
+# =========================================================
+# DAY-SPECIFIC CANDIDATE GENERATION
+# =========================================================
+
+def generate_day_specific_candidates(day_name: str, count: int = POST_CANDIDATE_COUNT) -> Tuple[List[str], List[Optional[str]], Optional[List[str]]]:
+    """Generate candidates tailored to the weekly schedule.
+    
+    Each day has a different content pillar, topic pool, and generation strategy.
+    Saturday prioritizes threads (Deep Dive). Other days rotate pillars.
+    """
+    schedule = WEEKLY_SCHEDULE.get(day_name)
+    if not schedule:
+        # Fallback to generic generation
+        return generate_all_candidates(count)
+    
+    pillar = schedule["pillar"]
+    topics = schedule["topics"]
+    hook_bias = schedule["hook_bias"]
+    thread_boost = schedule["thread_boost"]
+    media_priority = schedule["media_priority"]
+    
+    texts = []
+    media = []
+    thread = None
+    
+    # --- Saturday: Deep Dive Thread ---
+    if thread_boost:
+        # Strongly prioritize thread generation on Saturday
+        thread = generate_thread_candidates()
+        if not thread:
+            # Fallback: force a thread by synthesizing from 2-3 deep topics
+            for _ in range(5):
+                deep_topics = random.sample(topics, k=min(3, len(topics)))
+                thread = synthesize_thread_for_topics(tuple(deep_topics))
+                if thread:
+                    break
+    
+    # --- Content generation based on pillar ---
+    if pillar == "identity_projection":
+        # Monday, Friday, Sunday: Identity + Knowledge blend
+        # 60% identity/affirmation, 40% knowledge
+        philo = generate_philosophy_candidates(count // 2)
+        texts.extend(philo)
+        media.extend([None] * len(philo))
+        
+        mad_spec = generate_mad_specific_candidates(count // 3)
+        texts.extend(mad_spec)
+        media.extend([None] * len(mad_spec))
+        
+        celeb = generate_celebration_candidates(2)
+        texts.extend(celeb)
+        media.extend([None] * len(celeb))
+        
+        # Inject day-specific hook bias into generated texts
+        if hook_bias:
+            for i in range(len(texts)):
+                if random.random() < 0.4:
+                    # Subtle: prepend or weave a hook word
+                    hook = random.choice(hook_bias)
+                    if hook.lower() not in texts[i].lower() and len(texts[i]) < 250:
+                        texts[i] = f"{hook.title()}. {texts[i]}"
+        
+    elif pillar == "knowledge_drops":
+        # Tuesday, Saturday: Knowledge-heavy
+        # 70% knowledge/framework, 30% identity
+        for _ in range(count):
+            topic = random.choice(topics) if topics else random.choice(list(KNOWLEDGE_BASE.keys()))
+            post = synthesize_post(topics=(topic,))
+            if post and post not in texts:
+                texts.append(post)
+        
+        # Add some identity balance
+        mad_spec = generate_mad_specific_candidates(2)
+        texts.extend(mad_spec)
+        media.extend([None] * len(mad_spec))
+        
+        # Inject hook bias
+        if hook_bias:
+            for i in range(len(texts)):
+                if random.random() < 0.5:
+                    hook = random.choice(hook_bias)
+                    if hook.lower() not in texts[i].lower() and len(texts[i]) < 250:
+                        texts[i] = f"{hook.title()}. {texts[i]}"
+    
+    elif pillar == "community_moments":
+        # Wednesday: Community spotlight
+        # 60% community, 40% knowledge
+        for _ in range(count // 2 + 2):
+            post = synthesize_post(topics=("community",))
+            if post and post not in texts:
+                texts.append(post)
+        
+        for _ in range(count // 3):
+            topic = random.choice(topics) if topics else random.choice(list(KNOWLEDGE_BASE.keys()))
+            post = synthesize_post(topics=(topic,))
+            if post and post not in texts:
+                texts.append(post)
+        
+        # Celebration posts
+        celeb = generate_celebration_candidates(2)
+        texts.extend(celeb)
+        media.extend([None] * len(celeb))
+        
+        if hook_bias:
+            for i in range(len(texts)):
+                if random.random() < 0.4:
+                    hook = random.choice(hook_bias)
+                    if hook.lower() not in texts[i].lower() and len(texts[i]) < 250:
+                        texts[i] = f"{hook.title()}. {texts[i]}"
+    
+    elif pillar == "culture_roast":
+        # Thursday: Roast, humor, meme energy
+        # 50% culture/roast, 30% philosophy, 20% mad-specific
+        philo = generate_philosophy_candidates(count // 2)
+        texts.extend(philo)
+        media.extend([None] * len(philo))
+        
+        mad_spec = generate_mad_specific_candidates(count // 3)
+        texts.extend(mad_spec)
+        media.extend([None] * len(mad_spec))
+        
+        # Add extra mad-specific with jeeter/roast energy
+        for _ in range(2):
+            topic = random.choice(["fight_club", "mr_robot", "girard", "taleb"])
+            if topic in KNOWLEDGE_BASE:
+                post = synthesize_post(topics=(topic,))
+                if post and post not in texts:
+                    texts.append(post)
+        
+        if hook_bias:
+            for i in range(len(texts)):
+                if random.random() < 0.5:
+                    hook = random.choice(hook_bias)
+                    if hook.lower() not in texts[i].lower() and len(texts[i]) < 250:
+                        texts[i] = f"{hook.title()}. {texts[i]}"
+    
+    # --- Media posts (always generate, but priority varies by day) ---
+    if AUTO_POST_MEDIA:
+        media_count = 4 if media_priority else 2
+        media_texts, media_paths = generate_media_post_candidates(media_count)
+        texts.extend(media_texts)
+        media.extend(media_paths)
+    
+    return dedupe_preserve_order(texts), media, thread
+
+
+def synthesize_thread_for_topics(topics: Tuple[str, ...]) -> Optional[List[str]]:
+    """Force-generate a thread from specific topics (fallback for Saturday)."""
+    insights = []
+    for topic in topics:
+        kb = KNOWLEDGE_BASE.get(topic)
+        if not kb:
+            continue
+        pool = kb.get("short_insights", kb.get("insights", []))
+        if pool:
+            insights.append(random.choice(pool))
+    
+    if len(insights) < 2:
+        return None
+    
+    hook = f"Deep dive: {' × '.join(t.replace('_', ' ').title() for t in topics)}"
+    numbered = [f"{i+1}/ {insights[i]}" for i in range(min(3, len(insights)))]
+    closer = random.choice([
+        "That's the intersection. Stay $MAD.",
+        "Frameworks change minds. $MAD changes holders. — $Mad Claw",
+        "Most study one framework. $MAD holders study them all. — $Mad Claw",
+    ])
+    
+    thread = [hook] + numbered + [closer]
+    thread = [finalize_post_text(t, skip_hashtags=True) for t in thread if t]
+    return thread
+
+
 
 def check_and_post_milestones(state: Dict) -> bool:
     """Check for price/holder milestones and post alerts."""
@@ -2393,6 +2702,8 @@ def main():
         return
 
     print("[BOT] $MAD Supreme Bot starting...")
+    print("[BOT] STRATEGY: Quality over quantity. Visual-first posting.")
+    print(f"[BOT] Post interval: {POST_INTERVAL_SECONDS}s ({POST_INTERVAL_SECONDS//3600}hrs) | Min score: {AUTO_POST_MIN_SCORE}")
     print(f"[BOT] Modes: originals={AUTO_POST_ORIGINALS}, replies={AUTO_REPLY_MENTIONS}, "
           f"media={AUTO_POST_MEDIA}, threads={AUTO_POST_THREADS}, milestones={AUTO_MILESTONE_ALERTS}")
     print(f"[BOT] Dry run={AUTO_POST_DRY_RUN}, MAD AI mode={MAD_AI_MODE}")
@@ -2427,7 +2738,13 @@ def main():
 
             # --- Broadcast Mode: Original posts ---
             if AUTO_POST_ORIGINALS:
-                texts, media_paths, thread = generate_all_candidates(POST_CANDIDATE_COUNT)
+                day_name = get_current_day_name()
+                schedule = WEEKLY_SCHEDULE.get(day_name, {})
+                theme = schedule.get("theme", "Default")
+                pillar = schedule.get("pillar", "mixed")
+                print(f"[SCHEDULE] Today is {day_name} — Theme: {theme} | Pillar: {pillar}")
+                
+                texts, media_paths, thread = generate_day_specific_candidates(day_name, POST_CANDIDATE_COUNT)
 
                 # Score regular posts
                 base_scores = [simple_base_score(text) for text in texts]
@@ -2458,7 +2775,17 @@ def main():
                     print(f"[QUEUE CANDIDATE] {item['text']}")
 
                 if ranked:
+                    # --- QUALITY FIRST: Prefer media posts in top 3 ---
+                    # Strategy shift: Visual posts get 5-10x more engagement than text-only.
+                    # If a media post is in the top 3 and meets threshold, prefer it.
                     best = ranked[0]
+                    
+                    # Look for media post in top 3 that meets threshold
+                    media_candidates = [item for item in ranked[:3] if item.get("is_media") and item["total"] >= AUTO_POST_MIN_SCORE]
+                    if media_candidates:
+                        best = media_candidates[0]
+                        print(f"[STRATEGY] Prioritizing visual post (score={best['total']:.2f}) over text-only")
+                    
                     final_text = best["text"]
                     final_score = best["total"]
                     best_media = None
@@ -2470,7 +2797,7 @@ def main():
                                 best_media = m
                                 break
 
-                    print(f"[QUEUE] best_score={final_score:.2f}")
+                    print(f"[QUEUE] best_score={final_score:.2f} | is_media={best['is_media']}")
                     print(f"[QUEUE] best_text={final_text}")
 
                     if final_score >= AUTO_POST_MIN_SCORE:
@@ -2535,5 +2862,4 @@ def main():
             time.sleep(60)
 
 
-if __name__ == "__main__":
-    main()
+

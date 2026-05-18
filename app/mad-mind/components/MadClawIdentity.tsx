@@ -94,9 +94,10 @@ export default function MadClawIdentity() {
   const [expandedDiary, setExpandedDiary] = useState<number | null>(null);
   const [askValue, setAskValue] = useState("");
   const [senderName, setSenderName] = useState("");
-  const [signals, setSignals] = useState<{ id: string; message: string; sender: string; ago: string }[]>([]);
+  const [signals, setSignals] = useState<{ id: string; message: string; sender: string; ago: string; tweetId?: string }[]>([]);
   const [sendStatus, setSendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [sendMsg, setSendMsg] = useState("");
+  const [responseData, setResponseData] = useState<{ tweetId?: string; replyTweetId?: string } | null>(null);
 
   useEffect(() => {
     const fetchSignals = async () => {
@@ -119,6 +120,7 @@ export default function MadClawIdentity() {
       const data = await res.json();
       if (data.success) {
         setSendStatus("sent"); setSendMsg(data.message); setAskValue("");
+        setResponseData({ tweetId: data.tweetId, replyTweetId: data.replyTweetId });
         const refresh = await fetch("/api/mad-mind/signal");
         const fresh = await refresh.json();
         if (fresh.signals) setSignals(fresh.signals);
@@ -224,11 +226,11 @@ export default function MadClawIdentity() {
             </p>
           )}
 
-          {sendStatus === "sent" && (
+          {sendStatus === "sent" && responseData?.tweetId && (
             <div className="mt-3 p-3 rounded-[12px] bg-green-400/[0.04] border border-green-400/10 text-center">
-              <p className="text-xs text-green-400 font-bold mb-2">The Claw responds on X. Tweet at it.</p>
-              <a href="https://x.com/madrichclub_" target="_blank" rel="noreferrer" className="inline-block px-4 py-2 rounded-[10px] bg-green-400/10 text-green-400 text-xs font-black hover:bg-green-400/20 transition-colors">
-                Go to X →
+              <p className="text-xs text-green-400 font-bold mb-2">The Claw responded on X.</p>
+              <a href={`https://x.com/madrichclub_/status/${responseData.tweetId}`} target="_blank" rel="noreferrer" className="inline-block px-4 py-2 rounded-[10px] bg-green-400/10 text-green-400 text-xs font-black hover:bg-green-400/20 transition-colors">
+                See the tweet →
               </a>
             </div>
           )}

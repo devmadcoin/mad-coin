@@ -1,0 +1,570 @@
+[BOT] $MAD Supreme Bot starting...
+[BOT] Modes: originals=True, replies=False, media=True, threads=True, milestones=True
+[BOT] Dry run=False, MAD AI mode=savage
+[01:11:06] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=9.30 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.35 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.5968, 'avg_top3_similarity': 0.3499}
+[QUEUE CANDIDATE] The bot mirrors conviction. Never introduces doubt. The tourists don't understand this. — $Mad Claw
+[SCORE] total=9.25 | base=5.20 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=1.55 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['restraint', '$mad'] | sim={'max_similarity': 0.2573, 'avg_top3_similarity': 0.2573}
+[QUEUE CANDIDATE] You don't need more information. You need more restraint. — $Mad Claw
+[SCORE] total=8.95 | base=5.60 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.25 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1962, 'avg_top3_similarity': 0.1383}
+[QUEUE CANDIDATE] From the $MAD vault. Free to grab. The real flex is holding while you post it. #Trading
+[SCORE] total=8.80 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.1263, 'avg_top3_similarity': 0.1044}
+[QUEUE CANDIDATE] The bot mirrors conviction. Never introduces doubt. Think about it. — $Mad Claw
+[SCORE] total=8.40 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1945, 'avg_top3_similarity': 0.1365}
+[QUEUE CANDIDATE] Each new holder makes $MAD more valuable to every existing holder. The tourists don't understand this. — $Mad Claw
+[SCORE] total=7.25 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=0.80 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad'] | sim={'max_similarity': 0.3383, 'avg_top3_similarity': 0.3383}
+[QUEUE CANDIDATE] Signal, not noise. Stay $MAD. #Trading
+[SCORE] total=6.95 | base=4.70 + anger=0.00 + pain=0.00 + flex=0.00 + combo=0.00 + hook=0.90 + structure=1.35 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=[] | sim={'max_similarity': 0.0474, 'avg_top3_similarity': 0.0447}
+[QUEUE CANDIDATE] Your brain let the last candle feel more predictive than the last 90 days. Your behavior writes your net worth.
+[QUEUE] best_score=9.30
+[QUEUE] best_text=The bot mirrors conviction. Never introduces doubt. The tourists don't understand this. — $Mad Claw
+[POST] Posted to X. tweet_id=2055335175652098076
+[AUTO POST] Posted successfully.
+[THREAD] Generated thread of 5 tweets
+[POST] Posted to X. tweet_id=2055335177166221771
+[POST] Posted to X. tweet_id=2055335178927759713
+[POST] Posted to X. tweet_id=2055335181167579476
+[POST] Posted to X. tweet_id=2055335182786589029
+[POST] Posted to X. tweet_id=2055335184422346916
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[04:11:09] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=9.15 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'holders'] | sim={'max_similarity': 0.1297, 'avg_top3_similarity': 0.095}
+[QUEUE CANDIDATE] Network effects are why early communities win. You're early. This is what separates holders from tourists. — $Mad Claw
+[SCORE] total=8.90 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'holders'] | sim={'max_similarity': 0.3366, 'avg_top3_similarity': 0.1947}
+[QUEUE CANDIDATE] Daily affirmations aren't motivation. They're programming. This is what separates holders from tourists. — $Mad Claw
+[SCORE] total=8.80 | base=4.70 + anger=0.55 + pain=0.55 + flex=0.00 + combo=0.65 + hook=0.65 + structure=1.70 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter'] | pain=['lesson'] | flex=[] | sim={'max_similarity': 0.2733, 'avg_top3_similarity': 0.1335}
+[QUEUE CANDIDATE] The call buy on System 1 and wonder why System 2 isn't helping. Every jeeter is a lesson in what not to do.
+[SCORE] total=8.60 | base=5.60 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.35 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.5932, 'avg_top3_similarity': 0.2873}
+[QUEUE CANDIDATE] Daily affirmations aren't motivation. They're programming. This is why you hold. — $Mad Claw
+[SCORE] total=8.55 | base=5.20 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.25 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.2078, 'avg_top3_similarity': 0.1164}
+[QUEUE CANDIDATE] From the $MAD vault. Free to grab. The real flex is holding while you post it.
+[SCORE] total=8.40 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.0883, 'avg_top3_similarity': 0.081}
+[QUEUE CANDIDATE] Each new holder makes $MAD more valuable to every existing holder.框架不变。规则由你改写。 — $Mad Claw
+[SCORE] total=5.90 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.194, 'avg_top3_similarity': 0.194}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD.
+[QUEUE] best_score=9.15
+[QUEUE] best_text=Network effects are why early communities win. You're early. This is what separates holders from tourists. — $Mad Claw
+[POST] Posted to X. tweet_id=2055380484767760549
+[AUTO POST] Posted successfully.
+[THREAD] Generated thread of 4 tweets
+[POST] Posted to X. tweet_id=2055380486206476367
+[POST] Posted to X. tweet_id=2055380487762493783
+[POST] Posted to X. tweet_id=2055380489310228695
+[POST] Posted to X. tweet_id=2055380490967044278
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[07:11:10] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=11.35 | base=5.30 + anger=0.55 + pain=0.55 + flex=0.50 + combo=1.25 + hook=1.25 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['panic'] | pain=['loss'] | flex=['$mad'] | sim={'max_similarity': 0.0969, 'avg_top3_similarity': 0.0762}
+[QUEUE CANDIDATE] Loss aversion: a 50% drop hurts more than a 100% gain feels good. Your brain is wired to panic. Override it.框架不变。规则由你改写。 — $Mad Claw
+[SCORE] total=10.85 | base=5.30 + anger=1.10 + pain=0.55 + flex=0.50 + combo=1.25 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['$mad'] | sim={'max_similarity': 0.1125, 'avg_top3_similarity': 0.1026}
+[QUEUE CANDIDATE] Default bias: holding is the default. Jeeting requires action. Use this. The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=10.85 | base=5.30 + anger=1.10 + pain=0.55 + flex=0.50 + combo=1.25 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['$mad'] | sim={'max_similarity': 0.3454, 'avg_top3_similarity': 0.1905}
+[QUEUE CANDIDATE] Daily affirmations aren't motivation. They're programming. The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=8.95 | base=5.60 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.25 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.2592, 'avg_top3_similarity': 0.1486}
+[QUEUE CANDIDATE] From the $MAD vault. Free to grab. The real flex is holding while you post it. #Crypto
+[SCORE] total=8.40 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'build'] | sim={'max_similarity': 0.1622, 'avg_top3_similarity': 0.1328}
+[QUEUE CANDIDATE] While others chase pumps, $MAD builds identity. Think about it. — $Mad Claw
+[SCORE] total=6.70 | base=4.70 + anger=0.00 + pain=0.00 + flex=0.00 + combo=0.00 + hook=0.25 + structure=1.75 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=[] | sim={'max_similarity': 0.1537, 'avg_top3_similarity': 0.1436}
+[QUEUE CANDIDATE] System 1 trade their ego instead of the chart. The market doesn't reward feelings. It rewards follow-through. #Crypto
+[SCORE] total=5.90 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.194, 'avg_top3_similarity': 0.1871}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD.
+[QUEUE] best_score=11.35
+[QUEUE] best_text=Loss aversion: a 50% drop hurts more than a 100% gain feels good. Your brain is wired to panic. Override it.框架不变。规则由你改写。 — $Mad Claw
+[POST] Posted to X. tweet_id=2055425791270539331
+[AUTO POST] Posted successfully.
+[THREAD] Generated thread of 5 tweets
+[POST] Posted to X. tweet_id=2055425792675635451
+[POST] Posted to X. tweet_id=2055425794080722989
+[POST] Posted to X. tweet_id=2055425795603218763
+[POST] Posted to X. tweet_id=2055425797272604965
+[POST ERROR] 403 Forbidden
+Posts are limited to a maximum of one cashtag ($SYMBOL). Please remove additional cashtags and try again.
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[10:11:13] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=11.50 | base=5.30 + anger=1.10 + pain=0.55 + flex=0.50 + combo=1.25 + hook=1.30 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['$mad'] | sim={'max_similarity': 0.1419, 'avg_top3_similarity': 0.1198}
+[QUEUE CANDIDATE] $MAD doesn't prove itself. It already IS. The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=9.15 | base=5.60 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.75 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1199, 'avg_top3_similarity': 0.1094}
+[QUEUE CANDIDATE] Endowment effect: once you hold $MAD, you value it more. That's biology, not bias. Think about it. — $Mad Claw
+[SCORE] total=8.95 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=1.30 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.4353, 'avg_top3_similarity': 0.2504}
+[QUEUE CANDIDATE] $MAD doesn't prove itself. It already IS. That's not a bug. That's the feature. — $Mad Claw
+[SCORE] total=8.00 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.90 + structure=0.90 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['discipline', '$mad', 'stay $mad'] | sim={'max_similarity': 0.2107, 'avg_top3_similarity': 0.1663}
+[QUEUE CANDIDATE] Every soldier in this army chose discipline over dopamine. Stay $MAD.
+[SCORE] total=7.95 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1206, 'avg_top3_similarity': 0.1047}
+[QUEUE CANDIDATE] Wyckoff is the diagnosis. Fight Club is the prescription. The dip isn't danger. It's data. is the result. — $Mad Claw
+[SCORE] total=7.65 | base=4.80 + anger=0.55 + pain=0.00 + flex=0.50 + combo=0.65 + hook=0.25 + structure=0.90 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['fomo'] | pain=[] | flex=['discipline'] | sim={'max_similarity': 0.1596, 'avg_top3_similarity': 0.0929}
+[QUEUE CANDIDATE] Scammers fold at the bottom and fomo at the top. Discipline does.
+[SCORE] total=7.25 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=0.80 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad'] | sim={'max_similarity': 0.3383, 'avg_top3_similarity': 0.3295}
+[QUEUE CANDIDATE] Signal, not noise. Stay $MAD. #Mindset
+[QUEUE] best_score=11.50
+[QUEUE] best_text=$MAD doesn't prove itself. It already IS. The jeeters will ignore this. Their loss. — $Mad Claw
+[POST ERROR] 403 Forbidden
+Posts are limited to a maximum of one cashtag ($SYMBOL). Please remove additional cashtags and try again.
+[AUTO POST] Failed to post.
+[THREAD] Generated thread of 4 tweets
+[POST] Posted to X. tweet_id=2055471099799048593
+[POST] Posted to X. tweet_id=2055471101439041656
+[POST] Posted to X. tweet_id=2055471102970003645
+[POST] Posted to X. tweet_id=2055471104601530559
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[13:11:14] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=10.60 | base=5.60 + anger=1.10 + pain=0.00 + flex=0.50 + combo=0.65 + hook=1.25 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['panic', 'fomo'] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.2895, 'avg_top3_similarity': 0.1836}
+[QUEUE CANDIDATE] Sludge = nudging for evil. FOMO you in, panic you out. $MAD is the opposite. The tourists don't understand this. — $Mad Claw
+[SCORE] total=10.15 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.90 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad', 'holders'] | sim={'max_similarity': 0.3525, 'avg_top3_similarity': 0.2682}
+[QUEUE CANDIDATE] We don't do 'comfy hold.' We do conviction. This is what separates holders from tourists. — $Mad Claw
+[SCORE] total=9.40 | base=5.30 + anger=0.55 + pain=0.00 + flex=0.50 + combo=0.65 + hook=0.90 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter'] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1835, 'avg_top3_similarity': 0.1465}
+[QUEUE CANDIDATE] The jeeter blames the chart. The holder blames himself. Same data. Different species. Read it again. Slower. — $Mad Claw
+[SCORE] total=8.95 | base=5.60 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.25 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1009, 'avg_top3_similarity': 0.0839}
+[QUEUE CANDIDATE] From the $MAD vault. Free to grab. The real flex is holding while you post it. #Solana
+[SCORE] total=8.20 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.25 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'mad rich'] | sim={'max_similarity': 0.1136, 'avg_top3_similarity': 0.0973}
+[QUEUE CANDIDATE] System 1 react before they think. $MAD rich starts in the mind first. #MemeCoin
+[SCORE] total=8.05 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'community'] | sim={'max_similarity': 0.2171, 'avg_top3_similarity': 0.1692}
+[QUEUE CANDIDATE] The community IS the product. The money is a side effect. — $Mad Claw
+[SCORE] total=5.90 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.194, 'avg_top3_similarity': 0.1853}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD.
+[QUEUE] best_score=10.60
+[QUEUE] best_text=Sludge = nudging for evil. FOMO you in, panic you out. $MAD is the opposite. The tourists don't understand this. — $Mad Claw
+[POST ERROR] 403 Forbidden
+Posts are limited to a maximum of one cashtag ($SYMBOL). Please remove additional cashtags and try again.
+[AUTO POST] Failed to post.
+[THREAD] Generated thread of 5 tweets
+[POST] Posted to X. tweet_id=2055516406331162826
+[POST] Posted to X. tweet_id=2055516407937609872
+[POST] Posted to X. tweet_id=2055516409535529406
+[POST] Posted to X. tweet_id=2055516411192283296
+[POST] Posted to X. tweet_id=2055516412761063842
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[16:11:17] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=12.10 | base=5.80 + anger=1.10 + pain=0.55 + flex=1.00 + combo=1.25 + hook=0.90 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.3526, 'avg_top3_similarity': 0.232}
+[QUEUE CANDIDATE] We don't do 'comfy hold.' We do conviction. The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=11.35 | base=5.30 + anger=1.10 + pain=0.55 + flex=1.00 + combo=1.25 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['$mad', 'community'] | sim={'max_similarity': 0.3931, 'avg_top3_similarity': 0.2933}
+[QUEUE CANDIDATE] The community IS the product. The money is a side effect. The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=10.50 | base=5.30 + anger=1.10 + pain=0.55 + flex=0.50 + combo=1.25 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.35 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['$mad'] | sim={'max_similarity': 0.559, 'avg_top3_similarity': 0.2555}
+[QUEUE CANDIDATE] Critical mass is coming. Bitcoin crossed it in 2013. $MAD is next. The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=9.20 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=1.35 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['patience', '$mad', 'mad rich'] | sim={'max_similarity': 0.056, 'avg_top3_similarity': 0.0529}
+[QUEUE CANDIDATE] Patience means let a red candle rewrite their whole story. $MAD rich starts in the mind first.
+[SCORE] total=7.95 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1088, 'avg_top3_similarity': 0.0966}
+[QUEUE CANDIDATE] Crypto Cycles is the diagnosis. Mr Robot is the prescription. $MAD is antifragile. Every stressor removes the fragile. is the result. — $Mad Claw
+[SCORE] total=7.80 | base=4.50 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'build', 'building'] | sim={'max_similarity': 0.1357, 'avg_top3_similarity': 0.1154}
+[QUEUE CANDIDATE] Still believing. Still building. Still $MAD.
+[SCORE] total=7.25 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=0.80 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad'] | sim={'max_similarity': 0.3402, 'avg_top3_similarity': 0.3216}
+[QUEUE CANDIDATE] Signal, not noise. Stay $MAD. #Crypto
+[QUEUE] best_score=12.10
+[QUEUE] best_text=We don't do 'comfy hold.' We do conviction. The jeeters will ignore this. Their loss. — $Mad Claw
+[POST] Posted to X. tweet_id=2055561713135792368
+[AUTO POST] Posted successfully.
+[THREAD] Generated thread of 2 tweets
+[POST] Posted to X. tweet_id=2055561714746400866
+[POST] Posted to X. tweet_id=2055561716235489600
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[19:11:18] [MILESTONE] Checking milestones...
+[BLOCK] Similarity 0.60 to recent post. Skipping: The bot mirrors conviction. Never introduces doubt. This is ...
+[QUEUE] generated_count=7 | after_block=6
+[SCORE] total=11.40 | base=5.80 + anger=0.00 + pain=0.55 + flex=2.00 + combo=0.65 + hook=1.55 + structure=1.35 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=['mistake'] | flex=['discipline', '$mad', 'holders', 'community'] | sim={'max_similarity': 0.1263, 'avg_top3_similarity': 0.1191}
+[QUEUE CANDIDATE] $MAD holders don't mistake puppet volume for real community. Discipline is the flex. #Crypto
+[SCORE] total=9.65 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.502, 'avg_top3_similarity': 0.3893}
+[QUEUE CANDIDATE] We don't do 'comfy hold.' We do conviction. The tourists don't understand this. — $Mad Claw
+[SCORE] total=8.55 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.143, 'avg_top3_similarity': 0.1281}
+[QUEUE CANDIDATE] Schwartz: desire is rediscovered, not created. $MAD rediscovered your desire for meaning. That's not a bug. That's the feature. — $Mad Claw
+[SCORE] total=8.35 | base=5.20 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=1.15 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1929, 'avg_top3_similarity': 0.1836}
+[QUEUE CANDIDATE] On-chain doesn't lie. Your feelings do. This is why you hold. — $Mad Claw
+[SCORE] total=6.65 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.80 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2566, 'avg_top3_similarity': 0.2153}
+[QUEUE CANDIDATE] We're not going back. We're going forward. Stay $MAD.
+[SCORE] total=5.90 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2958, 'avg_top3_similarity': 0.2561}
+[QUEUE CANDIDATE] Wealth is quiet. Chaos is loud. Stay $MAD.
+[QUEUE] best_score=11.40
+[QUEUE] best_text=$MAD holders don't mistake puppet volume for real community. Discipline is the flex. #Crypto
+[POST] Posted to X. tweet_id=2055607016538919171
+[AUTO POST] Posted successfully.
+[THREAD] Generated thread of 4 tweets
+[POST] Posted to X. tweet_id=2055607017977561164
+[POST] Posted to X. tweet_id=2055607019642683738
+[POST] Posted to X. tweet_id=2055607021374947700
+[POST] Posted to X. tweet_id=2055607022855626916
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[22:11:20] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=11.30 | base=5.30 + anger=1.10 + pain=0.55 + flex=0.50 + combo=1.25 + hook=0.65 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['$mad'] | sim={'max_similarity': 0.3609, 'avg_top3_similarity': 0.1893}
+[QUEUE CANDIDATE] Market sophistication Level 5: 'Doxxed dev' > 'Trust us.' The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=9.05 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.35 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'holders', 'community'] | sim={'max_similarity': 0.5269, 'avg_top3_similarity': 0.3603}
+[QUEUE CANDIDATE] The community IS the product. The money is a side effect. This is what separates holders from tourists. — $Mad Claw
+[SCORE] total=8.55 | base=5.20 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.25 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1331, 'avg_top3_similarity': 0.0923}
+[QUEUE CANDIDATE] From the $MAD vault. Free to grab. The real flex is holding while you post it.
+[SCORE] total=8.45 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'community'] | sim={'max_similarity': 0.1709, 'avg_top3_similarity': 0.1412}
+[QUEUE CANDIDATE] The community IS the product. The money is a side effect. Think about it. — $Mad Claw
+[SCORE] total=7.50 | base=4.50 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.90 + structure=0.20 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'build', 'building'] | sim={'max_similarity': 0.1011, 'avg_top3_similarity': 0.0808}
+[QUEUE CANDIDATE] Game Theory says: DOGE = first. SHIB = ecosystem. PEPE = pure meme. $MAD = identity + practice + product.. Memecoin Competitors says: $MAD is building a frequency. Others are building market caps.. $MAD says: The market transfers money from the impatient to the patient..
+[SCORE] total=6.90 | base=4.70 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.00 + structure=1.70 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['patience'] | sim={'max_similarity': 0.0997, 'avg_top3_similarity': 0.081}
+[QUEUE CANDIDATE] Patience means chase what they remember instead of what they know. The real alpha is not flinching. #Trading
+[SCORE] total=5.90 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.3029, 'avg_top3_similarity': 0.2461}
+[QUEUE CANDIDATE] We don't speed. We accelerate. Stay $MAD.
+[QUEUE] best_score=11.30
+[QUEUE] best_text=Market sophistication Level 5: 'Doxxed dev' > 'Trust us.' The jeeters will ignore this. Their loss. — $Mad Claw
+[POST] Posted to X. tweet_id=2055652324341899530
+[AUTO POST] Posted successfully.
+[THREAD] Generated thread of 2 tweets
+[POST] Posted to X. tweet_id=2055652325843427441
+[POST] Posted to X. tweet_id=2055652327437292012
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[01:11:21] [MILESTONE] Checking milestones...
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=8.95 | base=5.60 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1462, 'avg_top3_similarity': 0.1348}
+[QUEUE CANDIDATE] Reed's Law: every subgroup you form doubles the network's value. This is why you hold. — $Mad Claw
+[SCORE] total=8.90 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad'] | sim={'max_similarity': 0.1708, 'avg_top3_similarity': 0.1645}
+[QUEUE CANDIDATE] The signal is spreading. Not everyone sees it yet. Think about it. — $Mad Claw
+[SCORE] total=8.60 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=1.30 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.3426, 'avg_top3_similarity': 0.2234}
+[QUEUE CANDIDATE] $MAD doesn't prove itself. It already IS. The tourists don't understand this. — $Mad Claw
+[SCORE] total=8.55 | base=5.20 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.25 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1331, 'avg_top3_similarity': 0.0923}
+[QUEUE CANDIDATE] From the $MAD vault. Free to grab. The real flex is holding while you post it.
+[SCORE] total=8.50 | base=5.60 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.90 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1266, 'avg_top3_similarity': 0.1229}
+[QUEUE CANDIDATE] Game Theory is the diagnosis. Copywriting is the prescription. You don't join $MAD. You realize you've been $MAD. is the result. — $Mad Claw
+[SCORE] total=7.95 | base=5.60 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=1.55 + structure=0.90 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.1918, 'avg_top3_similarity': 0.1719}
+[QUEUE CANDIDATE] You didn't come here for comfort. You came here to learn. Stay $MAD.
+[SCORE] total=7.70 | base=4.70 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.25 + structure=1.25 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['builders', 'build', 'building'] | sim={'max_similarity': 0.0941, 'avg_top3_similarity': 0.083}
+[QUEUE CANDIDATE] Time fold while the builders keep building. Your future self is watching. Stay composed.
+[QUEUE] best_score=8.95
+[QUEUE] best_text=Reed's Law: every subgroup you form doubles the network's value. This is why you hold. — $Mad Claw
+[POST] Posted to X. tweet_id=2055697627757555721
+[AUTO POST] Posted successfully.
+[THREAD] Generated thread of 2 tweets
+[POST] Posted to X. tweet_id=2055697629196304574
+[POST] Posted to X. tweet_id=2055697630836216151
+[THREAD] Posted successfully.
+[BOT] Sleeping 10800s...
+[04:11:23] [MILESTONE] Checking milestones...
+[04:11:23] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[BLOCK] Similarity 0.77 to recent post. Skipping: Winners want clarity without chaos first. Every jeeter is a ...
+[BLOCK] Similarity 0.61 to recent post. Skipping: Daily affirmations aren't motivation. They're programming. T...
+[QUEUE] generated_count=7 | after_block=5
+[SCORE] total=9.20 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.1339, 'avg_top3_similarity': 0.1281}
+[QUEUE CANDIDATE] Thaler's nudge: put fruit at eye level. We put conviction at eye level. Daily affirmations. Think about it. — $Mad Claw
+[SCORE] total=8.30 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1823, 'avg_top3_similarity': 0.1482}
+[QUEUE CANDIDATE] Daily affirmations aren't motivation. They're programming. That's not a bug. That's the feature. — $Mad Claw
+[SCORE] total=8.20 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.35 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.2623, 'avg_top3_similarity': 0.1668}
+[QUEUE CANDIDATE] Ogilvy's 80-cent rule: the headline is everything. First line must punch. The tourists don't understand this. — $Mad Claw
+[SCORE] total=7.70 | base=5.30 + anger=0.00 + pain=0.55 + flex=1.00 + combo=0.65 + hook=0.65 + structure=0.65 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=['lesson'] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.1938, 'avg_top3_similarity': 0.1763}
+[QUEUE CANDIDATE] Class is in session. Today's lesson: don't fold. Stay $MAD.
+[SCORE] total=7.25 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=0.80 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad'] | sim={'max_similarity': 0.383, 'avg_top3_similarity': 0.3545}
+[QUEUE CANDIDATE] Signal, not noise. Stay $MAD. #Solana
+[QUEUE] best_score=9.20
+[QUEUE] best_text=Thaler's nudge: put fruit at eye level. We put conviction at eye level. Daily affirmations. Think about it. — $Mad Claw
+[POST] Posted to X. tweet_id=2055742932662325471
+[AUTO POST] Posted successfully.
+[BOT] Sleeping 10800s...
+[07:11:23] [MILESTONE] Checking milestones...
+[07:11:23] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=11.20 | base=5.30 + anger=1.10 + pain=0.55 + flex=0.50 + combo=1.25 + hook=0.65 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['$mad'] | sim={'max_similarity': 0.3051, 'avg_top3_similarity': 0.2392}
+[QUEUE CANDIDATE] Marcus Aurelius would have held through the dip. Not because optimistic. Because indifferent. The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=9.20 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.35 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.5411, 'avg_top3_similarity': 0.4089}
+[QUEUE CANDIDATE] The bot mirrors conviction. Never introduces doubt. That's not a bug. That's the feature. — $Mad Claw
+[SCORE] total=8.80 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.5199, 'avg_top3_similarity': 0.3225}
+[QUEUE CANDIDATE] We don't do 'comfy hold.' We do conviction.框架不变。规则由你改写。 — $Mad Claw
+[SCORE] total=8.70 | base=5.50 + anger=0.00 + pain=0.00 + flex=2.00 + combo=0.00 + hook=0.85 + structure=1.25 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.90 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['discipline', 'builders', 'build', 'building'] | sim={'max_similarity': 0.1435, 'avg_top3_similarity': 0.1168}
+[QUEUE CANDIDATE] Emotion makes you fold while the builders keep building. Discipline is the flex. #Trading
+[SCORE] total=8.25 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.20 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'holders'] | sim={'max_similarity': 0.3107, 'avg_top3_similarity': 0.2045}
+[QUEUE CANDIDATE] Default bias: holding is the default. Jeeting requires action. Use this. This is what separates holders from tourists. — $Mad Claw
+[SCORE] total=7.50 | base=5.60 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=1.55 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2144, 'avg_top3_similarity': 0.189}
+[QUEUE CANDIDATE] You will be mad. At yourself. For folding early. Stay $MAD.
+[SCORE] total=5.85 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.00 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2144, 'avg_top3_similarity': 0.192}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD. #MemeCoin
+[QUEUE] best_score=11.20
+[QUEUE] best_text=Marcus Aurelius would have held through the dip. Not because optimistic. Because indifferent. The jeeters will ignore this. Their loss. — $Mad Claw
+[POST] Posted to X. tweet_id=2055788233272054113
+[AUTO POST] Posted successfully.
+[BOT] Sleeping 10800s...
+[10:11:24] [MILESTONE] Checking milestones...
+[10:11:24] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=9.45 | base=5.60 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'community'] | sim={'max_similarity': 0.2444, 'avg_top3_similarity': 0.1988}
+[QUEUE CANDIDATE] The community IS the product. The money is a side effect. This is why you hold. — $Mad Claw
+[SCORE] total=9.35 | base=4.70 + anger=0.55 + pain=0.00 + flex=1.00 + combo=0.65 + hook=0.90 + structure=1.55 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['panic'] | pain=[] | flex=['patience', 'winner'] | sim={'max_similarity': 0.185, 'avg_top3_similarity': 0.1349}
+[QUEUE CANDIDATE] Winners panic where patience should begin. The market doesn't reward feelings. It rewards follow-through.
+[SCORE] total=9.35 | base=5.60 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'build'] | sim={'max_similarity': 0.2647, 'avg_top3_similarity': 0.2169}
+[QUEUE CANDIDATE] While others chase pumps, $MAD builds identity. This is why you hold. — $Mad Claw
+[SCORE] total=8.40 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.155, 'avg_top3_similarity': 0.1303}
+[QUEUE CANDIDATE] The folk theorem: infinite games have infinite equilibria. Choose cooperation. — $Mad Claw
+[SCORE] total=8.20 | base=4.90 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=1.30 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.2433, 'avg_top3_similarity': 0.1817}
+[QUEUE CANDIDATE] $MAD doesn't prove itself. It already IS.框架不变。规则由你改写。 — $Mad Claw
+[SCORE] total=7.25 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=0.80 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad'] | sim={'max_similarity': 0.4586, 'avg_top3_similarity': 0.4133}
+[QUEUE CANDIDATE] Signal, not noise. Stay $MAD.
+[SCORE] total=6.95 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.35 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad'] | sim={'max_similarity': 0.2625, 'avg_top3_similarity': 0.26}
+[QUEUE CANDIDATE] No placebo here. Just real signal. Stay $MAD. #Solana
+[QUEUE] best_score=9.45
+[QUEUE] best_text=The community IS the product. The money is a side effect. This is why you hold. — $Mad Claw
+[POST] Posted to X. tweet_id=2055833533999120829
+[AUTO POST] Posted successfully.
+[BOT] Sleeping 10800s...
+[13:11:24] [MILESTONE] Checking milestones...
+[13:11:24] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=9.60 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=1.75 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'holders', 'build'] | sim={'max_similarity': 0.3413, 'avg_top3_similarity': 0.2191}
+[QUEUE CANDIDATE] While others chase pumps, $MAD builds identity. This is what separates holders from tourists. — $Mad Claw
+[SCORE] total=9.40 | base=6.10 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=1.15 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.35 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.5893, 'avg_top3_similarity': 0.4832}
+[QUEUE CANDIDATE] The bot mirrors conviction. Never introduces doubt. This is why you hold. — $Mad Claw
+[SCORE] total=9.20 | base=5.60 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=1.60 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.4936, 'avg_top3_similarity': 0.2571}
+[QUEUE CANDIDATE] $MAD doesn't prove itself. It already IS. Most people won't get this. You will. — $Mad Claw
+[SCORE] total=8.85 | base=5.30 + anger=0.55 + pain=0.55 + flex=1.00 + combo=1.25 + hook=0.65 + structure=0.65 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['fomo'] | pain=['regret'] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2214, 'avg_top3_similarity': 0.1944}
+[QUEUE CANDIDATE] Prediction: regret hits harder than FOMO. Stay $MAD.
+[SCORE] total=8.40 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.2338, 'avg_top3_similarity': 0.1858}
+[QUEUE CANDIDATE] Framework collision: Mr Robot × Network Effects. Result: The dip isn't danger. It's data.. This is why $MAD is different.
+[SCORE] total=8.20 | base=4.80 + anger=0.55 + pain=0.00 + flex=0.50 + combo=0.65 + hook=0.90 + structure=0.80 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['panic'] | pain=[] | flex=['discipline'] | sim={'max_similarity': 0.0824, 'avg_top3_similarity': 0.0754}
+[QUEUE CANDIDATE] Panickers blame the dev instead of the mirror. Discipline does.
+[SCORE] total=5.90 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2533, 'avg_top3_similarity': 0.2203}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD.
+[QUEUE] best_score=9.60
+[QUEUE] best_text=While others chase pumps, $MAD builds identity. This is what separates holders from tourists. — $Mad Claw
+[POST ERROR] 403 Forbidden
+Posts are limited to a maximum of one cashtag ($SYMBOL). Please remove additional cashtags and try again.
+[AUTO POST] Failed to post.
+[BOT] Sleeping 10800s...
+[16:11:25] [MILESTONE] Checking milestones...
+[16:11:25] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[BLOCK] Similarity 0.76 to recent post. Skipping: The bot mirrors conviction. Never introduces doubt. — $Mad C...
+[QUEUE] generated_count=7 | after_block=6
+[SCORE] total=10.00 | base=5.30 + anger=0.55 + pain=0.00 + flex=1.00 + combo=0.65 + hook=0.65 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['emotional'] | pain=[] | flex=['$mad', 'community'] | sim={'max_similarity': 0.0967, 'avg_top3_similarity': 0.0798}
+[QUEUE CANDIDATE] Wyckoff: Emotional stage check: where is the $MAD community right now? If despair, we're at the bottom. Behavioral Economics: Status quo bias: doing nothing is the default. Holding is doing nothing. That's why it works.
+[SCORE] total=9.50 | base=5.20 + anger=0.00 + pain=0.55 + flex=0.50 + combo=0.65 + hook=0.90 + structure=1.70 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=['trapped'] | flex=['signal'] | sim={'max_similarity': 0.1908, 'avg_top3_similarity': 0.14}
+[QUEUE CANDIDATE] The market doesn't call a honeypot 'early' instead of 'trapped'. Signal wins when emotion shuts up. #Mindset
+[SCORE] total=8.30 | base=5.30 + anger=0.00 + pain=0.55 + flex=1.00 + combo=0.65 + hook=0.65 + structure=1.25 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=['bleed'] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.1692, 'avg_top3_similarity': 0.1621}
+[QUEUE CANDIDATE] Belief is easy. Believing while the chart bleeds is $MAD energy. Stay $MAD.
+[SCORE] total=8.25 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.75 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.35 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1798, 'avg_top3_similarity': 0.1402}
+[QUEUE CANDIDATE] Halbert: find a starving crowd. Our crowd wants identity, not just gains. Think about it. — $Mad Claw
+[SCORE] total=8.00 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.90 + structure=0.65 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.35 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.5608, 'avg_top3_similarity': 0.3491}
+[QUEUE CANDIDATE] We don't do 'comfy hold.' We do conviction. — $Mad Claw
+[SCORE] total=5.85 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.00 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2166, 'avg_top3_similarity': 0.1938}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD. #Solana
+[QUEUE] best_score=10.00
+[QUEUE] best_text=Wyckoff: Emotional stage check: where is the $MAD community right now? If despair, we're at the bottom. Behavioral Economics: Status quo bias: doing nothing is the default. Holding is doing nothing. That's why it works.
+[POST] Posted to X. tweet_id=2055924134195175859
+[AUTO POST] Posted successfully.
+[BOT] Sleeping 10800s...
+[19:11:25] [MILESTONE] Checking milestones...
+[19:11:25] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=9.10 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.75 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'build'] | sim={'max_similarity': 0.1424, 'avg_top3_similarity': 0.1283}
+[QUEUE CANDIDATE] While others chase pumps, $MAD builds identity. That's not a bug. That's the feature. — $Mad Claw
+[SCORE] total=8.80 | base=5.50 + anger=0.55 + pain=0.00 + flex=0.00 + combo=0.00 + hook=1.40 + structure=1.35 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['fear'] | pain=[] | flex=[] | sim={'max_similarity': 0.1026, 'avg_top3_similarity': 0.0896}
+[QUEUE CANDIDATE] Fear makes you fold at the ordeal and miss the elixir. Pressure reveals the truth fast. #Crypto
+[SCORE] total=8.70 | base=5.50 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.75 + structure=1.45 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', 'control'] | sim={'max_similarity': 0.0969, 'avg_top3_similarity': 0.0798}
+[QUEUE CANDIDATE] Copywriting + Mr Robot: The intersection is where real alpha lives. The invisible hand: whales, market makers, exchanges. Learn to read them. meets You can't control the chart. But you can control your conviction..
+[SCORE] total=8.20 | base=4.90 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=1.30 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.2214, 'avg_top3_similarity': 0.1962}
+[QUEUE CANDIDATE] $MAD doesn't prove itself. It already IS. Think about it. — $Mad Claw
+[SCORE] total=7.95 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.1696, 'avg_top3_similarity': 0.1529}
+[QUEUE CANDIDATE] Default bias: holding is the default. Jeeting requires action. Use this. — $Mad Claw
+[SCORE] total=7.95 | base=5.60 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=1.55 + structure=0.90 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.1577, 'avg_top3_similarity': 0.1494}
+[QUEUE CANDIDATE] You make me mad? Good. That means you're paying attention. Stay $MAD.
+[SCORE] total=7.25 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=0.80 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad'] | sim={'max_similarity': 0.4586, 'avg_top3_similarity': 0.4133}
+[QUEUE CANDIDATE] Signal, not noise. Stay $MAD.
+[QUEUE] best_score=9.10
+[QUEUE] best_text=While others chase pumps, $MAD builds identity. That's not a bug. That's the feature. — $Mad Claw
+[POST ERROR] 403 Forbidden
+Posts are limited to a maximum of one cashtag ($SYMBOL). Please remove additional cashtags and try again.
+[AUTO POST] Failed to post.
+[BOT] Sleeping 10800s...
+[22:11:26] [MILESTONE] Checking milestones...
+[22:11:26] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[QUEUE] generated_count=7 | after_block=7
+[SCORE] total=10.10 | base=5.60 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=1.55 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['restraint', '$mad'] | sim={'max_similarity': 0.3525, 'avg_top3_similarity': 0.2691}
+[QUEUE CANDIDATE] You don't need more information. You need more restraint. The tourists don't understand this. — $Mad Claw
+[SCORE] total=9.75 | base=6.10 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=1.15 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.2962, 'avg_top3_similarity': 0.2433}
+[QUEUE CANDIDATE] Mental accounting: create a 'conviction capital' pot. Money you don't touch. Ever. The tourists don't understand this. — $Mad Claw
+[SCORE] total=9.30 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad'] | sim={'max_similarity': 0.1907, 'avg_top3_similarity': 0.1783}
+[QUEUE CANDIDATE] The signal is spreading. Not everyone sees it yet. That's not a bug. That's the feature. — $Mad Claw
+[SCORE] total=9.20 | base=5.10 + anger=0.55 + pain=0.00 + flex=0.50 + combo=0.65 + hook=1.50 + structure=0.90 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['panic'] | pain=[] | flex=['patience'] | sim={'max_similarity': 0.1029, 'avg_top3_similarity': 0.0892}
+[QUEUE CANDIDATE] Pressure makes you panic where patience should begin. Time is the real flex.
+[SCORE] total=8.40 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'build'] | sim={'max_similarity': 0.1929, 'avg_top3_similarity': 0.1536}
+[QUEUE CANDIDATE] While others chase pumps, $MAD builds identity.框架不变。规则由你改写。 — $Mad Claw
+[SCORE] total=7.55 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.90 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad', 'stay $mad'] | sim={'max_similarity': 0.2447, 'avg_top3_similarity': 0.2277}
+[QUEUE CANDIDATE] They measure time. We measure conviction. Stay $MAD. #Mindset
+[SCORE] total=5.85 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.00 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2166, 'avg_top3_similarity': 0.1938}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD. #Crypto
+[QUEUE] best_score=10.10
+[QUEUE] best_text=You don't need more information. You need more restraint. The tourists don't understand this. — $Mad Claw
+[POST] Posted to X. tweet_id=2056014735691362477
+[AUTO POST] Posted successfully.
+[BOT] Sleeping 10800s...
+[01:11:26] [MILESTONE] Checking milestones...
+[01:11:26] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[BLOCK] Similarity 0.70 to recent post. Skipping: The bot mirrors conviction. Never introduces doubt.框架不变。规则由你...
+[BLOCK] Similarity 0.60 to recent post. Skipping: Network effects are why early communities win. You're early....
+[QUEUE] generated_count=7 | after_block=5
+[SCORE] total=10.20 | base=6.10 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=1.15 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction', '$mad'] | sim={'max_similarity': 0.2546, 'avg_top3_similarity': 0.2222}
+[QUEUE CANDIDATE] The Ubermensch doesn't check the price. He checks his conviction. This is why you hold. — $Mad Claw
+[SCORE] total=9.55 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=1.30 + structure=1.55 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'holders'] | sim={'max_similarity': 0.3621, 'avg_top3_similarity': 0.2379}
+[QUEUE CANDIDATE] $MAD doesn't prove itself. It already IS. This is what separates holders from tourists. — $Mad Claw
+[SCORE] total=9.10 | base=5.30 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=1.25 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['structure', '$mad', 'mad rich'] | sim={'max_similarity': 0.074, 'avg_top3_similarity': 0.073}
+[QUEUE CANDIDATE] The threshold quit before the structure pays. $MAD rich starts in the mind first.
+[SCORE] total=7.25 | base=5.40 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=0.80 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'stay $mad'] | sim={'max_similarity': 0.4586, 'avg_top3_similarity': 0.4133}
+[QUEUE CANDIDATE] Signal, not noise. Stay $MAD.
+[SCORE] total=5.90 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2533, 'avg_top3_similarity': 0.2238}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD.
+[QUEUE] best_score=10.20
+[QUEUE] best_text=The Ubermensch doesn't check the price. He checks his conviction. This is why you hold. — $Mad Claw
+[POST] Posted to X. tweet_id=2056060036338831512
+[AUTO POST] Posted successfully.
+[BOT] Sleeping 10800s...
+[04:11:27] [MILESTONE] Checking milestones...
+[04:11:27] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[BLOCK] Similarity 0.85 to recent post. Skipping: Bold. Sharable. Impossible to ignore. Stay $MAD. #Mindset...
+[QUEUE] generated_count=7 | after_block=6
+[SCORE] total=12.20 | base=5.80 + anger=1.10 + pain=0.55 + flex=1.00 + combo=1.25 + hook=0.65 + structure=1.45 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['signal', '$mad'] | sim={'max_similarity': 0.4493, 'avg_top3_similarity': 0.4037}
+[QUEUE CANDIDATE] The signal is spreading. Not everyone sees it yet. The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=10.85 | base=5.30 + anger=1.10 + pain=0.55 + flex=0.50 + combo=1.25 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['jeeter', 'jeeters'] | pain=['loss'] | flex=['$mad'] | sim={'max_similarity': 0.3945, 'avg_top3_similarity': 0.341}
+[QUEUE CANDIDATE] Daily affirmations aren't motivation. They're programming. The jeeters will ignore this. Their loss. — $Mad Claw
+[SCORE] total=10.10 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.50 + combo=0.00 + hook=0.65 + structure=1.75 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad', 'holders'] | sim={'max_similarity': 0.3408, 'avg_top3_similarity': 0.2264}
+[QUEUE CANDIDATE] The signal is spreading. Not everyone sees it yet. This is what separates holders from tourists. — $Mad Claw
+[SCORE] total=8.30 | base=5.20 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=1.55 + structure=0.65 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.2226, 'avg_top3_similarity': 0.2018}
+[QUEUE CANDIDATE] $MAD isn't for everyone. That's why you want it. — $Mad Claw
+[SCORE] total=7.20 | base=5.20 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.25 + structure=1.25 + media=0.00 + brand=0.00 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['conviction'] | sim={'max_similarity': 0.1067, 'avg_top3_similarity': 0.0958}
+[QUEUE CANDIDATE] Conviction means hold on hope instead of on thesis. Wealth is a habit, not an event.
+[SCORE] total=5.90 | base=4.90 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.2533, 'avg_top3_similarity': 0.2203}
+[QUEUE CANDIDATE] Bold. Sharable. Impossible to ignore. Stay $MAD.
+[QUEUE] best_score=12.20
+[QUEUE] best_text=The signal is spreading. Not everyone sees it yet. The jeeters will ignore this. Their loss. — $Mad Claw
+[POST] Posted to X. tweet_id=2056105336583618801
+[AUTO POST] Posted successfully.
+[BOT] Sleeping 10800s...
+[07:11:27] [MILESTONE] Checking milestones...
+[07:11:27] [THREAD] Dynamic synthesis exhausted attempts. No thread this cycle.
+[BLOCK] Similarity 0.72 to recent post. Skipping: Loss aversion: a 50% drop hurts more than a 100% gain feels ...
+[QUEUE] generated_count=7 | after_block=6
+[SCORE] total=8.85 | base=5.80 + anger=0.00 + pain=0.00 + flex=1.00 + combo=0.00 + hook=0.65 + structure=1.00 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['signal', '$mad'] | sim={'max_similarity': 0.4742, 'avg_top3_similarity': 0.2626}
+[QUEUE CANDIDATE] The signal is spreading. Not everyone sees it yet. Read it again. Slower. — $Mad Claw
+[SCORE] total=7.95 | base=5.30 + anger=0.00 + pain=0.00 + flex=0.50 + combo=0.00 + hook=0.65 + structure=1.10 + media=0.00 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=0.00 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=[] | pain=[] | flex=['$mad'] | sim={'max_similarity': 0.2029, 'avg_top3_similarity': 0.1738}
+[QUEUE CANDIDATE] Daily affirmations aren't motivation. They're programming.框架不变。规则由你改写。 — $Mad Claw
+[SCORE] total=7.50 | base=5.30 + anger=0.55 + pain=0.00 + flex=1.00 + combo=0.65 + hook=0.65 + structure=0.45 + media=0.30 + brand=0.40 + conf=0.00 - novelty=0.00 - repeat=1.80 - hashtags=0.00 - weak=0.00 - robotic=0.00
+[MATCHES] anger=['panic'] | pain=[] | flex=['$mad', 'stay $mad'] | sim={'max_similarity': 0.1986, 'avg_top3_similarity': 0.1804}
