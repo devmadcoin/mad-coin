@@ -154,15 +154,6 @@ function LiveTicker() {
 
 
 
-/* ─── SOCIAL ICON ─── */
-function SocialIconButton({ href, src, alt }: { href: string; src: string; alt: string }) {
-  return (
-    <a href={href} target="_blank" rel="noreferrer" aria-label={alt} title={alt} className="group flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-white/[0.03] shadow-[0_8px_20px_rgba(0,0,0,0.28)] transition duration-300 hover:scale-105 hover:border-red-500/30 hover:bg-red-500/10">
-      <Image src={src} alt={alt} width={30} height={30} className="h-8 w-8 object-contain transition duration-300 group-hover:scale-110" />
-    </a>
-  );
-}
-
 /* ─── METRIC CARD ─── */
 function MetricCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
@@ -522,13 +513,6 @@ export default function Home() {
                 <Chip>504.76M SUPPLY</Chip>
                 <Chip>800M TARGET</Chip>
                 <Chip>0% TAX</Chip>
-              </div>
-
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <SocialIconButton href={LINKS.telegram} src="/logos/MAD-TELEGRAM.png" alt="Telegram" />
-                <SocialIconButton href={LINKS.x} src="/logos/MAD-X-LOGO.png" alt="X" />
-                <SocialIconButton href={LINKS.instagram} src="/logos/MAD-INSTAGRAM-LOGO.png" alt="Instagram" />
-                <SocialIconButton href={LINKS.tiktok} src="/logos/MAD-TIKTOK-LOGO.png" alt="TikTok" />
               </div>
             </div>
 
