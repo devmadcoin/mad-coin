@@ -480,6 +480,24 @@ export default function Home() {
         </section>
 
         {/* ═══════════════════════════════════════════
+           EXCHANGE MARQUEE
+           ═══════════════════════════════════════════ */}
+        <section className="mt-8 overflow-hidden rounded-[36px] border border-white/10 bg-black/30 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-10">
+          <div>
+            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.34em] text-white/40">Verified on-chain</p>
+            <h2 className="mt-3 text-center text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">Track <span className="text-red-500">$MAD</span> Everywhere</h2>
+            <p className="mx-auto mt-2 max-w-lg text-center text-sm text-white/50">Jupiter. DEX Screener. Birdeye. Solscan. Real platforms. Real data.</p>
+          </div>
+          <div className="mt-6 overflow-hidden rounded-[24px] bg-[linear-gradient(90deg,rgba(96,58,80,0.95),rgba(49,57,110,0.95))] px-4 py-6 sm:px-6">
+            <div className="logo-marquee flex w-max items-center gap-6">
+              {[...exchangeItems, ...exchangeItems].map((item, index) => (
+                <ExchangeCard key={`${item.label}-${index}`} href={item.href} src={item.src} alt={item.alt} label={item.label} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════
            STORY — THE GOSPEL IS REAL
            ═══════════════════════════════════════════ */}
         <section className="mt-8 rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,0,0,0.9),rgba(5,0,0,0.96))] p-6 shadow-[0_16px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-10">
@@ -536,6 +554,15 @@ export default function Home() {
         </section>
 
         {/* ═══════════════════════════════════════════
+           ART CAMPAIGN — VISUAL FREQUENCY
+           ═══════════════════════════════════════════ */}
+        <div className="mt-8 grid gap-3 lg:grid-cols-3">
+          <ArtCard title="Mindset" text="Pressure reveals the real ones." image="/memes/MAD-KINGS-ONLY.png" accent="red" />
+          <ArtCard title="Signal" text="Not noise. Not panic. Signal." image="/memes/MAD-YOU-SIDELINED.png" accent="white" />
+          <ArtCard title="Wealth" text="Rich starts in the mind first." image="/memes/MAD-RICH-OR-BROKE.png" accent="green" />
+        </div>
+
+        {/* ═══════════════════════════════════════════
            LIVE TOKEN STATS
            ═══════════════════════════════════════════ */}
         <section className="mt-8 rounded-[36px] border border-white/10 bg-black/50 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-10">
@@ -580,49 +607,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-
-        {/* ═══════════════════════════════════════════
-           ART CAMPAIGN — VISUAL FREQUENCY
-           ═══════════════════════════════════════════ */}
-        <div className="mt-8 grid gap-3 lg:grid-cols-3">
-          <ArtCard title="Mindset" text="Pressure reveals the real ones." image="/memes/MAD-KINGS-ONLY.png" accent="red" />
-          <ArtCard title="Signal" text="Not noise. Not panic. Signal." image="/memes/MAD-YOU-SIDELINED.png" accent="white" />
-          <ArtCard title="Wealth" text="Rich starts in the mind first." image="/memes/MAD-RICH-OR-BROKE.png" accent="green" />
-        </div>
-
-        {/* ═══════════════════════════════════════════
-           EXCHANGE MARQUEE
-           ═══════════════════════════════════════════ */}
-        <section className="mt-8 overflow-hidden rounded-[36px] border border-white/10 bg-black/30 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-10">
-          <div>
-            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.34em] text-white/40">Verified on-chain</p>
-            <h2 className="mt-3 text-center text-3xl font-black leading-[0.95] text-white sm:text-4xl md:text-5xl">Track <span className="text-red-500">$MAD</span> Everywhere</h2>
-            <p className="mx-auto mt-2 max-w-lg text-center text-sm text-white/50">Jupiter. DEX Screener. Birdeye. Solscan. Real platforms. Real data.</p>
-          </div>
-          <div className="mt-6 overflow-hidden rounded-[24px] bg-[linear-gradient(90deg,rgba(96,58,80,0.95),rgba(49,57,110,0.95))] px-4 py-6 sm:px-6">
-            <div className="logo-marquee flex w-max items-center gap-6">
-              {[...exchangeItems, ...exchangeItems].map((item, index) => (
-                <ExchangeCard key={`${item.label}-${index}`} href={item.href} src={item.src} alt={item.alt} label={item.label} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════
-           CONFESSIONS — CONDITIONAL
-           ═══════════════════════════════════════════ */}
-        {showConfessions && (
-          <section className="mt-8 rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(20,0,0,0.9),rgba(5,0,0,0.96))] p-4 shadow-[0_16px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-6 lg:p-8">
-            <div className="mb-5 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Community</p>
-                <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">MAD <span className="text-red-500">Confessions</span></h2>
-                <p className="mt-1 text-sm text-white/50 max-w-lg">Anonymous thoughts. No filter. Just real feelings.</p>
-              </div>
-            </div>
-            <div className="min-w-0"><MadConfessions /></div>
-          </section>
-        )}
 
         {/* ═══════════════════════════════════════════
            RISK NOTICE
