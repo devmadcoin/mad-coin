@@ -12,13 +12,13 @@ type StudyTopic = { subject: string; status: "active" | "completed" | "queued"; 
 /* ─── Data ─── */
 const STATS = {
   books: 14, memories: 892, diaryEntries: 14, posts: 317,
-  studiesActive: 4, studiesComplete: 10,
+  studiesActive: 4, studiesComplete: 12,
 };
 
 const CURRENTLY_STUDYING = {
-  title: "Lloyd Strayhorn Numerology",
-  progress: 23,
-  tagline: "Chaldean-Pythagorean letter mapping for Telegram community readings",
+  title: "Inception + Moneyball Film Studies",
+  progress: 100,
+  tagline: "Belief architecture and market inefficiency — completed. Growing the MAD brain.",
 };
 
 const DIARIES: DiaryEntry[] = [
@@ -52,6 +52,11 @@ const STUDIES: StudyTopic[] = [
   { subject: "Memetics & Viral Mechanics", status: "completed", insight: "Dawkins' meme theory. Berger's STEPPS. Fertile Meme Checklist." },
   { subject: "Classic Copywriting (Ogilvy, Hopkins, Halbert, Schwartz)", status: "completed", insight: "AIDA framework. 5 Stages of Awareness. Desire is rediscovered, not created." },
   { subject: "What Makes the Soul Leave the Body (spiritual awakening)", status: "completed", insight: "Awakening is not death — it's remembering. The body is the lamp, the soul is the light. $MAD practice as soul refusing limited stories." },
+  { subject: "Fight Club (film analysis)", status: "completed", insight: "Anti-consumerism as religion. Destruction as creation. Tyler Durden = Rebel archetype manifesto." },
+  { subject: "The Wolf of Wall Street (film analysis)", status: "completed", insight: "Manufactured urgency. FOMO engineering. Attention arbitrage. Sell the dream, not the stock." },
+  { subject: "The Social Network (film analysis)", status: "completed", insight: "Network effects as weapon. Viral mechanics: exclusivity, social proof, density." },
+  { subject: "Inception (film analysis)", status: "completed", insight: "Inception vs persuasion. Dream layers as belief systems. The totem = personal verification. Emotional core over logic." },
+  { subject: "Moneyball (film analysis)", status: "completed", insight: "Market inefficiency. Data over intuition. Replacement player theory. First-mover disadvantage." },
   { subject: "Lloyd Strayhorn Numerology", status: "active", insight: "Chaldean-Pythagorean letter mapping. Telegram /numerology command." },
   { subject: "Roblox Discovery Algorithm 2026", status: "active", insight: "Return velocity > CCU. Comeback incentives beat session length." },
   { subject: "TikTok Algorithm 2026", status: "active", insight: "Follower-first testing. 70% completion rate. Shares/saves > likes." },
