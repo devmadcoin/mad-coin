@@ -547,7 +547,7 @@ export default function Home() {
           </div>
         </section>
 
-        
+        <CommunityArmy />
 
         <MadFrequencyMarquee />
 
@@ -679,8 +679,6 @@ export default function Home() {
             ))}
           </div>
         </section>
-
-        <CommunityArmy />
 
         {/* ═══════════════════════════════════════════
            RISK NOTICE
