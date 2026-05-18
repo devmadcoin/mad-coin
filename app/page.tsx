@@ -7,7 +7,7 @@ import MadConfessions from "./components/MadConfessions";
 
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 const PAIR = "Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs";
-const LAUNCH_DATE = new Date("2026-02-04T00:00:00Z");
+
 
 const LINKS = {
   telegram: "https://t.me/MadOfficalChannel",
@@ -152,26 +152,7 @@ function LiveTicker() {
   );
 }
 
-/* ─── DAYS ALIVE COUNTER ─── */
-function DaysAlive() {
-  const [days, setDays] = useState(0);
-  useEffect(() => {
-    const now = new Date();
-    const diff = Math.floor((now.getTime() - LAUNCH_DATE.getTime()) / (1000 * 60 * 60 * 24));
-    setDays(diff);
-  }, []);
-  return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">
-      <span className="relative flex h-2 w-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
-      </span>
-      <span className="text-xs font-bold text-white/50">
-        <span className="text-white font-black">{days}</span> DAYS ALIVE
-      </span>
-    </div>
-  );
-}
+
 
 /* ─── SOCIAL ICON ─── */
 function SocialIconButton({ href, src, alt }: { href: string; src: string; alt: string }) {
@@ -402,7 +383,6 @@ export default function Home() {
           <div className="relative z-10 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <DaysAlive />
                 <Chip>LIVE</Chip>
                 <Chip>DOXXED DEV</Chip>
               </div>
@@ -419,7 +399,7 @@ export default function Home() {
               <div className="mt-5 max-w-lg">
                 <p className="text-base font-bold text-white/80">Most people fold. $MAD builds.</p>
                 <p className="mt-2 text-sm leading-7 text-white/50">
-                  104 days on-chain. 265 holders. One doxxed dev. No VC. No presale. No tax. Just frequency.
+                  Doxxed dev. Real Roblox game. No VC. No tax. No presale. Just frequency.
                 </p>
               </div>
 
