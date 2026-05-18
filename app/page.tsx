@@ -272,9 +272,97 @@ function FloatingParticles() {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   MAIN PAGE
-   ═══════════════════════════════════════════════════════════ */
+/* ─── MAD FREQUENCY MARQUEE (brand hypnosis) ─── */
+function MadFrequencyMarquee() {
+  const items = [
+    "$MAD FREQUENCY",
+    "CONTROL YOURSELF",
+    "STOP PANICKING",
+    "GET $MAD RICH",
+    "DOXXED DEV",
+    "REAL ROBlOX GAME",
+    "NO VC NO TAX NO PRESALE",
+    "265+ HOLDERS",
+    "504M SUPPLY",
+    "0% TAX",
+    "STAY $MAD",
+    "THE SUPREME OF SOLANA",
+  ];
+  const row = [...items, ...items, ...items];
+  return (
+    <div className="mt-6 overflow-hidden rounded-[20px] border border-red-500/10 bg-red-500/[0.03] py-3">
+      <div className="flex w-max logo-marquee-slow items-center gap-8 px-4">
+        {row.map((text, i) => (
+          <span key={i} className="shrink-0 text-[11px] font-black uppercase tracking-[0.2em] text-red-400/40 whitespace-nowrap">
+            {text} <span className="text-red-500/20 mx-2">◆</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── COMMUNITY ARMY (social proof) ─── */
+function CommunityArmy() {
+  const platforms = [
+    { name: "X / Twitter", handle: "@madrichclub_", icon: "𝕏", color: "text-white", stat: "Daily posts · Growing", href: LINKS.x },
+    { name: "YouTube", handle: "Coffee Collects", icon: "▶️", color: "text-red-400", stat: "3 channels · HQ + VR + Blox", href: "https://youtube.com/@coffeecollectshq" },
+    { name: "Telegram", handle: "@MADOfficalChannel", icon: "✈️", color: "text-blue-400", stat: "Bot live · Knowledge drops", href: LINKS.telegram },
+    { name: "Roblox", handle: "Mad Phonk Awakening", icon: "🎮", color: "text-green-400", stat: "Live game · Crushing it", href: "https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening" },
+    { name: "Instagram", handle: "@madrichclub", icon: "📷", color: "text-pink-400", stat: "Visual frequency", href: LINKS.instagram },
+    { name: "TikTok", handle: "@madrichclub", icon: "🎵", color: "text-cyan-400", stat: "Short-form energy", href: LINKS.tiktok },
+  ];
+  return (
+    <section className="mt-8 rounded-[36px] border border-white/10 bg-[linear-gradient(180deg,rgba(10,0,0,0.95),rgba(5,0,0,0.98))] p-6 shadow-[0_16px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-10">
+      <div className="mb-6">
+        <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Everywhere At Once</p>
+        <h2 className="mt-2 text-2xl font-black leading-[0.95] text-white sm:text-3xl md:text-4xl">The <span className="text-red-500">$MAD Army</span></h2>
+        <p className="mt-2 text-sm text-white/50 max-w-lg">Not a single channel. A frequency across every platform that matters.</p>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {platforms.map((p) => (
+          <a
+            key={p.name}
+            href={p.href}
+            target="_blank"
+            rel="noreferrer"
+            className="group flex flex-col items-center text-center p-4 rounded-[20px] border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-red-500/20 transition-all"
+          >
+            <span className="text-2xl mb-2">{p.icon}</span>
+            <p className="text-xs font-black text-white/80 group-hover:text-white transition-colors">{p.name}</p>
+            <p className={`text-[10px] font-bold mt-0.5 ${p.color}`}>{p.handle}</p>
+            <p className="text-[9px] text-white/30 mt-1 uppercase tracking-wider">{p.stat}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ─── DEX LOGOS STRIP (visual credibility) ─── */
+function DexLogosStrip() {
+  const dexes = [
+    { name: "Jupiter", src: "/logos/jupiter.png" },
+    { name: "DEX Screener", src: "/logos/DEX-screener.png" },
+    { name: "Birdeye", src: "/logos/birdeye.png" },
+    { name: "Solscan", src: "/logos/solscan.png" },
+    { name: "Pump.fun", src: "/logos/pumpfun.png" },
+    { name: "Phantom", src: "/logos/phantom.png" },
+  ];
+  return (
+    <section className="mt-8 rounded-[36px] border border-white/10 bg-black/30 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8">
+      <p className="text-center text-[11px] font-bold uppercase tracking-[0.34em] text-white/40 mb-4">Trade $MAD On</p>
+      <div className="flex flex-wrap items-center justify-center gap-6">
+        {dexes.map((dex) => (
+          <div key={dex.name} className="flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+            <Image src={dex.src} alt={dex.name} width={40} height={40} className="h-10 w-auto object-contain" />
+            <span className="text-[9px] font-bold uppercase tracking-wider text-white/30">{dex.name}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   const [liveStats, setLiveStats] = useState<{ price: string; change: string; mcap: string; holders: string; volume: string; buys: number; sells: number } | null>(null);
@@ -459,6 +547,10 @@ export default function Home() {
           </div>
         </section>
 
+        
+
+        <MadFrequencyMarquee />
+
         {/* ═══════════════════════════════════════════
            EXCHANGE MARQUEE
            ═══════════════════════════════════════════ */}
@@ -476,6 +568,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <DexLogosStrip />
 
         {/* ═══════════════════════════════════════════
            STORY — THE GOSPEL IS REAL
@@ -532,6 +626,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <CommunityArmy />
 
         {/* ═══════════════════════════════════════════
            ART CAMPAIGN — VISUAL FREQUENCY
