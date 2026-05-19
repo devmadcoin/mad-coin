@@ -151,8 +151,55 @@ function ChatSidebar({
   );
 }
 
+/* ─── Feedback buttons (👍 / 👎) ─── */
+function FeedbackButtons({ sessionId, timestamp, text }: { sessionId: string; timestamp: number; text: string }) {
+  const [voted, setVoted] = useState<"up" | "down" | null>(null);
+  const sendFeedback = async (type: "up" | "down") => {
+    if (voted) return;
+    try {
+      await fetch("/api/mad-mind/chat", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, timestamp, feedback: type }),
+      });
+      setVoted(type);
+    } catch { /* ignore */ }
+  };
+
+  if (voted) {
+    return (
+      <span className="text-[9px] text-white/15 ml-1">
+        {voted === "up" ? "✓ Thanks" : "✓ Noted"}
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-1">
+      <button
+        onClick={() => sendFeedback("up")}
+        className="p-1 rounded hover:bg-white/10 text-white/25 hover:text-green-400 transition-all"
+        title="Good response"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
+        </svg>
+      </button>
+      <button
+        onClick={() => sendFeedback("down")}
+        className="p-1 rounded hover:bg-white/10 text-white/25 hover:text-red-400 transition-all"
+        title="Bad response"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3zM17 2h3a2 2 0 012 2v7a2 2 0 01-2 2h-3"/>
+        </svg>
+      </button>
+    </div>
+  );
+}
+
 /* ─── Message bubble ─── */
-function MessageBubble({ msg, isLatest }: { msg: ChatMessage; isLatest: boolean }) {
+function MessageBubble({ msg, isLatest, sessionId }: { msg: ChatMessage; isLatest: boolean; sessionId: string }) {
   const isUser = msg.role === "user";
 
   return (
@@ -170,6 +217,7 @@ function MessageBubble({ msg, isLatest }: { msg: ChatMessage; isLatest: boolean 
         <div className={`flex items-center gap-2 mt-1.5 ${isUser ? "justify-end pr-1" : "justify-start pl-1"}`}>
           <span className="text-[9px] text-white/20 tabular-nums">{formatTime(msg.timestamp)}</span>
           {!isUser && <CopyButton text={msg.text} />}
+          {!isUser && <FeedbackButtons sessionId={sessionId} timestamp={msg.timestamp} text={msg.text} />}
         </div>
       </div>
     </div>
@@ -373,6 +421,7 @@ export default function ChatInterface({
                   key={msg.id || `${msg.role}-${i}-${msg.timestamp}`}
                   msg={msg}
                   isLatest={i === messages.length - 1}
+                  sessionId={sessionId}
                 />
               ))}
               {typing && <TypingIndicator />}
