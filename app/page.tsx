@@ -649,6 +649,13 @@ export default function Home() {
         </section>
 
         {/* ═══════════════════════════════════════════
+           MAD CONFESSIONS — COMMUNITY VOICE
+           ═══════════════════════════════════════════ */}
+        <section className="mt-8">
+          <MadConfessions />
+        </section>
+
+        {/* ═══════════════════════════════════════════
            HOW TO BUY — THE EXIT
            ═══════════════════════════════════════════ */}
         <section id="how-to-buy" className="mt-8 rounded-[36px] border border-white/10 bg-black/50 p-6 shadow-[0_16px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-10">
