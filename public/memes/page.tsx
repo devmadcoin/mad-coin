@@ -12,6 +12,8 @@ export default function MemeVaultPage() {
     "/memes/mad-meme-nogym.png",
     "/memes/mad-meme-toiletpaper.png",
     "/memes/mad-meme-wifibuffer.png",
+    "/memes/MAD-KYOKI.png",
+    "/memes/MAD-ERA-BEGINS.png",
   ];
 
   return (
