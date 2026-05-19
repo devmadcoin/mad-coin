@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   images: {
     domains: [],
     remotePatterns: [],
+    unoptimized: true,
   },
 
   // Security: Add headers for static assets
