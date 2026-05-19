@@ -1,13 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-
-interface ChatMessage {
-  role: "user" | "claw";
-  text: string;
-  timestamp: number;
-  id: string;
-}
+import { ChatMessage } from "./useChat";
 
 interface ChatSession {
   id: string;
