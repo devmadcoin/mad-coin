@@ -3,7 +3,7 @@
 import { useState } from "react";
 import useChat from "./useChat";
 import ChatInterface from "./ChatInterface";
-import MadChao3D from "./MadChao3D";
+import MadChao3D, { triggerClawReaction } from "./MadChao3D";
 
 /* ─── Types ─── */
 type DiaryEntry = { day: number; date: string; title: string; excerpt: string };
@@ -154,7 +154,10 @@ export default function MadClawIdentity() {
         messages={messages}
         status={status}
         typing={typing}
-        sendMessage={sendMessage}
+        sendMessage={(text) => {
+          triggerClawReaction();
+          sendMessage(text);
+        }}
         clearChat={clearChat}
         scrollRef={scrollRef}
         sessionId={sessionId}
