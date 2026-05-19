@@ -133,7 +133,7 @@ function ArtHero() {
             VAULT.
           </h1>
           <p className="mt-5 text-lg sm:text-xl text-white/55 max-w-xl leading-relaxed">
-            Posters. Memes. Identity. Chaos turned into visuals. Free to grab. Yours to share.
+            Posters. Memes. Identity. 34 pieces of chaos. Free to grab. Yours to share.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
