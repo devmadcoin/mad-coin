@@ -39,6 +39,9 @@ function FloatingParticles() {
 /* ═══════════════════════════════════════════════════════════
    MAD MIND — Meet Your AI
    The one place to talk to the Claw.
+   
+   LIVE CHAT v2 — Real-time conversation with session memory
+   Deployed: 2026-05-19
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadMindPage() {
