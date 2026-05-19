@@ -46,6 +46,8 @@ const ART_FILES = [
   "MAD-ART-2.png",
   "MAD-ART-3.png",
   "MAD-ART-4.png",
+  "MAD-RED-EYE.png",
+  "MAD-COLD-FRIES.png",
 ] as const;
 
 function cleanTitle(name: string) {
@@ -122,7 +124,7 @@ function ArtHero() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
           <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300 mb-6">
-            30 Pieces. All Rare.
+            32 Pieces. All Rare.
           </span>
           <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tight">
             THE <span className="text-red-500">$MAD</span><br />
@@ -136,7 +138,7 @@ function ArtHero() {
             <Pill tone="red">Official Art</Pill>
             <Pill tone="green">Free Download</Pill>
             <Pill>High Res</Pill>
-            <Pill tone="yellow">30 Total</Pill>
+            <Pill tone="yellow">32 Total</Pill>
           </div>
 
           {/* Contract box — drunk proof */}
