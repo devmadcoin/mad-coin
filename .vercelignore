@@ -1,0 +1,23 @@
+# Workspace / bot files (not part of the website)
+bot_state/
+bot_state.json
+conversation_states.json
+downloads/
+knowledge/
+memory/
+memorized_media/
+memorized_diary/
+*.log
+*.py
+__pycache__/
+
+# Dev / build artifacts
+.env.local
+.env
+node_modules/
+.vercel
+next-env.d.ts
+
+# Large media that should be served from CDN instead
+# Uncomment if you move memes to a CDN:
+# public/memes/
