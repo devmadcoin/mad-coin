@@ -6,23 +6,17 @@ import { OrbitControls, Float } from "@react-three/drei";
 import * as THREE from "three";
 
 /* ═══════════════════════════════════════════════════════════
-   $MAD VOID — Dark world for the red mascot
+   $MAD VOID — Professional lighting, proper proportions
    ═══════════════════════════════════════════════════════════ */
 
 const MOUSE = { x: 0, y: 0 };
 
 /* ═══════════════════════════════════════════════════════════
-   ENVIRONMENT
+   ENVIRONMENT — Minimal, no platform under character
    ═══════════════════════════════════════════════════════════ */
-
 function VoidWorld({ clawPosition }: { clawPosition: React.MutableRefObject<THREE.Vector3> }) {
   return (
     <group>
-      <DarkPlatform />
-      <EnergyGrid />
-      <FloatingShards count={12} clawPosition={clawPosition} />
-      <RingStructure position={[0, 2.5, 0]} radius={4} />
-      <RingStructure position={[0, -1, 0]} radius={6} rotSpeed={0.3} />
       <AmbientParticles />
       <StarField />
       <RedFog />
@@ -30,215 +24,14 @@ function VoidWorld({ clawPosition }: { clawPosition: React.MutableRefObject<THRE
   );
 }
 
-/* ─── Dark obsidian platform ─── */
-function DarkPlatform() {
-  const meshRef = useRef<THREE.Mesh>(null);
-  useFrame((state) => {
-    if (meshRef.current) {
-      const mat = meshRef.current.material as THREE.MeshStandardMaterial;
-      mat.emissiveIntensity = 0.3 + Math.sin(state.clock.elapsedTime * 0.8) * 0.1;
-    }
-  });
-
-  return (
-    <group>
-      {/* Main disk */}
-      <mesh ref={meshRef} position={[0, -0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[2.5, 64]} />
-        <meshStandardMaterial
-          color="#0a0a0a"
-          roughness={0.05}
-          metalness={0.95}
-          emissive="#220000"
-          emissiveIntensity={0.3}
-        />
-      </mesh>
-      {/* Red ring edge */}
-      <mesh position={[0, -0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[2.48, 2.52, 128]} />
-        <meshStandardMaterial
-          color="#ff0000"
-          emissive="#ff0000"
-          emissiveIntensity={2}
-          transparent
-          opacity={0.8}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-      {/* Inner subtle ring */}
-      <mesh position={[0, -0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[1.5, 1.52, 128]} />
-        <meshStandardMaterial
-          color="#ff3333"
-          emissive="#ff1111"
-          emissiveIntensity={1}
-          transparent
-          opacity={0.3}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-/* ─── Red energy grid on floor ─── */
-function EnergyGrid() {
-  const ref = useRef<THREE.Group>(null);
-  useFrame((state) => {
-    if (!ref.current) return;
-    ref.current.children.forEach((line, i) => {
-      const mat = (line as THREE.Mesh).material as THREE.MeshStandardMaterial;
-      mat.opacity = 0.1 + Math.sin(state.clock.elapsedTime * 1.5 + i * 0.5) * 0.08;
-    });
-  });
-
-  const lines = [];
-  for (let i = -4; i <= 4; i++) {
-    lines.push(
-      <mesh key={`x${i}`} position={[i * 0.6, -0.02, 0]} scale={[0.01, 1, 5]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={1} transparent opacity={0.15} />
-      </mesh>
-    );
-    lines.push(
-      <mesh key={`z${i}`} position={[0, -0.02, i * 0.6]} scale={[5, 1, 0.01]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={1} transparent opacity={0.15} />
-      </mesh>
-    );
-  }
-
-  return <group ref={ref}>{lines}</group>;
-}
-
-/* ─── Floating dark crystal shards ─── */
-function FloatingShards({ count, clawPosition }: { count: number; clawPosition: React.MutableRefObject<THREE.Vector3> }) {
-  const shards = useMemo(() => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      position: [
-        (Math.random() - 0.5) * 10,
-        Math.random() * 4 - 0.5,
-        (Math.random() - 0.5) * 10,
-      ] as [number, number, number],
-      scale: 0.05 + Math.random() * 0.15,
-      speed: 0.2 + Math.random() * 0.5,
-      color: ["#ff0000", "#ff3333", "#ff5555", "#aa0000"][Math.floor(Math.random() * 4)],
-    }));
-  }, []);
-
-  return (
-    <group>
-      {shards.map((shard) => (
-        <Float key={shard.id} speed={shard.speed} floatIntensity={0.4} rotationIntensity={0.8}>
-          <ShardMesh {...shard} clawPosition={clawPosition} />
-        </Float>
-      ))}
-    </group>
-  );
-}
-
-function ShardMesh({
-  position, scale, color, id, clawPosition,
-}: {
-  position: [number, number, number];
-  scale: number;
-  color: string;
-  id: number;
-  clawPosition: React.MutableRefObject<THREE.Vector3>;
-}) {
-  const ref = useRef<THREE.Mesh>(null);
-  const [baseIntensity] = useState(0.5 + Math.random() * 1);
-
-  useFrame((state) => {
-    if (!ref.current) return;
-    ref.current.rotation.x += 0.005;
-    ref.current.rotation.y += 0.008;
-
-    /* Proximity glow */
-    if (clawPosition?.current) {
-      const dx = clawPosition.current.x - position[0];
-      const dy = clawPosition.current.y - position[1];
-      const dz = clawPosition.current.z - position[2];
-      const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-      const proximity = Math.max(0, 1 - dist / 3);
-      const intensity = baseIntensity + proximity * 3;
-      (ref.current.material as THREE.MeshStandardMaterial).emissiveIntensity = intensity;
-    }
-  });
-
-  return (
-    <mesh ref={ref} position={position} scale={scale}>
-      <octahedronGeometry args={[1, 0]} />
-      <meshStandardMaterial
-        color={color}
-        emissive={color}
-        emissiveIntensity={baseIntensity}
-        roughness={0.1}
-        metalness={0.5}
-        transparent
-        opacity={0.85}
-      />
-    </mesh>
-  );
-}
-
-/* ─── Ring structure ─── */
-function RingStructure({
-  position, radius, rotSpeed = 0.2,
-}: {
-  position: [number, number, number];
-  radius: number;
-  rotSpeed?: number;
-}) {
-  const ref = useRef<THREE.Group>(null);
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.rotation.x = state.clock.elapsedTime * rotSpeed * 0.3;
-      ref.current.rotation.z = state.clock.elapsedTime * rotSpeed * 0.2;
-    }
-  });
-
-  return (
-    <group ref={ref} position={position}>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[radius, 0.03, 8, 64]} />
-        <meshStandardMaterial
-          color="#ff0000"
-          emissive="#ff0000"
-          emissiveIntensity={1.5}
-          transparent
-          opacity={0.4}
-        />
-      </mesh>
-      {/* Small orbiting nodes */}
-      {[0, Math.PI / 2, Math.PI, -Math.PI / 2].map((angle, i) => (
-        <mesh
-          key={i}
-          position={[Math.cos(angle) * radius, 0, Math.sin(angle) * radius]}
-          scale={0.06}
-        >
-          <sphereGeometry args={[1, 8, 8]} />
-          <meshStandardMaterial
-            color="#ff3333"
-            emissive="#ff1111"
-            emissiveIntensity={2}
-          />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-/* ─── Ambient red particles ─── */
 function AmbientParticles() {
-  const count = 80;
+  const count = 60;
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 12;
-      arr[i * 3 + 1] = Math.random() * 6 - 1;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 12;
+      arr[i * 3] = (Math.random() - 0.5) * 15;
+      arr[i * 3 + 1] = Math.random() * 8 - 2;
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 15;
     }
     return arr;
   }, []);
@@ -248,8 +41,8 @@ function AmbientParticles() {
     if (!ref.current) return;
     const pos = ref.current.geometry.attributes.position.array as Float32Array;
     for (let i = 0; i < count; i++) {
-      pos[i * 3 + 1] += Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.002;
-      if (pos[i * 3 + 1] > 5) pos[i * 3 + 1] = -1;
+      pos[i * 3 + 1] += Math.sin(state.clock.elapsedTime * 0.3 + i) * 0.001;
+      if (pos[i * 3 + 1] > 6) pos[i * 3 + 1] = -2;
     }
     ref.current.geometry.attributes.position.needsUpdate = true;
   });
@@ -259,22 +52,21 @@ function AmbientParticles() {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial color="#ff3333" size={0.03} transparent opacity={0.5} sizeAttenuation />
+      <pointsMaterial color="#ff2222" size={0.04} transparent opacity={0.5} sizeAttenuation />
     </points>
   );
 }
 
-/* ─── Star field ─── */
 function StarField() {
-  const count = 100;
+  const count = 80;
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const r = 15 + Math.random() * 20;
+      const r = 12 + Math.random() * 25;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
       arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      arr[i * 3 + 1] = r * Math.cos(phi) + 5;
+      arr[i * 3 + 1] = r * Math.cos(phi) + 3;
       arr[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
     }
     return arr;
@@ -285,110 +77,151 @@ function StarField() {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial color="#ffffff" size={0.05} transparent opacity={0.7} sizeAttenuation />
+      <pointsMaterial color="#ffffff" size={0.04} transparent opacity={0.6} sizeAttenuation />
     </points>
   );
 }
 
-/* ─── Subtle red fog plane ─── */
 function RedFog() {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.rotation.y = state.clock.elapsedTime * 0.02;
-    }
-  });
-
   return (
-    <mesh ref={ref} position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[30, 30]} />
-      <meshStandardMaterial
-        color="#330000"
-        emissive="#ff0000"
-        emissiveIntensity={0.15}
-        transparent
-        opacity={0.3}
-        roughness={1}
-      />
+    <mesh position={[0, -4, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[40, 40]} />
+      <meshStandardMaterial color="#1a0000" emissive="#ff0000" emissiveIntensity={0.08} transparent opacity={0.2} roughness={1} />
     </mesh>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════
-   $MAD MASCOT CHARACTER
+   $MAD MASCOT — Rebuilt with proper proportions
+   Reference: round red head, thick angry brows, defined body
    ═══════════════════════════════════════════════════════════ */
 
 function CharacterHead({ excited }: { excited: boolean }) {
   const headRef = useRef<THREE.Group>(null);
-  const browLeftRef = useRef<THREE.Mesh>(null);
-  const browRightRef = useRef<THREE.Mesh>(null);
+  const browLeftRef = useRef<THREE.Group>(null);
+  const browRightRef = useRef<THREE.Group>(null);
+  const mouthRef = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
     if (headRef.current) {
-      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, MOUSE.x * 0.5, 0.08);
-      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, -MOUSE.y * 0.3, 0.08);
+      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, MOUSE.x * 0.4, 0.08);
+      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, -MOUSE.y * 0.25, 0.08);
     }
     if (excited) {
-      const bounce = Math.sin(Date.now() / 100) * 0.05;
-      if (browLeftRef.current) browLeftRef.current.position.y = 0.18 + bounce;
-      if (browRightRef.current) browRightRef.current.position.y = 0.18 + bounce;
+      const t = Date.now() / 80;
+      if (browLeftRef.current) browLeftRef.current.position.y = 0.22 + Math.sin(t) * 0.04;
+      if (browRightRef.current) browRightRef.current.position.y = 0.22 + Math.sin(t) * 0.04;
     }
   });
 
   return (
-    <group ref={headRef} position={[0, 0.75, 0]}>
-      <mesh>
-        <sphereGeometry args={[0.38, 24, 24]} />
-        <meshStandardMaterial color="#cc0000" roughness={0.3} metalness={0.1} />
+    <group ref={headRef} position={[0, 0.82, 0]}>
+      {/* Main head — wider sphere for cheek fullness */}
+      <mesh scale={[1.05, 0.95, 1]}>
+        <sphereGeometry args={[0.42, 32, 32]} />
+        <meshStandardMaterial color="#e60000" roughness={0.25} metalness={0.05} />
       </mesh>
-      <mesh position={[0.1, 0.15, 0.25]} scale={0.15}>
+
+      {/* Subtle cheek highlights */}
+      <mesh position={[0.2, -0.05, 0.32]} scale={0.12}>
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshStandardMaterial color="#ff3333" transparent opacity={0.2} roughness={0.1} />
+      </mesh>
+      <mesh position={[-0.2, -0.05, 0.32]} scale={0.12}>
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshStandardMaterial color="#ff3333" transparent opacity={0.2} roughness={0.1} />
+      </mesh>
+
+      {/* Eye sockets — slight indent shadows */}
+      <mesh position={[-0.13, 0.06, 0.36]} scale={[0.14, 0.1, 0.03]}>
         <sphereGeometry args={[1, 12, 12]} />
-        <meshStandardMaterial color="#ff3333" transparent opacity={0.3} roughness={0.1} />
+        <meshStandardMaterial color="#cc0000" roughness={0.5} />
       </mesh>
-      {/* Eyes */}
-      <mesh position={[-0.12, 0.05, 0.28]} scale={[0.1, 0.12, 0.06]}>
+      <mesh position={[0.13, 0.06, 0.36]} scale={[0.14, 0.1, 0.03]}>
         <sphereGeometry args={[1, 12, 12]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.2} />
+        <meshStandardMaterial color="#cc0000" roughness={0.5} />
       </mesh>
-      <mesh position={[0.12, 0.05, 0.28]} scale={[0.1, 0.12, 0.06]}>
+
+      {/* Eyes — almond shaped, angry */}
+      <mesh position={[-0.13, 0.06, 0.38]} scale={[0.09, 0.065, 0.04]} rotation={[0, 0, -0.1]}>
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.15} />
+      </mesh>
+      <mesh position={[0.13, 0.06, 0.38]} scale={[0.09, 0.065, 0.04]} rotation={[0, 0, 0.1]}>
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.15} />
+      </mesh>
+
+      {/* Pupils — slightly off-center for angry look */}
+      <mesh position={[-0.11, 0.05, 0.41]} scale={[0.035, 0.04, 0.025]}>
         <sphereGeometry args={[1, 12, 12]} />
-        <meshStandardMaterial color="#ffffff" roughness={0.2} />
+        <meshStandardMaterial color="#111111" roughness={0.1} />
       </mesh>
-      <mesh position={[-0.1, 0.05, 0.33]} scale={[0.045, 0.055, 0.03]}>
+      <mesh position={[0.11, 0.05, 0.41]} scale={[0.035, 0.04, 0.025]}>
+        <sphereGeometry args={[1, 12, 12]} />
+        <meshStandardMaterial color="#111111" roughness={0.1} />
+      </mesh>
+
+      {/* Eye glints */}
+      <mesh position={[-0.09, 0.07, 0.42]} scale={0.015}>
         <sphereGeometry args={[1, 8, 8]} />
-        <meshStandardMaterial color="#000000" roughness={0.1} />
+        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1} />
       </mesh>
-      <mesh position={[0.1, 0.05, 0.33]} scale={[0.045, 0.055, 0.03]}>
+      <mesh position={[0.15, 0.07, 0.42]} scale={0.015}>
         <sphereGeometry args={[1, 8, 8]} />
-        <meshStandardMaterial color="#000000" roughness={0.1} />
+        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1} />
       </mesh>
-      {/* Angry eyebrows */}
-      <mesh ref={browLeftRef} position={[-0.14, 0.18, 0.28]} rotation={[0, 0, 0.35]} scale={[0.12, 0.04, 0.06]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#111111" roughness={0.5} />
-      </mesh>
-      <mesh ref={browRightRef} position={[0.14, 0.18, 0.28]} rotation={[0, 0, -0.35]} scale={[0.12, 0.04, 0.06]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#111111" roughness={0.5} />
-      </mesh>
-      {/* Frown */}
-      <mesh position={[0, -0.08, 0.3]} rotation={[0.1, 0, 0]} scale={[0.1, 0.025, 0.04]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#330000" roughness={0.5} />
-      </mesh>
-      {/* Nose */}
-      <mesh position={[0, 0, 0.35]} scale={[0.04, 0.03, 0.04]}>
-        <sphereGeometry args={[1, 8, 8]} />
-        <meshStandardMaterial color="#aa0000" roughness={0.4} />
-      </mesh>
-      {/* Ears */}
-      <mesh position={[-0.32, 0.1, 0]} scale={[0.08, 0.1, 0.06]}>
+
+      {/* Angry eyebrows — thick, tilted down at inner edge */}
+      <group ref={browLeftRef} position={[-0.14, 0.22, 0.35]}>
+        <mesh rotation={[0.1, 0, 0.5]} scale={[0.14, 0.055, 0.07]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="#1a1a1a" roughness={0.4} />
+        </mesh>
+        {/* Brow shadow underneath */}
+        <mesh position={[0, -0.03, 0.01]} rotation={[0.1, 0, 0.5]} scale={[0.13, 0.02, 0.06]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="#330000" roughness={0.5} />
+        </mesh>
+      </group>
+      <group ref={browRightRef} position={[0.14, 0.22, 0.35]}>
+        <mesh rotation={[0.1, 0, -0.5]} scale={[0.14, 0.055, 0.07]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="#1a1a1a" roughness={0.4} />
+        </mesh>
+        <mesh position={[0, -0.03, 0.01]} rotation={[0.1, 0, -0.5]} scale={[0.13, 0.02, 0.06]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="#330000" roughness={0.5} />
+        </mesh>
+      </group>
+
+      {/* Frown — curved downward arc */}
+      <group ref={mouthRef} position={[0, -0.12, 0.38]}>
+        <mesh rotation={[0.2, 0, 0]} scale={[0.08, 0.025, 0.04]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="#4a0000" roughness={0.5} />
+        </mesh>
+        {/* Chin crease */}
+        <mesh position={[0, -0.03, 0.02]} scale={[0.06, 0.015, 0.02]}>
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial color="#330000" roughness={0.6} />
+        </mesh>
+      </group>
+
+      {/* Nose — subtle */}
+      <mesh position={[0, -0.02, 0.4]} scale={[0.04, 0.03, 0.035]}>
         <sphereGeometry args={[1, 8, 8]} />
         <meshStandardMaterial color="#cc0000" roughness={0.3} />
       </mesh>
-      <mesh position={[0.32, 0.1, 0]} scale={[0.08, 0.1, 0.06]}>
-        <sphereGeometry args={[1, 8, 8]} />
-        <meshStandardMaterial color="#cc0000" roughness={0.3} />
+
+      {/* Ears — small round bumps */}
+      <mesh position={[-0.38, 0.05, 0]} scale={[0.08, 0.1, 0.07]}>
+        <sphereGeometry args={[1, 12, 12]} />
+        <meshStandardMaterial color="#d40000" roughness={0.3} />
+      </mesh>
+      <mesh position={[0.38, 0.05, 0]} scale={[0.08, 0.1, 0.07]}>
+        <sphereGeometry args={[1, 12, 12]} />
+        <meshStandardMaterial color="#d40000" roughness={0.3} />
       </mesh>
     </group>
   );
@@ -396,18 +229,26 @@ function CharacterHead({ excited }: { excited: boolean }) {
 
 function CharacterBody({ isSitting }: { isSitting: boolean }) {
   return (
-    <group position={[0, isSitting ? 0.15 : 0.35, 0]}>
-      <mesh scale={[0.28, 0.35, 0.25]}>
+    <group position={[0, isSitting ? 0.2 : 0.4, 0]}>
+      {/* Torso — wider at shoulders, narrower at waist */}
+      <mesh scale={[0.38, 0.42, 0.28]}>
+        <sphereGeometry args={[1, 20, 20]} />
+        <meshStandardMaterial color="#cc0000" roughness={0.3} metalness={0.05} />
+      </mesh>
+      {/* Chest plate highlight */}
+      <mesh position={[0, 0.05, 0.2]} scale={[0.2, 0.15, 0.08]}>
         <sphereGeometry args={[1, 16, 16]} />
-        <meshStandardMaterial color="#b30000" roughness={0.4} metalness={0.05} />
+        <meshStandardMaterial color="#e60000" transparent opacity={0.4} roughness={0.2} />
       </mesh>
-      <mesh position={[0, -0.05, 0.18]} scale={[0.15, 0.2, 0.08]}>
-        <sphereGeometry args={[1, 12, 12]} />
-        <meshStandardMaterial color="#cc2222" transparent opacity={0.5} roughness={0.3} />
-      </mesh>
-      <mesh position={[0, 0.05, 0.22]} scale={[0.08, 0.06, 0.02]} rotation={[0, 0, 0.1]}>
+      {/* $MAD emblem on chest */}
+      <mesh position={[0, 0.08, 0.25]} scale={[0.06, 0.04, 0.015]} rotation={[0, 0, 0.1]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#ffcc00" emissive="#ffaa00" emissiveIntensity={0.3} roughness={0.3} />
+        <meshStandardMaterial color="#ffcc00" emissive="#ffaa00" emissiveIntensity={0.5} roughness={0.3} metalness={0.3} />
+      </mesh>
+      {/* Waist belt */}
+      <mesh position={[0, -0.15, 0]} scale={[0.32, 0.06, 0.26]}>
+        <cylinderGeometry args={[1, 1, 1, 16]} />
+        <meshStandardMaterial color="#2a2a2a" roughness={0.6} metalness={0.2} />
       </mesh>
     </group>
   );
@@ -421,60 +262,72 @@ function CharacterLegs({ time, isWalking, isSitting }: { time: number; isWalking
 
   useFrame(() => {
     if (isSitting) {
-      if (leftThigh.current) { leftThigh.current.rotation.x = -1.0; leftThigh.current.position.y = 0.1; }
-      if (rightThigh.current) { rightThigh.current.rotation.x = -1.0; rightThigh.current.position.y = 0.1; }
-      if (leftShin.current) { leftShin.current.rotation.x = 1.2; leftShin.current.position.z = 0.1; }
-      if (rightShin.current) { rightShin.current.rotation.x = 1.2; rightShin.current.position.z = 0.1; }
+      if (leftThigh.current) { leftThigh.current.rotation.x = -0.9; leftThigh.current.position.y = 0.08; }
+      if (rightThigh.current) { rightThigh.current.rotation.x = -0.9; rightThigh.current.position.y = 0.08; }
+      if (leftShin.current) { leftShin.current.rotation.x = 1.1; leftShin.current.position.z = 0.08; }
+      if (rightShin.current) { rightShin.current.rotation.x = 1.1; rightShin.current.position.z = 0.08; }
       return;
     }
     if (!isWalking) {
       if (leftThigh.current) { leftThigh.current.rotation.x = 0; leftThigh.current.position.y = 0; }
       if (rightThigh.current) { rightThigh.current.rotation.x = 0; rightThigh.current.position.y = 0; }
-      if (leftShin.current) { leftShin.current.rotation.x = 0.05; leftShin.current.position.z = 0; }
-      if (rightShin.current) { rightShin.current.rotation.x = 0.05; rightShin.current.position.z = 0; }
+      if (leftShin.current) { leftShin.current.rotation.x = 0.03; leftShin.current.position.z = 0; }
+      if (rightShin.current) { rightShin.current.rotation.x = 0.03; rightShin.current.position.z = 0; }
       return;
     }
     const walkSpeed = 5;
-    const stride = 0.35;
+    const stride = 0.3;
     const lPhase = Math.sin(time * walkSpeed);
     if (leftThigh.current) leftThigh.current.rotation.x = lPhase * stride;
-    if (leftShin.current) leftShin.current.rotation.x = Math.max(0, -lPhase * stride * 0.7) + 0.05;
+    if (leftShin.current) leftShin.current.rotation.x = Math.max(0, -lPhase * stride * 0.6) + 0.03;
     const rPhase = Math.sin(time * walkSpeed + Math.PI);
     if (rightThigh.current) rightThigh.current.rotation.x = rPhase * stride;
-    if (rightShin.current) rightShin.current.rotation.x = Math.max(0, -rPhase * stride * 0.7) + 0.05;
+    if (rightShin.current) rightShin.current.rotation.x = Math.max(0, -rPhase * stride * 0.6) + 0.03;
   });
 
   return (
     <group>
-      <group ref={leftThigh} position={[-0.18, 0.15, 0]}>
-        <mesh position={[0, -0.12, 0]} scale={[0.1, 0.22, 0.1]}>
+      {/* Left leg */}
+      <group ref={leftThigh} position={[-0.15, 0.12, 0]}>
+        <mesh position={[0, -0.1, 0]} scale={[0.1, 0.2, 0.1]}>
           <capsuleGeometry args={[1, 1, 4, 8]} />
-          <meshStandardMaterial color="#cc0000" roughness={0.5} />
+          <meshStandardMaterial color="#cc0000" roughness={0.4} />
         </mesh>
-        <group ref={leftShin} position={[0, -0.25, 0]}>
-          <mesh position={[0, -0.1, 0]} scale={[0.09, 0.18, 0.09]}>
+        <group ref={leftShin} position={[0, -0.22, 0]}>
+          <mesh position={[0, -0.09, 0]} scale={[0.09, 0.17, 0.09]}>
             <capsuleGeometry args={[1, 1, 4, 8]} />
-            <meshStandardMaterial color="#cc0000" roughness={0.5} />
+            <meshStandardMaterial color="#b30000" roughness={0.4} />
           </mesh>
-          <mesh position={[0, -0.22, 0.02]} scale={[0.12, 0.08, 0.14]}>
-            <sphereGeometry args={[1, 8, 8]} />
-            <meshStandardMaterial color="#1a1a1a" roughness={0.6} />
+          {/* Boot */}
+          <mesh position={[0, -0.2, 0.02]} scale={[0.12, 0.07, 0.14]}>
+            <sphereGeometry args={[1, 10, 10]} />
+            <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.3} />
+          </mesh>
+          {/* Boot sole */}
+          <mesh position={[0, -0.24, 0.02]} scale={[0.13, 0.03, 0.15]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#0a0a0a" roughness={0.7} />
           </mesh>
         </group>
       </group>
-      <group ref={rightThigh} position={[0.18, 0.15, 0]}>
-        <mesh position={[0, -0.12, 0]} scale={[0.1, 0.22, 0.1]}>
+      {/* Right leg */}
+      <group ref={rightThigh} position={[0.15, 0.12, 0]}>
+        <mesh position={[0, -0.1, 0]} scale={[0.1, 0.2, 0.1]}>
           <capsuleGeometry args={[1, 1, 4, 8]} />
-          <meshStandardMaterial color="#cc0000" roughness={0.5} />
+          <meshStandardMaterial color="#cc0000" roughness={0.4} />
         </mesh>
-        <group ref={rightShin} position={[0, -0.25, 0]}>
-          <mesh position={[0, -0.1, 0]} scale={[0.09, 0.18, 0.09]}>
+        <group ref={rightShin} position={[0, -0.22, 0]}>
+          <mesh position={[0, -0.09, 0]} scale={[0.09, 0.17, 0.09]}>
             <capsuleGeometry args={[1, 1, 4, 8]} />
-            <meshStandardMaterial color="#cc0000" roughness={0.5} />
+            <meshStandardMaterial color="#b30000" roughness={0.4} />
           </mesh>
-          <mesh position={[0, -0.22, 0.02]} scale={[0.12, 0.08, 0.14]}>
-            <sphereGeometry args={[1, 8, 8]} />
-            <meshStandardMaterial color="#1a1a1a" roughness={0.6} />
+          <mesh position={[0, -0.2, 0.02]} scale={[0.12, 0.07, 0.14]}>
+            <sphereGeometry args={[1, 10, 10]} />
+            <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.3} />
+          </mesh>
+          <mesh position={[0, -0.24, 0.02]} scale={[0.13, 0.03, 0.15]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#0a0a0a" roughness={0.7} />
           </mesh>
         </group>
       </group>
@@ -488,40 +341,52 @@ function CharacterArms({ time, isSitting, excited }: { time: number; isSitting: 
 
   useFrame(() => {
     if (isSitting) {
-      if (leftArm.current) { leftArm.current.rotation.z = 0.4; leftArm.current.position.y = 0.05; }
-      if (rightArm.current) { rightArm.current.rotation.z = -0.4; rightArm.current.position.y = 0.05; }
+      if (leftArm.current) { leftArm.current.rotation.z = 0.35; leftArm.current.position.y = 0.04; }
+      if (rightArm.current) { rightArm.current.rotation.z = -0.35; rightArm.current.position.y = 0.04; }
       return;
     }
     if (excited) {
-      if (leftArm.current) { leftArm.current.rotation.z = 2.5 + Math.sin(time * 15) * 0.3; leftArm.current.position.y = 0; }
-      if (rightArm.current) { rightArm.current.rotation.z = -2.5 - Math.sin(time * 15) * 0.3; rightArm.current.position.y = 0; }
+      if (leftArm.current) { leftArm.current.rotation.z = 2.3 + Math.sin(time * 15) * 0.25; leftArm.current.position.y = 0; }
+      if (rightArm.current) { rightArm.current.rotation.z = -2.3 - Math.sin(time * 15) * 0.25; rightArm.current.position.y = 0; }
       return;
     }
-    const swing = Math.sin(time * 2) * 0.08;
-    if (leftArm.current) { leftArm.current.rotation.x = swing; leftArm.current.rotation.z = 0.15; leftArm.current.position.y = 0; }
-    if (rightArm.current) { rightArm.current.rotation.x = -swing; rightArm.current.rotation.z = -0.15; rightArm.current.position.y = 0; }
+    const swing = Math.sin(time * 2) * 0.06;
+    if (leftArm.current) { leftArm.current.rotation.x = swing; leftArm.current.rotation.z = 0.12; leftArm.current.position.y = 0; }
+    if (rightArm.current) { rightArm.current.rotation.x = -swing; rightArm.current.rotation.z = -0.12; rightArm.current.position.y = 0; }
   });
 
   return (
     <group>
-      <group ref={leftArm} position={[-0.32, 0.4, 0]}>
-        <mesh position={[0, -0.12, 0]} scale={[0.09, 0.2, 0.09]}>
+      {/* Left arm */}
+      <group ref={leftArm} position={[-0.32, 0.42, 0]}>
+        <mesh position={[0, -0.1, 0]} scale={[0.08, 0.18, 0.08]}>
           <capsuleGeometry args={[1, 1, 4, 8]} />
-          <meshStandardMaterial color="#cc0000" roughness={0.5} />
+          <meshStandardMaterial color="#cc0000" roughness={0.4} />
         </mesh>
-        <mesh position={[0, -0.25, 0]} scale={[0.11, 0.09, 0.11]}>
-          <sphereGeometry args={[1, 8, 8]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.5} />
+        {/* Forearm */}
+        <mesh position={[0, -0.22, 0.02]} scale={[0.07, 0.14, 0.07]}>
+          <capsuleGeometry args={[1, 1, 4, 8]} />
+          <meshStandardMaterial color="#b30000" roughness={0.4} />
+        </mesh>
+        {/* Glove */}
+        <mesh position={[0, -0.32, 0.02]} scale={[0.1, 0.08, 0.1]}>
+          <sphereGeometry args={[1, 10, 10]} />
+          <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.2} />
         </mesh>
       </group>
-      <group ref={rightArm} position={[0.32, 0.4, 0]}>
-        <mesh position={[0, -0.12, 0]} scale={[0.09, 0.2, 0.09]}>
+      {/* Right arm */}
+      <group ref={rightArm} position={[0.32, 0.42, 0]}>
+        <mesh position={[0, -0.1, 0]} scale={[0.08, 0.18, 0.08]}>
           <capsuleGeometry args={[1, 1, 4, 8]} />
-          <meshStandardMaterial color="#cc0000" roughness={0.5} />
+          <meshStandardMaterial color="#cc0000" roughness={0.4} />
         </mesh>
-        <mesh position={[0, -0.25, 0]} scale={[0.11, 0.09, 0.11]}>
-          <sphereGeometry args={[1, 8, 8]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.5} />
+        <mesh position={[0, -0.22, 0.02]} scale={[0.07, 0.14, 0.07]}>
+          <capsuleGeometry args={[1, 1, 4, 8]} />
+          <meshStandardMaterial color="#b30000" roughness={0.4} />
+        </mesh>
+        <mesh position={[0, -0.32, 0.02]} scale={[0.1, 0.08, 0.1]}>
+          <sphereGeometry args={[1, 10, 10]} />
+          <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.2} />
         </mesh>
       </group>
     </group>
@@ -530,20 +395,22 @@ function CharacterArms({ time, isSitting, excited }: { time: number; isSitting: 
 
 function CharacterBackpack() {
   return (
-    <group position={[0, 0.4, -0.22]}>
-      <mesh scale={[0.22, 0.18, 0.1]}>
+    <group position={[0, 0.42, -0.25]}>
+      <mesh scale={[0.24, 0.2, 0.12]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="#2a2a2a" roughness={0.6} metalness={0.2} />
       </mesh>
-      <mesh position={[-0.1, 0, 0.06]} scale={[0.04, 0.2, 0.02]}>
+      {/* Straps */}
+      <mesh position={[-0.08, 0, 0.07]} scale={[0.03, 0.22, 0.015]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="#1a1a1a" roughness={0.7} />
       </mesh>
-      <mesh position={[0.1, 0, 0.06]} scale={[0.04, 0.2, 0.02]}>
+      <mesh position={[0.08, 0, 0.07]} scale={[0.03, 0.22, 0.015]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="#1a1a1a" roughness={0.7} />
       </mesh>
-      <mesh position={[0, 0.05, -0.06]} scale={[0.08, 0.06, 0.02]}>
+      {/* Red detail */}
+      <mesh position={[0, 0.06, -0.07]} scale={[0.07, 0.05, 0.015]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={0.5} />
       </mesh>
@@ -551,30 +418,8 @@ function CharacterBackpack() {
   );
 }
 
-/* ─── Footstep sparks (red instead of dust) ─── */
-function FootstepSpark({ position }: { position: [number, number, number] }) {
-  const ref = useRef<THREE.Mesh>(null);
-  const [life] = useState(() => ({ t: 0 }));
-
-  useFrame((_, delta) => {
-    if (!ref.current) return;
-    life.t += delta;
-    const progress = Math.min(life.t / 0.6, 1);
-    ref.current.position.y = position[1] + progress * 0.4;
-    ref.current.scale.setScalar(0.04 + progress * 0.1);
-    (ref.current.material as THREE.MeshStandardMaterial).opacity = 1 - progress;
-  });
-
-  return (
-    <mesh ref={ref} position={position} scale={0.04}>
-      <octahedronGeometry args={[1, 0]} />
-      <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={2} transparent opacity={0.9} />
-    </mesh>
-  );
-}
-
 /* ═══════════════════════════════════════════════════════════
-   THE WALKING CLAW — Full state machine
+   THE WALKING CLAW
    ═══════════════════════════════════════════════════════════ */
 
 export const CLAW_STATE = {
@@ -623,7 +468,7 @@ function WalkingClaw({ positionRef }: { positionRef: React.MutableRefObject<THRE
     positionRef.current.copy(claw.position);
 
     if (s.excitedTimer > 0) {
-      claw.position.y = 0.2 + Math.sin(state.clock.elapsedTime * 15) * 0.2;
+      claw.position.y = 0.2 + Math.sin(state.clock.elapsedTime * 15) * 0.15;
       s.isWalking = false;
       s.isSitting = false;
       s.idleTimer = 0;
@@ -651,8 +496,8 @@ function WalkingClaw({ positionRef }: { positionRef: React.MutableRefObject<THRE
         const stepPhase = Math.sin(timeRef.current * 5);
         if (stepPhase * lastStepPhase.current < 0) {
           const isLeft = stepPhase > 0;
-          const footX = claw.position.x + (isLeft ? -0.18 : 0.18) * Math.cos(claw.rotation.y);
-          const footZ = claw.position.z + (isLeft ? -0.18 : 0.18) * Math.sin(claw.rotation.y);
+          const footX = claw.position.x + (isLeft ? -0.15 : 0.15) * Math.cos(claw.rotation.y);
+          const footZ = claw.position.z + (isLeft ? -0.15 : 0.15) * Math.sin(claw.rotation.y);
           const id = ++sparkId.current;
           setSparks(prev => [...prev.slice(-10), { id, pos: [footX, 0.05, footZ] }]);
           setTimeout(() => {
@@ -698,6 +543,50 @@ function WalkingClaw({ positionRef }: { positionRef: React.MutableRefObject<THRE
   );
 }
 
+function FootstepSpark({ position }: { position: [number, number, number] }) {
+  const ref = useRef<THREE.Mesh>(null);
+  const [life] = useState(() => ({ t: 0 }));
+
+  useFrame((_, delta) => {
+    if (!ref.current) return;
+    life.t += delta;
+    const progress = Math.min(life.t / 0.6, 1);
+    ref.current.position.y = position[1] + progress * 0.4;
+    ref.current.scale.setScalar(0.03 + progress * 0.08);
+    (ref.current.material as THREE.MeshStandardMaterial).opacity = 1 - progress;
+  });
+
+  return (
+    <mesh ref={ref} position={position} scale={0.03}>
+      <octahedronGeometry args={[1, 0]} />
+      <meshStandardMaterial color="#ff3333" emissive="#ff0000" emissiveIntensity={2} transparent opacity={0.9} />
+    </mesh>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHTING — 3-point setup for clean character definition
+   ═══════════════════════════════════════════════════════════ */
+function Lighting() {
+  return (
+    <group>
+      {/* Key light — warm white, front-left */}
+      <directionalLight position={[3, 4, 5]} intensity={1.2} color="#fff0e8" castShadow />
+      {/* Fill light — cool blue, right, dim */}
+      <directionalLight position={[-3, 2, 2]} intensity={0.3} color="#d0d8ff" />
+      {/* Rim light — red, from behind */}
+      <pointLight position={[0, 2, -4]} intensity={1.5} color="#ff4444" distance={10} />
+      {/* Top highlight */}
+      <pointLight position={[0, 5, 0]} intensity={0.6} color="#ffffff" distance={8} />
+      {/* Under glow — subtle red bounce */}
+      <pointLight position={[0, -2, 0]} intensity={0.4} color="#ff0000" distance={6} />
+      {/* Ambient — very dark, just enough to not be pitch black */}
+      <ambientLight intensity={0.15} color="#221111" />
+      <hemisphereLight args={["#ff2222", "#050000", 0.2]} />
+    </group>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════
    MAIN SCENE
    ═══════════════════════════════════════════════════════════ */
@@ -711,15 +600,8 @@ function Scene() {
 
   return (
     <group>
-      <ambientLight intensity={0.2} color="#331111" />
-      <directionalLight position={[3, 5, 4]} intensity={0.8} color="#ffcccc" />
-      <pointLight position={[-2, 3, -2]} intensity={1.2} color="#ff0000" />
-      <pointLight position={[2, 2, 2]} intensity={0.6} color="#ff4444" />
-      <pointLight position={[0, -2, 0]} intensity={0.4} color="#ff0000" />
-      <hemisphereLight args={["#ff2222", "#0a0000", 0.3]} />
-
+      <Lighting />
       <VoidWorld clawPosition={clawPosition} />
-
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.2}>
         <WalkingClaw positionRef={clawPosition} />
       </Float>
@@ -755,20 +637,20 @@ export default function MadChao3D() {
       onPointerMove={handlePointerMove}
     >
       <Canvas
-        camera={{ position: [0, 2, 7], fov: 45 }}
-        style={{ background: "#050505" }}
+        camera={{ position: [0, 1.5, 5.5], fov: 40 }}
+        style={{ background: "#080808" }}
         gl={{ antialias: true, alpha: true }}
       >
         <Scene />
         <OrbitControls
           enableZoom={true}
           enablePan={false}
-          maxPolarAngle={Math.PI / 2.1}
-          minPolarAngle={Math.PI / 8}
+          maxPolarAngle={Math.PI / 2.2}
+          minPolarAngle={Math.PI / 10}
           autoRotate
           autoRotateSpeed={0.3}
           minDistance={3}
-          maxDistance={12}
+          maxDistance={10}
         />
       </Canvas>
     </div>
