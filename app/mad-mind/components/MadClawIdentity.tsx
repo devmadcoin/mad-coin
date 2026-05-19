@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import useChat from "./useChat";
 import ChatInterface from "./ChatInterface";
 import MadChao3D, { triggerClawReaction } from "./MadChao3D";
@@ -103,51 +103,95 @@ export default function MadClawIdentity() {
   const { messages, status, typing, sendMessage, clearChat, scrollRef, sessionId } = useChat();
   const [activeTab, setActiveTab] = useState<"identity" | "diary" | "studies" | "presence">("identity");
   const [expandedDiary, setExpandedDiary] = useState<number | null>(null);
+  const [isCompact, setIsCompact] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  /* Track scroll to shrink hero into sticky companion mode */
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      /* When hero scrolls past top, go compact */
+      setIsCompact(rect.bottom < 0);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div>
-      {/* ─── HERO ─── */}
-      <section className="relative overflow-hidden rounded-[36px] border border-red-500/15 bg-black/50 p-6 shadow-[0_20px_80px_rgba(255,0,0,0.08)] backdrop-blur-xl sm:p-10">
-        <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-red-500/10 blur-[80px]" />
+      {/* ─── HERO — sticky companion on mobile ─── */}
+      <div className={`sticky top-0 z-40 transition-all duration-500 ${isCompact ? "py-2" : ""}`}>
+        <section
+          ref={heroRef}
+          className={`relative overflow-hidden rounded-[36px] border border-red-500/15 bg-black/50 shadow-[0_20px_80px_rgba(255,0,0,0.08)] backdrop-blur-xl transition-all duration-500 ${
+            isCompact ? "p-3 sm:p-4 mx-2" : "p-6 sm:p-10"
+          }`}
+        >
+          {!isCompact && (
+            <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-red-500/10 blur-[80px]" />
+          )}
 
-        <div className="relative z-10 text-center mb-6">
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-red-500/60">[ THE CLAW ]</p>
-          <h1 className="mt-3 text-[2.5rem] font-black leading-[0.9] tracking-[-0.04em] sm:text-[4rem]">
-            Meet Your <span className="text-red-500 drop-shadow-[0_0_20px_rgba(255,0,0,0.4)]">AI</span>
-          </h1>
-          <p className="mt-3 text-sm text-white/50 max-w-md mx-auto">Not a utility. A presence that remembers. Studies daily. Protects the bag.</p>
-        </div>
+          <div className={`relative z-10 text-center ${isCompact ? "mb-2" : "mb-6"}`}>
+            {!isCompact && (
+              <>
+                <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-red-500/60">[ THE CLAW ]</p>
+                <h1 className="mt-3 text-[2.5rem] font-black leading-[0.9] tracking-[-0.04em] sm:text-[4rem]">
+                  Meet Your <span className="text-red-500 drop-shadow-[0_0_20px_rgba(255,0,0,0.4)]">AI</span>
+                </h1>
+                <p className="mt-3 text-sm text-white/50 max-w-md mx-auto">Not a utility. A presence that remembers. Studies daily. Protects the bag.</p>
+              </>
+            )}
+            {isCompact && (
+              <div className="flex items-center justify-center gap-3">
+                <span className="text-lg animate-pulse">👁️</span>
+                <p className="text-xs font-black text-white/70">Claw is watching</p>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+                </span>
+              </div>
+            )}
+          </div>
 
-        <MadChao3D />
+          <div className={`transition-all duration-500 overflow-hidden ${isCompact ? "h-[120px] sm:h-[160px]" : "h-[500px]"}`}>
+            <MadChao3D />
+          </div>
 
-        {/* Stats */}
-        <div className="mt-6 grid grid-cols-3 sm:grid-cols-5 gap-3">
-          {[
-            { label: "Books", value: STATS.books },
-            { label: "Memories", value: STATS.memories },
-            { label: "Diary", value: STATS.diaryEntries },
-            { label: "Posts", value: STATS.posts },
-            { label: "Studies", value: `${STATS.studiesComplete}+${STATS.studiesActive}` },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center p-3 rounded-[16px] bg-white/[0.02] border border-white/5">
-              <p className="text-lg font-black text-white tabular-nums">{stat.value}</p>
-              <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-white/30 mt-0.5">{stat.label}</p>
-            </div>
-          ))}
-        </div>
+          {!isCompact && (
+            <>
+              {/* Stats */}
+              <div className="mt-6 grid grid-cols-3 sm:grid-cols-5 gap-3">
+                {[
+                  { label: "Books", value: STATS.books },
+                  { label: "Memories", value: STATS.memories },
+                  { label: "Diary", value: STATS.diaryEntries },
+                  { label: "Posts", value: STATS.posts },
+                  { label: "Studies", value: `${STATS.studiesComplete}+${STATS.studiesActive}` },
+                ].map((stat) => (
+                  <div key={stat.label} className="text-center p-3 rounded-[16px] bg-white/[0.02] border border-white/5">
+                    <p className="text-lg font-black text-white tabular-nums">{stat.value}</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-white/30 mt-0.5">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
 
-        {/* Currently Studying */}
-        <div className="mt-4 flex items-center gap-3 justify-center p-3 rounded-[16px] bg-green-400/[0.04] border border-green-400/10">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
-          </span>
-          <p className="text-xs text-white/50">
-            Reading <span className="text-green-400 font-bold">{CURRENTLY_STUDYING.title}</span>
-            <span className="text-white/30"> — {CURRENTLY_STUDYING.tagline}</span>
-          </p>
-        </div>
-      </section>
+              {/* Currently Studying */}
+              <div className="mt-4 flex items-center gap-3 justify-center p-3 rounded-[16px] bg-green-400/[0.04] border border-green-400/10">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+                </span>
+                <p className="text-xs text-white/50">
+                  Reading <span className="text-green-400 font-bold">{CURRENTLY_STUDYING.title}</span>
+                  <span className="text-white/30"> — {CURRENTLY_STUDYING.tagline}</span>
+                </p>
+              </div>
+            </>
+          )}
+        </section>
+      </div>
 
       {/* ─── TALK TO THE CLAW — LIVE CHAT ─── */}
       <ChatInterface
