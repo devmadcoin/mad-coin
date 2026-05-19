@@ -100,7 +100,7 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 }
 
 export default function MadClawIdentity() {
-  const { messages, status, typing, sendMessage, clearChat, scrollRef } = useChat();
+  const { messages, status, typing, sendMessage, clearChat, scrollRef, sessionId } = useChat();
   const [activeTab, setActiveTab] = useState<"identity" | "diary" | "studies" | "presence">("identity");
   const [expandedDiary, setExpandedDiary] = useState<number | null>(null);
 
@@ -157,6 +157,7 @@ export default function MadClawIdentity() {
         sendMessage={sendMessage}
         clearChat={clearChat}
         scrollRef={scrollRef}
+        sessionId={sessionId}
       />
 
       {/* ─── VOICE SAMPLES — PROOF OF PERSONALITY ─── */}

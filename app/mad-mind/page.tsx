@@ -37,11 +37,11 @@ function FloatingParticles() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MAD MIND — Meet Your AI
-   The one place to talk to the Claw.
+   MAD MIND — Chat with the Claw
+   ChatGPT-like real-time conversation with session memory
    
-   LIVE CHAT v2 — Real-time conversation with session memory
-   Deployed: 2026-05-19
+   LIVE CHAT v3 — Full-screen chat experience
+   Deployed: 2026-05-20
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadMindPage() {
@@ -51,8 +51,8 @@ export default function MadMindPage() {
       <FloatingParticles />
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.12),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(255,40,0,0.05),transparent_30%),linear-gradient(180deg,#070707,#020202)]" />
 
-      <main className="mx-auto max-w-3xl px-4 pb-24 pt-6 sm:px-6">
-        <div className="h-12" />
+      <main className="mx-auto max-w-5xl px-4 pb-8 pt-6 sm:px-6">
+        <div className="h-6" />
         <MadClawIdentity />
       </main>
     </div>

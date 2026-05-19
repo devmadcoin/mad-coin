@@ -4,6 +4,7 @@ interface ChatMessage {
   role: "user" | "claw";
   text: string;
   timestamp: number;
+  id?: string;
 }
 
 export default function useChat() {
@@ -27,7 +28,10 @@ export default function useChat() {
       .then((r) => r.json())
       .then((data) => {
         if (data.messages?.length) {
-          setMessages(data.messages);
+          setMessages(data.messages.map((m: ChatMessage, i: number) => ({
+            ...m,
+            id: m.id || `${m.role}-${i}-${m.timestamp}`,
+          })));
         }
       })
       .catch(() => { /* ignore */ });
@@ -43,7 +47,12 @@ export default function useChat() {
   const sendMessage = async (text: string) => {
     if (!text.trim() || !sessionId) return;
 
-    const userMsg: ChatMessage = { role: "user", text: text.trim(), timestamp: Date.now() };
+    const userMsg: ChatMessage = { 
+      role: "user", 
+      text: text.trim(), 
+      timestamp: Date.now(),
+      id: `user-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    };
     setMessages((prev) => [...prev, userMsg]);
     setStatus("sending");
     setTyping(true);
@@ -57,7 +66,12 @@ export default function useChat() {
 
       const data = await res.json();
       if (data.reply) {
-        const clawMsg: ChatMessage = { role: "claw", text: data.reply, timestamp: Date.now() };
+        const clawMsg: ChatMessage = { 
+          role: "claw", 
+          text: data.reply, 
+          timestamp: Date.now(),
+          id: `claw-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        };
         setMessages((prev) => [...prev, clawMsg]);
         setStatus("idle");
       } else {
@@ -77,5 +91,5 @@ export default function useChat() {
     setMessages([]);
   };
 
-  return { messages, status, typing, sendMessage, clearChat, scrollRef };
+  return { messages, status, typing, sendMessage, clearChat, scrollRef, sessionId };
 }
