@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 /* ═══════════════════════════════════════════════════════════
    ANIMATION UTILITIES
@@ -47,6 +47,150 @@ function HoverLift({ children, className = "" }: { children: ReactNode; classNam
       onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; }}>
       {children}
     </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PARTICLES — Floating dust motes like the MAD Garden
+   ═══════════════════════════════════════════════════════════ */
+function FloatingDust() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+
+    const particles: Array<{ x: number; y: number; vx: number; vy: number; size: number; alpha: number; color: string }> = [];
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3 - 0.1,
+        size: Math.random() * 2 + 0.5,
+        alpha: Math.random() * 0.5 + 0.1,
+        color: ["#ff4444", "#ff6666", "#ffaaaa", "#ffffff"][Math.floor(Math.random() * 4)],
+      });
+    }
+
+    let animId: number;
+    const animate = () => {
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha * (0.7 + Math.sin(Date.now() / 1000 + p.x) * 0.3);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      animId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    const handleResize = () => {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: 1,
+        opacity: 0.6,
+      }}
+    />
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLL PROGRESS — Red line at top + mile indicator
+   ═══════════════════════════════════════════════════════════ */
+function ScrollProgress() {
+  const [progress, setProgress] = useState(0);
+  const [activeMile, setActiveMile] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setProgress(Math.min(pct, 100));
+
+      /* Determine active mile based on scroll position */
+      const mileEls = document.querySelectorAll("[data-mile]");
+      let current = 0;
+      mileEls.forEach((el, i) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.5) current = i;
+      });
+      setActiveMile(current);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <>
+      {/* Top progress bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-white/5">
+        <div
+          className="h-full bg-gradient-to-r from-red-600 via-red-500 to-orange-400 transition-all duration-150"
+          style={{ width: `${progress}%`, boxShadow: "0 0 10px rgba(255,68,68,0.5)" }}
+        />
+      </div>
+      {/* Side mile indicator */}
+      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-3">
+        {["0", "25", "50", "100"].map((mile, i) => (
+          <div key={mile} className="flex items-center gap-2">
+            <div
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${
+                i <= activeMile
+                  ? "bg-red-500 shadow-[0_0_8px_rgba(255,68,68,0.6)]"
+                  : "bg-white/20"
+              }`}
+            />
+            <span
+              className={`text-[9px] font-black uppercase tracking-wider transition-all duration-500 ${
+                i === activeMile ? "text-red-400 opacity-100" : "text-white/30 opacity-0"
+              }`}
+            >
+              Mile {mile}
+            </span>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -150,6 +294,19 @@ function Shell({ children, className = "" }: { children: ReactNode; className?: 
   );
 }
 
+/* ─── Shell wrapper that accepts ref for scroll tracking ─── */
+const ShellWithRef = React.forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
+  ({ children, className = "" }, ref) => (
+    <div ref={ref} className={cn(
+      "overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] shadow-[0_18px_60px_rgba(0,0,0,0.42)] backdrop-blur-xl",
+      className,
+    )}>
+      {children}
+    </div>
+  )
+);
+ShellWithRef.displayName = "ShellWithRef";
+
 /* ═══════════════════════════════════════════════════════════
    CHAOS METER — Live widget showing burn, conviction, Claw
    ═══════════════════════════════════════════════════════════ */
@@ -159,7 +316,6 @@ function ChaosMeter() {
   const [burnProgress, setBurnProgress] = useState(0);
 
   useEffect(() => {
-    // Animate burn progress from 0 to ~64% (513M/800M)
     const target = 62;
     const interval = setInterval(() => {
       setBurnProgress((prev) => {
@@ -171,7 +327,6 @@ function ChaosMeter() {
   }, []);
 
   useEffect(() => {
-    // Fire breathing animation
     const interval = setInterval(() => {
       const time = Date.now() / 1000;
       setFirePulse(0.85 + Math.sin(time * 2.5) * 0.15);
@@ -183,9 +338,9 @@ function ChaosMeter() {
     <Shell className="p-5 sm:p-6">
       <div className="grid gap-4 sm:grid-cols-3">
         {/* Burn Progress */}
-        <div className="relative rounded-2xl border border-red-500/20 bg-black/60 p-5 overflow-hidden">
+        <div className="relative rounded-2xl border border-red-500/20 bg-black/60 p-5 overflow-hidden group hover:border-red-500/40 transition-all">
           <div
-            className="absolute inset-0 opacity-20"
+            className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity"
             style={{
               background: `radial-gradient(circle at 50% 100%, rgba(255,68,68,${firePulse * 0.5}), transparent 70%)`,
             }}
@@ -193,7 +348,7 @@ function ChaosMeter() {
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-3">
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-red-300/80">Token Burn</p>
-              <span className="text-lg">🔥</span>
+              <span className="text-lg animate-pulse">🔥</span>
             </div>
             <div className="text-3xl font-black text-white mb-1">{burnProgress}%</div>
             <p className="text-xs text-white/40 mb-3">of 800M target consumed</p>
@@ -212,7 +367,7 @@ function ChaosMeter() {
         </div>
 
         {/* Community Conviction */}
-        <div className="relative rounded-2xl border border-emerald-500/20 bg-black/60 p-5 overflow-hidden">
+        <div className="relative rounded-2xl border border-emerald-500/20 bg-black/60 p-5 overflow-hidden group hover:border-emerald-500/40 transition-all">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-emerald-500 animate-ping" style={{ animationDuration: "3s" }} />
           </div>
@@ -241,7 +396,7 @@ function ChaosMeter() {
         </div>
 
         {/* Mad Claw Status */}
-        <div className="relative rounded-2xl border border-white/10 bg-black/60 p-5 overflow-hidden group cursor-pointer">
+        <div className="relative rounded-2xl border border-white/10 bg-black/60 p-5 overflow-hidden group cursor-pointer hover:border-red-500/30 transition-all">
           <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br from-red-500 to-transparent" />
           <a href={LINKS.madMind} className="relative z-10 block">
             <div className="flex items-center justify-between mb-3">
@@ -273,7 +428,7 @@ function ChaosMeter() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PROOF MODAL — Click milestones to see proof
+   PROOF MODAL
    ═══════════════════════════════════════════════════════════ */
 
 function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () => void; exit: typeof EXITS[0] | null }) {
@@ -301,7 +456,6 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
 
         <p className="text-sm text-white/50 mb-6">{exit.summary}</p>
 
-        {/* Proof links */}
         {exit.proof.length > 0 && (
           <div className="mb-6">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-3">Proof of Work</p>
@@ -335,7 +489,6 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
           </div>
         )}
 
-        {/* Items checklist */}
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-3">Milestone Checklist</p>
           <div className="space-y-2">
@@ -409,7 +562,7 @@ function ProgressStrip() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HIGHWAY — Now with tire marks, skid marks, crash debris
+   HIGHWAY — Scroll-activated with living car + particles
    ═══════════════════════════════════════════════════════════ */
 
 function RoadSign({ mile, title, color }: { mile: string; title: string; color: string }) {
@@ -485,9 +638,64 @@ function ExitCard({ exit, side, onClick }: { exit: typeof EXITS[0]; side: "left"
   );
 }
 
-function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void }) {
+/* ─── Animated traveling car on the highway ─── */
+function TravelingCar({ scrollProgress }: { scrollProgress: number }) {
+  const carRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!carRef.current) return;
+    /* Car travels from top (Mile 0) to bottom (Mile 100) based on scroll */
+    const y = scrollProgress * 100;
+    carRef.current.style.top = `${y}%`;
+  }, [scrollProgress]);
+
   return (
-    <Shell className="p-0 overflow-visible">
+    <div
+      ref={carRef}
+      className="absolute left-1/2 -translate-x-1/2 z-30 transition-all duration-300"
+      style={{ top: "0%" }}
+    >
+      <div className="relative">
+        {/* Glow trail */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-20 bg-gradient-to-b from-red-500/40 to-transparent rounded-full blur-md" />
+        {/* Car */}
+        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.6)] animate-pulse border border-red-400">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+            <path d="M5 17h14M6 17v-5l3-4h6l3 4v5M9 8V6a2 2 0 012-2h2a2 2 0 012 2v2" />
+            <circle cx="7.5" cy="17" r="1.5" fill="white" stroke="none" />
+            <circle cx="16.5" cy="17" r="1.5" fill="white" stroke="none" />
+          </svg>
+        </div>
+        {/* Headlight beams */}
+        <div className="absolute top-full left-1/2 -translate-x-1/2 w-16 h-24 bg-gradient-to-b from-red-500/20 to-transparent rounded-full blur-xl" />
+      </div>
+    </div>
+  );
+}
+
+function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void }) {
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const highwayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!highwayRef.current) return;
+      const rect = highwayRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const highwayTop = rect.top;
+      const highwayHeight = rect.height;
+      
+      /* Progress: 0 when highway enters viewport, 1 when it leaves */
+      const progress = Math.max(0, Math.min(1, (-highwayTop + viewportHeight * 0.3) / (highwayHeight + viewportHeight * 0.3)));
+      setScrollProgress(progress);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <ShellWithRef className="p-0 overflow-visible" ref={highwayRef}>
       <div className="relative py-10 sm:py-16">
         {/* Base asphalt */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#1a1a1a_0%,#111_50%,#1a1a1a_100%)]" />
@@ -525,10 +733,39 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
         <div className="absolute left-4 sm:left-8 top-0 bottom-0 w-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0.1)_100%)]" />
         <div className="absolute right-4 sm:right-8 top-0 bottom-0 w-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0.1)_100%)]" />
         
-        {/* Center dashed line */}
-        <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-1 flex flex-col">
-          {Array.from({ length: 30 }).map((_, i) => (
-            <div key={i} className="h-6 sm:h-8 my-1 sm:my-1.5 bg-[linear-gradient(180deg,#fbbf24,#f59e0b)] rounded-sm opacity-80" style={{ boxShadow: "0 0 8px rgba(251,191,36,0.3)" }} />
+        {/* Center dashed line — animated */}
+        <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-1 flex flex-col overflow-hidden">
+          {Array.from({ length: 40 }).map((_, i) => (
+            <div 
+              key={i} 
+              className="h-6 sm:h-8 my-1 sm:my-1.5 bg-[linear-gradient(180deg,#fbbf24,#f59e0b)] rounded-sm opacity-80 transition-all" 
+              style={{ 
+                boxShadow: "0 0 8px rgba(251,191,36,0.3)",
+                opacity: i / 40 < scrollProgress ? 0.3 + Math.sin(Date.now() / 500 + i) * 0.2 : 0.8,
+              }} 
+            />
+          ))}
+        </div>
+
+        {/* Traveling car */}
+        <div className="absolute inset-0 pointer-events-none">
+          <TravelingCar scrollProgress={scrollProgress} />
+        </div>
+
+        {/* Floating road particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 rounded-full bg-red-500/40"
+              style={{
+                left: `${20 + Math.random() * 60}%`,
+                top: `${Math.random() * 100}%`,
+                animation: `floatUp ${4 + Math.random() * 6}s linear infinite`,
+                animationDelay: `${Math.random() * 5}s`,
+                boxShadow: "0 0 6px rgba(255,68,68,0.4)",
+              }}
+            />
           ))}
         </div>
 
@@ -542,7 +779,7 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
             {EXITS.map((exit, i) => {
               const side = i % 2 === 0 ? "left" : "right";
               return (
-                <div key={exit.mile} className="relative">
+                <div key={exit.mile} data-mile className="relative">
                   <div className={cn("hidden lg:flex absolute top-0 z-20", side === "left" ? "right-[calc(50%+24px)]" : "left-[calc(50%+24px)]")}>
                     <RoadSign mile={exit.mile} title={exit.title} color={exit.color} />
                   </div>
@@ -577,14 +814,14 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
             })}
           </div>
           <div className="mt-16 text-center">
-            <div className="inline-block rounded-2xl border-2 border-white/20 bg-neutral-800 px-6 py-3">
+            <div className="inline-block rounded-2xl border-2 border-white/20 bg-neutral-800 px-6 py-3 animate-pulse">
               <p className="text-xs font-black uppercase tracking-[0.3em] text-white/40">End of Road</p>
               <p className="text-lg font-black text-white mt-1">Destination: $MAD</p>
             </div>
           </div>
         </div>
       </div>
-    </Shell>
+    </ShellWithRef>
   );
 }
 
@@ -625,39 +862,23 @@ function CommunitySupport() {
           <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-black/40 p-5">
             <p className="text-lg font-black text-white sm:text-xl">Supported three communities.</p>
             <p className="mt-2 text-lg font-black text-emerald-300 sm:text-xl">Locked all the tokens.</p>
-            {/* Proof images — both locks, stacked for readability */}
             <div className="mt-4 grid gap-4">
-              {/* Proof #1 — DERPYDAVE */}
               <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
-                <img
-                  src="/derpydave-lock-proof.png"
-                  alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060"
-                  className="w-full h-auto"
-                />
+                <img src="/derpydave-lock-proof.png" alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Proof #1 — Apr 21, 2026</p>
                   <p className="text-xs text-white/50 mt-0.5">8,155,311 $DERPYDAVE · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
-              {/* Proof #2 — RNDY */}
               <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
-                <img
-                  src="/rndy-lock-proof.png"
-                  alt="1,754,679 RNDY tokens locked via Streamflow until 2060"
-                  className="w-full h-auto"
-                />
+                <img src="/rndy-lock-proof.png" alt="1,754,679 RNDY tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Proof #2 — May 8, 2026</p>
                   <p className="text-xs text-white/50 mt-0.5">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
-              {/* Proof #3 — TOUCHGRASS */}
               <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
-                <img
-                  src="/touchgrass-lock-proof.png"
-                  alt="1,019,634 TOUCHGRASS tokens locked via Streamflow until 2060"
-                  className="w-full h-auto"
-                />
+                <img src="/touchgrass-lock-proof.png" alt="1,019,634 TOUCHGRASS tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Proof #3 — May 10, 2026</p>
                   <p className="text-xs text-white/50 mt-0.5">1,019,634 $TOUCHGRASS · Streamflow · Non-cancelable until 2060</p>
@@ -717,6 +938,30 @@ function RiskNotice() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ═══════════════════════════════════════════════════════════ */
+function GlobalStyles() {
+  return (
+    <style>{`
+      @keyframes floatUp {
+        0% { transform: translateY(100px); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(-100px); opacity: 0; }
+      }
+      @keyframes glowPulse {
+        0%, 100% { box-shadow: 0 0 20px rgba(255,0,0,0.15); }
+        50% { box-shadow: 0 0 35px rgba(255,0,0,0.28); }
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+      }
+    `}</style>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    PAGE
    ═══════════════════════════════════════════════════════════ */
 
@@ -731,8 +976,13 @@ export default function RoadmapPage() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
+      <GlobalStyles />
+      <FloatingDust />
+      <ScrollProgress />
+
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,0,0.10),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.08),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.03),transparent_25%),linear-gradient(180deg,#050505,#020202)]" />
-      <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
+      
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8 relative z-10">
         <div className="grid gap-6">
           <FadeIn>
             <ProgressStrip />
@@ -762,7 +1012,6 @@ export default function RoadmapPage() {
         </div>
       </main>
 
-      {/* Proof Modal */}
       <ProofModal
         isOpen={isModalOpen}
         onClose={() => { setIsModalOpen(false); setSelectedExit(null); }}
