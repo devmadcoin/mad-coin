@@ -48,6 +48,8 @@ const ART_FILES = [
   "MAD-ART-4.png",
   "MAD-RED-EYE.png",
   "MAD-COLD-FRIES.png",
+  "MAD-KYOKI.png",
+  "MAD-ERA-BEGINS.png",
 ] as const;
 
 function cleanTitle(name: string) {
@@ -124,7 +126,7 @@ function ArtHero() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
           <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300 mb-6">
-            32 Pieces. All Rare.
+            34 Pieces. All Rare.
           </span>
           <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tight">
             THE <span className="text-red-500">$MAD</span><br />
@@ -138,7 +140,7 @@ function ArtHero() {
             <Pill tone="red">Official Art</Pill>
             <Pill tone="green">Free Download</Pill>
             <Pill>High Res</Pill>
-            <Pill tone="yellow">32 Total</Pill>
+            <Pill tone="yellow">34 Total</Pill>
           </div>
 
           {/* Contract box — drunk proof */}
@@ -165,7 +167,7 @@ function ArtHero() {
 
 /* ─── MARQUEE ─── */
 function Marquee() {
-  const text = "RARE ART • FREE TO GRAB • NOT FOR EVERYONE • SHARE THE SIGNAL • DOWNLOAD ALL 30 • ";
+  const text = "RARE ART • FREE TO GRAB • NOT FOR EVERYONE • SHARE THE SIGNAL • DOWNLOAD ALL 34 • ";
   return (
     <div className="overflow-hidden border-y border-white/10 bg-white/[0.02] py-4">
       <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite]">
@@ -210,7 +212,7 @@ function FeaturedPiece() {
 
         <div className="flex flex-col justify-center min-w-0 p-5 sm:p-8 lg:p-10">
           <p className="text-[11px] font-black uppercase tracking-[0.3em] text-white/45">
-            Piece 01 / 30
+            Piece 01 / 34
           </p>
           <h2 className="mt-4 break-words text-3xl font-black leading-[0.95] text-white sm:text-5xl">
             Pressure.
@@ -312,7 +314,7 @@ function BuyMADBanner() {
             BUY THE TOKEN.<br className="hidden sm:block" /> THEN SHARE THE ART.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-white/60 max-w-xl mx-auto">
-            All 30 pieces are free. But the real flex is holding $MAD while you post them.
+            All 34 pieces are free. But the real flex is holding $MAD while you post them.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -448,7 +450,7 @@ export default function MemesPage() {
             <div>
               <p className="text-[11px] font-black uppercase tracking-[0.34em] text-white/40">Collection</p>
               <h2 className="mt-1 text-2xl sm:text-3xl font-black text-white">
-                All <span className="text-red-500">30</span> Pieces.
+                All <span className="text-red-500">34</span> Pieces.
               </h2>
             </div>
             <span className="text-white/30 text-xs font-bold uppercase tracking-wider hidden sm:inline">
