@@ -28,6 +28,8 @@ const PRODUCTS = [
     stockTone: "green" as const,
     image: "/stickers/Mad-Sticker-logo.png",
     stars: 5 as const,
+    featuredText:
+      "The easiest way to carry $MAD into the real world. Simple, loud, collectible, and built for instant signal.",
   },
   {
     id: "card-wrap",
@@ -242,10 +244,6 @@ function MerchHero() {
             Shop the Drop
           </a>
         </div>
-          >
-            Buy $MAD First
-          </a>
-        </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Pill tone="red">Real Project</Pill>
@@ -446,11 +444,14 @@ function Marquee() {
 function StarRating({ count }: { count: number }) {
   return (
     <div className="flex items-center gap-0.5">
-      {[...Array(5)].map((_, i) => (
-        <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill={i < count ? "#C5A572" : "#1a1a1a"} className={i < count ? "drop-shadow-[0_0_1px_rgba(197,165,114,0.4)]" : "opacity-15"}>
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-        </svg>
-      ))}
+      {[...Array(5)].map((_, i) => {
+        const filled = i + 1 <= count;
+        return (
+          <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill={filled ? "#C5A572" : "#1a1a1a"} className={filled ? "drop-shadow-[0_0_1px_rgba(197,165,114,0.4)]" : "opacity-15"}>
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        );
+      })}
     </div>
   );
 }
