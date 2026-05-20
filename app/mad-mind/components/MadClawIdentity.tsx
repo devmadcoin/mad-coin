@@ -7,7 +7,7 @@ import MadChaoPixel from "./MadChaoPixel";
 
 /* ─── Data ─── */
 const CONTRACT = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
-const PUMPSWAP_URL = `https://pumpswap.app/swap?input=So11111111111111111111111111111111111111112&output=${CONTRACT}`;
+const PUMPSWAP_URL = "https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=Fa7ZE9nCEYnrHsnoeHExJpchtrBtKXnWe6CgHpump";
 
 const DEATH = [
   "Still checking charts at 3am? There's another frequency.",
