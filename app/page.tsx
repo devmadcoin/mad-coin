@@ -238,17 +238,24 @@ function WhatIsMAD() {
 
         <div className="space-y-6 text-sm sm:text-base leading-relaxed text-white/60">
           <p>
-            <span className="text-white font-bold">$MAD is not a token. It's a frequency.</span> Most projects sell you a future. $MAD sells you a present — the present where you are already mad rich, already part of something, already holding.
+            <span className="text-white font-bold">$MAD is not a token. It's a frequency.</span> 🔊 Most projects sell you a future. $MAD sells you a present — the present where you are already mad rich, already part of something, already holding. 💎
           </p>
           <p>
-            The dev is <span className="text-white font-bold">doxxed</span>. The <Link href="/game" className="text-[#FF2D2D] hover:text-white transition-colors">Roblox game</Link> is real. There was no presale, no VC, no tax. Just a contract, a community, and a group of people who decided they were done folding.
+            The dev is <span className="text-white font-bold">doxxed</span>. 👤 The <Link href="/game" className="text-[#FF2D2D] hover:text-white transition-colors">Roblox game</Link> 🎮 is real. There was no presale, no VC, no tax. Just a contract, a community, and a group of people who decided they were done folding. 🚫📄
           </p>
           <p>
-            Before asking anyone to trust the mission, $MAD showed loyalty in public: <span className="text-white font-bold">three communities supported</span>, tokens locked via Streamflow until 2060. Not theory. Proof. Three times.
+            Before asking anyone to trust the mission, $MAD showed loyalty in public: <span className="text-white font-bold">three communities supported</span> 🤝, tokens locked via Streamflow until 2060. 🔒 Not theory. Proof. Three times. 3️⃣✅
           </p>
           <p>
-            The supply shrinks toward <span className="text-[#FF2D2D] font-bold">800M</span>. Every holder is a participant in a <span className="text-white font-bold">Life Economy</span> exit — no bosses, no quarterly reports, just the daily practice of staying $MAD.
+            The supply shrinks toward <span className="text-[#FF2D2D] font-bold">800M</span>. 📉 Every holder is a participant in a <span className="text-white font-bold">Life Economy</span> exit — no bosses, no quarterly reports, just the daily practice of staying $MAD. 🧘‍♂️💰
           </p>
+
+          {/* Closing punch */}
+          <div className="mt-8 p-5 sm:p-6 rounded-2xl border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03]">
+            <p className="text-base sm:text-lg font-bold text-white/80 leading-relaxed">
+              The daily practice of staying <span className="text-[#FF2D2D]">$MAD Rich</span>. 🧠💎 No worrying about your portfolio. No fear of AI layoffs. 🤖❌ The world is only going to <span className="text-[#FF2D2D]">GET MORE $MAD</span>. 📈🔥
+            </p>
+          </div>
         </div>
 
         {/* Stats */}
