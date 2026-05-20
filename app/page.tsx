@@ -156,46 +156,12 @@ function TheLobby() {
           <ContractBlock />
         </div>
 
-        {/* Verified Strip — Credibility as decor */}
-        <div className="mt-3 flex items-center justify-center gap-5 sm:gap-7 opacity-40 hover:opacity-70 transition-opacity duration-500">
-          <span className="text-[9px] font-bold uppercase tracking-[0.34em] text-white/30">Verified on</span>
-          <div className="flex items-center gap-4 sm:gap-6">
-            {[
-              { name: "Jupiter", src: "/logos/jupiter.png" },
-              { name: "DEX Screener", src: "/logos/DEX-screener.png" },
-              { name: "Birdeye", src: "/logos/birdeye.png" },
-              { name: "Solscan", src: "/logos/solscan.png" },
-              { name: "CoinGecko", src: "/logos/coingecko.png" },
-            ].map((dex) => (
-              <a
-                key={dex.name}
-                href={dex.name === "Jupiter" ? LINKS.jupiter : dex.name === "DEX Screener" ? LINKS.dexscreener : dex.name === "Birdeye" ? LINKS.birdeye : dex.name === "Solscan" ? LINKS.solscan : "https://www.coingecko.com/en/coins/mad-coin"}
-                target="_blank"
-                rel="noreferrer"
-                className="group relative flex flex-col items-center"
-                title={dex.name}
-              >
-                <Image
-                  src={dex.src}
-                  alt={dex.name}
-                  width={28}
-                  height={28}
-                  className="h-5 w-auto object-contain opacity-50 group-hover:opacity-100 transition-opacity"
-                />
-                <span className="absolute -bottom-4 text-[8px] font-bold uppercase tracking-wider text-white/0 group-hover:text-white/40 transition-colors whitespace-nowrap">
-                  {dex.name}
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-
         {/* Buy Button — Secondary CTA */}
         <a 
           href={LINKS.buy} 
           target="_blank" 
           rel="noreferrer"
-          className="mt-4 group flex items-center justify-center gap-2 px-8 py-4 bg-[#FF6B00] hover:bg-[#FF8533] text-white text-base font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,107,0,0.25)]"
+          className="mt-6 group flex items-center justify-center gap-2 px-8 py-4 bg-[#FF6B00] hover:bg-[#FF8533] text-white text-base font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,107,0,0.25)]"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           SWAP ON JUPITER
@@ -253,6 +219,51 @@ function ArtWall({ title, image, subtitle }: { title: string; image: string; sub
         <p className="mt-1 text-lg sm:text-xl font-black text-white">{title}</p>
       </div>
     </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THE VERIFIED — Exchange Showcase
+   ═══════════════════════════════════════════════════════════ */
+function TheVerified() {
+  const exchanges = [
+    { name: "Jupiter", src: "/logos/jupiter.png", href: LINKS.jupiter },
+    { name: "DEX Screener", src: "/logos/DEX-screener.png", href: LINKS.dexscreener },
+    { name: "Birdeye", src: "/logos/birdeye.png", href: LINKS.birdeye },
+    { name: "Solscan", src: "/logos/solscan.png", href: LINKS.solscan },
+    { name: "CoinGecko", src: "/logos/coingecko.png", href: "https://www.coingecko.com/en/coins/mad-coin" },
+  ];
+
+  return (
+    <section className="px-4 sm:px-6 py-10 sm:py-14 border-y border-white/5">
+      <div className="max-w-4xl mx-auto">
+        <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/50 mb-6">
+          Verified On-Chain
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+          {exchanges.map((dex) => (
+            <a
+              key={dex.name}
+              href={dex.href}
+              target="_blank"
+              rel="noreferrer"
+              className="group flex flex-col items-center gap-2 px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-[#FF2D2D]/20 transition-all"
+            >
+              <Image
+                src={dex.src}
+                alt={dex.name}
+                width={48}
+                height={48}
+                className="h-8 w-auto object-contain opacity-70 group-hover:opacity-100 transition-opacity"
+              />
+              <span className="text-[9px] font-bold uppercase tracking-wider text-white/40 group-hover:text-white/60 transition-colors">
+                {dex.name}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -392,6 +403,7 @@ export default function Home() {
 
       <main>
         <TheLobby />
+        <TheVerified />
         <TheWalls />
         <TheOracle />
         <TheFrequency />
