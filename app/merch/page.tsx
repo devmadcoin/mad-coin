@@ -525,39 +525,6 @@ function ProductGrid() {
   );
 }
 
-/* ─── APPAREL TEASER ─── */
-function ApparelTeaser() {
-  return (
-    <section className="py-16 border-t border-[#1a1a1a]/10">
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] overflow-hidden">
-          <div className="p-8 sm:p-12 flex flex-col justify-center">
-            <span className="text-xs text-[#1a1a1a]/50 uppercase">Drop 002</span>
-
-            <h2 className="mt-4 text-4xl font-black text-[#1a1a1a]">
-              $MAD isn&apos;t just held.
-              <br />
-              It&apos;s <span className="text-[#FF2D2D]">worn</span>.
-            </h2>
-
-            <p className="mt-4 text-[#1a1a1a]/55">
-              The first apparel pieces are on the way.
-            </p>
-          </div>
-
-          <div className="p-8 flex items-center justify-center">
-            <img
-              src="/merch/MAD-MERCH-SAMPLE-SHIRT.jpg"
-              alt="MAD Rich apparel preview"
-              className="max-h-96 object-cover rounded-2xl"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ─── RISK NOTICE ─── */
 function RiskNotice() {
   return (
@@ -666,7 +633,6 @@ export default function MerchPage() {
         <ProductGrid />
         <ProofGrid />
         <VideoGrid />
-        <ApparelTeaser />
         <RiskNotice />
       </main>
 
