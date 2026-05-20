@@ -309,8 +309,86 @@ function TheProof() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE ORACLE — Link to MAD Mind
+   THE ARCHITECTS — Team
    ═══════════════════════════════════════════════════════════ */
+function TheArchitects() {
+  const team = [
+    {
+      role: "Dev / Founder",
+      name: "$MAD Dev",
+      handle: "Coffee Collects",
+      links: [
+        { label: "X", href: "https://x.com/madrichclub_" },
+        { label: "YouTube", href: "https://www.youtube.com/@CoffeeCollectsHQ" },
+      ],
+    },
+    {
+      role: "Moderator",
+      name: "Dino",
+      handle: "@Iam__dino9",
+      links: [
+        { label: "X", href: "https://x.com/Iam__dino9" },
+      ],
+    },
+    {
+      role: "Mad Artist",
+      name: "Heydun",
+      handle: "@Grpx_Heydun",
+      links: [
+        { label: "X", href: "https://x.com/Grpx_Heydun" },
+      ],
+    },
+  ];
+
+  return (
+    <section className="px-4 sm:px-6 py-16 sm:py-20 border-y border-white/5">
+      <div className="max-w-4xl mx-auto">
+        <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-white/30 mb-2">
+          The People Behind It
+        </p>
+        <h2 className="text-center text-2xl sm:text-3xl font-black text-white mb-10 sm:mb-14">
+          The <span className="text-[#FF2D2D]">Architects</span>
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {team.map((member) => (
+            <div
+              key={member.role}
+              className="group relative overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.02] p-6 sm:p-8 text-center transition-all duration-300 hover:border-[#FF2D2D]/20 hover:bg-white/[0.04]"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,45,45,0.04),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative z-10">
+                <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-3">
+                  {member.role}
+                </p>
+                <p className="text-lg font-black text-white">{member.name}</p>
+                <p className="mt-1 text-xs text-white/40">{member.handle}</p>
+                <div className="mt-4 flex items-center justify-center gap-2">
+                  {member.links.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-[#FF2D2D]/20 text-white/50 hover:text-white text-[10px] font-bold uppercase tracking-wider transition-all"
+                    >
+                      {link.label === "X" ? (
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                      ) : (
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                      )}
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 function TheOracle() {
   return (
     <section className="px-4 sm:px-6 py-16 sm:py-20">
@@ -442,6 +520,7 @@ export default function Home() {
         <TheCinema />
         <TheVerified />
         <TheProof />
+        <TheArchitects />
         <TheOracle />
         <TheFrequency />
       </main>
