@@ -24,10 +24,12 @@ interface ChatInterfaceProps {
 
 /* ─── Suggested starters ─── */
 const STARTERS = [
-  "What frequency am I on?",
-  "Show me the Death Economy",
+  "Why does my 401k feel like a scam?",
+  "What makes $MAD different from every other memecoin?",
+  "How do I stop being a lurker?",
+  "Why does the chart control my mood?",
+  "What book should I read first?",
   "Why do I keep trenching?",
-  "What is $MAD really?",
 ];
 
 /* ─── Utilities ─── */
