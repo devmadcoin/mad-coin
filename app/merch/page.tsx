@@ -235,6 +235,40 @@ function MerchHero() {
   );
 }
 
+/* ─── SCANLINE OVERLAY ─── */
+function Scanlines() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.02]"
+      style={{
+        backgroundImage: "linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px)",
+        backgroundSize: "100% 3px",
+      }}
+    />
+  );
+}
+
+/* ─── FLOATING PARTICLES ─── */
+function FloatingParticles() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      {[...Array(12)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full bg-[#FF2D2D]/10 blur-sm"
+          style={{
+            width: `${Math.random() * 4 + 2}px`,
+            height: `${Math.random() * 4 + 2}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animation: `floatUp ${Math.random() * 4 + 4}s ease-in-out infinite`,
+            animationDelay: `${Math.random() * 5}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ─── PROOF GRID ─── */
 function ProofGrid() {
   const proofImages = [
@@ -413,6 +447,12 @@ function Marquee() {
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
+        }
+        @keyframes floatUp {
+          0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
         }
       `}</style>
     </div>
@@ -611,7 +651,9 @@ function Footer() {
 export default function MerchPage() {
   return (
     <div className="min-h-screen bg-[#F5F1E8] text-[#1a1a1a] overflow-x-hidden">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,45,45,0.06),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.04),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(26,26,26,0.02),transparent_25%),linear-gradient(180deg,#F5F1E8,#EDE9DD)]" />
+      <Scanlines />
+      <FloatingParticles />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.03),transparent_50%)]" />
 
       <LiveTicker />
 
