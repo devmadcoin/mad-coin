@@ -179,7 +179,7 @@ function TheCinema() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE VERIFIED — Exchange Carousel
+   THE VERIFIED — Exchange logos only (WEN style)
    ═══════════════════════════════════════════════════════════ */
 function TheVerified() {
   const exchanges = [
@@ -197,34 +197,30 @@ function TheVerified() {
 
   return (
     <section className="py-10 sm:py-14 border-y border-white/5 overflow-hidden">
-      <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/50 mb-6 px-4">
+      <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-white/30 mb-6 px-4">
         Verified On-Chain
       </p>
       <div className="relative">
-        {/* Fade edges */}
         <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-[#080808] to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-[#080808] to-transparent z-10 pointer-events-none" />
         
-        <div className="flex logo-marquee-slow items-center gap-8 sm:gap-12 px-4">
+        <div className="flex logo-marquee-slow items-center gap-10 sm:gap-14 px-4">
           {exchanges.map((dex, i) => (
             <a 
               key={`${dex.name}-${i}`} 
               href={dex.href}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-3 shrink-0 group cursor-pointer"
+              className="shrink-0 opacity-50 hover:opacity-100 transition-opacity"
               title={dex.name}
             >
               <Image
                 src={dex.src}
                 alt={dex.name}
-                width={36}
-                height={36}
-                className="h-7 w-auto object-contain opacity-60 group-hover:opacity-100 transition-opacity"
+                width={48}
+                height={48}
+                className="h-10 sm:h-12 w-auto object-contain"
               />
-              <span className="text-xs font-bold uppercase tracking-wider text-white/40 group-hover:text-white/70 whitespace-nowrap transition-colors">
-                {dex.name}
-              </span>
             </a>
           ))}
         </div>
@@ -234,7 +230,57 @@ function TheVerified() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE PROOF — Mad Rich Tub + Testimony
+   WHAT IS $MAD — The story, WEN style
+   ═══════════════════════════════════════════════════════════ */
+function WhatIsMAD() {
+  return (
+    <section className="px-4 sm:px-6 py-20 sm:py-28">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-8 sm:mb-10">
+          What is <span className="text-[#FF2D2D]">$MAD</span>
+        </h2>
+
+        <div className="space-y-6 text-sm sm:text-base leading-relaxed text-white/60">
+          <p>
+            <span className="text-white font-bold">$MAD is not a token. It's a frequency.</span> Most crypto projects sell you a future. $MAD sells you a present — the present where you are already mad rich, already part of something, already holding.
+          </p>
+          <p>
+            The dev is doxxed. The game is real. The community says <span className="text-[#FF2D2D] font-bold">"$MAD Abundant"</span> every morning like it's a prayer. Because it is.
+          </p>
+          <p>
+            $MAD started as an experiment: what if a memecoin actually meant something? What if the "community" wasn't just Discord mods begging people to hold — what if it was people <span className="text-white font-bold">choosing to build</span>?
+          </p>
+          <p>
+            There was no presale. No VC. No tax. Just a contract, a <Link href="/game" className="text-[#FF2D2D] hover:text-white transition-colors">Roblox game</Link>, and a group of people who decided they were done folding.
+          </p>
+          <p>
+            The world runs on a <span className="text-white font-bold">Death Economy</span> — debt, extraction, layoffs, panic. $MAD is a <span className="text-[#FF2D2D] font-bold">Life Economy</span> exit. No bosses. No quarterly reports. Just holders, builders, and the daily practice of staying $MAD.
+          </p>
+        </div>
+
+        {/* Stats */}
+        <div className="mt-12 pt-10 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-6">
+          <div>
+            <p className="text-3xl sm:text-4xl font-black text-white">273</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">Holders</p>
+          </div>
+          <div>
+            <p className="text-3xl sm:text-4xl font-black text-white">1</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">Doxxed Dev</p>
+          </div>
+          <div>
+            <p className="text-3xl sm:text-4xl font-black text-white">1</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">Real Game</p>
+          </div>
+          <div>
+            <p className="text-3xl sm:text-4xl font-black text-[#FF2D2D]">0%</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">Tax</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
    ═══════════════════════════════════════════════════════════ */
 function TheProof() {
   return (
@@ -537,6 +583,7 @@ export default function Home() {
 
       <main>
         <TheCinema />
+        <WhatIsMAD />
         <TheVerified />
         <TheProof />
         <TheArchitects />
