@@ -38,11 +38,16 @@ function CarScene() {
     const t = timeRef.current * CAR_SPEED;
     const car = carGroupRef.current;
 
-    // Drive in a circle on the flat track
+    // Drive in a circle on the flat track — use lookAt for correct orientation
+    const nextT = t + 0.1;
     car.position.x = Math.cos(t) * TRACK_RADIUS;
     car.position.z = Math.sin(t) * TRACK_RADIUS;
-    car.position.y = 0.15; // On top of flat track
-    car.rotation.y = -t + Math.PI / 2; // Face direction of travel
+    car.position.y = 0.15;
+    car.lookAt(
+      Math.cos(nextT) * TRACK_RADIUS,
+      0.15,
+      Math.sin(nextT) * TRACK_RADIUS
+    );
 
     // Spin wheels
     wheelsRef.current.forEach((wheel) => {
