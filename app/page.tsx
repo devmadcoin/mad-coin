@@ -183,16 +183,16 @@ function TheCinema() {
    ═══════════════════════════════════════════════════════════ */
 function TheVerified() {
   const exchanges = [
-    { name: "Jupiter", src: "/logos/jupiter.png" },
-    { name: "DEX Screener", src: "/logos/DEX-screener.png" },
-    { name: "Birdeye", src: "/logos/birdeye.png" },
-    { name: "Solscan", src: "/logos/solscan.png" },
-    { name: "CoinGecko", src: "/logos/coingecko.png" },
-    { name: "Jupiter", src: "/logos/jupiter.png" },
-    { name: "DEX Screener", src: "/logos/DEX-screener.png" },
-    { name: "Birdeye", src: "/logos/birdeye.png" },
-    { name: "Solscan", src: "/logos/solscan.png" },
-    { name: "CoinGecko", src: "/logos/coingecko.png" },
+    { name: "Jupiter", src: "/logos/jupiter.png", href: LINKS.jupiter },
+    { name: "DEX Screener", src: "/logos/DEX-screener.png", href: LINKS.dexscreener },
+    { name: "Birdeye", src: "/logos/birdeye.png", href: LINKS.birdeye },
+    { name: "Solscan", src: "/logos/solscan.png", href: LINKS.solscan },
+    { name: "CoinGecko", src: "/logos/coingecko.png", href: "https://www.coingecko.com/en/coins/mad-coin" },
+    { name: "Jupiter", src: "/logos/jupiter.png", href: LINKS.jupiter },
+    { name: "DEX Screener", src: "/logos/DEX-screener.png", href: LINKS.dexscreener },
+    { name: "Birdeye", src: "/logos/birdeye.png", href: LINKS.birdeye },
+    { name: "Solscan", src: "/logos/solscan.png", href: LINKS.solscan },
+    { name: "CoinGecko", src: "/logos/coingecko.png", href: "https://www.coingecko.com/en/coins/mad-coin" },
   ];
 
   return (
@@ -207,18 +207,25 @@ function TheVerified() {
         
         <div className="flex logo-marquee-slow items-center gap-8 sm:gap-12 px-4">
           {exchanges.map((dex, i) => (
-            <div key={`${dex.name}-${i}`} className="flex items-center gap-3 shrink-0">
+            <a 
+              key={`${dex.name}-${i}`} 
+              href={dex.href}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-3 shrink-0 group cursor-pointer"
+              title={dex.name}
+            >
               <Image
                 src={dex.src}
                 alt={dex.name}
                 width={36}
                 height={36}
-                className="h-7 w-auto object-contain opacity-60"
+                className="h-7 w-auto object-contain opacity-60 group-hover:opacity-100 transition-opacity"
               />
-              <span className="text-xs font-bold uppercase tracking-wider text-white/40 whitespace-nowrap">
+              <span className="text-xs font-bold uppercase tracking-wider text-white/40 group-hover:text-white/70 whitespace-nowrap transition-colors">
                 {dex.name}
               </span>
-            </div>
+            </a>
           ))}
         </div>
       </div>
