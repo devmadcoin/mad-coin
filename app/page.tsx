@@ -481,12 +481,17 @@ function TheFrequency() {
    ═══════════════════════════════════════════════════════════ */
 function Disclaimer() {
   return (
-    <section className="px-4 sm:px-6 py-8 border-t border-white/5">
-      <div className="max-w-3xl mx-auto text-center">
-        <p className="text-[10px] leading-relaxed text-white/20 uppercase tracking-wider">
-          $MAD is a memecoin for entertainment purposes only. Not financial advice. 
-          Cryptocurrency may lose value. DYOR. <span className="text-[#FF2D2D]/30">No guarantees. No refunds. No hand-holding.</span>
-        </p>
+    <section className="px-4 sm:px-6 py-10 border-t border-white/5">
+      <div className="max-w-3xl mx-auto">
+        <div className="flex items-start justify-center gap-3">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 shrink-0 text-[#FF2D2D]/50">
+            <path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          </svg>
+          <p className="text-[11px] leading-relaxed text-white/50 text-center">
+            <span className="font-bold text-white/60">$MAD is a memecoin for entertainment purposes only.</span> Not financial advice. 
+            Cryptocurrency may lose value. DYOR. <span className="text-[#FF2D2D]/70 font-bold">No guarantees. No refunds. No hand-holding.</span>
+          </p>
+        </div>
       </div>
     </section>
   );
