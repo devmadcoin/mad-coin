@@ -59,17 +59,40 @@ function TheGate() {
         The broke check charts. The <span className="text-[#FF6B00]">$MAD</span> check nothing.
       </p>
 
-      {/* BUY BUTTON */}
+      {/* CONTRACT — One tap copy, zero friction */}
+      <div
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(CONTRACT);
+            const el = document.getElementById('contract-flash');
+            if (el) { el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1500); }
+          } catch {}
+        }}
+        className="cursor-pointer group mb-8"
+      >
+        <div className="border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04] px-5 py-4 hover:border-[#FF2D2D]/40 transition-all">
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/40 mb-2">
+            Solana Contract — Tap to Copy
+          </p>
+          <p className="text-xs sm:text-sm font-mono text-[#FF2D2D]/70 break-all leading-relaxed">
+            {CONTRACT}
+          </p>
+        </div>
+        <div id="contract-flash" className="mt-2 text-center transition-opacity duration-300 opacity-0">
+          <p className="text-[10px] text-green-400 font-bold uppercase tracking-wider">
+            ✓ Copied — Paste into Phantom
+          </p>
+        </div>
+      </div>
+
+      {/* Jupiter link for people who want swap UI */}
       <a
         href={PUMPSWAP_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-6 py-3 bg-[#FF2D2D]/15 border border-[#FF2D2D]/30 hover:bg-[#FF2D2D]/25 hover:border-[#FF2D2D]/50 hover:scale-105 transition-all mb-8"
+        className="text-[10px] text-white/20 hover:text-white/40 uppercase tracking-wider transition-colors mb-8"
       >
-        <span className="text-sm font-black text-[#FF6B00]">BUY $MAD</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#FF6B00]">
-          <path d="M7 17L17 7M17 7H7M17 7v10"/>
-        </svg>
+        Or swap on Jupiter →
       </a>
 
       <div className="flex flex-col items-center gap-2">
