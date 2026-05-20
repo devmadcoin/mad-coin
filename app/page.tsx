@@ -133,16 +133,15 @@ function TheCinema() {
 
       {/* Content overlay at bottom */}
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
-        {/* The Declaration */}
-        <h1 className="text-[3rem] sm:text-[5rem] lg:text-[7rem] font-black leading-[0.85] tracking-[-0.05em] text-center">
-          <span className="text-[#FF2D2D] drop-shadow-[0_0_30px_rgba(255,45,45,0.5)]">STOP</span>
-          <br />
-          <span className="text-white">PANICKING.</span>
+        {/* The Declaration — flipped hierarchy */}
+        <h1 className="text-center">
+          <span className="block text-[2rem] sm:text-[3rem] lg:text-[4rem] font-black tracking-[-0.02em] text-[#FF2D2D] drop-shadow-[0_0_20px_rgba(255,45,45,0.4)]">
+            STOP PANICKING.
+          </span>
+          <span className="block text-[3rem] sm:text-[5rem] lg:text-[7rem] font-black leading-[0.85] tracking-[-0.05em] text-white mt-2">
+            GET $MAD RICH.
+          </span>
         </h1>
-
-        <p className="mt-4 text-center text-base sm:text-lg font-bold text-white/60 max-w-md mx-auto">
-          GET <span className="text-[#FF2D2D]">$MAD</span><span className="text-green-400">RICH.</span>
-        </p>
 
         {/* Contract + Buy */}
         <div className="mt-8 max-w-xl mx-auto">
