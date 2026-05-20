@@ -199,20 +199,6 @@ function StockBadge({ tone, children }: { tone: "green" | "yellow" | "red"; chil
   );
 }
 
-function Pill({ children, tone = "default" }: { children: React.ReactNode; tone?: "default" | "red" | "green" | "yellow" }) {
-  return (
-    <div className={cn(
-      "rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em]",
-      tone === "red" && "border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 text-[#FF2D2D]",
-      tone === "green" && "border border-emerald-400/20 bg-emerald-500/10 text-emerald-600",
-      tone === "yellow" && "border border-amber-400/20 bg-amber-500/10 text-amber-600",
-      tone === "default" && "border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] text-[#1a1a1a]/60",
-    )}>
-      {children}
-    </div>
-  );
-}
-
 /* ─── HERO ─── */
 function MerchHero() {
   return (
@@ -243,13 +229,6 @@ function MerchHero() {
           >
             Shop the Drop
           </a>
-        </div>
-
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Pill tone="red">Real Project</Pill>
-          <Pill tone="green">Live Tech</Pill>
-          <Pill>513M Supply</Pill>
-          <Pill tone="yellow">800M Target</Pill>
         </div>
       </div>
     </section>
