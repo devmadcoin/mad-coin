@@ -135,11 +135,14 @@ function TheCinema() {
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
         {/* The Declaration — flipped hierarchy */}
         <h1 className="text-center">
+          <span className="block text-[2rem] sm:text-[3rem] lg:text-[4rem] font-black tracking-[-0.02em] text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+            STOP
+          </span>
           <span className="block text-[2rem] sm:text-[3rem] lg:text-[4rem] font-black tracking-[-0.02em] text-[#FF2D2D] drop-shadow-[0_0_20px_rgba(255,45,45,0.4)]">
-            STOP PANICKING.
+            PANICKING.
           </span>
           <span className="block text-[3rem] sm:text-[5rem] lg:text-[7rem] font-black leading-[0.85] tracking-[-0.05em] text-white mt-2">
-            GET $MAD RICH.
+            GET <span className="text-green-400">$MAD</span> RICH.
           </span>
         </h1>
 
