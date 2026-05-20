@@ -1843,3 +1843,4 @@ telegram.error.NetworkError: Unknown error in HTTP implementation: RuntimeError(
 [GUARD] BLOCKED: announcement/pinned post from user=6833325473
 [MOTION] Chat active 24min ago. Silent mode.
 [MOTION] Posted (practical): 🔥 The market is a device for transferring money from the imp...
+[MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')
