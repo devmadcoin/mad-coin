@@ -286,21 +286,46 @@ function WhatIsMAD() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE PROOF — Mad Rich Tub + Testimony
+   THE PROOF — Mad Rich Tub + Testimony (Venetian crème)
    ═══════════════════════════════════════════════════════════ */
+function StarRating() {
+  return (
+    <div className="flex items-center gap-1">
+      {[...Array(5)].map((_, i) => (
+        <svg key={i} width="20" height="20" viewBox="0 0 24 24" fill="#C5A572" className="drop-shadow-[0_0_2px_rgba(197,165,114,0.5)]">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
 function TheProof() {
   return (
-    <section className="px-4 sm:px-6 py-20 sm:py-28">
+    <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8]">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-10 sm:mb-14">
-          <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-white/30">Real Stories</p>
-          <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-black text-white">
+        {/* Section header */}
+        <div className="mb-10 sm:mb-14 text-center">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5A572" strokeWidth="1.5">
+              <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
+            </svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C5A572" strokeWidth="1.5">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5A572" strokeWidth="1.5">
+              <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
+            </svg>
+          </div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">Holder Review</p>
+          <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-black text-[#1a1a1a]">
             The <span className="text-[#FF2D2D]">Proof</span> is Real
           </h2>
         </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Tub Image */}
-          <div className="relative overflow-hidden rounded-[24px] border border-white/10 aspect-[4/3]">
+          <div className="relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 aspect-[4/3]">
             <Image
               src="/memes/MAD-RICH-IN-THE-TUB.png"
               alt="Mad Rich in the Tub"
@@ -308,22 +333,27 @@ function TheProof() {
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(8,8,8,0.8)_90%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(245,241,232,0.9)_90%)]" />
             <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-              <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60">The Lifestyle</p>
-              <p className="mt-1 text-lg sm:text-xl font-black text-white">Mad Rich in the Tub</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/70">The Lifestyle</p>
+              <p className="mt-1 text-lg sm:text-xl font-black text-[#1a1a1a]">Mad Rich in the Tub</p>
             </div>
           </div>
           
-          {/* Testimony */}
-          <div className="relative overflow-hidden rounded-[24px] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-6 sm:p-8 flex flex-col justify-center">
-            <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#FF2D2D]/5 blur-3xl" />
+          {/* Testimony Card */}
+          <div className="relative overflow-hidden rounded-[24px] border border-[#C5A572]/30 bg-white p-6 sm:p-8 flex flex-col justify-center shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
             <div className="relative z-10">
+              {/* Stars */}
+              <div className="mb-4">
+                <StarRating />
+              </div>
+
+              {/* Avatar row */}
               <div className="flex items-center gap-3 mb-5">
-                <div className="h-10 w-10 rounded-full bg-[#FF2D2D]/20 flex items-center justify-center text-base font-black text-[#FF2D2D] border border-[#FF2D2D]/30">A</div>
+                <div className="h-10 w-10 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-base font-black text-[#FF2D2D] border border-[#FF2D2D]/20">A</div>
                 <div>
-                  <p className="text-sm font-black text-white">Abraxas</p>
-                  <p className="text-[10px] text-white/40">$MAD Holder · Giveaway Winner</p>
+                  <p className="text-sm font-black text-[#1a1a1a]">Abraxas</p>
+                  <p className="text-[10px] text-[#1a1a1a]/50">$MAD Holder · Giveaway Winner</p>
                 </div>
                 <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
                   <span className="relative flex h-1.5 w-1.5">
@@ -334,19 +364,19 @@ function TheProof() {
                 </span>
               </div>
 
-              <blockquote className="text-sm sm:text-base leading-relaxed text-white/70 italic">
+              <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
                 <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">"</span>
                 When I first encountered Mad Rich, I won a 200k MAD giveaway. The profits on holding the $120 worth of $MAD lasted me 2 months. <span className="text-[#FF2D2D] font-bold not-italic">$MAD relieved me of most my debts.</span> $MAD saved me during the hard times.
                 <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">"</span>
               </blockquote>
 
-              <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between">
-                <p className="text-[10px] text-white/30">Shared via DM · With permission</p>
+              <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
+                <p className="text-[10px] text-[#1a1a1a]/40">Shared via DM · With permission</p>
                 <a 
                   href="https://x.com/madrichclub_/status/2052836164311322949" 
                   target="_blank" 
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white/40 hover:text-[#FF2D2D] transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
                 >
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                   See on X
