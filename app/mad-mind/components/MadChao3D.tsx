@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useMemo, useEffect, Suspense } from "react";
+import { useRef, useMemo, useEffect, useState, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 /* ═══════════════════════════════════════════════════════════
-   $MAD CAR — Driving a flat neon track
+   $MAD CAR — The Chao is Driving!
    ═══════════════════════════════════════════════════════════ */
 
 const TRACK_RADIUS = 4.0;
@@ -17,18 +17,41 @@ function CarScene() {
   const { scene } = useGLTF("/mad-car.glb");
   const carGroupRef = useRef<THREE.Group | null>(null);
   const wheelsRef = useRef<THREE.Object3D[]>([]);
+  const steeringRef = useRef<THREE.Object3D | null>(null);
+  const armsRef = useRef<THREE.Object3D[]>([]);
+  const chaoHeadRef = useRef<THREE.Object3D | null>(null);
+  const chaoBodyRef = useRef<THREE.Object3D | null>(null);
   const timeRef = useRef(0);
+  const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    // Find car root and wheels
     scene.traverse((child) => {
       if (child.name === '$MAD_Car' && !carGroupRef.current) {
         carGroupRef.current = child as THREE.Group;
       }
-      if (child.name.startsWith('Wheel_')) {
+      if (child.name.startsWith('Wheel_') || child.name.startsWith('Rim_')) {
         wheelsRef.current.push(child);
       }
+      if (child.name === 'SteeringWheel') {
+        steeringRef.current = child;
+      }
+      if (child.name.startsWith('ChaoArm_')) {
+        armsRef.current.push(child);
+      }
+      if (child.name === 'ChaoHead') {
+        chaoHeadRef.current = child;
+      }
+      if (child.name === 'ChaoBody') {
+        chaoBodyRef.current = child;
+      }
     });
+
+    const onMouseMove = (e: MouseEvent) => {
+      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    return () => window.removeEventListener('mousemove', onMouseMove);
   }, [scene]);
 
   useFrame((state, delta) => {
@@ -38,7 +61,7 @@ function CarScene() {
     const t = timeRef.current * CAR_SPEED;
     const car = carGroupRef.current;
 
-    // Drive in a circle on the flat track — use lookAt for correct orientation
+    // Drive in a circle
     const nextT = t + 0.1;
     car.position.x = Math.cos(t) * TRACK_RADIUS;
     car.position.z = Math.sin(t) * TRACK_RADIUS;
@@ -49,12 +72,41 @@ function CarScene() {
       Math.sin(nextT) * TRACK_RADIUS
     );
 
-    // Spin wheels (both tires and rims)
+    // Spin wheels
     wheelsRef.current.forEach((wheel) => {
-      if (wheel.name.startsWith('Wheel_') || wheel.name.startsWith('Rim_')) {
-        wheel.rotation.x += delta * 8;
-      }
+      wheel.rotation.x += delta * 8;
     });
+
+    // Steering wheel oscillation (turning left/right)
+    if (steeringRef.current) {
+      const steerAngle = Math.sin(timeRef.current * 0.8) * 0.6; // ±0.6 radians
+      steeringRef.current.rotation.z = steerAngle;
+    }
+
+    // Chao arms follow steering wheel rotation
+    armsRef.current.forEach((arm) => {
+      const steerAngle = Math.sin(timeRef.current * 0.8) * 0.6;
+      const side = arm.name.includes('_L') ? -1 : 1;
+      // Arms pivot from shoulder, hands stay on wheel
+      arm.rotation.z = steerAngle * side * 0.5;
+    });
+
+    // Chao head tracks mouse
+    if (chaoHeadRef.current) {
+      const targetX = mouseRef.current.x * 0.4;
+      const targetY = mouseRef.current.y * 0.3;
+      chaoHeadRef.current.rotation.y = THREE.MathUtils.lerp(
+        chaoHeadRef.current.rotation.y, targetX, delta * 3
+      );
+      chaoHeadRef.current.rotation.x = THREE.MathUtils.lerp(
+        chaoHeadRef.current.rotation.x, targetY, delta * 3
+      );
+    }
+
+    // Chao body engine vibration
+    if (chaoBodyRef.current) {
+      chaoBodyRef.current.position.y = 0.58 + Math.sin(timeRef.current * 25) * 0.002;
+    }
 
     // Engine vibration bob
     car.position.y = 0.15 + Math.sin(timeRef.current * 20) * 0.003;
