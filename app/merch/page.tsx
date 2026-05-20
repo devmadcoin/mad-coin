@@ -122,9 +122,9 @@ function LiveTicker() {
 
   if (loading) {
     return (
-      <div className="fixed top-0 left-0 right-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10">
+      <div className="fixed top-0 left-0 right-0 z-[60] bg-[#F5F1E8]/95 backdrop-blur-xl border-b border-[#1a1a1a]/10">
         <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-center gap-4">
-          <span className="text-white/40 text-xs font-bold">Loading $MAD stats...</span>
+          <span className="text-[#1a1a1a]/40 text-xs font-bold">Loading $MAD stats...</span>
         </div>
       </div>
     );
@@ -134,30 +134,30 @@ function LiveTicker() {
 
   const items = [
     { label: "PRICE", value: stats.price },
-    { label: "24H", value: stats.change, color: stats.change.startsWith("+") ? "text-green-400" : stats.change.startsWith("-") ? "text-red-400" : "text-white/60" },
+    { label: "24H", value: stats.change, color: stats.change.startsWith("+") ? "text-emerald-600" : stats.change.startsWith("-") ? "text-[#FF2D2D]" : "text-[#1a1a1a]/60" },
     { label: "MCAP", value: stats.mcap },
     { label: "24H VOL", value: stats.volume },
     { label: "CA", value: CA.slice(0, 6) + "..." + CA.slice(-4) },
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-black/90 backdrop-blur-xl border-b border-white/10">
+    <div className="fixed top-0 left-0 right-0 z-[60] bg-[#F5F1E8]/95 backdrop-blur-xl border-b border-[#1a1a1a]/10">
       <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-between gap-4 overflow-x-auto">
         <div className="flex items-center gap-6 min-w-max">
-          <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest shrink-0">$MAD Live</span>
+          <span className="text-[#1a1a1a]/40 text-[10px] font-bold uppercase tracking-widest shrink-0">$MAD Live</span>
           {items.map((item) => (
             <div key={item.label} className="flex items-center gap-1.5 shrink-0">
-              <span className="text-white/30 text-[10px] font-bold uppercase">{item.label}</span>
-              <span className={cn("text-xs font-black", item.color || "text-white")}>{item.value}</span>
+              <span className="text-[#1a1a1a]/30 text-[10px] font-bold uppercase">{item.label}</span>
+              <span className={cn("text-xs font-black", item.color || "text-[#1a1a1a]")}>{item.value}</span>
             </div>
           ))}
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B00]" />
           </span>
-          <span className="text-[10px] text-white/40 font-bold">LIVE</span>
+          <span className="text-[10px] text-[#1a1a1a]/40 font-bold">LIVE</span>
         </div>
       </div>
     </div>
@@ -173,8 +173,8 @@ function CopyButton({ text = CA }: { text?: string }) {
       className={cn(
         "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition duration-300",
         copied
-          ? "border border-green-400/30 bg-green-400/10 text-green-400"
-          : "border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20",
+          ? "border border-[#FF6B00]/30 bg-[#FF6B00]/10 text-[#FF6B00]"
+          : "border border-[#FF2D2D]/30 bg-[#FF2D2D]/10 text-[#FF2D2D] hover:bg-[#FF2D2D]/20",
       )}
     >
       {copied ? "Copied!" : "Copy CA"}
@@ -184,9 +184,9 @@ function CopyButton({ text = CA }: { text?: string }) {
 
 function StockBadge({ tone, children }: { tone: "green" | "yellow" | "red"; children: React.ReactNode }) {
   const map = {
-    green: "border-emerald-400/25 bg-emerald-400/10 text-emerald-300",
-    yellow: "border-amber-400/25 bg-amber-400/10 text-amber-300",
-    red: "border-red-400/25 bg-red-400/10 text-red-300",
+    green: "border-emerald-400/25 bg-emerald-400/10 text-emerald-600",
+    yellow: "border-amber-400/25 bg-amber-400/10 text-amber-600",
+    red: "border-[#FF2D2D]/25 bg-[#FF2D2D]/10 text-[#FF2D2D]",
   };
   return (
     <span className={cn("rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] border", map[tone])}>
@@ -199,10 +199,10 @@ function Pill({ children, tone = "default" }: { children: React.ReactNode; tone?
   return (
     <div className={cn(
       "rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em]",
-      tone === "red" && "border border-red-500/25 bg-red-500/10 text-red-200",
-      tone === "green" && "border border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
-      tone === "yellow" && "border border-amber-400/20 bg-amber-500/10 text-amber-200",
-      tone === "default" && "border border-white/10 bg-white/[0.04] text-white/70",
+      tone === "red" && "border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 text-[#FF2D2D]",
+      tone === "green" && "border border-emerald-400/20 bg-emerald-500/10 text-emerald-600",
+      tone === "yellow" && "border border-amber-400/20 bg-amber-500/10 text-amber-600",
+      tone === "default" && "border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] text-[#1a1a1a]/60",
     )}>
       {children}
     </div>
@@ -210,6 +210,64 @@ function Pill({ children, tone = "default" }: { children: React.ReactNode; tone?
 }
 
 /* ─── HERO ─── */
+function MerchHero() {
+  return (
+    <section className="pt-32 pb-16 text-center">
+      <div className="mx-auto max-w-7xl px-4">
+        <span className="rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-[#FF2D2D] inline-flex">
+          Drop 001 — Limited
+        </span>
+
+        <h1 className="mt-6 text-5xl sm:text-7xl lg:text-8xl font-black text-[#1a1a1a] leading-[0.9]">
+          DON&apos;T JUST
+          <br />
+          HOLD <span className="text-[#FF2D2D]">$MAD</span>.
+        </h1>
+
+        <p className="mt-4 text-3xl sm:text-5xl lg:text-6xl font-black text-[#1a1a1a]">
+          WEAR IT.
+        </p>
+
+        <p className="mt-6 text-[#1a1a1a]/55 max-w-xl mx-auto">
+          Stickers, wraps, and signal pieces for the people carrying the brand into real life.
+        </p>
+
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#products"
+            className="px-8 py-4 bg-[#FF2D2D] hover:bg-[#FF6B00] text-white font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,45,45,0.25)]"
+          >
+            Shop the Drop
+          </a>
+
+          <a
+            href="#proof"
+            className="px-8 py-4 border border-[#1a1a1a]/15 text-[#1a1a1a] rounded-full hover:bg-[#1a1a1a]/[0.03] transition-all"
+          >
+            See Proof
+          </a>
+
+          <a
+            href={LINKS.buy}
+            target="_blank"
+            rel="noreferrer"
+            className="px-8 py-4 border border-[#1a1a1a]/15 text-[#1a1a1a] rounded-full hover:bg-[#1a1a1a]/[0.03] transition-all"
+          >
+            Buy $MAD First
+          </a>
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Pill tone="red">Real Project</Pill>
+          <Pill tone="green">Live Tech</Pill>
+          <Pill>513M Supply</Pill>
+          <Pill tone="yellow">800M Target</Pill>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── PROOF GRID ─── */
 function ProofGrid() {
   const proofImages = [
@@ -222,20 +280,20 @@ function ProofGrid() {
     <section id="proof" className="py-8">
       <div className="mx-auto max-w-7xl px-4">
         <div className="mb-8 text-center">
-          <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300">
+          <span className="rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-[#FF2D2D]">
             Verified Holders
           </span>
-          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-white">
-            Real People. Real <span className="text-red-500">$MAD</span> Stickers.
+          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-[#1a1a1a]">
+            Real People. Real <span className="text-[#FF2D2D]">$MAD</span> Stickers.
           </h2>
-          <p className="mt-2 text-sm text-white/50">Community submitted proof. Not paid actors.</p>
+          <p className="mt-2 text-sm text-[#1a1a1a]/50">Community submitted proof. Not paid actors.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {proofImages.map((item, i) => (
             <div
               key={i}
-              className="group overflow-hidden rounded-[2rem] border border-white/10 bg-black/25 hover:border-white/20 hover:bg-black/35 transition-all duration-300"
+              className="group overflow-hidden rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] hover:border-[#1a1a1a]/20 hover:bg-[#1a1a1a]/[0.04] transition-all duration-300"
             >
               <div className="relative aspect-square overflow-hidden">
                 <Image
@@ -245,77 +303,19 @@ function ProofGrid() {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a]/70 via-[#1a1a1a]/10 to-transparent" />
                 <div className="absolute top-4 left-4">
-                  <span className="rounded-full border border-red-500/30 bg-red-500/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-red-300">
+                  <span className="rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-[#FF2D2D]">
                     Proof #{String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
               </div>
               <div className="p-5">
-                <p className="text-lg font-black text-white">{item.caption}</p>
-                <p className="mt-1 text-xs text-white/40">{item.alt}</p>
+                <p className="text-lg font-black text-[#1a1a1a]">{item.caption}</p>
+                <p className="mt-1 text-xs text-[#1a1a1a]/40">{item.alt}</p>
               </div>
             </div>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function MerchHero() {
-  return (
-    <section className="pt-32 pb-16 text-center">
-      <div className="mx-auto max-w-7xl px-4">
-        <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300 inline-flex">
-          Drop 001 — Limited
-        </span>
-
-        <h1 className="mt-6 text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9]">
-          DON&apos;T JUST
-          <br />
-          HOLD <span className="text-red-500">$MAD</span>.
-        </h1>
-
-        <p className="mt-4 text-3xl sm:text-5xl lg:text-6xl font-black text-white">
-          WEAR IT.
-        </p>
-
-        <p className="mt-6 text-white/55 max-w-xl mx-auto">
-          Stickers, wraps, and signal pieces for the people carrying the brand into real life.
-        </p>
-
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="#products"
-            className="px-8 py-4 bg-red-500 hover:bg-red-400 text-white font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,0,0,0.25)]"
-          >
-            Shop the Drop
-          </a>
-
-          <a
-            href="#proof"
-            className="px-8 py-4 border border-white/15 text-white rounded-full hover:bg-white/[0.05] transition-all"
-          >
-            See Proof
-          </a>
-
-          <a
-            href={LINKS.buy}
-            target="_blank"
-            rel="noreferrer"
-            className="px-8 py-4 border border-white/15 text-white rounded-full hover:bg-white/[0.05] transition-all"
-          >
-            Buy $MAD First
-          </a>
-        </div>
-
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Pill tone="red">Real Project</Pill>
-          <Pill tone="green">Live Tech</Pill>
-          <Pill>513M Supply</Pill>
-          <Pill tone="yellow">800M Target</Pill>
         </div>
       </div>
     </section>
@@ -345,16 +345,16 @@ function VideoGrid() {
     <section className="py-8">
       <div className="mx-auto max-w-7xl px-4">
         <div className="mb-6 text-center">
-          <span className="rounded-full border border-red-500/25 bg-red-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-red-300">
+          <span className="rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-[#FF2D2D]">
             Customer Proof
           </span>
-          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-white">
-            Real <span className="text-red-500">$MAD</span> Energy In Action.
+          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-[#1a1a1a]">
+            Real <span className="text-[#FF2D2D]">$MAD</span> Energy In Action.
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {videos.map((video, i) => (
-            <div key={i} className="rounded-[2rem] border border-white/10 bg-black/40 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
+            <div key={i} className="rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
               <div className="relative aspect-[9/16] w-full sm:aspect-video">
                 <iframe
                   src={video.src}
@@ -365,9 +365,9 @@ function VideoGrid() {
                 />
               </div>
               <div className="p-5 text-center">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-300">{video.label}</span>
-                <p className="mt-2 text-lg font-black text-white">{video.heading}</p>
-                <p className="mt-1 text-sm text-white/40">{video.caption}</p>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF2D2D]">{video.label}</span>
+                <p className="mt-2 text-lg font-black text-[#1a1a1a]">{video.heading}</p>
+                <p className="mt-1 text-sm text-[#1a1a1a]/40">{video.caption}</p>
               </div>
             </div>
           ))}
@@ -382,7 +382,7 @@ function FeaturedPiece() {
   return (
     <section className="py-12">
       <div className="mx-auto max-w-7xl px-4">
-        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-white/10 bg-white/[0.03] overflow-hidden">
+        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] overflow-hidden">
           <div className="p-8 flex items-center justify-center">
             <img
               src={FEATURED.image}
@@ -393,17 +393,17 @@ function FeaturedPiece() {
 
           <div className="p-8 sm:p-12 flex flex-col justify-center">
             <div className="flex gap-3 mb-4">
-              <span className="text-xs text-white/50">{FEATURED.tag}</span>
+              <span className="text-xs text-[#1a1a1a]/50">{FEATURED.tag}</span>
               <StockBadge tone={FEATURED.stockTone}>{FEATURED.stock}</StockBadge>
             </div>
 
-            <h2 className="text-4xl font-black text-white">{FEATURED.name}</h2>
+            <h2 className="text-4xl font-black text-[#1a1a1a]">{FEATURED.name}</h2>
 
-            <p className="mt-2 text-3xl font-black text-red-400">
+            <p className="mt-2 text-3xl font-black text-[#FF2D2D]">
               {FEATURED.price}
             </p>
 
-            <p className="mt-4 text-white/60 max-w-md">
+            <p className="mt-4 text-[#1a1a1a]/60 max-w-md">
               {FEATURED.featuredText}
             </p>
 
@@ -412,13 +412,13 @@ function FeaturedPiece() {
                 href={FEATURED.url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex w-fit px-8 py-4 bg-red-500 hover:bg-red-400 text-white font-black rounded-full transition-all hover:scale-[1.02]"
+                className="inline-flex w-fit px-8 py-4 bg-[#FF2D2D] hover:bg-[#FF6B00] text-white font-black rounded-full transition-all hover:scale-[1.02]"
               >
                 Grab the Sticker
               </a>
               <a
                 href="#proof"
-                className="inline-flex w-fit px-6 py-4 border border-white/15 text-white rounded-full hover:bg-white/[0.05] transition-all text-sm font-bold"
+                className="inline-flex w-fit px-6 py-4 border border-[#1a1a1a]/15 text-[#1a1a1a] rounded-full hover:bg-[#1a1a1a]/[0.03] transition-all text-sm font-bold"
               >
                 View Customer Proof
               </a>
@@ -434,10 +434,10 @@ function FeaturedPiece() {
 function Marquee() {
   const text = "NOT FOR EVERYONE • LIMITED DROP • WHILE SUPPLIES LAST • ";
   return (
-    <div className="overflow-hidden border-y border-white/10 bg-white/[0.02] py-4">
+    <div className="overflow-hidden border-y border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] py-4">
       <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite]">
         {Array.from({ length: 8 }).map((_, i) => (
-          <span key={i} className="text-xs sm:text-sm font-black uppercase tracking-[0.3em] text-white/30 mx-4">
+          <span key={i} className="text-xs sm:text-sm font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30 mx-4">
             {text}
           </span>
         ))}
@@ -457,8 +457,8 @@ function ProductGrid() {
   return (
     <section id="products" className="py-16">
       <div className="mx-auto max-w-7xl px-4">
-        <h2 className="text-4xl font-black text-white mb-10">
-          The <span className="text-red-500">$MAD</span> Drop.
+        <h2 className="text-4xl font-black text-[#1a1a1a] mb-10">
+          The <span className="text-[#FF2D2D]">$MAD</span> Drop.
         </h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -468,7 +468,7 @@ function ProductGrid() {
               href={product.url}
               target="_blank"
               rel="noreferrer"
-              className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 hover:border-white/20 hover:bg-white/[0.05] transition-all duration-300 group"
+              className="rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 hover:border-[#1a1a1a]/20 hover:bg-[#1a1a1a]/[0.04] transition-all duration-300 group"
             >
               <img
                 src={product.image}
@@ -477,19 +477,19 @@ function ProductGrid() {
               />
 
               <div className="mt-5 flex justify-between items-center">
-                <span className="text-xs text-white/40">{product.tier}</span>
+                <span className="text-xs text-[#1a1a1a]/40">{product.tier}</span>
                 <StockBadge tone={product.stockTone}>{product.stock}</StockBadge>
               </div>
 
-              <h3 className="mt-4 text-xl font-black text-white">
+              <h3 className="mt-4 text-xl font-black text-[#1a1a1a]">
                 {product.name}
               </h3>
 
-              <p className="mt-2 text-2xl font-black text-white">
+              <p className="mt-2 text-2xl font-black text-[#1a1a1a]">
                 {product.price}
               </p>
 
-              <p className="mt-2 text-sm text-white/50">{product.desc}</p>
+              <p className="mt-2 text-sm text-[#1a1a1a]/50">{product.desc}</p>
             </a>
           ))}
         </div>
@@ -498,24 +498,22 @@ function ProductGrid() {
   );
 }
 
-
-
 /* ─── APPAREL TEASER ─── */
 function ApparelTeaser() {
   return (
-    <section className="py-16 border-t border-white/10">
+    <section className="py-16 border-t border-[#1a1a1a]/10">
       <div className="mx-auto max-w-7xl px-4">
-        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-white/10 bg-white/[0.03] overflow-hidden">
+        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] overflow-hidden">
           <div className="p-8 sm:p-12 flex flex-col justify-center">
-            <span className="text-xs text-white/50 uppercase">Drop 002</span>
+            <span className="text-xs text-[#1a1a1a]/50 uppercase">Drop 002</span>
 
-            <h2 className="mt-4 text-4xl font-black text-white">
+            <h2 className="mt-4 text-4xl font-black text-[#1a1a1a]">
               $MAD isn&apos;t just held.
               <br />
-              It&apos;s <span className="text-red-500">worn</span>.
+              It&apos;s <span className="text-[#FF2D2D]">worn</span>.
             </h2>
 
-            <p className="mt-4 text-white/55">
+            <p className="mt-4 text-[#1a1a1a]/55">
               The first apparel pieces are on the way.
             </p>
           </div>
@@ -538,12 +536,12 @@ function RiskNotice() {
   return (
     <section className="py-8">
       <div className="mx-auto max-w-7xl px-4">
-        <div className="rounded-[2rem] border border-yellow-400/15 bg-yellow-500/[0.07] px-6 py-8 text-center">
-          <p className="text-[11px] font-black uppercase tracking-[0.34em] text-yellow-200/80">
+        <div className="rounded-[2rem] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] px-6 py-8 text-center">
+          <p className="text-[11px] font-black uppercase tracking-[0.34em] text-[#FF2D2D]/70">
             Risk Notice
           </p>
 
-          <p className="mt-4 text-yellow-100/85 max-w-4xl mx-auto text-sm sm:text-base">
+          <p className="mt-4 text-[#1a1a1a]/60 max-w-4xl mx-auto text-sm sm:text-base">
             $MAD is a meme coin and speculative digital asset. Nothing on this
             website is financial advice or a guarantee of returns. Crypto is risky and volatile. Never risk money you cannot afford to lose. Always do your own research.
           </p>
@@ -563,55 +561,59 @@ function Footer() {
   ];
 
   return (
-    <footer className="border-t border-white/10">
+    <footer className="border-t border-[#1a1a1a]/10 bg-[#F5F1E8]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-black text-lg">M</div>
+              <div className="w-10 h-10 rounded-full bg-[#FF2D2D] flex items-center justify-center text-white font-black text-lg">M</div>
               <div>
-                <span className="text-white font-black text-xl">$MAD</span>
-                <span className="block text-white/40 text-[10px] tracking-[0.3em] uppercase">Stay $MAD</span>
+                <span className="text-[#1a1a1a] font-black text-xl">$MAD</span>
+                <span className="block text-[#1a1a1a]/40 text-[10px] tracking-[0.3em] uppercase">Stay $MAD</span>
               </div>
             </div>
-            <p className="text-white/50 text-sm leading-relaxed mb-6">The Supreme of Solana. Limited. Exclusive. Cult.</p>
+            <p className="text-[#1a1a1a]/50 text-sm leading-relaxed mb-6">The Supreme of Solana. Limited. Exclusive. Cult.</p>
             <div className="flex items-center gap-2">
               {socials.map((s) => (
-                <a key={s.name} href={s.href} target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 hover:bg-red-500/10 border border-white/5 hover:border-red-500/20 rounded-xl flex items-center justify-center text-white/40 hover:text-red-400 transition-all" title={s.name}>{s.icon}</a>
+                <a key={s.name} href={s.href} target="_blank" rel="noreferrer" className="w-10 h-10 bg-[#1a1a1a]/5 hover:bg-[#FF2D2D]/10 border border-[#1a1a1a]/5 hover:border-[#FF2D2D]/20 rounded-xl flex items-center justify-center text-[#1a1a1a]/40 hover:text-[#FF2D2D] transition-all" title={s.name}>{s.icon}</a>
               ))}
             </div>
           </div>
           <div>
-            <h4 className="text-white font-bold text-sm mb-4 tracking-wide">NAVIGATION</h4>
+            <h4 className="text-[#1a1a1a] font-bold text-sm mb-4 tracking-wide">NAVIGATION</h4>
             <ul className="space-y-2.5">
-              {[{l:"MAD AI",h:"/mad-mind"},{l:"Roadmap",h:"/roadmap"},{l:"Game",h:"/game"},{l:"Memes",h:"/memes"},{l:"Merch",h:"/merch"}].map((link)=>(
-                <li key={link.l}><Link href={link.h} className="text-white/50 hover:text-white text-sm font-medium transition-colors">{link.l}</Link></li>
-              ))}
+              {[{l:"MAD AI",h:"/mad-mind"},{l:"Roadmap",h:"/roadmap"},{l:"Game",h:"/game"},{l:"Memes",h:"/memes"},{l:"Merch",h:"/merch"}].map((link)=>{
+                return (
+                  <li key={link.l}><Link href={link.h} className="text-[#1a1a1a]/50 hover:text-[#1a1a1a] text-sm font-medium transition-colors">{link.l}</Link></li>
+                );
+              })}
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-bold text-sm mb-4 tracking-wide">BUY & TRACK</h4>
+            <h4 className="text-[#1a1a1a] font-bold text-sm mb-4 tracking-wide">BUY & TRACK</h4>
             <ul className="space-y-2.5">
-              {[{l:"Buy on Jupiter",h:LINKS.buy},{l:"Solscan",h:LINKS.solscan}].map((link)=>(
-                <li key={link.l}><a href={link.h} target="_blank" rel="noreferrer" className="text-white/50 hover:text-white text-sm font-medium transition-colors inline-flex items-center gap-1">{link.l}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a></li>
-              ))}
+              {[{l:"Buy on Jupiter",h:LINKS.buy},{l:"Solscan",h:LINKS.solscan}].map((link)=>{
+                return (
+                  <li key={link.l}><a href={link.h} target="_blank" rel="noreferrer" className="text-[#1a1a1a]/50 hover:text-[#1a1a1a] text-sm font-medium transition-colors inline-flex items-center gap-1">{link.l}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a></li>
+                );
+              })}
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-bold text-sm mb-4 tracking-wide">CONTRACT ADDRESS</h4>
-            <div className="p-4 bg-white/[0.02] border border-white/10 rounded-xl">
-              <code className="text-xs text-red-400 font-mono break-all block mb-3">{CA}</code>
+            <h4 className="text-[#1a1a1a] font-bold text-sm mb-4 tracking-wide">CONTRACT ADDRESS</h4>
+            <div className="p-4 bg-[#1a1a1a]/[0.02] border border-[#1a1a1a]/10 rounded-xl">
+              <code className="text-xs text-[#FF2D2D] font-mono break-all block mb-3">{CA}</code>
               <CopyButton />
             </div>
-            <a href={LINKS.telegram} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white text-sm font-bold transition-all">
+            <a href={LINKS.telegram} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-2 py-3 bg-[#1a1a1a]/5 hover:bg-[#1a1a1a]/10 border border-[#1a1a1a]/10 rounded-xl text-[#1a1a1a] text-sm font-bold transition-all">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.2 2L2 10.8l5.6 2.4L16.8 6 9.6 14.8l.8 5.2L13 16.8l4.8 3.2L22 2.8"/></svg>
               Join Telegram
             </a>
           </div>
         </div>
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-xs">&copy; {new Date().getFullYear()} $MAD. All rights reserved.</p>
-          <p className="text-white/40 text-xs">Stay $MAD. Limited. Exclusive. Cult.</p>
+        <div className="pt-8 border-t border-[#1a1a1a]/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[#1a1a1a]/40 text-xs">&copy; {new Date().getFullYear()} $MAD. All rights reserved.</p>
+          <p className="text-[#1a1a1a]/40 text-xs">Stay $MAD. Limited. Exclusive. Cult.</p>
         </div>
       </div>
     </footer>
@@ -621,8 +623,8 @@ function Footer() {
 /* ─── MAIN PAGE ─── */
 export default function MerchPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,0,0.10),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.08),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.03),transparent_25%),linear-gradient(180deg,#050505,#020202)]" />
+    <div className="min-h-screen bg-[#F5F1E8] text-[#1a1a1a] overflow-x-hidden">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,45,45,0.06),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.04),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(26,26,26,0.02),transparent_25%),linear-gradient(180deg,#F5F1E8,#EDE9DD)]" />
 
       <LiveTicker />
 
