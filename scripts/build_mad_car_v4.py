@@ -127,30 +127,33 @@ set_material(body, mat_red)
 smooth_shade(body)
 
 # ═══════════════════════════════════════════════════════
-#  WHEELS
+#  WHEELS — Protruding clearly from body
 # ═══════════════════════════════════════════════════════
-wheel_y = 0.12
-wheel_positions = [(-0.82, 1.0, wheel_y), (0.82, 1.0, wheel_y),
-                   (-0.82, -1.0, wheel_y), (0.82, -1.0, wheel_y)]
+wheel_y = 0.10  # Lower so they hang down
+wheel_positions = [(-0.95, 1.0, wheel_y), (0.95, 1.0, wheel_y),
+                   (-0.95, -1.0, wheel_y), (0.95, -1.0, wheel_y)]
 
 for i, pos in enumerate(wheel_positions):
-    bpy.ops.mesh.primitive_torus_add(major_radius=0.10, minor_radius=0.055, location=pos)
+    # Tire — larger and more visible
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.14, minor_radius=0.075, location=pos)
     tire = bpy.context.active_object
     tire.name = f'Wheel_{i}'
     tire.rotation_euler = (0, math.radians(90), 0)
     set_material(tire, mat_tire)
     
-    bpy.ops.mesh.primitive_cylinder_add(radius=0.065, depth=0.04, location=pos)
+    # Rim
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.09, depth=0.05, location=pos)
     rim = bpy.context.active_object
     rim.name = f'Rim_{i}'
     rim.rotation_euler = (0, math.radians(90), 0)
     set_material(rim, mat_rim)
     
-    cx = pos[0] + (0.025 if pos[0] < 0 else -0.025)
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(cx, pos[1], pos[2] + 0.02))
+    # Brake caliper
+    cx = pos[0] + (0.03 if pos[0] < 0 else -0.03)
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(cx, pos[1], pos[2] + 0.03))
     caliper = bpy.context.active_object
     caliper.name = f'Caliper_{i}'
-    caliper.scale = (0.015, 0.04, 0.025)
+    caliper.scale = (0.02, 0.05, 0.03)
     set_material(caliper, mat_red)
 
 # ═══════════════════════════════════════════════════════
