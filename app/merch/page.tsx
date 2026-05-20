@@ -202,23 +202,34 @@ function StockBadge({ tone, children }: { tone: "green" | "yellow" | "red"; chil
 /* ─── HERO ─── */
 function MerchHero() {
   return (
-    <section className="pt-32 pb-16 text-center">
-      <div className="mx-auto max-w-7xl px-4">
-        <span className="rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-[#FF2D2D] inline-flex">
+    <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
+      {/* Background image */}
+      <img
+        src="/merch/hero/merch-hero-bg.jpg"
+        alt="$MAD merch"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+
+      {/* Gradient overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-[#080808]" />
+
+      {/* Content */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 text-center">
+        <span className="rounded-full border border-[#FF2D2D]/30 bg-[#FF2D2D]/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-[#FF2D2D] inline-flex backdrop-blur-sm">
           Drop 001 — Limited
         </span>
 
-        <h1 className="mt-6 text-5xl sm:text-7xl lg:text-8xl font-black text-[#1a1a1a] leading-[0.9]">
+        <h1 className="mt-6 text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9] drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
           DON&apos;T JUST
           <br />
           HOLD <span className="text-[#FF2D2D]">$MAD</span>.
         </h1>
 
-        <p className="mt-4 text-3xl sm:text-5xl lg:text-6xl font-black text-[#1a1a1a]">
+        <p className="mt-4 text-3xl sm:text-5xl lg:text-6xl font-black text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
           WEAR IT.
         </p>
 
-        <p className="mt-6 text-[#1a1a1a]/55 max-w-xl mx-auto">
+        <p className="mt-6 text-white/60 max-w-xl mx-auto drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
           Stickers, wraps, and signal pieces for the people carrying the brand into real life.
         </p>
 
@@ -624,10 +635,9 @@ export default function MerchPage() {
 
       <LiveTicker />
 
-      <main className="mx-auto max-w-7xl px-4 pb-24 pt-6 sm:px-6 lg:px-8">
-        <div className="h-20" />
+      <MerchHero />
 
-        <MerchHero />
+      <main className="mx-auto max-w-7xl px-4 pb-24 pt-12 sm:px-6 lg:px-8">
         <FeaturedPiece />
         <Marquee />
         <ProductGrid />
