@@ -90,7 +90,7 @@ function ChatSidebar({
         </button>
         <button
           onClick={onNewChat}
-          className="w-8 h-8 rounded-lg bg-red-500/15 hover:bg-red-500/25 flex items-center justify-center text-red-400 transition-all"
+          className="w-8 h-8 rounded-lg bg-[#FF2D2D]/15 hover:bg-[#FF2D2D]/25 flex items-center justify-center text-[#FF6B00] transition-all"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
         </button>
@@ -187,7 +187,7 @@ function FeedbackButtons({ sessionId, timestamp, text }: { sessionId: string; ti
       </button>
       <button
         onClick={() => sendFeedback("down")}
-        className="p-1 rounded hover:bg-white/10 text-white/25 hover:text-red-400 transition-all"
+        className="p-1 rounded hover:bg-white/10 text-white/25 hover:text-[#FF6B00] transition-all"
         title="Bad response"
       >
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -208,7 +208,7 @@ function MessageBubble({ msg, isLatest, sessionId }: { msg: ChatMessage; isLates
         <div
           className={`rounded-2xl px-5 py-3.5 ${
             isUser
-              ? "bg-red-500/[0.12] border border-red-500/20 text-white/90"
+              ? "bg-[#FF2D2D]/[0.12] border border-[#FF2D2D]/20 text-white/90"
               : "bg-white/[0.03] border border-white/[0.08] text-white/75"
           }`}
         >
@@ -230,9 +230,9 @@ function TypingIndicator() {
     <div className="flex justify-start">
       <div className="rounded-2xl bg-white/[0.03] border border-white/[0.08] px-5 py-4">
         <div className="flex gap-1.5 items-center h-4">
-          <span className="h-2 w-2 rounded-full bg-red-400/50 animate-bounce" style={{ animationDelay: "0ms" }} />
-          <span className="h-2 w-2 rounded-full bg-red-400/50 animate-bounce" style={{ animationDelay: "120ms" }} />
-          <span className="h-2 w-2 rounded-full bg-red-400/50 animate-bounce" style={{ animationDelay: "240ms" }} />
+          <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "0ms" }} />
+          <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "120ms" }} />
+          <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "240ms" }} />
         </div>
       </div>
     </div>
@@ -360,7 +360,7 @@ export default function ChatInterface({
               </button>
             )}
             <div className="flex items-center gap-2.5">
-              <div className="relative h-8 w-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+              <div className="relative h-8 w-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center">
                 <span className="text-sm">🦞</span>
                 <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400 border-2 border-[#080808]" />
               </div>
@@ -393,7 +393,7 @@ export default function ChatInterface({
         >
           {!hasMessages ? (
             <div className="h-full flex flex-col items-center justify-center text-center px-6">
-              <div className="h-16 w-16 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-5">
+              <div className="h-16 w-16 rounded-2xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-5">
                 <span className="text-3xl">🦞</span>
               </div>
               <h2 className="text-xl font-black text-white mb-2">Mad Claw</h2>
@@ -432,7 +432,7 @@ export default function ChatInterface({
                       const lastUser = [...messages].reverse().find((m) => m.role === "user");
                       if (lastUser) sendMessage(lastUser.text);
                     }}
-                    className="text-[11px] text-red-400/60 bg-red-500/5 px-4 py-2 rounded-xl border border-red-500/10 hover:bg-red-500/10 transition-all"
+                    className="text-[11px] text-[#FF6B00]/60 bg-[#FF2D2D]/5 px-4 py-2 rounded-xl border border-[#FF2D2D]/10 hover:bg-[#FF2D2D]/10 transition-all"
                   >
                     ⚠️ The Claw lost the signal. Click to retry.
                   </button>
@@ -453,7 +453,7 @@ export default function ChatInterface({
               disabled={status === "sending" || typing}
               placeholder="Message Mad Claw..."
               rows={1}
-              className="w-full px-5 py-3.5 pr-14 rounded-2xl border border-white/10 bg-white/[0.03] text-white text-sm placeholder:text-white/20 outline-none focus:border-red-500/30 focus:bg-white/[0.05] transition-all resize-none disabled:opacity-40 leading-relaxed"
+              className="w-full px-5 py-3.5 pr-14 rounded-2xl border border-white/10 bg-white/[0.03] text-white text-sm placeholder:text-white/20 outline-none focus:border-[#FF2D2D]/30 focus:bg-white/[0.05] transition-all resize-none disabled:opacity-40 leading-relaxed"
               style={{ minHeight: "48px", maxHeight: "200px" }}
             />
             <button
@@ -462,7 +462,7 @@ export default function ChatInterface({
               className={`absolute right-2 bottom-2 p-2 rounded-xl transition-all ${
                 !input.trim() || status === "sending"
                   ? "text-white/10 cursor-not-allowed"
-                  : "bg-red-500/15 text-red-400 hover:bg-red-500/25 hover:scale-105"
+                  : "bg-[#FF2D2D]/15 text-[#FF6B00] hover:bg-[#FF2D2D]/25 hover:scale-105"
               }`}
             >
               {status === "sending" ? (

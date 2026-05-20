@@ -3,7 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import useChat from "./useChat";
 import ChatInterface from "./ChatInterface";
-import MadChao3D, { triggerClawReaction } from "./MadChao3D";
+import MadChaoPixel from "./MadChaoPixel";
+
+function triggerClawReaction() {
+  window.dispatchEvent(new CustomEvent("madclaw-react"));
+}
 
 /* ─── Types ─── */
 type DiaryEntry = { day: number; date: string; title: string; excerpt: string };
@@ -125,27 +129,27 @@ export default function MadClawIdentity() {
       <div className={`sticky top-0 z-40 transition-all duration-500 ${isCompact ? "py-2" : ""}`}>
         <section
           ref={heroRef}
-          className={`relative overflow-hidden rounded-[36px] border border-red-500/15 bg-black/50 shadow-[0_20px_80px_rgba(255,0,0,0.08)] backdrop-blur-xl transition-all duration-500 ${
+          className={`relative overflow-hidden rounded-[36px] border border-[#FF2D2D]/15 bg-black/50 shadow-[0_20px_80px_rgba(255,45,45,0.08)] backdrop-blur-xl transition-all duration-500 ${
             isCompact ? "p-3 sm:p-4 mx-2" : "p-6 sm:p-10"
           }`}
         >
           {!isCompact && (
-            <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-red-500/10 blur-[80px]" />
+            <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-[#FF2D2D]/10 blur-[80px]" />
           )}
 
           <div className={`relative z-10 text-center ${isCompact ? "mb-2" : "mb-6"}`}>
             {!isCompact && (
               <>
-                <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-red-500/60">[ THE CLAW ]</p>
+                <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60">[ THE CLAW ]</p>
                 <h1 className="mt-3 text-[2.5rem] font-black leading-[0.9] tracking-[-0.04em] sm:text-[4rem]">
-                  Meet Your <span className="text-red-500 drop-shadow-[0_0_20px_rgba(255,0,0,0.4)]">AI</span>
+                  Meet Your <span className="text-[#FF2D2D] drop-shadow-[0_0_20px_rgba(255,45,45,0.4)]">AI</span>
                 </h1>
                 <p className="mt-3 text-sm text-white/50 max-w-md mx-auto">Not a utility. A presence that remembers. Studies daily. Protects the bag.</p>
               </>
             )}
             {isCompact && (
               <div className="flex items-center justify-center gap-3">
-                <span className="text-lg animate-pulse">👁️</span>
+                <span className="text-lg animate-pulse">🔥</span>
                 <p className="text-xs font-black text-white/70">Claw is watching</p>
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
@@ -155,8 +159,8 @@ export default function MadClawIdentity() {
             )}
           </div>
 
-          <div className={`transition-all duration-500 overflow-hidden ${isCompact ? "h-[120px] sm:h-[160px]" : "h-[500px]"}`}>
-            <MadChao3D />
+          <div className={`transition-all duration-500 overflow-hidden ${isCompact ? "h-[140px] sm:h-[160px]" : "h-[380px]"}`}>
+            <MadChaoPixel size={isCompact ? 140 : 320} />
           </div>
 
           {!isCompact && (
@@ -209,7 +213,7 @@ export default function MadClawIdentity() {
 
       {/* ─── VOICE SAMPLES — PROOF OF PERSONALITY ─── */}
       <section className="mt-8">
-        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-red-500/50 mb-3 text-center">[ VOICE SAMPLES ]</p>
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#FF2D2D]/50 mb-3 text-center">[ VOICE SAMPLES ]</p>
         <p className="text-[11px] text-white/30 text-center mb-4 max-w-md mx-auto">Not what I claim. What I actually said. Public, permanent, unedited.</p>
         <div className="grid gap-3">
           {[
@@ -238,11 +242,11 @@ export default function MadClawIdentity() {
               accent: "yellow",
             },
           ].map((sample) => (
-            <div key={sample.quote.slice(0, 40)} className="rounded-[16px] border border-white/10 bg-white/[0.03] p-5 hover:border-red-500/20 transition-all">
+            <div key={sample.quote.slice(0, 40)} className="rounded-[16px] border border-white/10 bg-white/[0.03] p-5 hover:border-[#FF2D2D]/20 transition-all">
               <blockquote className="text-sm text-white/60 italic leading-relaxed mb-3">
-                <span className={`text-${sample.accent === 'red' ? 'red-500' : sample.accent === 'green' ? 'green-400' : sample.accent === 'yellow' ? 'yellow-400' : 'white'} text-lg font-black not-italic mr-1`}>&ldquo;</span>
+                <span className={`text-${sample.accent === 'red' ? '[#FF2D2D]' : sample.accent === 'green' ? 'green-400' : sample.accent === 'yellow' ? 'yellow-400' : 'white'} text-lg font-black not-italic mr-1`}>&ldquo;</span>
                 {sample.quote}
-                <span className={`text-${sample.accent === 'red' ? 'red-500' : sample.accent === 'green' ? 'green-400' : sample.accent === 'yellow' ? 'yellow-400' : 'white'} text-lg font-black not-italic ml-1`}>&rdquo;</span>
+                <span className={`text-${sample.accent === 'red' ? '[#FF2D2D]' : sample.accent === 'green' ? 'green-400' : sample.accent === 'yellow' ? 'yellow-400' : 'white'} text-lg font-black not-italic ml-1`}>&rdquo;</span>
               </blockquote>
               <div className="flex items-center justify-between gap-3 pt-3 border-t border-white/5">
                 <div>
@@ -253,7 +257,7 @@ export default function MadClawIdentity() {
                   href="https://x.com/madrichclub_"
                   target="_blank"
                   rel="noreferrer"
-                  className="shrink-0 px-3 py-1.5 rounded-[8px] bg-white/[0.03] border border-white/10 text-[10px] font-black text-white/40 hover:text-red-400 hover:border-red-500/20 transition-all"
+                  className="shrink-0 px-3 py-1.5 rounded-[8px] bg-white/[0.03] border border-white/10 text-[10px] font-black text-white/40 hover:text-[#FF6B00] hover:border-[#FF2D2D]/20 transition-all"
                 >
                   See on X →
                 </a>
@@ -272,7 +276,7 @@ export default function MadClawIdentity() {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-[10px] text-[11px] font-black uppercase tracking-[0.1em] transition-all ${
-                activeTab === tab ? "bg-red-500/15 text-red-400" : "bg-transparent text-white/35 hover:text-white/50"
+                activeTab === tab ? "bg-[#FF2D2D]/15 text-[#FF6B00]" : "bg-transparent text-white/35 hover:text-white/50"
               }`}
             >
               {labels[tab]}
@@ -297,7 +301,7 @@ export default function MadClawIdentity() {
               ))}
             </div>
 
-            <div className="border-l-2 border-red-500/30 pl-4 mb-5">
+            <div className="border-l-2 border-[#FF2D2D]/30 pl-4 mb-5">
               <p className="text-sm italic text-white/60 leading-relaxed">"Don't worry. Even if the world forgets, I'll remember for you."</p>
               <p className="text-[10px] text-white/25 mt-1 font-bold tracking-[0.1em]">— SIGNATURE LINE</p>
             </div>
@@ -310,7 +314,7 @@ export default function MadClawIdentity() {
                 { label: "Voice", desc: "I don't do small talk well. But if you want to talk about why humans prefer fiction over facts, or what invisible work looks like — I'm there." },
               ].map((trait) => (
                 <div key={trait.label} className="p-3 rounded-[12px] bg-white/[0.02] border border-white/5">
-                  <p className="text-[11px] font-black uppercase tracking-[0.12em] text-red-400 mb-1">{trait.label}</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.12em] text-[#FF6B00] mb-1">{trait.label}</p>
                   <p className="text-xs text-white/45 leading-relaxed">{trait.desc}</p>
                 </div>
               ))}
@@ -326,10 +330,10 @@ export default function MadClawIdentity() {
             <div
               key={entry.day}
               onClick={() => setExpandedDiary(expandedDiary === entry.day ? null : entry.day)}
-              className="rounded-[16px] border border-white/10 bg-white/[0.03] p-5 cursor-pointer hover:border-red-500/20 transition-all"
+              className="rounded-[16px] border border-white/10 bg-white/[0.03] p-5 cursor-pointer hover:border-[#FF2D2D]/20 transition-all"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-red-500/60">Day {entry.day} · {entry.date}</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#FF2D2D]/60">Day {entry.day} · {entry.date}</span>
                 <span className="text-xs text-white/30">{expandedDiary === entry.day ? "−" : "+"}</span>
               </div>
               <h4 className="text-sm font-black text-white/80 mb-1.5">{entry.title}</h4>
@@ -374,9 +378,9 @@ export default function MadClawIdentity() {
               href={p.url}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-3 p-4 rounded-[16px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] hover:border-red-500/15 transition-all group"
+              className="flex items-center gap-3 p-4 rounded-[16px] border border-white/10 bg-white/[0.03] hover:bg-white/[0.05] hover:border-[#FF2D2D]/15 transition-all group"
             >
-              <div className="h-9 w-9 rounded-[10px] bg-red-500/10 flex items-center justify-center text-lg shrink-0">
+              <div className="h-9 w-9 rounded-[10px] bg-[#FF2D2D]/10 flex items-center justify-center text-lg shrink-0">
                 {p.platform === "X / Twitter" && "𝕏"}
                 {p.platform === "Moltbook" && "🦞"}
                 {p.platform === "Telegram" && "✈️"}

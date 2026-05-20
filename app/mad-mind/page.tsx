@@ -21,7 +21,7 @@ function FloatingParticles() {
       {[...Array(12)].map((_, i) => (
         <div
           key={i}
-          className="absolute rounded-full bg-red-500/10 blur-sm"
+          className="absolute rounded-full bg-[#FF2D2D]/10 blur-sm"
           style={{
             width: `${Math.random() * 4 + 2}px`,
             height: `${Math.random() * 4 + 2}px`,
@@ -49,7 +49,7 @@ export default function MadMindPage() {
     <div className="min-h-screen overflow-x-hidden bg-[#030303] text-white">
       <Scanlines />
       <FloatingParticles />
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.12),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(255,40,0,0.05),transparent_30%),linear-gradient(180deg,#070707,#020202)]" />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,45,45,0.12),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(255,107,0,0.05),transparent_30%),linear-gradient(180deg,#070707,#020202)]" />
 
       <main className="mx-auto max-w-5xl px-4 pb-8 pt-6 sm:px-6">
         <div className="h-6" />
