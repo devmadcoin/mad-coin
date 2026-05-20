@@ -179,43 +179,46 @@ function TheCinema() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE VERIFIED — Exchange Showcase
+   THE VERIFIED — Exchange Carousel
    ═══════════════════════════════════════════════════════════ */
 function TheVerified() {
   const exchanges = [
-    { name: "Jupiter", src: "/logos/jupiter.png", href: LINKS.jupiter },
-    { name: "DEX Screener", src: "/logos/DEX-screener.png", href: LINKS.dexscreener },
-    { name: "Birdeye", src: "/logos/birdeye.png", href: LINKS.birdeye },
-    { name: "Solscan", src: "/logos/solscan.png", href: LINKS.solscan },
-    { name: "CoinGecko", src: "/logos/coingecko.png", href: "https://www.coingecko.com/en/coins/mad-coin" },
+    { name: "Jupiter", src: "/logos/jupiter.png" },
+    { name: "DEX Screener", src: "/logos/DEX-screener.png" },
+    { name: "Birdeye", src: "/logos/birdeye.png" },
+    { name: "Solscan", src: "/logos/solscan.png" },
+    { name: "CoinGecko", src: "/logos/coingecko.png" },
+    { name: "Jupiter", src: "/logos/jupiter.png" },
+    { name: "DEX Screener", src: "/logos/DEX-screener.png" },
+    { name: "Birdeye", src: "/logos/birdeye.png" },
+    { name: "Solscan", src: "/logos/solscan.png" },
+    { name: "CoinGecko", src: "/logos/coingecko.png" },
   ];
 
   return (
-    <section className="px-4 sm:px-6 py-12 sm:py-16 border-y border-white/5">
-      <div className="max-w-4xl mx-auto">
-        <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/50 mb-6">
-          Verified On-Chain
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-          {exchanges.map((dex) => (
-            <a
-              key={dex.name}
-              href={dex.href}
-              target="_blank"
-              rel="noreferrer"
-              className="group flex flex-col items-center gap-2 px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-[#FF2D2D]/20 transition-all"
-            >
+    <section className="py-10 sm:py-14 border-y border-white/5 overflow-hidden">
+      <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/50 mb-6 px-4">
+        Verified On-Chain
+      </p>
+      <div className="relative">
+        {/* Fade edges */}
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-[#080808] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-[#080808] to-transparent z-10 pointer-events-none" />
+        
+        <div className="flex logo-marquee-slow items-center gap-8 sm:gap-12 px-4">
+          {exchanges.map((dex, i) => (
+            <div key={`${dex.name}-${i}`} className="flex items-center gap-3 shrink-0">
               <Image
                 src={dex.src}
                 alt={dex.name}
-                width={48}
-                height={48}
-                className="h-8 w-auto object-contain opacity-70 group-hover:opacity-100 transition-opacity"
+                width={36}
+                height={36}
+                className="h-7 w-auto object-contain opacity-60"
               />
-              <span className="text-[9px] font-bold uppercase tracking-wider text-white/40 group-hover:text-white/60 transition-colors">
+              <span className="text-xs font-bold uppercase tracking-wider text-white/40 whitespace-nowrap">
                 {dex.name}
               </span>
-            </a>
+            </div>
           ))}
         </div>
       </div>
@@ -224,41 +227,74 @@ function TheVerified() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE WALLS — Featured Art
+   THE PROOF — Mad Rich Tub + Testimony
    ═══════════════════════════════════════════════════════════ */
-function ArtWall({ title, image, subtitle }: { title: string; image: string; subtitle: string }) {
-  return (
-    <div className="group relative overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.02] aspect-[4/5] sm:aspect-[3/4]">
-      <Image
-        src={image}
-        alt={title}
-        fill
-        className="object-cover transition duration-700 group-hover:scale-[1.05]"
-        sizes="(max-width: 768px) 100vw, 33vw"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(8,8,8,0.9)_80%,rgba(8,8,8,0.98))]" />
-      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-        <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60">{subtitle}</p>
-        <p className="mt-1 text-lg sm:text-xl font-black text-white">{title}</p>
-      </div>
-    </div>
-  );
-}
-
-function TheWalls() {
+function TheProof() {
   return (
     <section className="px-4 sm:px-6 py-20 sm:py-28">
       <div className="max-w-6xl mx-auto">
         <div className="mb-10 sm:mb-14">
-          <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-white/30">The Atmosphere</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-white/30">Real Stories</p>
           <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-black text-white">
-            The <span className="text-[#FF2D2D]">Walls</span> Speak
+            The <span className="text-[#FF2D2D]">Proof</span> is Real
           </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <ArtWall title="Kings Only" image="/memes/MAD-KINGS-ONLY.png" subtitle="Power" />
-          <ArtWall title="At The Bears" image="/memes/MAD-AT-BEARS.png" subtitle="Dominance" />
-          <ArtWall title="The Signal" image="/memes/MAD-BELIEVE.png" subtitle="Conviction" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Tub Image */}
+          <div className="relative overflow-hidden rounded-[24px] border border-white/10 aspect-[4/3]">
+            <Image
+              src="/memes/MAD-RICH-IN-THE-TUB.png"
+              alt="Mad Rich in the Tub"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(8,8,8,0.8)_90%)]" />
+            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+              <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60">The Lifestyle</p>
+              <p className="mt-1 text-lg sm:text-xl font-black text-white">Mad Rich in the Tub</p>
+            </div>
+          </div>
+          
+          {/* Testimony */}
+          <div className="relative overflow-hidden rounded-[24px] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-6 sm:p-8 flex flex-col justify-center">
+            <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#FF2D2D]/5 blur-3xl" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="h-10 w-10 rounded-full bg-[#FF2D2D]/20 flex items-center justify-center text-base font-black text-[#FF2D2D] border border-[#FF2D2D]/30">A</div>
+                <div>
+                  <p className="text-sm font-black text-white">Abraxas</p>
+                  <p className="text-[10px] text-white/40">$MAD Holder · Giveaway Winner</p>
+                </div>
+                <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-green-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-green-400 border border-green-400/20">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-400" />
+                  </span>
+                  Verified
+                </span>
+              </div>
+
+              <blockquote className="text-sm sm:text-base leading-relaxed text-white/70 italic">
+                <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">"</span>
+                When I first encountered Mad Rich, I won a 200k MAD giveaway. The profits on holding the $120 worth of $MAD lasted me 2 months. <span className="text-[#FF2D2D] font-bold not-italic">$MAD relieved me of most my debts.</span> $MAD saved me during the hard times.
+                <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">"</span>
+              </blockquote>
+
+              <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between">
+                <p className="text-[10px] text-white/30">Shared via DM · With permission</p>
+                <a 
+                  href="https://x.com/madrichclub_/status/2052836164311322949" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white/40 hover:text-[#FF2D2D] transition-colors"
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  See on X
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -342,6 +378,22 @@ function TheFrequency() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   DISCLAIMER — Legal protection
+   ═══════════════════════════════════════════════════════════ */
+function Disclaimer() {
+  return (
+    <section className="px-4 sm:px-6 py-8 border-t border-white/5">
+      <div className="max-w-3xl mx-auto text-center">
+        <p className="text-[10px] leading-relaxed text-white/20 uppercase tracking-wider">
+          $MAD is a memecoin for entertainment purposes only. Not financial advice. 
+          Cryptocurrency may lose value. DYOR. <span className="text-[#FF2D2D]/30">No guarantees. No refunds. No hand-holding.</span>
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    FOOTER — Minimal
    ═══════════════════════════════════════════════════════════ */
 function Footer() {
@@ -382,11 +434,12 @@ export default function Home() {
       <main>
         <TheCinema />
         <TheVerified />
-        <TheWalls />
+        <TheProof />
         <TheOracle />
         <TheFrequency />
       </main>
 
+      <Disclaimer />
       <Footer />
     </div>
   );
