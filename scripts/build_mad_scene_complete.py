@@ -210,18 +210,62 @@ def create_pupil_material():
 # ============================================================
 
 def build_car_body():
-    # Main body — cube scaled and shaped via modifiers
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0.55))
+    # Main body — cube with vertex-level shaping for car silhouette
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0.52))
     body = bpy.context.active_object
     body.name = "CarBody_v6"
-    body.scale = (0.95, 1.8, 0.42)
+    body.scale = (0.92, 2.0, 0.38)
+    
+    # Ensure object mode before bmesh
+    bpy.ops.object.mode_set(mode='OBJECT')
+    
+    # Box model the body shape (object mode bmesh)
+    bm = bmesh.new()
+    bm.from_mesh(body.data)
+    bm.verts.ensure_lookup_table()
+    
+    # Hood slope — push front top vertices WAY down for aerodynamic nose
+    for v in bm.verts:
+        if v.co.y > 0.6 and v.co.z > 0:
+            v.co.z *= 0.35  # Dramatically lower hood
+        elif v.co.y > 0.3 and v.co.z > 0:
+            v.co.z *= 0.75  # Gradual slope to cabin
+    
+    # Cabin roof raise — higher in the middle
+    for v in bm.verts:
+        if abs(v.co.y) < 0.35 and v.co.z > 0:
+            v.co.z += 0.18  # Raise roof
+            v.co.x *= 0.78   # Narrow cabin (greenhouse)
+    
+    # Rear deck — slightly lowered trunk area
+    for v in bm.verts:
+        if v.co.y < -0.5 and v.co.z > 0:
+            v.co.z *= 0.82
+    
+    # Taper sides — wider at bottom for stability look
+    for v in bm.verts:
+        if v.co.z > 0:
+            v.co.x *= 0.80  # Top narrower
+        else:
+            v.co.x *= 0.92  # Bottom wider
+    
+    # Wheel wells — push vertices inward where wheels sit
+    wheel_y_positions = [0.7, -0.7]
+    for wy in wheel_y_positions:
+        for v in bm.verts:
+            if abs(v.co.y - wy) < 0.25 and v.co.z < 0.05 and v.co.x > 0.5:
+                v.co.x *= 0.75  # Indent side for wheel well
+    
+    bm.to_mesh(body.data)
+    bm.free()
+    body.data.update()
     
     # Add bevel + subdivision for smooth organic hard-surface
-    add_bevel(body, width=0.008, segments=4)
+    add_bevel(body, width=0.006, segments=3)
     add_subsurf(body, levels=2)
     
-    # Apply procedural car paint
-    car_paint = create_car_paint("MAD_CarPaint", (0.75, 0.0, 0.05), flake_scale=40)
+    # Apply procedural car paint — more saturated for visibility
+    car_paint = create_car_paint("MAD_CarPaint", (0.85, 0.0, 0.08), flake_scale=40)
     body.data.materials.append(car_paint)
     set_smooth(body)
     
@@ -229,22 +273,22 @@ def build_car_body():
 
 def build_car_spoiler():
     # Spoiler deck
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, -1.35, 0.75))
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, -1.45, 0.72))
     deck = bpy.context.active_object
     deck.name = "SpoilerDeck"
-    deck.scale = (0.85, 0.15, 0.03)
+    deck.scale = (0.80, 0.15, 0.03)
     add_bevel(deck, 0.003, 2)
     deck.data.materials.append(create_car_paint("SpoilerPaint", (0.75, 0.0, 0.05)))
     set_smooth(deck)
     
     # Spoiler endplates
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(0.82, -1.35, 0.85))
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0.78, -1.45, 0.82))
     plate = bpy.context.active_object
     plate.name = "SpoilerEndplate_R"
     plate.scale = (0.02, 0.15, 0.15)
     plate.data.materials.append(create_neon_material("SpoilerNeon", (0.0, 1.0, 1.0), 6.0))
     
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(-0.82, -1.35, 0.85))
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(-0.78, -1.45, 0.82))
     plate_l = bpy.context.active_object
     plate_l.name = "SpoilerEndplate_L"
     plate_l.scale = (0.02, 0.15, 0.15)
@@ -254,35 +298,35 @@ def build_car_spoiler():
 
 def build_wheels():
     wheels = []
-    positions = [(0.82, 0.6, 0.28), (-0.82, 0.6, 0.28), (0.82, -0.6, 0.28), (-0.82, -0.6, 0.28)]
+    positions = [(0.85, 0.72, 0.24), (-0.85, 0.72, 0.24), (0.85, -0.72, 0.24), (-0.85, -0.72, 0.24)]
     
     for i, (x, y, z) in enumerate(positions):
         side = "R" if x > 0 else "L"
         pos = "F" if y > 0 else "R"
         
-        # Tire
+        # Tire — slightly smaller for better car proportions
         bpy.ops.mesh.primitive_torus_add(major_segments=24, minor_segments=16,
-                                         major_radius=0.28, minor_radius=0.12,
+                                         major_radius=0.24, minor_radius=0.10,
                                          location=(x, y, z), rotation=(math.radians(90), 0, 0))
         tire = bpy.context.active_object
         tire.name = f"Tire_{side}{pos}"
         tire.data.materials.append(create_tire_material())
         
         # Rim
-        bpy.ops.mesh.primitive_cylinder_add(vertices=16, radius=0.18, depth=0.06,
+        bpy.ops.mesh.primitive_cylinder_add(vertices=16, radius=0.15, depth=0.05,
                                             location=(x, y, z), rotation=(math.radians(90), 0, 0))
         rim = bpy.context.active_object
         rim.name = f"Rim_{side}{pos}"
         rim.data.materials.append(create_rim_material())
         
-        # Spoke detail (5 spokes)
+        # Spoke detail (5 spokes) — scaled for smaller wheels
         for j in range(5):
             angle = j * 2 * math.pi / 5
-            sx = x + math.cos(angle) * 0.12
-            sy = y + math.sin(angle) * 0.12
+            sx = x + math.cos(angle) * 0.10
+            sy = y + math.sin(angle) * 0.10
             bpy.ops.mesh.primitive_cube_add(size=1, location=(sx, sy, z))
             spoke = bpy.context.active_object
-            spoke.scale = (0.02, 0.08, 0.01)
+            spoke.scale = (0.018, 0.065, 0.008)
             spoke.rotation_euler = (math.radians(90), 0, angle)
             spoke.name = f"Spoke_{side}{pos}_{j}"
             spoke.data.materials.append(create_rim_material())
@@ -296,7 +340,7 @@ def build_headlights():
     lights = []
     for side in [-1, 1]:
         bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.08, depth=0.05,
-                                            location=(side * 0.7, 0.85, 0.45),
+                                            location=(side * 0.65, 0.92, 0.42),
                                             rotation=(math.radians(90), 0, 0))
         housing = bpy.context.active_object
         housing.name = f"Headlight_{'L' if side < 0 else 'R'}"
@@ -304,7 +348,7 @@ def build_headlights():
         
         # Light lens
         bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.06, depth=0.01,
-                                            location=(side * 0.7, 0.88, 0.45),
+                                            location=(side * 0.65, 0.95, 0.42),
                                             rotation=(math.radians(90), 0, 0))
         lens = bpy.context.active_object
         lens.name = f"HeadlightLens_{'L' if side < 0 else 'R'}"
@@ -317,18 +361,18 @@ def build_neon_strips(body):
     strips = []
     # Side skirt neon
     for side in [-1, 1]:
-        bpy.ops.mesh.primitive_cube_add(size=1, location=(side * 0.92, 0, 0.15))
+        bpy.ops.mesh.primitive_cube_add(size=1, location=(side * 0.90, 0, 0.12))
         strip = bpy.context.active_object
         strip.name = f"NeonSide_{'L' if side < 0 else 'R'}"
-        strip.scale = (0.01, 1.5, 0.01)
+        strip.scale = (0.01, 1.8, 0.01)
         strip.data.materials.append(create_neon_material("NeonSide", (1.0, 0.0, 0.5), 12.0))
         strips.append(strip)
     
     # Front lip neon
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0.88, 0.15))
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0.95, 0.12))
     front = bpy.context.active_object
     front.name = "NeonFront"
-    front.scale = (0.85, 0.01, 0.01)
+    front.scale = (0.80, 0.01, 0.01)
     front.data.materials.append(create_neon_material("NeonFront", (1.0, 0.0, 0.5), 12.0))
     strips.append(front)
     
@@ -343,7 +387,7 @@ def build_chao_character():
     
     # Body — scaled sphere for organic shape
     bpy.ops.mesh.primitive_uv_sphere_add(segments=32, ring_count=16, radius=0.18,
-                                         location=(0, 0.15, 0.65))
+                                         location=(0, 0.15, 0.62))
     body = bpy.context.active_object
     body.name = "ChaoBody_v6"
     body.scale = (1.0, 0.85, 1.2)
@@ -354,7 +398,7 @@ def build_chao_character():
     
     # Head — slightly wider sphere
     bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=16, radius=0.14,
-                                         location=(0, 0.12, 0.92))
+                                         location=(0, 0.12, 0.88))
     head = bpy.context.active_object
     head.name = "ChaoHead_v6"
     head.scale = (1.1, 1.05, 1.0)
@@ -626,14 +670,16 @@ def add_animation():
                 for kp in fcurve.keyframe_points:
                     kp.interpolation = 'LINEAR'
     
-    # Wheel spin
+    # Wheel spin — rotate around axle (X axis) for proper rolling
     for side in ['L', 'R']:
         for pos in ['F', 'R']:
             tire = bpy.data.objects.get(f"Tire_{side}{pos}")
             if tire:
+                # Initial upright orientation
                 tire.rotation_euler = (math.radians(90), 0, 0)
                 tire.keyframe_insert(data_path="rotation_euler", frame=1)
-                tire.rotation_euler = (math.radians(90), 0, math.radians(360 * 3))
+                # Spin around X (axle) — 3 full rotations over 120 frames
+                tire.rotation_euler = (math.radians(90 + 360 * 3), 0, 0)
                 tire.keyframe_insert(data_path="rotation_euler", frame=120)
                 
                 if tire.animation_data and tire.animation_data.action:
