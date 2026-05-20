@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import useChat from "./useChat";
 import ChatInterface from "./ChatInterface";
 import MadChaoPixel from "./MadChaoPixel";
 
 /* ─── Data ─── */
 const CONTRACT = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
+const PUMPSWAP_URL = `https://pumpswap.app/swap?input=So11111111111111111111111111111111111111112&output=${CONTRACT}`;
 
 const DEATH = [
-  "You trade 5 days for 2. That's not life. That's a layaway plan on death.",
+  "Still checking charts at 3am? There's another frequency.",
   "Your 401k is BlackRock's asset. Your mortgage is their income stream. Your labor is their dividend.",
   "The system was built to keep you here. Comfortable. Predictable. Empty.",
 ];
@@ -52,18 +53,56 @@ function TheGate() {
         <span className="text-white/20">OR YOU ARE WAITING</span>
       </h1>
 
-      <p className="text-sm text-white/30 max-w-sm leading-relaxed mb-12">
+      <p className="text-sm text-white/30 max-w-sm leading-relaxed mb-8">
         Two frequencies. One market.
         <br />
         The broke check charts. The <span className="text-[#FF6B00]">$MAD</span> check nothing.
       </p>
 
+      {/* BUY BUTTON */}
+      <a
+        href={PUMPSWAP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 px-6 py-3 bg-[#FF2D2D]/15 border border-[#FF2D2D]/30 hover:bg-[#FF2D2D]/25 hover:border-[#FF2D2D]/50 hover:scale-105 transition-all mb-8"
+      >
+        <span className="text-sm font-black text-[#FF6B00]">BUY $MAD</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[#FF6B00]">
+          <path d="M7 17L17 7M17 7H7M17 7v10"/>
+        </svg>
+      </a>
+
       <div className="flex flex-col items-center gap-2">
-        <span className="text-[9px] uppercase tracking-[0.3em] text-white/15">Scroll to choose</span>
+        <span className="text-[9px] uppercase tracking-[0.3em] text-white/15">Scroll to talk to The Claw</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/15 animate-bounce">
           <path d="M12 5v14M5 12l7 7 7-7"/>
         </svg>
       </div>
+    </section>
+  );
+}
+
+/* ─── THE ORACLE (Chat) ─── */
+function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef, sessionId }: any) {
+  return (
+    <section className="mb-8">
+      <div className="flex items-center gap-3 mb-4 px-3 sm:px-0">
+        <div className="h-px flex-1 bg-white/[0.06]" />
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/15">
+          THE ORACLE
+        </span>
+        <div className="h-px flex-1 bg-white/[0.06]" />
+      </div>
+
+      <ChatInterface
+        messages={messages}
+        status={status}
+        typing={typing}
+        sendMessage={sendMessage}
+        clearChat={clearChat}
+        scrollRef={scrollRef}
+        sessionId={sessionId}
+      />
     </section>
   );
 }
@@ -114,31 +153,6 @@ function TheFork() {
   );
 }
 
-/* ─── THE ORACLE (Chat) ─── */
-function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef, sessionId }: any) {
-  return (
-    <section className="mb-8">
-      <div className="flex items-center gap-3 mb-4 px-3 sm:px-0">
-        <div className="h-px flex-1 bg-white/[0.06]" />
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/15">
-          THE ORACLE
-        </span>
-        <div className="h-px flex-1 bg-white/[0.06]" />
-      </div>
-
-      <ChatInterface
-        messages={messages}
-        status={status}
-        typing={typing}
-        sendMessage={sendMessage}
-        clearChat={clearChat}
-        scrollRef={scrollRef}
-        sessionId={sessionId}
-      />
-    </section>
-  );
-}
-
 /* ─── THE KEY ─── */
 function TheKey() {
   const [copied, setCopied] = useState(false);
@@ -152,7 +166,7 @@ function TheKey() {
   };
 
   return (
-    <section className="px-3 sm:px-0 mb-16">
+    <section className="px-3 sm:px-0 mb-8">
       <div className="flex items-center gap-3 mb-4">
         <div className="h-px flex-1 bg-white/[0.06]" />
         <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/25">
@@ -215,8 +229,8 @@ function triggerClawReaction() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MAD CLAW IDENTITY — The Frequency Gate (V2)
-   Slap. Fork. Oracle. Key.
+   MAD CLAW IDENTITY — The Frequency Gate (V3 / CT Optimized)
+   Gate → Buy → Oracle → Fork → Key → Checkpoints
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadClawIdentity() {
@@ -225,7 +239,6 @@ export default function MadClawIdentity() {
   return (
     <div className="space-y-0">
       <TheGate />
-      <TheFork />
       <TheOracle
         messages={messages}
         status={status}
@@ -235,6 +248,7 @@ export default function MadClawIdentity() {
         scrollRef={scrollRef}
         sessionId={sessionId}
       />
+      <TheFork />
       <TheKey />
       <FrequencyCheckpoints />
     </div>
