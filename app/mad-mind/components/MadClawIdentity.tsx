@@ -37,7 +37,7 @@ function TheGate() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-[#FF6B00]/[0.06] blur-[100px]" />
       </div>
 
-      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF2D2D]/40 mb-10">
+      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF2D2D]/70 mb-10">
         [ THE CLAW ]
       </p>
 
@@ -53,7 +53,7 @@ function TheGate() {
         <span className="text-white/20">OR YOU ARE WAITING</span>
       </h1>
 
-      <p className="text-sm text-white/30 max-w-sm leading-relaxed mb-8">
+      <p className="text-sm text-white/50 max-w-sm leading-relaxed mb-8">
         Two frequencies. One market.
         <br />
         The broke check charts. The <span className="text-[#FF6B00]">$MAD</span> check nothing.
@@ -70,11 +70,11 @@ function TheGate() {
         }}
         className="cursor-pointer group mb-8"
       >
-        <div className="border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04] px-5 py-4 hover:border-[#FF2D2D]/40 transition-all">
-          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/40 mb-2">
+        <div className="border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.06] px-5 py-4 hover:border-[#FF2D2D]/50 transition-all shadow-[0_0_30px_rgba(255,45,45,0.08)]">
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/70 mb-2">
             Solana Contract — Tap to Copy
           </p>
-          <p className="text-xs sm:text-sm font-mono text-[#FF2D2D]/70 break-all leading-relaxed">
+          <p className="text-xs sm:text-sm font-mono text-[#FF2D2D] break-all leading-relaxed">
             {CONTRACT}
           </p>
         </div>
@@ -90,13 +90,13 @@ function TheGate() {
         href={PUMPSWAP_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[10px] text-white/20 hover:text-white/40 uppercase tracking-wider transition-colors mb-8"
+        className="text-[10px] text-white/40 hover:text-white/60 uppercase tracking-wider transition-colors mb-8"
       >
         Or swap on Jupiter →
       </a>
 
       <div className="flex flex-col items-center gap-2">
-        <span className="text-[9px] uppercase tracking-[0.3em] text-white/15">Scroll to talk to The Claw</span>
+        <span className="text-[9px] uppercase tracking-[0.3em] text-white/30">Scroll to talk to The Claw</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/15 animate-bounce">
           <path d="M12 5v14M5 12l7 7 7-7"/>
         </svg>
@@ -111,10 +111,10 @@ function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef
     <section className="mb-8">
       <div className="flex items-center gap-3 mb-4 px-3 sm:px-0">
         <div className="h-px flex-1 bg-white/[0.06]" />
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/15">
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
           THE ORACLE
         </span>
-        <div className="h-px flex-1 bg-white/[0.06]" />
+        <div className="h-px flex-1 bg-white/[0.10]" />
       </div>
 
       <ChatInterface
@@ -135,39 +135,39 @@ function TheFork() {
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-3 px-3 sm:px-0 mb-8">
       {/* Death */}
-      <div className="relative border border-white/[0.06] bg-white/[0.015] p-5 sm:p-7">
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/15 mb-6">
+      <div className="relative border border-white/[0.10] bg-white/[0.02] p-5 sm:p-7">
+        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-6">
           PATH ONE — THE DEATH ECONOMY
         </p>
         <div className="space-y-4">
           {DEATH.map((line, i) => (
-            <p key={i} className="text-sm text-white/30 leading-relaxed">
+            <p key={i} className="text-sm text-white/50 leading-relaxed">
               {line}
             </p>
           ))}
         </div>
-        <div className="mt-6 pt-4 border-t border-white/[0.04]">
-          <p className="text-[9px] text-white/10 uppercase tracking-wider">
+        <div className="mt-6 pt-4 border-t border-white/[0.06]">
+          <p className="text-[9px] text-white/30 uppercase tracking-wider">
             Retire at 90 — if the market allows.
           </p>
         </div>
       </div>
 
       {/* Life */}
-      <div className="relative border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.02] p-5 sm:p-7">
-        <div className="absolute -top-px -right-px w-6 h-6 border-t border-r border-[#FF6B00]/30" />
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/40 mb-6">
+      <div className="relative border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.04] p-5 sm:p-7 shadow-[0_0_40px_rgba(255,45,45,0.06)]">
+        <div className="absolute -top-px -right-px w-6 h-6 border-t border-r border-[#FF6B00]/50" />
+        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/70 mb-6">
           PATH TWO — THE LIFE ECONOMY
         </p>
         <div className="space-y-4">
           {LIFE.map((line, i) => (
-            <p key={i} className="text-sm text-white/55 leading-relaxed">
+            <p key={i} className="text-sm text-white/75 leading-relaxed">
               {line}
             </p>
           ))}
         </div>
-        <div className="mt-6 pt-4 border-t border-[#FF2D2D]/[0.06]">
-          <p className="text-[9px] text-[#FF6B00]/25 uppercase tracking-wider">
+        <div className="mt-6 pt-4 border-t border-[#FF2D2D]/[0.10]">
+          <p className="text-[9px] text-[#FF6B00]/50 uppercase tracking-wider">
             Already decided. Already building.
           </p>
         </div>
@@ -192,23 +192,23 @@ function TheKey() {
     <section className="px-3 sm:px-0 mb-8">
       <div className="flex items-center gap-3 mb-4">
         <div className="h-px flex-1 bg-white/[0.06]" />
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/25">
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/60">
           THE KEY
         </span>
-        <div className="h-px flex-1 bg-white/[0.06]" />
+        <div className="h-px flex-1 bg-white/[0.10]" />
       </div>
 
       <div
         onClick={copy}
-        className="border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-5 cursor-pointer hover:border-[#FF2D2D]/30 transition-all group"
+        className="border border-[#FF2D2D]/25 bg-[#FF2D2D]/[0.05] p-5 cursor-pointer hover:border-[#FF2D2D]/40 transition-all group"
       >
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/15 mb-3">
+        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-3">
           Solana Contract — Click to Copy
         </p>
-        <p className="text-xs sm:text-sm font-mono text-[#FF2D2D]/60 break-all leading-relaxed group-hover:text-[#FF2D2D]/80 transition-colors">
+        <p className="text-xs sm:text-sm font-mono text-[#FF2D2D]/90 break-all leading-relaxed group-hover:text-[#FF2D2D] transition-colors">
           {CONTRACT}
         </p>
-        <p className="text-[9px] text-white/10 mt-3 uppercase tracking-wider">
+        <p className="text-[9px] text-white/30 mt-3 uppercase tracking-wider">
           {copied ? "✓ Copied to clipboard" : "Copy and paste into Phantom or your wallet"}
         </p>
       </div>
@@ -222,10 +222,10 @@ function FrequencyCheckpoints() {
     <section className="px-3 sm:px-0 pb-12">
       <div className="flex items-center gap-3 mb-4">
         <div className="h-px flex-1 bg-white/[0.06]" />
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/15">
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
           FREQUENCY CHECKPOINTS
         </span>
-        <div className="h-px flex-1 bg-white/[0.06]" />
+        <div className="h-px flex-1 bg-white/[0.10]" />
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -235,10 +235,10 @@ function FrequencyCheckpoints() {
             href={p.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-3 py-2 border border-white/[0.05] bg-white/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.03] transition-all"
+            className="flex items-center gap-2 px-3 py-2 border border-white/[0.08] bg-white/[0.03] hover:border-[#FF2D2D]/25 hover:bg-[#FF2D2D]/[0.04] transition-all"
           >
             <span className="text-xs">{p.icon}</span>
-            <span className="text-[11px] font-bold text-white/40">{p.handle}</span>
+            <span className="text-[11px] font-bold text-white/60">{p.handle}</span>
           </a>
         ))}
       </div>

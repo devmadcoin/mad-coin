@@ -104,7 +104,7 @@ function ChatSidebar({
   return (
     <div className="shrink-0 w-[260px] border-r border-white/5 bg-[#0a0a0a] flex flex-col">
       <div className="p-3 flex items-center justify-between">
-        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/30">Chats</span>
+        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/50">Chats</span>
         <div className="flex gap-1">
           <button
             onClick={onNewChat}
@@ -125,7 +125,7 @@ function ChatSidebar({
       <div className="flex-1 overflow-y-auto px-2 pb-3 space-y-1">
         {sessions.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-[11px] text-white/20">No chat history yet</p>
+            <p className="text-[11px] text-white/40">No chat history yet</p>
           </div>
         )}
         {sessions.map((s) => (
@@ -144,8 +144,8 @@ function ChatSidebar({
             </div>
             <p className="text-[10px] text-white/30 truncate pl-5">{s.lastMessage}</p>
             <div className="flex items-center justify-between mt-1.5 pl-5">
-              <span className="text-[9px] text-white/15">{formatTime(s.timestamp)}</span>
-              <span className="text-[9px] text-white/15">{s.messageCount} msg</span>
+              <span className="text-[9px] text-white/30">{formatTime(s.timestamp)}</span>
+              <span className="text-[9px] text-white/30">{s.messageCount} msg</span>
             </div>
           </button>
         ))}
@@ -406,7 +406,7 @@ export default function ChatInterface({
       {/* Main chat area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b border-white/5">
+        <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b border-white/[0.08]">
           <div className="flex items-center gap-2.5 sm:gap-3">
             {!sidebarOpen && (
               <button
@@ -423,7 +423,7 @@ export default function ChatInterface({
               </div>
               <div>
                 <p className="text-xs sm:text-sm font-black text-white">The Claw</p>
-                <p className="text-[8px] sm:text-[9px] text-white/25">
+                <p className="text-[8px] sm:text-[9px] text-white/50">
                   {typing ? "reading..." : status === "sending" ? "tuning..." : "listening"}
                 </p>
               </div>
