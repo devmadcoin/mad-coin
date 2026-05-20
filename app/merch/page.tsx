@@ -27,8 +27,7 @@ const PRODUCTS = [
     stock: "In Stock",
     stockTone: "green" as const,
     image: "/stickers/Mad-Sticker-logo.png",
-    featuredText:
-      "The easiest way to carry $MAD into the real world. Simple, loud, collectible, and built for instant signal.",
+    stars: 5 as const,
   },
   {
     id: "card-wrap",
@@ -43,6 +42,7 @@ const PRODUCTS = [
     image: "/stickers/Mad-Premium-Embossed-Card-Wrap.png",
     featuredText:
       "A sharper premium piece with texture, attitude, and clean $MAD energy.",
+    stars: 4 as const,
   },
   {
     id: "rich-wrap",
@@ -57,6 +57,7 @@ const PRODUCTS = [
     image: "/stickers/Mad-Rich-Premium-Embossed-Card-Wrap.png",
     featuredText:
       "The louder luxury version for people who want their $MAD to look richer and cleaner.",
+    stars: 5 as const,
   },
   {
     id: "peeker",
@@ -71,6 +72,7 @@ const PRODUCTS = [
     image: "/stickers/Mad-Peeker.png",
     featuredText:
       "Small piece, big signal. Built to catch attention fast.",
+    stars: 4 as const,
   },
 ] as const;
 
@@ -232,26 +234,14 @@ function MerchHero() {
           Stickers, wraps, and signal pieces for the people carrying the brand into real life.
         </p>
 
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="mt-10 flex justify-center">
           <a
             href="#products"
             className="px-8 py-4 bg-[#FF2D2D] hover:bg-[#FF6B00] text-white font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,45,45,0.25)]"
           >
             Shop the Drop
           </a>
-
-          <a
-            href="#proof"
-            className="px-8 py-4 border border-[#1a1a1a]/15 text-[#1a1a1a] rounded-full hover:bg-[#1a1a1a]/[0.03] transition-all"
-          >
-            See Proof
-          </a>
-
-          <a
-            href={LINKS.buy}
-            target="_blank"
-            rel="noreferrer"
-            className="px-8 py-4 border border-[#1a1a1a]/15 text-[#1a1a1a] rounded-full hover:bg-[#1a1a1a]/[0.03] transition-all"
+        </div>
           >
             Buy $MAD First
           </a>
@@ -452,6 +442,19 @@ function Marquee() {
   );
 }
 
+/* ─── STAR RATING ─── */
+function StarRating({ count }: { count: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {[...Array(5)].map((_, i) => (
+        <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill={i < count ? "#C5A572" : "#1a1a1a"} className={i < count ? "drop-shadow-[0_0_1px_rgba(197,165,114,0.4)]" : "opacity-15"}>
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
 /* ─── PRODUCT GRID ─── */
 function ProductGrid() {
   return (
@@ -481,7 +484,11 @@ function ProductGrid() {
                 <StockBadge tone={product.stockTone}>{product.stock}</StockBadge>
               </div>
 
-              <h3 className="mt-4 text-xl font-black text-[#1a1a1a]">
+              <div className="mt-3">
+                <StarRating count={product.stars} />
+              </div>
+
+              <h3 className="mt-3 text-xl font-black text-[#1a1a1a]">
                 {product.name}
               </h3>
 
