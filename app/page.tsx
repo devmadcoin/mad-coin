@@ -373,7 +373,7 @@ function TheArchitects() {
       ],
     },
     {
-      role: "Moderator",
+      role: "Community Builder",
       name: "Dino",
       handle: "@Iam__dino9",
       image: "/team/dino-moderator.png",
