@@ -2,7 +2,7 @@
 
 import { useState, useRef, useMemo, useCallback, useEffect, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Float, useGLTF } from "@react-three/drei";
+import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 /* ═══════════════════════════════════════════════════════════
@@ -48,14 +48,14 @@ function MascotModel({ positionRef, walkState, isSitting, excited }: {
 
     // Excited bounce
     if (excited) {
-      claw.position.y = 0.3 + Math.sin(timeRef.current * 15) * 0.15;
+      claw.position.y = 0.6 + Math.sin(timeRef.current * 15) * 0.15;
       s.isWalking = false;
       return;
     }
 
     // Walking state machine
     if (s.isWalking) {
-      claw.position.y = 0.3 + Math.sin(timeRef.current * 5) * 0.02;
+      claw.position.y = 0.6 + Math.sin(timeRef.current * 5) * 0.02;
       const dx = s.targetX - claw.position.x;
       const dz = s.targetZ - claw.position.z;
       const dist = Math.sqrt(dx * dx + dz * dz);
@@ -69,7 +69,7 @@ function MascotModel({ positionRef, walkState, isSitting, excited }: {
         claw.rotation.y = Math.atan2(dx, dz) + Math.PI;
       }
     } else {
-      claw.position.y = 0.3 + Math.sin(timeRef.current * 1) * 0.02;
+      claw.position.y = 0.6 + Math.sin(timeRef.current * 1) * 0.02;
       s.pauseTimer -= delta;
       s.idleTimer += delta;
       if (s.pauseTimer <= 0) {
@@ -82,7 +82,7 @@ function MascotModel({ positionRef, walkState, isSitting, excited }: {
   });
 
   return (
-    <group ref={groupRef} scale={0.5} position={[0, 0.3, 0]}>
+    <group ref={groupRef} scale={0.5} position={[0, 0.6, 0]}>
       <primitive object={scene} />
     </group>
   );
@@ -96,7 +96,7 @@ function VoidWorld() {
     <group>
       <StarField />
       <AmbientParticles />
-      <RedFog />
+      <GroundPlane />
     </group>
   );
 }
@@ -159,28 +159,42 @@ function StarField() {
   );
 }
 
-function RedFog() {
+function GroundPlane() {
   return (
-    <mesh position={[0, -3, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[30, 30]} />
-      <meshStandardMaterial color="#1a0000" emissive="#ff0000" emissiveIntensity={0.04} transparent opacity={0.15} roughness={1} />
+    <mesh position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+      <planeGeometry args={[8, 8]} />
+      <meshStandardMaterial
+        color="#111111"
+        roughness={0.8}
+        metalness={0.2}
+        transparent
+        opacity={0.5}
+      />
     </mesh>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════
-   LIGHTING — Studio setup
+   LIGHTING — Bright studio setup (Blender materials need more light)
    ═══════════════════════════════════════════════════════════ */
 function Lighting() {
   return (
     <group>
-      <directionalLight position={[4, 5, 6]} intensity={1.0} color="#fff5f0" castShadow />
-      <directionalLight position={[-4, 3, 2]} intensity={0.25} color="#d0d8ff" />
-      <pointLight position={[0, 3, -4]} intensity={1.0} color="#ff4444" distance={12} />
-      <pointLight position={[0, 5, 0]} intensity={0.4} color="#ffffff" distance={10} />
-      <pointLight position={[0, -2, 0]} intensity={0.25} color="#ff0000" distance={8} />
-      <ambientLight intensity={0.1} color="#221111" />
-      <hemisphereLight args={["#ff2222", "#050000", 0.12]} />
+      {/* Key light — bright warm */}
+      <directionalLight position={[4, 6, 5]} intensity={2.5} color="#fff5f0" castShadow />
+      {/* Fill — cool, brighter */}
+      <directionalLight position={[-4, 4, 3]} intensity={1.0} color="#d0d8ff" />
+      {/* Rim — red from behind */}
+      <pointLight position={[0, 2, -4]} intensity={2.0} color="#ff4444" distance={15} />
+      {/* Top fill */}
+      <pointLight position={[0, 5, 0]} intensity={1.0} color="#ffffff" distance={12} />
+      {/* Bottom bounce — illuminates legs/boots */}
+      <pointLight position={[0, -2, 2]} intensity={0.8} color="#ff6666" distance={8} />
+      {/* Front fill for face */}
+      <pointLight position={[0, 1, 3]} intensity={0.6} color="#ffffff" distance={8} />
+      {/* Ambient — much brighter for dark background */}
+      <ambientLight intensity={0.4} color="#331111" />
+      <hemisphereLight args={["#ff4444", "#1a0000", 0.3]} />
     </group>
   );
 }
@@ -290,9 +304,7 @@ function Scene() {
     <group>
       <Lighting />
       <VoidWorld />
-      <Float speed={2} rotationIntensity={0.1} floatIntensity={0.2}>
-        <WalkingClaw positionRef={clawPosition} />
-      </Float>
+      <WalkingClaw positionRef={clawPosition} />
     </group>
   );
 }
@@ -325,7 +337,7 @@ export default function MadChao3D() {
       onPointerMove={handlePointerMove}
     >
       <Canvas
-        camera={{ position: [0, 1.1, 4.5], fov: 36 }}
+        camera={{ position: [0, 0.5, 4.0], fov: 40 }}
         style={{ background: "#080808" }}
         gl={{ antialias: true, alpha: true }}
       >

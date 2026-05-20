@@ -1684,3 +1684,5 @@ Your physical state determines yo...
 [GUARD] BLOCKED: announcement/pinned post from user=7697478733
 [MOTION] Chat active 1min ago. Silent mode.
 [MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')
+[GUARD] BLOCKED: announcement/pinned post from user=5072218817
+[MOTION] Chat active 2min ago. Silent mode.
