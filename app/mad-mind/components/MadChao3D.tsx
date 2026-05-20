@@ -14,7 +14,7 @@ const CAR_SPEED = 0.35; // radians per second
 
 /* ─── CAR MODEL ─── */
 function CarScene() {
-  const { scene } = useGLTF("/mad-car.glb");
+  const { scene } = useGLTF("/mad-car-v5.glb");
   const carGroupRef = useRef<THREE.Group | null>(null);
   const wheelsRef = useRef<THREE.Object3D[]>([]);
   const steeringRef = useRef<THREE.Object3D | null>(null);
@@ -26,10 +26,10 @@ function CarScene() {
 
   useEffect(() => {
     scene.traverse((child) => {
-      if (child.name === '$MAD_Car' && !carGroupRef.current) {
+      if (child.name === 'CarBody_v5' && !carGroupRef.current) {
         carGroupRef.current = child as THREE.Group;
       }
-      if (child.name.startsWith('Wheel_') || child.name.startsWith('Rim_')) {
+      if (child.name.startsWith('Tire_') || child.name.startsWith('Rim_')) {
         wheelsRef.current.push(child);
       }
       if (child.name === 'SteeringWheel') {
@@ -38,10 +38,10 @@ function CarScene() {
       if (child.name.startsWith('ChaoArm_')) {
         armsRef.current.push(child);
       }
-      if (child.name === 'ChaoHead') {
+      if (child.name === 'ChaoHead_v5') {
         chaoHeadRef.current = child;
       }
-      if (child.name === 'ChaoBody') {
+      if (child.name === 'ChaoBody_v5') {
         chaoBodyRef.current = child;
       }
     });
@@ -279,7 +279,7 @@ export default function MadChao3D() {
 
 // Preload
 try {
-  useGLTF.preload("/mad-car.glb");
+  useGLTF.preload("/mad-car-v5.glb");
 } catch {
   // Static preloading might fail, runtime Suspense handles it
 }
