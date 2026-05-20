@@ -50,14 +50,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
           {/* PAGE CONTENT */}
           <main className="relative z-10 flex-1">{children}</main>
-
-          {/* GLOBAL FOOTER (LIGHT, NON-CLUTTERED) */}
-          <footer className="relative z-10 border-t border-white/10 bg-black/40 px-4 py-6 text-center text-xs text-white/40 backdrop-blur-xl">
-            <p className="uppercase tracking-[0.2em]">Stay $MAD</p>
-            <p className="mt-2 text-white/50">
-              Controlled chaos. Discipline wins.
-            </p>
-          </footer>
         </div>
       </body>
     </html>
