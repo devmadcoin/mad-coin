@@ -6,130 +6,94 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 /* ═══════════════════════════════════════════════════════════
-   $MAD CAR — The Chao is Driving!
+   MAD TRACK DAY — Complete Scene
+   Procedural car paint + sculpted Chao + environment + animation
    ═══════════════════════════════════════════════════════════ */
 
-const TRACK_RADIUS = 4.0;
-const CAR_SPEED = 0.35; // radians per second
-
-/* ─── CAR MODEL ─── */
-function CarScene() {
-  const { scene } = useGLTF("/mad-car-v5.glb");
-  const carGroupRef = useRef<THREE.Group | null>(null);
-  const wheelsRef = useRef<THREE.Object3D[]>([]);
-  const steeringRef = useRef<THREE.Object3D | null>(null);
-  const armsRef = useRef<THREE.Object3D[]>([]);
+function CompleteScene() {
+  const { scene, animations } = useGLTF("/mad-scene-complete.glb");
+  const mixerRef = useRef<THREE.AnimationMixer | null>(null);
+  const carRef = useRef<THREE.Object3D | null>(null);
   const chaoHeadRef = useRef<THREE.Object3D | null>(null);
-  const chaoBodyRef = useRef<THREE.Object3D | null>(null);
-  const timeRef = useRef(0);
   const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    // Setup animation mixer
+    if (animations && animations.length > 0) {
+      const mixer = new THREE.AnimationMixer(scene);
+      animations.forEach((clip) => {
+        const action = mixer.clipAction(clip);
+        action.play();
+        action.setLoop(THREE.LoopRepeat, Infinity);
+      });
+      mixerRef.current = mixer;
+    }
+
+    // Find key objects by name
     scene.traverse((child) => {
-      if (child.name === 'CarBody_v5' && !carGroupRef.current) {
-        carGroupRef.current = child as THREE.Group;
+      if (child.name === "CarBody_v6" || child.name.includes("CarBody")) {
+        carRef.current = child;
       }
-      if (child.name.startsWith('Tire_') || child.name.startsWith('Rim_')) {
-        wheelsRef.current.push(child);
-      }
-      if (child.name === 'SteeringWheel') {
-        steeringRef.current = child;
-      }
-      if (child.name.startsWith('ChaoArm_')) {
-        armsRef.current.push(child);
-      }
-      if (child.name === 'ChaoHead_v5') {
+      if (child.name === "ChaoHead_v6" || child.name.includes("ChaoHead")) {
         chaoHeadRef.current = child;
-      }
-      if (child.name === 'ChaoBody_v5') {
-        chaoBodyRef.current = child;
       }
     });
 
+    // Mouse tracking
     const onMouseMove = (e: MouseEvent) => {
       mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
     };
-    window.addEventListener('mousemove', onMouseMove);
-    return () => window.removeEventListener('mousemove', onMouseMove);
-  }, [scene]);
+    window.addEventListener("mousemove", onMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      if (mixerRef.current) {
+        mixerRef.current.stopAllAction();
+        mixerRef.current = null;
+      }
+    };
+  }, [scene, animations]);
 
   useFrame((state, delta) => {
-    timeRef.current = state.clock.elapsedTime;
-    if (!carGroupRef.current) return;
-
-    const t = timeRef.current * CAR_SPEED;
-    const car = carGroupRef.current;
-
-    // Drive in a circle
-    const nextT = t + 0.1;
-    car.position.x = Math.cos(t) * TRACK_RADIUS;
-    car.position.z = Math.sin(t) * TRACK_RADIUS;
-    car.position.y = 0.15;
-    car.lookAt(
-      Math.cos(nextT) * TRACK_RADIUS,
-      0.15,
-      Math.sin(nextT) * TRACK_RADIUS
-    );
-    // Flip 180° — car model is backwards relative to direction
-    car.rotation.y += Math.PI;
-
-    // Spin wheels
-    wheelsRef.current.forEach((wheel) => {
-      wheel.rotation.x += delta * 8;
-    });
-
-    // Steering wheel oscillation (turning left/right)
-    if (steeringRef.current) {
-      const steerAngle = Math.sin(timeRef.current * 0.8) * 0.6; // ±0.6 radians
-      steeringRef.current.rotation.z = steerAngle;
+    // Update baked animation
+    if (mixerRef.current) {
+      mixerRef.current.update(delta);
     }
 
-    // Chao arms follow steering wheel rotation
-    armsRef.current.forEach((arm) => {
-      const steerAngle = Math.sin(timeRef.current * 0.8) * 0.6;
-      const side = arm.name.includes('_L') ? -1 : 1;
-      // Arms pivot from shoulder, hands stay on wheel
-      arm.rotation.z = steerAngle * side * 0.5;
-    });
-
-    // Chao head tracks mouse
+    // Chao head mouse tracking (on top of baked animation)
     if (chaoHeadRef.current) {
-      const targetX = mouseRef.current.x * 0.4;
-      const targetY = mouseRef.current.y * 0.3;
+      const targetX = mouseRef.current.x * 0.3;
+      const targetY = mouseRef.current.y * 0.2;
       chaoHeadRef.current.rotation.y = THREE.MathUtils.lerp(
-        chaoHeadRef.current.rotation.y, targetX, delta * 3
+        chaoHeadRef.current.rotation.y,
+        targetX,
+        delta * 3
       );
       chaoHeadRef.current.rotation.x = THREE.MathUtils.lerp(
-        chaoHeadRef.current.rotation.x, targetY, delta * 3
+        chaoHeadRef.current.rotation.x,
+        targetY,
+        delta * 3
       );
     }
-
-    // Chao body engine vibration
-    if (chaoBodyRef.current) {
-      chaoBodyRef.current.position.y = 0.58 + Math.sin(timeRef.current * 25) * 0.002;
-    }
-
-    // Engine vibration bob
-    car.position.y = 0.15 + Math.sin(timeRef.current * 20) * 0.003;
   });
 
   return <primitive object={scene} />;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ENVIRONMENT
+   STAR FIELD
    ═══════════════════════════════════════════════════════════ */
 function StarField() {
-  const count = 80;
+  const count = 120;
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const r = 15 + Math.random() * 25;
+      const r = 20 + Math.random() * 40;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
       arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      arr[i * 3 + 1] = r * Math.cos(phi) + 5;
+      arr[i * 3 + 1] = r * Math.cos(phi) + 8;
       arr[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
     }
     return arr;
@@ -140,7 +104,7 @@ function StarField() {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial color="#ffffff" size={0.04} transparent opacity={0.6} sizeAttenuation />
+      <pointsMaterial color="#ffffff" size={0.04} transparent opacity={0.5} sizeAttenuation />
     </points>
   );
 }
@@ -151,73 +115,29 @@ function StarField() {
 function Lighting() {
   return (
     <group>
-      <directionalLight position={[6, 10, 6]} intensity={3.0} color="#fff5f0" castShadow />
-      <directionalLight position={[-5, 6, 3]} intensity={1.0} color="#d0d8ff" />
-      <pointLight position={[0, 2, -6]} intensity={2.0} color="#ff4444" distance={20} />
-      <pointLight position={[0, 8, 0]} intensity={1.0} color="#ffffff" distance={15} />
-      <ambientLight intensity={0.5} color="#221111" />
-      <hemisphereLight args={["#ff4444", "#050000", 0.25]} />
+      <directionalLight position={[6, 12, 8]} intensity={4.0} color="#fff5f0" castShadow />
+      <directionalLight position={[-6, 8, -4]} intensity={1.5} color="#a0c8ff" />
+      <pointLight position={[0, 3, 0]} intensity={3.0} color="#ff0044" distance={25} />
+      <pointLight position={[-4, 2, 4]} intensity={1.5} color="#00ffff" distance={20} />
+      <pointLight position={[4, 2, -4]} intensity={1.5} color="#ff00ff" distance={20} />
+      <ambientLight intensity={0.4} color="#1a0a1a" />
+      <hemisphereLight args={["#ff2244", "#050005", 0.35]} />
     </group>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════
-   EXHAUST PARTICLES
+   CAMERA RIG (slow orbit)
    ═══════════════════════════════════════════════════════════ */
-function ExhaustParticles() {
-  const particles = useRef<THREE.Points>(null);
-  const count = 30;
-  const data = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const life = new Float32Array(count);
-    const offset = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      pos[i * 3] = 0;
-      pos[i * 3 + 1] = -100;
-      pos[i * 3 + 2] = 0;
-      life[i] = 0;
-      offset[i] = Math.random() * 2;
-    }
-    return { pos, life, offset };
-  }, []);
-
+function CameraRig() {
   useFrame((state) => {
-    if (!particles.current) return;
-    const pos = particles.current.geometry.attributes.position.array as Float32Array;
-    const t = state.clock.elapsedTime;
-
-    for (let i = 0; i < count; i++) {
-      const idx = i * 3;
-      data.life[i] -= 0.016;
-      
-      if (data.life[i] <= 0) {
-        // Respawn at rear of car (now opposite side due to 180° flip)
-        const angle = t * CAR_SPEED + Math.PI / 2; // Opposite direction
-        const carX = Math.cos(t * CAR_SPEED) * TRACK_RADIUS;
-        const carZ = Math.sin(t * CAR_SPEED) * TRACK_RADIUS;
-        const exX = carX - Math.cos(angle) * 0.5;
-        const exZ = carZ - Math.sin(angle) * 0.5;
-        pos[idx] = exX + (Math.random() - 0.5) * 0.1;
-        pos[idx + 1] = 0.25;
-        pos[idx + 2] = exZ + (Math.random() - 0.5) * 0.1;
-        data.life[i] = 1.0 + Math.random() * 0.5;
-      } else {
-        pos[idx] += Math.sin(t + data.offset[i]) * 0.002;
-        pos[idx + 1] += 0.008;
-        pos[idx + 2] += Math.cos(t + data.offset[i]) * 0.002;
-      }
-    }
-    particles.current.geometry.attributes.position.needsUpdate = true;
+    const t = state.clock.elapsedTime * 0.08;
+    state.camera.position.x = Math.sin(t) * 8;
+    state.camera.position.z = Math.cos(t) * 8;
+    state.camera.position.y = 3 + Math.sin(t * 0.5) * 1;
+    state.camera.lookAt(0, 0.5, 0);
   });
-
-  return (
-    <points ref={particles}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[data.pos, 3]} />
-      </bufferGeometry>
-      <pointsMaterial color="#ff2222" size={0.06} transparent opacity={0.5} sizeAttenuation />
-    </points>
-  );
+  return null;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -229,9 +149,9 @@ function Scene() {
       <Lighting />
       <StarField />
       <Suspense fallback={null}>
-        <CarScene />
+        <CompleteScene />
       </Suspense>
-      <ExhaustParticles />
+      <CameraRig />
     </group>
   );
 }
@@ -257,20 +177,20 @@ export default function MadChao3D() {
       }}
     >
       <Canvas
-        camera={{ position: [6, 8, 6], fov: 45 }}
-        style={{ background: "#080808" }}
+        camera={{ position: [8, 3, 8], fov: 45 }}
+        style={{ background: "#050005" }}
         gl={{ antialias: true, alpha: true }}
       >
         <Scene />
         <OrbitControls
           enableZoom={true}
           enablePan={false}
-          maxPolarAngle={Math.PI / 2.2}
-          minPolarAngle={Math.PI / 8}
+          maxPolarAngle={Math.PI / 2.1}
+          minPolarAngle={Math.PI / 12}
           autoRotate
-          autoRotateSpeed={0.15}
-          minDistance={4}
-          maxDistance={16}
+          autoRotateSpeed={0.2}
+          minDistance={3}
+          maxDistance={20}
         />
       </Canvas>
     </div>
@@ -279,7 +199,7 @@ export default function MadChao3D() {
 
 // Preload
 try {
-  useGLTF.preload("/mad-car-v5.glb");
+  useGLTF.preload("/mad-scene-complete.glb");
 } catch {
   // Static preloading might fail, runtime Suspense handles it
 }

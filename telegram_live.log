@@ -1690,3 +1690,10 @@ Your physical state determines yo...
 [MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')
 [MOTION] Posted (questions): 🌙 Time is more valuable than money. You can get more money, ...
 [MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')
+[MOTION] Posted (conviction): 🌙 learn how to be happy with what you have while you pursue ...
+[MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')
+[GUARD] BLOCKED: announcement/pinned post from user=7007869351
+[GUARD] BLOCKED: announcement/pinned post from user=1087968824
+[MOTION] Chat active 0min ago. Silent mode.
+[GUARD] BLOCKED: announcement/pinned post from user=7007869351
+[GUARD] BLOCKED: announcement/pinned post from user=7007869351
