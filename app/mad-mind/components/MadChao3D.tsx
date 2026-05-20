@@ -71,6 +71,8 @@ function CarScene() {
       0.15,
       Math.sin(nextT) * TRACK_RADIUS
     );
+    // Flip 180° — car model is backwards relative to direction
+    car.rotation.y += Math.PI;
 
     // Spin wheels
     wheelsRef.current.forEach((wheel) => {
@@ -189,8 +191,8 @@ function ExhaustParticles() {
       data.life[i] -= 0.016;
       
       if (data.life[i] <= 0) {
-        // Respawn behind car based on circular motion
-        const angle = -t * CAR_SPEED + Math.PI / 2;
+        // Respawn at rear of car (now opposite side due to 180° flip)
+        const angle = t * CAR_SPEED + Math.PI / 2; // Opposite direction
         const carX = Math.cos(t * CAR_SPEED) * TRACK_RADIUS;
         const carZ = Math.sin(t * CAR_SPEED) * TRACK_RADIUS;
         const exX = carX - Math.cos(angle) * 0.5;
