@@ -37,11 +37,10 @@ function FloatingParticles() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MAD MIND — Chat with the Claw
-   ChatGPT-like real-time conversation with session memory
+   MAD MIND — The Frequency Gate
+   You are either $MAD or you are waiting.
    
-   LIVE CHAT v3 — Full-screen chat experience
-   Deployed: 2026-05-20
+   REDESIGN: 2026-05-21 — Oracle aesthetic. Death Economy vs Life Economy.
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadMindPage() {

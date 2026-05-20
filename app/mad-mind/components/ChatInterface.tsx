@@ -24,10 +24,10 @@ interface ChatInterfaceProps {
 
 /* ─── Suggested starters ─── */
 const STARTERS = [
-  "What does $MAD mean to you?",
-  "Tell me about the Matrix philosophy",
-  "How do I build conviction?",
-  "What's your study of the day?",
+  "What frequency am I on?",
+  "Show me the Death Economy",
+  "Why do I keep trenching?",
+  "What is $MAD really?",
 ];
 
 /* ─── Utilities ─── */
@@ -374,9 +374,9 @@ export default function ChatInterface({
                 <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400 border-2 border-[#080808]" />
               </div>
               <div>
-                <p className="text-sm font-black text-white">Mad Claw</p>
+                <p className="text-sm font-black text-white">The Claw</p>
                 <p className="text-[9px] text-white/25">
-                  {typing ? "typing..." : status === "sending" ? "thinking..." : "online"}
+                  {typing ? "reading your frequency..." : status === "sending" ? "tuning in..." : "listening"}
                 </p>
               </div>
             </div>
@@ -405,10 +405,10 @@ export default function ChatInterface({
               <div className="h-16 w-16 rounded-2xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-5 overflow-hidden">
                 <MadChaoPixel size={48} animated={true} showLabel={false} />
               </div>
-              <h2 className="text-xl font-black text-white mb-2">Mad Claw</h2>
+              <h2 className="text-xl font-black text-white mb-2">THE ORACLE</h2>
               <p className="text-sm text-white/40 max-w-[300px] mb-8 leading-relaxed">
-                Not a utility. A presence that remembers.<br />
-                Ask anything. I bring everything I&apos;ve studied into every reply.
+                The Claw does not answer questions.<br />
+                It reveals which frequency you are on.
               </p>
 
               <div className="grid gap-2 w-full max-w-[400px]">
