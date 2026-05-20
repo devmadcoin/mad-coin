@@ -1698,3 +1698,9 @@ Your physical state determines yo...
 [GUARD] BLOCKED: announcement/pinned post from user=7007869351
 [GUARD] BLOCKED: announcement/pinned post from user=7007869351
 [MOTION] Chat active 28min ago. Silent mode.
+[MOTION] Posted (practical): ☀️ Don't just do something, stand there.
+
+The hardest move i...
+[MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')
+[MOTION] Posted (affirmations): ☀️ Learn to sell. Learn to build. If you can do both, you wi...
+[MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')

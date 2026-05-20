@@ -330,7 +330,24 @@ def build_wheels():
             spoke.rotation_euler = (math.radians(90), 0, angle)
             spoke.name = f"Spoke_{side}{pos}_{j}"
             spoke.data.materials.append(create_rim_material())
+            # Parent spoke to tire so it spins with the wheel
+            spoke.parent = tire
+            spoke.matrix_parent_inverse = tire.matrix_world.inverted()
             wheels.append(spoke)
+        
+        # Parent rim to tire so it spins with the wheel
+        rim.parent = tire
+        rim.matrix_parent_inverse = tire.matrix_world.inverted()
+        
+        # Add a small valve stem / tread marker for visible spin asymmetry
+        bpy.ops.mesh.primitive_cube_add(size=1, location=(x + 0.24, y, z))
+        marker = bpy.context.active_object
+        marker.name = f"TireMarker_{side}{pos}"
+        marker.scale = (0.012, 0.012, 0.04)
+        marker.data.materials.append(create_tire_material())
+        marker.parent = tire
+        marker.matrix_parent_inverse = tire.matrix_world.inverted()
+        wheels.append(marker)
         
         wheels.extend([tire, rim])
     
