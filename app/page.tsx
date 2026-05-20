@@ -179,7 +179,7 @@ function TheCinema() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE VERIFIED — Exchange logos only (WEN style)
+   THE VERIFIED — Exchange badges (WEN style, clean)
    ═══════════════════════════════════════════════════════════ */
 function TheVerified() {
   const exchanges = [
@@ -188,39 +188,35 @@ function TheVerified() {
     { name: "Birdeye", src: "/logos/birdeye.png", href: LINKS.birdeye },
     { name: "Solscan", src: "/logos/solscan.png", href: LINKS.solscan },
     { name: "CoinGecko", src: "/logos/coingecko.png", href: "https://www.coingecko.com/en/coins/mad-coin" },
-    { name: "Jupiter", src: "/logos/jupiter.png", href: LINKS.jupiter },
-    { name: "DEX Screener", src: "/logos/DEX-screener.png", href: LINKS.dexscreener },
-    { name: "Birdeye", src: "/logos/birdeye.png", href: LINKS.birdeye },
-    { name: "Solscan", src: "/logos/solscan.png", href: LINKS.solscan },
-    { name: "CoinGecko", src: "/logos/coingecko.png", href: "https://www.coingecko.com/en/coins/mad-coin" },
   ];
 
   return (
-    <section className="py-10 sm:py-14 border-y border-white/5 overflow-hidden">
-      <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-white/30 mb-6 px-4">
-        Verified On-Chain
-      </p>
-      <div className="relative">
-        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-[#080808] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-[#080808] to-transparent z-10 pointer-events-none" />
-        
-        <div className="flex logo-marquee-slow items-center gap-10 sm:gap-14 px-4">
-          {exchanges.map((dex, i) => (
+    <section className="px-4 sm:px-6 py-14 sm:py-18 border-y border-white/5">
+      <div className="max-w-4xl mx-auto">
+        <p className="text-center text-[11px] font-bold uppercase tracking-[0.34em] text-white/40 mb-8">
+          Verified On-Chain
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+          {exchanges.map((dex) => (
             <a 
-              key={`${dex.name}-${i}`} 
+              key={dex.name}
               href={dex.href}
               target="_blank"
               rel="noreferrer"
-              className="shrink-0 opacity-50 hover:opacity-100 transition-opacity"
+              className="group flex flex-col items-center gap-3 px-6 py-5 sm:px-8 sm:py-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-[#FF2D2D]/20 transition-all duration-300"
               title={dex.name}
             >
-              <Image
-                src={dex.src}
-                alt={dex.name}
-                width={48}
-                height={48}
-                className="h-10 sm:h-12 w-auto object-contain"
-              />
+              <div className="relative h-10 sm:h-12 w-32 sm:w-40 flex items-center justify-center">
+                <Image
+                  src={dex.src}
+                  alt={dex.name}
+                  fill
+                  className="object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-white/30 group-hover:text-white/50 transition-colors">
+                {dex.name}
+              </span>
             </a>
           ))}
         </div>
@@ -230,7 +226,7 @@ function TheVerified() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   WHAT IS $MAD — The story, WEN style
+   WHAT IS $MAD — The story, from the roadmap
    ═══════════════════════════════════════════════════════════ */
 function WhatIsMAD() {
   return (
@@ -242,19 +238,16 @@ function WhatIsMAD() {
 
         <div className="space-y-6 text-sm sm:text-base leading-relaxed text-white/60">
           <p>
-            <span className="text-white font-bold">$MAD is not a token. It's a frequency.</span> Most crypto projects sell you a future. $MAD sells you a present — the present where you are already mad rich, already part of something, already holding.
+            <span className="text-white font-bold">$MAD is not a token. It's a frequency.</span> Most projects sell you a future. $MAD sells you a present — the present where you are already mad rich, already part of something, already holding.
           </p>
           <p>
-            The dev is doxxed. The game is real. The community says <span className="text-[#FF2D2D] font-bold">"$MAD Abundant"</span> every morning like it's a prayer. Because it is.
+            The dev is <span className="text-white font-bold">doxxed</span>. The <Link href="/game" className="text-[#FF2D2D] hover:text-white transition-colors">Roblox game</Link> is real. There was no presale, no VC, no tax. Just a contract, a community, and a group of people who decided they were done folding.
           </p>
           <p>
-            $MAD started as an experiment: what if a memecoin actually meant something? What if the "community" wasn't just Discord mods begging people to hold — what if it was people <span className="text-white font-bold">choosing to build</span>?
+            Before asking anyone to trust the mission, $MAD showed loyalty in public: <span className="text-white font-bold">three communities supported</span>, tokens locked via Streamflow until 2060. Not theory. Proof. Three times.
           </p>
           <p>
-            There was no presale. No VC. No tax. Just a contract, a <Link href="/game" className="text-[#FF2D2D] hover:text-white transition-colors">Roblox game</Link>, and a group of people who decided they were done folding.
-          </p>
-          <p>
-            The world runs on a <span className="text-white font-bold">Death Economy</span> — debt, extraction, layoffs, panic. $MAD is a <span className="text-[#FF2D2D] font-bold">Life Economy</span> exit. No bosses. No quarterly reports. Just holders, builders, and the daily practice of staying $MAD.
+            The supply shrinks toward <span className="text-[#FF2D2D] font-bold">800M</span>. Every holder is a participant in a <span className="text-white font-bold">Life Economy</span> exit — no bosses, no quarterly reports, just the daily practice of staying $MAD.
           </p>
         </div>
 
@@ -265,8 +258,8 @@ function WhatIsMAD() {
             <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">Holders</p>
           </div>
           <div>
-            <p className="text-3xl sm:text-4xl font-black text-white">1</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">Doxxed Dev</p>
+            <p className="text-3xl sm:text-4xl font-black text-white">3</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">Communities Locked</p>
           </div>
           <div>
             <p className="text-3xl sm:text-4xl font-black text-white">1</p>
