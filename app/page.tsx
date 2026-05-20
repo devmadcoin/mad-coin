@@ -156,6 +156,40 @@ function TheLobby() {
           <ContractBlock />
         </div>
 
+        {/* Verified Strip — Credibility as decor */}
+        <div className="mt-3 flex items-center justify-center gap-5 sm:gap-7 opacity-40 hover:opacity-70 transition-opacity duration-500">
+          <span className="text-[9px] font-bold uppercase tracking-[0.34em] text-white/30">Verified on</span>
+          <div className="flex items-center gap-4 sm:gap-6">
+            {[
+              { name: "Jupiter", src: "/logos/jupiter.png" },
+              { name: "DEX Screener", src: "/logos/DEX-screener.png" },
+              { name: "Birdeye", src: "/logos/birdeye.png" },
+              { name: "Solscan", src: "/logos/solscan.png" },
+              { name: "CoinGecko", src: "/logos/coingecko.png" },
+            ].map((dex) => (
+              <a
+                key={dex.name}
+                href={dex.name === "Jupiter" ? LINKS.jupiter : dex.name === "DEX Screener" ? LINKS.dexscreener : dex.name === "Birdeye" ? LINKS.birdeye : dex.name === "Solscan" ? LINKS.solscan : "https://www.coingecko.com/en/coins/mad-coin"}
+                target="_blank"
+                rel="noreferrer"
+                className="group relative flex flex-col items-center"
+                title={dex.name}
+              >
+                <Image
+                  src={dex.src}
+                  alt={dex.name}
+                  width={28}
+                  height={28}
+                  className="h-5 w-auto object-contain opacity-50 group-hover:opacity-100 transition-opacity"
+                />
+                <span className="absolute -bottom-4 text-[8px] font-bold uppercase tracking-wider text-white/0 group-hover:text-white/40 transition-colors whitespace-nowrap">
+                  {dex.name}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+
         {/* Buy Button — Secondary CTA */}
         <a 
           href={LINKS.buy} 
