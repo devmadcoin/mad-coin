@@ -155,7 +155,19 @@ function ChatSidebar({
 }
 
 /* ─── Feedback buttons (👍 / 👎) ─── */
-function FeedbackButtons({ sessionId, timestamp, text }: { sessionId: string; timestamp: number; text: string }) {
+function FeedbackButtons({
+  sessionId,
+  timestamp,
+  text,
+  userMessage,
+  patternId,
+}: {
+  sessionId: string;
+  timestamp: number;
+  text: string;
+  userMessage?: string;
+  patternId?: string;
+}) {
   const [voted, setVoted] = useState<"up" | "down" | null>(null);
   const sendFeedback = async (type: "up" | "down") => {
     if (voted) return;
@@ -163,7 +175,14 @@ function FeedbackButtons({ sessionId, timestamp, text }: { sessionId: string; ti
       await fetch("/api/mad-mind/chat", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId, timestamp, feedback: type }),
+        body: JSON.stringify({
+          sessionId,
+          timestamp,
+          feedback: type,
+          message: userMessage,
+          reply: text,
+          patternId,
+        }),
       });
       setVoted(type);
     } catch { /* ignore */ }
@@ -202,7 +221,7 @@ function FeedbackButtons({ sessionId, timestamp, text }: { sessionId: string; ti
 }
 
 /* ─── Message bubble ─── */
-function MessageBubble({ msg, isLatest, sessionId }: { msg: ChatMessage; isLatest: boolean; sessionId: string }) {
+function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMessage; isLatest: boolean; sessionId: string; userMessage?: string }) {
   const isUser = msg.role === "user";
 
   return (
@@ -225,7 +244,15 @@ function MessageBubble({ msg, isLatest, sessionId }: { msg: ChatMessage; isLates
         <div className={`flex items-center gap-2 mt-1.5 ${isUser ? "justify-end pr-1" : "justify-start pl-1"}`}>
           <span className="text-[9px] text-white/20 tabular-nums">{formatTime(msg.timestamp)}</span>
           {!isUser && <CopyButton text={msg.text} />}
-          {!isUser && <FeedbackButtons sessionId={sessionId} timestamp={msg.timestamp} text={msg.text} />}
+          {!isUser && (
+            <FeedbackButtons
+              sessionId={sessionId}
+              timestamp={msg.timestamp}
+              text={msg.text}
+              userMessage={userMessage}
+              patternId={msg.latticePatternId}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -427,14 +454,18 @@ export default function ChatInterface({
             </div>
           ) : (
             <>
-              {messages.map((msg, i) => (
-                <MessageBubble
-                  key={msg.id || `${msg.role}-${i}-${msg.timestamp}`}
-                  msg={msg}
-                  isLatest={i === messages.length - 1}
-                  sessionId={sessionId}
-                />
-              ))}
+              {messages.map((msg, i) => {
+                const prevUser = [...messages.slice(0, i)].reverse().find((m) => m.role === "user");
+                return (
+                  <MessageBubble
+                    key={msg.id || `${msg.role}-${i}-${msg.timestamp}`}
+                    msg={msg}
+                    isLatest={i === messages.length - 1}
+                    sessionId={sessionId}
+                    userMessage={prevUser?.text}
+                  />
+                );
+              })}
               {typing && <TypingIndicator />}
               {status === "error" && messages[messages.length - 1]?.role === "user" && (
                 <div className="flex justify-center">

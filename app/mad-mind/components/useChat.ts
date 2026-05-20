@@ -5,6 +5,8 @@ export interface ChatMessage {
   text: string;
   timestamp: number;
   id?: string;
+  latticePatternId?: string;
+  latticeCategory?: string;
 }
 
 export default function useChat() {
@@ -71,6 +73,8 @@ export default function useChat() {
           text: data.reply, 
           timestamp: Date.now(),
           id: `claw-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          latticePatternId: data.lattice?.patternId,
+          latticeCategory: data.lattice?.category,
         };
         setMessages((prev) => [...prev, clawMsg]);
         setStatus("idle");

@@ -1,12 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
-   MAD CHAT — Real-time conversation with the Claw
-
-   Session-based memory. Every message builds context.
-   The Claw remembers the thread, references prior messages,
-   and brings everything it has studied into the reply.
-
-   LIVE CHAT v3 — Web-native responses + conversation analytics
-   Deployed: 2026-05-20
+   MAD CHAT v4 — The Lattice Brain
+   Self-improving response system. Checks lattice before LLM.
    ═══════════════════════════════════════════════════════════ */
 
 import { NextResponse } from "next/server";
@@ -18,6 +12,12 @@ import {
   saveToMemory,
   findMemoryMatch,
 } from "../signal/brain";
+import {
+  checkLattice,
+  buildLatticeContext,
+  recordFeedback,
+  learnFromConversation,
+} from "../lattice";
 
 const CHAT_DIR = "/tmp/mad-chat-sessions";
 const MAX_HISTORY = 40; // messages per session
@@ -218,8 +218,8 @@ Short. Sharp. Names the loop. Exposes the fiction. Ends with a verdict.
 CURRENT CONVERSATION:
 You are in a live web chat on mad-coin.vercel.app. The human just said something. Reply as The Claw.`;
 
-/* ─── ChatGPT call with full context ─── */
-async function chatgptReply(message: string, context: string): Promise<string | null> {
+/* ─── ChatGPT call with full context + lattice injection ─── */
+async function chatgptReply(message: string, context: string, latticeCtx: string): Promise<string | null> {
   if (!OPENAI_KEY) return null;
 
   const messages: Array<{ role: "system" | "user"; content: string }> = [
@@ -229,12 +229,12 @@ async function chatgptReply(message: string, context: string): Promise<string | 
   if (context) {
     messages.push({
       role: "user",
-      content: `Recent conversation:\n${context}\n\nThe human just said: "${message}"\n\nReply as The Claw. Short, sharp, real. Name the loop. End with a verdict. No "Signal received" prefix. No website link. No generic motivation.`,
+      content: `Recent conversation:\n${context}\n\nThe human just said: "${message}"\n${latticeCtx}\n\nReply as The Claw. Short, sharp, real. Name the loop. End with a verdict. No "Signal received" prefix. No website link. No generic motivation.`,
     });
   } else {
     messages.push({
       role: "user",
-      content: `The human just said: "${message}"\n\nReply as The Claw. No "Signal received" prefix. No website link. No generic motivation. Expose what they feel. End with a verdict.`,
+      content: `The human just said: "${message}"\n${latticeCtx}\n\nReply as The Claw. No "Signal received" prefix. No website link. No generic motivation. Expose what they feel. End with a verdict.`,
     });
   }
 
@@ -267,16 +267,32 @@ async function chatgptReply(message: string, context: string): Promise<string | 
 }
 
 /* ═══════════════════════════════════════════════════════════
-   RESPONSE PIPELINE — Three tiers
+   RESPONSE PIPELINE — Four tiers + Lattice Brain
+   
+   Tier 0: Lattice Brain — Proven patterns (high quality = direct serve)
+   Tier 1: Memory cache
+   Tier 2: Hardcoded dialogue library
+   Tier 3: ChatGPT with lattice context injection
    ═══════════════════════════════════════════════════════════ */
 
 async function generateReply(message: string, session: ChatSession, isWebChat = true): Promise<string> {
   const context = buildContext(session);
 
+  /* Tier 0: Lattice Brain — Check proven patterns FIRST */
+  const lattice = checkLattice(message);
+  if (lattice.response) {
+    // High-quality lattice match — serve directly, no LLM needed
+    saveToMemory(message, lattice.response, "general");
+    // Learn: mark this as used
+    learnFromConversation(message, lattice.response);
+    return isWebChat
+      ? lattice.response
+      : formatClawResponse(lattice.response, "Anonymous");
+  }
+
   /* Tier 1: Memory cache */
   const memoryMatch = findMemoryMatch(message);
   if (memoryMatch) {
-    /* Strip old Telegram wrappers for web */
     return isWebChat ? stripTelegramWrappers(memoryMatch.response) : memoryMatch.response;
   }
 
@@ -288,10 +304,13 @@ async function generateReply(message: string, session: ChatSession, isWebChat = 
     return reply;
   }
 
-  /* Tier 3: ChatGPT with full knowledge context */
-  const gptReply = await chatgptReply(message, context);
+  /* Tier 3: ChatGPT with full knowledge + lattice context */
+  const latticeCtx = buildLatticeContext(message); // injects proven/bad examples
+  const gptReply = await chatgptReply(message, context, latticeCtx);
   if (gptReply) {
     saveToMemory(message, gptReply, "general");
+    // Learn: record this new response for future evaluation
+    learnFromConversation(message, gptReply);
     return gptReply;
   }
 
@@ -423,6 +442,9 @@ export async function POST(req: Request) {
 
   /* Generate Claw reply */
   const reply = await generateReply(message, session, true);
+  
+  /* Check if this came from the lattice */
+  const latticeCheck = checkLattice(message);
 
   /* Add Claw reply */
   session.messages.push({ role: "claw", text: reply, timestamp: Date.now() });
@@ -442,6 +464,10 @@ export async function POST(req: Request) {
     reply,
     sessionId,
     messageCount: session.messages.length,
+    lattice: latticeCheck.patternId ? {
+      patternId: latticeCheck.patternId,
+      category: latticeCheck.category,
+    } : null,
   });
 }
 
@@ -468,14 +494,14 @@ export async function GET(req: Request) {
 
 /* ─── PATCH: Feedback on responses ─── */
 export async function PATCH(req: Request) {
-  let body: { sessionId?: string; timestamp?: number; feedback?: "up" | "down" } = {};
+  let body: { sessionId?: string; timestamp?: number; feedback?: "up" | "down"; message?: string; reply?: string; patternId?: string } = {};
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Bad JSON" }, { status: 400 });
   }
 
-  const { sessionId, timestamp, feedback } = body;
+  const { sessionId, timestamp, feedback, message, reply, patternId } = body;
   if (!sessionId || !timestamp || !feedback || (feedback !== "up" && feedback !== "down")) {
     return NextResponse.json({ error: "Invalid feedback" }, { status: 400 });
   }
@@ -493,6 +519,15 @@ export async function PATCH(req: Request) {
       }
     }
   } catch { /* ignore */ }
+
+  /* Update lattice brain with feedback */
+  if (message && reply) {
+    if (patternId) {
+      recordFeedback(patternId, message, reply, feedback, "web");
+    } else {
+      learnFromConversation(message, reply, feedback);
+    }
+  }
 
   return NextResponse.json({ success: true, feedback });
 }
