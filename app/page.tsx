@@ -486,44 +486,7 @@ function TheArchitects() {
   );
 }
 
-function TheOracle() {
-  return (
-    <section className="px-4 sm:px-6 py-16 sm:py-20 bg-[#F5F1E8]">
-      <div className="max-w-4xl mx-auto">
-        <Link href="/mad-mind" className="group block relative overflow-hidden rounded-[28px] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-6 sm:p-10 transition-all duration-500 hover:border-[#FF2D2D]/30 hover:shadow-[0_0_50px_rgba(255,45,45,0.1)]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,45,45,0.06),transparent_60%)]" />
-          <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
-            {/* MAD Chao preview */}
-            <div className="shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border border-[#FF2D2D]/20 bg-[#1a1a1a]/50 flex items-center justify-center overflow-hidden">
-              <svg viewBox="0 0 256 256" className="w-16 h-16 sm:w-20 sm:h-20" xmlns="http://www.w3.org/2000/svg">
-                <rect x="96" y="80" width="64" height="64" rx="32" fill="#FF2D2D" opacity="0.9" />
-                <rect x="112" y="100" width="12" height="16" rx="6" fill="#1a1a1a" />
-                <rect x="132" y="100" width="12" height="16" rx="6" fill="#1a1a1a" />
-                <rect x="120" y="128" width="16" height="6" rx="3" fill="#1a1a1a" />
-                <rect x="120" y="52" width="16" height="20" rx="4" fill="#FF6B00" opacity="0.8" />
-              </svg>
-            </div>
-            <div className="text-center sm:text-left">
-              <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/50 mb-2">The Oracle Chamber</p>
-              <h3 className="text-xl sm:text-2xl font-black text-[#1a1a1a] group-hover:text-[#FF2D2D] transition-colors">
-                The Claw Reads Your Frequency
-              </h3>
-              <p className="mt-2 text-sm text-[#1a1a1a]/50 max-w-md">
-                Not a chatbot. A presence. Ask about death economies, life economies, or why your 401k feels like a hostage situation.
-              </p>
-              <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#FF2D2D]/70 group-hover:text-[#FF2D2D] transition-colors">
-                Enter The Oracle
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-              </div>
-            </div>
-          </div>
-        </Link>
-      </div>
-    </section>
-  );
-}
 
-/* ═══════════════════════════════════════════════════════════
    THE FREQUENCY — Social Strip (crème edition)
    ═══════════════════════════════════════════════════════════ */
 function TheFrequency() {
@@ -624,7 +587,6 @@ export default function Home() {
         <TheVerified />
         <TheProof />
         <TheArchitects />
-        <TheOracle />
         <TheFrequency />
       </main>
 
