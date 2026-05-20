@@ -6,24 +6,24 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 /* ═══════════════════════════════════════════════════════════
-   $MAD CAR — Driving a neon track with mascot hood ornament
+   $MAD CAR — Driving a flat neon track
    ═══════════════════════════════════════════════════════════ */
 
 const TRACK_RADIUS = 4.0;
-const CAR_SPEED = 0.4; // radians per second
+const CAR_SPEED = 0.35; // radians per second
 
 /* ─── CAR MODEL ─── */
 function CarScene() {
   const { scene } = useGLTF("/mad-car.glb");
-  const carRef = useRef<THREE.Group>(null);
+  const carGroupRef = useRef<THREE.Group | null>(null);
   const wheelsRef = useRef<THREE.Object3D[]>([]);
   const timeRef = useRef(0);
 
   useEffect(() => {
-    // Find car and wheels
+    // Find car root and wheels
     scene.traverse((child) => {
-      if (child.name === '$MAD_Car' && !carRef.current) {
-        carRef.current = child as THREE.Group;
+      if (child.name === '$MAD_Car' && !carGroupRef.current) {
+        carGroupRef.current = child as THREE.Group;
       }
       if (child.name.startsWith('Wheel_')) {
         wheelsRef.current.push(child);
@@ -33,14 +33,15 @@ function CarScene() {
 
   useFrame((state, delta) => {
     timeRef.current = state.clock.elapsedTime;
-    if (!carRef.current) return;
+    if (!carGroupRef.current) return;
 
     const t = timeRef.current * CAR_SPEED;
-    const car = carRef.current;
+    const car = carGroupRef.current;
 
-    // Drive in a circle on the track
+    // Drive in a circle on the flat track
     car.position.x = Math.cos(t) * TRACK_RADIUS;
     car.position.z = Math.sin(t) * TRACK_RADIUS;
+    car.position.y = 0.15; // On top of flat track
     car.rotation.y = -t + Math.PI / 2; // Face direction of travel
 
     // Spin wheels
@@ -48,8 +49,8 @@ function CarScene() {
       wheel.rotation.x += delta * 8;
     });
 
-    // Subtle bob from engine vibration
-    car.position.y = 0.02 + Math.sin(timeRef.current * 20) * 0.005;
+    // Engine vibration bob
+    car.position.y = 0.15 + Math.sin(timeRef.current * 20) * 0.003;
   });
 
   return <primitive object={scene} />;
@@ -67,7 +68,7 @@ function StarField() {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
       arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      arr[i * 3 + 1] = r * Math.cos(phi) + 3;
+      arr[i * 3 + 1] = r * Math.cos(phi) + 5;
       arr[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
     }
     return arr;
@@ -89,11 +90,10 @@ function StarField() {
 function Lighting() {
   return (
     <group>
-      <directionalLight position={[6, 8, 6]} intensity={3.0} color="#fff5f0" castShadow />
-      <directionalLight position={[-5, 4, 3]} intensity={1.0} color="#d0d8ff" />
-      <pointLight position={[0, 3, -6]} intensity={3.0} color="#ff4444" distance={20} />
-      <pointLight position={[0, 6, 0]} intensity={1.5} color="#ffffff" distance={15} />
-      <pointLight position={[0, -1, 4]} intensity={1.0} color="#ff6666" distance={10} />
+      <directionalLight position={[6, 10, 6]} intensity={3.0} color="#fff5f0" castShadow />
+      <directionalLight position={[-5, 6, 3]} intensity={1.0} color="#d0d8ff" />
+      <pointLight position={[0, 2, -6]} intensity={2.0} color="#ff4444" distance={20} />
+      <pointLight position={[0, 8, 0]} intensity={1.0} color="#ffffff" distance={15} />
       <ambientLight intensity={0.5} color="#221111" />
       <hemisphereLight args={["#ff4444", "#050000", 0.25]} />
     </group>
@@ -103,7 +103,7 @@ function Lighting() {
 /* ═══════════════════════════════════════════════════════════
    EXHAUST PARTICLES
    ═══════════════════════════════════════════════════════════ */
-function ExhaustParticles({ carRef }: { carRef: React.MutableRefObject<THREE.Group | null> }) {
+function ExhaustParticles() {
   const particles = useRef<THREE.Points>(null);
   const count = 30;
   const data = useMemo(() => {
@@ -121,7 +121,7 @@ function ExhaustParticles({ carRef }: { carRef: React.MutableRefObject<THREE.Gro
   }, []);
 
   useFrame((state) => {
-    if (!particles.current || !carRef.current) return;
+    if (!particles.current) return;
     const pos = particles.current.geometry.attributes.position.array as Float32Array;
     const t = state.clock.elapsedTime;
 
@@ -130,17 +130,17 @@ function ExhaustParticles({ carRef }: { carRef: React.MutableRefObject<THREE.Gro
       data.life[i] -= 0.016;
       
       if (data.life[i] <= 0) {
-        // Respawn at car exhaust position
-        const car = carRef.current;
+        // Respawn behind car based on circular motion
         const angle = -t * CAR_SPEED + Math.PI / 2;
-        const exX = car.position.x - Math.cos(angle) * 0.5;
-        const exZ = car.position.z - Math.sin(angle) * 0.5;
+        const carX = Math.cos(t * CAR_SPEED) * TRACK_RADIUS;
+        const carZ = Math.sin(t * CAR_SPEED) * TRACK_RADIUS;
+        const exX = carX - Math.cos(angle) * 0.5;
+        const exZ = carZ - Math.sin(angle) * 0.5;
         pos[idx] = exX + (Math.random() - 0.5) * 0.1;
-        pos[idx + 1] = 0.3;
+        pos[idx + 1] = 0.25;
         pos[idx + 2] = exZ + (Math.random() - 0.5) * 0.1;
         data.life[i] = 1.0 + Math.random() * 0.5;
       } else {
-        // Drift and fade
         pos[idx] += Math.sin(t + data.offset[i]) * 0.002;
         pos[idx + 1] += 0.008;
         pos[idx + 2] += Math.cos(t + data.offset[i]) * 0.002;
@@ -163,8 +163,6 @@ function ExhaustParticles({ carRef }: { carRef: React.MutableRefObject<THREE.Gro
    MAIN SCENE
    ═══════════════════════════════════════════════════════════ */
 function Scene() {
-  const carRef = useRef<THREE.Group>(null);
-
   return (
     <group>
       <Lighting />
@@ -172,7 +170,7 @@ function Scene() {
       <Suspense fallback={null}>
         <CarScene />
       </Suspense>
-      <ExhaustParticles carRef={carRef} />
+      <ExhaustParticles />
     </group>
   );
 }
@@ -198,7 +196,7 @@ export default function MadChao3D() {
       }}
     >
       <Canvas
-        camera={{ position: [0, 5, 10], fov: 50 }}
+        camera={{ position: [6, 8, 6], fov: 45 }}
         style={{ background: "#080808" }}
         gl={{ antialias: true, alpha: true }}
       >
@@ -206,12 +204,12 @@ export default function MadChao3D() {
         <OrbitControls
           enableZoom={true}
           enablePan={false}
-          maxPolarAngle={Math.PI / 2.5}
-          minPolarAngle={Math.PI / 6}
+          maxPolarAngle={Math.PI / 2.2}
+          minPolarAngle={Math.PI / 8}
           autoRotate
-          autoRotateSpeed={0.2}
-          minDistance={5}
-          maxDistance={18}
+          autoRotateSpeed={0.15}
+          minDistance={4}
+          maxDistance={16}
         />
       </Canvas>
     </div>

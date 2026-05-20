@@ -237,35 +237,31 @@ brow_R.data.materials.append(mat_mascot_black)
 track_radius = 4.0
 track_width = 1.2
 
-# Road surface — torus for circular track
+# Road surface — torus lying FLAT in XY plane (no rotation)
 bpy.ops.mesh.primitive_torus_add(major_radius=track_radius, minor_radius=track_width/2, location=(0, 0, 0))
 road = bpy.context.active_object
 road.name = 'TrackRoad'
-road.rotation_euler = (1.57, 0, 0)
 road.scale = (1.0, 1.0, 0.1)
 road.data.materials.append(mat_road)
 smooth_shade(road)
 
-# Center line — thin torus
+# Center line — thin torus flat
 bpy.ops.mesh.primitive_torus_add(major_radius=track_radius, minor_radius=0.02, location=(0, 0, 0.02))
 center_line = bpy.context.active_object
 center_line.name = 'TrackCenterLine'
-center_line.rotation_euler = (1.57, 0, 0)
 center_line.scale = (1.0, 1.0, 0.1)
 center_line.data.materials.append(mat_road_line)
 
-# Neon edge strips
+# Neon edge strips — flat on ground
 bpy.ops.mesh.primitive_torus_add(major_radius=track_radius - track_width/2 - 0.05, minor_radius=0.03, location=(0, 0, 0.05))
 edge_inner = bpy.context.active_object
 edge_inner.name = 'TrackEdgeInner'
-edge_inner.rotation_euler = (1.57, 0, 0)
 edge_inner.scale = (1.0, 1.0, 0.1)
 edge_inner.data.materials.append(mat_neon)
 
 bpy.ops.mesh.primitive_torus_add(major_radius=track_radius + track_width/2 + 0.05, minor_radius=0.03, location=(0, 0, 0.05))
 edge_outer = bpy.context.active_object
 edge_outer.name = 'TrackEdgeOuter'
-edge_outer.rotation_euler = (1.57, 0, 0)
 edge_outer.scale = (1.0, 1.0, 0.1)
 edge_outer.data.materials.append(mat_neon)
 
