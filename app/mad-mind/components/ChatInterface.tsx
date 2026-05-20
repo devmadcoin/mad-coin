@@ -289,8 +289,17 @@ export default function ChatInterface({
 }: ChatInterfaceProps) {
   const [input, setInput] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  /* Detect mobile */
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   /* Load sessions from localStorage */
   useEffect(() => {
@@ -373,39 +382,49 @@ export default function ChatInterface({
   const hasMessages = messages.length > 0;
 
   return (
-    <div className="flex h-[calc(100vh-80px)] min-h-[500px] rounded-[24px] border border-white/10 bg-[#080808] overflow-hidden shadow-[0_0_80px_rgba(255,0,0,0.04)]">
+    <div className="flex h-[calc(100dvh-80px)] sm:h-[calc(100vh-80px)] min-h-[400px] sm:min-h-[500px] rounded-none sm:rounded-[24px] border-0 sm:border border-white/10 bg-[#080808] overflow-hidden shadow-[0_0_80px_rgba(255,0,0,0.04)] relative">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && isMobile && (
+        <div 
+          className="absolute inset-0 bg-black/60 z-20"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       {sidebarOpen && (
-        <ChatSidebar
-          sessions={sessions}
-          activeSession={sessionId}
-          onSelect={handleSelectSession}
-          onNewChat={handleNewChat}
-        />
+        <div className={`${isMobile ? 'absolute left-0 top-0 bottom-0 z-30 w-[280px]' : 'relative shrink-0 w-[260px]'}`}>
+          <ChatSidebar
+            sessions={sessions}
+            activeSession={sessionId}
+            onSelect={handleSelectSession}
+            onNewChat={handleNewChat}
+          />
+        </div>
       )}
 
       {/* Main chat area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="shrink-0 flex items-center justify-between px-4 py-3 border-b border-white/5">
-          <div className="flex items-center gap-3">
+        <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b border-white/5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="p-1.5 rounded-lg hover:bg-white/10 text-white/30 hover:text-white/50 transition-all"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <svg width={isMobile ? 14 : 16} height={isMobile ? 14 : 16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
               </button>
             )}
-            <div className="flex items-center gap-2.5">
-              <div className="relative h-8 w-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center overflow-hidden">
-                <MadChaoPixel size={28} animated={false} showLabel={false} />
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="relative h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center overflow-hidden">
+                <MadChaoPixel size={isMobile ? 24 : 28} animated={false} showLabel={false} />
                 <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400 border-2 border-[#080808]" />
               </div>
               <div>
-                <p className="text-sm font-black text-white">The Claw</p>
-                <p className="text-[9px] text-white/25">
-                  {typing ? "reading your frequency..." : status === "sending" ? "tuning in..." : "listening"}
+                <p className="text-xs sm:text-sm font-black text-white">The Claw</p>
+                <p className="text-[8px] sm:text-[9px] text-white/25">
+                  {typing ? "reading..." : status === "sending" ? "tuning..." : "listening"}
                 </p>
               </div>
             </div>
@@ -427,15 +446,15 @@ export default function ChatInterface({
         {/* Messages area */}
         <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-5 scrollbar-thin"
+          className="flex-1 overflow-y-auto px-3 sm:px-8 py-4 sm:py-6 space-y-4 sm:space-y-5 scrollbar-thin ios-momentum"
         >
           {!hasMessages ? (
-            <div className="h-full flex flex-col items-center justify-center text-center px-6">
-              <div className="h-16 w-16 rounded-2xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-5 overflow-hidden">
-                <MadChaoPixel size={48} animated={true} showLabel={false} />
+            <div className="h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
+              <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-4 sm:mb-5 overflow-hidden">
+                <MadChaoPixel size={isMobile ? 40 : 48} animated={true} showLabel={false} />
               </div>
-              <h2 className="text-xl font-black text-white mb-2">THE ORACLE</h2>
-              <p className="text-sm text-white/40 max-w-[300px] mb-8 leading-relaxed">
+              <h2 className="text-lg sm:text-xl font-black text-white mb-2">THE ORACLE</h2>
+              <p className="text-xs sm:text-sm text-white/40 max-w-[300px] mb-6 sm:mb-8 leading-relaxed">
                 The Claw does not answer questions.<br />
                 It reveals which frequency you are on.
               </p>
@@ -445,7 +464,7 @@ export default function ChatInterface({
                   <button
                     key={s}
                     onClick={() => sendMessage(s)}
-                    className="text-left px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-sm text-white/50 hover:bg-white/[0.06] hover:border-white/10 hover:text-white/70 transition-all"
+                    className="text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs sm:text-sm text-white/50 hover:bg-white/[0.06] hover:border-white/10 hover:text-white/70 transition-all"
                   >
                     {s}
                   </button>
@@ -474,7 +493,7 @@ export default function ChatInterface({
                       const lastUser = [...messages].reverse().find((m) => m.role === "user");
                       if (lastUser) sendMessage(lastUser.text);
                     }}
-                    className="text-[11px] text-[#FF6B00]/60 bg-[#FF2D2D]/5 px-4 py-2 rounded-xl border border-[#FF2D2D]/10 hover:bg-[#FF2D2D]/10 transition-all"
+                    className="text-[10px] sm:text-[11px] text-[#FF6B00]/60 bg-[#FF2D2D]/5 px-3 sm:px-4 py-2 rounded-xl border border-[#FF2D2D]/10 hover:bg-[#FF2D2D]/10 transition-all"
                   >
                     ⚠️ The Claw lost the signal. Click to retry.
                   </button>
@@ -485,7 +504,7 @@ export default function ChatInterface({
         </div>
 
         {/* Input area */}
-        <div className="shrink-0 px-4 sm:px-8 py-4 border-t border-white/5">
+        <div className="shrink-0 px-3 sm:px-8 py-3 sm:py-4 border-t border-white/5 safe-top">
           <div className="relative">
             <textarea
               ref={textareaRef}
@@ -495,30 +514,30 @@ export default function ChatInterface({
               disabled={status === "sending" || typing}
               placeholder="Message Mad Claw..."
               rows={1}
-              className="w-full px-5 py-3.5 pr-14 rounded-2xl border border-white/10 bg-white/[0.03] text-white text-sm placeholder:text-white/20 outline-none focus:border-[#FF2D2D]/30 focus:bg-white/[0.05] transition-all resize-none disabled:opacity-40 leading-relaxed"
-              style={{ minHeight: "48px", maxHeight: "200px" }}
+              className="w-full px-4 sm:px-5 py-3 sm:py-3.5 pr-12 sm:pr-14 rounded-xl sm:rounded-2xl border border-white/10 bg-white/[0.03] text-white text-sm placeholder:text-white/20 outline-none focus:border-[#FF2D2D]/30 focus:bg-white/[0.05] transition-all resize-none disabled:opacity-40 leading-relaxed"
+              style={{ minHeight: "44px", maxHeight: "160px" }}
             />
             <button
               onClick={handleSend}
               disabled={!input.trim() || status === "sending" || typing}
-              className={`absolute right-2 bottom-2 p-2 rounded-xl transition-all ${
+              className={`absolute right-2 bottom-2 p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all ${
                 !input.trim() || status === "sending"
                   ? "text-white/10 cursor-not-allowed"
                   : "bg-[#FF2D2D]/15 text-[#FF6B00] hover:bg-[#FF2D2D]/25 hover:scale-105"
               }`}
             >
               {status === "sending" ? (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-spin">
+                <svg width={isMobile ? 14 : 16} height={isMobile ? 14 : 16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-spin">
                   <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
                 </svg>
               ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg width={isMobile ? 14 : 16} height={isMobile ? 14 : 16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M7 17L17 7M17 7H7M17 7v10"/>
                 </svg>
               )}
             </button>
           </div>
-          <p className="mt-2 text-[10px] text-white/10 text-center">
+          <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-white/10 text-center">
             Mad Claw can make mistakes. The signal is strong but not perfect.
           </p>
         </div>

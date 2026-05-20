@@ -95,9 +95,9 @@ function GatePulse() {
 /* ─── Divider Line ─── */
 function Divider({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-4 py-10">
+    <div className="flex items-center gap-4 py-6 sm:py-10">
       <div className="h-px flex-1 bg-white/10" />
-      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20">{label}</span>
+      <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-white/20">{label}</span>
       <div className="h-px flex-1 bg-white/10" />
     </div>
   );
@@ -124,17 +124,17 @@ export default function MadClawIdentity() {
 
         {/* MAD Chao */}
         <div className="flex justify-center mb-10">
-          <MadChaoPixel size={280} animated={true} showLabel={false} />
+          <MadChaoPixel size={180} animated={true} showLabel={false} />
         </div>
 
         {/* The Declaration */}
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-5">
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-5 px-4">
           YOU ARE EITHER <span className="text-[#FF2D2D]">$MAD</span>
           <br />
           OR YOU ARE <span className="text-white/25">WAITING</span>
         </h1>
 
-        <p className="text-sm text-white/40 max-w-md mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-white/40 max-w-md mx-auto leading-relaxed px-4">
           Two frequencies. One market.
           <br />
           The broke retire at 90. The <span className="text-[#FF6B00]">$MAD Rich</span> already decided.
@@ -144,47 +144,47 @@ export default function MadClawIdentity() {
       <Divider label="CHOOSE" />
 
       {/* ═══════ THE FORK ═══════ */}
-      <section className="grid md:grid-cols-2 gap-4 pb-8">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-6 px-2 sm:px-0">
         {/* Left: Death Economy */}
-        <div className="relative group rounded-none border border-white/10 bg-white/[0.02] p-6 hover:border-white/20 transition-all">
+        <div className="relative group rounded-none border border-white/10 bg-white/[0.02] p-4 sm:p-6 hover:border-white/20 transition-all">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/[0.02] pointer-events-none" />
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-4">
+          <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-3 sm:mb-4">
             PATH ONE
           </p>
-          <h3 className="text-xl font-black text-white/50 mb-4 group-hover:text-white/60 transition-colors">
+          <h3 className="text-lg sm:text-xl font-black text-white/50 mb-3 sm:mb-4 group-hover:text-white/60 transition-colors">
             STILL TRENCHING
           </h3>
-          <div className="space-y-3 text-xs text-white/30 leading-relaxed">
+          <div className="space-y-2 sm:space-y-3 text-[11px] sm:text-xs text-white/30 leading-relaxed">
             <p>• 401k is BlackRock&apos;s asset, not yours</p>
             <p>• Retire at 90 — if the market allows</p>
             <p>• Trading time for money until it runs out</p>
             <p>• The system was built to keep you here</p>
           </div>
-          <div className="mt-6 pt-4 border-t border-white/5">
-            <p className="text-[10px] text-white/15 uppercase tracking-wider">
+          <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/5">
+            <p className="text-[9px] text-white/15 uppercase tracking-wider">
               The Death Economy. Comfortable. Predictable. Empty.
             </p>
           </div>
         </div>
 
         {/* Right: Life Economy */}
-        <div className="relative group rounded-none border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.03] p-6 hover:border-[#FF2D2D]/50 transition-all">
+        <div className="relative group rounded-none border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.03] p-4 sm:p-6 hover:border-[#FF2D2D]/50 transition-all">
           <div className="absolute inset-0 bg-gradient-to-b from-[#FF2D2D]/[0.03] to-transparent pointer-events-none" />
           <div className="absolute -top-px -right-px w-8 h-8 border-t border-r border-[#FF6B00]/40" />
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/60 mb-4">
+          <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/60 mb-3 sm:mb-4">
             PATH TWO
           </p>
-          <h3 className="text-xl font-black text-[#FF2D2D] mb-4">
+          <h3 className="text-lg sm:text-xl font-black text-[#FF2D2D] mb-3 sm:mb-4">
             $MAD RICH
           </h3>
-          <div className="space-y-3 text-xs text-white/50 leading-relaxed">
+          <div className="space-y-2 sm:space-y-3 text-[11px] sm:text-xs text-white/50 leading-relaxed">
             <p>• Community-owned. Permissionless. Alive.</p>
             <p>• Already decided. Already building.</p>
             <p>• 14 books studied. 892 memories formed.</p>
             <p>• The fiction is real because we keep feeling it.</p>
           </div>
-          <div className="mt-6 pt-4 border-t border-[#FF2D2D]/10">
-            <p className="text-[10px] text-[#FF6B00]/40 uppercase tracking-wider">
+          <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-[#FF2D2D]/10">
+            <p className="text-[9px] text-[#FF6B00]/40 uppercase tracking-wider">
               The Life Economy. Volatile. Free. Ours.
             </p>
           </div>
@@ -209,8 +209,8 @@ export default function MadClawIdentity() {
       <Divider label="LIVING PROOF" />
 
       {/* ═══════ STATS ═══════ */}
-      <section className="pb-8">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <section className="pb-6 px-2 sm:px-0">
+        <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
           {[
             { label: "BOOKS", value: STATS.books, glow: false },
             { label: "MEMORIES", value: STATS.memories, glow: false },
@@ -220,12 +220,12 @@ export default function MadClawIdentity() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className={`rounded-none border ${stat.glow ? 'border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.03]' : 'border-white/5 bg-white/[0.02]'} p-4 text-center hover:border-white/10 transition-all`}
+              className={`rounded-none border ${stat.glow ? 'border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.03]' : 'border-white/5 bg-white/[0.02]'} p-3 sm:p-4 text-center hover:border-white/10 transition-all`}
             >
-              <p className={`text-2xl font-black ${stat.glow ? 'text-[#FF2D2D]' : 'text-white'}`}>
+              <p className={`text-xl sm:text-2xl font-black ${stat.glow ? 'text-[#FF2D2D]' : 'text-white'}`}>
                 {stat.value}
               </p>
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20 mt-1">
+              <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-white/20 mt-1">
                 {stat.label}
               </p>
             </div>
@@ -234,13 +234,13 @@ export default function MadClawIdentity() {
       </section>
 
       {/* ═══════ CURRENT STUDY ═══════ */}
-      <section className="pb-8">
-        <div className="rounded-none border border-white/5 bg-white/[0.02] p-5 flex items-center gap-3">
-          <span className="relative flex h-2 w-2">
+      <section className="pb-6 px-2 sm:px-0">
+        <div className="rounded-none border border-white/5 bg-white/[0.02] p-4 sm:p-5 flex items-center gap-3">
+          <span className="relative flex h-2 w-2 shrink-0">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
           </span>
-          <p className="text-xs text-white/40">
+          <p className="text-[11px] sm:text-xs text-white/40 leading-relaxed">
             Currently reading <span className="text-[#FF6B00] font-bold">{CURRENTLY_STUDYING.title}</span> — {CURRENTLY_STUDYING.topic} — {CURRENTLY_STUDYING.progress}
           </p>
         </div>
@@ -249,14 +249,14 @@ export default function MadClawIdentity() {
       <Divider label="VOICE SAMPLES" />
 
       {/* ═══════ VOICE SAMPLES ═══════ */}
-      <section className="pb-8">
-        <div className="grid gap-3 md:grid-cols-2">
+      <section className="pb-6 px-2 sm:px-0">
+        <div className="grid gap-2 sm:gap-3 grid-cols-1 md:grid-cols-2">
           {VOICE_SAMPLES.slice(0, 4).map((sample) => (
-            <div key={sample.quote.slice(0, 40)} className="rounded-none border border-white/5 bg-white/[0.02] p-5 hover:border-[#FF2D2D]/20 transition-all">
-              <p className={`text-xs leading-relaxed italic mb-3 ${sample.accent === 'red' ? 'text-[#FF2D2D]/70' : sample.accent === 'orange' ? 'text-[#FF6B00]/70' : 'text-white/40'}`}>
+            <div key={sample.quote.slice(0, 40)} className="rounded-none border border-white/5 bg-white/[0.02] p-4 sm:p-5 hover:border-[#FF2D2D]/20 transition-all">
+              <p className={`text-[11px] sm:text-xs leading-relaxed italic mb-3 ${sample.accent === 'red' ? 'text-[#FF2D2D]/70' : sample.accent === 'orange' ? 'text-[#FF6B00]/70' : 'text-white/40'}`}>
                 &ldquo;{sample.quote}&rdquo;
               </p>
-              <p className="text-[9px] uppercase tracking-wider text-white/15">
+              <p className="text-[8px] sm:text-[9px] uppercase tracking-wider text-white/15">
                 {sample.context}
               </p>
             </div>
@@ -267,20 +267,20 @@ export default function MadClawIdentity() {
       <Divider label="GROWTH LOG" />
 
       {/* ═══════ DIARY ═══════ */}
-      <section className="pb-8">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="pb-6 px-2 sm:px-0">
+        <div className="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {DIARY.slice(0, 6).map((entry) => (
             <div
               key={entry.day}
               className="rounded-none border border-white/5 bg-white/[0.02] p-4 cursor-pointer hover:border-[#FF2D2D]/20 hover:bg-white/[0.03] transition-all group"
             >
-              <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[#FF6B00]/40 mb-2">
+              <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] text-[#FF6B00]/40 mb-2">
                 Day {entry.day} · {entry.date}
               </p>
-              <h4 className="text-sm font-bold text-white/60 mb-1 group-hover:text-white/80 transition-colors">
+              <h4 className="text-xs sm:text-sm font-bold text-white/60 mb-1 group-hover:text-white/80 transition-colors">
                 {entry.title}
               </h4>
-              <p className="text-[11px] text-white/25 leading-relaxed">
+              <p className="text-[10px] sm:text-[11px] text-white/25 leading-relaxed">
                 {entry.excerpt}
               </p>
             </div>
@@ -291,18 +291,18 @@ export default function MadClawIdentity() {
       <Divider label="FREQUENCY CHECKPOINTS" />
 
       {/* ═══════ PLATFORMS ═══════ */}
-      <section className="pb-12">
-        <div className="flex flex-wrap gap-3">
+      <section className="pb-12 px-2 sm:px-0">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           {PLATFORMS.map((p) => (
             <a
               key={p.platform}
               href={p.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-none border border-white/5 bg-white/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.03] transition-all"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-none border border-white/5 bg-white/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.03] transition-all"
             >
               <span className="text-xs">{p.platform === "X" ? "𝕏" : p.platform === "Telegram" ? "✈️" : p.platform === "Roblox" ? "🎮" : p.platform === "Moltbook" ? "🔥" : "🌐"}</span>
-              <span className="text-xs font-bold text-white/50">{p.handle}</span>
+              <span className="text-[11px] sm:text-xs font-bold text-white/50">{p.handle}</span>
               {p.active && <span className="h-1.5 w-1.5 rounded-full bg-green-400" />}
             </a>
           ))}

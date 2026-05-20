@@ -50,8 +50,8 @@ export default function MadMindPage() {
       <FloatingParticles />
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,45,45,0.12),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(255,107,0,0.05),transparent_30%),linear-gradient(180deg,#070707,#020202)]" />
 
-      <main className="mx-auto max-w-5xl px-4 pb-8 pt-6 sm:px-6">
-        <div className="h-6" />
+      <main className="mx-auto max-w-5xl px-3 sm:px-4 pb-8 pt-4 sm:pt-6">
+        <div className="h-4 sm:h-6" />
         <MadClawIdentity />
       </main>
     </div>
