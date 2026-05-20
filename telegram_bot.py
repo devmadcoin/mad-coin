@@ -327,10 +327,14 @@ def load_learned_data() -> Dict[str, Any]:
         data["words"] = {w: info for w, info in top_words}
 
         # Top phrases
-        data["phrases"] = [
-            p for p, info in vocab.get("phrases", {}).items()
-            if info.get("count", 0) >= 2
-        ][:5]
+        phrases_data = vocab.get("phrases", {})
+        if isinstance(phrases_data, dict):
+            data["phrases"] = [
+                p for p, info in phrases_data.items()
+                if info.get("count", 0) >= 2
+            ][:5]
+        elif isinstance(phrases_data, list):
+            data["phrases"] = phrases_data[:5]
 
         # Community catchphrases
         data["community_jokes"] = vocab.get("community_catchphrases", [])[:20]
@@ -1452,6 +1456,63 @@ def motion_loop():
         # Check every 30 minutes
         time.sleep(1800)
 
+async def _is_announcement_context(update: Update, text: str) -> bool:
+    """Detect if message is an official announcement/pinned post."""
+    if not update.message:
+        return False
+    
+    # Pinned message
+    if update.message.pinned_message:
+        return True
+    
+    # Forwarded from channel (announcement channel)
+    if update.message.forward_from_chat:
+        return True
+    
+    # Check sender status — if admin/creator posting official-looking content
+    text_lower = text.lower()
+    
+    # Heavy emoji + caps pattern = announcement energy
+    emoji_count = sum(1 for c in text if c in '😡🔥🚀💎⚠️📢📌📢🚨👀💰🎯✅❌🛑⛔')
+    caps_ratio = sum(1 for c in text if c.isupper()) / max(len(text), 1)
+    
+    # Announcement keywords
+    announcement_keywords = [
+        "official", "announcement", "pinned", "everyone", 
+        "important", "update", "read this", "must read",
+        "$mad official", "mad official", "dev announcement"
+    ]
+    has_announcement_kw = any(kw in text_lower for kw in announcement_keywords)
+    
+    # If it's all caps + emojis + mention everyone = 100% announcement
+    if caps_ratio > 0.5 and emoji_count >= 2 and "@everyone" in text:
+        return True
+    
+    # If message has official keywords and high emoji count
+    if has_announcement_kw and emoji_count >= 2:
+        return True
+    
+    return False
+
+
+def _is_casual_conversation(text: str) -> bool:
+    """Check if this looks like genuine casual chat, not an announcement."""
+    # If it's a question or personal statement, it's conversation
+    if text.rstrip().endswith("?"):
+        return True
+    
+    # If it's very short (under 30 chars), likely casual
+    if len(text) < 30:
+        return True
+    
+    # If it uses first-person pronouns
+    text_lower = text.lower()
+    if any(w in text_lower for w in ["i ", "my ", "me ", "im ", "i'm"]):
+        return True
+    
+    return False
+
+
 async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
@@ -1468,6 +1529,12 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     user_id = str(user.id)
     text = update.message.text if update.message else ""
+
+    # === ANNOUNCEMENT GUARD ===
+    # Never engage with random hooks on pinned/official/announcement posts
+    if _is_announcement_context(update, text):
+        print(f"[GUARD] BLOCKED: announcement/pinned post from user={user_id}")
+        return
 
     # === ADMIN COMMANDS (check first, owner-only) ===
     if tadmin and text.startswith("/"):
@@ -1567,7 +1634,7 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if (conviction_match or question_match or shift_match or energy_match):
                 # Cooldown per user: don't smart-engage same user more than once per 3 min
                 last_smart_key = f"smart_last:{user_id}"
-                last_smart = getattr(context.bot_data, 'smart_cooldowns', {})
+                last_smart = context.bot_data.get('smart_cooldowns', {})
                 now = time.time()
                 if user_id in last_smart and (now - last_smart[user_id]) < 180:
                     print(f"[SMART] COOLDOWN: user {user_id} too recent")
@@ -1575,9 +1642,9 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     # 40% chance to actually engage even when matched
                     if random.random() < 0.4:
                         smart_engaged = True
-                        if not hasattr(context.bot_data, 'smart_cooldowns'):
-                            context.bot_data.smart_cooldowns = {}
-                        context.bot_data.smart_cooldowns[user_id] = now
+                        if 'smart_cooldowns' not in context.bot_data:
+                            context.bot_data['smart_cooldowns'] = {}
+                        context.bot_data['smart_cooldowns'][user_id] = now
                         print(f"[SMART] ENGAGED: user={user_id} conviction={conviction_match} question={question_match} shift={shift_match} energy={energy_match}")
 
         if not smart_engaged:
@@ -1587,8 +1654,7 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         print(f"[GUARD] ALLOWED: processing reply")
 
     # === MEMORY: Log user message and detect sentiment ===
-    # (Only when @mentioned or replied - guard above ensures this)
-        # Simple sentiment detection from message
+    if tmem:
         sentiment = "neutral"
         intensity = 0.3
         if any(w in text_lower for w in ["bullish", "moon", "pump", "let's go", "wagmi"]):
@@ -1606,10 +1672,11 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         tmem.record_sentiment(user_id, sentiment, intensity)
 
-        # Check for sentiment shift
         shift = tmem.get_sentiment_shift(user_id)
         if shift:
             print(f"[MEMORY] User {user_id} sentiment shift: {shift}")
+    else:
+        print("[MEMORY] tmem not available, skipping sentiment logging")
 
     # === CHECK CONVERSATION STATE FIRST ===
     # If we're waiting for a reply from this user, handle it regardless of triggers
@@ -1980,14 +2047,19 @@ that's it. nothing else to memorize."""
     elif tc:
         response = tc.build_conversational_response(detected_context, text, profile)
     else:
-        hooks = [
-            "what's on your mind? don't say 'price'.",
-            "you holding anything right now? like actually holding?",
-            "what's the last thing that made you question your position?",
-            "what's your biggest fear in this space? not 'rugpull' - something real.",
-            "what would make you leave crypto forever? has it happened yet?",
-        ]
-        response = random.choice(hooks)
+        # Only use hooks on genuine casual conversation, never on announcements
+        if _is_casual_conversation(text):
+            hooks = [
+                "what's on your mind? don't say 'price'.",
+                "you holding anything right now? like actually holding?",
+                "what's the last thing that made you question your position?",
+                "what's your biggest fear in this space? not 'rugpull' - something real.",
+                "what would make you leave crypto forever? has it happened yet?",
+            ]
+            response = random.choice(hooks)
+        else:
+            print(f"[GUARD] BLOCKED: not casual conversation, skipping hooks")
+            return
 
     await _send_with_state(update, response)
 
@@ -2040,14 +2112,19 @@ that's it. nothing else to memorize."""
     elif tc:
         response = tc.build_conversational_response(_detect_telegram_context(text), text, profile)
     else:
-        hooks = [
-            "what's on your mind? don't say 'price'.",
-            "you holding anything right now? like actually holding?",
-            "what's the last thing that made you question your position?",
-            "what's your biggest fear in this space? not 'rugpull' - something real.",
-            "what would make you leave crypto forever? has it happened yet?",
-        ]
-        response = random.choice(hooks)
+        # Only use hooks on genuine casual conversation, never on announcements
+        if _is_casual_conversation(text):
+            hooks = [
+                "what's on your mind? don't say 'price'.",
+                "you holding anything right now? like actually holding?",
+                "what's the last thing that made you question your position?",
+                "what's your biggest fear in this space? not 'rugpull' - something real.",
+                "what would make you leave crypto forever? has it happened yet?",
+            ]
+            response = random.choice(hooks)
+        else:
+            print(f"[GUARD] BLOCKED: not casual conversation, skipping hooks")
+            return
 
     # Log the complete exchange after response is generated
     # (We'll log the bot message when it's sent, and update with user reply)

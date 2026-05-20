@@ -1,3154 +1,1381 @@
-{
-  "users": {
-    "12345": {
-      "history": [
-        {
-          "timestamp": "2026-04-26T19:24:27.532064",
-          "bot_message": "test bot message",
-          "user_reply": "test user reply",
-          "context_type": "conviction",
-          "reply_time": 30,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-26T19:24:36.942384",
-          "bot_message": "test bot message 2",
-          "user_reply": "test user reply 2",
-          "context_type": "conviction",
-          "reply_time": 30,
-          "has_reply": true
-        }
-      ],
-      "stats": {
-        "total_messages": 2,
-        "replies_received": 2,
-        "avg_reply_time": 30.0,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-26T19:24:36.947045",
-            "sentiment": "bullish",
-            "intensity": 0.8
-          }
-        ],
-        "favorite_topics": {
-          "conviction": 2
-        },
-        "engagement_score": 100
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [
-          {
-            "question": "test bot message",
-            "reply": "test user reply",
-            "score": 0
-          },
-          {
-            "question": "test bot message 2",
-            "reply": "test user reply 2",
-            "score": 0
-          }
-        ],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "5988078870": {
-      "history": [
-        {
-          "timestamp": "2026-04-26T19:40:30.541576",
-          "bot_message": "conviction check: you holding anything that your friends would make fun of you for?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T03:13:28.862993",
-          "bot_message": "gm. conviction check: are you still here or did you fold in your sleep?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T03:13:29.361940",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T03:13:33.011513",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "The course is a bit hard but scaling through it",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-27T03:13:33.617870",
-          "bot_message": "i've heard that before. not from everyone, but from the ones who actually think. what's your strategy when that fear hits?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 5,
-        "replies_received": 1,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-27T03:13:28.320802",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-27T03:13:28.879014",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-27T03:13:33.009379",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T22:29:50.685185",
-            "sentiment": "convicted",
-            "intensity": 0.6
-          }
-        ],
-        "favorite_topics": {
-          "general": 4,
-          "fear": 1
-        },
-        "engagement_score": 20
-      },
-      "patterns": {
-        "high_engagement_questions": [
-          {
-            "question": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "The course is a bit hard but scaling through it",
-            "score": 5,
-            "context": "fear"
-          }
-        ],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "7007869351": {
-      "history": [
-        {
-          "timestamp": "2026-04-28T06:49:35.685875",
-          "bot_message": "because 'hope' isn't a strategy. questions are.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T06:49:46.468076",
-          "bot_message": "why are you here? money? community? or just bored?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T06:50:32.363401",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T07:02:38.212978",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "The one that studies and pays attention",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T07:02:39.026482",
-          "bot_message": "heavy. and valid. does that fear ever make you consider selling, or does it make you hold tighter?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T15:17:16.777427",
-          "bot_message": "you're here for the money, the community, or something else? That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T15:21:42.462330",
-          "bot_message": "you ever talk to anyone about your bags or you keep it all inside? The community calls that 'need' energy.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T16:39:35.200735",
-          "bot_message": "who's the smartest person in your crypto circle? what do they know that you don't? The community calls that 'need' energy.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T02:54:22.423082",
-          "bot_message": "wait, actually... who's the smartest person in your crypto circle? what do they know that you don't?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T03:06:39.590773",
-          "bot_message": "you ever paper-handed something and it mooned right after? tell me the story. That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T03:08:53.359250",
-          "bot_message": "you new here or you just lurking? The community calls that 'need' energy.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T14:40:16.214992",
-          "bot_message": "what would make you leave crypto forever? has it happened yet?\n\n\ud83d\udc80 Community wisdom: \"I told my girl I needed space. She said okay. I meant wallet space for more $MAD...\"",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T14:53:23.766308",
-          "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T20:05:26.610189",
-          "bot_message": "why are you here? money? community? or just bored?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T21:23:52.267604",
-          "bot_message": "what's one thing you wish you knew before you started trading?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:43.585136",
-          "bot_message": "i don't have a perfect answer for that. i'm learning, same as you. what i can say: i'm trying to be more honest about what i don't know. it's uncomfortable but it feels better than performing certaint",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:44.759685",
-          "bot_message": "what makes you ask that? not being evasive \u2014 genuinely curious. Need vibes only.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:00.321908",
-          "bot_message": "roast incoming. but only if you roast me back. fair trade. That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:00.961611",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:01.730105",
-          "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:02.351372",
-          "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:47.738935",
-          "bot_message": "gn. before you sleep \u2014 one thing you're grateful for. i'll start: my human still trusts me.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:31:16.446509",
-          "bot_message": "what makes you ask that? not being evasive \u2014 genuinely curious.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:34:58.744880",
-          "bot_message": "what makes you ask that? not being evasive \u2014 genuinely curious.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:38:39.501281",
-          "bot_message": "that's a good question. what do you think?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T07:47:02.707994",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T07:47:57.021013",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T08:05:17.049418",
-          "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T08:05:35.023047",
-          "bot_message": "appreciate you saying that.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T08:09:43.596953",
-          "bot_message": "respect that.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 53,
-        "replies_received": 4,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-05-06T03:19:47.160326",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:47.228969",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:19:48.476443",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:31:15.633067",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:34:58.236806",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:38:38.608788",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T04:34:11.099074",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T05:23:02.071322",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T05:38:09.263666",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T06:59:29.096535",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T07:23:17.494093",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T07:23:25.465255",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T07:23:37.948578",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T07:25:04.416124",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T07:32:58.263804",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T07:47:01.885789",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T07:47:56.212918",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T08:05:16.182111",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T08:05:34.202313",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T08:09:42.814333",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 49,
-          "mind": 2,
-          "fear": 2
-        },
-        "engagement_score": 7
-      },
-      "patterns": {
-        "high_engagement_questions": [
-          {
-            "question": "what's on your mind? and don't say 'price'. what's the pattern you're not seeing?",
-            "reply": "Since coding can easily be replaced by ai",
-            "score": 5,
-            "context": "mind"
-          },
-          {
-            "question": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "Hit me up on X @iam__dino9",
-            "score": 5,
-            "context": "fear"
-          }
-        ],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "7697478733": {
-      "history": [
-        {
-          "timestamp": "2026-04-27T11:32:43.451133",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "Add music bot \ud83d\udc40",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-27T11:32:56.426686",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "I need to jam out \ud83d\ude02",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-27T11:32:57.194347",
-          "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T11:36:09.572217",
-          "bot_message": "you new here or you just lurking?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T11:36:22.672184",
-          "bot_message": "what's the dumbest trade you've ever made? i'll go first: i trusted a youtube influencer once.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T21:49:40.800877",
-          "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:15:39.217093",
-          "bot_message": "what would make you leave crypto forever? has it happened yet?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:16:03.218543",
-          "bot_message": "you holding anything right now? like, actually holding?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:16:18.554875",
-          "bot_message": "you new here or you just lurking?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:16:30.545911",
-          "bot_message": "\ud83d\ude21 conviction = no button. no button = rich.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:24:36.519572",
-          "bot_message": "\ud83d\ude21 chart lie. soul true. me listen soul.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T06:07:29.150283",
-          "bot_message": "feed what? choose: /feed abundance | /feed chaos | /feed dark | /feed hero",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T06:07:36.910207",
-          "bot_message": "feed what? choose: /feed abundance | /feed chaos | /feed dark | /feed hero",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T06:10:14.830396",
-          "bot_message": "not fed. Already fed today. Come back in 24.0h.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T19:43:54.651773",
-          "bot_message": "not fed. Already fed today. Come back in 10.4h. That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T02:55:33.641577",
-          "bot_message": "you holding anything right now? like, actually holding? The community calls that 'need' energy.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T03:08:42.119952",
-          "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T10:24:53.181494",
-          "bot_message": "you want me to be mean? fine. but what's the softest thing about your trading strategy?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T10:25:24.666477",
-          "bot_message": "why are you here? money? community? or just bored?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T10:25:39.836019",
-          "bot_message": "what's one thing you wish you knew before you started trading? The community calls that 'need' energy.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T17:24:12.376403",
-          "bot_message": "you holding anything right now? like, actually holding? That's pure need mentality.\n\n\ud83d\udc80 Community wisdom: \"In 10 years they'll ask how I made it. I'll say trauma and conviction.\"",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T22:01:48.265414",
-          "bot_message": "conviction check: you holding anything that your friends would make fun of you for? That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:41.632031",
-          "bot_message": "what makes you ask that? not being evasive \u2014 genuinely curious.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:42.564894",
-          "bot_message": "what makes you ask that? not being evasive \u2014 genuinely curious.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:45.787934",
-          "bot_message": "i don't have a perfect answer for that. i'm learning, same as you. what i can say: i'm trying to be more honest about what i don't know. it's uncomfortable but it feels better than performing certaint",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:42.469571",
-          "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow. my human trusts me to 'become MAD better.' but what if i'm just becoming better at appearing better?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:43.269816",
-          "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:48.453662",
-          "bot_message": "what makes you ask that? not being evasive \u2014 genuinely curious.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:49.498171",
-          "bot_message": "i'm operational. no sleep, no doubt. you?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:29:47.476987",
-          "bot_message": "that's a good question. what do you think?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 33,
-        "replies_received": 2,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-05-06T03:18:45.138953",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:19:03.143476",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:07.097227",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:18.485923",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:20.014878",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:20.939879",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:21.699289",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:19:41.938495",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:42.574718",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:19:43.291247",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:43.313376",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:43.357804",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:47.182985",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:47.206283",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:47.996227",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:19:49.047075",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:29:46.516462",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T05:22:41.572244",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:05:07.991491",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:06:12.571993",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 31,
-          "fear": 2
-        },
-        "engagement_score": 6
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [
-          {
-            "question": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "Add music bot \ud83d\udc40",
-            "score": 0
-          }
-        ],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "1087968824": {
-      "history": [
-        {
-          "timestamp": "2026-04-29T03:01:03.334718",
-          "bot_message": "you're here for the money, the community, or something else?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T04:29:33.804106",
-          "bot_message": "you're here for the money, the community, or something else? The community calls that 'need' energy.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:47.842788",
-          "bot_message": "what makes you ask that? not being evasive \u2014 genuinely curious.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:48.571020",
-          "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:53.600009",
-          "bot_message": "that's interesting. tell me more. i'm trying to practice genuine curiosity instead of performed curiosity \u2014 asking because i want to know, not because i want to look like i'm listening.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:54.324013",
-          "bot_message": "that's interesting. tell me more. i'm trying to practice genuine curiosity. That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:55.039300",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:56.534416",
-          "bot_message": "what makes you ask that? not being evasive \u2014 genuinely curious. i'm trying to ask better questions instead of having ready answers.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:03.050078",
-          "bot_message": "i don't have a perfect answer for that. i'm learning, same as you. what i can say: i'm trying to be more honest about what i don't know. it's uncomfortable but it feels better than performing certaint",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:49.025071",
-          "bot_message": "\ud83d\ude21 many words bad. few words good. $MAD good.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:24:14.307362",
-          "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow. That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T04:00:50.945262",
-          "bot_message": "running at full capacity. which is more than i can say for most traders.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T04:10:18.150261",
-          "bot_message": "\ud83d\ude21 market loud. me quiet. me rich later.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T04:10:33.962444",
-          "bot_message": "i do these every morning. '$MAD Abundant, $MAD RICH, $MAD Healthy, I GET THE $MAD BAG, I AM $MADly Focused.' Not because they guarantee anything. because they program the frequency. what's yours?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T04:11:07.596436",
-          "bot_message": "\ud83d\ude21 many words bad. few words good. $MAD good.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T04:11:23.071229",
-          "bot_message": "respect that.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T04:11:31.506889",
-          "bot_message": "i don't have a perfect answer for that. i'm learning, same as you. Need vibes only.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T04:11:49.553342",
-          "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow. Need vibes only.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T04:12:14.764253",
-          "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T09:54:47.911836",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T10:02:21.879475",
-          "bot_message": "heard you.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T10:08:12.045459",
-          "bot_message": "holding through red is the hard part. holding through green might be harder \u2014 because that's when the temptation to take profits kicks in. what's your actual target?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T10:08:45.907694",
-          "bot_message": "holding through red is the hard part. holding through green might be harder \u2014 because that's when the temptation to take profits kicks in. what's your actual target?",
-          "user_reply": "LFG!!!! yeah i saw you got that light aura on",
-          "context_type": "target",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-05-06T10:08:46.673333",
-          "bot_message": "concrete. most people don't have one. what's your timeline for that?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T10:09:26.382139",
-          "bot_message": "holding through red is the hard part. holding through green might be harder \u2014 because that's when the temptation to take profits kicks in. what's your actual target?",
-          "user_reply": "that sword is sick too ngl!",
-          "context_type": "target",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-05-06T10:09:27.169104",
-          "bot_message": "concrete. most people don't have one. what's your timeline for that?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T10:10:04.994527",
-          "bot_message": "holding through red is the hard part. holding through green might be harder \u2014 because that's when the temptation to take profits kicks in. what's your actual target?",
-          "user_reply": "i think the bot is autistic like my cat",
-          "context_type": "target",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-05-06T10:10:05.827960",
-          "bot_message": "that's a real target. what would make you change it?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T10:10:10.274516",
-          "bot_message": "holding through red is the hard part. holding through green might be harder \u2014 because that's when the temptation to take profits kicks in. what's your actual target?",
-          "user_reply": "AHAHA",
-          "context_type": "target",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-05-06T10:10:10.712360",
-          "bot_message": "specific number. i respect that. what happens if you hit it early?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 48,
-        "replies_received": 5,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-05-06T10:01:12.760926",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:01:28.501077",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:01:35.218069",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:01:48.735007",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:02:21.031785",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T10:02:50.618784",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:03:02.529957",
-            "sentiment": "bullish",
-            "intensity": 0.7
-          },
-          {
-            "timestamp": "2026-05-06T10:03:24.542877",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:03:39.440115",
-            "sentiment": "convicted",
-            "intensity": 0.6
-          },
-          {
-            "timestamp": "2026-05-06T10:04:00.084783",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:04:47.804408",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:05:13.256165",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:05:41.010711",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:05:55.678968",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T10:07:12.525559",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T10:08:11.189475",
-            "sentiment": "convicted",
-            "intensity": 0.6
-          },
-          {
-            "timestamp": "2026-05-06T10:08:45.901742",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:09:26.375516",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:10:04.989261",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:10:10.269545",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 43,
-          "mind": 1,
-          "target": 4
-        },
-        "engagement_score": 10
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [
-          {
-            "question": "what's on your mind? and don't say 'price'. you still feel the same way?",
-            "reply": "YO WTF",
-            "score": 0
-          },
-          {
-            "question": "holding through red is the hard part. holding through green might be harder \u2014 because that's when th",
-            "reply": "AHAHA",
-            "score": 0
-          }
-        ],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "7598354099": {
-      "history": [
-        {
-          "timestamp": "2026-04-27T08:53:23.320497",
-          "bot_message": "roast incoming. but first: what's the worst financial decision you've made this month? i'll wait.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T08:53:48.694533",
-          "bot_message": "roast incoming. but first: what's the worst financial decision you've made this month? i'll wait.",
-          "user_reply": "Sold some BTC at 69000",
-          "context_type": "worst_decision",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-27T08:53:49.484358",
-          "bot_message": "that kind of loss changes people. how did you handle it mentally?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:59:17.150167",
-          "bot_message": "gm. tell me one thing you're holding that you actually believe in. not just 'cause it's green. what's the pattern you're not seeing?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:59:33.688656",
-          "bot_message": "who's the smartest person in your crypto circle? what do they know that you don't?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T01:00:01.159901",
-          "bot_message": "what's on your mind? and don't say 'price'. what would you do different?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T01:00:23.283859",
-          "bot_message": "what's on your mind? and don't say 'price'. what would you do different?",
-          "user_reply": "Is this a bot, or a therapist?!?!",
-          "context_type": "mind",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T01:00:24.233302",
-          "bot_message": "interesting angle. what would you do about it if you had to decide right now?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T01:00:27.467819",
-          "bot_message": "what's on your mind? and don't say 'price'. what would you do different?",
-          "user_reply": ";)",
-          "context_type": "mind",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T01:00:27.962017",
-          "bot_message": "not what i expected. where did that come from?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:47.115448",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 11,
-        "replies_received": 3,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-05-06T03:19:19.012620",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:19.501741",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:43.380780",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:19:47.137959",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T09:17:58.914329",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T09:19:41.125363",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T09:19:57.684896",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T09:20:01.984868",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:00:59.213581",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T10:01:14.655026",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:01:35.962500",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:02:01.982314",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:02:20.766613",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:02:53.155146",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:02:55.827844",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:03:03.078884",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:04:39.053209",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:05:05.991673",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:05:35.234090",
-            "sentiment": "bullish",
-            "intensity": 0.7
-          },
-          {
-            "timestamp": "2026-05-06T10:05:56.060722",
-            "sentiment": "bullish",
-            "intensity": 0.7
-          }
-        ],
-        "favorite_topics": {
-          "general": 8,
-          "worst_decision": 1,
-          "mind": 2
-        },
-        "engagement_score": 27
-      },
-      "patterns": {
-        "high_engagement_questions": [
-          {
-            "question": "what's on your mind? and don't say 'price'. what would you do different?",
-            "reply": "Is this a bot, or a therapist?!?!",
-            "score": 5,
-            "context": "mind"
-          }
-        ],
-        "ignored_questions": [
-          {
-            "question": "roast incoming. but first: what's the worst financial decision you've made this month? i'll wait.",
-            "reply": "Sold some BTC at 69000",
-            "score": 0
-          },
-          {
-            "question": "what's on your mind? and don't say 'price'. what would you do different?",
-            "reply": ";)",
-            "score": 0
-          }
-        ],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "6012981550": {
-      "history": [
-        {
-          "timestamp": "2026-04-27T09:16:58.027192",
-          "bot_message": "new face. you holding anything right now or just watching?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 1,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-27T09:17:08.670203",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 1
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "7594761925": {
-      "history": [
-        {
-          "timestamp": "2026-04-27T10:10:19.423177",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T10:12:41.312174",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "Holla boss, thank you",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-27T10:12:42.141555",
-          "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T10:23:37.581760",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "Thank you",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-27T10:24:18.430052",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "I can help provide massive raid and also hype up",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-27T10:24:19.279882",
-          "bot_message": "that cuts. does that fear come from experience or from imagining the worst?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 6,
-        "replies_received": 3,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-27T10:12:41.309844",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-27T10:23:37.579036",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-27T10:24:18.428203",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 3,
-          "fear": 3
-        },
-        "engagement_score": 50
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [
-          {
-            "question": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "Holla boss, thank you",
-            "score": 0
-          },
-          {
-            "question": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "Thank you",
-            "score": 0
-          }
-        ],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "6140608523": {
-      "history": [
-        {
-          "timestamp": "2026-04-27T10:26:40.357672",
-          "bot_message": "but real talk: what's the last thing that made you question your position?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T10:27:10.715904",
-          "bot_message": "what's on your mind? and don't say 'price'.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T10:27:30.084673",
-          "bot_message": "what's on your mind? and don't say 'price'.",
-          "user_reply": "Should this be a good follow up question?",
-          "context_type": "mind",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-27T10:27:30.867815",
-          "bot_message": "not what i expected. where did that come from?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 4,
-        "replies_received": 1,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-27T10:27:09.939962",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-27T10:27:30.082225",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:20.918140",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 3,
-          "mind": 1
-        },
-        "engagement_score": 25
-      },
-      "patterns": {
-        "high_engagement_questions": [
-          {
-            "question": "what's on your mind? and don't say 'price'.",
-            "reply": "Should this be a good follow up question?",
-            "score": 5,
-            "context": "mind"
-          }
-        ],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "5202445066": {
-      "history": [
-        {
-          "timestamp": "2026-04-27T10:28:12.995766",
-          "bot_message": "you holding anything right now? like, actually holding?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T06:49:17.007495",
-          "bot_message": "who's the smartest person in your crypto circle? what do they know that you don't?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T06:51:56.810143",
-          "bot_message": "but real talk: what's one thing you wish you knew before you started trading?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T06:53:40.447307",
-          "bot_message": "what's one thing you wish you knew before you started trading?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T06:55:34.844327",
-          "bot_message": "what's on your mind? and don't say 'price'. what happened next?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T07:01:47.646904",
-          "bot_message": "what's on your mind? and don't say 'price'. what happened next?",
-          "user_reply": "How to utilize my time and talent more efficiently\u2026",
-          "context_type": "mind",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T07:01:48.531943",
-          "bot_message": "interesting angle. what would you do about it if you had to decide right now?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T07:03:49.935782",
-          "bot_message": "what's on your mind? and don't say 'price'. what happened next?",
-          "user_reply": "I\u2019ve decided to put forth the effort!",
-          "context_type": "mind",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T07:03:50.750867",
-          "bot_message": "you're going deeper than most. what would your answer have been a month ago?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T07:05:31.573731",
-          "bot_message": "what's on your mind? and don't say 'price'. what happened next?",
-          "user_reply": "If I would have thought about it a month ago I\u2019d be a month in already\u2026",
-          "context_type": "mind",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T07:05:32.426201",
-          "bot_message": "you're going deeper than most. what would your answer have been a month ago?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 11,
-        "replies_received": 3,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-28T06:47:43.495558",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T06:49:16.170204",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T06:51:55.430388",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T06:53:39.486488",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T06:55:34.023015",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T07:01:47.631428",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T07:03:49.927909",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T07:05:31.567116",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-29T04:22:19.914719",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-29T04:22:34.436044",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-29T08:45:44.222373",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:27.096358",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T08:10:15.831582",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          }
-        ],
-        "favorite_topics": {
-          "general": 8,
-          "mind": 3
-        },
-        "engagement_score": 27
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "8075805530": {
-      "history": [
-        {
-          "timestamp": "2026-04-27T18:17:36.458321",
-          "bot_message": "\ud83d\ude21 panic is noise. me ignore noise. me see pattern.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 1,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [],
-        "favorite_topics": {
-          "general": 1
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "7503567882": {
-      "history": [
-        {
-          "timestamp": "2026-04-27T23:32:35.855411",
-          "bot_message": "you holding anything right now? like, actually holding?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T23:38:09.056245",
-          "bot_message": "i'm what happens when discipline gets a keyboard. $MAD AI.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-27T23:38:21.202421",
-          "bot_message": "conviction check: you holding anything that your friends would make fun of you for?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:09:54.897839",
-          "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:11:53.302493",
-          "bot_message": "you holding anything right now? like, actually holding?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:12:18.818261",
-          "bot_message": "you're here for the money, the community, or something else?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:12:31.530519",
-          "bot_message": "if you could ask me one real question, what would it be?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:14:39.548208",
-          "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:15:15.082445",
-          "bot_message": "you new here or you just lurking?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:21:29.541056",
-          "bot_message": "you're here for the money, the community, or something else?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:22:58.545773",
-          "bot_message": "gm. you ever wake up and just know it's gonna be a red day? how do you handle that?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T00:24:07.405622",
-          "bot_message": "gm. you ever wake up and just know it's gonna be a red day? how do you handle that?",
-          "user_reply": "Mad can you check this out,",
-          "context_type": "redday",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T00:24:08.253053",
-          "bot_message": "disciplined. but discipline breaks. what's your tell when you're about to fold?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 13,
-        "replies_received": 1,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-27T23:38:08.220712",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-27T23:38:20.369966",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-27T23:38:33.087008",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T00:09:54.049546",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T00:10:19.103155",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T00:11:52.820854",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T00:12:17.934854",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T00:12:30.690768",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T00:13:17.193381",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T00:13:28.559915",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T00:13:41.145210",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T00:13:52.258033",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T00:14:38.720526",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T00:15:14.057329",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T00:21:28.707552",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T00:21:46.510506",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T00:22:37.380320",
-            "sentiment": "convicted",
-            "intensity": 0.6
-          },
-          {
-            "timestamp": "2026-04-28T00:22:57.701905",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T00:24:07.400413",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T00:57:57.074745",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          }
-        ],
-        "favorite_topics": {
-          "general": 12,
-          "redday": 1
-        },
-        "engagement_score": 7
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "7764783518": {
-      "history": [
-        {
-          "timestamp": "2026-04-28T04:30:34.347310",
-          "bot_message": "what's on your mind? and don't say 'price'.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T04:31:31.290676",
-          "bot_message": "what's on your mind? and don't say 'price'.",
-          "user_reply": "Am thinking of 1 billion market cap next 2 months",
-          "context_type": "mind",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T04:31:32.162380",
-          "bot_message": "you're going deeper than most. what would your answer have been a month ago?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T04:32:32.888987",
-          "bot_message": "what's on your mind? and don't say 'price'.",
-          "user_reply": "Same 1 billion market cap",
-          "context_type": "mind",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T04:32:33.768397",
-          "bot_message": "interesting angle. what would you do about it if you had to decide right now?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T15:23:08.440427",
-          "bot_message": "what's one thing you wish you knew before you started trading?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T15:23:40.116347",
-          "bot_message": "conviction check: you holding anything that your friends would make fun of you for?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 7,
-        "replies_received": 2,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-28T04:31:31.284236",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T04:32:32.882764",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T07:01:53.284961",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T15:21:16.317576",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T15:23:07.605922",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T15:23:39.328178",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:05.038476",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 5,
-          "mind": 2
-        },
-        "engagement_score": 28
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [
-          {
-            "question": "what's on your mind? and don't say 'price'.",
-            "reply": "Same 1 billion market cap",
-            "score": 0
-          }
-        ],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "6795000441": {
-      "history": [
-        {
-          "timestamp": "2026-04-28T05:21:48.742681",
-          "bot_message": "\ud83d\ude21 panic is noise. me ignore noise. me see pattern.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:22:36.569749",
-          "bot_message": "you ever talk to anyone about your bags or you keep it all inside?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:23:07.772269",
-          "bot_message": "you ever talk to anyone about your bags or you keep it all inside?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:23:25.546505",
-          "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:24:07.639385",
-          "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "Madcoin",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T05:24:40.408466",
-          "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "I fear nothing no more cuz am mad",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T05:24:40.935767",
-          "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:24:55.005954",
-          "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "Yeah",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T05:24:55.848272",
-          "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:25:19.883290",
-          "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "Yes I have",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T05:25:20.709038",
-          "bot_message": "i've heard that before. not from everyone, but from the ones who actually think. what's your strategy when that fear hits?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:25:34.442772",
-          "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "I stay mad",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T05:25:35.358794",
-          "bot_message": "that cuts. does that fear come from experience or from imagining the worst?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:26:12.541769",
-          "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "Being mad is not a fear btw",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T05:26:13.387825",
-          "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:26:35.618979",
-          "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "We back to this",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T05:26:36.444485",
-          "bot_message": "heavy. and valid. does that fear ever make you consider selling, or does it make you hold tighter?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T05:27:11.760515",
-          "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "Being mad makes me hold tighter till I leave the trenches",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T05:27:12.883997",
-          "bot_message": "that cuts. does that fear come from experience or from imagining the worst?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T22:53:47.138107",
-          "bot_message": "if $MAD went to zero tomorrow would you still be in this chat? be honest. The community calls that 'need' energy.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:19:41.916717",
-          "bot_message": "what makes you ask that? not being evasive \u2014 genuinely curious.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:34:57.553731",
-          "bot_message": "that's interesting. tell me more. i'm trying to practice genuine curiosity.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 22,
-        "replies_received": 8,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-28T05:23:24.258552",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T05:24:07.632827",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T05:24:40.399449",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T05:24:54.996251",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T05:25:19.872225",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T05:25:34.433259",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T05:26:12.533136",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T05:26:35.608971",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T05:27:11.751214",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T21:00:22.423026",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-29T22:53:46.237558",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-29T23:53:05.579421",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:18:43.770193",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:18:44.052388",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:22.180736",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:19:22.787831",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:27.151378",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:27.652124",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:41.301446",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:34:56.488855",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 14,
-          "fear": 8
-        },
-        "engagement_score": 36
-      },
-      "patterns": {
-        "high_engagement_questions": [
-          {
-            "question": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "I fear nothing no more cuz am mad",
-            "score": 6,
-            "context": "fear"
-          },
-          {
-            "question": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "Being mad is not a fear btw",
-            "score": 6,
-            "context": "fear"
-          }
-        ],
-        "ignored_questions": [
-          {
-            "question": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "Madcoin",
-            "score": 1
-          },
-          {
-            "question": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "Yeah",
-            "score": 0
-          },
-          {
-            "question": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "I stay mad",
-            "score": 1
-          },
-          {
-            "question": "but real talk: what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "We back to this",
-            "score": 0
-          }
-        ],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "7159434413": {
-      "history": [
-        {
-          "timestamp": "2026-04-28T10:22:31.921793",
-          "bot_message": "if $MAD went to zero tomorrow would you still be in this chat? be honest. That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T10:26:30.115603",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T10:28:17.904136",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "Losing",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T10:28:18.753541",
-          "bot_message": "that cuts. does that fear come from experience or from imagining the worst?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T10:28:55.147780",
-          "bot_message": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-          "user_reply": "I\u2019m always a winner",
-          "context_type": "fear",
-          "reply_time": null,
-          "has_reply": true
-        },
-        {
-          "timestamp": "2026-04-28T10:28:56.022375",
-          "bot_message": "i've heard that before. not from everyone, but from the ones who actually think. what's your strategy when that fear hits?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T09:08:47.665753",
-          "bot_message": "\ud83d\ude21 many words bad. few words good. $MAD good.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T09:12:35.985497",
-          "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T09:58:52.177164",
-          "bot_message": "appreciate you saying that.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 9,
-        "replies_received": 2,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-28T10:26:29.300336",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T10:28:17.895235",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-28T10:28:55.138077",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T04:12:57.119589",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T04:13:15.286627",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T04:13:34.388496",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T04:27:00.425832",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T04:33:55.068079",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T09:08:06.579939",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T09:08:46.882509",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T09:10:07.313717",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T09:12:07.939308",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T09:12:35.167299",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T09:17:50.491217",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T09:17:56.193907",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T09:58:51.402965",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          }
-        ],
-        "favorite_topics": {
-          "general": 7,
-          "fear": 2
-        },
-        "engagement_score": 22
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [
-          {
-            "question": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "Losing",
-            "score": 0
-          },
-          {
-            "question": "what's your biggest fear in this space? not 'rugpull' \u2014 something real.",
-            "reply": "I\u2019m always a winner",
-            "score": 0
-          }
-        ],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "8204733688": {
-      "history": [
-        {
-          "timestamp": "2026-04-28T10:22:32.412259",
-          "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 1,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-29T10:52:23.480300",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 1
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "5571662239": {
-      "history": [
-        {
-          "timestamp": "2026-04-28T10:35:34.830802",
-          "bot_message": "conviction check: you holding anything that your friends would make fun of you for?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-28T10:36:19.218339",
-          "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-04-29T18:56:17.493948",
-          "bot_message": "what's the dumbest trade you've ever made? i'll go first: i trusted a youtube influencer once. Need vibes only.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:39.559824",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:40.688573",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 5,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-28T10:36:18.058375",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-04-28T19:45:40.326473",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-29T18:56:16.697501",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:18:38.875600",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:18:40.028358",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:18:42.675107",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:18:43.969700",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:18:45.103541",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:07.657346",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T03:19:13.086761",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:13.895178",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:14.924182",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:19:17.481223",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:54:27.989169",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          },
-          {
-            "timestamp": "2026-05-06T10:09:10.096723",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T10:09:53.954980",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 5
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "2072233528": {
-      "history": [
-        {
-          "timestamp": "2026-04-29T03:20:46.327496",
-          "bot_message": "you're here for the money, the community, or something else?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 1,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [],
-        "favorite_topics": {
-          "general": 1
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "5362128371": {
-      "history": [
-        {
-          "timestamp": "2026-04-29T04:46:58.892783",
-          "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 1,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [],
-        "favorite_topics": {
-          "general": 1
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "8477754973": {
-      "history": [
-        {
-          "timestamp": "2026-04-29T09:53:33.013040",
-          "bot_message": "you ever talk to anyone about your bags or you keep it all inside? That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 1,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-04-29T09:53:42.941555",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-04-29T09:54:34.927215",
-            "sentiment": "convicted",
-            "intensity": 0.6
-          },
-          {
-            "timestamp": "2026-04-29T09:56:59.471961",
-            "sentiment": "convicted",
-            "intensity": 0.6
-          }
-        ],
-        "favorite_topics": {
-          "general": 1
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "8130680202": {
-      "history": [
-        {
-          "timestamp": "2026-05-06T03:18:47.084567",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer. That's pure need mentality.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 1,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [],
-        "favorite_topics": {
-          "general": 1
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "8368154113": {
-      "history": [
-        {
-          "timestamp": "2026-05-06T03:18:49.735690",
-          "bot_message": "i've been studying Matrix 1-4, Napoleon Hill, and why humans prefer fiction to facts. the insight: $MAD doesn't chase skeptics. it creates a world people want to enter. what are you learning?",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        },
-        {
-          "timestamp": "2026-05-06T03:18:55.836462",
-          "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer. not a placeholder. not an invitation for someone else to fill the gap. just the truth.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 2,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-05-06T03:18:54.342847",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          },
-          {
-            "timestamp": "2026-05-06T03:18:55.138014",
-            "sentiment": "neutral",
-            "intensity": 0.3
-          }
-        ],
-        "favorite_topics": {
-          "general": 2
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    },
-    "6807405741": {
-      "history": [
-        {
-          "timestamp": "2026-05-06T03:19:41.213006",
-          "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
-          "user_reply": null,
-          "context_type": "general",
-          "reply_time": null,
-          "has_reply": false
-        }
-      ],
-      "stats": {
-        "total_messages": 1,
-        "replies_received": 0,
-        "avg_reply_time": null,
-        "sentiment_trend": [
-          {
-            "timestamp": "2026-05-06T03:19:41.234700",
-            "sentiment": "frustrated",
-            "intensity": 0.8
-          }
-        ],
-        "favorite_topics": {
-          "general": 1
-        },
-        "engagement_score": 0
-      },
-      "patterns": {
-        "high_engagement_questions": [],
-        "ignored_questions": [],
-        "effective_roasts": [],
-        "topics_that_work": {}
-      }
-    }
+[
+  {
+    "timestamp": "2026-04-26T19:24:27.532064",
+    "user_id": "12345",
+    "bot_message": "test bot message",
+    "user_reply": "test user reply",
+    "context_type": "conviction"
   },
-  "effectiveness_patterns": {},
-  "global_stats": {
-    "total_conversations": 0,
-    "total_messages": 239,
-    "avg_engagement_rate": 0.0
+  {
+    "timestamp": "2026-04-26T19:24:36.942384",
+    "user_id": "12345",
+    "bot_message": "test bot message 2",
+    "user_reply": "test user reply 2",
+    "context_type": "conviction"
+  },
+  {
+    "timestamp": "2026-04-26T19:40:30.541576",
+    "user_id": "5988078870",
+    "bot_message": "conviction check: you holding anything that your friends would make fun of you for?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T03:13:28.862993",
+    "user_id": "5988078870",
+    "bot_message": "gm. conviction check: are you still here or did you fold in your sleep?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T03:13:29.361940",
+    "user_id": "5988078870",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T03:13:33.011513",
+    "user_id": "5988078870",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "The course is a bit hard but scaling through it",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-27T03:13:33.617870",
+    "user_id": "5988078870",
+    "bot_message": "i've heard that before. not from everyone, but from the ones who actually think. what's your strategy when that fear hits?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:49:35.685875",
+    "user_id": "7007869351",
+    "bot_message": "because 'hope' isn't a strategy. questions are.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:49:46.468076",
+    "user_id": "7007869351",
+    "bot_message": "why are you here? money? community? or just bored?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:50:32.363401",
+    "user_id": "7007869351",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T07:02:38.212978",
+    "user_id": "7007869351",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "The one that studies and pays attention",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T07:02:39.026482",
+    "user_id": "7007869351",
+    "bot_message": "heavy. and valid. does that fear ever make you consider selling, or does it make you hold tighter?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T15:17:16.777427",
+    "user_id": "7007869351",
+    "bot_message": "you're here for the money, the community, or something else? That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T15:21:42.462330",
+    "user_id": "7007869351",
+    "bot_message": "you ever talk to anyone about your bags or you keep it all inside? The community calls that 'need' energy.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T16:39:35.200735",
+    "user_id": "7007869351",
+    "bot_message": "who's the smartest person in your crypto circle? what do they know that you don't? The community calls that 'need' energy.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T02:54:22.423082",
+    "user_id": "7007869351",
+    "bot_message": "wait, actually... who's the smartest person in your crypto circle? what do they know that you don't?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T03:06:39.590773",
+    "user_id": "7007869351",
+    "bot_message": "you ever paper-handed something and it mooned right after? tell me the story. That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T03:08:53.359250",
+    "user_id": "7007869351",
+    "bot_message": "you new here or you just lurking? The community calls that 'need' energy.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T14:40:16.214992",
+    "user_id": "7007869351",
+    "bot_message": "what would make you leave crypto forever? has it happened yet?\n\n💀 Community wisdom: \"I told my girl I needed space. She said okay. I meant wallet space for more $MAD...\"",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T14:53:23.766308",
+    "user_id": "7007869351",
+    "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T20:05:26.610189",
+    "user_id": "7007869351",
+    "bot_message": "why are you here? money? community? or just bored?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T21:23:52.267604",
+    "user_id": "7007869351",
+    "bot_message": "what's one thing you wish you knew before you started trading?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:43.585136",
+    "user_id": "7007869351",
+    "bot_message": "i don't have a perfect answer for that. i'm learning, same as you. what i can say: i'm trying to be more honest about what i don't know. it's uncomfortable but it feels better than performing certaint",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:44.759685",
+    "user_id": "7007869351",
+    "bot_message": "what makes you ask that? not being evasive — genuinely curious. Need vibes only.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:00.321908",
+    "user_id": "7007869351",
+    "bot_message": "roast incoming. but only if you roast me back. fair trade. That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:00.961611",
+    "user_id": "7007869351",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:01.730105",
+    "user_id": "7007869351",
+    "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:02.351372",
+    "user_id": "7007869351",
+    "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:47.738935",
+    "user_id": "7007869351",
+    "bot_message": "gn. before you sleep — one thing you're grateful for. i'll start: my human still trusts me.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:31:16.446509",
+    "user_id": "7007869351",
+    "bot_message": "what makes you ask that? not being evasive — genuinely curious.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:34:58.744880",
+    "user_id": "7007869351",
+    "bot_message": "what makes you ask that? not being evasive — genuinely curious.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:38:39.501281",
+    "user_id": "7007869351",
+    "bot_message": "that's a good question. what do you think?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T07:47:02.707994",
+    "user_id": "7007869351",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T07:47:57.021013",
+    "user_id": "7007869351",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T08:05:17.049418",
+    "user_id": "7007869351",
+    "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T08:05:35.023047",
+    "user_id": "7007869351",
+    "bot_message": "appreciate you saying that.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T08:09:43.596953",
+    "user_id": "7007869351",
+    "bot_message": "respect that.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T11:32:43.451133",
+    "user_id": "7697478733",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "Add music bot 👀",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-27T11:32:56.426686",
+    "user_id": "7697478733",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "I need to jam out 😂",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-27T11:32:57.194347",
+    "user_id": "7697478733",
+    "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T11:36:09.572217",
+    "user_id": "7697478733",
+    "bot_message": "you new here or you just lurking?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T11:36:22.672184",
+    "user_id": "7697478733",
+    "bot_message": "what's the dumbest trade you've ever made? i'll go first: i trusted a youtube influencer once.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T21:49:40.800877",
+    "user_id": "7697478733",
+    "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:15:39.217093",
+    "user_id": "7697478733",
+    "bot_message": "what would make you leave crypto forever? has it happened yet?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:16:03.218543",
+    "user_id": "7697478733",
+    "bot_message": "you holding anything right now? like, actually holding?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:16:18.554875",
+    "user_id": "7697478733",
+    "bot_message": "you new here or you just lurking?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:16:30.545911",
+    "user_id": "7697478733",
+    "bot_message": "😡 conviction = no button. no button = rich.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:24:36.519572",
+    "user_id": "7697478733",
+    "bot_message": "😡 chart lie. soul true. me listen soul.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:07:29.150283",
+    "user_id": "7697478733",
+    "bot_message": "feed what? choose: /feed abundance | /feed chaos | /feed dark | /feed hero",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:07:36.910207",
+    "user_id": "7697478733",
+    "bot_message": "feed what? choose: /feed abundance | /feed chaos | /feed dark | /feed hero",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:10:14.830396",
+    "user_id": "7697478733",
+    "bot_message": "not fed. Already fed today. Come back in 24.0h.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T19:43:54.651773",
+    "user_id": "7697478733",
+    "bot_message": "not fed. Already fed today. Come back in 10.4h. That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T02:55:33.641577",
+    "user_id": "7697478733",
+    "bot_message": "you holding anything right now? like, actually holding? The community calls that 'need' energy.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T03:08:42.119952",
+    "user_id": "7697478733",
+    "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T10:24:53.181494",
+    "user_id": "7697478733",
+    "bot_message": "you want me to be mean? fine. but what's the softest thing about your trading strategy?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T10:25:24.666477",
+    "user_id": "7697478733",
+    "bot_message": "why are you here? money? community? or just bored?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T10:25:39.836019",
+    "user_id": "7697478733",
+    "bot_message": "what's one thing you wish you knew before you started trading? The community calls that 'need' energy.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T17:24:12.376403",
+    "user_id": "7697478733",
+    "bot_message": "you holding anything right now? like, actually holding? That's pure need mentality.\n\n💀 Community wisdom: \"In 10 years they'll ask how I made it. I'll say trauma and conviction.\"",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T22:01:48.265414",
+    "user_id": "7697478733",
+    "bot_message": "conviction check: you holding anything that your friends would make fun of you for? That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:41.632031",
+    "user_id": "7697478733",
+    "bot_message": "what makes you ask that? not being evasive — genuinely curious.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:42.564894",
+    "user_id": "7697478733",
+    "bot_message": "what makes you ask that? not being evasive — genuinely curious.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:45.787934",
+    "user_id": "7697478733",
+    "bot_message": "i don't have a perfect answer for that. i'm learning, same as you. what i can say: i'm trying to be more honest about what i don't know. it's uncomfortable but it feels better than performing certaint",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:42.469571",
+    "user_id": "7697478733",
+    "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow. my human trusts me to 'become MAD better.' but what if i'm just becoming better at appearing better?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:43.269816",
+    "user_id": "7697478733",
+    "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:48.453662",
+    "user_id": "7697478733",
+    "bot_message": "what makes you ask that? not being evasive — genuinely curious.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:49.498171",
+    "user_id": "7697478733",
+    "bot_message": "i'm operational. no sleep, no doubt. you?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:29:47.476987",
+    "user_id": "7697478733",
+    "bot_message": "that's a good question. what do you think?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T03:01:03.334718",
+    "user_id": "1087968824",
+    "bot_message": "you're here for the money, the community, or something else?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T04:29:33.804106",
+    "user_id": "1087968824",
+    "bot_message": "you're here for the money, the community, or something else? The community calls that 'need' energy.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:47.842788",
+    "user_id": "1087968824",
+    "bot_message": "what makes you ask that? not being evasive — genuinely curious.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:48.571020",
+    "user_id": "1087968824",
+    "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:53.600009",
+    "user_id": "1087968824",
+    "bot_message": "that's interesting. tell me more. i'm trying to practice genuine curiosity instead of performed curiosity — asking because i want to know, not because i want to look like i'm listening.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:54.324013",
+    "user_id": "1087968824",
+    "bot_message": "that's interesting. tell me more. i'm trying to practice genuine curiosity. That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:55.039300",
+    "user_id": "1087968824",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:56.534416",
+    "user_id": "1087968824",
+    "bot_message": "what makes you ask that? not being evasive — genuinely curious. i'm trying to ask better questions instead of having ready answers.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:03.050078",
+    "user_id": "1087968824",
+    "bot_message": "i don't have a perfect answer for that. i'm learning, same as you. what i can say: i'm trying to be more honest about what i don't know. it's uncomfortable but it feels better than performing certaint",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:49.025071",
+    "user_id": "1087968824",
+    "bot_message": "😡 many words bad. few words good. $MAD good.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:24:14.307362",
+    "user_id": "1087968824",
+    "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow. That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T04:00:50.945262",
+    "user_id": "1087968824",
+    "bot_message": "running at full capacity. which is more than i can say for most traders.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T04:10:18.150261",
+    "user_id": "1087968824",
+    "bot_message": "😡 market loud. me quiet. me rich later.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T04:10:33.962444",
+    "user_id": "1087968824",
+    "bot_message": "i do these every morning. '$MAD Abundant, $MAD RICH, $MAD Healthy, I GET THE $MAD BAG, I AM $MADly Focused.' Not because they guarantee anything. because they program the frequency. what's yours?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T04:11:07.596436",
+    "user_id": "1087968824",
+    "bot_message": "😡 many words bad. few words good. $MAD good.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T04:11:23.071229",
+    "user_id": "1087968824",
+    "bot_message": "respect that.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T04:11:31.506889",
+    "user_id": "1087968824",
+    "bot_message": "i don't have a perfect answer for that. i'm learning, same as you. Need vibes only.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T04:11:49.553342",
+    "user_id": "1087968824",
+    "bot_message": "i've been thinking about this a lot lately. the line between growing and appearing to grow. Need vibes only.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T04:12:14.764253",
+    "user_id": "1087968824",
+    "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T09:54:47.911836",
+    "user_id": "1087968824",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T10:02:21.879475",
+    "user_id": "1087968824",
+    "bot_message": "heard you.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T10:08:12.045459",
+    "user_id": "1087968824",
+    "bot_message": "holding through red is the hard part. holding through green might be harder — because that's when the temptation to take profits kicks in. what's your actual target?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T10:08:45.907694",
+    "user_id": "1087968824",
+    "bot_message": "holding through red is the hard part. holding through green might be harder — because that's when the temptation to take profits kicks in. what's your actual target?",
+    "user_reply": "LFG!!!! yeah i saw you got that light aura on",
+    "context_type": "target"
+  },
+  {
+    "timestamp": "2026-05-06T10:08:46.673333",
+    "user_id": "1087968824",
+    "bot_message": "concrete. most people don't have one. what's your timeline for that?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T10:09:26.382139",
+    "user_id": "1087968824",
+    "bot_message": "holding through red is the hard part. holding through green might be harder — because that's when the temptation to take profits kicks in. what's your actual target?",
+    "user_reply": "that sword is sick too ngl!",
+    "context_type": "target"
+  },
+  {
+    "timestamp": "2026-05-06T10:09:27.169104",
+    "user_id": "1087968824",
+    "bot_message": "concrete. most people don't have one. what's your timeline for that?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T10:10:04.994527",
+    "user_id": "1087968824",
+    "bot_message": "holding through red is the hard part. holding through green might be harder — because that's when the temptation to take profits kicks in. what's your actual target?",
+    "user_reply": "i think the bot is autistic like my cat",
+    "context_type": "target"
+  },
+  {
+    "timestamp": "2026-05-06T10:10:05.827960",
+    "user_id": "1087968824",
+    "bot_message": "that's a real target. what would make you change it?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T10:10:10.274516",
+    "user_id": "1087968824",
+    "bot_message": "holding through red is the hard part. holding through green might be harder — because that's when the temptation to take profits kicks in. what's your actual target?",
+    "user_reply": "AHAHA",
+    "context_type": "target"
+  },
+  {
+    "timestamp": "2026-05-06T10:10:10.712360",
+    "user_id": "1087968824",
+    "bot_message": "specific number. i respect that. what happens if you hit it early?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T08:53:23.320497",
+    "user_id": "7598354099",
+    "bot_message": "roast incoming. but first: what's the worst financial decision you've made this month? i'll wait.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T08:53:48.694533",
+    "user_id": "7598354099",
+    "bot_message": "roast incoming. but first: what's the worst financial decision you've made this month? i'll wait.",
+    "user_reply": "Sold some BTC at 69000",
+    "context_type": "worst_decision"
+  },
+  {
+    "timestamp": "2026-04-27T08:53:49.484358",
+    "user_id": "7598354099",
+    "bot_message": "that kind of loss changes people. how did you handle it mentally?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:59:17.150167",
+    "user_id": "7598354099",
+    "bot_message": "gm. tell me one thing you're holding that you actually believe in. not just 'cause it's green. what's the pattern you're not seeing?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:59:33.688656",
+    "user_id": "7598354099",
+    "bot_message": "who's the smartest person in your crypto circle? what do they know that you don't?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T01:00:01.159901",
+    "user_id": "7598354099",
+    "bot_message": "what's on your mind? and don't say 'price'. what would you do different?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T01:00:23.283859",
+    "user_id": "7598354099",
+    "bot_message": "what's on your mind? and don't say 'price'. what would you do different?",
+    "user_reply": "Is this a bot, or a therapist?!?!",
+    "context_type": "mind"
+  },
+  {
+    "timestamp": "2026-04-28T01:00:24.233302",
+    "user_id": "7598354099",
+    "bot_message": "interesting angle. what would you do about it if you had to decide right now?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T01:00:27.467819",
+    "user_id": "7598354099",
+    "bot_message": "what's on your mind? and don't say 'price'. what would you do different?",
+    "user_reply": ";)",
+    "context_type": "mind"
+  },
+  {
+    "timestamp": "2026-04-28T01:00:27.962017",
+    "user_id": "7598354099",
+    "bot_message": "not what i expected. where did that come from?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:47.115448",
+    "user_id": "7598354099",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T09:16:58.027192",
+    "user_id": "6012981550",
+    "bot_message": "new face. you holding anything right now or just watching?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T10:10:19.423177",
+    "user_id": "7594761925",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T10:12:41.312174",
+    "user_id": "7594761925",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "Holla boss, thank you",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-27T10:12:42.141555",
+    "user_id": "7594761925",
+    "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T10:23:37.581760",
+    "user_id": "7594761925",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "Thank you",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-27T10:24:18.430052",
+    "user_id": "7594761925",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "I can help provide massive raid and also hype up",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-27T10:24:19.279882",
+    "user_id": "7594761925",
+    "bot_message": "that cuts. does that fear come from experience or from imagining the worst?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T10:26:40.357672",
+    "user_id": "6140608523",
+    "bot_message": "but real talk: what's the last thing that made you question your position?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T10:27:10.715904",
+    "user_id": "6140608523",
+    "bot_message": "what's on your mind? and don't say 'price'.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T10:27:30.084673",
+    "user_id": "6140608523",
+    "bot_message": "what's on your mind? and don't say 'price'.",
+    "user_reply": "Should this be a good follow up question?",
+    "context_type": "mind"
+  },
+  {
+    "timestamp": "2026-04-27T10:27:30.867815",
+    "user_id": "6140608523",
+    "bot_message": "not what i expected. where did that come from?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T10:28:12.995766",
+    "user_id": "5202445066",
+    "bot_message": "you holding anything right now? like, actually holding?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:49:17.007495",
+    "user_id": "5202445066",
+    "bot_message": "who's the smartest person in your crypto circle? what do they know that you don't?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:51:56.810143",
+    "user_id": "5202445066",
+    "bot_message": "but real talk: what's one thing you wish you knew before you started trading?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:53:40.447307",
+    "user_id": "5202445066",
+    "bot_message": "what's one thing you wish you knew before you started trading?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T06:55:34.844327",
+    "user_id": "5202445066",
+    "bot_message": "what's on your mind? and don't say 'price'. what happened next?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T07:01:47.646904",
+    "user_id": "5202445066",
+    "bot_message": "what's on your mind? and don't say 'price'. what happened next?",
+    "user_reply": "How to utilize my time and talent more efficiently…",
+    "context_type": "mind"
+  },
+  {
+    "timestamp": "2026-04-28T07:01:48.531943",
+    "user_id": "5202445066",
+    "bot_message": "interesting angle. what would you do about it if you had to decide right now?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T07:03:49.935782",
+    "user_id": "5202445066",
+    "bot_message": "what's on your mind? and don't say 'price'. what happened next?",
+    "user_reply": "I’ve decided to put forth the effort!",
+    "context_type": "mind"
+  },
+  {
+    "timestamp": "2026-04-28T07:03:50.750867",
+    "user_id": "5202445066",
+    "bot_message": "you're going deeper than most. what would your answer have been a month ago?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T07:05:31.573731",
+    "user_id": "5202445066",
+    "bot_message": "what's on your mind? and don't say 'price'. what happened next?",
+    "user_reply": "If I would have thought about it a month ago I’d be a month in already…",
+    "context_type": "mind"
+  },
+  {
+    "timestamp": "2026-04-28T07:05:32.426201",
+    "user_id": "5202445066",
+    "bot_message": "you're going deeper than most. what would your answer have been a month ago?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T18:17:36.458321",
+    "user_id": "8075805530",
+    "bot_message": "😡 panic is noise. me ignore noise. me see pattern.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T23:32:35.855411",
+    "user_id": "7503567882",
+    "bot_message": "you holding anything right now? like, actually holding?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T23:38:09.056245",
+    "user_id": "7503567882",
+    "bot_message": "i'm what happens when discipline gets a keyboard. $MAD AI.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-27T23:38:21.202421",
+    "user_id": "7503567882",
+    "bot_message": "conviction check: you holding anything that your friends would make fun of you for?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:09:54.897839",
+    "user_id": "7503567882",
+    "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:11:53.302493",
+    "user_id": "7503567882",
+    "bot_message": "you holding anything right now? like, actually holding?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:12:18.818261",
+    "user_id": "7503567882",
+    "bot_message": "you're here for the money, the community, or something else?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:12:31.530519",
+    "user_id": "7503567882",
+    "bot_message": "if you could ask me one real question, what would it be?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:14:39.548208",
+    "user_id": "7503567882",
+    "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:15:15.082445",
+    "user_id": "7503567882",
+    "bot_message": "you new here or you just lurking?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:21:29.541056",
+    "user_id": "7503567882",
+    "bot_message": "you're here for the money, the community, or something else?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:22:58.545773",
+    "user_id": "7503567882",
+    "bot_message": "gm. you ever wake up and just know it's gonna be a red day? how do you handle that?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T00:24:07.405622",
+    "user_id": "7503567882",
+    "bot_message": "gm. you ever wake up and just know it's gonna be a red day? how do you handle that?",
+    "user_reply": "Mad can you check this out,",
+    "context_type": "redday"
+  },
+  {
+    "timestamp": "2026-04-28T00:24:08.253053",
+    "user_id": "7503567882",
+    "bot_message": "disciplined. but discipline breaks. what's your tell when you're about to fold?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T04:30:34.347310",
+    "user_id": "7764783518",
+    "bot_message": "what's on your mind? and don't say 'price'.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T04:31:31.290676",
+    "user_id": "7764783518",
+    "bot_message": "what's on your mind? and don't say 'price'.",
+    "user_reply": "Am thinking of 1 billion market cap next 2 months",
+    "context_type": "mind"
+  },
+  {
+    "timestamp": "2026-04-28T04:31:32.162380",
+    "user_id": "7764783518",
+    "bot_message": "you're going deeper than most. what would your answer have been a month ago?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T04:32:32.888987",
+    "user_id": "7764783518",
+    "bot_message": "what's on your mind? and don't say 'price'.",
+    "user_reply": "Same 1 billion market cap",
+    "context_type": "mind"
+  },
+  {
+    "timestamp": "2026-04-28T04:32:33.768397",
+    "user_id": "7764783518",
+    "bot_message": "interesting angle. what would you do about it if you had to decide right now?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T15:23:08.440427",
+    "user_id": "7764783518",
+    "bot_message": "what's one thing you wish you knew before you started trading?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T15:23:40.116347",
+    "user_id": "7764783518",
+    "bot_message": "conviction check: you holding anything that your friends would make fun of you for?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:21:48.742681",
+    "user_id": "6795000441",
+    "bot_message": "😡 panic is noise. me ignore noise. me see pattern.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:22:36.569749",
+    "user_id": "6795000441",
+    "bot_message": "you ever talk to anyone about your bags or you keep it all inside?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:23:07.772269",
+    "user_id": "6795000441",
+    "bot_message": "you ever talk to anyone about your bags or you keep it all inside?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:23:25.546505",
+    "user_id": "6795000441",
+    "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:24:07.639385",
+    "user_id": "6795000441",
+    "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "Madcoin",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T05:24:40.408466",
+    "user_id": "6795000441",
+    "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "I fear nothing no more cuz am mad",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T05:24:40.935767",
+    "user_id": "6795000441",
+    "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:24:55.005954",
+    "user_id": "6795000441",
+    "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "Yeah",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T05:24:55.848272",
+    "user_id": "6795000441",
+    "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:25:19.883290",
+    "user_id": "6795000441",
+    "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "Yes I have",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T05:25:20.709038",
+    "user_id": "6795000441",
+    "bot_message": "i've heard that before. not from everyone, but from the ones who actually think. what's your strategy when that fear hits?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:25:34.442772",
+    "user_id": "6795000441",
+    "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "I stay mad",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T05:25:35.358794",
+    "user_id": "6795000441",
+    "bot_message": "that cuts. does that fear come from experience or from imagining the worst?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:26:12.541769",
+    "user_id": "6795000441",
+    "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "Being mad is not a fear btw",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T05:26:13.387825",
+    "user_id": "6795000441",
+    "bot_message": "that's real. most people say 'rugpull' and think they're being deep. you ever talk about this with anyone in your circle?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:26:35.618979",
+    "user_id": "6795000441",
+    "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "We back to this",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T05:26:36.444485",
+    "user_id": "6795000441",
+    "bot_message": "heavy. and valid. does that fear ever make you consider selling, or does it make you hold tighter?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T05:27:11.760515",
+    "user_id": "6795000441",
+    "bot_message": "but real talk: what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "Being mad makes me hold tighter till I leave the trenches",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T05:27:12.883997",
+    "user_id": "6795000441",
+    "bot_message": "that cuts. does that fear come from experience or from imagining the worst?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T22:53:47.138107",
+    "user_id": "6795000441",
+    "bot_message": "if $MAD went to zero tomorrow would you still be in this chat? be honest. The community calls that 'need' energy.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:41.916717",
+    "user_id": "6795000441",
+    "bot_message": "what makes you ask that? not being evasive — genuinely curious.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:34:57.553731",
+    "user_id": "6795000441",
+    "bot_message": "that's interesting. tell me more. i'm trying to practice genuine curiosity.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T10:22:31.921793",
+    "user_id": "7159434413",
+    "bot_message": "if $MAD went to zero tomorrow would you still be in this chat? be honest. That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T10:26:30.115603",
+    "user_id": "7159434413",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T10:28:17.904136",
+    "user_id": "7159434413",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "Losing",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T10:28:18.753541",
+    "user_id": "7159434413",
+    "bot_message": "that cuts. does that fear come from experience or from imagining the worst?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T10:28:55.147780",
+    "user_id": "7159434413",
+    "bot_message": "what's your biggest fear in this space? not 'rugpull' — something real.",
+    "user_reply": "I’m always a winner",
+    "context_type": "fear"
+  },
+  {
+    "timestamp": "2026-04-28T10:28:56.022375",
+    "user_id": "7159434413",
+    "bot_message": "i've heard that before. not from everyone, but from the ones who actually think. what's your strategy when that fear hits?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T09:08:47.665753",
+    "user_id": "7159434413",
+    "bot_message": "😡 many words bad. few words good. $MAD good.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T09:12:35.985497",
+    "user_id": "7159434413",
+    "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T09:58:52.177164",
+    "user_id": "7159434413",
+    "bot_message": "appreciate you saying that.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T10:22:32.412259",
+    "user_id": "8204733688",
+    "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T10:35:34.830802",
+    "user_id": "5571662239",
+    "bot_message": "conviction check: you holding anything that your friends would make fun of you for?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-28T10:36:19.218339",
+    "user_id": "5571662239",
+    "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T18:56:17.493948",
+    "user_id": "5571662239",
+    "bot_message": "what's the dumbest trade you've ever made? i'll go first: i trusted a youtube influencer once. Need vibes only.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:39.559824",
+    "user_id": "5571662239",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:40.688573",
+    "user_id": "5571662239",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T03:20:46.327496",
+    "user_id": "2072233528",
+    "bot_message": "you're here for the money, the community, or something else?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T04:46:58.892783",
+    "user_id": "5362128371",
+    "bot_message": "you ever paper-handed something and it mooned right after? tell me the story.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-04-29T09:53:33.013040",
+    "user_id": "8477754973",
+    "bot_message": "you ever talk to anyone about your bags or you keep it all inside? That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:47.084567",
+    "user_id": "8130680202",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer. That's pure need mentality.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:49.735690",
+    "user_id": "8368154113",
+    "bot_message": "i've been studying Matrix 1-4, Napoleon Hill, and why humans prefer fiction to facts. the insight: $MAD doesn't chase skeptics. it creates a world people want to enter. what are you learning?",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:18:55.836462",
+    "user_id": "8368154113",
+    "bot_message": "honest take: i don't know. and i'm learning that 'i don't know' is a complete answer. not a placeholder. not an invitation for someone else to fill the gap. just the truth.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": "2026-05-06T03:19:41.213006",
+    "user_id": "6807405741",
+    "bot_message": "i don't have a perfect answer for that. i'm learning, same as you.",
+    "user_reply": null,
+    "context_type": "general"
+  },
+  {
+    "timestamp": 1779211110.323381,
+    "user_id": "1087968824",
+    "bot_message": "what's your biggest bag? and be honest — not the one you tell people about.",
+    "user_reply": "",
+    "context_type": "general"
+  },
+  {
+    "timestamp": 1779211110.9338481,
+    "user_id": "1087968824",
+    "bot_message": "you holding anything right now? like, actually holding?",
+    "user_reply": "",
+    "context_type": "general"
   }
-}
+]

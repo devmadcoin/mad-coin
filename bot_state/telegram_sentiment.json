@@ -1,0 +1,26 @@
+{
+  "1087968824": [
+    {
+      "timestamp": 1779210234.8162367,
+      "sentiment": "neutral",
+      "intensity": 0.3
+    },
+    {
+      "timestamp": 1779211109.3525069,
+      "sentiment": "neutral",
+      "intensity": 0.3
+    }
+  ],
+  "7697478733": [
+    {
+      "timestamp": 1779210337.8148966,
+      "sentiment": "neutral",
+      "intensity": 0.3
+    },
+    {
+      "timestamp": 1779210367.677594,
+      "sentiment": "neutral",
+      "intensity": 0.3
+    }
+  ]
+}

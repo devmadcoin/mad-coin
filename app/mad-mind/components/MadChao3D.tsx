@@ -1,17 +1,92 @@
 "use client";
 
-import { useState, useRef, useMemo, useCallback, useEffect } from "react";
+import { useState, useRef, useMemo, useCallback, useEffect, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Float, RoundedBox } from "@react-three/drei";
+import { OrbitControls, Float, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 /* ═══════════════════════════════════════════════════════════
-   $MAD MASCOT — Advanced Three.js techniques
-   ExtrudeGeometry eyebrows, MeshPhysicalMaterial skin,
-   layered eyes, proper chibi proportions
+   $MAD MASCOT — Loaded from Blender-built .glb
    ═══════════════════════════════════════════════════════════ */
 
 const MOUSE = { x: 0, y: 0 };
+
+/* ─── GLTF LOADER ─── */
+function MascotModel({ positionRef, walkState, isSitting, excited }: {
+  positionRef: React.MutableRefObject<THREE.Vector3>;
+  walkState: { isWalking: boolean; targetX: number; targetZ: number; pauseTimer: number; idleTimer: number; excitedTimer: number };
+  isSitting: boolean;
+  excited: boolean;
+}) {
+  const { scene } = useGLTF("/mad-mascot.glb");
+  const groupRef = useRef<THREE.Group>(null);
+  const headRef = useRef<THREE.Object3D | null>(null);
+  const timeRef = useRef(0);
+
+  // Find head in the loaded scene for mouse tracking
+  useEffect(() => {
+    scene.traverse((child) => {
+      if (child.name === 'Head' && !headRef.current) {
+        headRef.current = child;
+      }
+    });
+  }, [scene]);
+
+  useFrame((state, delta) => {
+    timeRef.current = state.clock.elapsedTime;
+    if (!groupRef.current) return;
+    const claw = groupRef.current;
+    const s = walkState;
+
+    positionRef.current.copy(claw.position);
+
+    // Head tracks mouse
+    if (headRef.current) {
+      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, MOUSE.x * 0.4, 0.08);
+      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, -MOUSE.y * 0.25, 0.08);
+    }
+
+    // Excited bounce
+    if (excited) {
+      claw.position.y = 0.3 + Math.sin(timeRef.current * 15) * 0.15;
+      s.isWalking = false;
+      return;
+    }
+
+    // Walking state machine
+    if (s.isWalking) {
+      claw.position.y = 0.3 + Math.sin(timeRef.current * 5) * 0.02;
+      const dx = s.targetX - claw.position.x;
+      const dz = s.targetZ - claw.position.z;
+      const dist = Math.sqrt(dx * dx + dz * dz);
+      if (dist < 0.05) {
+        s.isWalking = false;
+        s.pauseTimer = 2 + Math.random() * 3;
+      } else {
+        const speed = 0.008;
+        claw.position.x += (dx / dist) * speed;
+        claw.position.z += (dz / dist) * speed;
+        claw.rotation.y = Math.atan2(dx, dz) + Math.PI;
+      }
+    } else {
+      claw.position.y = 0.3 + Math.sin(timeRef.current * 1) * 0.02;
+      s.pauseTimer -= delta;
+      s.idleTimer += delta;
+      if (s.pauseTimer <= 0) {
+        s.targetX = (Math.random() - 0.5) * 1.2;
+        s.targetZ = (Math.random() - 0.5) * 1.2;
+        s.isWalking = true;
+        s.idleTimer = 0;
+      }
+    }
+  });
+
+  return (
+    <group ref={groupRef} scale={0.5} position={[0, 0.3, 0]}>
+      <primitive object={scene} />
+    </group>
+  );
+}
 
 /* ═══════════════════════════════════════════════════════════
    ENVIRONMENT
@@ -94,466 +169,25 @@ function RedFog() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SKIN MATERIAL — MeshPhysicalMaterial with sheen for soft toy look
+   LIGHTING — Studio setup
    ═══════════════════════════════════════════════════════════ */
-function SkinMaterial({ color = "#e60000", emissive = "#330000" }: { color?: string; emissive?: string }) {
-  return (
-    <meshPhysicalMaterial
-      color={color}
-      roughness={0.35}
-      metalness={0.0}
-      sheen={0.5}
-      sheenRoughness={0.5}
-      sheenColor="#ff6666"
-      clearcoat={0.1}
-      clearcoatRoughness={0.4}
-      emissive={emissive}
-      emissiveIntensity={0.15}
-    />
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   HEAD — Perfect sphere, smooth, with cheek volume
-   ═══════════════════════════════════════════════════════════ */
-function CharacterHead({ excited }: { excited: boolean }) {
-  const headRef = useRef<THREE.Group>(null);
-  const browLeftRef = useRef<THREE.Group>(null);
-  const browRightRef = useRef<THREE.Group>(null);
-
-  useFrame(() => {
-    if (headRef.current) {
-      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, MOUSE.x * 0.3, 0.08);
-      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, -MOUSE.y * 0.2, 0.08);
-    }
-    if (excited) {
-      const t = Date.now() / 80;
-      if (browLeftRef.current) browLeftRef.current.position.y = 0.32 + Math.sin(t) * 0.025;
-      if (browRightRef.current) browRightRef.current.position.y = 0.32 + Math.sin(t) * 0.025;
-    }
-  });
-
-  return (
-    <group ref={headRef} position={[0, 0.95, 0]}>
-      {/* Main head sphere */}
-      <mesh castShadow>
-        <sphereGeometry args={[0.52, 32, 32]} />
-        <SkinMaterial color="#e60000" emissive="#2a0000" />
-      </mesh>
-
-      {/* Cheek highlights — subtle volume */}
-      <mesh position={[0.24, -0.06, 0.38]} scale={0.14}>
-        <sphereGeometry args={[1, 16, 16]} />
-        <meshStandardMaterial color="#ff5555" transparent opacity={0.12} roughness={0.2} />
-      </mesh>
-      <mesh position={[-0.24, -0.06, 0.38]} scale={0.14}>
-        <sphereGeometry args={[1, 16, 16]} />
-        <meshStandardMaterial color="#ff5555" transparent opacity={0.12} roughness={0.2} />
-      </mesh>
-
-      {/* ─── EYES — Multi-layer construction ─── */}
-      {/* Left eye sclera */}
-      <mesh position={[-0.17, 0.05, 0.43]} scale={[0.13, 0.095, 0.06]} rotation={[0, 0, -0.03]}>
-        <sphereGeometry args={[1, 16, 16]} />
-        <meshPhysicalMaterial color="#ffffff" roughness={0.1} metalness={0.0} clearcoat={0.3} />
-      </mesh>
-      {/* Right eye sclera */}
-      <mesh position={[0.17, 0.05, 0.43]} scale={[0.13, 0.095, 0.06]} rotation={[0, 0, 0.03]}>
-        <sphereGeometry args={[1, 16, 16]} />
-        <meshPhysicalMaterial color="#ffffff" roughness={0.1} metalness={0.0} clearcoat={0.3} />
-      </mesh>
-
-      {/* Pupils */}
-      <mesh position={[-0.15, 0.04, 0.47]} scale={[0.06, 0.065, 0.04]}>
-        <sphereGeometry args={[1, 12, 12]} />
-        <meshStandardMaterial color="#0a0a0a" roughness={0.05} />
-      </mesh>
-      <mesh position={[0.15, 0.04, 0.47]} scale={[0.06, 0.065, 0.04]}>
-        <sphereGeometry args={[1, 12, 12]} />
-        <meshStandardMaterial color="#0a0a0a" roughness={0.05} />
-      </mesh>
-
-      {/* Eye glints */}
-      <mesh position={[-0.11, 0.065, 0.49]} scale={0.022}>
-        <sphereGeometry args={[1, 8, 8]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={3} />
-      </mesh>
-      <mesh position={[0.19, 0.065, 0.49]} scale={0.022}>
-        <sphereGeometry args={[1, 8, 8]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={3} />
-      </mesh>
-
-      {/* ─── ANGRY EYEBROWS — ExtrudeGeometry V-shape ─── */}
-      <group ref={browLeftRef} position={[-0.19, 0.32, 0.38]} rotation={[0.1, 0, 0.55]}>
-        <mesh>
-          <extrudeGeometry
-            args={[
-              (() => {
-                const shape = new THREE.Shape();
-                shape.moveTo(-0.09, 0.02);
-                shape.lineTo(0.09, -0.02);
-                shape.lineTo(0.09, 0.02);
-                shape.lineTo(-0.09, 0.06);
-                shape.lineTo(-0.09, 0.02);
-                return shape;
-              })(),
-              { depth: 0.05, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 3 },
-            ]}
-          />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.4} metalness={0.1} />
-        </mesh>
-      </group>
-      <group ref={browRightRef} position={[0.19, 0.32, 0.38]} rotation={[0.1, 0, -0.55]}>
-        <mesh>
-          <extrudeGeometry
-            args={[
-              (() => {
-                const shape = new THREE.Shape();
-                shape.moveTo(-0.09, -0.02);
-                shape.lineTo(0.09, 0.02);
-                shape.lineTo(0.09, 0.06);
-                shape.lineTo(-0.09, 0.02);
-                shape.lineTo(-0.09, -0.02);
-                return shape;
-              })(),
-              { depth: 0.05, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 3 },
-            ]}
-          />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.4} metalness={0.1} />
-        </mesh>
-      </group>
-
-      {/* ─── MOUTH — Small frown curve ─── */}
-      <group position={[0, -0.18, 0.42]}>
-        <mesh rotation={[0.1, 0, 0]} scale={[0.08, 0.02, 0.03]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#3a0000" roughness={0.6} />
-        </mesh>
-      </group>
-
-      {/* Nose bump */}
-      <mesh position={[0, -0.03, 0.49]} scale={[0.035, 0.025, 0.025]}>
-        <sphereGeometry args={[1, 8, 8]} />
-        <meshStandardMaterial color="#cc0000" roughness={0.3} />
-      </mesh>
-
-      {/* Small round ears */}
-      <mesh position={[-0.48, 0.02, 0]} scale={[0.08, 0.1, 0.06]}>
-        <sphereGeometry args={[1, 12, 12]} />
-        <SkinMaterial color="#d40000" />
-      </mesh>
-      <mesh position={[0.48, 0.02, 0]} scale={[0.08, 0.1, 0.06]}>
-        <sphereGeometry args={[1, 12, 12]} />
-        <SkinMaterial color="#d40000" />
-      </mesh>
-    </group>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   BODY — Rounded, compact chibi
-   ═══════════════════════════════════════════════════════════ */
-function CharacterBody({ isSitting }: { isSitting: boolean }) {
-  return (
-    <group position={[0, isSitting ? 0.28 : 0.5, 0]}>
-      {/* Main body */}
-      <mesh castShadow>
-        <sphereGeometry args={[0.42, 20, 20]} />
-        <SkinMaterial color="#cc0000" emissive="#1a0000" />
-      </mesh>
-      {/* Belly highlight */}
-      <mesh position={[0, -0.04, 0.32]} scale={[0.22, 0.18, 0.08]}>
-        <sphereGeometry args={[1, 16, 16]} />
-        <meshStandardMaterial color="#e60000" transparent opacity={0.2} roughness={0.2} />
-      </mesh>
-      {/* $MAD emblem */}
-      <mesh position={[0, 0.1, 0.38]} scale={[0.07, 0.045, 0.015]} rotation={[0, 0, 0.08]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#ffcc00" emissive="#ffaa00" emissiveIntensity={0.5} roughness={0.3} metalness={0.3} />
-      </mesh>
-      {/* Belt */}
-      <mesh position={[0, -0.16, 0]} scale={[0.38, 0.055, 0.3]}>
-        <cylinderGeometry args={[1, 1, 1, 16]} />
-        <meshStandardMaterial color="#2a2a2a" roughness={0.6} metalness={0.2} />
-      </mesh>
-    </group>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   LEGS — Segmented with boots
-   ═══════════════════════════════════════════════════════════ */
-function CharacterLegs({ time, isWalking, isSitting }: { time: number; isWalking: boolean; isSitting: boolean }) {
-  const leftThigh = useRef<THREE.Group>(null);
-  const rightThigh = useRef<THREE.Group>(null);
-  const leftShin = useRef<THREE.Group>(null);
-  const rightShin = useRef<THREE.Group>(null);
-
-  useFrame(() => {
-    if (isSitting) {
-      if (leftThigh.current) { leftThigh.current.rotation.x = -0.9; leftThigh.current.position.y = 0.08; }
-      if (rightThigh.current) { rightThigh.current.rotation.x = -0.9; rightThigh.current.position.y = 0.08; }
-      if (leftShin.current) { leftShin.current.rotation.x = 1.1; leftShin.current.position.z = 0.08; }
-      if (rightShin.current) { rightShin.current.rotation.x = 1.1; rightShin.current.position.z = 0.08; }
-      return;
-    }
-    if (!isWalking) {
-      if (leftThigh.current) { leftThigh.current.rotation.x = 0; leftThigh.current.position.y = 0; }
-      if (rightThigh.current) { rightThigh.current.rotation.x = 0; rightThigh.current.position.y = 0; }
-      if (leftShin.current) { leftShin.current.rotation.x = 0.03; leftShin.current.position.z = 0; }
-      if (rightShin.current) { rightShin.current.rotation.x = 0.03; rightShin.current.position.z = 0; }
-      return;
-    }
-    const walkSpeed = 5;
-    const stride = 0.3;
-    const lPhase = Math.sin(time * walkSpeed);
-    if (leftThigh.current) leftThigh.current.rotation.x = lPhase * stride;
-    if (leftShin.current) leftShin.current.rotation.x = Math.max(0, -lPhase * stride * 0.6) + 0.03;
-    const rPhase = Math.sin(time * walkSpeed + Math.PI);
-    if (rightThigh.current) rightThigh.current.rotation.x = rPhase * stride;
-    if (rightShin.current) rightShin.current.rotation.x = Math.max(0, -rPhase * stride * 0.6) + 0.03;
-  });
-
+function Lighting() {
   return (
     <group>
-      {/* Left leg */}
-      <group ref={leftThigh} position={[-0.17, 0.18, 0]}>
-        <mesh position={[0, -0.12, 0]} scale={[0.1, 0.22, 0.1]}>
-          <capsuleGeometry args={[1, 1, 4, 8]} />
-          <SkinMaterial color="#cc0000" />
-        </mesh>
-        <group ref={leftShin} position={[0, -0.24, 0]}>
-          <mesh position={[0, -0.1, 0]} scale={[0.09, 0.17, 0.09]}>
-            <capsuleGeometry args={[1, 1, 4, 8]} />
-            <SkinMaterial color="#b30000" />
-          </mesh>
-          <mesh position={[0, -0.22, 0.02]} scale={[0.12, 0.07, 0.14]}>
-            <sphereGeometry args={[1, 10, 10]} />
-            <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.3} />
-          </mesh>
-          <mesh position={[0, -0.26, 0.02]} scale={[0.13, 0.025, 0.15]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color="#0a0a0a" roughness={0.7} />
-          </mesh>
-        </group>
-      </group>
-      {/* Right leg */}
-      <group ref={rightThigh} position={[0.17, 0.18, 0]}>
-        <mesh position={[0, -0.12, 0]} scale={[0.1, 0.22, 0.1]}>
-          <capsuleGeometry args={[1, 1, 4, 8]} />
-          <SkinMaterial color="#cc0000" />
-        </mesh>
-        <group ref={rightShin} position={[0, -0.24, 0]}>
-          <mesh position={[0, -0.1, 0]} scale={[0.09, 0.17, 0.09]}>
-            <capsuleGeometry args={[1, 1, 4, 8]} />
-            <SkinMaterial color="#b30000" />
-          </mesh>
-          <mesh position={[0, -0.22, 0.02]} scale={[0.12, 0.07, 0.14]}>
-            <sphereGeometry args={[1, 10, 10]} />
-            <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.3} />
-          </mesh>
-          <mesh position={[0, -0.26, 0.02]} scale={[0.13, 0.025, 0.15]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color="#0a0a0a" roughness={0.7} />
-          </mesh>
-        </group>
-      </group>
+      <directionalLight position={[4, 5, 6]} intensity={1.0} color="#fff5f0" castShadow />
+      <directionalLight position={[-4, 3, 2]} intensity={0.25} color="#d0d8ff" />
+      <pointLight position={[0, 3, -4]} intensity={1.0} color="#ff4444" distance={12} />
+      <pointLight position={[0, 5, 0]} intensity={0.4} color="#ffffff" distance={10} />
+      <pointLight position={[0, -2, 0]} intensity={0.25} color="#ff0000" distance={8} />
+      <ambientLight intensity={0.1} color="#221111" />
+      <hemisphereLight args={["#ff2222", "#050000", 0.12]} />
     </group>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ARMS — Segmented with gloves
+   FOOTSTEP SPARKS
    ═══════════════════════════════════════════════════════════ */
-function CharacterArms({ time, isSitting, excited }: { time: number; isSitting: boolean; excited: boolean }) {
-  const leftArm = useRef<THREE.Group>(null);
-  const rightArm = useRef<THREE.Group>(null);
-
-  useFrame(() => {
-    if (isSitting) {
-      if (leftArm.current) { leftArm.current.rotation.z = 0.3; leftArm.current.position.y = 0.04; }
-      if (rightArm.current) { rightArm.current.rotation.z = -0.3; rightArm.current.position.y = 0.04; }
-      return;
-    }
-    if (excited) {
-      if (leftArm.current) { leftArm.current.rotation.z = 2.3 + Math.sin(time * 15) * 0.25; leftArm.current.position.y = 0; }
-      if (rightArm.current) { rightArm.current.rotation.z = -2.3 - Math.sin(time * 15) * 0.25; rightArm.current.position.y = 0; }
-      return;
-    }
-    const swing = Math.sin(time * 2) * 0.06;
-    if (leftArm.current) { leftArm.current.rotation.x = swing; leftArm.current.rotation.z = 0.1; leftArm.current.position.y = 0; }
-    if (rightArm.current) { rightArm.current.rotation.x = -swing; rightArm.current.rotation.z = -0.1; rightArm.current.position.y = 0; }
-  });
-
-  return (
-    <group>
-      <group ref={leftArm} position={[-0.36, 0.5, 0]}>
-        <mesh position={[0, -0.1, 0]} scale={[0.085, 0.17, 0.085]}>
-          <capsuleGeometry args={[1, 1, 4, 8]} />
-          <SkinMaterial color="#cc0000" />
-        </mesh>
-        <mesh position={[0, -0.22, 0.02]} scale={[0.065, 0.13, 0.065]}>
-          <capsuleGeometry args={[1, 1, 4, 8]} />
-          <SkinMaterial color="#b30000" />
-        </mesh>
-        <mesh position={[0, -0.32, 0.02]} scale={[0.1, 0.08, 0.1]}>
-          <sphereGeometry args={[1, 10, 10]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.2} />
-        </mesh>
-      </group>
-      <group ref={rightArm} position={[0.36, 0.5, 0]}>
-        <mesh position={[0, -0.1, 0]} scale={[0.085, 0.17, 0.085]}>
-          <capsuleGeometry args={[1, 1, 4, 8]} />
-          <SkinMaterial color="#cc0000" />
-        </mesh>
-        <mesh position={[0, -0.22, 0.02]} scale={[0.065, 0.13, 0.065]}>
-          <capsuleGeometry args={[1, 1, 4, 8]} />
-          <SkinMaterial color="#b30000" />
-        </mesh>
-        <mesh position={[0, -0.32, 0.02]} scale={[0.1, 0.08, 0.1]}>
-          <sphereGeometry args={[1, 10, 10]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.5} metalness={0.2} />
-        </mesh>
-      </group>
-    </group>
-  );
-}
-
-/* ─── BACKPACK ─── */
-function CharacterBackpack() {
-  return (
-    <group position={[0, 0.5, -0.28]}>
-      <mesh scale={[0.26, 0.2, 0.1]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#2a2a2a" roughness={0.6} metalness={0.2} />
-      </mesh>
-      <mesh position={[-0.09, 0, 0.06]} scale={[0.025, 0.22, 0.015]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#1a1a1a" roughness={0.7} />
-      </mesh>
-      <mesh position={[0.09, 0, 0.06]} scale={[0.025, 0.22, 0.015]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#1a1a1a" roughness={0.7} />
-      </mesh>
-      <mesh position={[0, 0.06, -0.06]} scale={[0.07, 0.045, 0.015]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={0.5} />
-      </mesh>
-    </group>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   THE WALKING CLAW
-   ═══════════════════════════════════════════════════════════ */
-
-export const CLAW_STATE = {
-  excited: false,
-  setExcited: (v: boolean) => { CLAW_STATE.excited = v; },
-};
-
-function WalkingClaw({ positionRef }: { positionRef: React.MutableRefObject<THREE.Vector3> }) {
-  const groupRef = useRef<THREE.Group>(null);
-  const timeRef = useRef(0);
-  const [walkState] = useState(() => ({
-    targetX: 0,
-    targetZ: 0,
-    isWalking: false,
-    pauseTimer: 0,
-    idleTimer: 0,
-    isSitting: false,
-    excitedTimer: 0,
-  }));
-  const [sparks, setSparks] = useState<Array<{ id: number; pos: [number, number, number] }>>([]);
-  const sparkId = useRef(0);
-  const lastStepPhase = useRef(0);
-
-  useEffect(() => {
-    const handleReact = () => { walkState.excitedTimer = 1.5; };
-    window.addEventListener("madclaw-react", handleReact);
-    return () => window.removeEventListener("madclaw-react", handleReact);
-  }, [walkState]);
-
-  useFrame((state, delta) => {
-    timeRef.current = state.clock.elapsedTime;
-    if (!groupRef.current) return;
-    const claw = groupRef.current;
-    const s = walkState;
-
-    if (s.excitedTimer > 0) {
-      s.excitedTimer -= delta;
-      CLAW_STATE.setExcited(true);
-    } else {
-      CLAW_STATE.setExcited(false);
-    }
-
-    positionRef.current.copy(claw.position);
-
-    if (s.excitedTimer > 0) {
-      claw.position.y = 0.3 + Math.sin(state.clock.elapsedTime * 15) * 0.15;
-      s.isWalking = false;
-      s.isSitting = false;
-      s.idleTimer = 0;
-      return;
-    }
-
-    if (s.isWalking) {
-      claw.position.y = 0.3;
-      s.isSitting = false;
-      s.idleTimer = 0;
-      const dx = s.targetX - claw.position.x;
-      const dz = s.targetZ - claw.position.z;
-      const dist = Math.sqrt(dx * dx + dz * dz);
-      if (dist < 0.05) {
-        s.isWalking = false;
-        s.pauseTimer = 2 + Math.random() * 3;
-      } else {
-        const speed = 0.008;
-        claw.position.x += (dx / dist) * speed;
-        claw.position.z += (dz / dist) * speed;
-        claw.rotation.y = Math.atan2(dx, dz) + Math.PI;
-        const stepPhase = Math.sin(timeRef.current * 5);
-        if (stepPhase * lastStepPhase.current < 0) {
-          const isLeft = stepPhase > 0;
-          const footX = claw.position.x + (isLeft ? -0.17 : 0.17) * Math.cos(claw.rotation.y);
-          const footZ = claw.position.z + (isLeft ? -0.17 : 0.17) * Math.sin(claw.rotation.y);
-          const id = ++sparkId.current;
-          setSparks(prev => [...prev.slice(-10), { id, pos: [footX, 0.05, footZ] }]);
-          setTimeout(() => { setSparks(prev => prev.filter(d => d.id !== id)); }, 600);
-        }
-        lastStepPhase.current = stepPhase;
-      }
-    } else {
-      claw.position.y = 0.3 + Math.sin(state.clock.elapsedTime * 1) * 0.02;
-      s.pauseTimer -= delta;
-      s.idleTimer += delta;
-      if (s.pauseTimer <= 0) {
-        s.targetX = (Math.random() - 0.5) * 1.2;
-        s.targetZ = (Math.random() - 0.5) * 1.2;
-        s.isWalking = true;
-        s.idleTimer = 0;
-        s.isSitting = false;
-      }
-      if (s.idleTimer > 8 && !s.isSitting) s.isSitting = true;
-    }
-  });
-
-  const isExcited = CLAW_STATE.excited;
-
-  return (
-    <group>
-      <group ref={groupRef} scale={0.5} position={[0, 0.3, 0]}>
-        <CharacterBody isSitting={walkState.isSitting} />
-        <CharacterHead excited={isExcited} />
-        <CharacterLegs time={timeRef.current} isWalking={walkState.isWalking} isSitting={walkState.isSitting} />
-        <CharacterArms time={timeRef.current} isSitting={walkState.isSitting} excited={isExcited} />
-        <CharacterBackpack />
-      </group>
-      {sparks.map(d => <FootstepSpark key={d.id} position={d.pos} />)}
-    </group>
-  );
-}
-
 function FootstepSpark({ position }: { position: [number, number, number] }) {
   const ref = useRef<THREE.Mesh>(null);
   const [life] = useState(() => ({ t: 0 }));
@@ -574,18 +208,75 @@ function FootstepSpark({ position }: { position: [number, number, number] }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   LIGHTING — Studio setup
+   THE WALKING CLAW
    ═══════════════════════════════════════════════════════════ */
-function Lighting() {
+
+export const CLAW_STATE = {
+  excited: false,
+  setExcited: (v: boolean) => { CLAW_STATE.excited = v; },
+};
+
+function WalkingClaw({ positionRef }: { positionRef: React.MutableRefObject<THREE.Vector3> }) {
+  const [sparks, setSparks] = useState<Array<{ id: number; pos: [number, number, number] }>>([]);
+  const sparkId = useRef(0);
+  const lastStepPhase = useRef(0);
+  const walkState = useRef({
+    targetX: 0,
+    targetZ: 0,
+    isWalking: false,
+    pauseTimer: 0,
+    idleTimer: 0,
+    excitedTimer: 0,
+  }).current;
+  const [isSitting, setIsSitting] = useState(false);
+
+  useEffect(() => {
+    const handleReact = () => { walkState.excitedTimer = 1.5; };
+    window.addEventListener("madclaw-react", handleReact);
+    return () => window.removeEventListener("madclaw-react", handleReact);
+  }, [walkState]);
+
+  useFrame((state, delta) => {
+    if (walkState.excitedTimer > 0) {
+      walkState.excitedTimer -= delta;
+      CLAW_STATE.setExcited(true);
+      setIsSitting(false);
+    } else {
+      CLAW_STATE.setExcited(false);
+    }
+
+    // Sitting logic
+    if (!walkState.isWalking && walkState.idleTimer > 8 && walkState.excitedTimer <= 0) {
+      setIsSitting(true);
+    } else if (walkState.isWalking || walkState.excitedTimer > 0) {
+      setIsSitting(false);
+    }
+
+    // Spark generation on steps
+    if (walkState.isWalking) {
+      const stepPhase = Math.sin(state.clock.elapsedTime * 5);
+      if (stepPhase * lastStepPhase.current < 0) {
+        const isLeft = stepPhase > 0;
+        const pos = positionRef.current;
+        const angle = Math.atan2(walkState.targetX - pos.x, walkState.targetZ - pos.z) + Math.PI;
+        const footX = pos.x + (isLeft ? -0.17 : 0.17) * Math.cos(angle);
+        const footZ = pos.z + (isLeft ? -0.17 : 0.17) * Math.sin(angle);
+        const id = ++sparkId.current;
+        setSparks(prev => [...prev.slice(-10), { id, pos: [footX, 0.05, footZ] }]);
+        setTimeout(() => { setSparks(prev => prev.filter(d => d.id !== id)); }, 600);
+      }
+      lastStepPhase.current = stepPhase;
+    }
+  });
+
+  const excited = CLAW_STATE.excited;
+
   return (
     <group>
-      <directionalLight position={[4, 5, 6]} intensity={1.0} color="#fff5f0" castShadow />
-      <directionalLight position={[-4, 3, 2]} intensity={0.25} color="#d0d8ff" />
-      <pointLight position={[0, 3, -4]} intensity={1.0} color="#ff4444" distance={12} />
-      <pointLight position={[0, 5, 0]} intensity={0.4} color="#ffffff" distance={10} />
-      <pointLight position={[0, -2, 0]} intensity={0.25} color="#ff0000" distance={8} />
-      <ambientLight intensity={0.1} color="#221111" />
-      <hemisphereLight args={["#ff2222", "#050000", 0.12]} />
+      <Suspense fallback={null}>
+        <MascotModel positionRef={positionRef} walkState={walkState} isSitting={isSitting} excited={excited} />
+      </Suspense>
+      {sparks.map(d => <FootstepSpark key={d.id} position={d.pos} />)}
     </group>
   );
 }
@@ -653,3 +344,6 @@ export default function MadChao3D() {
     </div>
   );
 }
+
+// Preload the GLB
+useGLTF.preload("/mad-mascot.glb");

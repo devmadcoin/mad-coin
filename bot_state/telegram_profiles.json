@@ -6,8 +6,8 @@
     "first_seen": "2026-05-05T20:27:00.435538"
   },
   "7007869351": {
-    "last_seen": "2026-05-10T19:45:30.363204",
-    "interactions": 268,
+    "last_seen": "2026-05-19T16:52:50.206030",
+    "interactions": 323,
     "respect_score": 100,
     "first_seen": "2026-05-05T20:34:11.103740"
   },
@@ -18,8 +18,8 @@
     "first_seen": "2026-05-05T20:43:16.166810"
   },
   "1087968824": {
-    "last_seen": "2026-05-10T20:57:36.914258",
-    "interactions": 314,
+    "last_seen": "2026-05-19T17:18:29.350982",
+    "interactions": 345,
     "respect_score": 100,
     "first_seen": "2026-05-05T20:50:30.229947"
   },
@@ -36,38 +36,40 @@
     "first_seen": "2026-05-05T21:11:57.049475"
   },
   "7697478733": {
-    "last_seen": "2026-05-10T20:37:21.916543",
-    "interactions": 98,
+    "last_seen": "2026-05-19T17:19:18.161444",
+    "interactions": 125,
     "respect_score": 100,
-    "first_seen": "2026-05-05T21:22:41.577579"
+    "first_seen": "2026-05-05T21:22:41.577579",
+    "challenges_completed": 1,
+    "last_completion": "2026-05-19T17:05:37.818006"
   },
   "8292209775": {
-    "last_seen": "2026-05-05T23:27:16.597463",
-    "interactions": 3,
-    "respect_score": 10,
+    "last_seen": "2026-05-19T16:35:45.658190",
+    "interactions": 4,
+    "respect_score": 11,
     "first_seen": "2026-05-05T23:23:41.849818"
   },
   "5202445066": {
-    "last_seen": "2026-05-10T16:02:16.198022",
-    "interactions": 23,
-    "respect_score": 64,
+    "last_seen": "2026-05-19T16:35:41.529750",
+    "interactions": 33,
+    "respect_score": 94,
     "first_seen": "2026-05-06T00:10:15.837101"
   },
   "7598354099": {
-    "last_seen": "2026-05-10T20:23:43.516026",
-    "interactions": 49,
+    "last_seen": "2026-05-19T16:35:38.940815",
+    "interactions": 50,
     "respect_score": 100,
     "first_seen": "2026-05-06T01:17:58.919609"
   },
   "6844734734": {
-    "last_seen": "2026-05-09T23:38:49.175233",
-    "interactions": 8,
-    "respect_score": 23,
+    "last_seen": "2026-05-19T16:35:45.689247",
+    "interactions": 10,
+    "respect_score": 30,
     "first_seen": "2026-05-06T02:06:56.148833"
   },
   "5571662239": {
-    "last_seen": "2026-05-10T20:57:23.648087",
-    "interactions": 57,
+    "last_seen": "2026-05-19T16:35:40.482482",
+    "interactions": 60,
     "respect_score": 100,
     "first_seen": "2026-05-06T02:09:10.101702"
   },
@@ -82,9 +84,9 @@
     "respect_score": 18
   },
   "1765584676": {
-    "last_seen": "2026-05-10T06:05:51.573334",
-    "interactions": 13,
-    "respect_score": 30
+    "last_seen": "2026-05-19T16:35:41.009129",
+    "interactions": 14,
+    "respect_score": 31
   },
   "8582151448": {
     "last_seen": "2026-05-06T10:02:04.273110",
@@ -137,9 +139,9 @@
     "respect_score": 23
   },
   "8495454899": {
-    "last_seen": "2026-05-08T14:44:37.114747",
-    "interactions": 7,
-    "respect_score": 19
+    "last_seen": "2026-05-19T16:35:42.032738",
+    "interactions": 8,
+    "respect_score": 20
   },
   "8395018331": {
     "last_seen": "2026-05-07T05:19:17.665484",
@@ -162,8 +164,8 @@
     "respect_score": 21
   },
   "7046476029": {
-    "last_seen": "2026-05-10T19:26:06.862553",
-    "interactions": 114,
+    "last_seen": "2026-05-19T16:35:40.477910",
+    "interactions": 120,
     "respect_score": 100
   },
   "5988078870": {
@@ -177,9 +179,9 @@
     "respect_score": 2
   },
   "5362128371": {
-    "last_seen": "2026-05-10T11:15:10.416371",
-    "interactions": 6,
-    "respect_score": 14
+    "last_seen": "2026-05-19T16:35:41.010622",
+    "interactions": 7,
+    "respect_score": 19
   },
   "5134088838": {
     "last_seen": "2026-05-09T10:20:08.052996",
@@ -222,14 +224,14 @@
     "respect_score": 42
   },
   "5909170002": {
-    "last_seen": "2026-05-10T00:53:46.718409",
-    "interactions": 5,
-    "respect_score": 15
+    "last_seen": "2026-05-19T16:35:41.013870",
+    "interactions": 7,
+    "respect_score": 21
   },
   "7686544856": {
-    "last_seen": "2026-05-09T20:09:25.642862",
-    "interactions": 19,
-    "respect_score": 66
+    "last_seen": "2026-05-19T16:35:39.536344",
+    "interactions": 28,
+    "respect_score": 99
   },
   "5072218817": {
     "last_seen": "2026-05-10T03:35:03.757075",
@@ -308,6 +310,41 @@
   },
   "6234820704": {
     "last_seen": "2026-05-10T17:09:20.573163",
+    "interactions": 1,
+    "respect_score": 4
+  },
+  "8371931058": {
+    "last_seen": "2026-05-19T16:35:45.675134",
+    "interactions": 17,
+    "respect_score": 53
+  },
+  "6793949861": {
+    "last_seen": "2026-05-19T16:35:40.945138",
+    "interactions": 2,
+    "respect_score": 3
+  },
+  "7175797919": {
+    "last_seen": "2026-05-19T16:35:40.940463",
+    "interactions": 1,
+    "respect_score": 1
+  },
+  "6727880194": {
+    "last_seen": "2026-05-19T16:35:41.588106",
+    "interactions": 2,
+    "respect_score": 4
+  },
+  "6459317105": {
+    "last_seen": "2026-05-19T16:35:40.996982",
+    "interactions": 1,
+    "respect_score": 5
+  },
+  "7320039252": {
+    "last_seen": "2026-05-19T16:35:42.029347",
+    "interactions": 1,
+    "respect_score": 5
+  },
+  "5448832806": {
+    "last_seen": "2026-05-19T16:35:45.654370",
     "interactions": 1,
     "respect_score": 4
   }
