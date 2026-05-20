@@ -39,8 +39,8 @@ function FloatingParticles() {
 /* ═══════════════════════════════════════════════════════════
    MAD MIND — The Frequency Gate
    You are either $MAD or you are waiting.
-   
-   REDESIGN: 2026-05-21 — Oracle aesthetic. Death Economy vs Life Economy.
+
+   V3: Deployed 2026-05-21 — Oracle aesthetic.
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadMindPage() {
