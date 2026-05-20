@@ -74,7 +74,7 @@ function CopyButton({ text = CA, label = "Copy CA" }: { text?: string; label?: s
   return (
     <button onClick={() => copy(text)} className={[
       "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition duration-300",
-      copied ? "border border-green-400/30 bg-green-400/10 text-green-400" : "border border-[#FF2D2D]/30 bg-[#FF2D2D]/10 text-[#FF2D2D] hover:bg-[#FF2D2D]/20",
+      copied ? "border border-[#FF6B00]/30 bg-[#FF6B00]/10 text-[#FF6B00]" : "border border-[#FF2D2D]/30 bg-[#FF2D2D]/10 text-[#FF2D2D] hover:bg-[#FF2D2D]/20",
     ].join(" ")}>
       {copied ? (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
@@ -322,10 +322,10 @@ function TheProof() {
                   <p className="text-sm font-black text-white">Abraxas</p>
                   <p className="text-[10px] text-white/40">$MAD Holder · Giveaway Winner</p>
                 </div>
-                <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-green-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-green-400 border border-green-400/20">
+                <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
                   <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-400" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
                   </span>
                   Verified
                 </span>
@@ -495,9 +495,9 @@ function TheOracle() {
 function TheFrequency() {
   const platforms = [
     { name: "X", icon: "𝕏", href: LINKS.x, color: "text-white" },
-    { name: "Telegram", icon: "✈️", href: LINKS.telegram, color: "text-blue-400" },
-    { name: "YouTube", icon: "▶️", href: LINKS.youtube, color: "text-red-400" },
-    { name: "Roblox", icon: "🎮", href: LINKS.game, color: "text-green-400" },
+    { name: "Telegram", icon: "✈️", href: LINKS.telegram, color: "text-[#FF6B00]" },
+    { name: "YouTube", icon: "▶️", href: LINKS.youtube, color: "text-[#FF2D2D]" },
+    { name: "Roblox", icon: "🎮", href: LINKS.game, color: "text-white" },
   ];
 
   return (
