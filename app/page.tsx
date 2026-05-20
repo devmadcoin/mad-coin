@@ -281,6 +281,9 @@ function WhatIsMAD() {
     </section>
   );
 }
+
+/* ═══════════════════════════════════════════════════════════
+   THE PROOF — Mad Rich Tub + Testimony
    ═══════════════════════════════════════════════════════════ */
 function TheProof() {
   return (
