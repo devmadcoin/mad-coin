@@ -179,7 +179,7 @@ function TheCinema() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE VERIFIED — Exchange badges (WEN style, clean)
+   THE VERIFIED — Exchange badges (unified dark containers)
    ═══════════════════════════════════════════════════════════ */
 function TheVerified() {
   const exchanges = [
@@ -196,22 +196,23 @@ function TheVerified() {
         <p className="text-center text-[11px] font-bold uppercase tracking-[0.34em] text-white/40 mb-8">
           Verified On-Chain
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
           {exchanges.map((dex) => (
             <a 
               key={dex.name}
               href={dex.href}
               target="_blank"
               rel="noreferrer"
-              className="group flex flex-col items-center gap-3 px-6 py-5 sm:px-8 sm:py-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-[#FF2D2D]/20 transition-all duration-300"
+              className="group flex flex-col items-center gap-2 px-5 py-4 sm:px-6 sm:py-5 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-[#FF2D2D]/20 transition-all duration-300"
               title={dex.name}
             >
-              <div className="relative h-10 sm:h-12 w-32 sm:w-40 flex items-center justify-center">
+              {/* Unified dark container for all logos */}
+              <div className="relative h-9 sm:h-10 w-32 sm:w-36 flex items-center justify-center rounded-xl bg-[#0a0a0a]/80 px-3 py-2">
                 <Image
                   src={dex.src}
                   alt={dex.name}
                   fill
-                  className="object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                  className="object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300 p-1"
                 />
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-white/30 group-hover:text-white/50 transition-colors">
