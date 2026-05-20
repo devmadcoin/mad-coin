@@ -317,6 +317,7 @@ function TheArchitects() {
       role: "Dev / Founder",
       name: "$MAD Dev",
       handle: "Coffee Collects",
+      image: "/team/mad-dev-coffee-collects.png",
       links: [
         { label: "X", href: "https://x.com/madrichclub_" },
         { label: "YouTube", href: "https://www.youtube.com/@CoffeeCollectsHQ" },
@@ -326,6 +327,7 @@ function TheArchitects() {
       role: "Moderator",
       name: "Dino",
       handle: "@Iam__dino9",
+      image: "/team/dino-moderator.png",
       links: [
         { label: "X", href: "https://x.com/Iam__dino9" },
       ],
@@ -334,6 +336,7 @@ function TheArchitects() {
       role: "Mad Artist",
       name: "Heydun",
       handle: "@Grpx_Heydun",
+      image: "/team/mad-artist-heydun.png",
       links: [
         { label: "X", href: "https://x.com/Grpx_Heydun" },
       ],
@@ -358,7 +361,18 @@ function TheArchitects() {
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,45,45,0.04),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative z-10">
-                <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-3">
+                {/* Avatar */}
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#FF2D2D]/30 transition-colors">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover"
+                    sizes="96px"
+                  />
+                </div>
+
+                <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-2">
                   {member.role}
                 </p>
                 <p className="text-lg font-black text-white">{member.name}</p>
