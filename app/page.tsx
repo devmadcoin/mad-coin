@@ -110,77 +110,55 @@ function ContractBlock() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE LOBBY — HERO
+   THE CINEMA — Full-viewport video hero (fwogs energy)
    ═══════════════════════════════════════════════════════════ */
-function TheLobby() {
+function TheCinema() {
   return (
-    <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-6 overflow-hidden">
-      {/* Ambient glow behind hero */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,rgba(255,45,45,0.06),transparent_70%)]" />
+    <section className="relative min-h-[100dvh] flex flex-col items-center justify-end overflow-hidden">
+      {/* Video background */}
+      <div className="absolute inset-0 z-0">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          preload="auto"
+          className="w-full h-full object-cover"
+        >
+          <source src="/loops/bullish-mad.mp4" type="video/mp4" />
+        </video>
+        {/* Dark gradient overlay — fades from clear top to solid bottom */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#080808_100%)]" />
       </div>
-      
-      <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto">
-        {/* Red Circle Guy — Hero Art */}
-        <div className="relative mb-6 w-[220px] h-[220px] sm:w-[280px] sm:h-[280px]">
-          <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,45,45,0.15),transparent_70%)]" />
-          <Image
-            src="/memes/MAD-KINGS-ONLY.png"
-            alt="The $MAD King"
-            fill
-            className="object-contain drop-shadow-[0_0_30px_rgba(255,45,45,0.3)]"
-            priority
-          />
-        </div>
 
+      {/* Content overlay at bottom */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
         {/* The Declaration */}
-        <h1 className="text-[2.5rem] sm:text-[4rem] lg:text-[5.5rem] font-black leading-[0.9] tracking-[-0.04em]">
-          <span className="text-[#FF2D2D] drop-shadow-[0_0_20px_rgba(255,45,45,0.4)]">STOP</span>
+        <h1 className="text-[3rem] sm:text-[5rem] lg:text-[7rem] font-black leading-[0.85] tracking-[-0.05em] text-center">
+          <span className="text-[#FF2D2D] drop-shadow-[0_0_30px_rgba(255,45,45,0.5)]">STOP</span>
           <br />
           <span className="text-white">PANICKING.</span>
-          <br />
-          <span className="text-white">GET </span>
-          <span className="text-[#FF2D2D] drop-shadow-[0_0_20px_rgba(255,45,45,0.4)]">$MAD</span>
-          <span className="text-green-400">RICH.</span>
         </h1>
 
-        {/* Subtle tagline */}
-        <p className="mt-5 text-sm sm:text-base font-medium text-white/50 max-w-md">
-          Doxxed dev. Real Roblox game. No VC. No tax. No presale.
-          <br className="hidden sm:block" />
-          Just a different frequency.
+        <p className="mt-4 text-center text-base sm:text-lg font-bold text-white/60 max-w-md mx-auto">
+          GET <span className="text-[#FF2D2D]">$MAD</span><span className="text-green-400">RICH.</span>
         </p>
 
-        {/* Contract — THE CTA */}
-        <div className="mt-8 w-full max-w-xl">
+        {/* Contract + Buy */}
+        <div className="mt-8 max-w-xl mx-auto">
           <ContractBlock />
         </div>
 
-        {/* Buy Button — Secondary CTA */}
-        <a 
-          href={LINKS.buy} 
-          target="_blank" 
-          rel="noreferrer"
-          className="mt-6 group flex items-center justify-center gap-2 px-8 py-4 bg-[#FF6B00] hover:bg-[#FF8533] text-white text-base font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,107,0,0.25)]"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          SWAP ON JUPITER
-        </a>
-
-        {/* Navigation Links */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/mad-mind" className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-[#FF2D2D]/20 text-white/70 hover:text-white text-xs font-bold transition-all">
-            <span className="text-[#FF2D2D]">🔥</span>
-            Enter The Oracle
-          </Link>
-          <Link href="/memes" className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-[#FF2D2D]/20 text-white/70 hover:text-white text-xs font-bold transition-all">
-            <span>🎨</span>
-            The Vault
-          </Link>
-          <Link href="/game" className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-[#FF2D2D]/20 text-white/70 hover:text-white text-xs font-bold transition-all">
-            <span>🎮</span>
-            The Game
-          </Link>
+        <div className="mt-4 flex justify-center">
+          <a 
+            href={LINKS.buy} 
+            target="_blank" 
+            rel="noreferrer"
+            className="group flex items-center gap-2 px-8 py-4 bg-[#FF6B00] hover:bg-[#FF8533] text-white text-base font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,107,0,0.25)]"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            SWAP ON JUPITER
+          </a>
         </div>
 
         {/* Minimal chips */}
@@ -192,33 +170,11 @@ function TheLobby() {
       </div>
 
       {/* Scroll hint */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/20">
-        <span className="text-[10px] font-bold uppercase tracking-[0.34em]">Scroll</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-bounce"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/15 z-10">
+        <span className="text-[9px] font-bold uppercase tracking-[0.34em]">Explore</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-bounce"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       </div>
     </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   THE WALLS — FEATURED ART
-   ═══════════════════════════════════════════════════════════ */
-function ArtWall({ title, image, subtitle }: { title: string; image: string; subtitle: string }) {
-  return (
-    <div className="group relative overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.02] aspect-[4/5] sm:aspect-[3/4]">
-      <Image
-        src={image}
-        alt={title}
-        fill
-        className="object-cover transition duration-700 group-hover:scale-[1.05]"
-        sizes="(max-width: 768px) 100vw, 33vw"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(8,8,8,0.9)_80%,rgba(8,8,8,0.98))]" />
-      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-        <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60">{subtitle}</p>
-        <p className="mt-1 text-lg sm:text-xl font-black text-white">{title}</p>
-      </div>
-    </div>
   );
 }
 
@@ -235,7 +191,7 @@ function TheVerified() {
   ];
 
   return (
-    <section className="px-4 sm:px-6 py-10 sm:py-14 border-y border-white/5">
+    <section className="px-4 sm:px-6 py-12 sm:py-16 border-y border-white/5">
       <div className="max-w-4xl mx-auto">
         <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/50 mb-6">
           Verified On-Chain
@@ -264,6 +220,28 @@ function TheVerified() {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THE WALLS — Featured Art
+   ═══════════════════════════════════════════════════════════ */
+function ArtWall({ title, image, subtitle }: { title: string; image: string; subtitle: string }) {
+  return (
+    <div className="group relative overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.02] aspect-[4/5] sm:aspect-[3/4]">
+      <Image
+        src={image}
+        alt={title}
+        fill
+        className="object-cover transition duration-700 group-hover:scale-[1.05]"
+        sizes="(max-width: 768px) 100vw, 33vw"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(8,8,8,0.9)_80%,rgba(8,8,8,0.98))]" />
+      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+        <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60">{subtitle}</p>
+        <p className="mt-1 text-lg sm:text-xl font-black text-white">{title}</p>
+      </div>
+    </div>
   );
 }
 
@@ -300,12 +278,10 @@ function TheOracle() {
             {/* MAD Chao preview */}
             <div className="shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border border-[#FF2D2D]/20 bg-black/50 flex items-center justify-center overflow-hidden">
               <svg viewBox="0 0 256 256" className="w-16 h-16 sm:w-20 sm:h-20" xmlns="http://www.w3.org/2000/svg">
-                {/* Simplified MAD Chao preview */}
                 <rect x="96" y="80" width="64" height="64" rx="32" fill="#FF2D2D" opacity="0.9" />
                 <rect x="112" y="100" width="12" height="16" rx="6" fill="#080808" />
                 <rect x="132" y="100" width="12" height="16" rx="6" fill="#080808" />
                 <rect x="120" y="128" width="16" height="6" rx="3" fill="#080808" />
-                {/* Flame */}
                 <rect x="120" y="52" width="16" height="20" rx="4" fill="#FF6B00" opacity="0.8" />
               </svg>
             </div>
@@ -343,7 +319,9 @@ function TheFrequency() {
   return (
     <section className="px-4 sm:px-6 py-12 sm:py-16 border-t border-white/5">
       <div className="max-w-4xl mx-auto">
-        <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-white/25 mb-6">The Frequency</p>
+        <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-white/25 mb-6">
+          The Frequency
+        </p>
         <div className="flex items-center justify-center gap-3 sm:gap-4">
           {platforms.map((p) => (
             <a
@@ -402,7 +380,7 @@ export default function Home() {
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
 
       <main>
-        <TheLobby />
+        <TheCinema />
         <TheVerified />
         <TheWalls />
         <TheOracle />
