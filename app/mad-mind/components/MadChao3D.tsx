@@ -49,9 +49,11 @@ function CarScene() {
       Math.sin(nextT) * TRACK_RADIUS
     );
 
-    // Spin wheels
+    // Spin wheels (both tires and rims)
     wheelsRef.current.forEach((wheel) => {
-      wheel.rotation.x += delta * 8;
+      if (wheel.name.startsWith('Wheel_') || wheel.name.startsWith('Rim_')) {
+        wheel.rotation.x += delta * 8;
+      }
     });
 
     // Engine vibration bob

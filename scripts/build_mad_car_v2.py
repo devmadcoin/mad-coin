@@ -284,28 +284,37 @@ strut_R.name = 'SpoilerStrut_R'
 strut_R.scale = (0.04, 0.04, 0.08)
 set_material(strut_R, mat_black)
 
-# ─── WHEELS — Proper proportion and detail ───
+# ─── WHEELS — Proper proportion and orientation ───
+# Wheel dimensions (properly sized for car body width of 0.8)
+wheel_major = 0.12  # Tire outer radius
+wheel_minor = 0.06  # Tire tube radius
+rim_radius = 0.075
+rim_depth = 0.05
+wheel_y = 0.14      # Center height (touching ground at y=0)
+
 for i, pos in enumerate(wheel_positions):
-    # Tire (torus for roundness)
-    bpy.ops.mesh.primitive_torus_add(major_radius=0.17, minor_radius=0.085, location=pos)
+    # Tire — rotated to stand upright (axle along X)
+    bpy.ops.mesh.primitive_torus_add(major_radius=wheel_major, minor_radius=wheel_minor, location=(pos[0], pos[1], wheel_y))
     tire = bpy.context.active_object
     tire.name = f'Wheel_{i}'
-    tire.rotation_euler = (0, 0, 0)
+    # Rotate 90° on Y so torus hole aligns with X axis (car width = axle direction)
+    tire.rotation_euler = (0, math.radians(90), 0)
     set_material(tire, mat_tire)
     
-    # Rim (cylinder with slightly smaller radius)
-    bpy.ops.mesh.primitive_cylinder_add(radius=0.11, depth=0.07, location=pos)
+    # Rim — cylinder aligned with axle (X axis)
+    bpy.ops.mesh.primitive_cylinder_add(radius=rim_radius, depth=rim_depth, location=(pos[0], pos[1], wheel_y))
     rim = bpy.context.active_object
     rim.name = f'Rim_{i}'
-    rim.rotation_euler = (math.radians(90), 0, 0)
+    # Rotate 90° on Y so cylinder axis aligns with X (axle)
+    rim.rotation_euler = (0, math.radians(90), 0)
     set_material(rim, mat_rim)
     
-    # Brake caliper (small red box visible through rim)
-    caliper_x = pos[0] + (0.04 if pos[0] < 0 else -0.04)
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(caliper_x, pos[1], pos[2] + 0.05))
+    # Brake caliper (visible through rim, on the inner side)
+    caliper_x = pos[0] + (0.03 if pos[0] < 0 else -0.03)
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(caliper_x, pos[1], wheel_y + 0.03))
     caliper = bpy.context.active_object
     caliper.name = f'Caliper_{i}'
-    caliper.scale = (0.02, 0.06, 0.04)
+    caliper.scale = (0.02, 0.05, 0.035)
     set_material(caliper, mat_red_body)
 
 # ─── SIDE MIRRORS ───
