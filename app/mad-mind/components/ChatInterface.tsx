@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ChatMessage } from "./useChat";
+import MadChaoPixel from "./MadChaoPixel";
 
 interface ChatSession {
   id: string;
@@ -203,8 +204,13 @@ function MessageBubble({ msg, isLatest, sessionId }: { msg: ChatMessage; isLates
   const isUser = msg.role === "user";
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} group`}>
-      <div className={`max-w-[85%] sm:max-w-[75%] ${isUser ? "order-2" : "order-1"}`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} group gap-2 items-end`}>
+      {!isUser && (
+        <div className="shrink-0 mb-5">
+          <MadChaoPixel size={28} animated={false} showLabel={false} />
+        </div>
+      )}
+      <div className={`max-w-[85%] sm:max-w-[75%]`}>
         <div
           className={`rounded-2xl px-5 py-3.5 ${
             isUser
@@ -227,7 +233,10 @@ function MessageBubble({ msg, isLatest, sessionId }: { msg: ChatMessage; isLates
 /* ─── Typing indicator ─── */
 function TypingIndicator() {
   return (
-    <div className="flex justify-start">
+    <div className="flex justify-start gap-2 items-end">
+      <div className="shrink-0 mb-1">
+        <MadChaoPixel size={28} animated={true} showLabel={false} />
+      </div>
       <div className="rounded-2xl bg-white/[0.03] border border-white/[0.08] px-5 py-4">
         <div className="flex gap-1.5 items-center h-4">
           <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "0ms" }} />
@@ -360,8 +369,8 @@ export default function ChatInterface({
               </button>
             )}
             <div className="flex items-center gap-2.5">
-              <div className="relative h-8 w-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center">
-                <span className="text-sm">🦞</span>
+              <div className="relative h-8 w-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center overflow-hidden">
+                <MadChaoPixel size={28} animated={false} showLabel={false} />
                 <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400 border-2 border-[#080808]" />
               </div>
               <div>
@@ -393,8 +402,8 @@ export default function ChatInterface({
         >
           {!hasMessages ? (
             <div className="h-full flex flex-col items-center justify-center text-center px-6">
-              <div className="h-16 w-16 rounded-2xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-5">
-                <span className="text-3xl">🦞</span>
+              <div className="h-16 w-16 rounded-2xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-5 overflow-hidden">
+                <MadChaoPixel size={48} animated={true} showLabel={false} />
               </div>
               <h2 className="text-xl font-black text-white mb-2">Mad Claw</h2>
               <p className="text-sm text-white/40 max-w-[300px] mb-8 leading-relaxed">

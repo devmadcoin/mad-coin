@@ -34,6 +34,7 @@ interface MadChaoPixelProps {
   size?: number;
   animated?: boolean;
   glowIntensity?: number;
+  showLabel?: boolean;
 }
 
 /* ─── Pixel grid helpers ─── */
@@ -244,6 +245,7 @@ export default function MadChaoPixel({
   size = 320,
   animated = true,
   glowIntensity = 0.15,
+  showLabel = true,
 }: MadChaoPixelProps) {
   const [frame, setFrame] = useState(0);
   const [hovered, setHovered] = useState(false);
@@ -296,15 +298,16 @@ export default function MadChaoPixel({
         <PixelGrid state={state} frame={frame} />
       </svg>
 
-      {/* Label */}
-      <div className="mt-2 text-center">
-        <p
-          className="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-300"
-          style={{ color: hovered ? "#FF2D2D" : "rgba(255,255,255,0.25)" }}
-        >
-          {hovered ? "MAD CHAO IS WATCHING" : "THE $MAD MASCOT"}
-        </p>
-      </div>
+      {showLabel && (
+        <div className="mt-2 text-center">
+          <p
+            className="text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-300"
+            style={{ color: hovered ? "#FF2D2D" : "rgba(255,255,255,0.25)" }}
+          >
+            {hovered ? "MAD CHAO IS WATCHING" : "THE $MAD MASCOT"}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
