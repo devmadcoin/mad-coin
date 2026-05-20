@@ -34,9 +34,25 @@ export default function useChat() {
             ...m,
             id: m.id || `${m.role}-${i}-${m.timestamp}`,
           })));
+        } else {
+          /* The Claw opens the conversation */
+          setMessages([{
+            role: "claw",
+            text: "Someone just asked why their 401k feels like a scam. I told them the truth.\n\nWhat do you want to know?",
+            timestamp: Date.now(),
+            id: `claw-open-${Date.now()}`,
+          }]);
         }
       })
-      .catch(() => { /* ignore */ });
+      .catch(() => {
+        /* Fallback if API fails */
+        setMessages([{
+          role: "claw",
+          text: "Someone just asked why their 401k feels like a scam. I told them the truth.\n\nWhat do you want to know?",
+          timestamp: Date.now(),
+          id: `claw-open-${Date.now()}`,
+        }]);
+      });
   }, []);
 
   /* Auto-scroll */
