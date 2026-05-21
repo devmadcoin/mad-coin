@@ -181,6 +181,40 @@ function TheCinema() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   WHY $MAD STRIP — Elevator pitch credibility cluster
+   Six trust signals. One glance. Zero doubt.
+   ═══════════════════════════════════════════════════════════ */
+function WhyMADStrip() {
+  const signals = [
+    { icon: "👤", label: "Doxxed", sub: "Not a LARP" },
+    { icon: "🎮", label: "Real Game", sub: "Roblox Live" },
+    { icon: "💰", label: "0% Tax", sub: "Every Trade" },
+    { icon: "🚫", label: "No VC", sub: "Community First" },
+    { icon: "🔐", label: "Locked", sub: "3 Communities" },
+    { icon: "⚡", label: "No Presale", sub: "Fair Launch" },
+  ];
+
+  return (
+    <section className="px-4 sm:px-6 py-8 sm:py-10 bg-[#F5F1E8] border-b border-[#1a1a1a]/10">
+      <div className="max-w-5xl mx-auto">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4">
+          {signals.map((s) => (
+            <div
+              key={s.label}
+              className="flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.03] transition-all duration-300 group"
+            >
+              <span className="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">{s.icon}</span>
+              <p className="text-xs sm:text-sm font-black text-[#1a1a1a] uppercase tracking-wider">{s.label}</p>
+              <p className="text-[9px] sm:text-[10px] text-[#1a1a1a]/40 mt-0.5">{s.sub}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    WHAT IS $MAD — Venetian crème
    ═══════════════════════════════════════════════════════════ */
 function WhatIsMAD() {
@@ -583,6 +617,7 @@ export default function Home() {
 
       <main>
         <TheCinema />
+        <WhyMADStrip />
         <WhatIsMAD />
         <TheVerified />
         <TheProof />
