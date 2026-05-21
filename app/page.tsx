@@ -164,11 +164,7 @@ function TheCinema() {
         </div>
 
         {/* Minimal chips */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">265 HOLDERS</span>
-          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">504M SUPPLY</span>
-          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">0% TAX</span>
-        </div>
+        {/* Removed — stats now in WhatIsMAD section */}
       </div>
 
       {/* Scroll hint */}
