@@ -238,8 +238,9 @@ const EXITS = [
     mile: "MILE 25", title: "Proof + Community", status: "COMPLETE" as const, color: "emerald",
     proof: [
       { label: "Community Support #1", url: LINKS.communityProof, type: "link" as const },
-      { label: "Community Support #2 — Locked", url: LINKS.communityProof2, type: "link" as const },
-      { label: "Burn Tracker", url: "#", type: "link" as const },
+      { label: "Community Support #2", url: LINKS.communityProof2, type: "link" as const },
+      { label: "Community Support #3", url: LINKS.communityProof3, type: "link" as const },
+      { label: "Community Support #4 — Hineycoin", url: LINKS.communityProof4, type: "link" as const },
     ],
     items: [
       { text: "MAD Confessions live", done: true },
@@ -249,7 +250,7 @@ const EXITS = [
       { text: "Community growth active", done: true },
       { text: "4th community locked in", done: true },
     ],
-    summary: "Supply shrinking. 503M → 800M. Two communities backed publicly. Tokens locked.",
+    summary: "Supply shrinking. 503M → 800M. Four communities backed publicly. Tokens locked.",
   },
   {
     mile: "MILE 50", title: "Build", status: "IN PROGRESS" as const, color: "yellow",
