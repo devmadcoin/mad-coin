@@ -213,7 +213,7 @@ const percentComplete = Math.round((PROGRESS.complete / PROGRESS.total) * 100);
 const STATUS_CARDS = [
   { label: "Website", value: "LIVE NOW", tone: "green" as const, icon: "🌐" },
   { label: "Confessions", value: "LIVE NOW", tone: "green" as const, icon: "💬" },
-  { label: "Token Burns", value: "ACTIVE", tone: "green" as const, icon: "🔥" },
+  { label: "Token Burns", value: "50% BURNED", tone: "green" as const, icon: "🔥" },
   { label: "MAD AI", value: "LIVE NOW", tone: "green" as const, icon: "🤖" },
   { label: "Community Support", value: "4 LOCKED", tone: "green" as const, icon: "🤝" },
   { label: "MAD Games", value: "IN PROGRESS", tone: "red" as const, icon: "🎮" },
@@ -224,20 +224,22 @@ const STATUS_CARDS = [
 
 const EXITS = [
   {
-    mile: "MILE 0", title: "Foundation", status: "COMPLETE" as const, color: "emerald",
+    mile: "MILE 0", title: "Proof of Conviction", status: "COMPLETE" as const, color: "emerald",
     proof: [
-      { label: "Token Launch", url: "https://pump.fun/coin/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", type: "tx" as const },
+      { label: "Token Launch — No Presale", url: "https://pump.fun/coin/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", type: "tx" as const },
       { label: "Website Deployed", url: "https://mad-coin.vercel.app", type: "link" as const },
+      { label: "Solscan Verification", url: "https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", type: "link" as const },
     ],
     items: [
-      { text: "Core brand philosophy established", done: true },
-      { text: "Smart contract framework built", done: true },
+      { text: "Fair launch — no presale, no VC, no tax", done: true },
+      { text: "Doxxed dev with public identity", done: true },
       { text: "Community channels launched", done: true },
+      { text: "1B total supply, deflationary by design", done: true },
     ],
-    summary: "The groundwork. Philosophy locked. Community born.",
+    summary: "No shortcuts. No insiders. Just a contract and a community that decided they were done folding.",
   },
   {
-    mile: "MILE 25", title: "Proof + Community", status: "COMPLETE" as const, color: "emerald",
+    mile: "MILE 25", title: "Proof of Loyalty", status: "COMPLETE" as const, color: "emerald",
     proof: [
       { label: "Community Support #1", url: LINKS.communityProof, type: "link" as const },
       { label: "Community Support #2", url: LINKS.communityProof2, type: "link" as const },
@@ -245,39 +247,43 @@ const EXITS = [
       { label: "Community Support #4 — Hineycoin", url: LINKS.communityProof4, type: "link" as const },
     ],
     items: [
-      { text: "MAD Confessions live", done: true },
-      { text: "Exchange visibility live", done: true },
-      { text: "Supply reduced to ~503M", done: true },
-      { text: "Burn target set: 800M", done: true },
-      { text: "Community growth active", done: true },
-      { text: "4th community locked in", done: true },
+      { text: "4 communities supported publicly", done: true },
+      { text: "All tokens locked via Streamflow until 2060", done: true },
+      { text: "Supply reduced to ~500M (50% burned)", done: true },
+      { text: "Burn #1 complete — scarcity activated", done: true },
+      { text: "Cross-community coalition formed", done: true },
     ],
-    summary: "Supply shrinking. 503M → 800M. Four communities backed publicly. Tokens locked.",
+    summary: "50% supply burned. 4 communities locked until 2060. We didn't ask for trust — we proved loyalty.",
   },
   {
-    mile: "MILE 50", title: "Build", status: "IN PROGRESS" as const, color: "yellow",
+    mile: "MILE 50", title: "Proof of Utility", status: "IN PROGRESS" as const, color: "yellow",
     proof: [
       { label: "MAD Mind AI", url: LINKS.madMind, type: "link" as const },
       { label: "Moltbook Agent", url: "https://www.moltbook.com/u/themadclaw", type: "link" as const },
+      { label: "Mad Phonk Awakening (Roblox)", url: "https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening", type: "link" as const },
     ],
     items: [
-      { text: "Token utility expansion", done: true },
-      { text: "Burn #2 at 10K holders", done: false },
+      { text: "MAD Mind AI live — autonomous brand agent", done: true },
+      { text: "MAD Confessions community platform", done: true },
+      { text: "Roblox game with $MAD integration", done: true },
+      { text: "Moltbook cross-platform agent deployed", done: true },
+      { text: "Burn #2 trigger: 10,000 holders", done: false },
       { text: "Marketplace integration", done: false },
-      { text: "Partnerships & alliances", done: false },
-      { text: "MAD Games expansion", done: false },
+      { text: "Partnerships & alliance expansion", done: false },
     ],
-    summary: "Burn #2 locked in at 10K holders. Building utility. In motion.",
+    summary: "The token does something. AI. Games. Community. Not a ticker — a toolkit.",
   },
   {
-    mile: "MILE 100", title: "Expand", status: "UP NEXT" as const, color: "red",
+    mile: "MILE 100", title: "Proof of Scale", status: "UP NEXT" as const, color: "red",
     proof: [],
     items: [
-      { text: "Global marketing campaign", done: false },
+      { text: "10,000+ holders globally", done: false },
+      { text: "Burn #2 activated — supply to 200M", done: false },
       { text: "CEX listings", done: false },
+      { text: "Global marketing campaign", done: false },
       { text: "Ecosystem expansion", done: false },
     ],
-    summary: "The next level. CEX. Global reach. Full ecosystem.",
+    summary: "200M supply. Global reach. Full ecosystem. The Life Economy, proven at scale.",
   },
 ];
 
@@ -352,19 +358,19 @@ function ChaosMeter() {
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#FF2D2D]/60">Token Burn</p>
               <span className="text-lg animate-pulse">🔥</span>
             </div>
-            <div className="text-3xl font-black text-[#1a1a1a] mb-1">{burnProgress}%</div>
-            <p className="text-xs text-[#1a1a1a]/40 mb-3">of 800M target consumed</p>
+            <div className="text-3xl font-black text-[#1a1a1a] mb-1">50%</div>
+            <p className="text-xs text-[#1a1a1a]/40 mb-3">of total supply already burned</p>
             <div className="h-3 rounded-full bg-[#1a1a1a]/10 overflow-hidden">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-[#FF2D2D] via-[#FF6B00] to-[#FF2D2D] transition-all duration-300"
                 style={{
-                  width: `${burnProgress}%`,
+                  width: `50%`,
                   boxShadow: `0 0 ${12 * firePulse}px rgba(255,45,45,0.5)`,
                   transform: `scaleY(${firePulse})`,
                 }}
               />
             </div>
-            <p className="mt-2 text-[10px] text-[#1a1a1a]/30">~513M tokens burned and counting</p>
+            <p className="mt-2 text-[10px] text-[#1a1a1a]/30">~500M remaining. Burn #2 at 10K holders → 200M final.</p>
           </div>
         </div>
 
@@ -776,9 +782,9 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8">
           <div className="text-center mb-10">
-            <p className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30">The Burn Trail</p>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-black text-white">Four exits. One destination.</h2>
-            <p className="mt-2 text-sm text-white/30">⚠️ Some casualties at Mile 0. We kept driving.</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30">The $MAD Proof Sequence</p>
+            <h2 className="mt-2 text-3xl sm:text-4xl font-black text-white">Four stages. One truth.</h2>
+            <p className="mt-2 text-sm text-white/30">⚠️ Not a roadmap. A verification chain. Every claim backed by proof.</p>
           </div>
           <div className="space-y-16 sm:space-y-20">
             {EXITS.map((exit, i) => {
@@ -820,13 +826,77 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
           </div>
           <div className="mt-16 text-center">
             <div className="inline-block rounded-2xl border-2 border-white/20 bg-neutral-800 px-6 py-3 animate-pulse">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-white/40">End of Road</p>
-              <p className="text-lg font-black text-white mt-1">Destination: $MAD</p>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-white/40">End of Sequence</p>
+              <p className="text-lg font-black text-white mt-1">Destination: 200M $MAD</p>
             </div>
           </div>
         </div>
       </div>
     </ShellWithRef>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BURN MECHANICS — Token supply reduction protocol
+   ═══════════════════════════════════════════════════════════ */
+
+function BurnMechanics() {
+  return (
+    <Shell className="p-6 sm:p-8">
+      <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-stretch">
+        <div className="flex flex-col justify-between rounded-[1.75rem] border border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] p-6 sm:p-7">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.35em] text-[#FF2D2D]/70">Deflation Protocol</p>
+            <h2 className="mt-3 text-3xl font-black text-[#1a1a1a] sm:text-5xl">50% Burned. More Coming.</h2>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
+              Supply is already cut in half — from 1 billion to ~500 million. But this is just the first burn. 
+              The next one is tied to a real milestone, not a calendar date.
+            </p>
+          </div>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-3xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/5 px-6 py-5">
+              <p className="text-xs font-black uppercase tracking-[0.28em] text-[#FF2D2D]/70">Current Supply</p>
+              <p className="mt-2 text-3xl font-black text-[#FF2D2D]">~500M</p>
+              <p className="mt-1 text-sm text-[#1a1a1a]/40">Down from 1B at launch</p>
+            </div>
+            <div className="rounded-3xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-6 py-5">
+              <p className="text-xs font-black uppercase tracking-[0.28em] text-[#1a1a1a]/40">Final Target</p>
+              <p className="mt-2 text-3xl font-black text-[#1a1a1a]">200M</p>
+              <p className="mt-1 text-sm text-[#1a1a1a]/40">80% total reduction</p>
+            </div>
+          </div>
+        </div>
+        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Burn Trigger</p>
+            <span className="rounded-full border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-[#FF2D2D]">Phase 2</span>
+          </div>
+          <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-5">
+            <p className="text-lg font-black text-[#1a1a1a] sm:text-xl">Burn #2 activates at 10,000 holders.</p>
+            <p className="mt-2 text-lg font-black text-[#FF2D2D] sm:text-xl">No earlier. No later.</p>
+            <div className="mt-4 rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
+              <img src="/solscan-mad-token.png" alt="$MAD token on Solscan — 276 holders, ~500M supply" className="w-full h-auto" />
+              <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Live on Solscan</p>
+                <p className="text-xs text-[#1a1a1a]/40 mt-0.5">Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump · Verifiable · On-chain</p>
+              </div>
+            </div>
+            <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
+              Why 10,000? Because the most successful projects and communities exceed that threshold. 
+              We're not burning to create artificial hype — we're burning to reward real growth. 
+              When 10,000 people globally hold $MAD, the supply drops to 200M. Scarcity. Store of value. 
+              Not a promise — a protocol.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <a href="https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump" target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 px-5 py-3 text-sm font-black text-[#FF2D2D] transition hover:scale-[1.02] hover:bg-[#FF2D2D]/15">
+                View on Solscan →
+              </a>
+              <span className="inline-flex items-center rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-3 text-sm font-semibold text-[#1a1a1a]/60">Burn #1: Complete ✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Shell>
   );
 }
 
@@ -927,8 +997,8 @@ function CTASection() {
     <Shell className="p-6 sm:p-8">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <h2 className="text-4xl font-black text-[#1a1a1a] sm:text-6xl">THIS IS YOUR PATH.</h2>
-          <p className="mt-4 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">Build. Prove. Expand.</p>
+          <h2 className="text-4xl font-black text-[#1a1a1a] sm:text-6xl">THE $MAD PROOF SEQUENCE.</h2>
+          <p className="mt-4 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">Conviction. Loyalty. Utility. Scale. Every stage verifiable. Nothing promised.</p>
         </div>
         <div style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
           <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,45,45,0.15)} 50%{box-shadow:0 0 35px rgba(255,45,45,0.28)}`}</style>
@@ -1014,6 +1084,9 @@ export default function RoadmapPage() {
           </FadeIn>
           <FadeIn delay={0.1}>
             <Highway onCardClick={openProof} />
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <BurnMechanics />
           </FadeIn>
           <FadeIn delay={0.1}>
             <CommunitySupport />
