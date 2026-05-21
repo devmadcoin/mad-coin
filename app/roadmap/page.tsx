@@ -204,6 +204,8 @@ const LINKS = {
   communityProof2: "https://x.com/madrichclub_/status/2052921091342107024?s=20",
   communityProof3: "https://x.com/madrichclub_/status/2053391015109955771?s=20",
   communityProof4: "https://x.com/madrichclub_/status/2057508965567877497?s=20",
+  madMind: "https://mad-coin.vercel.app/mad-mind",
+} as const;
 
 const PROGRESS = { complete: 7, total: 10 };
 const percentComplete = Math.round((PROGRESS.complete / PROGRESS.total) * 100);
