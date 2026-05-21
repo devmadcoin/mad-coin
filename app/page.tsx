@@ -229,7 +229,7 @@ function WhatIsMAD() {
             The dev is <span className="text-[#1a1a1a] font-bold">doxxed</span>. The <Link href="/game" className="text-[#FF2D2D] hover:text-[#1a1a1a] transition-colors">Roblox game</Link> is real. There was no presale, no VC, no tax. Just a contract, a community, and a group of people who decided they were done folding.
           </p>
           <p>
-            Before asking anyone to trust the mission, $MAD showed loyalty in public: <span className="text-[#1a1a1a] font-bold">three communities supported</span>, tokens locked via Streamflow until 2060. Not theory. Proof. Three times.
+            Before asking anyone to trust the mission, $MAD showed loyalty in public: <span className="text-[#1a1a1a] font-bold">four communities supported</span>, tokens locked via Streamflow until 2060. Not theory. Proof. Four times.
           </p>
           <p>
             The supply shrinks toward <span className="text-[#FF2D2D] font-bold">800M</span>. Every holder is a participant in a <span className="text-[#1a1a1a] font-bold">Life Economy</span> exit — no bosses, no quarterly reports, just the daily practice of staying $MAD.
@@ -250,7 +250,7 @@ function WhatIsMAD() {
             <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Holders</p>
           </div>
           <div>
-            <p className="text-3xl sm:text-4xl font-black text-[#1a1a1a]">3</p>
+            <p className="text-3xl sm:text-4xl font-black text-[#1a1a1a]">4</p>
             <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Communities Locked</p>
           </div>
           <div>
