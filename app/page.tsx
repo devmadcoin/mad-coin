@@ -549,7 +549,7 @@ function Footer() {
     { label: "MAD AI", href: "/mad-mind" },
     { label: "Roadmap", href: "/roadmap" },
     { label: "Game", href: "/game" },
-    { label: "Memes", href: "/memes" },
+    { label: "MAD Art", href: "/mad-art" },
     { label: "Merch", href: "/merch" },
   ];
 

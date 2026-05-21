@@ -29,7 +29,7 @@ const NAV_ITEMS: NavItem[] = [
     variant: "primary",
   },
   { href: "/game", label: "Game", mobileLabel: "Game" },
-  { href: "/memes", label: "$MAD Art", mobileLabel: "Art" },
+  { href: "/mad-art", label: "MAD Art", mobileLabel: "Art" },
   { href: "/merch", label: "Merch", mobileLabel: "Merch", variant: "cta" },
 ];
 
