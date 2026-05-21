@@ -519,47 +519,9 @@ function TheArchitects() {
     </section>
   );
 }
-/* 
+   
+   
 
-   THE FREQUENCY — Social Strip (crème edition)
-   ═══════════════════════════════════════════════════════════ */
-function TheFrequency() {
-  const platforms = [
-    { name: "X", icon: "𝕏", href: LINKS.x, color: "text-[#1a1a1a]" },
-    { name: "Telegram", icon: "✈️", href: LINKS.telegram, color: "text-[#FF6B00]" },
-    { name: "YouTube", icon: "▶️", href: LINKS.youtube, color: "text-[#FF2D2D]" },
-    { name: "Roblox", icon: "🎮", href: LINKS.game, color: "text-[#1a1a1a]" },
-  ];
-
-  return (
-    <section className="px-4 sm:px-6 py-12 sm:py-16 bg-[#F5F1E8] border-t border-[#1a1a1a]/10">
-      <div className="max-w-4xl mx-auto">
-        <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-[#1a1a1a]/30 mb-6">
-          The Frequency
-        </p>
-        <div className="flex items-center justify-center gap-3 sm:gap-4">
-          {platforms.map((p) => (
-            <a
-              key={p.name}
-              href={p.href}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] hover:bg-[#1a1a1a]/[0.05] hover:border-[#1a1a1a]/20 transition-all"
-            >
-              <span className={`text-sm ${p.color}`}>{p.icon}</span>
-              <span className="text-xs font-bold text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors hidden sm:inline">{p.name}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   DISCLAIMER — Legal protection (crème edition)
-   ═══════════════════════════════════════════════════════════ */
-function Disclaimer() {
   return (
     <section className="px-4 sm:px-6 py-10 bg-[#F5F1E8] border-t border-[#1a1a1a]/10">
       <div className="max-w-3xl mx-auto">
@@ -700,7 +662,6 @@ export default function Home() {
         <TheVerified />
         <TheProof />
         <TheArchitects />
-        <TheFrequency />
       </main>
 
       <Disclaimer />
