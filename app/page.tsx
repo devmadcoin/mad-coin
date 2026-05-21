@@ -248,7 +248,7 @@ function WhatIsMAD() {
         </div>
 
         {/* Stats */}
-        <div className="mt-12 pt-10 border-t border-[#1a1a1a]/10 grid grid-cols-2 sm:grid-cols-4 gap-6">
+        <div className="mt-12 pt-10 border-t border-[#1a1a1a]/10 grid grid-cols-2 sm:grid-cols-5 gap-6">
           <div>
             <p className="text-3xl sm:text-4xl font-black text-[#1a1a1a]">273</p>
             <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Holders</p>
@@ -260,6 +260,10 @@ function WhatIsMAD() {
           <div>
             <p className="text-3xl sm:text-4xl font-black text-[#1a1a1a]">1</p>
             <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Real Game</p>
+          </div>
+          <div>
+            <p className="text-3xl sm:text-4xl font-black text-[#FF2D2D]">50%</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Supply Burn</p>
           </div>
           <div>
             <p className="text-3xl sm:text-4xl font-black text-[#FF2D2D]">0%</p>
