@@ -76,7 +76,7 @@ function FloatingDust() {
         vy: (Math.random() - 0.5) * 0.3 - 0.1,
         size: Math.random() * 2 + 0.5,
         alpha: Math.random() * 0.5 + 0.1,
-        color: ["#ff4444", "#ff6666", "#ffaaaa", "#ffffff"][Math.floor(Math.random() * 4)],
+        color: ["#ff4444", "#ff6666", "#ffaaaa", "#1a1a1a"][Math.floor(Math.random() * 4)],
       });
     }
 
@@ -163,10 +163,10 @@ function ScrollProgress() {
   return (
     <>
       {/* Top progress bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-white/5">
+      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-[#1a1a1a]/5">
         <div
-          className="h-full bg-gradient-to-r from-red-600 via-red-500 to-orange-400 transition-all duration-150"
-          style={{ width: `${progress}%`, boxShadow: "0 0 10px rgba(255,68,68,0.5)" }}
+          className="h-full bg-gradient-to-r from-[#FF2D2D] via-[#FF2D2D] to-[#FF6B00] transition-all duration-150"
+          style={{ width: `${progress}%`, boxShadow: "0 0 10px rgba(255,45,45,0.3)" }}
         />
       </div>
       {/* Side mile indicator */}
@@ -176,13 +176,13 @@ function ScrollProgress() {
             <div
               className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${
                 i <= activeMile
-                  ? "bg-red-500 shadow-[0_0_8px_rgba(255,68,68,0.6)]"
-                  : "bg-white/20"
+                  ? "bg-[#FF2D2D] shadow-[0_0_8px_rgba(255,45,45,0.4)]"
+                  : "bg-[#1a1a1a]/20"
               }`}
             />
             <span
               className={`text-[9px] font-black uppercase tracking-wider transition-all duration-500 ${
-                i === activeMile ? "text-red-400 opacity-100" : "text-white/30 opacity-0"
+                i === activeMile ? "text-[#FF2D2D] opacity-100" : "text-[#1a1a1a]/30 opacity-0"
               }`}
             >
               Mile {mile}
@@ -286,7 +286,7 @@ function cn(...classes: Array<string | false | null | undefined>) {
 function Shell({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <section className={cn(
-      "overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] shadow-[0_18px_60px_rgba(0,0,0,0.42)] backdrop-blur-xl",
+      "overflow-hidden rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] shadow-[0_18px_60px_rgba(0,0,0,0.06)]",
       className,
     )}>
       {children}
@@ -298,7 +298,7 @@ function Shell({ children, className = "" }: { children: ReactNode; className?: 
 const ShellWithRef = React.forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
   ({ children, className = "" }, ref) => (
     <div ref={ref} className={cn(
-      "overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))] shadow-[0_18px_60px_rgba(0,0,0,0.42)] backdrop-blur-xl",
+      "overflow-hidden rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] shadow-[0_18px_60px_rgba(0,0,0,0.06)]",
       className,
     )}>
       {children}
@@ -338,46 +338,46 @@ function ChaosMeter() {
     <Shell className="p-5 sm:p-6">
       <div className="grid gap-4 sm:grid-cols-3">
         {/* Burn Progress */}
-        <div className="relative rounded-2xl border border-red-500/20 bg-black/60 p-5 overflow-hidden group hover:border-red-500/40 transition-all">
+        <div className="relative rounded-2xl border border-[#FF2D2D]/20 bg-[#1a1a1a]/[0.02] p-5 overflow-hidden group hover:border-[#FF2D2D]/40 transition-all">
           <div
             className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity"
             style={{
-              background: `radial-gradient(circle at 50% 100%, rgba(255,68,68,${firePulse * 0.5}), transparent 70%)`,
+              background: `radial-gradient(circle at 50% 100%, rgba(255,45,45,${firePulse * 0.5}), transparent 70%)`,
             }}
           />
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-red-300/80">Token Burn</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#FF2D2D]/60">Token Burn</p>
               <span className="text-lg animate-pulse">🔥</span>
             </div>
-            <div className="text-3xl font-black text-white mb-1">{burnProgress}%</div>
-            <p className="text-xs text-white/40 mb-3">of 800M target consumed</p>
-            <div className="h-3 rounded-full bg-white/10 overflow-hidden">
+            <div className="text-3xl font-black text-[#1a1a1a] mb-1">{burnProgress}%</div>
+            <p className="text-xs text-[#1a1a1a]/40 mb-3">of 800M target consumed</p>
+            <div className="h-3 rounded-full bg-[#1a1a1a]/10 overflow-hidden">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-red-600 via-orange-500 to-red-400 transition-all duration-300"
+                className="h-full rounded-full bg-gradient-to-r from-[#FF2D2D] via-[#FF6B00] to-[#FF2D2D] transition-all duration-300"
                 style={{
                   width: `${burnProgress}%`,
-                  boxShadow: `0 0 ${12 * firePulse}px rgba(255,68,68,0.5)`,
+                  boxShadow: `0 0 ${12 * firePulse}px rgba(255,45,45,0.5)`,
                   transform: `scaleY(${firePulse})`,
                 }}
               />
             </div>
-            <p className="mt-2 text-[10px] text-white/30">~513M tokens burned and counting</p>
+            <p className="mt-2 text-[10px] text-[#1a1a1a]/30">~513M tokens burned and counting</p>
           </div>
         </div>
 
         {/* Community Conviction */}
-        <div className="relative rounded-2xl border border-emerald-500/20 bg-black/60 p-5 overflow-hidden group hover:border-emerald-500/40 transition-all">
+        <div className="relative rounded-2xl border border-emerald-500/20 bg-[#1a1a1a]/[0.02] p-5 overflow-hidden group hover:border-emerald-500/40 transition-all">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-emerald-500 animate-ping" style={{ animationDuration: "3s" }} />
           </div>
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-300/80">Conviction</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/70">Conviction</p>
               <span className="text-lg">💓</span>
             </div>
-            <div className="text-3xl font-black text-white mb-1">STRONG</div>
-            <p className="text-xs text-white/40 mb-3">Community heartbeat detected</p>
+            <div className="text-3xl font-black text-[#1a1a1a] mb-1">STRONG</div>
+            <p className="text-xs text-[#1a1a1a]/40 mb-3">Community heartbeat detected</p>
             <div className="flex items-center gap-2">
               {[...Array(5)].map((_, i) => (
                 <div
@@ -391,25 +391,25 @@ function ChaosMeter() {
                 />
               ))}
             </div>
-            <p className="mt-2 text-[10px] text-white/30">Pulse sync: active</p>
+            <p className="mt-2 text-[10px] text-[#1a1a1a]/30">Pulse sync: active</p>
           </div>
         </div>
 
         {/* Mad Claw Status */}
-        <div className="relative rounded-2xl border border-white/10 bg-black/60 p-5 overflow-hidden group cursor-pointer hover:border-red-500/30 transition-all">
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br from-red-500 to-transparent" />
+        <div className="relative rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 overflow-hidden group cursor-pointer hover:border-[#FF2D2D]/30 transition-all">
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br from-[#FF2D2D] to-transparent" />
           <a href={LINKS.madMind} className="relative z-10 block">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50">Mad Claw</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/50">Mad Claw</p>
               <span className="text-lg animate-pulse">👁️</span>
             </div>
-            <div className="text-3xl font-black text-white mb-1">WATCHING</div>
-            <p className="text-xs text-white/40 mb-3">Live across 4 platforms</p>
+            <div className="text-3xl font-black text-[#1a1a1a] mb-1">WATCHING</div>
+            <p className="text-xs text-[#1a1a1a]/40 mb-3">Live across 4 platforms</p>
             <div className="flex gap-2">
               {["X", "🦞", "✈️", "🌐"].map((icon, i) => (
                 <div
                   key={icon}
-                  className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xs"
+                  className="w-8 h-8 rounded-lg bg-[#1a1a1a]/5 border border-[#1a1a1a]/10 flex items-center justify-center text-xs"
                   style={{
                     animation: `pulse ${2 + i * 0.4}s ease-in-out infinite`,
                     animationDelay: `${i * 0.2}s`,
@@ -419,7 +419,7 @@ function ChaosMeter() {
                 </div>
               ))}
             </div>
-            <p className="mt-2 text-[10px] text-white/30">Click to visit →</p>
+            <p className="mt-2 text-[10px] text-[#1a1a1a]/30">Click to visit →</p>
           </a>
         </div>
       </div>
@@ -436,29 +436,29 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-[#1a1a1a]/40 backdrop-blur-sm" />
       <div
-        className="relative z-10 w-full max-w-lg rounded-[2rem] border border-white/10 bg-[#0a0a0a] p-6 sm:p-8 shadow-2xl"
+        className="relative z-10 w-full max-w-lg rounded-[2rem] border border-[#1a1a1a]/10 bg-[#F5F1E8] p-6 sm:p-8 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
           <div>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">{exit.mile}</span>
-            <h3 className="text-2xl font-black text-white">{exit.title}</h3>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30">{exit.mile}</span>
+            <h3 className="text-2xl font-black text-[#1a1a1a]">{exit.title}</h3>
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition"
+            className="w-10 h-10 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/5 flex items-center justify-center text-[#1a1a1a]/50 hover:text-[#1a1a1a] hover:bg-[#1a1a1a]/10 transition"
           >
             ✕
           </button>
         </div>
 
-        <p className="text-sm text-white/50 mb-6">{exit.summary}</p>
+        <p className="text-sm text-[#1a1a1a]/40 mb-6">{exit.summary}</p>
 
         {exit.proof.length > 0 && (
           <div className="mb-6">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-3">Proof of Work</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30 mb-3">Proof of Work</p>
             <div className="grid gap-2">
               {exit.proof.map((p) => (
                 <a
@@ -466,16 +466,16 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
                   href={p.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-white/[0.02] hover:border-red-500/20 hover:bg-red-500/5 transition group"
+                  className="flex items-center gap-3 p-3 rounded-xl border border-[#1a1a1a]/5 bg-[#1a1a1a]/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/5 transition group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-sm group-hover:scale-110 transition">
+                  <div className="w-8 h-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center text-sm group-hover:scale-110 transition">
                     {p.type === "tx" ? "🔗" : "🌐"}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-white/80">{p.label}</p>
-                    <p className="text-[10px] text-white/30">{p.type === "tx" ? "Transaction / Contract" : "Live Link"}</p>
+                    <p className="text-sm font-bold text-[#1a1a1a]/80">{p.label}</p>
+                    <p className="text-[10px] text-[#1a1a1a]/30">{p.type === "tx" ? "Transaction / Contract" : "Live Link"}</p>
                   </div>
-                  <span className="ml-auto text-white/20 group-hover:text-white/50 transition">→</span>
+                  <span className="ml-auto text-[#1a1a1a]/20 group-hover:text-[#1a1a1a]/50 transition">→</span>
                 </a>
               ))}
             </div>
@@ -483,32 +483,32 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
         )}
 
         {exit.proof.length === 0 && (
-          <div className="mb-6 p-4 rounded-xl border border-white/5 bg-white/[0.02] text-center">
-            <p className="text-sm text-white/40">No proof yet — this milestone is in progress.</p>
-            <p className="text-[10px] text-white/20 mt-1">Check back when status updates to COMPLETE</p>
+          <div className="mb-6 p-4 rounded-xl border border-[#1a1a1a]/5 bg-[#1a1a1a]/[0.02] text-center">
+            <p className="text-sm text-[#1a1a1a]/40">No proof yet — this milestone is in progress.</p>
+            <p className="text-[10px] text-[#1a1a1a]/20 mt-1">Check back when status updates to COMPLETE</p>
           </div>
         )}
 
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-3">Milestone Checklist</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30 mb-3">Milestone Checklist</p>
           <div className="space-y-2">
             {exit.items.map((item) => (
               <div
                 key={item.text}
                 className={cn(
                   "flex items-center gap-3 p-3 rounded-xl border",
-                  item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-white/[0.02] border-white/5"
+                  item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-[#1a1a1a]/[0.02] border-[#1a1a1a]/5"
                 )}
               >
                 <div
                   className={cn(
                     "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0",
-                    item.done ? "bg-emerald-500 text-black" : "bg-white/10 text-white/30"
+                    item.done ? "bg-emerald-500 text-white" : "bg-[#1a1a1a]/10 text-[#1a1a1a]/30"
                   )}
                 >
                   {item.done ? "✓" : "○"}
                 </div>
-                <span className={cn("text-sm", item.done ? "text-white/80" : "text-white/40")}>{item.text}</span>
+                <span className={cn("text-sm", item.done ? "text-[#1a1a1a]/80" : "text-[#1a1a1a]/40")}>{item.text}</span>
               </div>
             ))}
           </div>
@@ -528,14 +528,14 @@ function StatusMiniCard({ label, value, tone, icon }: { label: string; value: st
     <div className={cn(
       "rounded-[1.25rem] border p-4 transition duration-300 cursor-pointer",
       tone === "green"
-        ? "border-emerald-400/35 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.2),rgba(0,0,0,0.92))] shadow-[0_0_25px_rgba(16,185,129,0.12)]"
-        : "border-red-500/25 bg-[radial-gradient(circle_at_top_left,rgba(255,0,0,0.14),rgba(0,0,0,0.92))] shadow-[0_0_20px_rgba(255,0,0,0.08)]",
+        ? "border-emerald-500/25 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),rgba(245,241,232,0.92))] shadow-[0_0_25px_rgba(16,185,129,0.06)]"
+        : "border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] shadow-[0_0_20px_rgba(255,45,45,0.06)]",
     )}>
       <div className="flex items-start justify-between gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/58">{label}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#1a1a1a]/50">{label}</p>
         <div className="text-lg">{icon}</div>
       </div>
-      <p className={cn("mt-3 text-xl font-black leading-tight sm:text-2xl", tone === "green" ? "text-emerald-300" : "text-red-100")}>
+      <p className={cn("mt-3 text-xl font-black leading-tight sm:text-2xl", tone === "green" ? "text-emerald-600" : "text-[#FF2D2D]")}>
         {value}
       </p>
     </div>
@@ -548,14 +548,14 @@ function ProgressStrip() {
     <Shell className="p-5 sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.35em] text-white/45">Overall Progress</p>
-          <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">{percentComplete}% complete</h2>
-          <p className="mt-2 text-sm text-white/60">{PROGRESS.complete} of {PROGRESS.total} roadmap milestones are live, proven, or in motion.</p>
+          <p className="text-xs font-black uppercase tracking-[0.35em] text-[#1a1a1a]/40">Overall Progress</p>
+          <h2 className="mt-2 text-2xl font-black text-[#1a1a1a] sm:text-3xl">{percentComplete}% complete</h2>
+          <p className="mt-2 text-sm text-[#1a1a1a]/50">{PROGRESS.complete} of {PROGRESS.total} roadmap milestones are live, proven, or in motion.</p>
         </div>
-        <div className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-bold text-white/75">Build. Prove. Expand.</div>
+        <div className="rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-2 text-sm font-bold text-[#1a1a1a]/70">Build. Prove. Expand.</div>
       </div>
-      <div className="mt-5 h-4 overflow-hidden rounded-full bg-white/10">
-        <div className="h-full rounded-full bg-[linear-gradient(90deg,#22c55e,#10b981,#ef4444)] shadow-[0_0_24px_rgba(16,185,129,0.25)] transition-all duration-500" style={{ width: `${percentComplete}%` }} />
+      <div className="mt-5 h-4 overflow-hidden rounded-full bg-[#1a1a1a]/10">
+        <div className="h-full rounded-full bg-[linear-gradient(90deg,#22c55e,#10b981,#FF2D2D)] shadow-[0_0_24px_rgba(16,185,129,0.15)] transition-all duration-500" style={{ width: `${percentComplete}%` }} />
       </div>
     </Shell>
   );
@@ -563,6 +563,9 @@ function ProgressStrip() {
 
 /* ═══════════════════════════════════════════════════════════
    HIGHWAY — Scroll-activated with living car + particles
+   ═══════════════════════════════════════════════════════════
+   NOTE: Highway is intentionally kept DARK — it's the asphalt
+   road cutting through the crème page. A dramatic contrast.
    ═══════════════════════════════════════════════════════════ */
 
 function RoadSign({ mile, title, color }: { mile: string; title: string; color: string }) {
@@ -695,7 +698,7 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
   }, []);
 
   return (
-    <ShellWithRef className="p-0 overflow-visible" ref={highwayRef}>
+    <ShellWithRef className="p-0 overflow-visible border-[#1a1a1a]/20" ref={highwayRef}>
       <div className="relative py-10 sm:py-16">
         {/* Base asphalt */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#1a1a1a_0%,#111_50%,#1a1a1a_100%)]" />
@@ -833,72 +836,72 @@ function CommunitySupport() {
   return (
     <Shell className="p-6 sm:p-8">
       <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
-        <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.12),rgba(0,0,0,0.92))] p-6 sm:p-7">
+        <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-6 sm:p-7">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-300/85">Alliance Expansion</p>
-            <h2 className="mt-3 text-3xl font-black text-white sm:text-5xl">3 Communities Supported.</h2>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-white/78 sm:text-lg">
+            <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
+            <h2 className="mt-3 text-3xl font-black text-[#1a1a1a] sm:text-5xl">3 Communities Supported.</h2>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
               Before asking people to trust the mission, we showed loyalty in public. Two communities were supported through action, and the tokens were locked to prove long-term conviction.
             </p>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 px-6 py-5">
-              <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-300/80">Support Status</p>
-              <p className="mt-2 text-3xl font-black text-emerald-300">3 Locked</p>
-              <p className="mt-1 text-sm text-white/55">Backed publicly with receipts</p>
+              <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-600/70">Support Status</p>
+              <p className="mt-2 text-3xl font-black text-emerald-600">3 Locked</p>
+              <p className="mt-1 text-sm text-[#1a1a1a]/40">Backed publicly with receipts</p>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-5">
-              <p className="text-xs font-black uppercase tracking-[0.28em] text-white/55">Signal Sent</p>
-              <p className="mt-2 text-3xl font-black text-white">Locked Up</p>
-              <p className="mt-1 text-sm text-white/55">Commitment over quick exits</p>
+            <div className="rounded-3xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-6 py-5">
+              <p className="text-xs font-black uppercase tracking-[0.28em] text-[#1a1a1a]/40">Signal Sent</p>
+              <p className="mt-2 text-3xl font-black text-[#1a1a1a]">Locked Up</p>
+              <p className="mt-1 text-sm text-[#1a1a1a]/40">Commitment over quick exits</p>
             </div>
           </div>
         </div>
-        <div className="rounded-[1.75rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-5 sm:p-6">
+        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-white/55">Proof of Work</p>
-            <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-300">Verified Signal</span>
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Proof of Work</p>
+            <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-600">Verified Signal</span>
           </div>
-          <div className="mt-4 rounded-[1.5rem] border border-white/10 bg-black/40 p-5">
-            <p className="text-lg font-black text-white sm:text-xl">Supported three communities.</p>
-            <p className="mt-2 text-lg font-black text-emerald-300 sm:text-xl">Locked all the tokens.</p>
+          <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-5">
+            <p className="text-lg font-black text-[#1a1a1a] sm:text-xl">Supported three communities.</p>
+            <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl">Locked all the tokens.</p>
             <div className="mt-4 grid gap-4">
-              <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
+              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
                 <img src="/derpydave-lock-proof.png" alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Proof #1 — Apr 21, 2026</p>
-                  <p className="text-xs text-white/50 mt-0.5">8,155,311 $DERPYDAVE · Streamflow · Non-cancelable until 2060</p>
+                <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #1 — Apr 21, 2026</p>
+                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5">8,155,311 $DERPYDAVE · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
-              <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
+              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
                 <img src="/rndy-lock-proof.png" alt="1,754,679 RNDY tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Proof #2 — May 8, 2026</p>
-                  <p className="text-xs text-white/50 mt-0.5">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
+                <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #2 — May 8, 2026</p>
+                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
-              <div className="rounded-[1.25rem] border border-white/10 overflow-hidden">
+              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
                 <img src="/touchgrass-lock-proof.png" alt="1,019,634 TOUCHGRASS tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Proof #3 — May 10, 2026</p>
-                  <p className="text-xs text-white/50 mt-0.5">1,019,634 $TOUCHGRASS · Streamflow · Non-cancelable until 2060</p>
+                <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #3 — May 10, 2026</p>
+                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5">1,019,634 $TOUCHGRASS · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
             </div>
-            <p className="mt-4 text-sm leading-7 text-white/68 sm:text-base">
+            <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
               This milestone matters because it shows execution, patience, and visible commitment. Not theory. Not hype. Proof. Three times.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <a href={LINKS.communityProof} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-300 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+              <a href={LINKS.communityProof} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #1 →
               </a>
-              <a href={LINKS.communityProof2} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-300 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+              <a href={LINKS.communityProof2} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #2 →
               </a>
-              <a href={LINKS.communityProof3} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-300 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+              <a href={LINKS.communityProof3} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #3 →
               </a>
-              <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-semibold text-white/65">Public receipts on X</span>
+              <span className="inline-flex items-center rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-3 text-sm font-semibold text-[#1a1a1a]/60">Public receipts on X</span>
             </div>
           </div>
         </div>
@@ -912,12 +915,12 @@ function CTASection() {
     <Shell className="p-6 sm:p-8">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <h2 className="text-4xl font-black text-white sm:text-6xl">THIS IS YOUR PATH.</h2>
-          <p className="mt-4 max-w-2xl text-base leading-8 text-white/78 sm:text-lg">Build. Prove. Expand.</p>
+          <h2 className="text-4xl font-black text-[#1a1a1a] sm:text-6xl">THIS IS YOUR PATH.</h2>
+          <p className="mt-4 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">Build. Prove. Expand.</p>
         </div>
         <div style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
-          <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,0,0,0.15)} 50%{box-shadow:0 0 35px rgba(255,0,0,0.28)}`}</style>
-          <a href={LINKS.buy} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-red-500/35 bg-red-500 px-8 py-4 text-base font-black text-white shadow-[0_0_22px_rgba(255,0,0,0.22)] transition hover:scale-[1.02] hover:bg-red-400">
+          <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,45,45,0.15)} 50%{box-shadow:0 0 35px rgba(255,45,45,0.28)}`}</style>
+          <a href={LINKS.buy} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-[#FF2D2D]/35 bg-[#FF2D2D] px-8 py-4 text-base font-black text-white shadow-[0_0_22px_rgba(255,45,45,0.15)] transition hover:scale-[1.02] hover:bg-[#FF6B00]">
             Start Your Journey →
           </a>
         </div>
@@ -928,9 +931,9 @@ function CTASection() {
 
 function RiskNotice() {
   return (
-    <Shell className="border-yellow-500/20 bg-[linear-gradient(180deg,rgba(255,208,0,0.05),rgba(255,208,0,0.02))] px-6 py-8 sm:px-10 sm:py-10">
-      <p className="text-center text-xs font-black uppercase tracking-[0.38em] text-yellow-300/85">Risk Notice</p>
-      <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-yellow-100/90 sm:text-xl">
+    <Shell className="border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] px-6 py-8 sm:px-10 sm:py-10">
+      <p className="text-center text-xs font-black uppercase tracking-[0.38em] text-[#FF2D2D]/70">Risk Notice</p>
+      <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-[#1a1a1a]/60 sm:text-xl">
         $MAD is a meme coin and speculative digital asset. Nothing on this website is financial advice or a guarantee of returns. Crypto is risky and volatile. Never risk money you cannot afford to lose. Always do your own research.
       </p>
     </Shell>
@@ -950,8 +953,8 @@ function GlobalStyles() {
         100% { transform: translateY(-100px); opacity: 0; }
       }
       @keyframes glowPulse {
-        0%, 100% { box-shadow: 0 0 20px rgba(255,0,0,0.15); }
-        50% { box-shadow: 0 0 35px rgba(255,0,0,0.28); }
+        0%, 100% { box-shadow: 0 0 20px rgba(255,45,45,0.15); }
+        50% { box-shadow: 0 0 35px rgba(255,45,45,0.28); }
       }
       @keyframes pulse {
         0%, 100% { opacity: 0.4; }
@@ -975,12 +978,12 @@ export default function RoadmapPage() {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#050505] text-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#F5F1E8] text-[#1a1a1a]">
       <GlobalStyles />
       <FloatingDust />
       <ScrollProgress />
 
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,0,0,0.10),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.08),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.03),transparent_25%),linear-gradient(180deg,#050505,#020202)]" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,45,45,0.06),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.04),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(26,26,26,0.03),transparent_25%)]" />
       
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8 relative z-10">
         <div className="grid gap-6">
