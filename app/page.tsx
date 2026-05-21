@@ -186,7 +186,7 @@ function WhyMADStrip() {
     { icon: "🎮", label: "Real Game", sub: "Roblox Live" },
     { icon: "💰", label: "0% Tax", sub: "Every Trade" },
     { icon: "🚫", label: "No VC", sub: "Community First" },
-    { icon: "🔐", label: "Locked", sub: "3 Communities" },
+    { icon: "🔐", label: "Locked", sub: "4 Communities" },
     { icon: "⚡", label: "No Presale", sub: "Fair Launch" },
   ];
 
