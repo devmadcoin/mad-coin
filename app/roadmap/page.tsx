@@ -558,7 +558,7 @@ function ProgressStrip() {
           <h2 className="mt-2 text-2xl font-black text-[#1a1a1a] sm:text-3xl">{percentComplete}% complete</h2>
           <p className="mt-2 text-sm text-[#1a1a1a]/50">{PROGRESS.complete} of {PROGRESS.total} roadmap milestones are live, proven, or in motion.</p>
         </div>
-        <div className="rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-2 text-sm font-bold text-[#1a1a1a]/70">Build. Prove. Expand.</div>
+        <div className="rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-2 text-sm font-bold text-[#1a1a1a]/70">Conviction. Loyalty. Utility.</div>
       </div>
       <div className="mt-5 h-4 overflow-hidden rounded-full bg-[#1a1a1a]/10">
         <div className="h-full rounded-full bg-[linear-gradient(90deg,#22c55e,#10b981,#FF2D2D)] shadow-[0_0_24px_rgba(16,185,129,0.15)] transition-all duration-500" style={{ width: `${percentComplete}%` }} />
@@ -907,7 +907,7 @@ function CommunitySupport() {
             <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
             <h2 className="mt-3 text-3xl font-black text-[#1a1a1a] sm:text-5xl">4 Communities Supported.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
-              Fair launch. No presale. No VC. No tax. Just a contract and a community that decided they were done folding.
+              4 communities supported. Tokens locked to 2060. Public receipts on X. Loyalty proven before trust asked.
             </p>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
