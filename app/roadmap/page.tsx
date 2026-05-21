@@ -232,11 +232,11 @@ const EXITS = [
     ],
     items: [
       { text: "Fair launch — no presale, no VC, no tax", done: true },
-      { text: "Doxxed dev with public identity", done: true },
-      { text: "Community channels launched", done: true },
-      { text: "1B total supply, deflationary by design", done: true },
+      { text: "Doxxed dev, public identity", done: true },
+      { text: "Community channels live", done: true },
+      { text: "1B supply, deflationary by design", done: true },
     ],
-    summary: "No shortcuts. No insiders. Just a contract and a community that decided they were done folding.",
+    summary: "Fair launch. No presale. No VC. No tax. Just a contract and a community done folding.",
   },
   {
     mile: "MILE 25", title: "Proof of Loyalty", status: "COMPLETE" as const, color: "emerald",
@@ -247,13 +247,12 @@ const EXITS = [
       { label: "Community Support #4 — Hineycoin", url: LINKS.communityProof4, type: "link" as const },
     ],
     items: [
-      { text: "4 communities supported publicly", done: true },
-      { text: "All tokens locked via Streamflow until 2060", done: true },
-      { text: "Supply reduced to ~500M (50% burned)", done: true },
-      { text: "Burn #1 complete — scarcity activated", done: true },
-      { text: "Cross-community coalition formed", done: true },
+      { text: "4 communities supported", done: true },
+      { text: "All tokens locked to 2060", done: true },
+      { text: "50% supply burned", done: true },
+      { text: "Cross-community coalition", done: true },
     ],
-    summary: "50% supply burned. 4 communities locked until 2060. We didn't ask for trust — we proved loyalty.",
+    summary: "50% burned. 4 communities locked to 2060. We didn't ask for trust — we proved loyalty.",
   },
   {
     mile: "MILE 50", title: "Proof of Utility", status: "IN PROGRESS" as const, color: "yellow",
@@ -263,13 +262,12 @@ const EXITS = [
       { label: "Mad Phonk Awakening (Roblox)", url: "https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening", type: "link" as const },
     ],
     items: [
-      { text: "MAD Mind AI live — autonomous brand agent", done: true },
-      { text: "MAD Confessions community platform", done: true },
-      { text: "Roblox game with $MAD integration", done: true },
-      { text: "Moltbook cross-platform agent deployed", done: true },
-      { text: "Burn #2 trigger: 10,000 holders", done: false },
-      { text: "Marketplace integration", done: false },
-      { text: "Partnerships & alliance expansion", done: false },
+      { text: "MAD Mind AI live", done: true },
+      { text: "MAD Confessions platform", done: true },
+      { text: "Roblox game with $MAD", done: true },
+      { text: "Moltbook agent deployed", done: true },
+      { text: "Burn #2 at 10K holders", done: false },
+      { text: "Marketplace + partnerships", done: false },
     ],
     summary: "The token does something. AI. Games. Community. Not a ticker — a toolkit.",
   },
@@ -283,7 +281,7 @@ const EXITS = [
       { text: "Global marketing campaign", done: false },
       { text: "Ecosystem expansion", done: false },
     ],
-    summary: "200M supply. Global reach. Full ecosystem. The Life Economy, proven at scale.",
+    summary: "10K holders. 200M supply. Global. Not a dream — a protocol.",
   },
 ];
 
@@ -849,8 +847,7 @@ function BurnMechanics() {
             <p className="text-xs font-black uppercase tracking-[0.35em] text-[#FF2D2D]/70">Deflation Protocol</p>
             <h2 className="mt-3 text-3xl font-black text-[#1a1a1a] sm:text-5xl">50% Burned. More Coming.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
-              Supply is already cut in half — from 1 billion to ~500 million. But this is just the first burn. 
-              The next one is tied to a real milestone, not a calendar date.
+              Supply is already cut in half. Burn #2 drops it to 200M — but only when 10,000 people hold $MAD. Not a promise. A protocol.
             </p>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -882,10 +879,7 @@ function BurnMechanics() {
               </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
-              Why 10,000? Because the most successful projects and communities exceed that threshold. 
-              We're not burning to create artificial hype — we're burning to reward real growth. 
-              When 10,000 people globally hold $MAD, the supply drops to 200M. Scarcity. Store of value. 
-              Not a promise — a protocol.
+              10,000 holders. Then 200M supply. The most successful communities exceed that threshold. We don't burn for hype — we burn for growth.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <a href="https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump" target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 px-5 py-3 text-sm font-black text-[#FF2D2D] transition hover:scale-[1.02] hover:bg-[#FF2D2D]/15">
@@ -913,7 +907,7 @@ function CommunitySupport() {
             <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
             <h2 className="mt-3 text-3xl font-black text-[#1a1a1a] sm:text-5xl">4 Communities Supported.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
-              Before asking people to trust the mission, we showed loyalty in public. Three communities were supported through action, and the tokens were locked to prove long-term conviction.
+              Fair launch. No presale. No VC. No tax. Just a contract and a community that decided they were done folding.
             </p>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -968,7 +962,7 @@ function CommunitySupport() {
               </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
-              This milestone matters because it shows execution, patience, and visible commitment. Not theory. Not hype. Proof. Four times.
+              50% burned. 4 communities locked to 2060. Not theory. Proof.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <a href={LINKS.communityProof} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
