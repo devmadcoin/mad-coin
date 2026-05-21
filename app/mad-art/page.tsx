@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 
 /* ─── Scanlines ─── */
 function Scanlines() {
@@ -83,21 +84,58 @@ function TheStage() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE GALLERY — Art collection grid
+   THE GALLERY — Full art collection with lightbox + download
    ═══════════════════════════════════════════════════════════ */
 function TheGallery() {
+  const [lightbox, setLightbox] = useState<string | null>(null);
+
   const artworks = [
+    { src: "/memes/MAD-2-MONTHS.png", title: "2 Months", type: "Milestone" },
+    { src: "/memes/MAD-3-MONTHS.png", title: "3 Months", type: "Milestone" },
+    { src: "/memes/MAD-ARMY.png", title: "MAD Army", type: "Community" },
     { src: "/memes/MAD-ART-1.png", title: "MAD Art #1", type: "Digital" },
-    { src: "/memes/MAD-ART-2.png", title: "MAD Art #2", type: "Pixel" },
-    { src: "/memes/MAD-ART-3.png", title: "MAD Art #3", type: "3D Render" },
-    { src: "/memes/MAD-ART-4.png", title: "MAD Art #4", type: "Meme" },
-    { src: "/memes/MAD-RICH-IN-THE-TUB.png", title: "Mad Rich in the Tub", type: "Lifestyle" },
-    { src: "/memes/MAD-RICH-BATH.png", title: "The Bath", type: "Digital" },
+    { src: "/memes/MAD-ART-2.png", title: "MAD Art #2", type: "Digital" },
+    { src: "/memes/MAD-ART-3.png", title: "MAD Art #3", type: "Digital" },
+    { src: "/memes/MAD-ART-4.png", title: "MAD Art #4", type: "Digital" },
+    { src: "/memes/MAD-AT-BEARS.png", title: "At Bears", type: "Meme" },
+    { src: "/memes/MAD-BELIEVE.png", title: "Believe", type: "Meme" },
+    { src: "/memes/MAD-BELIEVING.png", title: "Believing", type: "Meme" },
+    { src: "/memes/MAD-COLD-FRIES.png", title: "Cold Fries", type: "Meme" },
+    { src: "/memes/MAD-COMMUNITY.png", title: "Community", type: "Community" },
+    { src: "/memes/MAD-DOCTOR.png", title: "Doctor", type: "Meme" },
+    { src: "/memes/MAD-DOLLAR.png", title: "MAD Dollar", type: "Meme" },
+    { src: "/memes/MAD-HOLD-ON-DEAR-LIFE.png", title: "HODL", type: "Meme" },
+    { src: "/memes/MAD-KETCHUP-EXPLOSION.png", title: "Ketchup", type: "Meme" },
+    { src: "/memes/MAD-KINGS-ONLY.png", title: "Kings Only", type: "Meme" },
+    { src: "/memes/MAD-LAST-FARM.png", title: "Last Farm", type: "Meme" },
+    { src: "/memes/mad-launch-chart.png", title: "Launch Chart", type: "Data" },
+    { src: "/memes/mad-meme-alarm.png", title: "Alarm", type: "Meme" },
+    { src: "/memes/mad-meme-chipsbagofair.png", title: "Chips Bag", type: "Meme" },
+    { src: "/memes/mad-meme-coffeehot.png", title: "Hot Coffee", type: "Meme" },
+    { src: "/memes/mad-meme-coldshower.png", title: "Cold Shower", type: "Meme" },
+    { src: "/memes/mad-meme-lipbalm.png", title: "Lip Balm", type: "Meme" },
+    { src: "/memes/mad-meme-nogym.png", title: "No Gym", type: "Meme" },
+    { src: "/memes/mad-meme-toiletpaper.png", title: "Toilet Paper", type: "Meme" },
+    { src: "/memes/mad-meme-wifibuffer.png", title: "WiFi Buffer", type: "Meme" },
+    { src: "/memes/MAD-MONTH.png", title: "MAD Month", type: "Meme" },
+    { src: "/memes/MAD-NEPTUNE.png", title: "Neptune", type: "Digital" },
+    { src: "/memes/MAD-RED-EYE.png", title: "Red Eye", type: "Meme" },
+    { src: "/memes/MAD-RICH-BATH.png", title: "Rich Bath", type: "Digital" },
+    { src: "/memes/MAD-RICH-IN-THE-TUB.png", title: "Rich in Tub", type: "Digital" },
+    { src: "/memes/MAD-RICH-OR-BROKE.png", title: "Rich or Broke", type: "Meme" },
+    { src: "/memes/MAD-ROLLERCOASTER.png", title: "Rollercoaster", type: "Meme" },
+    { src: "/memes/MAD-SCAM-CALL.png", title: "Scam Call", type: "Meme" },
+    { src: "/memes/MAD-SCHOOL.png", title: "MAD School", type: "Meme" },
+    { src: "/memes/MAD-YOU-SIDELINED.png", title: "Sidelined", type: "Meme" },
+    { src: "/memes/MAKE-MAD-GREAT-AGAIN.png", title: "Make MAD Great", type: "Meme" },
+    { src: "/memes/WE-MAD-ZOOMIN.png", title: "We MAD Zoomin'", type: "Meme" },
+    { src: "/memes/YOU-MAKE-ME-MAD.png", title: "You Make Me MAD", type: "Meme" },
+    { src: "/memes/YOU-WILL-BE-MAD.png", title: "You Will Be MAD", type: "Meme" },
   ];
 
   return (
     <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8]">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12 sm:mb-16">
           <p className="text-[11px] font-black uppercase tracking-[0.34em] text-[#1a1a1a]/40 mb-3">
             Visual Archive
@@ -105,30 +143,68 @@ function TheGallery() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#1a1a1a]">
             THE <span className="text-[#FF2D2D]">GALLERY</span>
           </h2>
+          <p className="text-sm text-[#1a1a1a]/50 mt-3">
+            {artworks.length} pieces. Click to view. Tap the download arrow to save.
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
           {artworks.map((art, i) => (
             <div
               key={i}
               className="group relative overflow-hidden rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] aspect-square cursor-pointer hover:border-[#FF2D2D]/20 transition-all duration-300"
+              onClick={() => setLightbox(art.src)}
             >
               <Image
                 src={art.src}
                 alt={art.title}
                 fill
                 className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
-                sizes="(max-width: 640px) 50vw, 33vw"
+                sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(0,0,0,0.7)_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                <p className="text-xs font-bold text-white">{art.title}</p>
-                <p className="text-[9px] text-white/60 uppercase tracking-wider">{art.type}</p>
+              <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end justify-between">
+                <div>
+                  <p className="text-xs font-bold text-white">{art.title}</p>
+                  <p className="text-[9px] text-white/60 uppercase tracking-wider">{art.type}</p>
+                </div>
+                <a
+                  href={art.src}
+                  download
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-8 h-8 rounded-full bg-white/10 backdrop-blur flex items-center justify-center text-white hover:bg-[#FF2D2D] transition-colors"
+                  title="Download"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                </a>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Lightbox */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#FF2D2D] transition-colors"
+            onClick={() => setLightbox(null)}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+          <Image
+            src={lightbox}
+            alt="Full size"
+            width={1200}
+            height={1200}
+            className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </section>
   );
 }
