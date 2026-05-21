@@ -56,7 +56,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={copy}
-      className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-white/10 text-white/30 hover:text-white/60"
+      className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-[#1a1a1a]/10 text-[#1a1a1a]/30 hover:text-[#1a1a1a]/60"
       title={copied ? "Copied!" : "Copy"}
     >
       {copied ? (
@@ -84,10 +84,10 @@ function ChatSidebar({
 
   if (collapsed) {
     return (
-      <div className="shrink-0 w-12 border-r border-white/5 bg-[#0a0a0a] flex flex-col items-center py-4 gap-3">
+      <div className="shrink-0 w-12 border-r border-[#1a1a1a]/10 bg-[#F5F1E8] flex flex-col items-center py-4 gap-3">
         <button
           onClick={() => setCollapsed(false)}
-          className="w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center text-white/40 transition-all"
+          className="w-8 h-8 rounded-lg hover:bg-[#1a1a1a]/10 flex items-center justify-center text-[#1a1a1a]/40 transition-all"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
@@ -102,20 +102,20 @@ function ChatSidebar({
   }
 
   return (
-    <div className="shrink-0 w-[260px] border-r border-white/5 bg-[#0a0a0a] flex flex-col">
+    <div className="shrink-0 w-[260px] border-r border-[#1a1a1a]/10 bg-[#F5F1E8] flex flex-col">
       <div className="p-3 flex items-center justify-between">
-        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/50">Chats</span>
+        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/50">Chats</span>
         <div className="flex gap-1">
           <button
             onClick={onNewChat}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white/60 transition-all"
+            className="p-1.5 rounded-lg hover:bg-[#1a1a1a]/10 text-[#1a1a1a]/40 hover:text-[#1a1a1a]/60 transition-all"
             title="New chat"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
           </button>
           <button
             onClick={() => setCollapsed(true)}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white/60 transition-all"
+            className="p-1.5 rounded-lg hover:bg-[#1a1a1a]/10 text-[#1a1a1a]/40 hover:text-[#1a1a1a]/60 transition-all"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg>
           </button>
@@ -125,7 +125,7 @@ function ChatSidebar({
       <div className="flex-1 overflow-y-auto px-2 pb-3 space-y-1">
         {sessions.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-[11px] text-white/40">No chat history yet</p>
+            <p className="text-[11px] text-[#1a1a1a]/40">No chat history yet</p>
           </div>
         )}
         {sessions.map((s) => (
@@ -134,18 +134,18 @@ function ChatSidebar({
             onClick={() => onSelect(s.id)}
             className={`w-full text-left p-3 rounded-xl transition-all group ${
               s.id === activeSession
-                ? "bg-white/[0.06] border border-white/10"
-                : "hover:bg-white/[0.03] border border-transparent"
+                ? "bg-[#1a1a1a]/[0.06] border border-[#1a1a1a]/10"
+                : "hover:bg-[#1a1a1a]/[0.03] border border-transparent"
             }`}
           >
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs">💬</span>
-              <span className="text-xs font-bold text-white/70 truncate flex-1">{s.title}</span>
+              <span className="text-xs font-bold text-[#1a1a1a]/70 truncate flex-1">{s.title}</span>
             </div>
-            <p className="text-[10px] text-white/30 truncate pl-5">{s.lastMessage}</p>
+            <p className="text-[10px] text-[#1a1a1a]/30 truncate pl-5">{s.lastMessage}</p>
             <div className="flex items-center justify-between mt-1.5 pl-5">
-              <span className="text-[9px] text-white/30">{formatTime(s.timestamp)}</span>
-              <span className="text-[9px] text-white/30">{s.messageCount} msg</span>
+              <span className="text-[9px] text-[#1a1a1a]/30">{formatTime(s.timestamp)}</span>
+              <span className="text-[9px] text-[#1a1a1a]/30">{s.messageCount} msg</span>
             </div>
           </button>
         ))}
@@ -190,7 +190,7 @@ function FeedbackButtons({
 
   if (voted) {
     return (
-      <span className="text-[9px] text-white/15 ml-1">
+      <span className="text-[9px] text-[#1a1a1a]/15 ml-1">
         {voted === "up" ? "✓ Thanks" : "✓ Noted"}
       </span>
     );
@@ -200,7 +200,7 @@ function FeedbackButtons({
     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-1">
       <button
         onClick={() => sendFeedback("up")}
-        className="p-1 rounded hover:bg-white/10 text-white/25 hover:text-green-400 transition-all"
+        className="p-1 rounded hover:bg-[#1a1a1a]/10 text-[#1a1a1a]/25 hover:text-[#FF6B00] transition-all"
         title="Good response"
       >
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -209,7 +209,7 @@ function FeedbackButtons({
       </button>
       <button
         onClick={() => sendFeedback("down")}
-        className="p-1 rounded hover:bg-white/10 text-white/25 hover:text-[#FF6B00] transition-all"
+        className="p-1 rounded hover:bg-[#1a1a1a]/10 text-[#1a1a1a]/25 hover:text-[#FF6B00] transition-all"
         title="Bad response"
       >
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -235,14 +235,14 @@ function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMes
         <div
           className={`rounded-2xl px-5 py-3.5 ${
             isUser
-              ? "bg-[#FF2D2D]/[0.12] border border-[#FF2D2D]/20 text-white/90"
-              : "bg-white/[0.03] border border-white/[0.08] text-white/75"
+              ? "bg-[#FF2D2D]/[0.12] border border-[#FF2D2D]/20 text-[#1a1a1a]/90"
+              : "bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.08] text-[#1a1a1a]/75"
           }`}
         >
           <p className="text-sm leading-[1.7] whitespace-pre-wrap">{msg.text}</p>
         </div>
         <div className={`flex items-center gap-2 mt-1.5 ${isUser ? "justify-end pr-1" : "justify-start pl-1"}`}>
-          <span className="text-[9px] text-white/20 tabular-nums">{formatTime(msg.timestamp)}</span>
+          <span className="text-[9px] text-[#1a1a1a]/20 tabular-nums">{formatTime(msg.timestamp)}</span>
           {!isUser && <CopyButton text={msg.text} />}
           {!isUser && (
             <FeedbackButtons
@@ -266,7 +266,7 @@ function TypingIndicator() {
       <div className="shrink-0 mb-1">
         <MadChaoPixel size={28} animated={true} showLabel={false} />
       </div>
-      <div className="rounded-2xl bg-white/[0.03] border border-white/[0.08] px-5 py-4">
+      <div className="rounded-2xl bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.08] px-5 py-4">
         <div className="flex gap-1.5 items-center h-4">
           <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "0ms" }} />
           <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "120ms" }} />
@@ -382,11 +382,11 @@ export default function ChatInterface({
   const hasMessages = messages.length > 0;
 
   return (
-    <div className="flex h-[calc(100dvh-80px)] sm:h-[calc(100vh-80px)] min-h-[400px] sm:min-h-[500px] rounded-none sm:rounded-[24px] border-0 sm:border border-white/10 bg-[#080808] overflow-hidden shadow-[0_0_80px_rgba(255,0,0,0.04)] relative">
+    <div className="flex h-[calc(100dvh-80px)] sm:h-[calc(100vh-80px)] min-h-[400px] sm:min-h-[500px] rounded-none sm:rounded-[24px] border-0 sm:border border-[#1a1a1a]/10 bg-[#F5F1E8] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.04)] relative">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && isMobile && (
         <div 
-          className="absolute inset-0 bg-black/60 z-20"
+          className="absolute inset-0 bg-[#1a1a1a]/60 z-20"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -406,12 +406,12 @@ export default function ChatInterface({
       {/* Main chat area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b border-white/[0.08]">
+        <div className="shrink-0 flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 border-b border-[#1a1a1a]/[0.08]">
           <div className="flex items-center gap-2.5 sm:gap-3">
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-white/30 hover:text-white/50 transition-all"
+                className="p-1.5 rounded-lg hover:bg-[#1a1a1a]/10 text-[#1a1a1a]/30 hover:text-[#1a1a1a]/50 transition-all"
               >
                 <svg width={isMobile ? 14 : 16} height={isMobile ? 14 : 16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
               </button>
@@ -419,11 +419,11 @@ export default function ChatInterface({
             <div className="flex items-center gap-2 sm:gap-2.5">
               <div className="relative h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center overflow-hidden">
                 <MadChaoPixel size={isMobile ? 24 : 28} animated={false} showLabel={false} />
-                <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400 border-2 border-[#080808]" />
+                <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#FF6B00] border-2 border-[#F5F1E8]" />
               </div>
               <div>
-                <p className="text-xs sm:text-sm font-black text-white">The Claw</p>
-                <p className="text-[8px] sm:text-[9px] text-white/50">
+                <p className="text-xs sm:text-sm font-black text-[#1a1a1a]">The Claw</p>
+                <p className="text-[8px] sm:text-[9px] text-[#1a1a1a]/50">
                   {typing ? "reading..." : status === "sending" ? "tuning..." : "listening"}
                 </p>
               </div>
@@ -434,7 +434,7 @@ export default function ChatInterface({
             {hasMessages && (
               <button
                 onClick={clearChat}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-white/25 hover:text-white/40 transition-all text-[10px] font-bold"
+                className="p-1.5 rounded-lg hover:bg-[#1a1a1a]/10 text-[#1a1a1a]/25 hover:text-[#1a1a1a]/40 transition-all text-[10px] font-bold"
                 title="New chat"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
@@ -453,8 +453,8 @@ export default function ChatInterface({
               <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-4 sm:mb-5 overflow-hidden">
                 <MadChaoPixel size={isMobile ? 40 : 48} animated={true} showLabel={false} />
               </div>
-              <h2 className="text-lg sm:text-xl font-black text-white mb-2">THE ORACLE</h2>
-              <p className="text-xs sm:text-sm text-white/40 max-w-[300px] mb-6 sm:mb-8 leading-relaxed">
+              <h2 className="text-lg sm:text-xl font-black text-[#1a1a1a] mb-2">THE ORACLE</h2>
+              <p className="text-xs sm:text-sm text-[#1a1a1a]/40 max-w-[300px] mb-6 sm:mb-8 leading-relaxed">
                 The Claw does not answer questions.<br />
                 It reveals which frequency you are on.
               </p>
@@ -464,7 +464,7 @@ export default function ChatInterface({
                   <button
                     key={s}
                     onClick={() => sendMessage(s)}
-                    className="text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs sm:text-sm text-white/50 hover:bg-white/[0.06] hover:border-white/10 hover:text-white/70 transition-all"
+                    className="text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.06] text-xs sm:text-sm text-[#1a1a1a]/50 hover:bg-[#1a1a1a]/[0.06] hover:border-[#1a1a1a]/10 hover:text-[#1a1a1a]/70 transition-all"
                   >
                     {s}
                   </button>
@@ -504,7 +504,7 @@ export default function ChatInterface({
         </div>
 
         {/* Input area */}
-        <div className="shrink-0 px-3 sm:px-8 py-3 sm:py-4 border-t border-white/5 safe-top">
+        <div className="shrink-0 px-3 sm:px-8 py-3 sm:py-4 border-t border-[#1a1a1a]/5 safe-top">
           <div className="relative">
             <textarea
               ref={textareaRef}
@@ -514,7 +514,7 @@ export default function ChatInterface({
               disabled={status === "sending" || typing}
               placeholder="Message Mad Claw..."
               rows={1}
-              className="w-full px-4 sm:px-5 py-3 sm:py-3.5 pr-12 sm:pr-14 rounded-xl sm:rounded-2xl border border-white/10 bg-white/[0.03] text-white text-sm placeholder:text-white/20 outline-none focus:border-[#FF2D2D]/30 focus:bg-white/[0.05] transition-all resize-none disabled:opacity-40 leading-relaxed"
+              className="w-full px-4 sm:px-5 py-3 sm:py-3.5 pr-12 sm:pr-14 rounded-xl sm:rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] text-[#1a1a1a] text-sm placeholder:text-[#1a1a1a]/20 outline-none focus:border-[#FF2D2D]/30 focus:bg-[#1a1a1a]/[0.05] transition-all resize-none disabled:opacity-40 leading-relaxed"
               style={{ minHeight: "44px", maxHeight: "160px" }}
             />
             <button
@@ -522,7 +522,7 @@ export default function ChatInterface({
               disabled={!input.trim() || status === "sending" || typing}
               className={`absolute right-2 bottom-2 p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all ${
                 !input.trim() || status === "sending"
-                  ? "text-white/10 cursor-not-allowed"
+                  ? "text-[#1a1a1a]/10 cursor-not-allowed"
                   : "bg-[#FF2D2D]/15 text-[#FF6B00] hover:bg-[#FF2D2D]/25 hover:scale-105"
               }`}
             >
@@ -537,7 +537,7 @@ export default function ChatInterface({
               )}
             </button>
           </div>
-          <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-white/10 text-center">
+          <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-[#1a1a1a]/10 text-center">
             Mad Claw can make mistakes. The signal is strong but not perfect.
           </p>
         </div>

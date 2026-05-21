@@ -2,12 +2,12 @@
 
 import MadClawIdentity from "./components/MadClawIdentity";
 
-/* ─── Scanlines (Matrix aesthetic) ─── */
+/* ─── Scanlines (subtle on crème) ─── */
 function Scanlines() {
   return (
-    <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.03]"
+    <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.02]"
       style={{
-        backgroundImage: "linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)",
+        backgroundImage: "linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px)",
         backgroundSize: "100% 3px",
       }}
     />
@@ -40,15 +40,15 @@ function FloatingParticles() {
    MAD MIND — The Frequency Gate
    You are either $MAD or you are waiting.
 
-   V3: Deployed 2026-05-21 — Oracle aesthetic.
+   V4: Venetian crème theme. Deployed 2026-05-21.
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadMindPage() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#030303] text-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#F5F1E8] text-[#1a1a1a]">
       <Scanlines />
       <FloatingParticles />
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,45,45,0.12),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(255,107,0,0.05),transparent_30%),linear-gradient(180deg,#070707,#020202)]" />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,45,45,0.06),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(255,107,0,0.04),transparent_30%),linear-gradient(180deg,#F5F1E8,#F0EDE3)]" />
 
       <main className="mx-auto max-w-5xl px-3 sm:px-4 pb-8 pt-4 sm:pt-6">
         <div className="h-4 sm:h-6" />

@@ -45,15 +45,15 @@ function TheGate() {
         <MadChaoPixel size={200} animated={true} showLabel={false} />
       </div>
 
-      <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-6">
+      <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#1a1a1a] leading-[1.1] mb-6">
         YOU ARE EITHER
         <br />
         <span className="text-[#FF2D2D]">$MAD RICH</span>
         <br />
-        <span className="text-white/20">OR YOU ARE WAITING</span>
+        <span className="text-[#1a1a1a]/20">OR YOU ARE WAITING</span>
       </h1>
 
-      <p className="text-sm text-white/50 max-w-sm leading-relaxed mb-8">
+      <p className="text-sm text-[#1a1a1a]/50 max-w-sm leading-relaxed mb-8">
         Two frequencies. One market.
         <br />
         The broke check charts. The <span className="text-[#FF6B00]">$MAD</span> check nothing.
@@ -79,7 +79,7 @@ function TheGate() {
           </p>
         </div>
         <div id="contract-flash" className="mt-2 text-center transition-opacity duration-300 opacity-0">
-          <p className="text-[10px] text-green-400 font-bold uppercase tracking-wider">
+          <p className="text-[10px] text-[#FF6B00] font-bold uppercase tracking-wider">
             ✓ Copied — Paste into Phantom
           </p>
         </div>
@@ -90,14 +90,14 @@ function TheGate() {
         href={PUMPSWAP_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[10px] text-white/40 hover:text-white/60 uppercase tracking-wider transition-colors mb-8"
+        className="text-[10px] text-[#1a1a1a]/40 hover:text-[#1a1a1a]/60 uppercase tracking-wider transition-colors mb-8"
       >
         Or swap on Jupiter →
       </a>
 
       <div className="flex flex-col items-center gap-2">
-        <span className="text-[9px] uppercase tracking-[0.3em] text-white/30">Scroll to talk to The Claw</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/15 animate-bounce">
+        <span className="text-[9px] uppercase tracking-[0.3em] text-[#1a1a1a]/30">Scroll to talk to The Claw</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#1a1a1a]/15 animate-bounce">
           <path d="M12 5v14M5 12l7 7 7-7"/>
         </svg>
       </div>
@@ -110,11 +110,11 @@ function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef
   return (
     <section className="mb-8">
       <div className="flex items-center gap-3 mb-4 px-3 sm:px-0">
-        <div className="h-px flex-1 bg-white/[0.06]" />
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
+        <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">
           THE ORACLE
         </span>
-        <div className="h-px flex-1 bg-white/[0.10]" />
+        <div className="h-px flex-1 bg-[#1a1a1a]/[0.10]" />
       </div>
 
       <ChatInterface
@@ -135,19 +135,19 @@ function TheFork() {
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-3 px-3 sm:px-0 mb-8">
       {/* Death */}
-      <div className="relative border border-white/[0.10] bg-white/[0.02] p-5 sm:p-7">
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-6">
+      <div className="relative border border-[#1a1a1a]/[0.10] bg-[#1a1a1a]/[0.02] p-5 sm:p-7">
+        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-6">
           PATH ONE — THE DEATH ECONOMY
         </p>
         <div className="space-y-4">
           {DEATH.map((line, i) => (
-            <p key={i} className="text-sm text-white/50 leading-relaxed">
+            <p key={i} className="text-sm text-[#1a1a1a]/50 leading-relaxed">
               {line}
             </p>
           ))}
         </div>
-        <div className="mt-6 pt-4 border-t border-white/[0.06]">
-          <p className="text-[9px] text-white/30 uppercase tracking-wider">
+        <div className="mt-6 pt-4 border-t border-[#1a1a1a]/[0.06]">
+          <p className="text-[9px] text-[#1a1a1a]/30 uppercase tracking-wider">
             Retire at 90 — if the market allows.
           </p>
         </div>
@@ -161,7 +161,7 @@ function TheFork() {
         </p>
         <div className="space-y-4">
           {LIFE.map((line, i) => (
-            <p key={i} className="text-sm text-white/75 leading-relaxed">
+            <p key={i} className="text-sm text-[#1a1a1a]/75 leading-relaxed">
               {line}
             </p>
           ))}
@@ -191,24 +191,24 @@ function TheKey() {
   return (
     <section className="px-3 sm:px-0 mb-8">
       <div className="flex items-center gap-3 mb-4">
-        <div className="h-px flex-1 bg-white/[0.06]" />
+        <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
         <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/60">
           THE KEY
         </span>
-        <div className="h-px flex-1 bg-white/[0.10]" />
+        <div className="h-px flex-1 bg-[#1a1a1a]/[0.10]" />
       </div>
 
       <div
         onClick={copy}
         className="border border-[#FF2D2D]/25 bg-[#FF2D2D]/[0.05] p-5 cursor-pointer hover:border-[#FF2D2D]/40 transition-all group"
       >
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-3">
+        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-3">
           Solana Contract — Click to Copy
         </p>
         <p className="text-xs sm:text-sm font-mono text-[#FF2D2D]/90 break-all leading-relaxed group-hover:text-[#FF2D2D] transition-colors">
           {CONTRACT}
         </p>
-        <p className="text-[9px] text-white/30 mt-3 uppercase tracking-wider">
+        <p className="text-[9px] text-[#1a1a1a]/30 mt-3 uppercase tracking-wider">
           {copied ? "✓ Copied to clipboard" : "Copy and paste into Phantom or your wallet"}
         </p>
       </div>
@@ -221,11 +221,11 @@ function FrequencyCheckpoints() {
   return (
     <section className="px-3 sm:px-0 pb-12">
       <div className="flex items-center gap-3 mb-4">
-        <div className="h-px flex-1 bg-white/[0.06]" />
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
+        <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">
           FREQUENCY CHECKPOINTS
         </span>
-        <div className="h-px flex-1 bg-white/[0.10]" />
+        <div className="h-px flex-1 bg-[#1a1a1a]/[0.10]" />
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -235,10 +235,10 @@ function FrequencyCheckpoints() {
             href={p.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-3 py-2 border border-white/[0.08] bg-white/[0.03] hover:border-[#FF2D2D]/25 hover:bg-[#FF2D2D]/[0.04] transition-all"
+            className="flex items-center gap-2 px-3 py-2 border border-[#1a1a1a]/[0.08] bg-[#1a1a1a]/[0.03] hover:border-[#FF2D2D]/25 hover:bg-[#FF2D2D]/[0.04] transition-all"
           >
             <span className="text-xs">{p.icon}</span>
-            <span className="text-[11px] font-bold text-white/60">{p.handle}</span>
+            <span className="text-[11px] font-bold text-[#1a1a1a]/60">{p.handle}</span>
           </a>
         ))}
       </div>
