@@ -519,9 +519,11 @@ function TheArchitects() {
     </section>
   );
 }
-   
-   
 
+/* ═══════════════════════════════════════════════════════════
+   DISCLAIMER — Legal protection (crème edition)
+   ═══════════════════════════════════════════════════════════ */
+function Disclaimer() {
   return (
     <section className="px-4 sm:px-6 py-10 bg-[#F5F1E8] border-t border-[#1a1a1a]/10">
       <div className="max-w-3xl mx-auto">
