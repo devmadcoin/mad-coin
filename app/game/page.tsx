@@ -125,8 +125,8 @@ function GlowPulse({
       {children}
       <style>{`
         @keyframes glowPulse {
-          0%,100% { box-shadow: 0 0 20px rgba(255,0,0,0.15); }
-          50% { box-shadow: 0 0 35px rgba(255,0,0,0.28); }
+          0%,100% { box-shadow: 0 0 20px rgba(255,45,45,0.15); }
+          50% { box-shadow: 0 0 35px rgba(255,45,45,0.28); }
         }
       `}</style>
     </div>
@@ -196,11 +196,11 @@ function Pill({
     <div
       className={cn(
         "rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em]",
-        tone === "red" && "border border-red-500/25 bg-red-500/10 text-red-200",
+        tone === "red" && "border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 text-[#FF2D2D]",
         tone === "green" &&
-          "border border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
+          "border border-emerald-400/20 bg-emerald-500/10 text-emerald-600",
         tone === "default" &&
-          "border border-white/10 bg-white/[0.04] text-white/70"
+          "border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] text-[#1a1a1a]/60",
       )}
     >
       {children}
@@ -218,8 +218,8 @@ function SectionShell({
   return (
     <section
       className={cn(
-        "overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_18px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl",
-        className
+        "overflow-hidden rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] shadow-[0_18px_50px_rgba(0,0,0,0.06]",
+        className,
       )}
     >
       {children}
@@ -238,12 +238,12 @@ function SimpleCard({
 }) {
   return (
     <HoverLift>
-      <div className="rounded-[1.4rem] border border-white/10 bg-black/25 p-5 transition-colors hover:border-white/15 group">
-        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 transition-transform group-hover:scale-110">
+      <div className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 transition-colors hover:border-[#1a1a1a]/15 group">
+        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 text-[#FF2D2D] transition-transform group-hover:scale-110">
           {icon}
         </div>
-        <h3 className="text-xl font-black text-white">{title}</h3>
-        <p className="mt-3 text-sm leading-7 text-white/65">{text}</p>
+        <h3 className="text-xl font-black text-[#1a1a1a]">{title}</h3>
+        <p className="mt-3 text-sm leading-7 text-[#1a1a1a]/55">{text}</p>
       </div>
     </HoverLift>
   );
@@ -260,12 +260,12 @@ function StatCard({
 }) {
   return (
     <HoverLift>
-      <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.02] p-6 text-center transition-colors hover:border-white/15">
-        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-red-500/20 bg-red-500/10 text-red-400">
+      <div className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-6 text-center transition-colors hover:border-[#1a1a1a]/15">
+        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 text-[#FF2D2D]">
           {icon}
         </div>
-        <div className="text-3xl font-black text-white">{value}</div>
-        <div className="mt-1 text-[11px] uppercase tracking-[0.2em] text-white/40">
+        <div className="text-3xl font-black text-[#1a1a1a]">{value}</div>
+        <div className="mt-1 text-[11px] uppercase tracking-[0.2em] text-[#1a1a1a]/35">
           {label}
         </div>
       </div>
@@ -275,11 +275,11 @@ function StatCard({
 
 function RiskNotice() {
   return (
-    <SectionShell className="border-yellow-500/20 bg-[linear-gradient(180deg,rgba(255,208,0,0.05),rgba(255,208,0,0.02))] px-6 py-8 sm:px-10 sm:py-10">
-      <p className="text-center text-xs font-black uppercase tracking-[0.38em] text-yellow-300/85">
+    <SectionShell className="border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] px-6 py-8 sm:px-10 sm:py-10">
+      <p className="text-center text-xs font-black uppercase tracking-[0.38em] text-[#FF2D2D]/70">
         Risk Notice
       </p>
-      <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-yellow-100/90 sm:text-xl">
+      <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-[#1a1a1a]/60 sm:text-xl">
         $MAD is a meme coin and speculative digital asset. Nothing on this
         website is financial advice or a guarantee of returns. Crypto is risky
         and volatile. Never risk money you cannot afford to lose. Always do your
@@ -346,15 +346,15 @@ const Icons = {
 
 export default function GamePage() {
   return (
-    <div className="relative overflow-hidden bg-black text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(255,0,60,0.14),transparent_30%),radial-gradient(circle_at_85%_15%,rgba(255,90,0,0.1),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(120,0,0,0.18),transparent_45%)]" />
+    <div className="relative overflow-hidden bg-[#F5F1E8] text-[#1a1a1a]">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
 
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
         <FadeIn>
           <SectionShell className="overflow-hidden p-0">
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.95fr]">
               <div className="p-6 sm:p-8 lg:p-10">
-                <p className="text-xs font-semibold uppercase tracking-[0.34em] text-red-200/75">
+                <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#FF2D2D]/60">
                   OFFICIAL $MAD EXPERIENCE — NOW LIVE
                 </p>
 
@@ -362,23 +362,23 @@ export default function GamePage() {
                   <Pill tone="red">🔥 MAY 9TH — REINCARNATION UPDATE</Pill>
                 </div>
 
-                <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl">
+                <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-[#1a1a1a] sm:text-6xl">
                   Mad{" "}
-                  <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.45)]">
+                  <span className="text-[#FF2D2D] drop-shadow-[0_0_14px_rgba(255,45,45,0.25)]">
                     Phonk
                   </span>
                   <br />
-                  <span className="text-red-500 drop-shadow-[0_0_14px_rgba(255,0,0,0.45)]">
+                  <span className="text-[#FF2D2D] drop-shadow-[0_0_14px_rgba(255,45,45,0.25)]">
                     Awakening
                   </span>
                 </h1>
 
-                <p className="mt-5 max-w-2xl text-base leading-8 text-white/70 sm:text-lg">
+                <p className="mt-5 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
                   The first official $MAD game just dropped. Step into the arena, 
-                  wield the MAD blade, and prove your conviction. This isn't a 
+                  wield the MAD blade, and prove your conviction. This isn&apos;t a 
                   prototype — this is the real signal.
                   <br className="hidden sm:block" />
-                  <span className="mt-2 inline-block text-red-300/80">
+                  <span className="mt-2 inline-block text-[#FF2D2D]/70">
                     🔥 May 9th — The Reincarnation update drops. New auras, new madness.
                   </span>
                 </p>
@@ -395,7 +395,7 @@ export default function GamePage() {
                       href={GAME_LINK}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
+                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-[#FF6B00]"
                     >
                       Play Mad Phonk Awakening →
                     </a>
@@ -405,7 +405,7 @@ export default function GamePage() {
                     href={TUTORIAL_VIDEO.replace("/embed/", "/watch?v=")}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-7 py-4 text-base font-black text-white/85 transition hover:border-white/20 hover:bg-white/[0.08]"
+                    className="inline-flex rounded-full border border-[#1a1a1a]/15 bg-[#1a1a1a]/[0.02] px-7 py-4 text-base font-black text-[#1a1a1a]/75 transition hover:border-[#1a1a1a]/20 hover:bg-[#1a1a1a]/[0.04]"
                   >
                     Watch Tutorial
                   </a>
@@ -429,10 +429,10 @@ export default function GamePage() {
           <SectionShell className="mt-8 p-6 sm:p-8">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#FF2D2D]/60">
                   LIVE STATS
                 </p>
-                <h2 className="mt-2 text-2xl font-black text-white">
+                <h2 className="mt-2 text-2xl font-black text-[#1a1a1a]">
                   Game Activity
                 </h2>
               </div>
@@ -441,7 +441,7 @@ export default function GamePage() {
                 href={GAME_LINK}
                 target="_blank"
                 rel="noreferrer"
-                className="text-xs text-white/40 transition-colors hover:text-red-400"
+                className="text-xs text-[#1a1a1a]/35 transition-colors hover:text-[#FF2D2D]"
               >
                 View on Roblox →
               </a>
@@ -456,7 +456,7 @@ export default function GamePage() {
               <StatCard value={GAME_STATS.camera} label="Camera" icon={Icons.eye} />
             </StaggerGrid>
 
-            <div className="mt-4 flex flex-wrap gap-4 text-xs text-white/30">
+            <div className="mt-4 flex flex-wrap gap-4 text-xs text-[#1a1a1a]/25">
               <span>Created {GAME_STATS.created}</span>
               <span>Updated {GAME_STATS.updated}</span>
               <span>Genre {GAME_STATS.genre}</span>
@@ -466,7 +466,7 @@ export default function GamePage() {
                   href={CREATOR_LINK}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-red-400/60 hover:text-red-400"
+                  className="text-[#FF6B00]/60 hover:text-[#FF2D2D]"
                 >
                   {CREATOR}
                 </a>
@@ -480,15 +480,15 @@ export default function GamePage() {
           <SectionShell className="mt-8 overflow-hidden p-0">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="flex flex-col justify-center p-6 sm:p-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#FF2D2D]/60">
                   WATCH THE MADNESS
                 </p>
 
-                <h2 className="mt-4 text-3xl font-black leading-[0.95] text-white sm:text-4xl">
+                <h2 className="mt-4 text-3xl font-black leading-[0.95] text-[#1a1a1a] sm:text-4xl">
                   10K ROBUX Spent
                 </h2>
 
-                <p className="mt-5 max-w-xl text-base leading-8 text-white/68">
+                <p className="mt-5 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
                   Coffee Blox just dropped 10,000 ROBUX into Mad Phonk Awakening. 
                   Unlocking crazy auras, evolving from weak to overpowered. 
                   Real gameplay. Real chaos. Real $MAD.
@@ -500,7 +500,7 @@ export default function GamePage() {
                       href="https://www.youtube.com/watch?v=Pte0bOa16xI&t=840s"
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
+                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-[#FF6B00]"
                     >
                       Watch on YouTube →
                     </a>
@@ -525,14 +525,14 @@ export default function GamePage() {
 
         <FadeIn delay={0.1}>
           <SectionShell className="mt-8 p-6 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/45">
+            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#1a1a1a]/40">
               HOW IT WORKS
             </p>
 
             <StaggerGrid className="mt-6 grid gap-4 md:grid-cols-3" staggerDelay={0.1}>
               <SimpleCard
                 title="1. Make Roblox"
-                text="No account yet? Create one at roblox.com. It's free and takes 2 minutes."
+                text="No account yet? Create one at roblox.com. It&apos;s free and takes 2 minutes."
                 icon={Icons.user}
               />
               <SimpleCard
@@ -554,19 +554,19 @@ export default function GamePage() {
             <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
               <div>
                 <div className="max-w-4xl">
-                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">
+                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#FF2D2D]/60">
                     QUICK HELP
                   </p>
-                  <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-5xl">
+                  <h2 className="mt-3 text-3xl font-black leading-tight text-[#1a1a1a] sm:text-5xl">
                     Need help first?
                   </h2>
-                  <p className="mt-4 max-w-3xl text-base leading-8 text-white/70">
+                  <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55">
                     Watch this quick setup video to get into Roblox and start
                     playing fast.
                   </p>
                 </div>
 
-                <div className="mt-8 overflow-hidden rounded-[1.6rem] border border-white/10 bg-black shadow-[0_0_24px_rgba(255,0,0,0.12)]">
+                <div className="mt-8 overflow-hidden rounded-[1.6rem] border border-[#1a1a1a]/10 bg-black shadow-[0_0_24px_rgba(255,45,45,0.08)]">
                   <div className="relative aspect-video w-full">
                     <iframe
                       src={TUTORIAL_VIDEO}
@@ -579,12 +579,12 @@ export default function GamePage() {
                 </div>
               </div>
 
-              <div className="rounded-[1.8rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-200/75">
+              <div className="rounded-[1.8rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#FF2D2D]/60">
                   SPECIAL GUEST
                 </p>
 
-                <div className="mt-4 overflow-hidden rounded-[1.4rem] border border-white/10 bg-black">
+                <div className="mt-4 overflow-hidden rounded-[1.4rem] border border-[#1a1a1a]/10 bg-black">
                   <div className="relative aspect-square w-full">
                     <Image
                       src="/game/kubo-special-guest.png"
@@ -595,14 +595,14 @@ export default function GamePage() {
                   </div>
                 </div>
 
-                <h3 className="mt-5 text-2xl font-black text-white sm:text-3xl">
+                <h3 className="mt-5 text-2xl font-black text-[#1a1a1a] sm:text-3xl">
                   Kubo was a{" "}
-                  <span className="text-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.45)]">
+                  <span className="text-[#FF2D2D] drop-shadow-[0_0_12px_rgba(255,45,45,0.25)]">
                     special guest
                   </span>
                 </h3>
 
-                <p className="mt-3 text-sm leading-7 text-white/65">
+                <p className="mt-3 text-sm leading-7 text-[#1a1a1a]/55">
                   Community supporter featured inside the $MAD gaming world.
                 </p>
 
@@ -611,7 +611,7 @@ export default function GamePage() {
                     href="https://x.com/Kubo100x"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex rounded-full border border-red-500/40 bg-red-500 px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02] hover:bg-red-400"
+                    className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D] px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02] hover:bg-[#FF6B00]"
                   >
                     Visit @Kubo100x →
                   </a>
@@ -625,15 +625,15 @@ export default function GamePage() {
           <SectionShell className="mt-8 overflow-hidden p-0">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="flex flex-col justify-center p-6 sm:p-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-red-300/75">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#FF2D2D]/70">
                   COMING SOON
                 </p>
 
-                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
+                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-[#1a1a1a] sm:text-5xl">
                   MAD Tower Defense
                 </h2>
 
-                <p className="mt-5 max-w-xl text-base leading-8 text-white/68">
+                <p className="mt-5 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
                   Bigger, wilder, and more strategic. Build your defenses,
                   withstand the chaos, and prove your $MAD discipline. Still in
                   active development.
@@ -645,7 +645,7 @@ export default function GamePage() {
                       href={TOWER_DEFENSE_TEASER.replace("/e/", "/")}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex rounded-full border border-red-500/40 bg-red-500/15 px-6 py-3 text-sm font-black text-red-300 transition hover:bg-red-500/25"
+                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D]/15 px-6 py-3 text-sm font-black text-[#FF2D2D] transition hover:bg-[#FF2D2D]/25"
                     >
                       Watch Teaser →
                     </a>
