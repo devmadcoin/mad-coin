@@ -65,6 +65,8 @@ export default function useChat() {
   const sendMessage = async (text: string) => {
     if (!text.trim() || !sessionId) return;
 
+    window.dispatchEvent(new CustomEvent("madclaw-chat-start"));
+
     const userMsg: ChatMessage = { 
       role: "user", 
       text: text.trim(), 
@@ -74,6 +76,8 @@ export default function useChat() {
     setMessages((prev) => [...prev, userMsg]);
     setStatus("sending");
     setTyping(true);
+
+    window.dispatchEvent(new CustomEvent("madclaw-chat-typing"));
 
     try {
       const res = await fetch("/api/mad-mind/chat", {
@@ -101,6 +105,7 @@ export default function useChat() {
       setStatus("error");
     } finally {
       setTyping(false);
+      window.dispatchEvent(new CustomEvent("madclaw-chat-end"));
     }
   };
 

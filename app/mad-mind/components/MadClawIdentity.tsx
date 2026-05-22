@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, Suspense, lazy } from "react";
+import { useState, useEffect } from "react";
 
-const MadChao3D = lazy(() => import("./MadChao3D"));
+import MadClawCharacter from "./MadClawCharacter";
 import useChat from "./useChat";
 import ChatInterface from "./ChatInterface";
 
@@ -43,13 +43,7 @@ function TheGate() {
       </p>
 
       <div className="mb-6 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] mx-auto">
-        <Suspense fallback={
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="animate-pulse text-[#FF2D2D]/30 text-xs font-bold uppercase tracking-wider">Loading 3D...</div>
-          </div>
-        }>
-          <MadChao3D />
-        </Suspense>
+        <MadClawCharacter size={280} state="neutral" />
       </div>
 
       <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#1a1a1a] leading-[1.1] mb-6">
