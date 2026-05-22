@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 
-import MadClawCharacter from "./MadClawCharacter";
+import Image from "next/image";
+
 import useChat from "./useChat";
 import ChatInterface from "./ChatInterface";
 
@@ -42,8 +43,14 @@ function TheGate() {
         [ THE CLAW ]
       </p>
 
-      <div className="mb-6 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] mx-auto">
-        <MadClawCharacter size={280} state="neutral" />
+      <div className="mb-6 w-[300px] h-[200px] sm:w-[400px] sm:h-[270px] mx-auto relative group">
+        <Image
+          src="/images/mad-claw-hero.png"
+          alt="$MAD Claw"
+          fill
+          className="object-contain drop-shadow-[0_0_30px_rgba(255,45,45,0.3)] group-hover:drop-shadow-[0_0_50px_rgba(255,45,45,0.5)] transition-all duration-500"
+          priority
+        />
       </div>
 
       <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#1a1a1a] leading-[1.1] mb-6">
