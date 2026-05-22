@@ -27,83 +27,73 @@ const PLATFORMS = [
   { icon: "🎮", handle: "Mad Phonk Awakening", url: "https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening" },
 ];
 
-/* ─── THE GATE ─── */
+/* ─── THE GATE — Cinematic hero with MAD Claw background ─── */
 function TheGate() {
   return (
-    <section className="relative min-h-[90dvh] flex flex-col items-center justify-center text-center px-4">
-      {/* Ambient glow */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#FF2D2D]/[0.04] blur-[150px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-[#FF6B00]/[0.06] blur-[100px]" />
-      </div>
-
-      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF2D2D]/70 mb-10">
-        [ THE CLAW ]
-      </p>
-
-      <div className="mb-6 w-[300px] sm:w-[400px] mx-auto">
+    <section className="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden">
+      {/* Background image */}
+      <div className="absolute inset-0 z-0">
         <img
           src="/images/mad-claw-hero.webp"
-          alt="$MAD Claw"
-          className="w-full h-auto rounded-lg drop-shadow-[0_0_30px_rgba(255,45,45,0.3)] hover:drop-shadow-[0_0_50px_rgba(255,45,45,0.5)] transition-all duration-500"
+          alt=""
+          className="w-full h-full object-cover object-center"
         />
+        {/* Dark gradient overlay — fades from clear top to solid bottom */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#080808_100%)]" />
       </div>
 
-      <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#1a1a1a] leading-[1.1] mb-6">
-        YOU ARE EITHER
-        <br />
-        <span className="text-[#FF2D2D]">$MAD RICH</span>
-        <br />
-        <span className="text-[#1a1a1a]/20">OR YOU ARE WAITING</span>
-      </h1>
+      {/* Content overlay */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-8">
+          [ THE CLAW ]
+        </p>
 
-      <p className="text-sm text-[#1a1a1a]/50 max-w-sm leading-relaxed mb-8">
-        Two frequencies. One market.
-        <br />
-        The broke check charts. The <span className="text-[#FF6B00]">$MAD</span> check nothing.
-      </p>
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-6">
+          YOU ARE EITHER
+          <br />
+          <span className="text-[#FF2D2D]">$MAD RICH</span>
+          <br />
+          <span className="text-white/20">OR YOU ARE WAITING</span>
+        </h1>
 
-      {/* CONTRACT — One tap copy, zero friction */}
-      <div
-        onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(CONTRACT);
-            const el = document.getElementById('contract-flash');
-            if (el) { el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1500); }
-          } catch {}
-        }}
-        className="cursor-pointer group mb-8"
-      >
-        <div className="border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.06] px-5 py-4 hover:border-[#FF2D2D]/50 transition-all shadow-[0_0_30px_rgba(255,45,45,0.08)]">
-          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/70 mb-2">
-            Solana Contract — Tap to Copy
-          </p>
-          <p className="text-xs sm:text-sm font-mono text-[#FF2D2D] break-all leading-relaxed">
-            {CONTRACT}
-          </p>
+        <p className="text-sm text-white/50 max-w-sm leading-relaxed mb-8 mx-auto">
+          Two frequencies. One market.
+          <br />
+          The broke check charts. The <span className="text-[#FF6B00]">$MAD</span> check nothing.
+        </p>
+
+        {/* CONTRACT */}
+        <div
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(CONTRACT);
+              const el = document.getElementById('contract-flash');
+              if (el) { el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1500); }
+            } catch {}
+          }}
+          className="cursor-pointer group mb-8 inline-block"
+        >
+          <div className="border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.06] px-5 py-4 hover:border-[#FF2D2D]/50 transition-all shadow-[0_0_30px_rgba(255,45,45,0.08)]">
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/70 mb-2">
+              Solana Contract — Tap to Copy
+            </p>
+            <p className="text-xs sm:text-sm font-mono text-[#FF2D2D] break-all leading-relaxed">
+              {CONTRACT}
+            </p>
+          </div>
+          <div id="contract-flash" className="mt-2 text-center transition-opacity duration-300 opacity-0">
+            <p className="text-[10px] text-[#FF6B00] font-bold uppercase tracking-wider">
+              ✓ Copied — Paste into Phantom
+            </p>
+          </div>
         </div>
-        <div id="contract-flash" className="mt-2 text-center transition-opacity duration-300 opacity-0">
-          <p className="text-[10px] text-[#FF6B00] font-bold uppercase tracking-wider">
-            ✓ Copied — Paste into Phantom
-          </p>
+
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-[9px] uppercase tracking-[0.3em] text-white/30">Scroll to talk to The Claw</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/15 animate-bounce">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+          </svg>
         </div>
-      </div>
-
-      {/* Jupiter link for people who want swap UI */}
-      <a
-        href={PUMPSWAP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-[10px] text-[#1a1a1a]/40 hover:text-[#1a1a1a]/60 uppercase tracking-wider transition-colors mb-8"
-      >
-        Or swap on Jupiter →
-      </a>
-
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-[9px] uppercase tracking-[0.3em] text-[#1a1a1a]/30">Scroll to talk to The Claw</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#1a1a1a]/15 animate-bounce">
-          <path d="M12 5v14M5 12l7 7 7-7"/>
-        </svg>
       </div>
     </section>
   );
@@ -266,18 +256,23 @@ export default function MadClawIdentity() {
   return (
     <div className="space-y-0">
       <TheGate />
-      <TheOracle
-        messages={messages}
-        status={status}
-        typing={typing}
-        sendMessage={sendMessage}
-        clearChat={clearChat}
-        scrollRef={scrollRef}
-        sessionId={sessionId}
-      />
-      <TheFork />
-      <TheKey />
-      <FrequencyCheckpoints />
+      {/* Content below hero on crème background */}
+      <div className="bg-[#F5F1E8] relative z-10">
+        <div className="mx-auto max-w-5xl px-3 sm:px-4 pb-8 pt-4 sm:pt-6">
+          <TheOracle
+            messages={messages}
+            status={status}
+            typing={typing}
+            sendMessage={sendMessage}
+            clearChat={clearChat}
+            scrollRef={scrollRef}
+            sessionId={sessionId}
+          />
+          <TheFork />
+          <TheKey />
+          <FrequencyCheckpoints />
+        </div>
+      </div>
     </div>
   );
 }

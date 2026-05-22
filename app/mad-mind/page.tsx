@@ -40,7 +40,7 @@ function FloatingParticles() {
    MAD MIND — The Frequency Gate
    You are either $MAD or you are waiting.
 
-   V4: Venetian crème theme. Deployed 2026-05-21.
+   V5: Cinematic hero with MAD Claw background. Deployed 2026-05-23.
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadMindPage() {
@@ -48,10 +48,8 @@ export default function MadMindPage() {
     <div className="min-h-screen overflow-x-hidden bg-[#F5F1E8] text-[#1a1a1a]">
       <Scanlines />
       <FloatingParticles />
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,45,45,0.06),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(255,107,0,0.04),transparent_30%),linear-gradient(180deg,#F5F1E8,#F0EDE3)]" />
 
-      <main className="mx-auto max-w-5xl px-3 sm:px-4 pb-8 pt-4 sm:pt-6">
-        <div className="h-4 sm:h-6" />
+      <main>
         <MadClawIdentity />
       </main>
     </div>
