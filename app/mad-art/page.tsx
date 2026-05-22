@@ -119,6 +119,7 @@ function TheGallery() {
     { src: "/memes/WE-MAD-ZOOMIN.png", title: "We MAD Zoomin'", type: "Meme" },
     { src: "/memes/YOU-MAKE-ME-MAD.png", title: "You Make Me MAD", type: "Meme" },
     { src: "/memes/YOU-WILL-BE-MAD.png", title: "You Will Be MAD", type: "Meme" },
+    { src: "/mad-art/mad-attitude.png", title: "MAD Attitude", type: "Character" },
   ];
 
   return (
