@@ -170,8 +170,8 @@ const CREATOR = "@CoffeeCollectsBlox";
 const CREATOR_LINK = "https://www.roblox.com/users/5183792958/profile";
 
 const GAME_STATS = {
-  visits: 26500,
-  favorites: 78,
+  visits: 39300,
+  favorites: 126,
   active: 19,
   serverSize: 25,
   created: "4/14/2026",
