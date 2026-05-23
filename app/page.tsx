@@ -232,7 +232,7 @@ function WhatIsMAD() {
             Before asking anyone to trust the mission, $MAD showed loyalty in public: <span className="text-[#1a1a1a] font-bold">four communities supported</span>, tokens locked to 2060. Not theory. Proof. Four times.
           </p>
           <p>
-            The supply shrinks toward <span className="text-[#FF2D2D] font-bold">800M</span>. Every holder is a participant in a <span className="text-[#1a1a1a] font-bold">Life Economy</span> exit — no bosses, no quarterly reports, just the daily practice of staying $MAD.
+            The supply shrinks toward <span className="text-[#FF2D2D] font-bold">200M</span>. Every holder is a participant in a <span className="text-[#1a1a1a] font-bold">Life Economy</span> exit — no bosses, no quarterly reports, just the daily practice of staying $MAD.
           </p>
 
           {/* Closing punch */}
