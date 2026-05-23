@@ -448,7 +448,7 @@ export default function GamePage() {
             </div>
 
             <StaggerGrid className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" staggerDelay={0.06}>
-              <StatCard value="26.5K+" label="Visits" icon={Icons.eye} />
+              <StatCard value="39.3K+" label="Visits" icon={Icons.eye} />
               <StatCard value={GAME_STATS.favorites.toString()} label="Favorites" icon={Icons.heart} />
               <StatCard value={GAME_STATS.active.toString()} label="Active Now" icon={Icons.users} />
               <StatCard value={`${GAME_STATS.serverSize}`} label="Server Size" icon={Icons.server} />
