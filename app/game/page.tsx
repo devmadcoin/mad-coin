@@ -170,9 +170,9 @@ const CREATOR = "@CoffeeCollectsBlox";
 const CREATOR_LINK = "https://www.roblox.com/users/5183792958/profile";
 
 const GAME_STATS = {
-  visits: 39300,
-  favorites: 126,
-  active: 19,
+  visits: 41000,
+  favorites: 133,
+  active: 79,
   serverSize: 25,
   created: "4/14/2026",
   updated: "5/8/2026",
@@ -448,7 +448,7 @@ export default function GamePage() {
             </div>
 
             <StaggerGrid className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" staggerDelay={0.06}>
-              <StatCard value="39.3K+" label="Visits" icon={Icons.eye} />
+              <StatCard value="41.0K+" label="Visits" icon={Icons.eye} />
               <StatCard value={GAME_STATS.favorites.toString()} label="Favorites" icon={Icons.heart} />
               <StatCard value={GAME_STATS.active.toString()} label="Active Now" icon={Icons.users} />
               <StatCard value={`${GAME_STATS.serverSize}`} label="Server Size" icon={Icons.server} />
