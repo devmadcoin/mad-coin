@@ -233,7 +233,7 @@ function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMes
       )}
       <div className={`max-w-[85%] sm:max-w-[75%]`}>
         <div
-          className={`rounded-2xl px-5 py-3.5 ${
+          className={`rounded-2xl px-4 py-3 ${
             isUser
               ? "bg-[#FF2D2D]/[0.12] border border-[#FF2D2D]/20 text-[#1a1a1a]/90"
               : "bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.08] text-[#1a1a1a]/75"
@@ -446,15 +446,15 @@ export default function ChatInterface({
         {/* Messages area */}
         <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto px-3 sm:px-8 py-4 sm:py-6 space-y-4 sm:space-y-5 scrollbar-thin ios-momentum"
+          className="flex-1 overflow-y-auto px-3 sm:px-8 py-3 sm:py-4 space-y-3 sm:space-y-4 scrollbar-thin ios-momentum"
         >
           {!hasMessages ? (
             <div className="h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
               <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-4 sm:mb-5 overflow-hidden">
                 <MadChaoPixel size={isMobile ? 40 : 48} animated={true} showLabel={false} />
               </div>
-              <h2 className="text-lg sm:text-xl font-black text-[#1a1a1a] mb-2">THE ORACLE</h2>
-              <p className="text-xs sm:text-sm text-[#1a1a1a]/40 max-w-[300px] mb-6 sm:mb-8 leading-relaxed">
+              <h2 className="text-lg sm:text-xl font-black text-[#1a1a1a] mb-1">THE ORACLE</h2>
+              <p className="text-xs sm:text-sm text-[#1a1a1a]/40 max-w-[300px] mb-5 sm:mb-6 leading-relaxed">
                 The Claw does not answer questions.<br />
                 It reveals which frequency you are on.
               </p>
@@ -504,7 +504,7 @@ export default function ChatInterface({
         </div>
 
         {/* Input area */}
-        <div className="shrink-0 px-3 sm:px-8 py-3 sm:py-4 border-t border-[#1a1a1a]/5 safe-top">
+        <div className="shrink-0 px-3 sm:px-8 py-2.5 sm:py-3 border-t border-[#1a1a1a]/5 safe-top">
           <div className="relative">
             <textarea
               ref={textareaRef}
