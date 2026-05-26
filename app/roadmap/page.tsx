@@ -872,7 +872,7 @@ function BurnMechanics() {
               <img src="/solscan-mad-token.png" alt="$MAD token on Solscan — 276 holders, ~500M supply" className="w-full h-auto" />
               <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Live on Solscan</p>
-                <p className="text-xs text-[#1a1a1a]/40 mt-0.5">Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump · Verifiable · On-chain</p>
+                <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump · Verifiable · On-chain</p>
               </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
@@ -1016,7 +1016,7 @@ function RiskNotice() {
   return (
     <Shell className="border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] px-4 py-6 sm:px-10 sm:py-10">
       <p className="text-center text-xs font-black uppercase tracking-[0.38em] text-[#FF2D2D]/70">Risk Notice</p>
-      <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-[#1a1a1a]/60 sm:text-xl">
+      <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-[#1a1a1a]/60 break-words sm:text-xl">
         $MAD is a meme coin and speculative digital asset. Nothing on this website is financial advice or a guarantee of returns. Crypto is risky and volatile. Never risk money you cannot afford to lose. Always do your own research.
       </p>
     </Shell>
