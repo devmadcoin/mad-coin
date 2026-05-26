@@ -650,7 +650,6 @@ function TravelingCar({ scrollProgress }: { scrollProgress: number }) {
 
   useEffect(() => {
     if (!carRef.current) return;
-    /* Car travels from top (Mile 0) to bottom (Mile 100) based on scroll */
     const y = scrollProgress * 100;
     carRef.current.style.top = `${y}%`;
   }, [scrollProgress]);
@@ -661,19 +660,21 @@ function TravelingCar({ scrollProgress }: { scrollProgress: number }) {
       className="absolute left-1/2 -translate-x-1/2 z-30 transition-all duration-300"
       style={{ top: "0%" }}
     >
-      <div className="relative">
-        {/* Glow trail */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-20 bg-gradient-to-b from-red-500/40 to-transparent rounded-full blur-md" />
-        {/* Car */}
-        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.6)] animate-pulse border border-red-400">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-            <path d="M5 17h14M6 17v-5l3-4h6l3 4v5M9 8V6a2 2 0 012-2h2a2 2 0 012 2v2" />
-            <circle cx="7.5" cy="17" r="1.5" fill="white" stroke="none" />
-            <circle cx="16.5" cy="17" r="1.5" fill="white" stroke="none" />
-          </svg>
+      <div className="relative flex flex-col items-center">
+        {/* Headlight beam */}
+        <div className="absolute top-full left-1/2 -translate-x-1/2 w-12 h-20 bg-gradient-to-b from-amber-400/30 to-transparent rounded-full blur-xl" />
+        {/* Car body — elongated, not square */}
+        <div className="relative w-12 h-8 bg-red-500 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.6)] animate-pulse border border-red-400">
+          {/* Windshield */}
+          <div className="absolute top-1 left-2 right-2 h-3 bg-white/20 rounded-lg" />
+          {/* Car emoji + wheels */}
+          <span className="text-xl relative z-10">🚗</span>
         </div>
-        {/* Headlight beams */}
-        <div className="absolute top-full left-1/2 -translate-x-1/2 w-16 h-24 bg-gradient-to-b from-red-500/20 to-transparent rounded-full blur-xl" />
+        {/* Wheels */}
+        <div className="flex gap-5 mt-0.5">
+          <div className="w-2.5 h-2.5 bg-neutral-700 rounded-full border border-neutral-500" />
+          <div className="w-2.5 h-2.5 bg-neutral-700 rounded-full border border-neutral-500" />
+        </div>
       </div>
     </div>
   );
@@ -791,15 +792,16 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
                   </div>
                   {exit.status === "IN PROGRESS" && (
                     <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-30">
-                      <div className="relative">
-                        <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.6)] animate-pulse">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                            <path d="M5 17h14M6 17v-5l3-4h6l3 4v5M9 8V6a2 2 0 012-2h2a2 2 0 012 2v2" />
-                            <circle cx="7.5" cy="17" r="1.5" fill="white" stroke="none" />
-                            <circle cx="16.5" cy="17" r="1.5" fill="white" stroke="none" />
-                          </svg>
+                      <div className="relative flex flex-col items-center">
+                        <div className="w-12 h-8 bg-red-500 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.6)] animate-pulse border border-red-400">
+                          <div className="absolute top-1 left-2 right-2 h-2 bg-white/20 rounded-lg" />
+                          <span className="text-lg relative z-10">🚗</span>
                         </div>
-                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-20 h-8 bg-[linear-gradient(180deg,rgba(255,200,100,0.3),transparent)] rounded-full" />
+                        <div className="flex gap-5 mt-0.5">
+                          <div className="w-2 h-2 bg-neutral-700 rounded-full border border-neutral-500" />
+                          <div className="w-2 h-2 bg-neutral-700 rounded-full border border-neutral-500" />
+                        </div>
+                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-6 bg-[linear-gradient(180deg,rgba(255,200,100,0.3),transparent)] rounded-full" />
                       </div>
                     </div>
                   )}
