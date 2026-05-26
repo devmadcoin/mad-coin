@@ -16,7 +16,7 @@ const LINKS = {
   jupiter: "https://jup.ag/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
   solscan: "https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
   birdeye: "https://birdeye.so/solana/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
-  dexscreener: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs",
+  okx: "https://web3.okx.com/dex-swap?chain=solana,solana&token=11111111111111111111111111111111,Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
   game: "https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening",
   youtube: "https://youtube.com/@coffeecollectshq",
 } as const;
@@ -151,7 +151,8 @@ function TheCinema() {
           <ContractBlock />
         </div>
 
-        <div className="mt-4 flex justify-center">
+        {/* Buy buttons */}
+        <div className="mt-4 flex flex-col sm:flex-row justify-center items-center gap-3">
           <a 
             href={LINKS.buy} 
             target="_blank" 
@@ -160,6 +161,15 @@ function TheCinema() {
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             SWAP ON JUPITER
+          </a>
+          <a 
+            href={LINKS.okx} 
+            target="_blank" 
+            rel="noreferrer"
+            className="group flex items-center gap-2 px-8 py-4 bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white text-base font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(26,26,26,0.25)] border border-white/10"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            BUY ON OKX DEX
           </a>
         </div>
 
@@ -277,6 +287,7 @@ function WhatIsMAD() {
 function TheVerified() {
   const exchanges = [
     { name: "Jupiter", src: "/logos/jupiter.png", href: LINKS.jupiter },
+    { name: "OKX DEX", src: "/logos/okx.png", href: LINKS.okx },
     { name: "DEX Screener", src: "/logos/DEX-screener.png", href: LINKS.dexscreener },
     { name: "Birdeye", src: "/logos/birdeye.png", href: LINKS.birdeye },
     { name: "Solscan", src: "/logos/solscan.png", href: LINKS.solscan },
