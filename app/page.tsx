@@ -18,7 +18,7 @@ const LINKS = {
   birdeye: "https://birdeye.so/solana/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
   okx: "https://web3.okx.com/dex-swap?chain=solana,solana&token=11111111111111111111111111111111,Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
   dexscreener: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs",
-  gate: "https://www.gate.com/alpha/sol-Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
+  mexc: "https://www.mexc.com/dex/trade?pair_ca=Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs&chain_id=100000&token_ca=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump&from=search",
   game: "https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening",
   youtube: "https://youtube.com/@coffeecollectshq",
 } as const;
@@ -282,6 +282,7 @@ function TheVerified() {
     { name: "Jupiter", src: "/logos/jupiter.png", href: LINKS.jupiter },
     { name: "OKX DEX", src: "/logos/okx.png", href: LINKS.okx },
     { name: "Gate", src: "/logos/gate.png", href: LINKS.gate },
+    { name: "MEXC", src: "/logos/mexc.png", href: LINKS.mexc },
     { name: "DEX Screener", src: "/logos/DEX-screener.png", href: LINKS.dexscreener },
     { name: "Birdeye", src: "/logos/birdeye.png", href: LINKS.birdeye },
     { name: "Solscan", src: "/logos/solscan.png", href: LINKS.solscan },
