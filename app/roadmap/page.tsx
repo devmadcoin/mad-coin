@@ -839,28 +839,28 @@ function BurnMechanics() {
   return (
     <Shell className="p-6 sm:p-8">
       <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-stretch">
-        <div className="flex flex-col justify-between rounded-[1.75rem] border border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] p-6 sm:p-7">
+        <div className="flex flex-col justify-between rounded-[1.75rem] border border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-[#FF2D2D]/70">Deflation Protocol</p>
-            <h2 className="mt-3 text-3xl font-black text-[#1a1a1a] sm:text-5xl">50% Burned. More Coming.</h2>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
+            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl">50% Burned. More Coming.</h2>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 break-words">
               Supply is already cut in half. Burn #2 drops it to 200M — but only when 10,000 people hold $MAD. Not a promise. A protocol.
             </p>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/5 px-6 py-5">
+            <div className="rounded-3xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/5 px-4 py-5 sm:px-6">
               <p className="text-xs font-black uppercase tracking-[0.28em] text-[#FF2D2D]/70">Current Supply</p>
               <p className="mt-2 text-3xl font-black text-[#FF2D2D]">~500M</p>
               <p className="mt-1 text-sm text-[#1a1a1a]/40">Down from 1B at launch</p>
             </div>
-            <div className="rounded-3xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-6 py-5">
+            <div className="rounded-3xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-5 sm:px-6">
               <p className="text-xs font-black uppercase tracking-[0.28em] text-[#1a1a1a]/40">Final Target</p>
               <p className="mt-2 text-3xl font-black text-[#1a1a1a]">200M</p>
               <p className="mt-1 text-sm text-[#1a1a1a]/40">80% total reduction</p>
             </div>
           </div>
         </div>
-        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
+        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-4 sm:p-6">
           <div className="flex items-center justify-between gap-3">
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Burn Trigger</p>
             <span className="rounded-full border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-[#FF2D2D]">Phase 2</span>
@@ -899,11 +899,11 @@ function CommunitySupport() {
   return (
     <Shell className="p-6 sm:p-8">
       <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
-        <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-6 sm:p-7">
+        <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
-            <h2 className="mt-3 text-3xl font-black text-[#1a1a1a] sm:text-5xl">5 Communities Supported.</h2>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
+            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl">5 Communities Supported.</h2>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 break-words">
               5 communities supported. Tokens locked to 2060. Public receipts on X. Loyalty proven before trust asked.
             </p>
           </div>
@@ -920,7 +920,7 @@ function CommunitySupport() {
             </div>
           </div>
         </div>
-        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
+        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-4 sm:p-6">
           <div className="flex items-center justify-between gap-3">
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Proof of Work</p>
             <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-600">Verified Signal</span>
