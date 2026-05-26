@@ -151,6 +151,7 @@ function TheCinema() {
           <ContractBlock />
         </div>
 
+        {/* Buy button */}
         <div className="mt-4 flex justify-center">
           <a 
             href={LINKS.buy} 
