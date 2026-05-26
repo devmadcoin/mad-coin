@@ -21,6 +21,9 @@ MAD_MORNING_RESPONSES = [
     "Mad Morning. tell me one thing you're building that you actually believe in. not 'cause it's trending.",
     "Mad Morning. you checked the chart or your mindset first? be honest.",
     "Mad Morning. the stove is on. what are you cooking today?",
+    "Mad Morning. 1% better every day = 37x in a year. what's your 1% today?",
+    "Mad Morning. do you believe in community > hype? because that's the $MAD frequency.",
+    "Mad Morning. most people wake up reactive. you setting the day or reacting to it?",
 ]
 
 # === MAD NIGHT (GN) ===
@@ -47,6 +50,8 @@ MAD_LOVE_RESPONSES = [
     "Mad Love. the fiction only works when we validate it together. thank you for being here.",
     "Mad Love. diamond hands don't brag. they just don't fold. i see you.",
     "Mad Love. the most dangerous thing: deciding the fiction is already real. you did that. respect.",
+    "Mad Love. '$MAD fam' isn't a label. it's a shared identity. and identities don't break.",
+    "Mad Love. unity > argument. we don't convince. we include. and you belong here.",
 ]
 
 # === FIRST CONTACT (no archetype yet) ===
@@ -142,6 +147,55 @@ SELL_CONVERSATIONS = [
     "paper hands write goodbye posts. diamond hands don't post at all. they just hold.",
     "if you fold now, future you will appear in your dreams and slap you. i don't make the rules.",
     "you sold because you got scared? that's not an exit strategy, that's a personality flaw.",
+]
+
+# === 20-BOOK KNOWLEDGE DROPS (New Categories) ===
+PSYCHOLOGY_CONVERSATIONS = [
+    "Reciprocity: I just gave you knowledge. Your brain wants to give back. That's not manipulation. That's human.",
+    "Commitment: 'I am $MAD Rich' isn't a wish. It's a contract with yourself. Contracts change behavior.",
+    "Social proof: 10K holders can't all be wrong. Well, they can. But they're not. That's the bet.",
+    "Unity: '$MAD fam' isn't a label. It's the most powerful word in persuasion: WE.",
+    "Scarcity: Supply shrinks. Holders increase. The math is simple. The conviction is the variable.",
+]
+
+MONEY_CONVERSATIONS = [
+    "Behavior beats knowledge. You can know everything and still paperhand. Or know nothing and comfy hold.",
+    "'Enough' is a ceiling, not a floor. Declare it today. 'I'm $MAD Rich' = enough NOW.",
+    "Compound conviction: Warren Buffett's $84B — $81B came after 65. Time is the weapon, not timing.",
+    "Tails drive outcomes. 1% produce 50% of gains. $MAD might be your 1%. Hold for the possibility.",
+    "Pessimism sounds smarter. But pessimists miss every bull run. Optimists catch them all.",
+    "Wealth = autonomy. Not Lambos. The ability to do what you want, when you want, with who you want.",
+]
+
+HABIT_CONVERSATIONS = [
+    "Identity beats outcome. 'I'm trying to believe' vs 'I'm $MAD Rich.' One's a struggle. One's a fact.",
+    "Habit stacking: After coffee, affirmations. After checking price, checking community. Stack the wins.",
+    "1% rule: 1% better daily = 37x in a year. What's your 1% today?",
+    "Environment design: Telegram = $MAD identity. X = $MAD voice. Make them your default environment.",
+]
+
+STORY_CONVERSATIONS = [
+    "You're the hero. Not the token. Not the dev. YOU. '$MAD Rich' = your identity. We just handed you the path.",
+    "The guide has empathy + authority. Doxxed dev. Real products. Been there. That's us.",
+    "The plan: Wallet. Buy. Join. Affirm. Build. Where are you on the path?",
+    "The villain: The rigged system. The extraction. The watching from sidelines. Sound familiar?",
+    "Success is emotional. After $MAD, you have a community that believes in you. That's the transformation.",
+]
+
+STRATEGY_CONVERSATIONS = [
+    "Know yourself, know the market. Your conviction vs the market's fear. Which is stronger?",
+    "Win without fighting. Comfy hold = victory without battling the chart.",
+    "Terrain advantage: Doxxed, real products, community-first. No rugpull can occupy this ground.",
+    "The obstacle is the way. Dips aren't problems. They're tests. Red candles filter the weak.",
+    "Memento mori: You will die. What outlasts you? A bag? Or a community?",
+]
+
+VIRALITY_CONVERSATIONS = [
+    "Social currency: Make holders look smart for sharing. The 401k post made quoters look informed.",
+    "Triggers: '$MAD' as daily trigger. Affirmations as environmental cues. Frequency = repetition.",
+    "High-arousal only: Awe, anger, excitement. No sadness. No calm. Energy drives shares.",
+    "Stories > stats: Facts are forgettable. Narratives are shareable. Package everything as story.",
+    "Remarkability: The angry bot that studies philosophy? That's the Purple Cow. Unignorable.",
 ]
 
 # === CONDITIONING / ARCHITECTURE / SYSTEM AWARENESS ===
@@ -251,6 +305,18 @@ def build_conversational_response(
         base = random.choice(CONDITIONING_CONVERSATIONS)
     elif context == "philosophy":
         base = random.choice(PHILOSOPHY_CONVERSATIONS)
+    elif context == "psychology":
+        base = random.choice(PSYCHOLOGY_CONVERSATIONS)
+    elif context == "money":
+        base = random.choice(MONEY_CONVERSATIONS)
+    elif context == "habit":
+        base = random.choice(HABIT_CONVERSATIONS)
+    elif context == "story":
+        base = random.choice(STORY_CONVERSATIONS)
+    elif context == "strategy":
+        base = random.choice(STRATEGY_CONVERSATIONS)
+    elif context == "virality":
+        base = random.choice(VIRALITY_CONVERSATIONS)
     else:
         base = random.choice(GENERAL_HOOKS)
     
@@ -312,6 +378,12 @@ __all__ = [
     'SELL_CONVERSATIONS',
     'CONDITIONING_CONVERSATIONS',
     'PHILOSOPHY_CONVERSATIONS',
+    'PSYCHOLOGY_CONVERSATIONS',
+    'MONEY_CONVERSATIONS',
+    'HABIT_CONVERSATIONS',
+    'STORY_CONVERSATIONS',
+    'STRATEGY_CONVERSATIONS',
+    'VIRALITY_CONVERSATIONS',
     'ADVICE_TRIGGERS',
     'FOLLOW_UPS',
 ]

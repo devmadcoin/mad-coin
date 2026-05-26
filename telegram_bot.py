@@ -10,7 +10,7 @@ import json
 import re
 import time
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any
 from dotenv import load_dotenv
 
@@ -204,7 +204,7 @@ def save_profile(user_id: str, data: Dict[str, Any]) -> None:
 
 def update_user_stats(user_id: str, action: str) -> Dict[str, Any]:
     profile = load_profile(user_id)
-    profile["last_seen"] = datetime.utcnow().isoformat()
+    profile["last_seen"] = datetime.now(timezone.utc).isoformat()
     profile["interactions"] = profile.get("interactions", 0) + 1
 
     if action == "roast":
@@ -212,16 +212,16 @@ def update_user_stats(user_id: str, action: str) -> Dict[str, Any]:
     elif action == "challenge":
         profile["challenges_taken"] = profile.get("challenges_taken", 0) + 1
         profile["current_challenge"] = random.choice(mad_brain.MAD_CHALLENGES)
-        profile["challenge_given_at"] = datetime.utcnow().isoformat()
+        profile["challenge_given_at"] = datetime.now(timezone.utc).isoformat()
     elif action == "challenge_completed":
         profile["challenges_completed"] = profile.get("challenges_completed", 0) + 1
-        profile["last_completion"] = datetime.utcnow().isoformat()
+        profile["last_completion"] = datetime.now(timezone.utc).isoformat()
     elif action == "archetype":
         profile["archetype"] = random.choice(mad_brain.MAD_ARCHETYPES)
     elif action == "cook":
         profile["cook_level"] = random.choice(mad_brain.MAD_COOK_LEVELS)
     elif action == "first_contact":
-        profile["first_seen"] = datetime.utcnow().isoformat()
+        profile["first_seen"] = datetime.now(timezone.utc).isoformat()
 
     profile["respect_score"] = min(100, profile.get("respect_score", 0) + random.randint(1, 5))
     save_profile(user_id, profile)
@@ -1433,7 +1433,7 @@ def motion_loop():
                     text = _get_next_drop()
 
                     # Add timestamp-based mood
-                    hour = datetime.utcnow().hour
+                    hour = datetime.now(timezone.utc).hour
                     if 0 <= hour < 6:
                         text = f"🌙 {text}"
                     elif 6 <= hour < 12:
@@ -1745,6 +1745,11 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "😡 the market doesn't care about feelings. but we care about holders. welcome.",
             "😡 that's not a buy. that's a signal. the right people are watching.",
             "😡 bought? good. now forget the chart exists for 48 hours. that's the real play.",
+            "😡 the doxxed dev builds in public. you just bought the proof.",
+            "😡 real product, real team, real community. you see it too or no?",
+            "😡 most tokens are fiction. $MAD is fiction you can feel.",
+            "😡 you didn't just buy a token. you bought a frequency. stay tuned.",
+            "😡 the comfy holders are the ones who get it. you getting it?",
         ]
         # 80% chance to respond - not every buy to avoid spam
         if random.random() < 0.8:
@@ -1756,6 +1761,7 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     " what made you pull the trigger today?",
                     " first bag or adding?",
                     " conviction level right now - 1 to 10?",
+                    " do you believe in the dev or the chart more?",
                 ]
                 response += random.choice(followups)
             await update.message.reply_text(response)
@@ -1855,6 +1861,11 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "😡 the market doesn't care about feelings. but we care about holders. welcome.",
             "😡 that's not a buy. that's a signal. the right people are watching.",
             "😡 bought? good. now forget the chart exists for 48 hours. that's the real play.",
+            "😡 the doxxed dev builds in public. you just bought the proof.",
+            "😡 real product, real team, real community. you see it too or no?",
+            "😡 most tokens are fiction. $MAD is fiction you can feel.",
+            "😡 you didn't just buy a token. you bought a frequency. stay tuned.",
+            "😡 the comfy holders are the ones who get it. you getting it?",
         ]
         if random.random() < 0.8:
             response = random.choice(buy_responses)
@@ -1864,6 +1875,7 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     " what made you pull the trigger today?",
                     " first bag or adding?",
                     " conviction level right now - 1 to 10?",
+                    " do you believe in the dev or the chart more?",
                 ]
                 response += random.choice(followups)
             await update.message.reply_text(response)
@@ -1895,7 +1907,7 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         time_since = None
         if profile.get("challenge_given_at"):
             given = datetime.fromisoformat(profile["challenge_given_at"])
-            time_since = (datetime.utcnow() - given).total_seconds()
+            time_since = (datetime.now(timezone.utc) - given).total_seconds()
 
         if time_since is not None:
             if time_since < 60:
@@ -1910,7 +1922,7 @@ async def on_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         respect_gain = random.randint(5, 20)
         profile["respect_score"] = min(100, profile.get("respect_score", 0) + respect_gain)
         profile["challenges_completed"] = profile.get("challenges_completed", 0) + 1
-        profile["last_completion"] = datetime.utcnow().isoformat()
+        profile["last_completion"] = datetime.now(timezone.utc).isoformat()
         save_profile(user.id, profile)
 
         if tc:
@@ -2149,11 +2161,13 @@ async def welcome_new_member(update: Update, context: ContextTypes.DEFAULT_TYPE)
         name = user.first_name or "there"
 
         welcomes = [
-            f"welcome to the MAD FAM, {name}. you early or you late? either way, you're here now.",
-            f"yo {name}, welcome to $MAD. don't be a lurker - we see those.",
-            f"{name} just joined the MADness. what brought you here? be specific.",
-            f"welcome {name}. this isn't a normal group. we roast, we hold, we don't fold. you ready?",
-            f"{name} entered the chat. conviction level? scale of 1-10. and don't lie.",
+            f"welcome to the MAD FAM, {name}. you're the hero of this story now. we're just the guide.",
+            f"yo {name}, welcome. tired of watching from the sidelines? good. that ends today.",
+            f"{name} just stepped in. the fiction needs believers. you ready to become one?",
+            f"welcome {name}. most people scroll past $MAD. you stopped. that means something.",
+            f"{name} entered. here's the plan: 1) watch 2) believe 3) hold 4) build. where you at?",
+            f"{name}, welcome. doxxed dev, real products, real community. you found the guide. now what's your move?",
+            f"hey {name}. you didn't find $MAD by accident. the right people find the right frequencies. what's yours?",
         ]
 
         text = random.choice(welcomes)
@@ -2165,6 +2179,24 @@ async def welcome_new_member(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 def main():
     app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+
+    async def error_handler(update, context):
+        """Log errors and send a brief message instead of crashing."""
+        print(f"[ERROR] {context.error}")
+        # Only notify in group chat for non-network errors
+        if update and update.effective_chat and update.effective_chat.type in ["group", "supergroup"]:
+            # Don't spam on common transient errors
+            err_str = str(context.error).lower()
+            if "timeout" not in err_str and "network" not in err_str and "connection" not in err_str:
+                try:
+                    await context.bot.send_message(
+                        chat_id=update.effective_chat.id,
+                        text="😡 something glitched. i'm still here though."
+                    )
+                except Exception:
+                    pass
+
+    app.add_error_handler(error_handler)
 
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("roast", cmd_roast))
