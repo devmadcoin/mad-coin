@@ -301,7 +301,7 @@ function Shell({ children, className = "" }: { children: ReactNode; className?: 
 const ShellWithRef = React.forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
   ({ children, className = "" }, ref) => (
     <div ref={ref} className={cn(
-      "rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] shadow-[0_18px_60px_rgba(0,0,0,0.06)]",
+      "overflow-hidden rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] shadow-[0_18px_60px_rgba(0,0,0,0.06)]",
       className,
     )}>
       {children}
@@ -338,10 +338,10 @@ function ChaosMeter() {
   }, []);
 
   return (
-    <Shell className="p-5 sm:p-6">
+    <Shell className="p-4 sm:p-6">
       <div className="grid gap-4 sm:grid-cols-3">
         {/* Burn Progress */}
-        <div className="relative rounded-2xl border border-[#FF2D2D]/20 bg-[#1a1a1a]/[0.02] p-5 overflow-hidden group hover:border-[#FF2D2D]/40 transition-all">
+        <div className="relative rounded-2xl border border-[#FF2D2D]/20 bg-[#1a1a1a]/[0.02] p-4 overflow-hidden group hover:border-[#FF2D2D]/40 transition-all">
           <div
             className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity"
             style={{
@@ -370,7 +370,7 @@ function ChaosMeter() {
         </div>
 
         {/* Community Conviction */}
-        <div className="relative rounded-2xl border border-emerald-500/20 bg-[#1a1a1a]/[0.02] p-5 overflow-hidden group hover:border-emerald-500/40 transition-all">
+        <div className="relative rounded-2xl border border-emerald-500/20 bg-[#1a1a1a]/[0.02] p-4 overflow-hidden group hover:border-emerald-500/40 transition-all">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-emerald-500 animate-ping" style={{ animationDuration: "3s" }} />
           </div>
@@ -399,7 +399,7 @@ function ChaosMeter() {
         </div>
 
         {/* Mad Claw Status */}
-        <div className="relative rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 overflow-hidden group cursor-pointer hover:border-[#FF2D2D]/30 transition-all">
+        <div className="relative rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-4 overflow-hidden group cursor-pointer hover:border-[#FF2D2D]/30 transition-all">
           <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br from-[#FF2D2D] to-transparent" />
           <a href={LINKS.madMind} className="relative z-10 block">
             <div className="flex items-center justify-between mb-3">
@@ -441,13 +441,13 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-[#1a1a1a]/40 backdrop-blur-sm" />
       <div
-        className="relative z-10 w-full max-w-lg rounded-[2rem] border border-[#1a1a1a]/10 bg-[#F5F1E8] p-6 sm:p-8 shadow-2xl"
+        className="relative z-10 w-full max-w-lg rounded-[2rem] border border-[#1a1a1a]/10 bg-[#F5F1E8] p-4 sm:p-8 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
           <div>
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30">{exit.mile}</span>
-            <h3 className="text-2xl font-black text-[#1a1a1a]">{exit.title}</h3>
+            <h3 className="text-xl sm:text-2xl font-black text-[#1a1a1a]">{exit.title}</h3>
           </div>
           <button
             onClick={onClose}
@@ -474,8 +474,8 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
                   <div className="w-8 h-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center text-sm group-hover:scale-110 transition">
                     {p.type === "tx" ? "🔗" : "🌐"}
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-[#1a1a1a]/80">{p.label}</p>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-[#1a1a1a]/80 truncate">{p.label}</p>
                     <p className="text-[10px] text-[#1a1a1a]/30">{p.type === "tx" ? "Transaction / Contract" : "Live Link"}</p>
                   </div>
                   <span className="ml-auto text-[#1a1a1a]/20 group-hover:text-[#1a1a1a]/50 transition">→</span>
@@ -529,16 +529,16 @@ function StatusMiniCard({ label, value, tone, icon }: { label: string; value: st
   return (
     <HoverLift>
     <div className={cn(
-      "rounded-[1.25rem] border p-4 transition duration-300 cursor-pointer",
+      "rounded-[1.25rem] border p-3 sm:p-4 transition duration-300 cursor-pointer",
       tone === "green"
         ? "border-emerald-500/25 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),rgba(245,241,232,0.92))] shadow-[0_0_25px_rgba(16,185,129,0.06)]"
         : "border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] shadow-[0_0_20px_rgba(255,45,45,0.06)]",
     )}>
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-2">
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#1a1a1a]/50">{label}</p>
         <div className="text-lg">{icon}</div>
       </div>
-      <p className={cn("mt-3 text-xl font-black leading-tight sm:text-2xl", tone === "green" ? "text-emerald-600" : "text-[#FF2D2D]")}>
+      <p className={cn("mt-3 text-lg font-black leading-tight sm:text-2xl", tone === "green" ? "text-emerald-600" : "text-[#FF2D2D]")}>
         {value}
       </p>
     </div>
@@ -548,9 +548,9 @@ function StatusMiniCard({ label, value, tone, icon }: { label: string; value: st
 
 function ProgressStrip() {
   return (
-    <Shell className="p-5 sm:p-6">
+    <Shell className="p-4 sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+        <div className="min-w-0">
           <p className="text-xs font-black uppercase tracking-[0.35em] text-[#1a1a1a]/40">Overall Progress</p>
           <h2 className="mt-2 text-2xl font-black text-[#1a1a1a] sm:text-3xl">{percentComplete}% complete</h2>
           <p className="mt-2 text-sm text-[#1a1a1a]/50 break-words">{PROGRESS.complete} of {PROGRESS.total} roadmap milestones are live, proven, or in motion.</p>
@@ -582,7 +582,7 @@ function RoadSign({ mile, title, color }: { mile: string; title: string; color: 
   return (
     <div className={`relative ${c.glow}`}>
       <div className="absolute left-1/2 -translate-x-1/2 top-full w-1.5 h-8 bg-neutral-600" />
-      <div className={cn("relative rounded-xl border-2 px-4 py-2 text-center min-w-[140px]", c.bg, c.border)}>
+      <div className={cn("relative rounded-xl border-2 px-4 py-2 text-center min-w-[120px] sm:min-w-[140px]", c.bg, c.border)}>
         <p className={cn("text-[9px] font-black uppercase tracking-[0.3em] opacity-75", c.text)}>{mile}</p>
         <p className={cn("text-sm font-black leading-tight", c.text)}>{title}</p>
         <div className="absolute top-1 left-2 w-1.5 h-1.5 rounded-full bg-white/30" />
@@ -609,9 +609,9 @@ function ExitCard({ exit, side, onClick }: { exit: typeof EXITS[0]; side: "left"
     <div className={cn("relative", side === "left" ? "lg:pr-8" : "lg:pl-8")}>
       <div
         onClick={onClick}
-        className="rounded-[1.4rem] border border-white/10 bg-neutral-900/80 p-5 sm:p-6 hover:border-red-500/20 hover:bg-neutral-900/90 transition-all cursor-pointer group"
+        className="rounded-[1.4rem] border border-white/10 bg-neutral-900/80 p-4 sm:p-6 hover:border-red-500/20 hover:bg-neutral-900/90 transition-all cursor-pointer group"
       >
-        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition">
+        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition hidden sm:block">
           <span className="text-[10px] font-black uppercase tracking-wider text-red-400">Click for proof →</span>
         </div>
         <div className={cn("flex items-center gap-3 mb-3 flex-wrap", side === "left" ? "lg:justify-end" : "")}>
@@ -620,13 +620,13 @@ function ExitCard({ exit, side, onClick }: { exit: typeof EXITS[0]; side: "left"
             {exit.status}
           </span>
         </div>
-        <h3 className={cn("text-2xl sm:text-3xl font-black text-white mb-1", side === "left" ? "lg:text-right" : "")}>
+        <h3 className={cn("text-xl sm:text-3xl font-black text-white mb-1", side === "left" ? "lg:text-right" : "")}>
           {exit.title}
         </h3>
         <p className={cn("text-sm text-white/50 mb-5", side === "left" ? "lg:text-right" : "")}>
           {exit.summary}
         </p>
-        <div className={cn("space-y-2", side === "left" ? "lg:ml-auto" : "", "max-w-sm")}>
+        <div className={cn("space-y-2", side === "left" ? "lg:ml-auto" : "", "max-w-full sm:max-w-sm")}>
           {exit.items.map((item) => (
             <div key={item.text} className={cn("flex items-center gap-3 p-3 rounded-xl border",
               item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-white/[0.02] border-white/5")}>
@@ -701,8 +701,8 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
   }, []);
 
   return (
-    <ShellWithRef className="p-0 overflow-visible border-[#1a1a1a]/20" ref={highwayRef}>
-      <div className="relative py-10 sm:py-16">
+    <ShellWithRef className="p-0 border-[#1a1a1a]/20" ref={highwayRef}>
+      <div className="relative py-10 sm:py-16 overflow-hidden">
         {/* Base asphalt */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#1a1a1a_0%,#111_50%,#1a1a1a_100%)]" />
         
@@ -775,10 +775,10 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
           ))}
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8">
+        <div className="relative z-10 max-w-5xl mx-auto px-3 sm:px-8">
           <div className="text-center mb-10">
             <p className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30">The $MAD Proof Sequence</p>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-black text-white">Four stages. One truth.</h2>
+            <h2 className="mt-2 text-2xl sm:text-4xl font-black text-white">Four stages. One truth.</h2>
             <p className="mt-2 text-sm text-white/30">⚠️ Not a roadmap. A verification chain. Every claim backed by proof.</p>
           </div>
           <div className="space-y-16 sm:space-y-20">
@@ -820,9 +820,9 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
             })}
           </div>
           <div className="mt-16 text-center">
-            <div className="inline-block rounded-2xl border-2 border-white/20 bg-neutral-800 px-6 py-3 animate-pulse">
+            <div className="inline-block rounded-2xl border-2 border-white/20 bg-neutral-800 px-4 py-3 sm:px-6 animate-pulse">
               <p className="text-xs font-black uppercase tracking-[0.3em] text-white/40">End of Sequence</p>
-              <p className="text-lg font-black text-white mt-1">Destination: 200M $MAD</p>
+              <p className="text-base sm:text-lg font-black text-white mt-1">Destination: 200M $MAD</p>
             </div>
           </div>
         </div>
@@ -837,7 +837,7 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
 
 function BurnMechanics() {
   return (
-    <Shell className="p-6 sm:p-8">
+    <Shell className="p-4 sm:p-8">
       <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-stretch">
         <div className="flex flex-col justify-between rounded-[1.75rem] border border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
           <div>
@@ -865,7 +865,7 @@ function BurnMechanics() {
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Burn Trigger</p>
             <span className="rounded-full border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-[#FF2D2D]">Phase 2</span>
           </div>
-          <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-5">
+          <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-4 sm:p-5">
             <p className="text-lg font-black text-[#1a1a1a] sm:text-xl">Burn #2 activates at 10,000 holders.</p>
             <p className="mt-2 text-lg font-black text-[#FF2D2D] sm:text-xl">No earlier. No later.</p>
             <div className="mt-4 rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
@@ -897,7 +897,7 @@ function BurnMechanics() {
 
 function CommunitySupport() {
   return (
-    <Shell className="p-6 sm:p-8">
+    <Shell className="p-4 sm:p-8">
       <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
         <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
           <div>
@@ -908,12 +908,12 @@ function CommunitySupport() {
             </p>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 px-6 py-5">
+            <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-5 sm:px-6">
               <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-600/70">Support Status</p>
               <p className="mt-2 text-3xl font-black text-emerald-600">5 Locked</p>
               <p className="mt-1 text-sm text-[#1a1a1a]/40">Backed publicly with receipts</p>
             </div>
-            <div className="rounded-3xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-6 py-5">
+            <div className="rounded-3xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-5 sm:px-6">
               <p className="text-xs font-black uppercase tracking-[0.28em] text-[#1a1a1a]/40">Signal Sent</p>
               <p className="mt-2 text-3xl font-black text-[#1a1a1a]">Locked Up</p>
               <p className="mt-1 text-sm text-[#1a1a1a]/40">Commitment over quick exits</p>
@@ -925,7 +925,7 @@ function CommunitySupport() {
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Proof of Work</p>
             <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-600">Verified Signal</span>
           </div>
-          <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-5">
+          <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-4 sm:p-5">
             <p className="text-lg font-black text-[#1a1a1a] sm:text-xl">Supported five communities.</p>
             <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl">Locked all the tokens.</p>
             <div className="mt-4 grid gap-4">
@@ -995,10 +995,10 @@ function CommunitySupport() {
 
 function CTASection() {
   return (
-    <Shell className="p-6 sm:p-8">
+    <Shell className="p-4 sm:p-8">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <h2 className="text-4xl font-black text-[#1a1a1a] sm:text-6xl">THE $MAD PROOF SEQUENCE.</h2>
+          <h2 className="text-3xl font-black text-[#1a1a1a] sm:text-6xl">THE $MAD PROOF SEQUENCE.</h2>
           <p className="mt-4 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">Conviction. Loyalty. Utility. Scale. Every stage verifiable. Nothing promised.</p>
         </div>
         <div style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
@@ -1014,7 +1014,7 @@ function CTASection() {
 
 function RiskNotice() {
   return (
-    <Shell className="border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] px-6 py-8 sm:px-10 sm:py-10">
+    <Shell className="border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] px-4 py-6 sm:px-10 sm:py-10">
       <p className="text-center text-xs font-black uppercase tracking-[0.38em] text-[#FF2D2D]/70">Risk Notice</p>
       <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-[#1a1a1a]/60 sm:text-xl">
         $MAD is a meme coin and speculative digital asset. Nothing on this website is financial advice or a guarantee of returns. Crypto is risky and volatile. Never risk money you cannot afford to lose. Always do your own research.
@@ -1068,7 +1068,7 @@ export default function RoadmapPage() {
 
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,45,45,0.06),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.04),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(26,26,26,0.03),transparent_25%)]" />
       
-      <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6 lg:px-8 relative z-10">
+      <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-20 pt-6 relative z-10">
         <div className="grid gap-6">
           <FadeIn>
             <ProgressStrip />
