@@ -151,8 +151,7 @@ function TheCinema() {
           <ContractBlock />
         </div>
 
-        {/* Buy buttons */}
-        <div className="mt-4 flex flex-col sm:flex-row justify-center items-center gap-3">
+        <div className="mt-4 flex justify-center">
           <a 
             href={LINKS.buy} 
             target="_blank" 
@@ -161,15 +160,6 @@ function TheCinema() {
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             SWAP ON JUPITER
-          </a>
-          <a 
-            href={LINKS.okx} 
-            target="_blank" 
-            rel="noreferrer"
-            className="group flex items-center gap-2 px-8 py-4 bg-[#1a1a1a] hover:bg-[#2a2a2a] text-white text-base font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(26,26,26,0.25)] border border-white/10"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            BUY ON OKX DEX
           </a>
         </div>
 
