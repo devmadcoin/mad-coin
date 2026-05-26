@@ -447,7 +447,7 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
         <div className="flex items-center justify-between mb-6">
           <div>
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30">{exit.mile}</span>
-            <h3 className="text-xl sm:text-2xl font-black text-[#1a1a1a]">{exit.title}</h3>
+            <h3 className="text-xl sm:text-2xl font-black text-[#1a1a1a] break-words">{exit.title}</h3>
           </div>
           <button
             onClick={onClose}
@@ -457,7 +457,7 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
           </button>
         </div>
 
-        <p className="text-sm text-[#1a1a1a]/40 mb-6">{exit.summary}</p>
+        <p className="text-sm text-[#1a1a1a]/40 mb-6 break-words">{exit.summary}</p>
 
         {exit.proof.length > 0 && (
           <div className="mb-6">
@@ -499,7 +499,7 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
               <div
                 key={item.text}
                 className={cn(
-                  "flex items-center gap-3 p-3 rounded-xl border",
+                  "flex items-center gap-3 p-3 rounded-xl border min-w-0",
                   item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-[#1a1a1a]/[0.02] border-[#1a1a1a]/5"
                 )}
               >
@@ -511,7 +511,7 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
                 >
                   {item.done ? "✓" : "○"}
                 </div>
-                <span className={cn("text-sm", item.done ? "text-[#1a1a1a]/80" : "text-[#1a1a1a]/40")}>{item.text}</span>
+                <span className={cn("text-sm break-words min-w-0", item.done ? "text-[#1a1a1a]/80" : "text-[#1a1a1a]/40")}>{item.text}</span>
               </div>
             ))}
           </div>
@@ -552,7 +552,7 @@ function ProgressStrip() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
           <p className="text-xs font-black uppercase tracking-[0.35em] text-[#1a1a1a]/40">Overall Progress</p>
-          <h2 className="mt-2 text-2xl font-black text-[#1a1a1a] sm:text-3xl">{percentComplete}% complete</h2>
+          <h2 className="mt-2 text-2xl font-black text-[#1a1a1a] sm:text-3xl break-words">{percentComplete}% complete</h2>
           <p className="mt-2 text-sm text-[#1a1a1a]/50 break-words">{PROGRESS.complete} of {PROGRESS.total} roadmap milestones are live, proven, or in motion.</p>
         </div>
         <div className="rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-2 text-sm font-bold text-[#1a1a1a]/70">Conviction. Loyalty. Utility.</div>
@@ -628,13 +628,13 @@ function ExitCard({ exit, side, onClick }: { exit: typeof EXITS[0]; side: "left"
         </p>
         <div className={cn("space-y-2", side === "left" ? "lg:ml-auto" : "", "max-w-full sm:max-w-sm")}>
           {exit.items.map((item) => (
-            <div key={item.text} className={cn("flex items-center gap-3 p-3 rounded-xl border",
+            <div key={item.text} className={cn("flex items-center gap-3 p-3 rounded-xl border min-w-0",
               item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-white/[0.02] border-white/5")}>
               <div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0",
                 item.done ? "bg-emerald-500 text-black" : "bg-white/10 text-white/30")}>
                 {item.done ? "✓" : "○"}
               </div>
-              <span className={cn("text-sm font-medium", item.done ? "text-white/80" : "text-white/40")}>{item.text}</span>
+              <span className={cn("text-sm font-medium break-words min-w-0", item.done ? "text-white/80" : "text-white/40")}>{item.text}</span>
             </div>
           ))}
         </div>
@@ -778,8 +778,8 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
         <div className="relative z-10 max-w-5xl mx-auto px-3 sm:px-8">
           <div className="text-center mb-10">
             <p className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30">The $MAD Proof Sequence</p>
-            <h2 className="mt-2 text-2xl sm:text-4xl font-black text-white">Four stages. One truth.</h2>
-            <p className="mt-2 text-sm text-white/30">⚠️ Not a roadmap. A verification chain. Every claim backed by proof.</p>
+            <h2 className="mt-2 text-2xl sm:text-4xl font-black text-white break-words">Four stages. One truth.</h2>
+            <p className="mt-2 text-sm text-white/30 break-words">⚠️ Not a roadmap. A verification chain. Every claim backed by proof.</p>
           </div>
           <div className="space-y-16 sm:space-y-20">
             {EXITS.map((exit, i) => {
@@ -842,7 +842,7 @@ function BurnMechanics() {
         <div className="flex flex-col justify-between rounded-[1.75rem] border border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-[#FF2D2D]/70">Deflation Protocol</p>
-            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl">50% Burned. More Coming.</h2>
+            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl break-words">50% Burned. More Coming.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 break-words">
               Supply is already cut in half. Burn #2 drops it to 200M — but only when 10,000 people hold $MAD. Not a promise. A protocol.
             </p>
@@ -866,20 +866,20 @@ function BurnMechanics() {
             <span className="rounded-full border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-[#FF2D2D]">Phase 2</span>
           </div>
           <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-4 sm:p-5">
-            <p className="text-lg font-black text-[#1a1a1a] sm:text-xl">Burn #2 activates at 10,000 holders.</p>
-            <p className="mt-2 text-lg font-black text-[#FF2D2D] sm:text-xl">No earlier. No later.</p>
+            <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Burn #2 activates at 10,000 holders.</p>
+            <p className="mt-2 text-lg font-black text-[#FF2D2D] sm:text-xl break-words">No earlier. No later.</p>
             <div className="mt-4 rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
               <img src="/solscan-mad-token.png" alt="$MAD token on Solscan — 276 holders, ~500M supply" className="w-full h-auto" />
               <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Live on Solscan</p>
-                <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump · Verifiable · On-chain</p>
+                <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-all">Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump · Verifiable · On-chain</p>
               </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
               10,000 holders. Then 200M supply. The most successful communities exceed that threshold. We don't burn for hype — we burn for growth.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <a href="https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump" target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 px-5 py-3 text-sm font-black text-[#FF2D2D] transition hover:scale-[1.02] hover:bg-[#FF2D2D]/15">
+              <a href="https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump" target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 px-4 py-2 sm:px-5 sm:py-3 text-sm font-black text-[#FF2D2D] transition hover:scale-[1.02] hover:bg-[#FF2D2D]/15">
                 View on Solscan →
               </a>
               <span className="inline-flex items-center rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-3 text-sm font-semibold text-[#1a1a1a]/60">Burn #1: Complete ✓</span>
@@ -902,7 +902,7 @@ function CommunitySupport() {
         <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
-            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl">5 Communities Supported.</h2>
+            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl break-words">5 Communities Supported.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 break-words">
               5 communities supported. Tokens locked to 2060. Public receipts on X. Loyalty proven before trust asked.
             </p>
@@ -926,42 +926,42 @@ function CommunitySupport() {
             <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-600">Verified Signal</span>
           </div>
           <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-4 sm:p-5">
-            <p className="text-lg font-black text-[#1a1a1a] sm:text-xl">Supported five communities.</p>
-            <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl">Locked all the tokens.</p>
+            <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Supported five communities.</p>
+            <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl break-words">Locked all the tokens.</p>
             <div className="mt-4 grid gap-4">
               <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
                 <img src="/derpydave-lock-proof.png" alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #1 — Apr 21, 2026</p>
-                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5">8,155,311 $DERPYDAVE · Streamflow · Non-cancelable until 2060</p>
+                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">8,155,311 $DERPYDAVE · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
               <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
                 <img src="/rndy-lock-proof.png" alt="1,754,679 RNDY tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #2 — May 8, 2026</p>
-                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
+                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
               <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
                 <img src="/touchgrass-lock-proof.png" alt="1,019,634 TOUCHGRASS tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #3 — May 10, 2026</p>
-                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5">1,019,634 $TOUCHGRASS · Streamflow · Non-cancelable until 2060</p>
+                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">1,019,634 $TOUCHGRASS · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
               <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
                 <img src="/hineycoin-lock-proof.png" alt="1,027,002 HINEY tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #4 — May 21, 2026</p>
-                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5">1,027,002 $HINEY · Streamflow · Non-cancelable until 2060</p>
+                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">1,027,002 $HINEY · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
               <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
                 <img src="/digikoinz-lock-proof.png" alt="1,038,763 KOINZ tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #5 — May 24, 2026</p>
-                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5">1,038,763 $KOINZ · Streamflow · Non-cancelable until 2060</p>
+                  <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">1,038,763 $KOINZ · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
             </div>
@@ -969,19 +969,19 @@ function CommunitySupport() {
               50% burned. 5 communities locked to 2060. Not theory. Proof.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <a href={LINKS.communityProof} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+              <a href={LINKS.communityProof} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #1 →
               </a>
-              <a href={LINKS.communityProof2} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+              <a href={LINKS.communityProof2} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #2 →
               </a>
-              <a href={LINKS.communityProof3} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+              <a href={LINKS.communityProof3} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #3 →
               </a>
-              <a href={LINKS.communityProof4} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+              <a href={LINKS.communityProof4} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #4 →
               </a>
-              <a href={LINKS.communityProof5} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+              <a href={LINKS.communityProof5} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #5 →
               </a>
               <span className="inline-flex items-center rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-3 text-sm font-semibold text-[#1a1a1a]/60">Public receipts on X</span>
@@ -998,8 +998,8 @@ function CTASection() {
     <Shell className="p-4 sm:p-8">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <h2 className="text-3xl font-black text-[#1a1a1a] sm:text-6xl">THE $MAD PROOF SEQUENCE.</h2>
-          <p className="mt-4 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">Conviction. Loyalty. Utility. Scale. Every stage verifiable. Nothing promised.</p>
+          <h2 className="text-3xl font-black text-[#1a1a1a] sm:text-6xl break-words">THE $MAD PROOF SEQUENCE.</h2>
+          <p className="mt-4 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg break-words">Conviction. Loyalty. Utility. Scale. Every stage verifiable. Nothing promised.</p>
         </div>
         <div style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
           <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,45,45,0.15)} 50%{box-shadow:0 0 35px rgba(255,45,45,0.28)}`}</style>
