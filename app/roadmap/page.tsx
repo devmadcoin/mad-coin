@@ -998,12 +998,12 @@ function CTASection() {
     <Shell className="p-4 sm:p-8">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
-          <h2 className="text-3xl font-black text-[#1a1a1a] sm:text-6xl break-words">THE $MAD PROOF SEQUENCE.</h2>
+          <h2 className="text-2xl sm:text-4xl font-black text-[#1a1a1a] break-words">THE $MAD PROOF SEQUENCE.</h2>
           <p className="mt-4 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg break-words">Conviction. Loyalty. Utility. Scale. Every stage verifiable. Nothing promised.</p>
         </div>
         <div style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
           <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,45,45,0.15)} 50%{box-shadow:0 0 35px rgba(255,45,45,0.28)}`}</style>
-          <a href={LINKS.buy} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-[#FF2D2D]/35 bg-[#FF2D2D] px-8 py-4 text-base font-black text-white shadow-[0_0_22px_rgba(255,45,45,0.15)] transition hover:scale-[1.02] hover:bg-[#FF6B00]">
+          <a href={LINKS.buy} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-[#FF2D2D]/35 bg-[#FF2D2D] px-5 py-3 text-sm sm:px-8 sm:py-4 sm:text-base font-black text-white shadow-[0_0_22px_rgba(255,45,45,0.15)] transition hover:scale-[1.02] hover:bg-[#FF6B00]">
             Start Your Journey →
           </a>
         </div>
