@@ -90,12 +90,12 @@ function TheGallery() {
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   const artworks = [
-    { src: "/mad-art/mad-morning-v2.png", title: "Morning Routine", type: "Scene" },
-    { src: "/mad-art/mad-cyber-v2.png", title: "Cyber MAD", type: "Character" },
-    { src: "/mad-art/mad-green-pill-v2.png", title: "The Green Pill", type: "Scene" },
-    { src: "/mad-art/mad-morning-routine-v2.jpg", title: "Morning $MAD", type: "Character" },
-    { src: "/mad-art/mad-cyber-troll-v2.jpg", title: "Cyber $MAD", type: "Character" },
-    { src: "/mad-art/mad-green-pill-v2.jpg", title: "The Green Pill", type: "Scene" },
+    { src: "/mad-art/mad-morning-v3.jpg", title: "Morning Routine", type: "Scene" },
+    { src: "/mad-art/mad-cyber-v3.jpg", title: "Cyber MAD", type: "Character" },
+    { src: "/mad-art/mad-green-pill-v3.jpg", title: "The Green Pill", type: "Scene" },
+    { src: "/mad-art/mad-morning-routine.jpg", title: "Morning $MAD", type: "Character" },
+    { src: "/mad-art/mad-cyber-troll.jpg", title: "Cyber $MAD", type: "Character" },
+    { src: "/mad-art/mad-green-pill.jpg", title: "The Green Pill", type: "Scene" },
     { src: "/memes/MAD-2-MONTHS.png", title: "2 Months", type: "Milestone" },
     { src: "/memes/MAD-3-MONTHS.png", title: "3 Months", type: "Milestone" },
     { src: "/memes/MAD-ARMY.png", title: "MAD Army", type: "Community" },
