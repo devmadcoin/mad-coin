@@ -1,4 +1,5 @@
 memory/
+.git/
 *.log
 .env.local
 .env.development.local
