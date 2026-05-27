@@ -7,3 +7,8 @@ memory/
 .env.production.local
 node_modules/
 .next/
+downloads/
+memorized_media/
+memorized_diary/
+knowledge/
+content/
