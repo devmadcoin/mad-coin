@@ -507,6 +507,7 @@ function TheArchitects() {
                       href={link.href}
                       target="_blank"
                       rel="noreferrer"
+                      aria-label={link.label}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] hover:bg-[#1a1a1a]/[0.06] hover:border-[#FF2D2D]/20 text-[#1a1a1a]/50 hover:text-[#1a1a1a] text-[10px] font-bold uppercase tracking-wider transition-all"
                     >
                       {link.label === "X" ? (
@@ -514,7 +515,7 @@ function TheArchitects() {
                       ) : (
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                       )}
-                      {link.label}
+                      {link.label !== "X" && link.label}
                     </a>
                   ))}
                 </div>
