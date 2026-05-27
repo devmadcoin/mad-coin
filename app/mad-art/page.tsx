@@ -90,9 +90,9 @@ function TheGallery() {
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   const artworks = [
-    { src: "/mad-art/mad-cyber-troll-v2.png", title: "Cyber Troll", type: "Character" },
-    { src: "/mad-art/mad-jungle-pill.png", title: "Jungle Pill", type: "Scene" },
-    { src: "/mad-art/mad-morning-cereal.png", title: "Morning Cereal", type: "Character" },
+    { src: "/mad-art/mad-cyber-troll-v2.jpg", title: "Cyber Troll", type: "Character" },
+    { src: "/mad-art/mad-jungle-pill.jpg", title: "Jungle Pill", type: "Scene" },
+    { src: "/mad-art/mad-morning-cereal.jpg", title: "Morning Cereal", type: "Character" },
     { src: "/mad-art/mad-cyber-v3.jpg", title: "Cyber MAD", type: "Character" },
     { src: "/mad-art/mad-green-pill-v3.jpg", title: "The Green Pill", type: "Scene" },
     { src: "/mad-art/mad-morning-routine.jpg", title: "Morning $MAD", type: "Character" },
