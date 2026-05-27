@@ -14,4 +14,4 @@ knowledge/
 content/
 memes/
 __pycache__/
-*.png
+/*.png
