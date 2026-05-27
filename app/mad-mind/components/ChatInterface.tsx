@@ -233,15 +233,15 @@ function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMes
       )}
       <div className={`max-w-[85%] sm:max-w-[75%]`}>
         <div
-          className={`rounded-2xl px-4 py-3 ${
+          className={`rounded-xl px-3 py-2 ${
             isUser
               ? "bg-[#FF2D2D]/[0.12] border border-[#FF2D2D]/20 text-[#1a1a1a]/90"
               : "bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.08] text-[#1a1a1a]/75"
           }`}
         >
-          <p className="text-sm leading-[1.7] whitespace-pre-wrap">{msg.text}</p>
+          <p className="text-sm leading-[1.6] whitespace-pre-wrap">{msg.text}</p>
         </div>
-        <div className={`flex items-center gap-2 mt-1.5 ${isUser ? "justify-end pr-1" : "justify-start pl-1"}`}>
+        <div className={`flex items-center gap-2 mt-1 ${isUser ? "justify-end pr-1" : "justify-start pl-1"}`}>
           <span className="text-[9px] text-[#1a1a1a]/20 tabular-nums">{formatTime(msg.timestamp)}</span>
           {!isUser && <CopyButton text={msg.text} />}
           {!isUser && (
@@ -266,7 +266,7 @@ function TypingIndicator() {
       <div className="shrink-0 mb-1">
         <MadChaoPixel size={28} animated={true} showLabel={false} />
       </div>
-      <div className="rounded-2xl bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.08] px-5 py-4">
+      <div className="rounded-xl bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.08] px-4 py-3">
         <div className="flex gap-1.5 items-center h-4">
           <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "0ms" }} />
           <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "120ms" }} />
@@ -446,25 +446,25 @@ export default function ChatInterface({
         {/* Messages area */}
         <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto px-3 sm:px-8 py-3 sm:py-4 space-y-3 sm:space-y-4 scrollbar-thin ios-momentum"
+          className="flex-1 overflow-y-auto px-3 sm:px-5 py-2 sm:py-3 space-y-2 sm:space-y-3 scrollbar-thin ios-momentum"
         >
           {!hasMessages ? (
             <div className="h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
-              <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-4 sm:mb-5 overflow-hidden">
+              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-3 sm:mb-4 overflow-hidden">
                 <MadChaoPixel size={isMobile ? 40 : 48} animated={true} showLabel={false} />
               </div>
               <h2 className="text-lg sm:text-xl font-black text-[#1a1a1a] mb-1">THE ORACLE</h2>
-              <p className="text-xs sm:text-sm text-[#1a1a1a]/40 max-w-[300px] mb-5 sm:mb-6 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#1a1a1a]/40 max-w-[300px] mb-4 sm:mb-5 leading-relaxed">
                 The Claw does not answer questions.<br />
                 It reveals which frequency you are on.
               </p>
 
-              <div className="grid gap-2 w-full max-w-[400px]">
+              <div className="grid gap-1.5 w-full max-w-[400px]">
                 {STARTERS.map((s) => (
                   <button
                     key={s}
                     onClick={() => sendMessage(s)}
-                    className="text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.06] text-xs sm:text-sm text-[#1a1a1a]/50 hover:bg-[#1a1a1a]/[0.06] hover:border-[#1a1a1a]/10 hover:text-[#1a1a1a]/70 transition-all"
+                    className="text-left px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.06] text-xs sm:text-sm text-[#1a1a1a]/50 hover:bg-[#1a1a1a]/[0.06] hover:border-[#1a1a1a]/10 hover:text-[#1a1a1a]/70 transition-all"
                   >
                     {s}
                   </button>
@@ -504,7 +504,7 @@ export default function ChatInterface({
         </div>
 
         {/* Input area */}
-        <div className="shrink-0 px-3 sm:px-8 py-2.5 sm:py-3 border-t border-[#1a1a1a]/5 safe-top">
+        <div className="shrink-0 px-3 sm:px-5 py-2 sm:py-2.5 border-t border-[#1a1a1a]/5 safe-top">
           <div className="relative">
             <textarea
               ref={textareaRef}
@@ -514,8 +514,8 @@ export default function ChatInterface({
               disabled={status === "sending" || typing}
               placeholder="Message Mad Claw..."
               rows={1}
-              className="w-full px-4 sm:px-5 py-3 sm:py-3.5 pr-12 sm:pr-14 rounded-xl sm:rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] text-[#1a1a1a] text-sm placeholder:text-[#1a1a1a]/20 outline-none focus:border-[#FF2D2D]/30 focus:bg-[#1a1a1a]/[0.05] transition-all resize-none disabled:opacity-40 leading-relaxed"
-              style={{ minHeight: "44px", maxHeight: "160px" }}
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 rounded-xl sm:rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] text-[#1a1a1a] text-sm placeholder:text-[#1a1a1a]/20 outline-none focus:border-[#FF2D2D]/30 focus:bg-[#1a1a1a]/[0.05] transition-all resize-none disabled:opacity-40 leading-relaxed"
+              style={{ minHeight: "40px", maxHeight: "160px" }}
             />
             <button
               onClick={handleSend}
@@ -537,7 +537,7 @@ export default function ChatInterface({
               )}
             </button>
           </div>
-          <p className="mt-1.5 sm:mt-2 text-[9px] sm:text-[10px] text-[#1a1a1a]/10 text-center">
+          <p className="mt-1 text-[9px] sm:text-[10px] text-[#1a1a1a]/10 text-center">
             Mad Claw can make mistakes. The signal is strong but not perfect.
           </p>
         </div>
