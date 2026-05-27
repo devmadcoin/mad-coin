@@ -12,6 +12,6 @@ memorized_media/
 memorized_diary/
 knowledge/
 content/
-memes/
-__pycache__/
+/memes/
+/__pycache__/
 /*.png
