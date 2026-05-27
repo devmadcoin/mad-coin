@@ -53,7 +53,7 @@ function TheStage() {
           preload="auto"
           className="w-full h-full object-cover"
         >
-          <source src="/art/mad-dancing.mp4" type="video/mp4" />
+          <source src="/loops/mad-dancing.mp4" type="video/mp4" />
         </video>
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#080808_100%)]" />
