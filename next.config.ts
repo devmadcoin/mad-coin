@@ -39,8 +39,5 @@ const nextConfig: NextConfig = {
     return [];
   },
 };
-};
 
 export default nextConfig;
-
-// Force redeploy - Vercel build fix
