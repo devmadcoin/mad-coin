@@ -38,6 +38,9 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [];
   },
+
+  // Trigger fresh deploy
+  // Build timestamp: 2026-05-27
 };
 
 export default nextConfig;
