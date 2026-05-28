@@ -901,7 +901,7 @@ function BurnMechanics() {
 function CommunitySupport() {
   return (
     <Shell className="p-4 sm:p-8">
-      <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
+      <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-stretch">
         <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
@@ -930,7 +930,7 @@ function CommunitySupport() {
           </div>
             <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Supported six communities.</p>
             <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl break-words">Locked all the tokens.</p>
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="mt-4 grid grid-cols-3 gap-3">
               <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
                 <img src="/derpydave-lock-proof.png" alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
