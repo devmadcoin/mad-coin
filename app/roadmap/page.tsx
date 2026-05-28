@@ -927,9 +927,10 @@ function CommunitySupport() {
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Proof of Work</p>
             <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-600">Verified Signal</span>
           </div>
-          <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-4 sm:p-5">
+          <div className="mt-3">
             <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Supported five communities.</p>
-            <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl break-words">Locked all the tokens.</p>
+            <p className="mt-1 text-lg font-black text-emerald-600 sm:text-xl break-words">Locked all the tokens.</p>
+          </div>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
                 <img src="/derpydave-lock-proof.png" alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060" className="w-full h-auto" />
