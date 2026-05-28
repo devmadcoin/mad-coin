@@ -93,7 +93,6 @@ function TheGallery() {
     { src: "/mad-art/mad-cyber-troll-v2.jpg", title: "Cyber Troll", type: "Character" },
     { src: "/mad-art/mad-jungle-pill.jpg", title: "Jungle Pill", type: "Scene" },
     { src: "/mad-art/mad-morning-cereal.jpg", title: "Morning Cereal", type: "Character" },
-    { src: "/mad-art/mad-cyber-v3.jpg", title: "Cyber MAD", type: "Character" },
     { src: "/memes/MAD-2-MONTHS.png", title: "2 Months", type: "Milestone" },
     { src: "/memes/MAD-3-MONTHS.png", title: "3 Months", type: "Milestone" },
     { src: "/memes/MAD-ARMY.png", title: "MAD Army", type: "Community" },
