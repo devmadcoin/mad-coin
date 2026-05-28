@@ -930,36 +930,36 @@ function CommunitySupport() {
           <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-4 sm:p-5">
             <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Supported five communities.</p>
             <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl break-words">Locked all the tokens.</p>
-            <div className="mt-4 grid gap-4">
-              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden hover:border-emerald-400/30 transition-all hover:shadow-lg">
                 <img src="/derpydave-lock-proof.png" alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #1 — Apr 21, 2026</p>
                   <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">8,155,311 $DERPYDAVE · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
-              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
+              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden hover:border-emerald-400/30 transition-all hover:shadow-lg">
                 <img src="/rndy-lock-proof.png" alt="1,754,679 RNDY tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #2 — May 8, 2026</p>
                   <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
-              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
+              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden hover:border-emerald-400/30 transition-all hover:shadow-lg">
                 <img src="/touchgrass-lock-proof.png" alt="1,019,634 TOUCHGRASS tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #3 — May 10, 2026</p>
                   <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">1,019,634 $TOUCHGRASS · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
-              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
+              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden hover:border-emerald-400/30 transition-all hover:shadow-lg">
                 <img src="/hineycoin-lock-proof.png" alt="1,027,002 HINEY tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #4 — May 21, 2026</p>
                   <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-words">1,027,002 $HINEY · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
-              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
+              <div className="rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden hover:border-emerald-400/30 transition-all hover:shadow-lg">
                 <img src="/digikoinz-lock-proof.png" alt="1,038,763 KOINZ tokens locked via Streamflow until 2060" className="w-full h-auto" />
                 <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #5 — May 24, 2026</p>
