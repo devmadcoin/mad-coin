@@ -200,6 +200,7 @@ const LINKS = {
   communityProof3: "https://x.com/madrichclub_/status/2053391015109955771?s=20",
   communityProof4: "https://x.com/madrichclub_/status/2057508965567877497?s=20",
   communityProof5: "https://x.com/madrichclub_/status/2058759994485715249?s=20",
+  communityProof6: "https://x.com/madrichclub_/status/2060080223954346354?s=20",
   madMind: "https://mad-coin.vercel.app/mad-mind",
 } as const;
 
@@ -211,7 +212,7 @@ const STATUS_CARDS = [
   { label: "Confessions", value: "LIVE NOW", tone: "green" as const, icon: "💬" },
   { label: "Token Burns", value: "50% BURNED", tone: "green" as const, icon: "🔥" },
   { label: "MAD AI", value: "LIVE NOW", tone: "green" as const, icon: "🤖" },
-  { label: "Community Support", value: "5 LOCKED", tone: "green" as const, icon: "🤝" },
+  { label: "Community Support", value: "6 LOCKED", tone: "green" as const, icon: "🤝" },
   { label: "MAD Games", value: "IN PROGRESS", tone: "red" as const, icon: "🎮" },
   { label: "Stickers", value: "LIVE NOW", tone: "green" as const, icon: "😈" },
   { label: "Clothing", value: "TESTING", tone: "red" as const, icon: "👕" },
@@ -904,15 +905,15 @@ function CommunitySupport() {
         <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
-            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl break-words">5 Communities Supported.</h2>
+            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl break-words">6 Communities Supported.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 break-words">
-              5 communities supported. Tokens locked to 2060. Public receipts on X. Loyalty proven before trust asked.
+              6 communities supported. Tokens locked to 2060. Public receipts on X. Loyalty proven before trust asked.
             </p>
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-5 sm:px-6">
               <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-600/70">Support Status</p>
-              <p className="mt-2 text-3xl font-black text-emerald-600">5 Locked</p>
+              <p className="mt-2 text-3xl font-black text-emerald-600">6 Locked</p>
               <p className="mt-1 text-sm text-[#1a1a1a]/40">Backed publicly with receipts</p>
             </div>
             <div className="rounded-3xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-5 sm:px-6">
@@ -927,7 +928,7 @@ function CommunitySupport() {
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Proof of Work</p>
             <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-600">Verified Signal</span>
           </div>
-            <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Supported five communities.</p>
+            <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Supported six communities.</p>
             <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl break-words">Locked all the tokens.</p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
@@ -965,9 +966,16 @@ function CommunitySupport() {
                   <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,038,763 $KOINZ · Streamflow · Non-cancelable until 2060</p>
                 </div>
               </div>
+              <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
+                <img src="/stash-lock-proof.png" alt="33,890 STASH tokens locked via Streamflow until 2060" className="w-full h-auto" />
+                <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #6 — May 28, 2026</p>
+                  <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">33,890 $STASH · Streamflow · Non-cancelable until 2060</p>
+                </div>
+              </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
-              50% burned. 5 communities locked to 2060. Not theory. Proof.
+              50% burned. 6 communities locked to 2060. Not theory. Proof.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <a href={LINKS.communityProof} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
@@ -984,6 +992,9 @@ function CommunitySupport() {
               </a>
               <a href={LINKS.communityProof5} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
                 Proof #5 →
+              </a>
+              <a href={LINKS.communityProof6} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+                Proof #6 →
               </a>
               <span className="inline-flex items-center rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-3 text-sm font-semibold text-[#1a1a1a]/60">Public receipts on X</span>
             </div>
