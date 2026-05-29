@@ -381,7 +381,7 @@ function TheProof() {
             </div>
           </div>
           
-          {/* Testimony Card */}
+          {/* Abraxas Testimony Card */}
           <div className="relative overflow-hidden rounded-[24px] border border-[#C5A572]/30 bg-white p-6 sm:p-8 flex flex-col justify-center shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
             <div className="relative z-10">
               {/* Stars */}
@@ -422,6 +422,63 @@ function TheProof() {
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                   See on X
                 </a>
+              </div>
+            </div>
+          </div>
+
+          {/* DKWTT Testimony — Full Width */}
+          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
+            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
+              {/* Tweet Image */}
+              <div className="relative aspect-square md:aspect-auto">
+                <Image
+                  src="/proof-american-dad-hat.png"
+                  alt="DKWTT wearing $MAD American Dad hat with MAD game on tablet"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 320px"
+                />
+              </div>
+              
+              {/* Tweet Content */}
+              <div className="p-6 sm:p-8 flex flex-col justify-center">
+                <div className="mb-4">
+                  <StarRating />
+                </div>
+
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="h-10 w-10 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-base font-black text-[#FF2D2D] border border-[#FF2D2D]/20">D</div>
+                  <div>
+                    <p className="text-sm font-black text-[#1a1a1a]">DKWTT (CHADWICK BASEMAN)</p>
+                    <p className="text-[10px] text-[#1a1a1a]/50">@lit_terrestrial · $MAD Merch Buyer</p>
+                  </div>
+                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
+                    </span>
+                    Verified
+                  </span>
+                </div>
+
+                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
+                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
+                  Ordered the <span className="text-[#FF2D2D] font-bold not-italic">$MAD American Dad hat</span> on the day that my Dad passed, he was an Army Veteran as well. This is not just a hat to me, <span className="text-[#FF2D2D] font-bold not-italic">$MAD is not just a meme coin to me</span>, Its deeper than just a feeling... It&apos;s Motivation Alignment &amp; Discipline.
+                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
+                </blockquote>
+
+                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
+                  <p className="text-[10px] text-[#1a1a1a]/40">May 26, 2026 · 603 Views</p>
+                  <a 
+                    href="https://x.com/lit_terrestrial/status/2059486216567824581?s=20" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    See on X
+                  </a>
+                </div>
               </div>
             </div>
           </div>
