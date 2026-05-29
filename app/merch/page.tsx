@@ -9,7 +9,7 @@ const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 const LINKS = {
   buy: "https://jup.ag/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
   solscan: "https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump",
-  telegram: "https://t.me/MadOfficalChannel",
+  telegram: "https://t.me/MadRichClub",
   x: "https://x.com/madrichclub_",
   instagram: "https://www.instagram.com/madrichclub/",
   tiktok: "https://www.tiktok.com/@madrichclub",
