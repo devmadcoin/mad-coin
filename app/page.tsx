@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
 const LINKS = {
-  telegram: "https://t.me/MadOfficalChannel",
+  telegram: "https://t.me/MadRichClub",
   x: "https://x.com/madrichclub_",
   instagram: "https://www.instagram.com/madrichclub/",
   tiktok: "https://www.tiktok.com/@madrichclub",
