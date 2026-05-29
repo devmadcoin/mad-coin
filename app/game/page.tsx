@@ -164,18 +164,18 @@ function HoverLift({
 
 const TUTORIAL_VIDEO = "https://www.youtube.com/embed/V0LBY-ZiklY";
 const GAME_LINK =
-  "https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening";
+  "https://www.roblox.com/games/123392566067659/MAD-INCREMENTAL";
 const TOWER_DEFENSE_TEASER = "https://streamable.com/e/yc9dot";
 const CREATOR = "@CoffeeCollectsBlox";
 const CREATOR_LINK = "https://www.roblox.com/users/5183792958/profile";
 
 const GAME_STATS = {
-  visits: 41000,
-  favorites: 133,
+  visits: 56500,
+  favorites: 216,
   active: 79,
   serverSize: 25,
   created: "4/14/2026",
-  updated: "5/8/2026",
+  updated: "5/29/2026",
   voiceChat: "Not Supported",
   camera: "Supported",
   genre: "N/A",
@@ -363,23 +363,19 @@ export default function GamePage() {
                 </div>
 
                 <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-[#1a1a1a] sm:text-6xl">
-                  Mad{" "}
+                  MAD{" "}
                   <span className="text-[#FF2D2D] drop-shadow-[0_0_14px_rgba(255,45,45,0.25)]">
-                    Phonk
-                  </span>
-                  <br />
-                  <span className="text-[#FF2D2D] drop-shadow-[0_0_14px_rgba(255,45,45,0.25)]">
-                    Awakening
+                    INCREMENTAL
                   </span>
                 </h1>
 
                 <p className="mt-5 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
-                  The first official $MAD game just dropped. Step into the arena, 
-                  wield the MAD blade, and prove your conviction. This isn&apos;t a 
+                  The first official $MAD game just dropped. Step into the arena,
+                  wield the MAD blade, and prove your conviction. This isn&apos;t a
                   prototype — this is the real signal.
                   <br className="hidden sm:block" />
                   <span className="mt-2 inline-block text-[#FF2D2D]/70">
-                    🔥 May 9th — The Reincarnation update drops. New auras, new madness.
+                    🔥 The Reincarnation update is live. New auras, new madness.
                   </span>
                 </p>
 
@@ -397,7 +393,7 @@ export default function GamePage() {
                       rel="noreferrer"
                       className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-[#FF6B00]"
                     >
-                      Play Mad Phonk Awakening →
+                      Play MAD INCREMENTAL →
                     </a>
                   </GlowPulse>
 
@@ -414,8 +410,8 @@ export default function GamePage() {
 
               <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-full">
                 <Image
-                  src="/game/mad-phonk-awakening-hero.png"
-                  alt="Mad Phonk Awakening — Official $MAD Game"
+                  src="/game/mad-incremental-hero.png"
+                  alt="MAD INCREMENTAL — Official $MAD Game"
                   fill
                   priority
                   className="object-cover"
@@ -448,7 +444,7 @@ export default function GamePage() {
             </div>
 
             <StaggerGrid className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" staggerDelay={0.06}>
-              <StatCard value="41.0K+" label="Visits" icon={Icons.eye} />
+              <StatCard value="56.5K+" label="Visits" icon={Icons.eye} />
               <StatCard value={GAME_STATS.favorites.toString()} label="Favorites" icon={Icons.heart} />
               <StatCard value={GAME_STATS.active.toString()} label="Active Now" icon={Icons.users} />
               <StatCard value={`${GAME_STATS.serverSize}`} label="Server Size" icon={Icons.server} />
@@ -489,8 +485,8 @@ export default function GamePage() {
                 </h2>
 
                 <p className="mt-5 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
-                  Coffee Blox just dropped 10,000 ROBUX into Mad Phonk Awakening. 
-                  Unlocking crazy auras, evolving from weak to overpowered. 
+                  Coffee Blox just dropped 10,000 ROBUX into MAD INCREMENTAL.
+                  Unlocking crazy auras, evolving from weak to overpowered.
                   Real gameplay. Real chaos. Real $MAD.
                 </p>
 
@@ -513,7 +509,7 @@ export default function GamePage() {
               <div className="relative aspect-video w-full bg-black">
                 <iframe
                   src="https://www.youtube.com/embed/Pte0bOa16xI?start=840"
-                  title="I Spent 10,000 ROBUX In Mad Phonk Awakening! (ROBLOX)"
+                  title="I Spent 10,000 ROBUX In MAD INCREMENTAL! (ROBLOX)"
                   className="absolute inset-0 h-full w-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
