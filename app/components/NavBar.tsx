@@ -24,7 +24,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     href: "/roadmap",
-    label: "The Mad Path",
+    label: "roadmap",
     mobileLabel: "Path",
     variant: "primary",
   },
