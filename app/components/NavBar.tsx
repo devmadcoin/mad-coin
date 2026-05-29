@@ -24,7 +24,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     href: "/roadmap",
-    label: "roadmap",
+    label: "Roadmap",
     mobileLabel: "Path",
     variant: "primary",
   },
