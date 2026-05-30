@@ -54,8 +54,50 @@ export default function RewardsPage() {
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
 
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+        {/* Distribution Rules — 1M Market Cap Milestone */}
+        <SectionShell className="p-6 sm:p-10">
+          <div className="text-center">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
+              Milestone Reward
+            </p>
+            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-3xl">
+              1M Market Cap <span className="text-[#FF2D2D]">Distribution</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
+              When $MAD hits 1M market cap on DEX, the rewards unlock. Original holders and active community members get rewarded.
+            </p>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-white p-6 sm:p-8">
+              <div className="mb-4">
+                <p className="text-3xl font-black text-[#FF2D2D]">50K</p>
+                <p className="text-sm font-black text-[#1a1a1a]">$MAD Tokens</p>
+              </div>
+              <p className="text-sm text-[#1a1a1a]/55">
+                Distributed to <span className="font-bold text-[#1a1a1a]">30 original holders</span> who believed from day one.
+              </p>
+              <div className="mt-4 inline-flex rounded-full bg-[#FF2D2D]/10 px-3 py-1 text-[10px] font-bold text-[#FF2D2D]">
+                ~1,667 $MAD per holder
+              </div>
+            </div>
+            <div className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-white p-6 sm:p-8">
+              <div className="mb-4">
+                <p className="text-3xl font-black text-[#FF2D2D]">25K</p>
+                <p className="text-sm font-black text-[#1a1a1a]">$MAD Tokens</p>
+              </div>
+              <p className="text-sm text-[#1a1a1a]/55">
+                Distributed to <span className="font-bold text-[#1a1a1a]">20 active holders</span> who keep the community alive.
+              </p>
+              <div className="mt-4 inline-flex rounded-full bg-[#FF2D2D]/10 px-3 py-1 text-[10px] font-bold text-[#FF2D2D]">
+                ~1,250 $MAD per holder
+              </div>
+            </div>
+          </div>
+        </SectionShell>
+
         {/* Hero */}
-        <SectionShell className="p-6 sm:p-10 lg:p-14">
+        <SectionShell className="mt-8 p-6 sm:p-10 lg:p-14">
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#FF2D2D]/60">
               Coming Soon
@@ -220,46 +262,6 @@ export default function RewardsPage() {
           </div>
         </SectionShell>
 
-        {/* Distribution Rules — 1M Market Cap Milestone */}
-        <SectionShell className="mt-8 p-6 sm:p-10">
-          <div className="text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
-              Milestone Reward
-            </p>
-            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-3xl">
-              1M Market Cap <span className="text-[#FF2D2D]">Distribution</span>
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
-              When $MAD hits 1M market cap on DEX, the rewards unlock. Original holders and active community members get rewarded.
-            </p>
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-white p-6 sm:p-8">
-              <div className="mb-4">
-                <p className="text-3xl font-black text-[#FF2D2D]">50K</p>
-                <p className="text-sm font-black text-[#1a1a1a]">$MAD Tokens</p>
-              </div>
-              <p className="text-sm text-[#1a1a1a]/55">
-                Distributed to <span className="font-bold text-[#1a1a1a]">30 original holders</span> who believed from day one.
-              </p>
-              <div className="mt-4 inline-flex rounded-full bg-[#FF2D2D]/10 px-3 py-1 text-[10px] font-bold text-[#FF2D2D]">
-                ~1,667 $MAD per holder
-              </div>
-            </div>
-            <div className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-white p-6 sm:p-8">
-              <div className="mb-4">
-                <p className="text-3xl font-black text-[#FF2D2D]">25K</p>
-                <p className="text-sm font-black text-[#1a1a1a]">$MAD Tokens</p>
-              </div>
-              <p className="text-sm text-[#1a1a1a]/55">
-                Distributed to <span className="font-bold text-[#1a1a1a]">20 active holders</span> who keep the community alive.
-              </p>
-              <div className="mt-4 inline-flex rounded-full bg-[#FF2D2D]/10 px-3 py-1 text-[10px] font-bold text-[#FF2D2D]">
-                ~1,250 $MAD per holder
-              </div>
-            </div>
-          </div>
         </SectionShell>
 
         {/* CTA */}
