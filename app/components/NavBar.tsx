@@ -88,14 +88,18 @@ function NavPill({
       className={cn(
         "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-bold transition duration-300",
         active
-          ? "bg-white text-black shadow-[0_0_12px_rgba(255,255,255,0.08)]"
+          ? href === "/rewards"
+            ? "bg-[#FF2D2D] text-white shadow-[0_0_20px_rgba(255,45,45,0.5)] animate-pulse"
+            : "bg-white text-black shadow-[0_0_12px_rgba(255,255,255,0.08)]"
           : variant === "cta"
             ? "border border-red-500/30 bg-red-500 text-white hover:scale-105 hover:bg-red-400 hover:shadow-[0_0_20px_rgba(255,0,0,0.25)]"
             : variant === "ai"
               ? "border border-red-500/20 bg-red-500/8 text-red-100 hover:border-red-400/35 hover:bg-red-500/12 hover:text-white"
               : variant === "primary"
                 ? "border border-white/10 bg-white/5 text-white/85 hover:bg-white/10"
-                : "text-white/72 hover:bg-white/10 hover:text-white"
+                : href === "/rewards"
+                  ? "border border-[#FF2D2D]/30 bg-[#FF2D2D]/10 text-[#FF4444] hover:bg-[#FF2D2D]/20 hover:text-[#FF6666] shadow-[0_0_15px_rgba(255,45,45,0.15)]"
+                  : "text-white/72 hover:bg-white/10 hover:text-white"
       )}
     >
       {children}
@@ -120,18 +124,28 @@ function MobileBottomNav({ pathname }: { pathname: string }) {
                 "flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 transition-all duration-200",
                 active
                   ? "text-[#FF2D2D]"
-                  : "text-white/45 hover:text-white/70"
+                  : item.href === "/rewards"
+                    ? "text-[#FF4444] animate-pulse hover:text-[#FF6666]"
+                    : "text-white/45 hover:text-white/70"
               )}
             >
               <div className={cn(
                 "flex h-9 w-9 items-center justify-center rounded-xl transition-colors",
-                active ? "bg-[#FF2D2D]/15" : "bg-transparent"
+                active
+                  ? "bg-[#FF2D2D]/15"
+                  : item.href === "/rewards"
+                    ? "bg-[#FF2D2D]/25 shadow-[0_0_12px_rgba(255,45,45,0.4)]"
+                    : "bg-transparent"
               )}>
                 {item.icon(active)}
               </div>
               <span className={cn(
                 "text-[10px] font-bold leading-none",
-                active ? "text-[#FF2D2D]" : "text-white/50"
+                active
+                  ? "text-[#FF2D2D]"
+                  : item.href === "/rewards"
+                    ? "text-[#FF4444] font-black"
+                    : "text-white/50"
               )}>
                 {item.mobileLabel ?? item.label}
               </span>
