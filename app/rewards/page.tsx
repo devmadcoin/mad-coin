@@ -144,6 +144,66 @@ export default function RewardsPage() {
           </div>
         </SectionShell>
 
+        {/* Thank You — The MAD Fam Behind the Concept */}
+        <SectionShell className="mt-8 p-6 sm:p-10">
+          <div className="text-center">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
+              The MAD Fam
+            </p>
+            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-3xl">
+              Thank <span className="text-[#FF2D2D]">You</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
+              The $MAD Rewards concept was born from the community. These two holders saw the vision and helped build it from the ground up.
+            </p>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {[
+              {
+                name: "crypto guru",
+                handle: "@followdv80",
+                image: "/rewards/crypto-guru-followdv80.png",
+                href: "https://x.com/followdv80",
+              },
+              {
+                name: "Perspective 360",
+                handle: "@Derrick152667",
+                image: "/rewards/perspective-360-derrick152667.png",
+                href: "https://x.com/Derrick152667",
+              },
+            ].map((person) => (
+              <a
+                key={person.handle}
+                href={person.href}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-4 rounded-[1.4rem] border border-[#1a1a1a]/10 bg-white p-5 transition-all hover:border-[#FF2D2D]/20"
+              >
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-[#1a1a1a]/10">
+                  <Image
+                    src={person.image}
+                    alt={person.name}
+                    fill
+                    className="object-cover transition-transform group-hover:scale-105"
+                    sizes="64px"
+                  />
+                </div>
+                <div>
+                  <p className="text-base font-black text-[#1a1a1a]">{person.name}</p>
+                  <p className="text-sm text-[#1a1a1a]/50">{person.handle}</p>
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-[#FF2D2D]/70">
+                    Concept Creator
+                  </p>
+                </div>
+                <div className="ml-auto text-[#1a1a1a]/30 transition-colors group-hover:text-[#FF2D2D]">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </div>
+              </a>
+            ))}
+          </div>
+        </SectionShell>
+
         {/* CTA */}
         <SectionShell className="mt-8 overflow-hidden p-0">
           <div className="grid grid-cols-1 lg:grid-cols-2">
