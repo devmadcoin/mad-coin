@@ -91,7 +91,7 @@ export default function RewardsPage() {
               Reward <span className="text-[#FF2D2D]">Milestones</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-[#1a1a1a]/55">
-              Every milestone unlocks a reward. The chart only goes up — the question is how fast you hold.
+              Every milestone unlocks a reward. The chart only goes up — the question is how long you hold.
             </p>
           </div>
 
