@@ -79,70 +79,210 @@ export default function RewardsPage() {
           </div>
         </SectionShell>
 
-        {/* Phase 1 — 1M Market Cap Milestone */}
+        {/* ═══════════════════════════════════════════════════════════
+            REWARD MILESTONES — Chart Ascending to $100M
+            ═══════════════════════════════════════════════════════════ */}
         <SectionShell className="mt-8 p-6 sm:p-10">
-          <div className="text-center">
+          <div className="text-center mb-10">
             <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
-              Phase 1 Reward
+              The Road Up
             </p>
             <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-3xl">
-              1M Market Cap <span className="text-[#FF2D2D]">Distribution</span>
+              Reward <span className="text-[#FF2D2D]">Milestones</span>
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
-              When $MAD hits $1M market cap on DEX and holds for <span className="font-bold text-[#1a1a1a]">12 hours</span>, the rewards unlock. 
-              2,000,000 $MAD tokens distributed to 50 holders. Winners chosen randomly from eligible wallets.
+            <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-[#1a1a1a]/55">
+              Every milestone unlocks a reward. The chart only goes up — the question is how fast you hold.
             </p>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-white p-6 sm:p-8">
-              <div className="mb-4">
-                <p className="text-3xl font-black text-[#FF2D2D]">50K</p>
-                <p className="text-sm font-black text-[#1a1a1a]">$MAD Each</p>
-              </div>
-              <p className="text-sm text-[#1a1a1a]/55">
-                <span className="font-bold text-[#1a1a1a]">30 OG holders</span> who believed from day one. 
-                Randomly selected from wallets holding 50K+ $MAD.
-              </p>
-              <div className="mt-4 inline-flex rounded-full bg-[#FF2D2D]/10 px-3 py-1 text-[10px] font-bold text-[#FF2D2D]">
-                1.5M $MAD total
+          {/* Chart container */}
+          <div className="relative max-w-3xl mx-auto">
+            {/* Vertical line connecting milestones */}
+            <div className="absolute left-[24px] sm:left-[32px] top-0 bottom-0 w-0.5 bg-[#1a1a1a]/10" />
+
+            {/* === 1M — ACTIVE === */}
+            <div className="relative mb-8">
+              {/* Dot on the line */}
+              <div className="absolute left-[18px] sm:left-[26px] top-6 z-10 h-3 w-3 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
+              
+              <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-emerald-500/30 bg-white p-5 sm:p-6 shadow-[0_0_20px_rgba(16,185,129,0.06)]">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="inline-flex rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-600">
+                    Unlocked
+                  </span>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
+                    Phase 1
+                  </p>
+                </div>
+                <h3 className="text-xl font-black text-[#1a1a1a]">
+                  $1M Market Cap <span className="text-emerald-500">Distribution</span>
+                </h3>
+                <p className="mt-2 text-sm text-[#1a1a1a]/55 leading-relaxed">
+                  When $MAD hits $1M market cap and holds for <span className="font-bold text-[#1a1a1a]">12 hours</span>, 2M $MAD tokens distributed to 50 eligible holders.
+                </p>
+
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-[#1a1a1a]/10 bg-[#F5F1E8] p-4">
+                    <p className="text-2xl font-black text-[#FF2D2D]">50K</p>
+                    <p className="text-xs font-bold text-[#1a1a1a]">$MAD Each</p>
+                    <p className="mt-1 text-xs text-[#1a1a1a]/50">30 OG holders randomly selected</p>
+                  </div>
+                  <div className="rounded-xl border border-[#1a1a1a]/10 bg-[#F5F1E8] p-4">
+                    <p className="text-2xl font-black text-[#FF2D2D]">25K</p>
+                    <p className="text-xs font-bold text-[#1a1a1a]">$MAD Each</p>
+                    <p className="mt-1 text-xs text-[#1a1a1a]/50">20 new holders randomly selected</p>
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-4">
+                  <p className="text-xs font-bold text-[#1a1a1a] mb-2">Eligibility</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#1a1a1a]/55">
+                    <p>✅ Hold at least <span className="font-bold text-[#1a1a1a]">50K $MAD</span></p>
+                    <p>✅ Hold for <span className="font-bold text-[#1a1a1a]">12 hours</span> after 1M MC</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-white p-6 sm:p-8">
-              <div className="mb-4">
-                <p className="text-3xl font-black text-[#FF2D2D]">25K</p>
-                <p className="text-sm font-black text-[#1a1a1a]">$MAD Each</p>
+
+            {/* === 10M — LOCKED === */}
+            <div className="relative mb-8">
+              <div className="absolute left-[18px] sm:left-[26px] top-5 z-10 h-3 w-3 rounded-full bg-[#1a1a1a]/20 ring-4 ring-[#1a1a1a]/5" />
+              
+              <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="inline-flex rounded-full bg-[#1a1a1a]/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#1a1a1a]/40">
+                    Locked
+                  </span>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#1a1a1a]/30">
+                    Phase 2
+                  </p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xl font-black text-[#1a1a1a]/30">
+                    $10M Market Cap
+                  </h3>
+                  <div className="h-10 w-10 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] flex items-center justify-center">
+                    <span className="text-lg font-black text-[#1a1a1a]/30">?</span>
+                  </div>
+                </div>
+                <p className="mt-2 text-sm text-[#1a1a1a]/30">
+                  Bigger milestone. Bigger reward. Stay $MAD to find out.
+                </p>
               </div>
-              <p className="text-sm text-[#1a1a1a]/55">
-                <span className="font-bold text-[#1a1a1a]">20 new holders</span> who join after this announcement. 
-                Randomly selected from wallets holding 50K+ $MAD.
-              </p>
-              <div className="mt-4 inline-flex rounded-full bg-[#FF2D2D]/10 px-3 py-1 text-[10px] font-bold text-[#FF2D2D]">
-                500K $MAD total
+            </div>
+
+            {/* === 25M — LOCKED === */}
+            <div className="relative mb-8">
+              <div className="absolute left-[18px] sm:left-[26px] top-5 z-10 h-3 w-3 rounded-full bg-[#1a1a1a]/20 ring-4 ring-[#1a1a1a]/5" />
+              
+              <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="inline-flex rounded-full bg-[#1a1a1a]/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#1a1a1a]/40">
+                    Locked
+                  </span>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#1a1a1a]/30">
+                    Phase 3
+                  </p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xl font-black text-[#1a1a1a]/30">
+                    $25M Market Cap
+                  </h3>
+                  <div className="h-10 w-10 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] flex items-center justify-center">
+                    <span className="text-lg font-black text-[#1a1a1a]/30">?</span>
+                  </div>
+                </div>
+                <p className="mt-2 text-sm text-[#1a1a1a]/30">
+                  The rewards get serious. The community gets rewarded.
+                </p>
+              </div>
+            </div>
+
+            {/* === 50M — LOCKED === */}
+            <div className="relative mb-8">
+              <div className="absolute left-[18px] sm:left-[26px] top-5 z-10 h-3 w-3 rounded-full bg-[#1a1a1a]/20 ring-4 ring-[#1a1a1a]/5" />
+              
+              <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="inline-flex rounded-full bg-[#1a1a1a]/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#1a1a1a]/40">
+                    Locked
+                  </span>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#1a1a1a]/30">
+                    Phase 4
+                  </p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xl font-black text-[#1a1a1a]/30">
+                    $50M Market Cap
+                  </h3>
+                  <div className="h-10 w-10 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] flex items-center justify-center">
+                    <span className="text-lg font-black text-[#1a1a1a]/30">?</span>
+                  </div>
+                </div>
+                <p className="mt-2 text-sm text-[#1a1a1a]/30">
+                  Halfway to the dream. The reward reflects the journey.
+                </p>
+              </div>
+            </div>
+
+            {/* === 75M — LOCKED === */}
+            <div className="relative mb-8">
+              <div className="absolute left-[18px] sm:left-[26px] top-5 z-10 h-3 w-3 rounded-full bg-[#1a1a1a]/20 ring-4 ring-[#1a1a1a]/5" />
+              
+              <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="inline-flex rounded-full bg-[#1a1a1a]/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#1a1a1a]/40">
+                    Locked
+                  </span>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#1a1a1a]/30">
+                    Phase 5
+                  </p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xl font-black text-[#1a1a1a]/30">
+                    $75M Market Cap
+                  </h3>
+                  <div className="h-10 w-10 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] flex items-center justify-center">
+                    <span className="text-lg font-black text-[#1a1a1a]/30">?</span>
+                  </div>
+                </div>
+                <p className="mt-2 text-sm text-[#1a1a1a]/30">
+                  The community is massive. The reward is legendary.
+                </p>
+              </div>
+            </div>
+
+            {/* === 100M — LOCKED === */}
+            <div className="relative">
+              <div className="absolute left-[18px] sm:left-[26px] top-5 z-10 h-3 w-3 rounded-full bg-[#FF2D2D]/30 ring-4 ring-[#FF2D2D]/10" />
+              
+              <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.03] p-5 sm:p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="inline-flex rounded-full bg-[#FF2D2D]/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#FF2D2D]/60">
+                    Final Goal
+                  </span>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/40">
+                    Phase 6
+                  </p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xl font-black text-[#FF2D2D]/50">
+                    $100M Market Cap
+                  </h3>
+                  <div className="h-10 w-10 rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.05] flex items-center justify-center">
+                    <span className="text-lg font-black text-[#FF2D2D]/40">?</span>
+                  </div>
+                </div>
+                <p className="mt-2 text-sm text-[#FF2D2D]/30">
+                  The ultimate milestone. The ultimate reward. Are you $MAD enough to find out?
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 rounded-[1.4rem] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-5 sm:p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF2D2D]/10">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF2D2D" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              </div>
-              <p className="text-sm font-black text-[#1a1a1a]">Eligibility Requirements</p>
-            </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 text-sm text-[#1a1a1a]/55">
-              <p>✅ Hold at least <span className="font-bold text-[#1a1a1a]">50K $MAD</span> tokens</p>
-              <p>✅ Hold for <span className="font-bold text-[#1a1a1a]">12 hours</span> after 1M MC hit</p>
-            </div>
-          </div>
-
-          <div className="mt-6 text-center">
+          <div className="mt-8 text-center">
             <p className="text-sm text-[#1a1a1a]/55">
-              Didn't win? No worries. This is only <span className="font-bold text-[#FF2D2D]">Phase 1</span>. 
-              More MAD Rewards coming as we grow — bigger milestones = bigger rewards.
-            </p>
-            <p className="mt-2 text-sm font-black text-[#1a1a1a]">
-              Hold longer. Stay $MAD. 🔥
+              Didn't win a phase? No worries. The next milestone is always coming. <span className="font-bold text-[#FF2D2D]">Hold longer. Stay $MAD.</span>
             </p>
           </div>
         </SectionShell>
