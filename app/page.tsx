@@ -607,6 +607,24 @@ function TheArchitects() {
     },
     {
       role: "Community Builder",
+      name: "crypto guru",
+      handle: "@followdv80",
+      image: "/rewards/crypto-guru-followdv80.png",
+      links: [
+        { label: "X", href: "https://x.com/followdv80" },
+      ],
+    },
+    {
+      role: "Community Builder",
+      name: "Perspective 360",
+      handle: "@Derrick152667",
+      image: "/rewards/perspective-360-derrick152667.png",
+      links: [
+        { label: "X", href: "https://x.com/Derrick152667" },
+      ],
+    },
+    {
+      role: "Community Builder",
       name: "Dino",
       handle: "@Iam__dino9",
       image: "/team/dino-moderator.png",
@@ -635,7 +653,7 @@ function TheArchitects() {
           The <span className="text-[#FF2D2D]">Architects</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {team.map((member) => (
             <div
               key={member.role}
