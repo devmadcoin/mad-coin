@@ -262,8 +262,6 @@ export default function RewardsPage() {
           </div>
         </SectionShell>
 
-        </SectionShell>
-
         {/* CTA */}
         <SectionShell className="mt-8 overflow-hidden p-0">
           <div className="grid grid-cols-1 lg:grid-cols-2">
