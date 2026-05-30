@@ -80,7 +80,7 @@ export default function RewardsPage() {
         </SectionShell>
 
         {/* Live Tracker — Reward Wallet */}
-        <SectionShell className="mt-8 overflow-hidden border-[#FF2D2D]/15 bg-[#1a1a1a] text-white p-0">
+        <section className="mt-8 overflow-hidden rounded-[2rem] border border-[#FF2D2D]/15 bg-[#111111] text-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
           <div className="p-6 sm:p-10">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
@@ -103,7 +103,7 @@ export default function RewardsPage() {
             </div>
 
             <div className="mt-8 mx-auto max-w-2xl">
-              <div className="rounded-[1.2rem] border border-white/10 bg-white/5 p-5 sm:p-6">
+              <div className="rounded-[1.2rem] border border-white/10 bg-[#1a1a1a] p-5 sm:p-6">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-white/30 mb-1">Wallet Address</p>
@@ -141,12 +141,11 @@ export default function RewardsPage() {
             </div>
           </div>
 
-          {/* Live ticker bar */}
-          <div className="border-t border-white/10 bg-white/[0.03] px-6 py-3 flex items-center justify-between text-[10px] font-mono text-white/30">
+          <div className="border-t border-white/10 bg-[#1a1a1a] px-6 py-3 flex items-center justify-between text-[10px] font-mono text-white/30">
             <span>Last updated: <span id="tracker-ts">just now</span></span>
             <span>Tracker v1.0</span>
           </div>
-        </SectionShell>
+        </section>
 
         <script dangerouslySetInnerHTML={{__html: `
           (function(){
