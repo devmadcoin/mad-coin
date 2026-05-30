@@ -1,192 +1,173 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-function SectionShell({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <section
-      className={cn(
-        "overflow-hidden rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] shadow-[0_18px_50px_rgba(0,0,0,0.06)]",
-        className,
-      )}
-    >
-      {children}
-    </section>
-  );
-}
-
-function Pill({
-  children,
-  tone = "default",
-}: {
-  children: React.ReactNode;
-  tone?: "default" | "red" | "green";
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em]",
-        tone === "red" && "border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 text-[#FF2D2D]",
-        tone === "green" &&
-          "border border-emerald-400/20 bg-emerald-500/10 text-emerald-600",
-        tone === "default" &&
-          "border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] text-[#1a1a1a]/60",
-      )}
-    >
-      {children}
-    </div>
-  );
-}
+/* ═══════════════════════════════════════════════════════════
+   $MAD REWARDS — Coming Soon Page
+   ═══════════════════════════════════════════════════════════ */
 
 export default function RewardsPage() {
   return (
-    <div className="relative overflow-hidden bg-[#F5F1E8] text-[#1a1a1a]">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-[#F5F1E8] text-[#1a1a1a]">
+      {/* Subtle radial */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.05),transparent_55%)]" />
 
-      <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
-        {/* Hero */}
-        <SectionShell className="p-6 sm:p-10 lg:p-14">
-          <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#FF2D2D]/60">
+      <div className="relative mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-20">
+        {/* Hero Badge */}
+        <div className="mb-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 rounded-full border border-[#FF2D2D]/30 bg-[#FF2D2D]/10 px-5 py-2"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2D2D] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF2D2D]" />
+            </span>
+            <span className="text-[11px] font-black uppercase tracking-[0.3em] text-[#FF2D2D]">
               Coming Soon
-            </p>
-            <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-[#1a1a1a] sm:text-6xl">
-              $MAD{" "}
-              <span className="text-[#FF2D2D] drop-shadow-[0_0_14px_rgba(255,45,45,0.25)]">
-                Rewards
-              </span>
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
-              Loyalty gets rewarded. Holders who stay $MAD unlock exclusive perks,
-              early access, and real-world benefits. The longer you hold, the more
-              you earn.
-            </p>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Pill tone="red">Holder Benefits</Pill>
-              <Pill tone="green">Early Access</Pill>
-              <Pill>Exclusive Perks</Pill>
+            </span>
+          </motion.div>
+        </div>
+
+        {/* Main Headline */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-center"
+        >
+          <h1 className="text-4xl font-black leading-[0.95] tracking-tight text-[#1a1a1a] sm:text-6xl lg:text-7xl">
+            🚨{" "}
+            <span className="text-[#FF2D2D] drop-shadow-[0_0_16px_rgba(255,45,45,0.2)]">
+              $MAD REWARDS
+            </span>{" "}
+            IS COMING! 🚨
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[#1a1a1a]/60 sm:text-lg">
+            The $MAD ecosystem is evolving, and this is only the beginning.
+            A fellow community member and the dev worked together to create
+            <span className="font-bold text-[#1a1a1a]"> MAD Rewards</span>, a
+            utility-driven rewards system designed to give back to the holders
+            who believe in the project and help grow the movement.
+          </p>
+        </motion.div>
+
+        {/* Funded Badge */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="mt-10 text-center"
+        >
+          <div className="inline-flex flex-col items-center gap-3 rounded-[2rem] border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.06] px-8 py-6 sm:px-12 sm:py-8">
+            <div className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/70">
+              Initial Rollout Funded
+            </div>
+            <div className="text-3xl font-black text-[#FF2D2D] sm:text-5xl">
+              2,000,000 <span className="text-[#1a1a1a]">$MAD</span>
+            </div>
+            <div className="text-sm text-[#1a1a1a]/50">
+              More rewards planned as the community expands and new milestones are reached.
             </div>
           </div>
-        </SectionShell>
+        </motion.div>
 
-        {/* Placeholder for reward tiers */}
-        <SectionShell className="mt-8 p-6 sm:p-10">
-          <div className="text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
-              Reward Tiers
-            </p>
-            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-3xl">
-              The <span className="text-[#FF2D2D]">$MAD</span> Tiers
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
-              Different levels of commitment unlock different rewards. From
-              stickers and merch to exclusive events and airdrops.
-            </p>
-          </div>
+        {/* The Three Pillars */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3"
+        >
+          {[
+            { icon: "💎", word: "Hold", desc: "Believe in the mission. Stay locked in." },
+            { icon: "⚡", word: "Earn", desc: "The more you support, the more you gain." },
+            { icon: "🔥", word: "Get Rewarded", desc: "Real benefits for real believers." },
+          ].map((item) => (
+            <div
+              key={item.word}
+              className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-white p-6 text-center transition-all hover:border-[#FF2D2D]/20"
+            >
+              <div className="text-3xl">{item.icon}</div>
+              <p className="mt-3 text-lg font-black text-[#1a1a1a]">{item.word}</p>
+              <p className="mt-1 text-sm text-[#1a1a1a]/50">{item.desc}</p>
+            </div>
+          ))}
+        </motion.div>
 
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                tier: "Bronze",
-                label: "Holder",
-                desc: "Hold any amount of $MAD. Access to community channels and basic perks.",
-                perks: ["Community Access", "Sticker Discounts", "Voting Rights"],
-              },
-              {
-                tier: "Silver",
-                label: "Believer",
-                desc: "Hold 1M+ $MAD. Unlock merch drops, early product access, and more.",
-                perks: ["Merch Early Access", "Exclusive Drops", "Priority Support"],
-              },
-              {
-                tier: "Gold",
-                label: "Conviction",
-                desc: "Hold 10M+ $MAD. Real-world rewards, events, and direct dev access.",
-                perks: ["Event Invites", "Airdrop Eligibility", "1-on-1 Dev Chat"],
-              },
-            ].map((item) => (
-              <div
-                key={item.tier}
-                className="rounded-[1.4rem] border border-[#1a1a1a]/10 bg-white p-6 sm:p-8 transition-all hover:border-[#FF2D2D]/20"
+        {/* The Vision Statement */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="mt-10 rounded-[2rem] border border-[#1a1a1a]/10 bg-white p-8 sm:p-10"
+        >
+          <blockquote className="text-center text-base leading-8 text-[#1a1a1a]/70 sm:text-lg italic">
+            <span className="text-[#FF2D2D] text-xl font-black not-italic mr-1">&ldquo;</span>
+            This isn&apos;t just another update
+            <span className="font-bold text-[#1a1a1a]">
+              — it&apos;s the foundation for something much bigger.
+            </span>{" "}
+            More details will be revealed soon, so stay locked in and keep your eyes on what&apos;s coming next.
+            <span className="text-[#FF2D2D] text-xl font-black not-italic ml-1">&rdquo;</span>
+          </blockquote>
+        </motion.div>
+
+        {/* Energy Lines */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="mt-10 flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-center"
+        >
+          {["⚡ We&apos;re building.", "⚡ We&apos;re growing.", "⚡ We&apos;re rewarding the community."].map(
+            (line) => (
+              <span
+                key={line}
+                className="rounded-full border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.05] px-5 py-2 text-sm font-black text-[#FF2D2D]/90"
               >
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 text-sm font-black text-[#FF2D2D]">
-                    {item.tier[0]}
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-[#1a1a1a]">{item.tier}</p>
-                    <p className="text-[10px] text-[#1a1a1a]/40">{item.label}</p>
-                  </div>
-                </div>
-                <p className="text-sm leading-7 text-[#1a1a1a]/55">{item.desc}</p>
-                <ul className="mt-4 space-y-2">
-                  {item.perks.map((perk) => (
-                    <li
-                      key={perk}
-                      className="flex items-center gap-2 text-sm text-[#1a1a1a]/60"
-                    >
-                      <span className="text-emerald-600">✓</span> {perk}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </SectionShell>
+                {line}
+              </span>
+            ),
+          )}
+        </motion.div>
 
         {/* CTA */}
-        <SectionShell className="mt-8 overflow-hidden p-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div className="flex flex-col justify-center p-6 sm:p-10">
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#FF2D2D]/60">
-                Get Started
-              </p>
-              <h2 className="mt-4 text-3xl font-black leading-[0.95] text-[#1a1a1a] sm:text-4xl">
-                Join the $MAD Movement
-              </h2>
-              <p className="mt-5 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
-                Hold $MAD. Stay $MAD. Get rewarded. The program launches soon —
-                position yourself now.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href="https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-[#FF6B00]"
-                >
-                  Buy $MAD →
-                </a>
-                <a
-                  href="https://t.me/MadRichClub"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex rounded-full border border-[#1a1a1a]/15 bg-[#1a1a1a]/[0.02] px-7 py-4 text-base font-black text-[#1a1a1a]/75 transition hover:border-[#1a1a1a]/20 hover:bg-[#1a1a1a]/[0.04]"
-                >
-                  Join Telegram
-                </a>
-              </div>
-            </div>
-            <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-full">
-              <Image
-                src="/mad.png"
-                alt="$MAD Logo"
-                fill
-                className="object-contain p-10"
-              />
-            </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.85 }}
+          className="mt-12 text-center"
+        >
+          <p className="text-sm font-bold text-[#1a1a1a]/40">
+            This is just the beginning.
+          </p>
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <a
+              href="https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D] px-8 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-[#FF6B00]"
+            >
+              Buy $MAD →
+            </a>
+            <a
+              href="https://t.me/MadRichClub"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex rounded-full border border-[#1a1a1a]/15 bg-[#1a1a1a]/[0.02] px-8 py-4 text-base font-black text-[#1a1a1a]/75 transition hover:border-[#1a1a1a]/20 hover:bg-[#1a1a1a]/[0.04]"
+            >
+              Join Telegram
+            </a>
           </div>
-        </SectionShell>
+        </motion.div>
       </div>
     </div>
   );
