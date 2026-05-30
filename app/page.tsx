@@ -6,6 +6,51 @@ import { useState, useEffect } from "react";
 
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
+const DASHBOARD_CARDS = [
+  {
+    title: "Game",
+    subtitle: "Mad Phonk Awakening",
+    href: "/game",
+    image: "/game/mad-phonk-awakening-hero.png",
+    cta: "Play",
+  },
+  {
+    title: "Memes",
+    subtitle: "32 Pieces. All Rare.",
+    href: "/memes",
+    image: "/memes/MAD-ROLLERCOASTER.png",
+    cta: "Download",
+  },
+  {
+    title: "MAD Mind",
+    subtitle: "Talk to the bot",
+    href: "/mad-mind",
+    image: "/MAD-MIND-HEAD.png",
+    cta: "Chat",
+  },
+  {
+    title: "Rewards",
+    subtitle: "Hold. Unlock. Earn.",
+    href: "/rewards",
+    image: "/memes/MAD-KINGS-ONLY.png",
+    cta: "View",
+  },
+  {
+    title: "Merch",
+    subtitle: "Real $MAD goods",
+    href: "/merch",
+    image: "/merch/hero/merch-hero-bg.jpg",
+    cta: "Shop",
+  },
+  {
+    title: "Roadmap",
+    subtitle: "The plan ahead",
+    href: "/roadmap",
+    image: "/roadmap/the-mad-roadmap.png",
+    cta: "Explore",
+  },
+];
+
 const LINKS = {
   telegram: "https://t.me/MadRichClub",
   x: "https://x.com/madrichclub_",
@@ -207,6 +252,63 @@ function WhyMADStrip() {
               <p className="text-xs sm:text-sm font-black text-[#1a1a1a] uppercase tracking-wider">{s.label}</p>
               <p className="text-[9px] sm:text-[10px] text-[#1a1a1a]/40 mt-0.5">{s.sub}</p>
             </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THE DASHBOARD — Chimpers-style command center
+   ═══════════════════════════════════════════════════════════ */
+function TheDashboard() {
+  return (
+    <section className="px-4 sm:px-6 py-12 sm:py-16 bg-[#F5F1E8]">
+      <div className="max-w-6xl mx-auto">
+        {/* Section label */}
+        <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355] mb-2">
+          Everything $MAD
+        </p>
+        <h2 className="text-2xl sm:text-3xl font-black text-[#1a1a1a] mb-8">
+          The <span className="text-[#FF2D2D]">Command Center</span>
+        </h2>
+
+        {/* Card grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-5">
+          {DASHBOARD_CARDS.map((card) => (
+            <Link
+              key={card.title}
+              href={card.href}
+              className="group relative overflow-hidden rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] hover:border-[#FF2D2D]/30 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+            >
+              {/* Image */}
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={card.image}
+                  alt={card.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(245,241,232,0.95)_90%)]" />
+              </div>
+              {/* Text */}
+              <div className="p-4 sm:p-5">
+                <p className="text-sm sm:text-base font-black text-[#1a1a1a] group-hover:text-[#FF2D2D] transition-colors">
+                  {card.title}
+                </p>
+                <p className="text-[10px] sm:text-xs text-[#1a1a1a]/40 mt-0.5">
+                  {card.subtitle}
+                </p>
+                <div className="mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#FF2D2D]/70 group-hover:text-[#FF2D2D] transition-colors">
+                  {card.cta}
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                  </svg>
+                </div>
+              </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -725,6 +827,7 @@ export default function Home() {
       <main>
         <TheCinema />
         <WhyMADStrip />
+        <TheDashboard />
         <WhatIsMAD />
         <TheVerified />
         <TheProof />
