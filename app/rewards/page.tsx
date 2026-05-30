@@ -80,6 +80,89 @@ export default function RewardsPage() {
         </SectionShell>
 
         {/* ═══════════════════════════════════════════════════════════
+            LIVE TRACKER — Reward Wallet (moved under hero)
+            ═══════════════════════════════════════════════════════════ */}
+        <section className="mt-8 overflow-hidden rounded-[2rem] border border-[#FF2D2D]/15 bg-[#111111] text-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
+          <div className="p-6 sm:p-10">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
+                </span>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400">LIVE</span>
+              </div>
+              <span className="text-[10px] text-white/30 font-mono">AUTO-REFRESH 30s</span>
+            </div>
+
+            <div className="text-center">
+              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Reward Wallet Balance</p>
+              <div className="mt-3 flex items-baseline justify-center gap-2">
+                <span className="text-4xl sm:text-6xl font-black tracking-tight text-white">2,500,000</span>
+                <span className="text-lg sm:text-2xl font-black text-[#FF2D2D]">$MAD</span>
+              </div>
+              <p className="mt-2 text-sm text-white/40">Initial rollout supply · 100% community funded</p>
+            </div>
+
+            <div className="mt-8 mx-auto max-w-2xl">
+              <div className="rounded-[1.2rem] border border-white/10 bg-[#1a1a1a] p-5 sm:p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-white/30 mb-1">Wallet Address</p>
+                    <p className="text-sm font-mono text-white/60 truncate">FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText("FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW");
+                    }}
+                    className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-[#FF2D2D]/30 bg-[#FF2D2D]/15 px-4 py-2 text-xs font-bold text-[#FF2D2D] transition hover:bg-[#FF2D2D]/25"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                    Copy
+                  </button>
+                </div>
+                <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF2D2D]/15">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF2D2D" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-white">Solana</p>
+                    <p className="text-[10px] text-white/30">Verified on-chain</p>
+                  </div>
+                  <a
+                    href="https://solscan.io/account/FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="ml-auto inline-flex items-center gap-1 text-xs font-bold text-[#FF2D2D]/70 hover:text-[#FF2D2D] transition"
+                  >
+                    View on Solscan
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 bg-[#1a1a1a] px-6 py-3 flex items-center justify-between text-[10px] font-mono text-white/30">
+            <span>Last updated: <span id="tracker-ts">just now</span></span>
+            <span>Tracker v1.0</span>
+          </div>
+        </section>
+
+        <script dangerouslySetInnerHTML={{__html: `
+          (function(){
+            const el = document.getElementById('tracker-ts');
+            if(!el) return;
+            const fmt = () => {
+              const now = new Date();
+              el.textContent = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+            };
+            fmt();
+            setInterval(fmt, 30000);
+          })();
+        `}} />
+
+        {/* ═══════════════════════════════════════════════════════════
             REWARD MILESTONES — Chart Ascending to $100M
             ═══════════════════════════════════════════════════════════ */}
         <SectionShell className="mt-8 p-6 sm:p-10">
@@ -322,87 +405,6 @@ export default function RewardsPage() {
             </p>
           </div>
         </SectionShell>
-
-        {/* Live Tracker — Reward Wallet */}
-        <section className="mt-8 overflow-hidden rounded-[2rem] border border-[#FF2D2D]/15 bg-[#111111] text-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]">
-          <div className="p-6 sm:p-10">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
-                </span>
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400">LIVE</span>
-              </div>
-              <span className="text-[10px] text-white/30 font-mono">AUTO-REFRESH 30s</span>
-            </div>
-
-            <div className="text-center">
-              <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Reward Wallet Balance</p>
-              <div className="mt-3 flex items-baseline justify-center gap-2">
-                <span className="text-4xl sm:text-6xl font-black tracking-tight text-white">2,000,000</span>
-                <span className="text-lg sm:text-2xl font-black text-[#FF2D2D]">$MAD</span>
-              </div>
-              <p className="mt-2 text-sm text-white/40">Initial rollout supply · 100% community funded</p>
-            </div>
-
-            <div className="mt-8 mx-auto max-w-2xl">
-              <div className="rounded-[1.2rem] border border-white/10 bg-[#1a1a1a] p-5 sm:p-6">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-white/30 mb-1">Wallet Address</p>
-                    <p className="text-sm font-mono text-white/60 truncate">FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText("FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW");
-                    }}
-                    className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-[#FF2D2D]/30 bg-[#FF2D2D]/15 px-4 py-2 text-xs font-bold text-[#FF2D2D] transition hover:bg-[#FF2D2D]/25"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                    Copy
-                  </button>
-                </div>
-                <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF2D2D]/15">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF2D2D" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-white">Solana</p>
-                    <p className="text-[10px] text-white/30">Verified on-chain</p>
-                  </div>
-                  <a
-                    href="https://solscan.io/account/FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="ml-auto inline-flex items-center gap-1 text-xs font-bold text-[#FF2D2D]/70 hover:text-[#FF2D2D] transition"
-                  >
-                    View on Solscan
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-white/10 bg-[#1a1a1a] px-6 py-3 flex items-center justify-between text-[10px] font-mono text-white/30">
-            <span>Last updated: <span id="tracker-ts">just now</span></span>
-            <span>Tracker v1.0</span>
-          </div>
-        </section>
-
-        <script dangerouslySetInnerHTML={{__html: `
-          (function(){
-            const el = document.getElementById('tracker-ts');
-            if(!el) return;
-            const fmt = () => {
-              const now = new Date();
-              el.textContent = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-            };
-            fmt();
-            setInterval(fmt, 30000);
-          })();
-        `}} />
 
         {/* Thank You — The MAD Fam Behind the Concept */}
         <SectionShell className="mt-8 p-6 sm:p-10">
