@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <NavBar />
 
           {/* PAGE CONTENT */}
-          <main className="relative z-10 flex-1">{children}</main>
+          <main className="relative z-10 flex-1 pb-20 md:pb-0">{children}</main>
         </div>
       </body>
     </html>
