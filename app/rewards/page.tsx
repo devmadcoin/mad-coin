@@ -54,8 +54,33 @@ export default function RewardsPage() {
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
 
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+        {/* Hero */}
+        <SectionShell className="p-6 sm:p-10 lg:p-14">
+          <div className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#FF2D2D]/60">
+              Coming Soon
+            </p>
+            <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-[#1a1a1a] sm:text-6xl">
+              $MAD{" "}
+              <span className="text-[#FF2D2D] drop-shadow-[0_0_14px_rgba(255,45,45,0.25)]">
+                Rewards
+              </span>
+            </h1>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
+              Loyalty gets rewarded. Holders who stay $MAD unlock exclusive perks,
+              early access, and real-world benefits. The longer you hold, the more
+              you earn.
+            </p>
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
+              <Pill tone="red">Holder Benefits</Pill>
+              <Pill tone="green">Early Access</Pill>
+              <Pill>Exclusive Perks</Pill>
+            </div>
+          </div>
+        </SectionShell>
+
         {/* Phase 1 — 1M Market Cap Milestone */}
-        <SectionShell className="p-6 sm:p-10">
+        <SectionShell className="mt-8 p-6 sm:p-10">
           <div className="text-center">
             <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
               Phase 1 Reward
@@ -119,31 +144,6 @@ export default function RewardsPage() {
             <p className="mt-2 text-sm font-black text-[#1a1a1a]">
               Hold longer. Stay $MAD. 🔥
             </p>
-          </div>
-        </SectionShell>
-
-        {/* Hero */}
-        <SectionShell className="mt-8 p-6 sm:p-10 lg:p-14">
-          <div className="text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#FF2D2D]/60">
-              Coming Soon
-            </p>
-            <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-[#1a1a1a] sm:text-6xl">
-              $MAD{" "}
-              <span className="text-[#FF2D2D] drop-shadow-[0_0_14px_rgba(255,45,45,0.25)]">
-                Rewards
-              </span>
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg">
-              Loyalty gets rewarded. Holders who stay $MAD unlock exclusive perks,
-              early access, and real-world benefits. The longer you hold, the more
-              you earn.
-            </p>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Pill tone="red">Holder Benefits</Pill>
-              <Pill tone="green">Early Access</Pill>
-              <Pill>Exclusive Perks</Pill>
-            </div>
           </div>
         </SectionShell>
 

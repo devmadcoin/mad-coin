@@ -227,7 +227,7 @@ function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMes
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} group gap-2 items-end`}>
       {!isUser && (
-        <div className="shrink-0 mb-5">
+        <div className="shrink-0 mb-1">
           <MadChaoPixel size={28} animated={false} showLabel={false} />
         </div>
       )}
@@ -446,7 +446,7 @@ export default function ChatInterface({
         {/* Messages area */}
         <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto px-3 sm:px-5 py-2 sm:py-3 space-y-2 sm:space-y-3 scrollbar-thin ios-momentum"
+          className="flex-1 overflow-y-auto px-3 sm:px-5 py-2 sm:py-3 space-y-1 sm:space-y-2 scrollbar-thin ios-momentum"
         >
           {!hasMessages ? (
             <div className="h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">

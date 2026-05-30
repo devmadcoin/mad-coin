@@ -1377,5 +1377,12 @@
     "bot_message": "you holding anything right now? like, actually holding?",
     "user_reply": "",
     "context_type": "general"
+  },
+  {
+    "timestamp": 1780144497.1654782,
+    "user_id": "7018133071",
+    "bot_message": "you're new. what's the last project you actually believed in? not just aped.",
+    "user_reply": "",
+    "context_type": "general"
   }
 ]
