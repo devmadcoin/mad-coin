@@ -30,6 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   { href: "/game", label: "Game", mobileLabel: "Game" },
   { href: "/mad-art", label: "MAD Art", mobileLabel: "Art" },
+  { href: "/rewards", label: "Rewards", mobileLabel: "Rewards" },
   { href: "/merch", label: "Merch", mobileLabel: "Merch", variant: "cta" },
 ];
 
