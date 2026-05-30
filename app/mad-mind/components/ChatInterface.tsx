@@ -225,9 +225,9 @@ function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMes
   const isUser = msg.role === "user";
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} group gap-2 items-end`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} group gap-2 items-end mb-1`}>
       {!isUser && (
-        <div className="shrink-0 mb-1">
+        <div className="shrink-0">
           <MadChaoPixel size={28} animated={false} showLabel={false} />
         </div>
       )}
@@ -241,7 +241,7 @@ function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMes
         >
           <p className="text-sm leading-[1.6] whitespace-pre-wrap">{msg.text}</p>
         </div>
-        <div className={`flex items-center gap-2 mt-1 ${isUser ? "justify-end pr-1" : "justify-start pl-1"}`}>
+        <div className={`flex items-center gap-2 mt-0.5 ${isUser ? "justify-end pr-1" : "justify-start pl-1"}`}>
           <span className="text-[9px] text-[#1a1a1a]/20 tabular-nums">{formatTime(msg.timestamp)}</span>
           {!isUser && <CopyButton text={msg.text} />}
           {!isUser && (
@@ -446,7 +446,7 @@ export default function ChatInterface({
         {/* Messages area */}
         <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto px-3 sm:px-5 py-2 sm:py-3 space-y-1 sm:space-y-2 scrollbar-thin ios-momentum"
+          className="flex-1 overflow-y-auto px-3 sm:px-5 py-2 sm:py-3 scrollbar-thin ios-momentum"
         >
           {!hasMessages ? (
             <div className="h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
