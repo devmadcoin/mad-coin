@@ -100,6 +100,42 @@ export default function RewardsPage() {
             {/* Vertical line connecting milestones */}
             <div className="absolute left-[24px] sm:left-[32px] top-0 bottom-0 w-0.5 bg-[#1a1a1a]/10" />
 
+            {/* === CURRENT POSITION === */}
+            <div className="relative mb-8">
+              <div className="absolute left-[18px] sm:left-[26px] top-5 z-10 h-3 w-3 rounded-full bg-[#FF6B00] ring-4 ring-[#FF6B00]/20 animate-pulse" />
+
+              <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-[#FF6B00]/30 bg-[#FF6B00]/[0.04] p-5 sm:p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="inline-flex rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#FF6B00]">
+                    Now
+                  </span>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
+                    Current Position
+                  </p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xl font-black text-[#1a1a1a]">
+                    $200K Market Cap
+                  </h3>
+                </div>
+
+                {/* Progress bar to $1M */}
+                <div className="mt-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-bold text-[#1a1a1a]/40">Progress to $1M</span>
+                    <span className="text-[10px] font-black text-[#FF6B00]">20%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-[#1a1a1a]/[0.06] overflow-hidden">
+                    <div className="h-full rounded-full bg-[#FF6B00] w-[20%] shadow-[0_0_10px_rgba(255,107,0,0.3)]" />
+                  </div>
+                </div>
+
+                <p className="mt-3 text-xs text-[#1a1a1a]/50">
+                  📈 +4.58% today · 582 buys vs 178 sells · 70 traders active
+                </p>
+              </div>
+            </div>
+
             {/* === 1M — ACTIVE === */}
             <div className="relative mb-8">
               {/* Dot on the line */}
