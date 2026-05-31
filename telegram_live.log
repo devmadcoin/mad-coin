@@ -27390,3 +27390,4 @@ What's your number? W...
 [MOTION] Error: Forbidden: bot was kicked from the supergroup chat
 [MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')
 [MOTION] Error: Forbidden: bot was kicked from the supergroup chat
+[MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')

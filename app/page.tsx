@@ -588,16 +588,17 @@ function TheProof() {
           {/* KIMDUNK77 Video Testimony — Full Width */}
           <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
             <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Video thumbnail */}
-              <div className="relative aspect-video md:aspect-auto">
-                <div className="absolute inset-0 bg-[#0a0a0a] flex flex-col items-center justify-center gap-3">
-                  <div className="w-16 h-16 rounded-full bg-[#FF2D2D]/20 flex items-center justify-center">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-[#FF2D2D]">
-                      <path d="M8 5v14l11-7z"/>
-                    </svg>
-                  </div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/40">1:25</p>
-                </div>
+              {/* Video player */}
+              <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
+                <video
+                  src="/testimonials/kimdunk77-mad-promo-indonesia.mp4"
+                  controls
+                  muted
+                  playsInline
+                  loop
+                  className="w-full h-full object-cover"
+                  poster=""
+                />
               </div>
               
               {/* Testimony Content */}
