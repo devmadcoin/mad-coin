@@ -633,6 +633,15 @@ function TheArchitects() {
       ],
     },
     {
+      role: "Community Builder",
+      name: "Crypto Lord",
+      handle: "@CryptoL6621",
+      image: "/rewards/crypto-lord-cryptol6621.png",
+      links: [
+        { label: "X", href: "https://x.com/CryptoL6621" },
+      ],
+    },
+    {
       role: "Mad Artist",
       name: "Heydun",
       handle: "@Grpx_Heydun",
@@ -653,7 +662,7 @@ function TheArchitects() {
           The <span className="text-[#FF2D2D]">Architects</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {team.map((member) => (
             <div
               key={member.role}
