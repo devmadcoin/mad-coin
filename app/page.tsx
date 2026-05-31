@@ -493,7 +493,15 @@ function TheProof() {
 
               {/* Avatar row */}
               <div className="flex items-center gap-3 mb-5">
-                <div className="h-10 w-10 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-base font-black text-[#FF2D2D] border border-[#FF2D2D]/20">A</div>
+                <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
+                  <Image
+                    src="/testimonials/abraxas-pfp.png"
+                    alt="Abraxas"
+                    fill
+                    className="object-cover"
+                    sizes="40px"
+                  />
+                </div>
                 <div>
                   <p className="text-sm font-black text-[#1a1a1a]">Abraxas</p>
                   <p className="text-[10px] text-[#1a1a1a]/50">$MAD Holder · Giveaway Winner</p>
