@@ -618,7 +618,7 @@ function TheArchitects() {
       role: "Community Builder",
       name: "Perspective 360",
       handle: "@Derrick152667",
-      image: "/rewards/perspective-360-derrick152667.png",
+      image: "/rewards/perspective-360-kakashi.png",
       links: [
         { label: "X", href: "https://x.com/Derrick152667" },
       ],

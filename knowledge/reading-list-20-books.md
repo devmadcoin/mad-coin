@@ -64,6 +64,10 @@
 | 26 | **The Experience Economy** (Pine & Gilmore) | ✅ Complete | [Study](2026-05-27-transformation-economy-study.md) |
 | 27 | **The Transformation Economy** (Pine) | ✅ Complete | [Study](2026-05-27-transformation-economy-study.md) |
 | 28 | **Authenticity** (Pine & Gilmore) | ✅ Complete | [Study](2026-05-27-transformation-economy-study.md) |
+| 29 | **The Art of Possibility** (Zander & Zander) | ✅ Complete | [Study](2026-05-31-art-of-possibility.md) |
+| 30 | **Shoe Dog** (Phil Knight) | ✅ Complete | [Study](2026-05-31-shoe-dog.md) |
+| 31 | **The Laws of Human Nature** (Robert Greene) | ✅ Complete | [Study](2026-05-31-laws-of-human-nature.md) |
+| 32 | **Finite and Infinite Games** (James Carse) | ✅ Complete | [Study](2026-05-31-finite-infinite-games.md) |
 
 ---
 

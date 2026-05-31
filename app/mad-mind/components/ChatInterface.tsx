@@ -225,7 +225,7 @@ function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMes
   const isUser = msg.role === "user";
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} group gap-2 items-end mb-1`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} group gap-1 items-end`}>
       {!isUser && (
         <div className="shrink-0">
           <MadChaoPixel size={28} animated={false} showLabel={false} />
