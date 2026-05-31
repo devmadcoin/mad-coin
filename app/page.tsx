@@ -690,14 +690,18 @@ function TheProof() {
                 </div>
 
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="h-10 w-10 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-base font-black text-[#FF2D2D] border border-[#FF2D2D]/20">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                    </svg>
+                  <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
+                    <Image
+                      src="/testimonials/tlt-podcast-logo.png"
+                      alt="TLT Podcast"
+                      fill
+                      className="object-cover"
+                      sizes="40px"
+                    />
                   </div>
                   <div>
-                    <p className="text-sm font-black text-[#1a1a1a]">Coffee Collects</p>
-                    <p className="text-[10px] text-[#1a1a1a]/50">$MAD Dev · Founder</p>
+                    <p className="text-sm font-black text-[#1a1a1a]">The Luxurious Lounge</p>
+                    <p className="text-[10px] text-[#1a1a1a]/50">TLT Podcast · Crypto · Money · Lifestyle</p>
                   </div>
                   <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
                     <span className="relative flex h-1.5 w-1.5">
@@ -715,7 +719,7 @@ function TheProof() {
                 </blockquote>
 
                 <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                  <p className="text-[10px] text-[#1a1a1a]/40">YouTube Podcast · Doxxed &amp; Verified</p>
+                  <p className="text-[10px] text-[#1a1a1a]/40">YouTube Podcast · TLT x Coffee Collects</p>
                   <a 
                     href="https://www.youtube.com/watch?v=gJsb2p2Uig8" 
                     target="_blank" 
