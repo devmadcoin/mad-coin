@@ -667,6 +667,68 @@ function TheProof() {
               </div>
             </div>
           </div>
+
+          {/* Podcast Interview — Full Width */}
+          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
+            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
+              {/* YouTube embed */}
+              <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/gJsb2p2Uig8?start=1"
+                  title="$MAD Founder Interview"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full border-0"
+                  loading="lazy"
+                />
+              </div>
+              
+              {/* Podcast Info */}
+              <div className="p-6 sm:p-8 flex flex-col justify-center">
+                <div className="mb-4">
+                  <StarRating />
+                </div>
+
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="h-10 w-10 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-base font-black text-[#FF2D2D] border border-[#FF2D2D]/20">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-[#1a1a1a]">Coffee Collects</p>
+                    <p className="text-[10px] text-[#1a1a1a]/50">$MAD Dev · Founder</p>
+                  </div>
+                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
+                    </span>
+                    Verified
+                  </span>
+                </div>
+
+                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
+                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
+                  The world is full of opportunities, but the world is run on <span className="text-[#FF2D2D] font-bold not-italic">MAD</span> — Motivation, Alignment, and Discipline. <span className="text-[#FF2D2D] font-bold not-italic">We are building something that will last.</span>
+                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
+                </blockquote>
+
+                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
+                  <p className="text-[10px] text-[#1a1a1a]/40">YouTube Podcast · Doxxed &amp; Verified</p>
+                  <a 
+                    href="https://www.youtube.com/watch?v=gJsb2p2Uig8" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M10 15l5.19-3L10 9v6zm11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+                    Watch on YouTube
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
