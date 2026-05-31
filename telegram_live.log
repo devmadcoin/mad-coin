@@ -27387,3 +27387,6 @@ What's your number? W...
 [ERROR] Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
 [MOTION] Error: Forbidden: bot was kicked from the supergroup chat
 [MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')
+[MOTION] Error: Forbidden: bot was kicked from the supergroup chat
+[MOTION] Error: Unknown error in HTTP implementation: RuntimeError('Event loop is closed')
+[MOTION] Error: Forbidden: bot was kicked from the supergroup chat

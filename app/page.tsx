@@ -584,6 +584,64 @@ function TheProof() {
               </div>
             </div>
           </div>
+
+          {/* KIMDUNK77 Video Testimony — Full Width */}
+          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
+            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
+              {/* Video thumbnail */}
+              <div className="relative aspect-video md:aspect-auto">
+                <div className="absolute inset-0 bg-[#0a0a0a] flex flex-col items-center justify-center gap-3">
+                  <div className="w-16 h-16 rounded-full bg-[#FF2D2D]/20 flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-[#FF2D2D]">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/40">1:25</p>
+                </div>
+              </div>
+              
+              {/* Testimony Content */}
+              <div className="p-6 sm:p-8 flex flex-col justify-center">
+                <div className="mb-4">
+                  <StarRating />
+                </div>
+
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="h-10 w-10 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-base font-black text-[#FF2D2D] border border-[#FF2D2D]/20">K</div>
+                  <div>
+                    <p className="text-sm font-black text-[#1a1a1a]">KIMDUNK77</p>
+                    <p className="text-[10px] text-[#1a1a1a]/50">@KIMDUNK77 · $MAD Community Builder</p>
+                  </div>
+                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
+                    </span>
+                    Verified
+                  </span>
+                </div>
+
+                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
+                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
+                  The long road to <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span> 😡 so that everyone knows $MAD 😡 Everyday, everywhere $MAD 😡 STAY $MAD 😡
+                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
+                </blockquote>
+
+                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
+                  <p className="text-[10px] text-[#1a1a1a]/40">May 31, 2026 · Promoting $MAD in Indonesia</p>
+                  <a 
+                    href="https://x.com/KIMDUNK77/status/2061078380376936606?s=20" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Watch on X
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
