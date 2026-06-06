@@ -123,6 +123,10 @@ function TheGallery() {
     { src: "/memes/YOU-MAKE-ME-MAD.png", title: "You Make Me MAD", type: "Meme" },
     { src: "/memes/YOU-WILL-BE-MAD.png", title: "You Will Be MAD", type: "Meme" },
     { src: "/mad-art/mad-attitude.png", title: "MAD Attitude", type: "Character" },
+    { src: "/mad-art/mad-this-is-fine.png", title: "This Is Fine", type: "Meme" },
+    { src: "/mad-art/mad-donut-temptation.png", title: "Donut Temptation", type: "Meme" },
+    { src: "/mad-art/mad-stay-mad-soldier.png", title: "STAY $MAD Soldier", type: "Character" },
+    { src: "/mad-art/mad-car-wash-rain.png", title: "Car Wash Curse", type: "Meme" },
   ];
 
   return (
