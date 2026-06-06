@@ -246,6 +246,68 @@ function MerchHero() {
   );
 }
 
+/* ─── LEGACY DROP — MAD LIMITED 001 HAT ─── */
+function LegacyDrop() {
+  return (
+    <section className="py-12">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-[#FF2D2D]/15 bg-[#1a1a1a]/[0.02] overflow-hidden">
+          <div className="p-8 flex items-center justify-center bg-[#1a1a1a]/[0.03]">
+            <img
+              src="/merch/mad-limited-001-hat.png"
+              alt="MAD // LIMITED 001 Hat"
+              className="max-h-72 object-contain"
+            />
+          </div>
+
+          <div className="p-8 sm:p-12 flex flex-col justify-center">
+            <div className="flex gap-3 mb-4 flex-wrap">
+              <span className="text-xs text-[#1a1a1a]/50">Drop 001 — Legacy</span>
+              <span className="rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/40">
+                SOLD OUT FOREVER
+              </span>
+            </div>
+
+            <h2 className="text-4xl font-black text-[#1a1a1a] leading-tight">
+              MAD // <span className="text-[#FF2D2D]">LIMITED 001</span>
+            </h2>
+            <p className="mt-2 text-lg font-black text-[#1a1a1a]/30">
+              $mad America dad hat
+            </p>
+
+            <div className="mt-6 space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="h-2 w-2 rounded-full bg-[#FF2D2D]" />
+                <p className="text-sm text-[#1a1a1a]/70">
+                  Only <span className="font-black text-[#1a1a1a]">26</span> ever made. No restocks. No reprints.
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="h-2 w-2 rounded-full bg-[#FF2D2D]" />
+                <p className="text-sm text-[#1a1a1a]/70">
+                  Every buyer received <span className="font-black text-[#1a1a1a]">1,000,000 $MAD</span> tokens each.
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="h-2 w-2 rounded-full bg-[#FF2D2D]" />
+                <p className="text-sm text-[#1a1a1a]/70">
+                  This will <span className="font-black text-[#1a1a1a]">never happen again</span>.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 rounded-[1.2rem] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-5">
+              <p className="text-xs text-[#1a1a1a]/60 leading-relaxed">
+                The hat that started the legend. If you own one, you are one of the 26. If you missed it, you missed the most exclusive $MAD drop in history. Next drops will never carry the same token bonus. This was a one-time artifact of conviction.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── SCANLINE OVERLAY ─── */
 function Scanlines() {
   return (
@@ -638,6 +700,7 @@ export default function MerchPage() {
       <MerchHero />
 
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-12 sm:px-6 lg:px-8">
+        <LegacyDrop />
         <FeaturedPiece />
         <Marquee />
         <ProductGrid />
