@@ -102,8 +102,8 @@ function TheGate() {
 /* ─── THE ORACLE (Chat) ─── */
 function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef, sessionId }: any) {
   return (
-    <section className="mb-8">
-      <div className="flex items-center gap-3 mb-4 px-3 sm:px-0">
+    <section className="mb-4">
+      <div className="flex items-center gap-3 mb-2 px-3 sm:px-0">
         <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
         <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">
           THE ORACLE
@@ -127,7 +127,7 @@ function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef
 /* ─── THE FORK ─── */
 function TheFork() {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-3 px-3 sm:px-0 mb-8">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-3 px-3 sm:px-0 mb-4">
       {/* Death */}
       <div className="relative border border-[#1a1a1a]/[0.10] bg-[#1a1a1a]/[0.02] p-5 sm:p-7">
         <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-6">
@@ -183,7 +183,7 @@ function TheKey() {
   };
 
   return (
-    <section className="px-3 sm:px-0 mb-8">
+    <section className="px-3 sm:px-0 mb-4">
       <div className="flex items-center gap-3 mb-4">
         <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
         <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/60">
@@ -213,7 +213,7 @@ function TheKey() {
 /* ─── FREQUENCY CHECKPOINTS ─── */
 function FrequencyCheckpoints() {
   return (
-    <section className="px-3 sm:px-0 pb-12">
+    <section className="px-3 sm:px-0 pb-6">
       <div className="flex items-center gap-3 mb-4">
         <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
         <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">
@@ -258,7 +258,7 @@ export default function MadClawIdentity() {
       <TheGate />
       {/* Content below hero on crème background */}
       <div className="bg-[#F5F1E8] relative z-10">
-        <div className="mx-auto max-w-5xl px-3 sm:px-4 pb-8 pt-4 sm:pt-6">
+        <div className="mx-auto max-w-5xl px-3 sm:px-4 pb-4 pt-2 sm:pt-3">
           <TheOracle
             messages={messages}
             status={status}
