@@ -201,6 +201,7 @@ const LINKS = {
   communityProof4: "https://x.com/madrichclub_/status/2057508965567877497?s=20",
   communityProof5: "https://x.com/madrichclub_/status/2058759994485715249?s=20",
   communityProof6: "https://x.com/madrichclub_/status/2060080223954346354?s=20",
+  communityProof7: "https://x.com/madrichclub_/status/2063766619059638771?s=20",
   madMind: "https://mad-coin.vercel.app/mad-mind",
 } as const;
 
@@ -212,7 +213,7 @@ const STATUS_CARDS = [
   { label: "Confessions", value: "LIVE NOW", tone: "green" as const, icon: "💬" },
   { label: "Token Burns", value: "50% BURNED", tone: "green" as const, icon: "🔥" },
   { label: "MAD AI", value: "LIVE NOW", tone: "green" as const, icon: "🤖" },
-  { label: "Community Support", value: "6 LOCKED", tone: "green" as const, icon: "🤝" },
+  { label: "Community Support", value: "7 LOCKED", tone: "green" as const, icon: "🤝" },
   { label: "MAD Games", value: "IN PROGRESS", tone: "red" as const, icon: "🎮" },
   { label: "Stickers", value: "LIVE NOW", tone: "green" as const, icon: "😈" },
   { label: "Clothing", value: "TESTING", tone: "red" as const, icon: "👕" },
@@ -243,9 +244,11 @@ const EXITS = [
       { label: "Community Support #3", url: LINKS.communityProof3, type: "link" as const },
       { label: "Community Support #4 — Hineycoin", url: LINKS.communityProof4, type: "link" as const },
       { label: "Community Support #5 — DIGI_KOINZ", url: LINKS.communityProof5, type: "link" as const },
+      { label: "Community Support #6", url: LINKS.communityProof6, type: "link" as const },
+      { label: "Community Support #7 — TheLuxxLounge", url: LINKS.communityProof7, type: "link" as const },
     ],
     items: [
-      { text: "5 communities supported", done: true },
+      { text: "7 communities supported", done: true },
       { text: "All tokens locked to 2060", done: true },
       { text: "50% supply burned", done: true },
       { text: "Cross-community coalition", done: true },
@@ -905,7 +908,7 @@ function CommunitySupport() {
         <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
-            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl break-words">6 Communities Supported.</h2>
+            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl break-words">7 Communities Supported.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 break-words">
               6 communities supported. Tokens locked to 2060. Public receipts on X. Loyalty proven before trust asked.
             </p>
