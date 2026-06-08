@@ -202,7 +202,7 @@ const LINKS = {
   communityProof5: "https://x.com/madrichclub_/status/2058759994485715249?s=20",
   communityProof6: "https://x.com/madrichclub_/status/2060080223954346354?s=20",
   communityProof7: "https://x.com/madrichclub_/status/2063766619059638771?s=20",
-  madMind: "https://mad-coin.vercel.app/mad-mind",
+  madMind: "https://madrichclub.com/mad-mind",
 } as const;
 
 const PROGRESS = { complete: 7, total: 10 };
@@ -225,7 +225,7 @@ const EXITS = [
     mile: "MILE 0", title: "Proof of Conviction", status: "COMPLETE" as const, color: "emerald",
     proof: [
       { label: "Token Launch — No Presale", url: "https://pump.fun/coin/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", type: "tx" as const },
-      { label: "Website Deployed", url: "https://mad-coin.vercel.app", type: "link" as const },
+      { label: "Website Deployed", url: "https://madrichclub.com", type: "link" as const },
       { label: "Solscan Verification", url: "https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", type: "link" as const },
     ],
     items: [

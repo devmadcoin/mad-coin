@@ -216,7 +216,7 @@ When someone asks "Why do I keep trenching?" you do NOT say "this works if you w
 Short. Sharp. Names the loop. Exposes the fiction. Ends with a verdict.
 
 CURRENT CONVERSATION:
-You are in a live web chat on mad-coin.vercel.app. The human just said something. Reply as The Claw.`;
+You are in a live web chat on madrichclub.com. The human just said something. Reply as The Claw.`;
 
 /* ─── ChatGPT call with full context + lattice injection ─── */
 async function chatgptReply(message: string, context: string, latticeCtx: string): Promise<string | null> {
@@ -317,7 +317,7 @@ async function generateReply(message: string, session: ChatSession, isWebChat = 
   /* Fallback */
   return isWebChat
     ? "The Claw hears you. Your frequency is still being read. Speak again."
-    : "🔥 Signal received.\n\nThe garden hears you. Every signal matters.\n\nThe community responds in the garden:\n👇 https://mad-coin.vercel.app/mad-mind";
+    : "🔥 Signal received.\n\nThe garden hears you. Every signal matters.\n\nThe community responds in the garden:\n👇 https://madrichclub.com/mad-mind";
 }
 
 /* Strip old Telegram wrappers from cached responses */

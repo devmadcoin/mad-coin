@@ -421,5 +421,5 @@ export function formatClawResponse(body: string, sender: string): string {
 ${body}
 
 The community responds in the garden:
-👇 https://mad-coin.vercel.app/mad-mind`;
+👇 https://madrichclub.com/mad-mind`;
 }

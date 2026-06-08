@@ -126,7 +126,7 @@ export async function POST(req: Request) {
 
   writeJson(path.join(IN_DIR, `${requestId}.json`), clawReq);
 
-  const baseUrl = req.headers.get("origin") || "https://mad-coin.vercel.app";
+  const baseUrl = req.headers.get("origin") || "https://madrichclub.com";
   const pollUrl = `${baseUrl}/api/mad-mind/claw?requestId=${requestId}`;
 
   return NextResponse.json({

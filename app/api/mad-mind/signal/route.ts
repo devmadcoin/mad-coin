@@ -246,7 +246,7 @@ export async function POST(req: Request) {
 
     if (tweetId) {
       /* Post user's signal as reply thread */
-      const replyText = `🔥 Signal from the garden:\n\n"${truncate(message, 200)}"\n\n— ${sender} | mad-coin.vercel.app/mad-mind`;
+      const replyText = `🔥 Signal from the garden:\n\n"${truncate(message, 200)}"\n\n— ${sender} | madrichclub.com/mad-mind`;
       replyTweetId = await postTweet(replyText, tweetId);
     }
   }
