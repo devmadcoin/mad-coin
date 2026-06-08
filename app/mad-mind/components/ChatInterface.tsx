@@ -511,6 +511,14 @@ export default function ChatInterface({
               value={input}
               onChange={handleInput}
               onKeyDown={handleKeyDown}
+              onFocus={() => {
+                if (scrollRef.current) {
+                  scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+                }
+                setTimeout(() => {
+                  textareaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+              }}
               disabled={status === "sending" || typing}
               placeholder="Message Mad Claw..."
               rows={1}
