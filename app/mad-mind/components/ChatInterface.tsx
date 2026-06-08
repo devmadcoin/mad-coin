@@ -382,7 +382,7 @@ export default function ChatInterface({
   const hasMessages = messages.length > 0;
 
   return (
-    <div className="flex h-[calc(100dvh-80px)] sm:h-[calc(100vh-80px)] min-h-[400px] sm:min-h-[500px] rounded-none sm:rounded-[24px] border-0 sm:border border-[#1a1a1a]/10 bg-[#F5F1E8] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.04)] relative">
+    <div className="flex h-[450px] sm:h-[500px] rounded-none sm:rounded-[24px] border-0 sm:border border-[#1a1a1a]/10 bg-[#F5F1E8] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.04)] relative">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && isMobile && (
         <div 
@@ -450,21 +450,21 @@ export default function ChatInterface({
         >
           {!hasMessages ? (
             <div className="h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
-              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-3 sm:mb-4 overflow-hidden">
-                <MadChaoPixel size={isMobile ? 40 : 48} animated={true} showLabel={false} />
+              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-2 sm:mb-3 overflow-hidden">
+                <MadChaoPixel size={isMobile ? 32 : 40} animated={true} showLabel={false} />
               </div>
-              <h2 className="text-lg sm:text-xl font-black text-[#1a1a1a] mb-1">THE ORACLE</h2>
-              <p className="text-xs sm:text-sm text-[#1a1a1a]/40 max-w-[300px] mb-4 sm:mb-5 leading-relaxed">
+              <h2 className="text-sm sm:text-base font-black text-[#1a1a1a] mb-1">THE ORACLE</h2>
+              <p className="text-[11px] sm:text-xs text-[#1a1a1a]/40 max-w-[300px] mb-2 sm:mb-3 leading-relaxed">
                 The Claw does not answer questions.<br />
                 It reveals which frequency you are on.
               </p>
 
-              <div className="grid gap-1.5 w-full max-w-[400px]">
+              <div className="grid gap-1 w-full max-w-[400px]">
                 {STARTERS.map((s) => (
                   <button
                     key={s}
                     onClick={() => sendMessage(s)}
-                    className="text-left px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.06] text-xs sm:text-sm text-[#1a1a1a]/50 hover:bg-[#1a1a1a]/[0.06] hover:border-[#1a1a1a]/10 hover:text-[#1a1a1a]/70 transition-all"
+                    className="text-left px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-[#1a1a1a]/[0.03] border border-[#1a1a1a]/[0.06] text-[11px] sm:text-xs text-[#1a1a1a]/50 hover:bg-[#1a1a1a]/[0.06] hover:border-[#1a1a1a]/10 hover:text-[#1a1a1a]/70 transition-all"
                   >
                     {s}
                   </button>

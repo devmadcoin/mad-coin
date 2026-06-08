@@ -102,10 +102,10 @@ function TheGate() {
 /* ─── THE ORACLE (Chat) ─── */
 function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef, sessionId }: any) {
   return (
-    <section className="mb-4">
-      <div className="flex items-center gap-3 mb-2 px-3 sm:px-0">
+    <section className="mb-1">
+      <div className="flex items-center gap-2 mb-1 px-2 sm:px-0">
         <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">
+        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30">
           THE ORACLE
         </span>
         <div className="h-px flex-1 bg-[#1a1a1a]/[0.10]" />
@@ -127,41 +127,41 @@ function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef
 /* ─── THE FORK ─── */
 function TheFork() {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-3 px-3 sm:px-0 mb-4">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-2 px-2 sm:px-0 mb-2">
       {/* Death */}
-      <div className="relative border border-[#1a1a1a]/[0.10] bg-[#1a1a1a]/[0.02] p-5 sm:p-7">
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-6">
+      <div className="relative border border-[#1a1a1a]/[0.10] bg-[#1a1a1a]/[0.02] p-3 sm:p-4">
+        <p className="text-[8px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-3">
           PATH ONE — THE DEATH ECONOMY
         </p>
-        <div className="space-y-4">
+        <div className="space-y-2">
           {DEATH.map((line, i) => (
-            <p key={i} className="text-sm text-[#1a1a1a]/50 leading-relaxed">
+            <p key={i} className="text-xs text-[#1a1a1a]/50 leading-relaxed">
               {line}
             </p>
           ))}
         </div>
-        <div className="mt-6 pt-4 border-t border-[#1a1a1a]/[0.06]">
-          <p className="text-[9px] text-[#1a1a1a]/30 uppercase tracking-wider">
+        <div className="mt-4 pt-3 border-t border-[#1a1a1a]/[0.06]">
+          <p className="text-[8px] text-[#1a1a1a]/30 uppercase tracking-wider">
             Retire at 90 — if the market allows.
           </p>
         </div>
       </div>
 
       {/* Life */}
-      <div className="relative border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.04] p-5 sm:p-7 shadow-[0_0_40px_rgba(255,45,45,0.06)]">
+      <div className="relative border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.04] p-3 sm:p-4 shadow-[0_0_40px_rgba(255,45,45,0.06)]">
         <div className="absolute -top-px -right-px w-6 h-6 border-t border-r border-[#FF6B00]/50" />
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/70 mb-6">
+        <p className="text-[8px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/70 mb-3">
           PATH TWO — THE LIFE ECONOMY
         </p>
-        <div className="space-y-4">
+        <div className="space-y-2">
           {LIFE.map((line, i) => (
-            <p key={i} className="text-sm text-[#1a1a1a]/75 leading-relaxed">
+            <p key={i} className="text-xs text-[#1a1a1a]/75 leading-relaxed">
               {line}
             </p>
           ))}
         </div>
-        <div className="mt-6 pt-4 border-t border-[#FF2D2D]/[0.10]">
-          <p className="text-[9px] text-[#FF6B00]/50 uppercase tracking-wider">
+        <div className="mt-4 pt-3 border-t border-[#FF2D2D]/[0.10]">
+          <p className="text-[8px] text-[#FF6B00]/50 uppercase tracking-wider">
             Already decided. Already building.
           </p>
         </div>
@@ -183,10 +183,10 @@ function TheKey() {
   };
 
   return (
-    <section className="px-3 sm:px-0 mb-4">
-      <div className="flex items-center gap-3 mb-4">
+    <section className="px-2 sm:px-0 mb-2">
+      <div className="flex items-center gap-2 mb-2">
         <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/60">
+        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/40">
           THE KEY
         </span>
         <div className="h-px flex-1 bg-[#1a1a1a]/[0.10]" />
@@ -194,15 +194,15 @@ function TheKey() {
 
       <div
         onClick={copy}
-        className="border border-[#FF2D2D]/25 bg-[#FF2D2D]/[0.05] p-5 cursor-pointer hover:border-[#FF2D2D]/40 transition-all group"
+        className="border border-[#FF2D2D]/25 bg-[#FF2D2D]/[0.05] p-3 cursor-pointer hover:border-[#FF2D2D]/40 transition-all group"
       >
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-3">
+        <p className="text-[8px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-2">
           Solana Contract — Click to Copy
         </p>
         <p className="text-xs sm:text-sm font-mono text-[#FF2D2D]/90 break-all leading-relaxed group-hover:text-[#FF2D2D] transition-colors">
           {CONTRACT}
         </p>
-        <p className="text-[9px] text-[#1a1a1a]/30 mt-3 uppercase tracking-wider">
+        <p className="text-[8px] text-[#1a1a1a]/30 mt-2 uppercase tracking-wider">
           {copied ? "✓ Copied to clipboard" : "Copy and paste into Phantom or your wallet"}
         </p>
       </div>
@@ -213,26 +213,26 @@ function TheKey() {
 /* ─── FREQUENCY CHECKPOINTS ─── */
 function FrequencyCheckpoints() {
   return (
-    <section className="px-3 sm:px-0 pb-6">
-      <div className="flex items-center gap-3 mb-4">
+    <section className="px-2 sm:px-0 pb-3">
+      <div className="flex items-center gap-2 mb-2">
         <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">
+        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30">
           FREQUENCY CHECKPOINTS
         </span>
         <div className="h-px flex-1 bg-[#1a1a1a]/[0.10]" />
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         {PLATFORMS.map((p) => (
           <a
             key={p.handle}
             href={p.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-3 py-2 border border-[#1a1a1a]/[0.08] bg-[#1a1a1a]/[0.03] hover:border-[#FF2D2D]/25 hover:bg-[#FF2D2D]/[0.04] transition-all"
+            className="flex items-center gap-1.5 px-2 py-1.5 border border-[#1a1a1a]/[0.08] bg-[#1a1a1a]/[0.03] hover:border-[#FF2D2D]/25 hover:bg-[#FF2D2D]/[0.04] transition-all"
           >
-            <span className="text-xs">{p.icon}</span>
-            <span className="text-[11px] font-bold text-[#1a1a1a]/60">{p.handle}</span>
+            <span className="text-[10px]">{p.icon}</span>
+            <span className="text-[10px] font-bold text-[#1a1a1a]/60">{p.handle}</span>
           </a>
         ))}
       </div>
@@ -258,7 +258,7 @@ export default function MadClawIdentity() {
       <TheGate />
       {/* Content below hero on crème background */}
       <div className="bg-[#F5F1E8] relative z-10">
-        <div className="mx-auto max-w-5xl px-3 sm:px-4 pb-4 pt-2 sm:pt-3">
+        <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
           <TheOracle
             messages={messages}
             status={status}
