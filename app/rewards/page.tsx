@@ -176,6 +176,9 @@ export default function RewardsPage() {
             <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-[#1a1a1a]/55">
               Every milestone unlocks a reward. The chart only goes up — the question is how long you hold.
             </p>
+            <p className="mx-auto mt-3 max-w-xl text-xs font-bold uppercase tracking-[0.2em] text-[#FF2D2D]/80">
+              Market Cap tracked via DexScreener, not Pump.fun — $MAD 😡
+            </p>
           </div>
 
           {/* Chart container */}
