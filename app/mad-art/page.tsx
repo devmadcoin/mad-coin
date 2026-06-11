@@ -206,6 +206,103 @@ function TheGallery() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   MAD STORIES — Cinematic moments with sound
+   ═══════════════════════════════════════════════════════════ */
+function MadStories() {
+  const [active, setActive] = useState<number | null>(null);
+
+  const stories = [
+    {
+      src: "/mad-art/stories/mad-dancing.mp4",
+      title: "MAD Dancing",
+      desc: "The rhythm of conviction. When the beat drops, you hold.",
+    },
+    {
+      src: "/mad-art/stories/mad-winning.mp4",
+      title: "MAD Winning",
+      desc: "Victory is a mindset. The bag is already yours.",
+    },
+    {
+      src: "/mad-art/stories/bullish-mad.mp4",
+      title: "Bullish MAD",
+      desc: "The charts don't lie. The community doesn't fold.",
+    },
+  ];
+
+  return (
+    <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8] border-b border-[#1a1a1a]/10">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12 sm:mb-16">
+          <p className="text-[11px] font-black uppercase tracking-[0.34em] text-[#1a1a1a]/40 mb-3">
+            Sound On 🔊
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#1a1a1a]">
+            MAD <span className="text-[#FF2D2D]">STORIES</span>
+          </h2>
+          <p className="text-sm text-[#1a1a1a]/50 mt-3 max-w-md mx-auto">
+            Cinematic moments. Tap to play. Turn up the volume.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          {stories.map((story, i) => (
+            <div
+              key={i}
+              className="group relative overflow-hidden rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] aspect-[9/16] cursor-pointer"
+              onClick={() => setActive(active === i ? null : i)}
+            >
+              <video
+                ref={(el) => {
+                  if (el && active === i) el.play();
+                  if (el && active !== i) {
+                    el.pause();
+                    el.currentTime = 0;
+                  }
+                }}
+                src={story.src}
+                loop
+                playsInline
+                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+              />
+
+              {/* Overlay when not playing */}
+              {active !== i && (
+                <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center transition-opacity">
+                  <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white" stroke="none">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                  <p className="text-white font-black text-lg">{story.title}</p>
+                  <p className="text-white/60 text-xs mt-1 max-w-[80%] text-center">{story.desc}</p>
+                </div>
+              )}
+
+              {/* Pause button when playing */}
+              {active === i && (
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="w-14 h-14 rounded-full bg-black/40 backdrop-blur flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="none">
+                      <rect x="6" y="4" width="4" height="16" rx="1"/>
+                      <rect x="14" y="4" width="4" height="16" rx="1"/>
+                    </svg>
+                  </div>
+                </div>
+              )}
+
+              {/* Title bar at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.7)_100%)]">
+                <p className="text-xs font-bold text-white/80">{story.title}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    ANIMATED GALLERY — Looping MAD moments (GIF-style videos)
    ═══════════════════════════════════════════════════════════ */
 function AnimatedGallery() {
@@ -330,6 +427,7 @@ export default function MadArtPage() {
 
       <main>
         <TheStage />
+        <MadStories />
         <AnimatedGallery />
         <TheGallery />
         <CTASection />

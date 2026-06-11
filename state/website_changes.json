@@ -8,10 +8,22 @@
       "commit": "2f59d6d"
     },
     {
-      "task": "mad-art: add 4 animated GIF loops (MAD Thinking, HAHAHA, MAD Excited, MAD Planning)",
+      "task": "mad-art: add 4 animated MAD Moments loops (Thinking, HAHAHA, Excited, Planning)",
       "date": "2026-06-11",
       "status": "deployed",
       "commit": "222225d"
+    },
+    {
+      "task": "mad-art: move MAD MOMENTS loops to top of page",
+      "date": "2026-06-11",
+      "status": "deployed",
+      "commit": "cd2b514"
+    },
+    {
+      "task": "rewards: add falling gold coins animation",
+      "date": "2026-06-11",
+      "status": "deployed",
+      "commit": "a71ff65"
     }
   ]
 }
