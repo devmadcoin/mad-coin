@@ -48,10 +48,70 @@ function Pill({
   );
 }
 
+/* ═══════════════════════════════════════════════════════════
+   FALLING COINS — Background rain animation
+   ═══════════════════════════════════════════════════════════ */
+function FallingCoins() {
+  const coins = Array.from({ length: 24 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    delay: `${Math.random() * 8}s`,
+    duration: `${Math.random() * 4 + 5}s`,
+    size: `${Math.random() * 14 + 12}px`,
+  }));
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      {coins.map((coin) => (
+        <div
+          key={coin.id}
+          className="absolute top-[-40px] opacity-40 will-change-transform"
+          style={{
+            left: coin.left,
+            animationDelay: coin.delay,
+            animationDuration: coin.duration,
+            animation: `fallCoin ${coin.duration} linear ${coin.delay} infinite`,
+          }}
+        >
+          <svg
+            width={coin.size}
+            height={coin.size}
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#B8860B" strokeWidth="1.5" opacity="0.7" />
+            <text
+              x="12"
+              y="16"
+              textAnchor="middle"
+              fill="#B8860B"
+              fontSize="11"
+              fontWeight="900"
+              fontFamily="sans-serif"
+            >
+              $
+            </text>
+          </svg>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function RewardsPage() {
   return (
     <div className="relative overflow-hidden bg-[#F5F1E8] text-[#1a1a1a]">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
+      <FallingCoins />
+
+      <style>{`
+        @keyframes fallCoin {
+          0% { transform: translateY(-40px) rotate(0deg); opacity: 0; }
+          10% { opacity: 0.4; }
+          90% { opacity: 0.4; }
+          100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+      `}</style>
 
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
         {/* Hero */}
