@@ -1,16 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Link from "next/link";
 import MadClawIdentity from "./components/MadClawIdentity";
-
-const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
-const LINKS = {
-  telegram: "https://t.me/MadRichClub",
-  x: "https://x.com/madrichclub_",
-  instagram: "https://www.instagram.com/madrichclub/",
-  tiktok: "https://www.tiktok.com/@madrichclub",
-};
 
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 const LINKS = {
