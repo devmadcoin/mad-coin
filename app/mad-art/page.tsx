@@ -516,3 +516,35 @@ function Footer() {
     </footer>
   );
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE
+   ═══════════════════════════════════════════════════════════ */
+export default function MadArtPage() {
+  return (
+    <div className="min-h-screen overflow-x-hidden bg-[#F5F1E8] text-[#1a1a1a]">
+      <style>{`
+        @keyframes floatUp {
+          0% { transform: translateY(0); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(-100px); opacity: 0; }
+        }
+      `}</style>
+      <Scanlines />
+      <FloatingParticles />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.03),transparent_50%)]" />
+
+      <main>
+        <TheStage />
+        <MadStories />
+        <AnimatedGallery />
+        <TheGallery />
+        <CTASection />
+      </main>
+
+      <Disclaimer />
+      <Footer />
+    </div>
+  );
+}
