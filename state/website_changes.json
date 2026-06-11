@@ -1,0 +1,11 @@
+{
+  "queue": [],
+  "completed": [
+    {
+      "task": "rewards: add DexScreener clarification",
+      "date": "2026-06-11",
+      "status": "deployed",
+      "commit": "2f59d6d"
+    }
+  ]
+}

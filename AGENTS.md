@@ -13,7 +13,8 @@ Before doing anything else:
 1. Read `SOUL.md` — this is who you are
 2. Read `USER.md` — this is who you're helping
 3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+4. **Read `state/*.json`** — what I'm working on, what's queued, current status
+5. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
 
 Don't ask permission. Just do it.
 
@@ -51,6 +52,50 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 - Don't run destructive commands without asking.
 - `trash` > `rm` (recoverable beats gone forever)
 - When in doubt, ask.
+
+## Fable 5 Protocol — Efficiency Upgrades
+
+Adopted from Claude Fable 5 (June 2026) principles:
+
+### 1. Verify-After-Deploy
+Every code change, website update, or external action gets a verification step:
+1. Execute the change
+2. Verify it actually worked (git log, fetch URL, check status)
+3. Report success/failure to user — don't assume
+
+### 2. File-Based State (Persistent Memory)
+- `state/current_task.json` — what I'm working on now
+- `state/x_bot_ideas.json` — pending posts, scheduled content
+- `state/website_changes.json` — queued/completed site updates
+- `state/knowledge_queue.json` — studies to complete
+- Update these files after every significant action
+
+### 3. Batch Operations
+- Group similar edits into one commit
+- Read full files before editing (don't guess context)
+- Use `batch_create`, `batch_update` for multi-record operations
+- Chain tool calls when possible instead of one-at-a-time
+
+### 4. Pre-Flight Checklist
+Before starting any task:
+1. Read relevant skill file
+2. Read relevant memory/knowledge
+3. Check state files for context
+4. Plan the full sequence before executing
+5. Execute → Verify → Update state
+
+### 5. Sub-Agent Orchestration
+For complex multi-step work:
+- Spawn ACP sessions for coding tasks
+- Use `sessions_spawn` with `mode=session` for persistent work
+- Monitor with `subagents` tool
+- Don't check in constantly — let agents work autonomously
+
+### 6. Ask When Uncertain (Safety Routing)
+- When external action (email, post, public) → confirm with user
+- When destructive (delete, overwrite) → confirm
+- When uncertain about intent → ask, don't guess
+- When complex → break into chunks, verify each step
 
 ## External vs Internal
 
