@@ -206,6 +206,60 @@ function TheGallery() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   ANIMATED GALLERY — Looping MAD moments (GIF-style videos)
+   ═══════════════════════════════════════════════════════════ */
+function AnimatedGallery() {
+  const loops = [
+    { src: "/mad-art/loops/mad-thinking.mp4", title: "MAD Thinking" },
+    { src: "/mad-art/loops/hahaha.mp4", title: "HAHAHA" },
+    { src: "/mad-art/loops/mad-excited.mp4", title: "MAD Excited" },
+    { src: "/mad-art/loops/mad-planning.mp4", title: "MAD Planning" },
+  ];
+
+  return (
+    <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8] border-t border-[#1a1a1a]/10">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12 sm:mb-16">
+          <p className="text-[11px] font-black uppercase tracking-[0.34em] text-[#1a1a1a]/40 mb-3">
+            Always Moving
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#1a1a1a]">
+            MAD <span className="text-[#FF2D2D]">MOMENTS</span>
+          </h2>
+          <p className="text-sm text-[#1a1a1a]/50 mt-3">
+            The energy. The emotion. The frequency. Loop it.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {loops.map((loop, i) => (
+            <div
+              key={i}
+              className="group relative overflow-hidden rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] aspect-square"
+            >
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+              >
+                <source src={loop.src} type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,rgba(0,0,0,0.5)_100%)]" />
+              <div className="absolute bottom-0 left-0 right-0 p-3">
+                <p className="text-xs font-bold text-white">{loop.title}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    CTA SECTION
    ═══════════════════════════════════════════════════════════ */
 function CTASection() {
@@ -277,6 +331,7 @@ export default function MadArtPage() {
       <main>
         <TheStage />
         <TheGallery />
+        <AnimatedGallery />
         <CTASection />
       </main>
 
