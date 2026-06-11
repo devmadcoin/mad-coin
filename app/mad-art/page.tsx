@@ -330,8 +330,8 @@ export default function MadArtPage() {
 
       <main>
         <TheStage />
-        <TheGallery />
         <AnimatedGallery />
+        <TheGallery />
         <CTASection />
       </main>
 

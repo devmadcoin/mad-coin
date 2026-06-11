@@ -10,8 +10,8 @@
     {
       "task": "mad-art: add 4 animated GIF loops (MAD Thinking, HAHAHA, MAD Excited, MAD Planning)",
       "date": "2026-06-11",
-      "status": "ready_to_push",
-      "files": ["public/mad-art/loops/*.mp4", "app/mad-art/page.tsx"]
+      "status": "deployed",
+      "commit": "222225d"
     }
   ]
 }
