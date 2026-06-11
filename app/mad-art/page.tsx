@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 /* ─── Scanlines ─── */
 function Scanlines() {
@@ -210,6 +210,7 @@ function TheGallery() {
    ═══════════════════════════════════════════════════════════ */
 function MadStories() {
   const [active, setActive] = useState<number | null>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const stories = [
     {
@@ -228,6 +229,19 @@ function MadStories() {
       desc: "The charts don't lie. The community doesn't fold.",
     },
   ];
+
+  useEffect(() => {
+    stories.forEach((_, i) => {
+      const el = videoRefs.current[i];
+      if (!el) return;
+      if (active === i) {
+        el.play().catch(() => {});
+      } else {
+        el.pause();
+        el.currentTime = 0;
+      }
+    });
+  }, [active]);
 
   return (
     <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8] border-b border-[#1a1a1a]/10">
@@ -252,16 +266,11 @@ function MadStories() {
               onClick={() => setActive(active === i ? null : i)}
             >
               <video
-                ref={(el) => {
-                  if (el && active === i) el.play();
-                  if (el && active !== i) {
-                    el.pause();
-                    el.currentTime = 0;
-                  }
-                }}
+                ref={(el) => { videoRefs.current[i] = el; }}
                 src={story.src}
                 loop
                 playsInline
+                preload="metadata"
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
               />
 
