@@ -469,6 +469,91 @@ export default function RewardsPage() {
           </div>
         </SectionShell>
 
+        {/* ═══════════════════════════════════════════════════════════
+            COMPLETED CHALLENGES — Past Giveaways
+            ═══════════════════════════════════════════════════════════ */}
+        <SectionShell className="mt-8 p-6 sm:p-10">
+          <div className="text-center mb-10">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
+              Completed
+            </p>
+            <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-3xl">
+              Past <span className="text-[#FF2D2D]">Challenges</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-[#1a1a1a]/55">
+              Real rewards. Real winners. Proof that $MAD delivers.
+            </p>
+          </div>
+
+          <div className="rounded-[1.4rem] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-5 sm:p-6 overflow-hidden">
+            <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-8">
+              {/* Video thumbnail / image placeholder */}
+              <div className="relative w-full sm:w-56 shrink-0 aspect-[4/5] rounded-[1.2rem] overflow-hidden border border-[#1a1a1a]/10 bg-[#1a1a1a]/5">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-5xl">💪</span>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-3 bg-[#1a1a1a]/60 backdrop-blur-sm">
+                  <p className="text-[10px] font-black text-white uppercase tracking-wider">🎥 Watch on X</p>
+                </div>
+              </div>
+
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <span className="inline-flex rounded-full bg-[#FF2D2D]/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#FF2D2D]">
+                    Completed
+                  </span>
+                  <span className="inline-flex rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-600">
+                    ✅ Winners Paid
+                  </span>
+                </div>
+
+                <h3 className="text-xl font-black text-[#1a1a1a] leading-tight">
+                  $MAD Health Competition
+                </h3>
+                <p className="mt-2 text-sm text-[#1a1a1a]/55 leading-relaxed">
+                  The first-ever $MAD community challenge. Film yourself doing 20 pushups IRL. First 100 entries eligible. Winners announced June 6, 2026.
+                </p>
+
+                <div className="mt-4 grid grid-cols-3 gap-3">
+                  <div className="rounded-xl border border-[#1a1a1a]/10 bg-[#F5F1E8] p-3 text-center">
+                    <p className="text-lg font-black text-[#FF2D2D]">100</p>
+                    <p className="text-[10px] font-bold text-[#1a1a1a]/60 uppercase">Eligible</p>
+                  </div>
+                  <div className="rounded-xl border border-[#1a1a1a]/10 bg-[#F5F1E8] p-3 text-center">
+                    <p className="text-lg font-black text-[#FF2D2D]">50K</p>
+                    <p className="text-[10px] font-bold text-[#1a1a1a]/60 uppercase">$MAD Each</p>
+                  </div>
+                  <div className="rounded-xl border border-[#1a1a1a]/10 bg-[#F5F1E8] p-3 text-center">
+                    <p className="text-lg font-black text-[#FF2D2D]">20</p>
+                    <p className="text-[10px] font-bold text-[#1a1a1a]/60 uppercase">Pushups</p>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center gap-3">
+                  <a
+                    href="https://x.com/madrichclub_/status/2061871512991437267"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#FF2D2D]/30 bg-[#FF2D2D]/10 px-5 py-2.5 text-xs font-black text-[#FF2D2D] transition hover:bg-[#FF2D2D]/20"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    View on X
+                  </a>
+                  <p className="text-[10px] text-[#1a1a1a]/40 font-mono">
+                    Jun 2, 2026 · 12.5K views
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-[#1a1a1a]/55">
+              More challenges coming. <span className="font-bold text-[#FF2D2D]">Stay active. Stay $MAD.</span>
+            </p>
+          </div>
+        </SectionShell>
+
         {/* Thank You — The MAD Fam Behind the Concept */}
         <SectionShell className="mt-8 p-6 sm:p-10">
           <div className="text-center">
