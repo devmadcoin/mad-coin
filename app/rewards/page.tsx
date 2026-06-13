@@ -261,7 +261,7 @@ export default function RewardsPage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <h3 className="text-xl font-black text-[#1a1a1a]">
-                    $376K Market Cap
+                    $533K Market Cap
                   </h3>
                 </div>
 
@@ -269,15 +269,15 @@ export default function RewardsPage() {
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-bold text-[#1a1a1a]/40">Progress to $1M</span>
-                    <span className="text-[10px] font-black text-[#FF6B00]">38%</span>
+                    <span className="text-[10px] font-black text-[#FF6B00]">53%</span>
                   </div>
                   <div className="h-2 rounded-full bg-[#1a1a1a]/[0.06] overflow-hidden">
-                    <div className="h-full rounded-full bg-[#FF6B00] w-[38%] shadow-[0_0_10px_rgba(255,107,0,0.3)]" />
+                    <div className="h-full rounded-full bg-[#FF6B00] w-[53%] shadow-[0_0_10px_rgba(255,107,0,0.3)]" />
                   </div>
                 </div>
 
                 <p className="mt-3 text-xs text-[#1a1a1a]/50">
-                  📈 1,111 buys vs 164 sells · 14.8K volume 24h
+                  📈 1,425 buys vs 288 sells · 12K volume 24h
                 </p>
               </div>
             </div>
