@@ -24,36 +24,43 @@ export default function useChat() {
       localStorage.setItem("mad-claw-chat-session", sid);
     }
     setSessionId(sid);
-
-    /* Load history */
-    fetch(`/api/mad-mind/chat?sessionId=${sid}`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.messages?.length) {
-          setMessages(data.messages.map((m: ChatMessage, i: number) => ({
-            ...m,
-            id: m.id || `${m.role}-${i}-${m.timestamp}`,
-          })));
-        } else {
-          /* The Claw opens the conversation */
-          setMessages([{
-            role: "claw",
-            text: "Someone just asked why their 401k feels like a scam. I told them the truth.\n\nWhat do you want to know?",
-            timestamp: Date.now(),
-            id: `claw-open-${Date.now()}`,
-          }]);
-        }
-      })
-      .catch(() => {
-        /* Fallback if API fails */
-        setMessages([{
-          role: "claw",
-          text: "Someone just asked why their 401k feels like a scam. I told them the truth.\n\nWhat do you want to know?",
-          timestamp: Date.now(),
-          id: `claw-open-${Date.now()}`,
-        }]);
-      });
+    loadSessionHistory(sid);
   }, []);
+
+  const loadSessionHistory = async (sid: string) => {
+    try {
+      const res = await fetch(`/api/mad-mind/chat?sessionId=${sid}`);
+      const data = await res.json();
+      if (data.messages?.length) {
+        setMessages(data.messages.map((m: ChatMessage, i: number) => ({
+          ...m,
+          id: m.id || `${m.role}-${i}-${m.timestamp}`,
+        })));
+      } else {
+        setWelcomeMessage();
+      }
+    } catch {
+      setWelcomeMessage();
+    }
+  };
+
+  const setWelcomeMessage = () => {
+    setMessages([{
+      role: "claw",
+      text: "Someone just asked why their 401k feels like a scam. I told them the truth.\n\nWhat do you want to know?",
+      timestamp: Date.now(),
+      id: `claw-open-${Date.now()}`,
+    }]);
+  };
+
+  const switchSession = async (sid: string) => {
+    localStorage.setItem("mad-claw-chat-session", sid);
+    setSessionId(sid);
+    setMessages([]);
+    setStatus("idle");
+    setTyping(false);
+    await loadSessionHistory(sid);
+  };
 
   /* Auto-scroll */
   useEffect(() => {
@@ -116,5 +123,5 @@ export default function useChat() {
     setMessages([]);
   };
 
-  return { messages, status, typing, sendMessage, clearChat, scrollRef, sessionId };
+  return { messages, status, typing, sendMessage, clearChat, scrollRef, sessionId, switchSession };
 }

@@ -20,6 +20,7 @@ interface ChatInterfaceProps {
   clearChat: () => void;
   scrollRef: React.RefObject<HTMLDivElement | null>;
   sessionId: string;
+  switchSession?: (id: string) => void;
 }
 
 /* ─── Suggested starters ─── */
@@ -286,6 +287,7 @@ export default function ChatInterface({
   clearChat,
   scrollRef,
   sessionId,
+  switchSession,
 }: ChatInterfaceProps) {
   const [input, setInput] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -301,14 +303,43 @@ export default function ChatInterface({
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  /* Load sessions from localStorage */
+  /* Load sessions from backend + localStorage */
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("mad-claw-sessions");
-      if (raw) {
-        setSessions(JSON.parse(raw));
-      }
-    } catch { /* ignore */ }
+    const loadSessions = async () => {
+      let allSessions: ChatSession[] = [];
+      
+      // Try backend first
+      try {
+        const res = await fetch("/api/mad-mind/chat?list=true");
+        const data = await res.json();
+        if (data.sessions?.length) {
+          allSessions = data.sessions.map((s: any) => ({
+            id: s.id,
+            title: s.preview.slice(0, 30) || "New chat",
+            lastMessage: s.preview || "",
+            timestamp: s.lastActivity,
+            messageCount: s.messageCount,
+          }));
+        }
+      } catch { /* ignore */ }
+      
+      // Merge with localStorage sessions
+      try {
+        const raw = localStorage.getItem("mad-claw-sessions");
+        if (raw) {
+          const local = JSON.parse(raw) as ChatSession[];
+          const existing = new Map(allSessions.map(s => [s.id, s]));
+          for (const s of local) {
+            if (!existing.has(s.id)) existing.set(s.id, s);
+          }
+          allSessions = Array.from(existing.values());
+        }
+      } catch { /* ignore */ }
+      
+      setSessions(allSessions.sort((a, b) => b.timestamp - a.timestamp));
+    };
+    
+    loadSessions();
   }, []);
 
   /* Save sessions */
@@ -374,15 +405,19 @@ export default function ChatInterface({
   };
 
   const handleSelectSession = (id: string) => {
-    /* Switch to that session — reload page with that session */
-    localStorage.setItem("mad-claw-chat-session", id);
-    window.location.reload();
+    if (switchSession) {
+      switchSession(id);
+    } else {
+      localStorage.setItem("mad-claw-chat-session", id);
+      window.location.reload();
+    }
+    setSidebarOpen(false);
   };
 
   const hasMessages = messages.length > 0;
 
   return (
-    <div className="flex h-[450px] sm:h-[500px] rounded-none sm:rounded-[24px] border-0 sm:border border-[#1a1a1a]/10 bg-[#F5F1E8] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.04)] relative">
+    <div className="flex h-[60vh] sm:h-[550px] rounded-none sm:rounded-[24px] border-0 sm:border border-[#1a1a1a]/10 bg-[#F5F1E8] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.04)] relative">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && isMobile && (
         <div 
@@ -522,6 +557,7 @@ export default function ChatInterface({
               disabled={status === "sending" || typing}
               placeholder="Message Mad Claw..."
               rows={1}
+              autoFocus
               className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 rounded-xl sm:rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] text-[#1a1a1a] text-sm placeholder:text-[#1a1a1a]/20 outline-none focus:border-[#FF2D2D]/30 focus:bg-[#1a1a1a]/[0.05] transition-all resize-none disabled:opacity-40 leading-relaxed"
               style={{ minHeight: "40px", maxHeight: "160px" }}
             />

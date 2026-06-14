@@ -100,7 +100,7 @@ function TheGate() {
 }
 
 /* ─── THE ORACLE (Chat) ─── */
-function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef, sessionId }: any) {
+function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef, sessionId, switchSession }: any) {
   return (
     <section className="mb-1">
       <div className="flex items-center gap-2 mb-1 px-2 sm:px-0">
@@ -119,6 +119,7 @@ function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef
         clearChat={clearChat}
         scrollRef={scrollRef}
         sessionId={sessionId}
+        switchSession={switchSession}
       />
     </section>
   );
@@ -251,7 +252,7 @@ function triggerClawReaction() {
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadClawIdentity() {
-  const { messages, status, typing, sendMessage, clearChat, scrollRef, sessionId } = useChat();
+  const { messages, status, typing, sendMessage, clearChat, scrollRef, sessionId, switchSession } = useChat();
 
   return (
     <div className="space-y-0">
@@ -267,6 +268,7 @@ export default function MadClawIdentity() {
             clearChat={clearChat}
             scrollRef={scrollRef}
             sessionId={sessionId}
+            switchSession={switchSession}
           />
           <TheFork />
           <TheKey />

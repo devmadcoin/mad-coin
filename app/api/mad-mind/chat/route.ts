@@ -488,10 +488,32 @@ export async function POST(req: Request) {
   });
 }
 
-/* ─── GET: Load conversation history ─── */
+/* ─── GET: Load conversation history or list sessions ─── */
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const sessionId = url.searchParams.get("sessionId") || "";
+  const list = url.searchParams.get("list") === "true";
+
+  if (list) {
+    const sessions: Array<{ id: string; messageCount: number; lastActivity: number; preview: string }> = [];
+    if (fs.existsSync(CHAT_DIR)) {
+      const files = fs.readdirSync(CHAT_DIR);
+      for (const file of files) {
+        if (!file.endsWith(".json")) continue;
+        try {
+          const raw = fs.readFileSync(path.join(CHAT_DIR, file), "utf-8");
+          const data = JSON.parse(raw) as ChatSession;
+          sessions.push({
+            id: data.id,
+            messageCount: data.messages.length,
+            lastActivity: data.lastActivity,
+            preview: data.messages.find((m) => m.role === "user")?.text.slice(0, 50) || "",
+          });
+        } catch { /* ignore */ }
+      }
+    }
+    return NextResponse.json({ sessions: sessions.sort((a, b) => b.lastActivity - a.lastActivity) });
+  }
 
   if (!sessionId) {
     return NextResponse.json({ messages: [], sessionId: generateSessionId() });
