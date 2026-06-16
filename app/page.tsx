@@ -737,14 +737,16 @@ function TheProof() {
           {/* Silverwing Notebook Testimonial — Full Width */}
           <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
             <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Notebook Image */}
-              <div className="relative aspect-square md:aspect-auto">
-                <Image
-                  src="/testimonials/silverwing-notebook.jpg"
-                  alt="Silverwing giving out $MAD notebooks to kids in the community"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 320px"
+              {/* Notebook Video */}
+              <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
+                <video
+                  src="/testimonials/silverwing-notebook.mp4"
+                  controls
+                  muted
+                  playsInline
+                  loop
+                  className="w-full h-full object-cover"
+                  poster="/testimonials/silverwing-notebook.jpg"
                 />
               </div>
               
