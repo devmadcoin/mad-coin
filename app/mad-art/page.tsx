@@ -132,6 +132,7 @@ function TheGallery() {
     { src: "/mad-art/mad-car-wash-rain.png", title: "Car Wash Curse", type: "Meme" },
     { src: "/mad-art/mad-wealthy.mp4", title: "MAD Wealthy", type: "Animation" },
     { src: "/mad-art/very-mad.mp4", title: "Very MAD", type: "Animation" },
+  ];
 
   return (
     <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8]">
