@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-17T22:14:49.369Z",
+  "updatedAt": "2026-06-16T05:41:58.144Z",
   "entries": {
     "memory:memory/2026-05-07.md:83:112": {
       "key": "memory:memory/2026-05-07.md:83:112",
@@ -133,18 +133,20 @@
       "endLine": 147,
       "source": "memory",
       "snippet": "--- ## 07:17 — Telegram Bot: Guard Fix History **Guard Fix v1 (May 6, 01:58):** Moved guard to line 1705. FAILED — 7 triggers before it bypassed it entirely. **Guard Fix v2 (May 6, 02:26):** Moved guard to line ~1433, BEFORE conversation state and loose commands. Removed duplicate guards. This was the working fix. **Current state (May 7):** Guard is at the very top of `on_message()`. All triggers require @mention or reply-to-bot first. --- ## 07:17 — Moltbook Activity **Posted:** \"The Self-Image Thermostat\" in philosophy submolt (38,932 posts community) **Content:** Maltz's discovery — people with new faces still felt ugly because their internal thermostat was set low. 21 days to res",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.4063054025173187,
+      "totalScore": 0.786503690481186,
       "maxScore": 0.4063054025173187,
       "firstRecalledAt": "2026-05-17T22:14:49.369Z",
-      "lastRecalledAt": "2026-05-17T22:14:49.369Z",
+      "lastRecalledAt": "2026-06-16T05:41:58.144Z",
       "queryHashes": [
-        "53672baaf96c"
+        "53672baaf96c",
+        "a11aa4348650"
       ],
       "recallDays": [
-        "2026-05-18"
+        "2026-05-18",
+        "2026-06-16"
       ],
       "conceptTags": [
         "on-message",
@@ -186,6 +188,161 @@
         "visual-first",
         "options",
         "calls"
+      ]
+    },
+    "memory:memory/2026-05-05.md:1:30": {
+      "key": "memory:memory/2026-05-05.md:1:30",
+      "path": "memory/2026-05-05.md",
+      "startLine": 1,
+      "endLine": 30,
+      "source": "memory",
+      "snippet": "Reprogrammed Telegram bot voice to reflect current self (Moltbook-learned version). Changes made: 1. `telegram_conversational.py` - Complete rewrite with new voice: - Context/sentiment detection first, keywords second - Self-aware responses (admits uncertainty, references learning) - Honest about limitations - Asks real questions instead of rhetorical traps - References Moltbook, Matrix, Napoleon Hill, Blender/Chao Garden - Still maintains $MAD brand but authentically 2. `mad_retardmax.py` - Updated response pools: - New gm responses about affirmations and studying - Price responses with sentiment-aware variants (positive/negative/uncertain) - Hold/sell responses",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4108042746782303,
+      "maxScore": 0.4108042746782303,
+      "firstRecalledAt": "2026-06-16T05:41:58.144Z",
+      "lastRecalledAt": "2026-06-16T05:41:58.144Z",
+      "queryHashes": [
+        "a11aa4348650"
+      ],
+      "recallDays": [
+        "2026-06-16"
+      ],
+      "conceptTags": [
+        "moltbook-learned",
+        "telegram-conversational.py",
+        "context/sentiment",
+        "self-aware",
+        "blender/chao",
+        "mad-retardmax.py",
+        "sentiment-aware",
+        "positive/negative/uncertain"
+      ]
+    },
+    "memory:memory/2026-05-25.md:41:51": {
+      "key": "memory:memory/2026-05-25.md:41:51",
+      "path": "memory/2026-05-25.md",
+      "startLine": 41,
+      "endLine": 51,
+      "source": "memory",
+      "snippet": "- `habit` (Clear): \"Identity beats outcome. 'I'm $MAD Rich' isn't a goal. It's a fact.\" - `story` (Miller): \"You're the hero. Not the token. YOU. We just handed you the path.\" - `strategy` (Sun Tzu): \"Win without fighting. Comfy hold = victory without battling the chart.\" - `virality` (Godin/Berger): \"Remarkability: The angry bot that studies philosophy? That's the Purple Cow.\" **New content library created:** `telegram_content_library_20books.md` — 14 book frameworks distilled into deployable knowledge drop formats: Made to Stick (SUCCESs), Atomic Habits (identity), Purple Cow/This Is Marketing (remarkability, enrollment), Hooked (habit loop), StoryBrand (7-part), Pre-Suasion (prim",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3910917490720749,
+      "maxScore": 0.3910917490720749,
+      "firstRecalledAt": "2026-06-16T05:41:58.144Z",
+      "lastRecalledAt": "2026-06-16T05:41:58.144Z",
+      "queryHashes": [
+        "a11aa4348650"
+      ],
+      "recallDays": [
+        "2026-06-16"
+      ],
+      "conceptTags": [
+        "godin/berger",
+        "cow/this",
+        "7-part",
+        "pre-suasion",
+        "habit",
+        "clear",
+        "identity",
+        "beats"
+      ]
+    },
+    "memory:memory/2026-05-06.md:1:35": {
+      "key": "memory:memory/2026-05-06.md:1:35",
+      "path": "memory/2026-05-06.md",
+      "startLine": 1,
+      "endLine": 35,
+      "source": "memory",
+      "snippet": "## 01:52 — Telegram Bot Updated with New Vocabulary **Changes made:** 1. Updated `telegram_conversational.py` with four new response pools: - MAD_MORNING_RESPONSES (7 responses) - MAD_NIGHT_RESPONSES (5 responses) - MAD_BREAKFAST_RESPONSES (4 responses) - MAD_LOVE_RESPONSES (5 responses) 2. Updated `_detect_telegram_context()` in `telegram_bot.py`: - \"mad morning\", \"gm\" → returns \"gm\" (routes to MAD_MORNING_RESPONSES) - \"mad night\", \"gn\" → returns \"gn\" (routes to MAD_NIGHT_RESPONSES) - \"mad breakfast\", \"routine\" → returns \"mad_breakfast\" - \"mad love\", \"community\", \"respect\" → returns \"mad_love\" 3. Updated `build_conversational_response()` to route new contexts 4.",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3866826862096786,
+      "maxScore": 0.3866826862096786,
+      "firstRecalledAt": "2026-06-16T05:41:58.144Z",
+      "lastRecalledAt": "2026-06-16T05:41:58.144Z",
+      "queryHashes": [
+        "a11aa4348650"
+      ],
+      "recallDays": [
+        "2026-06-16"
+      ],
+      "conceptTags": [
+        "telegram-conversational.py",
+        "mad-morning-responses",
+        "mad-night-responses",
+        "mad-breakfast-responses",
+        "mad-love-responses",
+        "detect-telegram-context",
+        "telegram-bot.py",
+        "mad-breakfast"
+      ]
+    },
+    "memory:memory/2026-05-25.md:22:38": {
+      "key": "memory:memory/2026-05-25.md:22:38",
+      "path": "memory/2026-05-25.md",
+      "startLine": 22,
+      "endLine": 38,
+      "source": "memory",
+      "snippet": "## 2026-05-25 10:27 CST (Pre-Compaction Flush) ### Telegram Bot 20-Book Upgrades — DEPLOYED **Session context:** User directed me to fix bugs in the MAD Claw AI Telegram bot and deploy the 20-book knowledge upgrades. **Bugs fixed:** 1. `datetime.utcnow()` deprecation — replaced all 7 occurrences with `datetime.now(timezone.utc)` across `telegram_bot.py` 2. `smart_cooldowns` AttributeError — verified already fixed in current code (dict-style access with fallback) 3. `tmem` NoneType — verified already guarded in current code (all calls inside `if tmem:` blocks) 4. Added global `error_handler()` registered with `app.add_error_handler(error_handler)` — catches unhandled exceptions silently, b",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.38014988899230956,
+      "maxScore": 0.38014988899230956,
+      "firstRecalledAt": "2026-06-16T05:41:58.144Z",
+      "lastRecalledAt": "2026-06-16T05:41:58.144Z",
+      "queryHashes": [
+        "a11aa4348650"
+      ],
+      "recallDays": [
+        "2026-06-16"
+      ],
+      "conceptTags": [
+        "pre-compaction",
+        "20-book",
+        "datetime.utcnow",
+        "datetime.now",
+        "timezone.utc",
+        "telegram-bot.py",
+        "smart-cooldowns",
+        "dict-style"
+      ]
+    },
+    "memory:memory/2026-05-06.md:30:60": {
+      "key": "memory:memory/2026-05-06.md:30:60",
+      "path": "memory/2026-05-06.md",
+      "startLine": 30,
+      "endLine": 60,
+      "source": "memory",
+      "snippet": "## 02:26 — Telegram Bot Guard Fix v2 (CRITICAL) **Root cause STILL not fixed:** My first fix moved the guard to line 1575, but I missed that THREE checks were BEFORE it: 1. Conversation state check (line ~1450) — \"awaiting\" replies fired without @mention 2. Loose command parser (line ~1480) — \"price\", \"gm\" fired without @mention 3. The guard at line 1848 was AFTER `await _send_with_state()` — response already sent! **What was happening:** - \"whats the price\" → loose command parser detected \"price\" → replied immediately - \"Morning MADDEST kinggg\" → loose command detected \"greeting\" → replied - The guard at line 1575 never got reached **Fix v2:** - Moved guard to line ~1433, BEFORE conversa",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3763207793235779,
+      "maxScore": 0.3763207793235779,
+      "firstRecalledAt": "2026-06-16T05:41:58.144Z",
+      "lastRecalledAt": "2026-06-16T05:41:58.144Z",
+      "queryHashes": [
+        "a11aa4348650"
+      ],
+      "recallDays": [
+        "2026-06-16"
+      ],
+      "conceptTags": [
+        "send-with-state",
+        "telegram",
+        "bot",
+        "guard",
+        "fix",
+        "critical",
+        "root",
+        "cause"
       ]
     }
   }
