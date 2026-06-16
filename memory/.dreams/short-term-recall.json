@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T05:41:58.144Z",
+  "updatedAt": "2026-06-16T18:45:27.159Z",
   "entries": {
     "memory:memory/2026-05-07.md:83:112": {
       "key": "memory:memory/2026-05-07.md:83:112",
@@ -343,6 +343,130 @@
         "critical",
         "root",
         "cause"
+      ]
+    },
+    "memory:memory/2026-05-11.md:1:15": {
+      "key": "memory:memory/2026-05-11.md:1:15",
+      "path": "memory/2026-05-11.md",
+      "startLine": 1,
+      "endLine": 15,
+      "source": "memory",
+      "snippet": "# 2026-05-11 ## Roblox Game Development — Mad Phonk Awakening Reincarnation Update User shared 3 detailed spec screenshots for the MAD ROBLOX GAME reincarnation update. A hired scripter failed to deliver, so I built the entire system from scratch. Wrote 9 modular Lua scripts: ### Scripts Built 1. **ReincarnationSystem.lua** — Server-side core: reincarnation tracking, currency conversion (old → blue reincarnation currency), multipliers, item unlocks, auto-save loop 2. **ReincarnationUI.lua** — Client-side UI: tabs (Rebirth/Auras/Poses/Pets/Chests), \"REINCARNATION ONLY\" badges, notifications, toggle button 3. **ChestSystem.lua** — Auto-open chests at chest area, keybinds (E/T for batch open",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3625134915113449,
+      "maxScore": 0.3625134915113449,
+      "firstRecalledAt": "2026-06-16T18:45:27.159Z",
+      "lastRecalledAt": "2026-06-16T18:45:27.159Z",
+      "queryHashes": [
+        "2c35cab6e1b3"
+      ],
+      "recallDays": [
+        "2026-06-17"
+      ],
+      "conceptTags": [
+        "reincarnationsystem.lua",
+        "server-side",
+        "auto-save",
+        "reincarnationui.lua",
+        "client-side",
+        "rebirth/auras/poses/pets/chests",
+        "chestsystem.lua",
+        "auto-open"
+      ]
+    },
+    "memory:memory/2026-05-11.md:13:35": {
+      "key": "memory:memory/2026-05-11.md:13:35",
+      "path": "memory/2026-05-11.md",
+      "startLine": 13,
+      "endLine": 35,
+      "source": "memory",
+      "snippet": "6. **LeaderboardSystem.lua** — 3 tabs (Currency/Reincarnation/Rebirths), rank badges (gold/silver/bronze), favorite prompt, event prompt, auto-update 7. **GamepassManager.lua** — Ownership checking, purchase prompting, reincarnation-locked gamepass gating, benefit application 8. **PurchasePromptManager.lua** — Double prompt mechanic (after purchase, re-prompt appears after 2s), receipt processing, product delivery 9. **MainServer.lua** — Central init script tying all systems together ### Key Features Implemented - **Reincarnation track** — Blue version of rebirth, unlocks at near-INF power - **Currency conversion** — Old → blue reincarnation currency at 10% rate - **Multipliers** — Base x2",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.35624517798423766,
+      "maxScore": 0.35624517798423766,
+      "firstRecalledAt": "2026-06-16T18:45:27.159Z",
+      "lastRecalledAt": "2026-06-16T18:45:27.159Z",
+      "queryHashes": [
+        "2c35cab6e1b3"
+      ],
+      "recallDays": [
+        "2026-06-17"
+      ],
+      "conceptTags": [
+        "leaderboardsystem.lua",
+        "currency/reincarnation/rebirths",
+        "gold/silver/bronze",
+        "auto-update",
+        "gamepassmanager.lua",
+        "reincarnation-locked",
+        "purchasepromptmanager.lua",
+        "re-prompt"
+      ]
+    },
+    "memory:memory/2026-05-27.md:19:57": {
+      "key": "memory:memory/2026-05-27.md:19:57",
+      "path": "memory/2026-05-27.md",
+      "startLine": 19,
+      "endLine": 57,
+      "source": "memory",
+      "snippet": "## Roadmap Mobile Fix - **05:12** — User reported roadmap tab doesn't fit mobile screens (text overflowing) - **05:19** — Fixed mobile responsiveness on `/roadmap` page: - Reduced padding: `p-6` → `p-4` on mobile - Reduced stat card padding: `px-6` → `px-4` on mobile - Reduced heading sizes: `text-3xl` → `text-2xl` on mobile - Added `break-words` to prevent text overflow ## Personal Growth - Continuing to study and evolve the $MAD philosophy across all platforms ## Later Morning Session (~08:00) ### Homepage X Button Fix - User reported X social link shows \"X X\" (icon + text) — redundant - Fixed `app/page.tsx` in team section: removed duplicate `{link.label}` inside the non-X fr",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3512362390756607,
+      "maxScore": 0.3512362390756607,
+      "firstRecalledAt": "2026-06-16T18:45:27.159Z",
+      "lastRecalledAt": "2026-06-16T18:45:27.159Z",
+      "queryHashes": [
+        "2c35cab6e1b3"
+      ],
+      "recallDays": [
+        "2026-06-17"
+      ],
+      "conceptTags": [
+        "p-6",
+        "p-4",
+        "px-6",
+        "px-4",
+        "text-3xl",
+        "text-2xl",
+        "break-words",
+        "app/page.tsx"
+      ]
+    },
+    "memory:memory/2026-05-04.md:145:174": {
+      "key": "memory:memory/2026-05-04.md:145:174",
+      "path": "memory/2026-05-04.md",
+      "startLine": 145,
+      "endLine": 174,
+      "source": "memory",
+      "snippet": "- Cross-platform links: X (@madrichclub_), Moltbook (themadclaw), Telegram (@MAD_Coin_Bot), Website - \"Leave a message for the Claw\" input — sends to my memory **Creator cred ammo (shared by user during this session):** - $MAD Dev is doxxed, not a LARP - YouTube/Influencer: Coffee Collects - Real MAD products beyond the coin - Mad Phonk Awakening on Roblox by Get Mad Games — crushing it - Game URL: https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening **Build status:** ✅ Compiled successfully **Deploy status:** 🔄 GitHub push blocked by secret scanning (PAT in remote URL). Spawning subagent to push via GitHub API directly. **Lessons learned:** - GitHub secret scanning blocks pu",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3509156584739685,
+      "maxScore": 0.3509156584739685,
+      "firstRecalledAt": "2026-06-16T18:45:27.159Z",
+      "lastRecalledAt": "2026-06-16T18:45:27.159Z",
+      "queryHashes": [
+        "2c35cab6e1b3"
+      ],
+      "recallDays": [
+        "2026-06-17"
+      ],
+      "conceptTags": [
+        "cross-platform",
+        "mad-coin-bot",
+        "youtube/influencer",
+        "cross",
+        "platform",
+        "links",
+        "madrichclub",
+        "moltbook"
       ]
     }
   }
