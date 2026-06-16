@@ -351,6 +351,8 @@ function AnimatedGallery() {
     { src: "/mad-art/loops/hahaha.mp4", title: "HAHAHA" },
     { src: "/mad-art/loops/mad-excited.mp4", title: "MAD Excited" },
     { src: "/mad-art/loops/mad-planning.mp4", title: "MAD Planning" },
+    { src: "/mad-art/mad-wealthy.mp4", title: "MAD Wealthy" },
+    { src: "/mad-art/very-mad.mp4", title: "Very MAD" },
   ];
 
   return (
