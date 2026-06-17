@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 
 /* ─── Constants ─── */
 const SUPPLY = 490820000; // 490.82M tokens
+const CONTRACT = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 const DEXSCREENER_API = "https://api.dexscreener.com/latest/dex/pairs/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs";
 
 interface TokenData {
@@ -38,10 +39,11 @@ function formatTokens(n: number): string {
 
 /* ─── THE CALCULATOR ─── */
 export default function MadBagCalculator() {
-  const [tokenAmount, setTokenAmount] = useState<string>("1000000");
+  const [tokenAmount, setTokenAmount] = useState<string>("100000");
   const [tokenData, setTokenData] = useState<TokenData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [customMcap, setCustomMcap] = useState<string>("");
+  const [customMcap, setCustomMcap] = useState<string>("5000000");
+  const [copied, setCopied] = useState(false);
 
   /* Fetch live data from DexScreener */
   const fetchData = useCallback(async () => {
@@ -66,7 +68,7 @@ export default function MadBagCalculator() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 30000); // Refresh every 30s
+    const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
   }, [fetchData]);
 
@@ -75,100 +77,167 @@ export default function MadBagCalculator() {
   const currentMcap = tokenData?.marketCap || 0;
   const currentValue = amount * currentPrice;
 
-  /* Calculate bag value at any market cap */
   const valueAtMcap = (mcap: number) => {
     const priceAtMcap = mcap / SUPPLY;
     return amount * priceAtMcap;
   };
 
-  /* Progress to milestone */
   const progressToMilestone = (mcap: number) => {
     if (currentMcap <= 0) return 0;
     return Math.min(100, (currentMcap / mcap) * 100);
   };
 
-  /* How many X to reach milestone */
   const multiplierToMilestone = (mcap: number) => {
     if (currentMcap <= 0) return 0;
     return mcap / currentMcap;
   };
 
+  const copyMint = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTRACT);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  };
+
   return (
     <section className="px-2 sm:px-0 mb-3">
-      {/* Section header */}
-      <div className="flex items-center gap-2 mb-3">
-        <div className="h-px flex-1 bg-[#1a1a1a]/[0.06]" />
-        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/50">
-          BAG CALCULATOR
-        </span>
-        <div className="h-px flex-1 bg-[#1a1a1a]/[0.10]" />
-      </div>
-
-      <div className="border border-[#1a1a1a]/[0.10] bg-[#1a1a1a]/[0.02] p-4 sm:p-5">
-        {/* Live Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
-          <StatBox
-            label="Price"
-            value={loading ? "—" : currentPrice > 0 ? `$${currentPrice.toFixed(8)}` : "—"}
-            change={tokenData?.priceChange24h}
-          />
-          <StatBox
-            label="Market Cap"
-            value={loading ? "—" : currentMcap > 0 ? formatUSD(currentMcap) : "—"}
-          />
-          <StatBox
-            label="Supply"
-            value={formatTokens(SUPPLY)}
-          />
-          <StatBox
-            label="24h Volume"
-            value={loading ? "—" : tokenData?.volume24h ? formatUSD(tokenData.volume24h) : "—"}
-          />
+      {/* Dark card container matching the screenshot vibe */}
+      <div className="rounded-2xl border border-[#FF2D2D]/20 bg-[#1a1a1a] p-4 sm:p-6 shadow-[0_0_60px_rgba(255,45,45,0.08)]">
+        
+        {/* Header */}
+        <div className="text-center mb-5">
+          <h2 className="text-2xl sm:text-3xl font-black text-[#FF2D2D] tracking-tight">
+            $MAD VALUE CALC <span className="text-2xl">😡</span>
+          </h2>
+          <p className="text-[11px] text-white/40 mt-1">
+            Real-time metrics tracking from Pump.fun graduation
+          </p>
+          
+          {/* Mint badge */}
+          <button
+            onClick={copyMint}
+            className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-[#FF2D2D]/30 transition-all"
+          >
+            <span className="text-[10px] text-white/40">Mint:</span>
+            <span className="text-[11px] font-mono font-bold text-white/60">
+              {CONTRACT.slice(0, 5)}...{CONTRACT.slice(-5)}
+            </span>
+            {copied && (
+              <span className="text-[9px] text-[#FF2D2D] font-bold">✓ Copied</span>
+            )}
+          </button>
         </div>
 
-        {/* Input Section */}
+        {/* Bag Input */}
         <div className="mb-5">
-          <label className="text-[8px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-2 block">
-            YOUR $MAD BAG
+          <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-2 block">
+            Your $MAD Bag (Amount of Tokens)
           </label>
-          <div className="flex items-center gap-3">
-            <div className="flex-1 relative">
-              <input
-                type="number"
-                value={tokenAmount}
-                onChange={(e) => setTokenAmount(e.target.value)}
-                className="w-full bg-transparent border border-[#1a1a1a]/15 px-4 py-3 text-lg font-mono font-bold text-[#1a1a1a] placeholder:text-[#1a1a1a]/20 focus:border-[#FF2D2D]/40 focus:outline-none transition-colors"
-                placeholder="1000000"
-              />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-[#1a1a1a]/30">
-                $MAD
-              </span>
-            </div>
-            {/* Quick buttons */}
-            <div className="flex gap-1">
-              {["1M", "5M", "10M", "100M"].map((label) => (
-                <button
-                  key={label}
-                  onClick={() => {
-                    const multiplier = label === "1M" ? 1_000_000 : label === "5M" ? 5_000_000 : label === "10M" ? 10_000_000 : 100_000_000;
-                    setTokenAmount(multiplier.toString());
-                  }}
-                  className="px-2 py-1 text-[9px] font-bold border border-[#1a1a1a]/10 hover:border-[#FF2D2D]/30 hover:bg-[#FF2D2D]/[0.04] transition-all text-[#1a1a1a]/50"
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+          <div className="relative">
+            <input
+              type="number"
+              value={tokenAmount}
+              onChange={(e) => setTokenAmount(e.target.value)}
+              className="w-full bg-[#0a0a0a] border border-[#FF2D2D]/20 rounded-xl px-4 py-3.5 text-lg font-mono font-bold text-white placeholder:text-white/20 focus:border-[#FF2D2D]/50 focus:outline-none transition-colors"
+              placeholder="e.g. 100,000"
+            />
           </div>
-          <p className="text-[9px] text-[#1a1a1a]/30 mt-1.5">
-            Current value: <span className="font-bold text-[#FF2D2D]">{currentValue > 0 ? formatUSD(currentValue) : "—"}</span>
-          </p>
+          
+          {/* Quick buttons */}
+          <div className="flex gap-1.5 mt-2">
+            {["100K", "1M", "5M", "10M", "100M"].map((label) => (
+              <button
+                key={label}
+                onClick={() => {
+                  const multiplier = label === "100K" ? 100_000 : label === "1M" ? 1_000_000 : label === "5M" ? 5_000_000 : label === "10M" ? 10_000_000 : 100_000_000;
+                  setTokenAmount(multiplier.toString());
+                }}
+                className="px-3 py-1.5 text-[10px] font-bold rounded-lg bg-white/5 border border-white/10 hover:border-[#FF2D2D]/30 hover:bg-[#FF2D2D]/10 transition-all text-white/40"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Live Stats Row */}
+        <div className="grid grid-cols-2 gap-2 mb-5">
+          <div className="bg-[#0a0a0a] rounded-xl p-3 border border-white/5">
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20 mb-1">
+              Current Price
+            </p>
+            <p className="text-sm font-mono font-bold text-white">
+              {loading ? "—" : currentPrice > 0 ? `$${currentPrice.toFixed(8)}` : "—"}
+            </p>
+            {tokenData?.priceChange24h !== undefined && (
+              <p className={`text-[9px] font-bold mt-0.5 ${tokenData.priceChange24h >= 0 ? "text-green-400" : "text-red-400"}`}>
+                {tokenData.priceChange24h >= 0 ? "+" : ""}{tokenData.priceChange24h.toFixed(2)}%
+              </p>
+            )}
+          </div>
+          <div className="bg-[#0a0a0a] rounded-xl p-3 border border-white/5">
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20 mb-1">
+              Current MCAP
+            </p>
+            <p className="text-sm font-mono font-bold text-white">
+              {loading ? "—" : currentMcap > 0 ? formatUSD(currentMcap) : "—"}
+            </p>
+          </div>
+        </div>
+
+        {/* Current Value Display */}
+        <div className="bg-[#0a0a0a] rounded-xl p-4 border border-white/5 mb-5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-white/30 uppercase tracking-wider">Current Value:</span>
+            <span className="text-lg font-black text-white">
+              {currentValue > 0 ? formatUSD(currentValue) : "$0.00"}
+            </span>
+          </div>
+        </div>
+
+        {/* Target Market Cap Simulation */}
+        <div className="mb-5">
+          <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-2 block">
+            Target Market Cap Simulation
+          </label>
+          <div className="relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 font-bold">$</span>
+            <input
+              type="number"
+              value={customMcap}
+              onChange={(e) => setCustomMcap(e.target.value)}
+              className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl pl-8 pr-4 py-3 text-sm font-mono font-bold text-white placeholder:text-white/20 focus:border-[#FF2D2D]/40 focus:outline-none transition-colors"
+              placeholder="5000000"
+            />
+          </div>
+          
+          {customMcap && parseFloat(customMcap) > 0 && (
+            <div className="mt-3 bg-[#0a0a0a] rounded-xl p-4 border border-[#FF2D2D]/10">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] text-white/30">Current Value:</span>
+                <span className="text-sm font-bold text-white">{currentValue > 0 ? formatUSD(currentValue) : "$0.00"}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] text-white/30">Target Value:</span>
+                <span className="text-lg font-black text-green-400">
+                  {formatUSD(valueAtMcap(parseFloat(customMcap)))}
+                </span>
+              </div>
+              <div className="mt-2 pt-2 border-t border-white/5 flex items-center justify-between">
+                <span className="text-[9px] text-white/20">Multiplier:</span>
+                <span className="text-xs font-bold text-[#FF6B00]">
+                  {currentMcap > 0 ? `${(parseFloat(customMcap) / currentMcap).toFixed(1)}x` : "—"}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Milestones Grid */}
-        <div className="mb-5">
-          <label className="text-[8px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-3 block">
-            MILESTONE SIMULATOR
+        <div className="mb-4">
+          <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-3 block">
+            Milestone Simulator
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {MILESTONES.map((m) => {
@@ -180,28 +249,28 @@ export default function MadBagCalculator() {
               return (
                 <div
                   key={m.label}
-                  className={`relative border p-3 transition-all ${
+                  className={`relative rounded-xl p-3 transition-all overflow-hidden ${
                     isReached
-                      ? "border-[#FF2D2D]/40 bg-[#FF2D2D]/[0.06]"
-                      : "border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02]"
+                      ? "bg-[#FF2D2D]/10 border border-[#FF2D2D]/30"
+                      : "bg-[#0a0a0a] border border-white/5"
                   }`}
                 >
                   {/* Progress bar background */}
                   <div
-                    className="absolute bottom-0 left-0 h-0.5 bg-[#FF2D2D]/30 transition-all duration-1000"
+                    className="absolute bottom-0 left-0 h-0.5 bg-[#FF2D2D]/40 transition-all duration-1000"
                     style={{ width: `${progress}%` }}
                   />
 
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold text-[#1a1a1a]/60">{m.label} MCAP</span>
+                    <span className="text-[10px] font-bold text-white/50">{m.label} MCAP</span>
                     <span className="text-xs">{m.emoji}</span>
                   </div>
 
-                  <p className="text-lg font-black text-[#1a1a1a] leading-tight">
+                  <p className="text-base font-black text-white leading-tight">
                     {formatUSD(value)}
                   </p>
 
-                  <p className="text-[8px] text-[#1a1a1a]/30 mt-1">
+                  <p className="text-[8px] text-white/20 mt-1">
                     {isReached
                       ? "✓ REACHED"
                       : mult > 0
@@ -215,55 +284,13 @@ export default function MadBagCalculator() {
           </div>
         </div>
 
-        {/* Custom Target */}
-        <div className="mb-4">
-          <label className="text-[8px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-2 block">
-            CUSTOM TARGET
-          </label>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-[#1a1a1a]/40">$</span>
-            <input
-              type="number"
-              value={customMcap}
-              onChange={(e) => setCustomMcap(e.target.value)}
-              className="flex-1 bg-transparent border border-[#1a1a1a]/15 px-3 py-2 text-sm font-mono font-bold text-[#1a1a1a] placeholder:text-[#1a1a1a]/20 focus:border-[#FF2D2D]/40 focus:outline-none transition-colors"
-              placeholder="Enter market cap..."
-            />
-            <span className="text-[10px] font-bold text-[#1a1a1a]/30">MCAP</span>
-          </div>
-          {customMcap && parseFloat(customMcap) > 0 && (
-            <p className="text-sm font-black text-[#FF2D2D] mt-2">
-              Your bag at ${(parseFloat(customMcap) / 1_000_000).toFixed(1)}M MCAP: {formatUSD(valueAtMcap(parseFloat(customMcap)))}
-            </p>
-          )}
-        </div>
-
         {/* Bottom note */}
-        <div className="pt-3 border-t border-[#1a1a1a]/[0.06]">
-          <p className="text-[8px] text-[#1a1a1a]/30 text-center uppercase tracking-wider">
-            Supply: {formatTokens(SUPPLY)} tokens • Data updates every 30s from DexScreener
+        <div className="pt-3 border-t border-white/5">
+          <p className="text-[8px] text-white/20 text-center">
+            Supply: {formatTokens(SUPPLY)} tokens • Updates every 30s from DexScreener • Not financial advice
           </p>
         </div>
       </div>
     </section>
-  );
-}
-
-/* ─── Stat Box Component ─── */
-function StatBox({ label, value, change }: { label: string; value: string; change?: number }) {
-  return (
-    <div className="border border-[#1a1a1a]/[0.08] bg-[#1a1a1a]/[0.02] p-2.5">
-      <p className="text-[7px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30 mb-1">
-        {label}
-      </p>
-      <p className="text-sm font-mono font-bold text-[#1a1a1a] leading-tight">
-        {value}
-      </p>
-      {change !== undefined && (
-        <p className={`text-[8px] font-bold mt-0.5 ${change >= 0 ? "text-green-600" : "text-red-600"}`}>
-          {change >= 0 ? "+" : ""}{change.toFixed(2)}%
-        </p>
-      )}
-    </div>
   );
 }
