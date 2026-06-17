@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import useChat from "./useChat";
 import ChatInterface from "./ChatInterface";
+import MadBagCalculator from "./MadBagCalculator";
 
 /* ─── Data ─── */
 const CONTRACT = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
@@ -270,6 +271,7 @@ export default function MadClawIdentity() {
             sessionId={sessionId}
             switchSession={switchSession}
           />
+          <MadBagCalculator />
           <TheFork />
           <TheKey />
           <FrequencyCheckpoints />
