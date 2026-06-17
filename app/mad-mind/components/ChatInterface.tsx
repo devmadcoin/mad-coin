@@ -481,28 +481,7 @@ export default function ChatInterface({
           className="flex-1 overflow-y-auto px-2 sm:px-3 py-1 sm:py-2 scrollbar-thin ios-momentum"
         >
           {!hasMessages ? (
-            <div className="h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
-              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-2 sm:mb-3 overflow-hidden">
-                <MadChaoPixel size={isMobile ? 32 : 40} animated={true} showLabel={false} />
-              </div>
-              <h2 className="text-sm sm:text-base font-black text-white mb-1">THE ORACLE</h2>
-              <p className="text-[11px] sm:text-xs text-white/40 max-w-[300px] mb-2 sm:mb-3 leading-relaxed">
-                The Claw does not answer questions.<br />
-                It reveals which frequency you are on.
-              </p>
-
-              <div className="grid gap-1 w-full max-w-[400px]">
-                {STARTERS.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => sendMessage(s)}
-                    className="text-left px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[11px] sm:text-xs text-white/50 hover:bg-white/[0.06] hover:border-white/10 hover:text-white/70 transition-all"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <div className="h-full" />
           ) : (
             <>
               {messages.map((msg, i) => {
