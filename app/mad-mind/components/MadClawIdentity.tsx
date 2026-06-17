@@ -104,14 +104,6 @@ function TheGate() {
 function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef, sessionId, switchSession }: any) {
   return (
     <section className="mb-1">
-      <div className="flex items-center gap-2 mb-1 px-2 sm:px-0">
-        <div className="h-px flex-1 bg-white/[0.06]" />
-        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white/30">
-          THE ORACLE
-        </span>
-        <div className="h-px flex-1 bg-white/[0.10]" />
-      </div>
-
       <ChatInterface
         messages={messages}
         status={status}
