@@ -304,7 +304,9 @@ function MadStories() {
           {stories.map((story, i) => (
             <div
               key={i}
-              className="group relative overflow-hidden rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] aspect-[9/16] cursor-pointer"
+              className={`group relative overflow-hidden rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] cursor-pointer ${
+                i === 1 ? 'aspect-[9/16] md:aspect-[16/9] md:col-span-2' : 'aspect-[9/16]'
+              }`}
               onClick={() => handleToggle(i)}
             >
               <video
