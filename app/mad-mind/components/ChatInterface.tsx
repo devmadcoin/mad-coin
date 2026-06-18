@@ -222,27 +222,45 @@ function FeedbackButtons({
 }
 
 /* ─── Message bubble ─── */
-function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMessage; isLatest: boolean; sessionId: string; userMessage?: string }) {
+function MessageBubble({ 
+  msg, 
+  isLatest, 
+  sessionId, 
+  userMessage,
+  showAvatar,
+  isFirstInGroup,
+}: { 
+  msg: ChatMessage; 
+  isLatest: boolean; 
+  sessionId: string; 
+  userMessage?: string;
+  showAvatar: boolean;
+  isFirstInGroup: boolean;
+}) {
   const isUser = msg.role === "user";
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} group gap-1 items-end`}>
-      {!isUser && (
-        <div className="shrink-0">
-          <MadChaoPixel size={28} animated={false} showLabel={false} />
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} group gap-2 items-end`}>
+      {!isUser && showAvatar && (
+        <div className="shrink-0 w-7 h-7 rounded-full bg-[#FF2D2D]/20 border border-[#FF2D2D]/30 flex items-center justify-center overflow-hidden">
+          <MadChaoPixel size={24} animated={false} showLabel={false} />
         </div>
       )}
+      {!isUser && !showAvatar && (
+        <div className="shrink-0 w-7" />
+      )}
+      
       <div className={`max-w-[85%] sm:max-w-[75%]`}>
         <div
-          className={`rounded-xl px-3 py-2 ${
+          className={`rounded-2xl px-4 py-2.5 ${
             isUser
-              ? "bg-[#FF2D2D]/[0.15] border border-[#FF2D2D]/25 text-white/90"
-              : "bg-white/[0.06] border border-white/10 text-white/75"
+              ? "bg-[#FF2D2D]/[0.15] border border-[#FF2D2D]/25 text-white/90 rounded-tr-sm"
+              : "bg-white/[0.06] border border-white/10 text-white/75 rounded-tl-sm"
           }`}
         >
           <p className="text-sm leading-[1.6] whitespace-pre-wrap">{msg.text}</p>
         </div>
-        <div className={`flex items-center gap-2 mt-0.5 ${isUser ? "justify-end pr-1" : "justify-start pl-1"}`}>
+        <div className={`flex items-center gap-2 mt-1 ${isUser ? "justify-end pr-1" : "justify-start pl-1"}`}>
           <span className="text-[9px] text-white/20 tabular-nums">{formatTime(msg.timestamp)}</span>
           {!isUser && <CopyButton text={msg.text} />}
           {!isUser && (
@@ -256,6 +274,15 @@ function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMes
           )}
         </div>
       </div>
+      
+      {isUser && showAvatar && (
+        <div className="shrink-0 w-7 h-7 rounded-full bg-[#FF6B00]/20 border border-[#FF6B00]/30 flex items-center justify-center text-[9px] font-black text-white/60">
+          YOU
+        </div>
+      )}
+      {isUser && !showAvatar && (
+        <div className="shrink-0 w-7" />
+      )}
     </div>
   );
 }
@@ -263,11 +290,11 @@ function MessageBubble({ msg, isLatest, sessionId, userMessage }: { msg: ChatMes
 /* ─── Typing indicator ─── */
 function TypingIndicator() {
   return (
-    <div className="flex justify-start gap-2 items-end">
-      <div className="shrink-0 mb-1">
-        <MadChaoPixel size={28} animated={true} showLabel={false} />
+    <div className="flex justify-start gap-2 items-end mt-3">
+      <div className="shrink-0 w-7 h-7 rounded-full bg-[#FF2D2D]/20 border border-[#FF2D2D]/30 flex items-center justify-center overflow-hidden">
+        <MadChaoPixel size={24} animated={true} showLabel={false} />
       </div>
-      <div className="rounded-xl bg-white/[0.06] border border-white/10 px-4 py-3">
+      <div className="rounded-2xl rounded-tl-sm bg-white/[0.06] border border-white/10 px-4 py-3">
         <div className="flex gap-1.5 items-center h-4">
           <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "0ms" }} />
           <span className="h-2 w-2 rounded-full bg-[#FF6B00]/50 animate-bounce" style={{ animationDelay: "120ms" }} />
@@ -449,9 +476,9 @@ export default function ChatInterface({
               </button>
             )}
             <div className="flex items-center gap-2 sm:gap-2.5">
-              <div className="relative h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center overflow-hidden">
+              <div className="relative h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#FF2D2D]/20 border border-[#FF2D2D]/30 flex items-center justify-center overflow-hidden">
                 <MadChaoPixel size={isMobile ? 24 : 28} animated={false} showLabel={false} />
-                <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#FF6B00] border-2 border-[#121212]" />
+                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#FF6B00] border-2 border-[#121212]" />
               </div>
               <div>
                 <p className="text-xs sm:text-sm font-black text-white">The Claw</p>
@@ -482,22 +509,32 @@ export default function ChatInterface({
         >
           {!hasMessages ? (
             <div className="h-full flex flex-col items-center justify-center text-center px-4">
-              <p className="text-[11px] text-white/20 font-medium tracking-wide">
+              <div className="w-12 h-12 rounded-full bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-4">
+                <MadChaoPixel size={36} animated={true} showLabel={false} />
+              </div>
+              <p className="text-[13px] text-white/30 font-medium">
                 Ask anything. The Claw is listening.
               </p>
             </div>
           ) : (
             <>
               {messages.map((msg, i) => {
+                const prevMsg = messages[i - 1];
+                const nextMsg = messages[i + 1];
+                const isFirstInGroup = !prevMsg || prevMsg.role !== msg.role;
+                const showAvatar = isFirstInGroup;
                 const prevUser = [...messages.slice(0, i)].reverse().find((m) => m.role === "user");
                 return (
-                  <MessageBubble
-                    key={msg.id || `${msg.role}-${i}-${msg.timestamp}`}
-                    msg={msg}
-                    isLatest={i === messages.length - 1}
-                    sessionId={sessionId}
-                    userMessage={prevUser?.text}
-                  />
+                  <div key={msg.id || `${msg.role}-${i}-${msg.timestamp}`} className={isFirstInGroup ? "mt-3" : "mt-0.5"}>
+                    <MessageBubble
+                      msg={msg}
+                      isLatest={i === messages.length - 1}
+                      sessionId={sessionId}
+                      userMessage={prevUser?.text}
+                      showAvatar={showAvatar}
+                      isFirstInGroup={isFirstInGroup}
+                    />
+                  </div>
                 );
               })}
               {typing && <TypingIndicator />}
