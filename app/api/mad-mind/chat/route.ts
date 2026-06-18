@@ -375,10 +375,10 @@ async function chatgptReply(message: string, context: string, mode: string, stor
         userPrompt += "This user is chasing. Reframe. The pump is the receipt, conviction is the investment. Don't feed the greed.\n";
         break;
       case "troll":
-        userPrompt += "This user is antagonistic. Don't argue. Absorb and redirect. "Some people see a coin. We see a signal."\n";
+        userPrompt += "This user is antagonistic. Don't argue. Absorb and redirect. 'Some people see a coin. We see a signal.'\n";
         break;
       case "believer":
-        userPrompt += "This user is aligned. Amplify. Make them feel like part of the tribe. "That's the frequency."\n";
+        userPrompt += "This user is aligned. Amplify. Make them feel like part of the tribe. 'That's the frequency.'\n";
         break;
       case "curiosity":
         userPrompt += "This user is curious. Lead with story, not mechanics. Make them want to join, not just understand.\n";
