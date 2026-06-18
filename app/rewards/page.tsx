@@ -98,6 +98,59 @@ function FallingCoins() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════
+   COUNTDOWN TIMER — 12 Hour Reward Distribution
+   ═══════════════════════════════════════════════════════════ */
+function CountdownTimer() {
+  const [timeLeft, setTimeLeft] = useState({ hours: 12, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const target = new Date(Date.now() + 12 * 60 * 60 * 1000);
+    const interval = setInterval(() => {
+      const now = new Date();
+      const diff = target.getTime() - now.getTime();
+      if (diff <= 0) {
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        clearInterval(interval);
+      } else {
+        setTimeLeft({
+          hours: Math.floor(diff / (1000 * 60 * 60)),
+          minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((diff % (1000 * 60)) / 1000),
+        });
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const pad = (n: number) => n.toString().padStart(2, "0");
+
+  return (
+    <div className="mt-4 rounded-[1.2rem] border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04] p-4 sm:p-5">
+      <p className="text-[10px] font-black uppercase tracking-[0.34em] text-[#FF2D2D]/70 mb-3 text-center">
+        Reward Distribution In
+      </p>
+      <div className="flex items-center justify-center gap-2 sm:gap-4">
+        {[
+          { value: timeLeft.hours, label: "Hours" },
+          { value: timeLeft.minutes, label: "Minutes" },
+          { value: timeLeft.seconds, label: "Seconds" },
+        ].map((item) => (
+          <div key={item.label} className="flex flex-col items-center">
+            <div className="rounded-xl border border-[#1a1a1a]/10 bg-white px-3 py-2 sm:px-4 sm:py-3 min-w-[60px] sm:min-w-[72px] text-center">
+              <span className="text-xl sm:text-2xl font-black text-[#FF2D2D]">{pad(item.value)}</span>
+            </div>
+            <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-[#1a1a1a]/40">{item.label}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-center text-xs text-[#1a1a1a]/50">
+        Hold 50K+ $MAD for 12 hours after 1M MC to be eligible
+      </p>
+    </div>
+  );
+}
+
 export default function RewardsPage() {
   return (
     <div className="relative overflow-hidden bg-[#F5F1E8] text-[#1a1a1a]">
@@ -261,23 +314,30 @@ export default function RewardsPage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <h3 className="text-xl font-black text-[#1a1a1a]">
-                    $533K Market Cap
+                    $1M Market Cap
                   </h3>
+                  <div className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-[#FF2D2D]/10 px-3 py-1">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2D2D] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF2D2D]" />
+                    </span>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#FF2D2D]">Just Hit</span>
+                  </div>
                 </div>
 
                 {/* Progress bar to $1M */}
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-bold text-[#1a1a1a]/40">Progress to $1M</span>
-                    <span className="text-[10px] font-black text-[#FF6B00]">53%</span>
+                    <span className="text-[10px] font-black text-[#FF2D2D]">100%</span>
                   </div>
                   <div className="h-2 rounded-full bg-[#1a1a1a]/[0.06] overflow-hidden">
-                    <div className="h-full rounded-full bg-[#FF6B00] w-[53%] shadow-[0_0_10px_rgba(255,107,0,0.3)]" />
+                    <div className="h-full rounded-full bg-[#FF2D2D] w-full shadow-[0_0_10px_rgba(255,45,45,0.3)]" />
                   </div>
                 </div>
 
                 <p className="mt-3 text-xs text-[#1a1a1a]/50">
-                  📈 1,425 buys vs 288 sells · 12K volume 24h
+                  📈 1M Market Cap touched · 12-hour reward window active
                 </p>
               </div>
             </div>
@@ -323,6 +383,8 @@ export default function RewardsPage() {
                     <p>✅ Hold for <span className="font-bold text-[#1a1a1a]">12 hours</span> after 1M MC</p>
                   </div>
                 </div>
+
+                <CountdownTimer />
               </div>
             </div>
 
