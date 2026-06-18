@@ -481,7 +481,11 @@ export default function ChatInterface({
           className="flex-1 overflow-y-auto px-2 sm:px-3 py-1 sm:py-2 scrollbar-thin ios-momentum"
         >
           {!hasMessages ? (
-            <div className="h-full" />
+            <div className="h-full flex flex-col items-center justify-center text-center px-4">
+              <p className="text-[11px] text-white/20 font-medium tracking-wide">
+                Ask anything. The Claw is listening.
+              </p>
+            </div>
           ) : (
             <>
               {messages.map((msg, i) => {
