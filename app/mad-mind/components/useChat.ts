@@ -37,20 +37,11 @@ export default function useChat() {
           id: m.id || `${m.role}-${i}-${m.timestamp}`,
         })));
       } else {
-        setWelcomeMessage();
+        setMessages([]);
       }
     } catch {
-      setWelcomeMessage();
+      setMessages([]);
     }
-  };
-
-  const setWelcomeMessage = () => {
-    setMessages([{
-      role: "claw",
-      text: "Someone just asked why their 401k feels like a scam. I told them the truth.\n\nWhat do you want to know?",
-      timestamp: Date.now(),
-      id: `claw-open-${Date.now()}`,
-    }]);
   };
 
   const switchSession = async (sid: string) => {
