@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 function cn(...classes: Array<string | false | null | undefined>) {
