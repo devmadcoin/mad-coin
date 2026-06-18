@@ -240,6 +240,7 @@ function TheGallery() {
    ═══════════════════════════════════════════════════════════ */
 function MadStories() {
   const [active, setActive] = useState<number | null>(null);
+  const [muted, setMuted] = useState(true);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const stories = [
@@ -260,18 +261,29 @@ function MadStories() {
     },
   ];
 
+  const handleToggle = (i: number) => {
+    if (active === i) {
+      setActive(null);
+    } else {
+      setActive(i);
+      setMuted(false); // unmute when user taps
+    }
+  };
+
   useEffect(() => {
     stories.forEach((_, i) => {
       const el = videoRefs.current[i];
       if (!el) return;
       if (active === i) {
+        el.muted = muted;
         el.play().catch(() => {});
       } else {
         el.pause();
         el.currentTime = 0;
+        el.muted = true;
       }
     });
-  }, [active]);
+  }, [active, muted]);
 
   return (
     <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8] border-b border-[#1a1a1a]/10">
@@ -293,13 +305,14 @@ function MadStories() {
             <div
               key={i}
               className="group relative overflow-hidden rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] aspect-[9/16] cursor-pointer"
-              onClick={() => setActive(active === i ? null : i)}
+              onClick={() => handleToggle(i)}
             >
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
                 src={story.src}
                 loop
                 playsInline
+                muted={active !== i}
                 preload="metadata"
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
               />
@@ -326,6 +339,17 @@ function MadStories() {
                       <rect x="14" y="4" width="4" height="16" rx="1"/>
                     </svg>
                   </div>
+                </div>
+              )}
+
+              {/* Sound indicator */}
+              {active === i && !muted && (
+                <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/40 backdrop-blur px-2 py-1">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="none">
+                    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                    <path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/>
+                  </svg>
+                  <span className="text-[9px] font-bold text-white">ON</span>
                 </div>
               )}
 
