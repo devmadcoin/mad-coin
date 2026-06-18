@@ -130,8 +130,6 @@ function TheGallery() {
     { src: "/mad-art/mad-donut-temptation.png", title: "Donut Temptation", type: "Meme" },
     { src: "/mad-art/mad-stay-mad-soldier.png", title: "STAY $MAD Soldier", type: "Character" },
     { src: "/mad-art/mad-car-wash-rain.png", title: "Car Wash Curse", type: "Meme" },
-    { src: "/mad-art/mad-wealthy.mp4", title: "MAD Wealthy", type: "Animation" },
-    { src: "/mad-art/very-mad.mp4", title: "Very MAD", type: "Animation" },
   ];
 
   return (
