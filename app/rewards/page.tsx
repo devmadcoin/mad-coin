@@ -103,13 +103,25 @@ function FallingCoins() {
    COUNTDOWN TIMER — 12 Hour Reward Distribution
    ═══════════════════════════════════════════════════════════ */
 function CountdownTimer() {
-  const [timeLeft, setTimeLeft] = useState({ hours: 12, minutes: 0, seconds: 0 });
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [target, setTarget] = useState<number | null>(null);
 
   useEffect(() => {
-    const target = new Date(Date.now() + 12 * 60 * 60 * 1000);
+    const stored = localStorage.getItem("mad-rewards-target");
+    let targetTime: number;
+
+    if (stored) {
+      targetTime = parseInt(stored, 10);
+    } else {
+      targetTime = Date.now() + 12 * 60 * 60 * 1000;
+      localStorage.setItem("mad-rewards-target", targetTime.toString());
+    }
+
+    setTarget(targetTime);
+
     const interval = setInterval(() => {
-      const now = new Date();
-      const diff = target.getTime() - now.getTime();
+      const now = Date.now();
+      const diff = targetTime - now;
       if (diff <= 0) {
         setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
         clearInterval(interval);
@@ -121,6 +133,20 @@ function CountdownTimer() {
         });
       }
     }, 1000);
+
+    // Run immediately
+    const now = Date.now();
+    const diff = targetTime - now;
+    if (diff <= 0) {
+      setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+    } else {
+      setTimeLeft({
+        hours: Math.floor(diff / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((diff % (1000 * 60)) / 1000),
+      });
+    }
+
     return () => clearInterval(interval);
   }, []);
 
