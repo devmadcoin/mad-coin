@@ -419,28 +419,46 @@ export default function RewardsPage() {
 
             {/* === 10M — LOCKED === */}
             <div className="relative mb-8">
-              <div className="absolute left-[18px] sm:left-[26px] top-5 z-10 h-3 w-3 rounded-full bg-[#1a1a1a]/20 ring-4 ring-[#1a1a1a]/5" />
+              <div className="absolute left-[18px] sm:left-[26px] top-5 z-10 h-3 w-3 rounded-full bg-[#FF2D2D]/30 ring-4 ring-[#FF2D2D]/10" />
               
-              <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
+              <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.03] p-5 sm:p-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="inline-flex rounded-full bg-[#1a1a1a]/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#1a1a1a]/40">
+                  <span className="inline-flex rounded-full bg-[#FF2D2D]/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#FF2D2D]/60">
                     Locked
                   </span>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#1a1a1a]/30">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]/60">
                     Phase 2
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <h3 className="text-xl font-black text-[#1a1a1a]/30">
+                  <h3 className="text-xl font-black text-[#1a1a1a]/70">
                     $10M Market Cap
                   </h3>
-                  <div className="h-10 w-10 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] flex items-center justify-center">
-                    <span className="text-lg font-black text-[#1a1a1a]/30">?</span>
+                </div>
+                <p className="mt-2 text-sm text-[#1a1a1a]/50 leading-relaxed">
+                  When $MAD hits $10M market cap, <span className="font-bold text-[#1a1a1a]/70">12.5K $MAD</span> (≈$250) distributed to <span className="font-bold text-[#1a1a1a]/70">80 eligible holders</span>.
+                </p>
+
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-[#1a1a1a]/10 bg-[#F5F1E8]/50 p-4">
+                    <p className="text-2xl font-black text-[#FF2D2D]/70">12.5K</p>
+                    <p className="text-xs font-bold text-[#1a1a1a]/60">$MAD Each (~$250)</p>
+                    <p className="mt-1 text-xs text-[#1a1a1a]/40">50 OG holders randomly selected</p>
+                  </div>
+                  <div className="rounded-xl border border-[#1a1a1a]/10 bg-[#F5F1E8]/50 p-4">
+                    <p className="text-2xl font-black text-[#FF2D2D]/70">12.5K</p>
+                    <p className="text-xs font-bold text-[#1a1a1a]/60">$MAD Each (~$250)</p>
+                    <p className="mt-1 text-xs text-[#1a1a1a]/40">30 new holders randomly selected</p>
                   </div>
                 </div>
-                <p className="mt-2 text-sm text-[#1a1a1a]/30">
-                  Bigger milestone. Bigger reward. Stay $MAD to find out.
-                </p>
+
+                <div className="mt-4 rounded-xl border border-[#FF2D2D]/10 bg-[#FF2D2D]/[0.02] p-4">
+                  <p className="text-xs font-bold text-[#1a1a1a]/60 mb-2">Eligibility</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#1a1a1a]/40">
+                    <p>🔒 Hold at least <span className="font-bold text-[#1a1a1a]/60">1K $MAD</span></p>
+                    <p>🔒 Hold through $10M MC milestone</p>
+                  </div>
+                </div>
               </div>
             </div>
 
