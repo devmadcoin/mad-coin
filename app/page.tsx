@@ -672,12 +672,17 @@ function TheProof() {
           {/* idclord Campus Flyer Testimony — Full Width */}
           <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
             <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Image / Media side */}
-              <div className="relative aspect-square md:aspect-auto bg-[#0a0a0a] overflow-hidden flex items-center justify-center">
-                <div className="text-center p-6">
-                  <span className="text-6xl">📍</span>
-                  <p className="mt-3 text-xs font-bold text-white/40 uppercase tracking-wider">Campus • Bus Stops • Lecture Halls</p>
-                </div>
+              {/* Video */}
+              <div className="relative aspect-square md:aspect-auto bg-[#0a0a0a] overflow-hidden">
+                <video
+                  src="/testimonials/idclord-mad-campus.mp4"
+                  controls
+                  muted
+                  playsInline
+                  loop
+                  className="w-full h-full object-cover"
+                  poster=""
+                />
               </div>
               
               {/* Testimony Content */}
