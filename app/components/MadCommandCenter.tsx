@@ -13,8 +13,7 @@ interface TokenData {
   liquidity: { usd: string };
 }
 
-/* ─── MOCK TRANSACTIONS — DexScreener style ─── */
-interface MockTxn {
+interface TradeData {
   time: string;
   type: "buy" | "sell";
   solAmount: string;
@@ -23,27 +22,32 @@ interface MockTxn {
   price: string;
   wallet: string;
   walletShort: string;
+  txHash: string;
 }
 
-const MOCK_TXNS: MockTxn[] = [
-  { time: "2m ago", type: "buy",  solAmount: "0.50",  usdValue: "$42.80",   tokenAmount: "21,400",   price: "$0.00200",  wallet: "h1DomY", walletShort: "h1Do..." },
-  { time: "5m ago", type: "sell", solAmount: "4.50",  usdValue: "$385.20",  tokenAmount: "192,600",  price: "$0.00200",  wallet: "51vuPv", walletShort: "51vu..." },
-  { time: "8m ago", type: "buy",  solAmount: "0.09",  usdValue: "$7.70",    tokenAmount: "3,850",    price: "$0.00200",  wallet: "h1DomY", walletShort: "h1Do..." },
-  { time: "12m ago", type: "sell", solAmount: "2.60", usdValue: "$222.56",  tokenAmount: "111,280",  price: "$0.00200",  wallet: "B6NQJo", walletShort: "B6NQ..." },
-  { time: "15m ago", type: "buy",  solAmount: "0.09",  usdValue: "$7.70",    tokenAmount: "3,850",    price: "$0.00200",  wallet: "B6NQJo", walletShort: "B6NQ..." },
-  { time: "18m ago", type: "sell", solAmount: "13.71", usdValue: "$1,173.62", tokenAmount: "586,810", price: "$0.00200",  wallet: "XWf7G9", walletShort: "XWf7..." },
-  { time: "21m ago", type: "buy",  solAmount: "0.08",  usdValue: "$6.85",    tokenAmount: "3,425",    price: "$0.00200",  wallet: "B6NQJo", walletShort: "B6NQ..." },
-  { time: "24m ago", type: "sell", solAmount: "3.27",  usdValue: "$279.90",  tokenAmount: "139,950",  price: "$0.00200",  wallet: "D9aYzF", walletShort: "D9aY..." },
-  { time: "28m ago", type: "buy",  solAmount: "0.01",  usdValue: "$0.86",    tokenAmount: "430",      price: "$0.00200",  wallet: "51vuPv", walletShort: "51vu..." },
-  { time: "31m ago", type: "buy",  solAmount: "0.01",  usdValue: "$0.86",    tokenAmount: "430",      price: "$0.00200",  wallet: "51vuPv", walletShort: "51vu..." },
+/* ─── FALLBACK MOCK DATA ─── */
+const MOCK_TXNS: TradeData[] = [
+  { time: "2m ago", type: "buy",  solAmount: "0.50",  usdValue: "$42.80",   tokenAmount: "21,400",   price: "$0.00200",  wallet: "h1DomY", walletShort: "h1Do...", txHash: "" },
+  { time: "5m ago", type: "sell", solAmount: "4.50",  usdValue: "$385.20",  tokenAmount: "192,600",  price: "$0.00200",  wallet: "51vuPv", walletShort: "51vu...", txHash: "" },
+  { time: "8m ago", type: "buy",  solAmount: "0.09",  usdValue: "$7.70",    tokenAmount: "3,850",    price: "$0.00200",  wallet: "h1DomY", walletShort: "h1Do...", txHash: "" },
+  { time: "12m ago", type: "sell", solAmount: "2.60", usdValue: "$222.56",  tokenAmount: "111,280",  price: "$0.00200",  wallet: "B6NQJo", walletShort: "B6NQ...", txHash: "" },
+  { time: "15m ago", type: "buy",  solAmount: "0.09",  usdValue: "$7.70",    tokenAmount: "3,850",    price: "$0.00200",  wallet: "B6NQJo", walletShort: "B6NQ...", txHash: "" },
+  { time: "18m ago", type: "sell", solAmount: "13.71", usdValue: "$1,173.62", tokenAmount: "586,810", price: "$0.00200",  wallet: "XWf7G9", walletShort: "XWf7...", txHash: "" },
+  { time: "21m ago", type: "buy",  solAmount: "0.08",  usdValue: "$6.85",    tokenAmount: "3,425",    price: "$0.00200",  wallet: "B6NQJo", walletShort: "B6NQ...", txHash: "" },
+  { time: "24m ago", type: "sell", solAmount: "3.27",  usdValue: "$279.90",  tokenAmount: "139,950",  price: "$0.00200",  wallet: "D9aYzF", walletShort: "D9aY...", txHash: "" },
+  { time: "28m ago", type: "buy",  solAmount: "0.01",  usdValue: "$0.86",    tokenAmount: "430",      price: "$0.00200",  wallet: "51vuPv", walletShort: "51vu...", txHash: "" },
+  { time: "31m ago", type: "buy",  solAmount: "0.01",  usdValue: "$0.86",    tokenAmount: "430",      price: "$0.00200",  wallet: "51vuPv", walletShort: "51vu...", txHash: "" },
 ];
 
 /* ─── LIVE COMMAND CENTER ─── */
 export default function MadCommandCenter() {
   const [data, setData] = useState<TokenData | null>(null);
+  const [trades, setTrades] = useState<TradeData[]>(MOCK_TXNS);
+  const [isDemo, setIsDemo] = useState(true);
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
+  /* ─── Fetch token price data ─── */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -68,7 +72,32 @@ export default function MadCommandCenter() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 30000); // refresh every 30s
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  /* ─── Fetch live trades ─── */
+  useEffect(() => {
+    const fetchTrades = async () => {
+      try {
+        const res = await fetch("/api/trades");
+        const json = await res.json();
+        if (json.trades && json.trades.length > 0) {
+          setTrades(json.trades);
+          setIsDemo(json.demo === true);
+        } else {
+          setTrades(MOCK_TXNS);
+          setIsDemo(true);
+        }
+      } catch (e) {
+        console.error("Failed to fetch trades", e);
+        setTrades(MOCK_TXNS);
+        setIsDemo(true);
+      }
+    };
+
+    fetchTrades();
+    const interval = setInterval(fetchTrades, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -85,7 +114,7 @@ export default function MadCommandCenter() {
     <section className="relative px-4 sm:px-6 py-12 sm:py-16 bg-[#0a0a0a] border-y border-[#FF2D2D]/10 overflow-hidden">
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,45,45,0.06),transparent_70%)]" />
-      
+
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -195,9 +224,18 @@ export default function MadCommandCenter() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-400" />
                   </span>
-                  Live
+                  {isDemo ? "Demo" : "Live"}
                 </span>
               </div>
+
+              {/* Demo Banner */}
+              {isDemo && (
+                <div className="mx-4 mb-2 px-3 py-2 rounded-lg bg-[#FF6B00]/10 border border-[#FF6B00]/20">
+                  <p className="text-[10px] text-[#FF6B00] font-bold">
+                    ⚡ Add BIRDEYE_API_KEY to .env for live blockchain data
+                  </p>
+                </div>
+              )}
 
               {/* Table Header */}
               <div className="grid grid-cols-[50px_50px_1fr_1fr_1fr_1fr] gap-1 px-4 py-2 border-b border-white/5">
@@ -211,9 +249,12 @@ export default function MadCommandCenter() {
 
               {/* Rows */}
               <div className="flex-1 overflow-hidden">
-                {MOCK_TXNS.map((tx, i) => (
-                  <div
+                {trades.map((tx, i) => (
+                  <a
                     key={i}
+                    href={tx.txHash ? `https://solscan.io/tx/${tx.txHash}` : undefined}
+                    target={tx.txHash ? "_blank" : undefined}
+                    rel={tx.txHash ? "noreferrer" : undefined}
                     className="grid grid-cols-[50px_50px_1fr_1fr_1fr_1fr] gap-1 px-4 py-2 border-b border-white/[0.02] hover:bg-white/[0.03] transition-colors items-center"
                   >
                     {/* Type */}
@@ -247,7 +288,7 @@ export default function MadCommandCenter() {
                       <span className="text-[10px] font-mono text-white/50">{tx.walletShort}</span>
                       <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#FF2D2D]/40 to-[#FF6B00]/40" />
                     </div>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>
