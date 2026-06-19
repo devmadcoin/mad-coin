@@ -917,15 +917,6 @@ function TheArchitects() {
       ],
     },
     {
-      role: "Community Builder",
-      name: "Crypto Lord",
-      handle: "@CryptoL6621",
-      image: "/rewards/crypto-lord-cryptol6621.png",
-      links: [
-        { label: "X", href: "https://x.com/CryptoL6621" },
-      ],
-    },
-    {
       role: "Mad Artist",
       name: "Heydun",
       handle: "@Grpx_Heydun",
