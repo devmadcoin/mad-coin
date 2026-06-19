@@ -50,49 +50,50 @@ function Pill({
 }
 
 /* ═══════════════════════════════════════════════════════════
-   FALLING COINS — Background rain animation
+   CONFETTI CELEBRATION — Phase 1 completion burst
    ═══════════════════════════════════════════════════════════ */
-function FallingCoins() {
-  const coins = Array.from({ length: 24 }, (_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    delay: `${Math.random() * 8}s`,
-    duration: `${Math.random() * 4 + 5}s`,
-    size: `${Math.random() * 14 + 12}px`,
-  }));
+function ConfettiBurst() {
+  const [particles, setParticles] = useState<Array<{
+    id: number; left: string; delay: string; duration: string; color: string; size: string; rotation: string;
+  }>>([]);
+
+  useEffect(() => {
+    const colors = ['#FF2D2D', '#FFD700', '#10B981', '#FF6B00', '#1a1a1a'];
+    const p = Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 3}s`,
+      duration: `${Math.random() * 3 + 3}s`,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: `${Math.random() * 8 + 4}px`,
+      rotation: `${Math.random() * 360}deg`,
+    }));
+    setParticles(p);
+  }, []);
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {coins.map((coin) => (
+      {particles.map((p) => (
         <div
-          key={coin.id}
-          className="absolute top-[-40px] opacity-40 will-change-transform"
+          key={p.id}
+          className="absolute top-[-20px] will-change-transform"
           style={{
-            left: coin.left,
-            animationDelay: coin.delay,
-            animationDuration: coin.duration,
-            animation: `fallCoin ${coin.duration} linear ${coin.delay} infinite`,
+            left: p.left,
+            animationDelay: p.delay,
+            animationDuration: p.duration,
+            animation: `confettiFall ${p.duration} ease-out ${p.delay} forwards`,
           }}
         >
-          <svg
-            width={coin.size}
-            height={coin.size}
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <circle cx="12" cy="12" r="10" fill="#FFD700" stroke="#B8860B" strokeWidth="1.5" opacity="0.7" />
-            <text
-              x="12"
-              y="16"
-              textAnchor="middle"
-              fill="#B8860B"
-              fontSize="11"
-              fontWeight="900"
-              fontFamily="sans-serif"
-            >
-              $
-            </text>
-          </svg>
+          <div
+            style={{
+              width: p.size,
+              height: p.size,
+              backgroundColor: p.color,
+              transform: `rotate(${p.rotation})`,
+              borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+              opacity: 0.7,
+            }}
+          />
         </div>
       ))}
     </div>
@@ -182,18 +183,32 @@ export default function RewardsPage() {
   return (
     <div className="relative overflow-hidden bg-[#F5F1E8] text-[#1a1a1a]">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
-      <FallingCoins />
+      <ConfettiBurst />
 
       <style>{`
-        @keyframes fallCoin {
-          0% { transform: translateY(-40px) rotate(0deg); opacity: 0; }
-          10% { opacity: 0.4; }
-          90% { opacity: 0.4; }
-          100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        @keyframes confettiFall {
+          0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+          10% { opacity: 0.8; }
+          90% { opacity: 0.6; }
+          100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
       `}</style>
 
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+        {/* Phase 1 Celebration Banner */}
+        <div className="mb-6 overflow-hidden rounded-[1.6rem] border border-emerald-500/20 bg-emerald-500/[0.04] p-5 sm:p-6 text-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+            <span className="text-2xl">🎉</span>
+            <p className="text-sm sm:text-base font-black text-[#1a1a1a]/80 tracking-tight">
+              PHASE 1 COMPLETE — <span className="text-emerald-600">$1M MARKET CAP ACHIEVED</span>
+            </p>
+            <span className="text-2xl">🎉</span>
+          </div>
+          <p className="mt-2 text-xs text-[#1a1a1a]/50">
+            2M $MAD distributed to 50 holders · Phase 2 ($10M) now revealed · Stay $MAD
+          </p>
+        </div>
+
         {/* Hero */}
         <SectionShell className="p-6 sm:p-10 lg:p-14">
           <div className="text-center">
