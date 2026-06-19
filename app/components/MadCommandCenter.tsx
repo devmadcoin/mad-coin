@@ -13,41 +13,12 @@ interface TokenData {
   liquidity: { usd: string };
 }
 
-interface TradeData {
-  time: string;
-  type: "buy" | "sell";
-  solAmount: string;
-  usdValue: string;
-  tokenAmount: string;
-  price: string;
-  wallet: string;
-  walletShort: string;
-  txHash: string;
-}
-
-/* ─── FALLBACK MOCK DATA ─── */
-const MOCK_TXNS: TradeData[] = [
-  { time: "2m ago", type: "buy",  solAmount: "0.50",  usdValue: "$42.80",   tokenAmount: "21,400",   price: "$0.00200",  wallet: "h1DomY", walletShort: "h1Do...", txHash: "" },
-  { time: "5m ago", type: "sell", solAmount: "4.50",  usdValue: "$385.20",  tokenAmount: "192,600",  price: "$0.00200",  wallet: "51vuPv", walletShort: "51vu...", txHash: "" },
-  { time: "8m ago", type: "buy",  solAmount: "0.09",  usdValue: "$7.70",    tokenAmount: "3,850",    price: "$0.00200",  wallet: "h1DomY", walletShort: "h1Do...", txHash: "" },
-  { time: "12m ago", type: "sell", solAmount: "2.60", usdValue: "$222.56",  tokenAmount: "111,280",  price: "$0.00200",  wallet: "B6NQJo", walletShort: "B6NQ...", txHash: "" },
-  { time: "15m ago", type: "buy",  solAmount: "0.09",  usdValue: "$7.70",    tokenAmount: "3,850",    price: "$0.00200",  wallet: "B6NQJo", walletShort: "B6NQ...", txHash: "" },
-  { time: "18m ago", type: "sell", solAmount: "13.71", usdValue: "$1,173.62", tokenAmount: "586,810", price: "$0.00200",  wallet: "XWf7G9", walletShort: "XWf7...", txHash: "" },
-  { time: "21m ago", type: "buy",  solAmount: "0.08",  usdValue: "$6.85",    tokenAmount: "3,425",    price: "$0.00200",  wallet: "B6NQJo", walletShort: "B6NQ...", txHash: "" },
-  { time: "24m ago", type: "sell", solAmount: "3.27",  usdValue: "$279.90",  tokenAmount: "139,950",  price: "$0.00200",  wallet: "D9aYzF", walletShort: "D9aY...", txHash: "" },
-  { time: "28m ago", type: "buy",  solAmount: "0.01",  usdValue: "$0.86",    tokenAmount: "430",      price: "$0.00200",  wallet: "51vuPv", walletShort: "51vu...", txHash: "" },
-  { time: "31m ago", type: "buy",  solAmount: "0.01",  usdValue: "$0.86",    tokenAmount: "430",      price: "$0.00200",  wallet: "51vuPv", walletShort: "51vu...", txHash: "" },
-];
-
 /* ─── LIVE COMMAND CENTER ─── */
 export default function MadCommandCenter() {
   const [data, setData] = useState<TokenData | null>(null);
-  const [trades, setTrades] = useState<TradeData[]>(MOCK_TXNS);
-  const [isDemo, setIsDemo] = useState(true);
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
-  /* ─── Fetch token price data ─── */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -73,31 +44,6 @@ export default function MadCommandCenter() {
 
     fetchData();
     const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  /* ─── Fetch live trades ─── */
-  useEffect(() => {
-    const fetchTrades = async () => {
-      try {
-        const res = await fetch("/api/trades");
-        const json = await res.json();
-        if (json.trades && json.trades.length > 0) {
-          setTrades(json.trades);
-          setIsDemo(json.demo === true);
-        } else {
-          setTrades(MOCK_TXNS);
-          setIsDemo(true);
-        }
-      } catch (e) {
-        console.error("Failed to fetch trades", e);
-        setTrades(MOCK_TXNS);
-        setIsDemo(true);
-      }
-    };
-
-    fetchTrades();
-    const interval = setInterval(fetchTrades, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -213,9 +159,9 @@ export default function MadCommandCenter() {
             </div>
           </div>
 
-          {/* ─── TRANSACTIONS COLUMN ─── */}
+          {/* ─── TRANSACTIONS COLUMN — Embedded DexScreener ─── */}
           <div className="lg:col-span-1">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] h-full flex flex-col">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] h-full flex flex-col overflow-hidden">
               {/* Header */}
               <div className="flex items-center justify-between px-4 pt-4 pb-2">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-white/40">Recent Trades</p>
@@ -224,72 +170,17 @@ export default function MadCommandCenter() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-400" />
                   </span>
-                  {isDemo ? "Demo" : "Live"}
+                  Live
                 </span>
               </div>
-
-              {/* Demo Banner */}
-              {isDemo && (
-                <div className="mx-4 mb-2 px-3 py-2 rounded-lg bg-[#FF6B00]/10 border border-[#FF6B00]/20">
-                  <p className="text-[10px] text-[#FF6B00] font-bold">
-                    ⚡ Add BIRDEYE_API_KEY to .env for live blockchain data
-                  </p>
-                </div>
-              )}
-
-              {/* Table Header */}
-              <div className="grid grid-cols-[50px_50px_1fr_1fr_1fr_1fr] gap-1 px-4 py-2 border-b border-white/5">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-white/20">Type</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-white/20">SOL</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-white/20 text-right">USD</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-white/20 text-right">Tokens</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-white/20 text-right">Price</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-white/20 text-right">Trader</span>
-              </div>
-
-              {/* Rows */}
-              <div className="flex-1 overflow-hidden">
-                {trades.map((tx, i) => (
-                  <a
-                    key={i}
-                    href={tx.txHash ? `https://solscan.io/tx/${tx.txHash}` : undefined}
-                    target={tx.txHash ? "_blank" : undefined}
-                    rel={tx.txHash ? "noreferrer" : undefined}
-                    className="grid grid-cols-[50px_50px_1fr_1fr_1fr_1fr] gap-1 px-4 py-2 border-b border-white/[0.02] hover:bg-white/[0.03] transition-colors items-center"
-                  >
-                    {/* Type */}
-                    <div className="flex items-center gap-1">
-                      {tx.type === "buy" ? (
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                      ) : (
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                      )}
-                      <span className={`text-[10px] font-bold ${tx.type === "buy" ? "text-green-400" : "text-red-400"}`}>
-                        {tx.type === "buy" ? "Buy" : "Sell"}
-                      </span>
-                    </div>
-
-                    {/* SOL */}
-                    <span className={`text-[10px] font-mono ${tx.type === "buy" ? "text-green-400" : "text-red-400"}`}>
-                      {tx.solAmount}
-                    </span>
-
-                    {/* USD */}
-                    <span className="text-[10px] font-mono text-right text-white/60">{tx.usdValue}</span>
-
-                    {/* Tokens */}
-                    <span className="text-[10px] font-mono text-right text-white/40">{tx.tokenAmount}</span>
-
-                    {/* Price */}
-                    <span className="text-[10px] font-mono text-right text-white/40">{tx.price}</span>
-
-                    {/* Trader */}
-                    <div className="flex items-center justify-end gap-1">
-                      <span className="text-[10px] font-mono text-white/50">{tx.walletShort}</span>
-                      <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#FF2D2D]/40 to-[#FF6B00]/40" />
-                    </div>
-                  </a>
-                ))}
+              {/* DexScreener Embed */}
+              <div className="flex-1 min-h-[320px]">
+                <iframe
+                  src="https://dexscreener.com/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs?embed=1&theme=dark"
+                  className="w-full h-full min-h-[320px] rounded-xl"
+                  style={{ border: "none" }}
+                  title="$MAD Live Trades"
+                />
               </div>
             </div>
           </div>
