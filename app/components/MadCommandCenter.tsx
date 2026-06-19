@@ -18,6 +18,7 @@ export default function MadCommandCenter() {
   const [data, setData] = useState<TokenData | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [activeTab, setActiveTab] = useState<"chart" | "txns">("chart");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -147,25 +148,34 @@ export default function MadCommandCenter() {
             </a>
           </div>
 
-          {/* ─── CHART COLUMN — DexScreener Chart (header cropped) ─── */}
-          <div className="lg:col-span-1">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-1 h-full min-h-[300px] relative overflow-hidden">
-              <iframe
-                src="https://dexscreener.com/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs?embed=1&theme=dark&tab=chart"
-                className="absolute left-0 w-full"
-                style={{ top: -155, height: 520, border: "none" }}
-                title="$MAD Chart"
-              />
-            </div>
-          </div>
-
-          {/* ─── TRANSACTIONS COLUMN — DexScreener Txns (header cropped) ─── */}
-          <div className="lg:col-span-1">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] h-full flex flex-col overflow-hidden">
-              {/* Header */}
-              <div className="flex items-center justify-between px-4 pt-4 pb-2">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-white/40">Recent Trades</p>
-                <span className="text-[9px] text-white/20 flex items-center gap-1">
+          {/* ─── DEXSCREENER COLUMN (Chart + Txns tabs) ─── */}
+          <div className="lg:col-span-2">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden flex flex-col h-full min-h-[480px]">
+              {/* Tab Switcher */}
+              <div className="flex items-center gap-1 p-2 border-b border-white/5">
+                <button
+                  onClick={() => setActiveTab("chart")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                    activeTab === "chart"
+                      ? "bg-[#FF2D2D]/20 text-[#FF2D2D]"
+                      : "text-white/40 hover:text-white/60 hover:bg-white/5"
+                  }`}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>
+                  Chart
+                </button>
+                <button
+                  onClick={() => setActiveTab("txns")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                    activeTab === "txns"
+                      ? "bg-[#FF2D2D]/20 text-[#FF2D2D]"
+                      : "text-white/40 hover:text-white/60 hover:bg-white/5"
+                  }`}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
+                  Transactions
+                </button>
+                <span className="ml-auto text-[9px] text-white/20 flex items-center gap-1 pr-2">
                   <span className="relative flex h-1.5 w-1.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-400" />
@@ -173,13 +183,14 @@ export default function MadCommandCenter() {
                   Live
                 </span>
               </div>
-              {/* DexScreener Embed — cropped to hide header, show only txns table */}
-              <div className="flex-1 relative overflow-hidden" style={{ minHeight: 320 }}>
+
+              {/* DexScreener Embed */}
+              <div className="flex-1 relative">
                 <iframe
-                  src="https://dexscreener.com/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs?embed=1&theme=dark&tab=txns"
-                  className="absolute left-0 w-full"
-                  style={{ top: -155, height: 520, border: "none" }}
-                  title="$MAD Live Trades"
+                  src={`https://dexscreener.com/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs?embed=1&theme=dark&tab=${activeTab}`}
+                  className="w-full h-full absolute inset-0"
+                  style={{ border: "none", minHeight: 420 }}
+                  title={`$MAD ${activeTab === "chart" ? "Chart" : "Transactions"}`}
                 />
               </div>
             </div>
