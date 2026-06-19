@@ -396,7 +396,7 @@ export default function RewardsPage() {
                     <p className="mt-1 text-xs text-[#1a1a1a]/50">30 OG holders randomly selected</p>
                   </div>
                   <div className="rounded-xl border border-[#1a1a1a]/10 bg-[#F5F1E8] p-4">
-                    <p className="text-2xl font-black text-[#FF2D2D]">25K</p>
+                    <p className="text-2xl font-black text-[#FF2D2D]">50K</p>
                     <p className="text-xs font-bold text-[#1a1a1a]">$MAD Each</p>
                     <p className="mt-1 text-xs text-[#1a1a1a]/50">20 new holders randomly selected</p>
                   </div>
