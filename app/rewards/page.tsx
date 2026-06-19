@@ -456,7 +456,7 @@ export default function RewardsPage() {
                   <p className="text-xs font-bold text-[#1a1a1a]/60 mb-2">Eligibility</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#1a1a1a]/40">
                     <p>🔒 Hold at least <span className="font-bold text-[#1a1a1a]/60">1K $MAD</span></p>
-                    <p>🔒 Hold through $10M MC milestone</p>
+                    <p>🔒 Hold for <span className="font-bold text-[#1a1a1a]/60">24 hours</span> after $10M MC</p>
                   </div>
                 </div>
               </div>
