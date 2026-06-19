@@ -147,19 +147,19 @@ export default function MadCommandCenter() {
             </a>
           </div>
 
-          {/* ─── CHART COLUMN ─── */}
+          {/* ─── CHART COLUMN — DexScreener Chart (header cropped) ─── */}
           <div className="lg:col-span-1">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-1 h-full min-h-[300px]">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-1 h-full min-h-[300px] relative overflow-hidden">
               <iframe
-                src="https://dexscreener.com/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs?embed=1&theme=dark"
-                className="w-full h-full min-h-[300px] rounded-xl"
-                style={{ border: "none" }}
+                src="https://dexscreener.com/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs?embed=1&theme=dark&tab=chart"
+                className="absolute left-0 w-full"
+                style={{ top: -155, height: 520, border: "none" }}
                 title="$MAD Chart"
               />
             </div>
           </div>
 
-          {/* ─── TRANSACTIONS COLUMN — Embedded DexScreener ─── */}
+          {/* ─── TRANSACTIONS COLUMN — DexScreener Txns (header cropped) ─── */}
           <div className="lg:col-span-1">
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] h-full flex flex-col overflow-hidden">
               {/* Header */}
@@ -173,12 +173,12 @@ export default function MadCommandCenter() {
                   Live
                 </span>
               </div>
-              {/* DexScreener Embed — Transactions tab */}
-              <div className="flex-1 min-h-[320px]">
+              {/* DexScreener Embed — cropped to hide header, show only txns table */}
+              <div className="flex-1 relative overflow-hidden" style={{ minHeight: 320 }}>
                 <iframe
                   src="https://dexscreener.com/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs?embed=1&theme=dark&tab=txns"
-                  className="w-full h-full min-h-[320px] rounded-xl"
-                  style={{ border: "none" }}
+                  className="absolute left-0 w-full"
+                  style={{ top: -155, height: 520, border: "none" }}
                   title="$MAD Live Trades"
                 />
               </div>
