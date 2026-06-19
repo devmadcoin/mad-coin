@@ -173,10 +173,10 @@ export default function MadCommandCenter() {
                   Live
                 </span>
               </div>
-              {/* DexScreener Embed */}
+              {/* DexScreener Embed — Transactions tab */}
               <div className="flex-1 min-h-[320px]">
                 <iframe
-                  src="https://dexscreener.com/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs?embed=1&theme=dark"
+                  src="https://dexscreener.com/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs?embed=1&theme=dark&tab=txns"
                   className="w-full h-full min-h-[320px] rounded-xl"
                   style={{ border: "none" }}
                   title="$MAD Live Trades"
