@@ -343,12 +343,11 @@ export default function RewardsPage() {
                   <h3 className="text-xl font-black text-[#1a1a1a]">
                     $1M Market Cap
                   </h3>
-                  <div className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-[#FF2D2D]/10 px-3 py-1">
+                  <div className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1">
                     <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2D2D] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF2D2D]" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                     </span>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#FF2D2D]">Just Hit</span>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600">Completed</span>
                   </div>
                 </div>
 
@@ -356,15 +355,15 @@ export default function RewardsPage() {
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-bold text-[#1a1a1a]/40">Progress to $1M</span>
-                    <span className="text-[10px] font-black text-[#FF2D2D]">100%</span>
+                    <span className="text-[10px] font-black text-emerald-500">100% ✅</span>
                   </div>
                   <div className="h-2 rounded-full bg-[#1a1a1a]/[0.06] overflow-hidden">
-                    <div className="h-full rounded-full bg-[#FF2D2D] w-full shadow-[0_0_10px_rgba(255,45,45,0.3)]" />
+                    <div className="h-full rounded-full bg-emerald-500 w-full shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
                   </div>
                 </div>
 
                 <p className="mt-3 text-xs text-[#1a1a1a]/50">
-                  📈 1M Market Cap touched · 12-hour reward window active
+                  ✅ 1M Market Cap reached · 12-hour reward window closed · Winners paid
                 </p>
               </div>
             </div>
@@ -377,17 +376,17 @@ export default function RewardsPage() {
               <div className="ml-14 sm:ml-20 rounded-[1.4rem] border border-emerald-500/30 bg-white p-5 sm:p-6 shadow-[0_0_20px_rgba(16,185,129,0.06)]">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="inline-flex rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-600">
-                    Unlocked
+                    Completed
                   </span>
                   <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">
                     Phase 1
                   </p>
                 </div>
                 <h3 className="text-xl font-black text-[#1a1a1a]">
-                  $1M Market Cap <span className="text-emerald-500">Distribution</span>
+                  $1M Market Cap <span className="text-emerald-500">Completed</span>
                 </h3>
                 <p className="mt-2 text-sm text-[#1a1a1a]/55 leading-relaxed">
-                  When $MAD hits $1M market cap and holds for <span className="font-bold text-[#1a1a1a]">12 hours</span>, 2M $MAD tokens distributed to 50 eligible holders.
+                  $MAD hit $1M market cap and held for <span className="font-bold text-[#1a1a1a]">12 hours</span>. 2M $MAD tokens distributed to 50 eligible holders. <span className="font-bold text-emerald-600">Reward window closed.</span>
                 </p>
 
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -403,15 +402,18 @@ export default function RewardsPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-xl border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-4">
-                  <p className="text-xs font-bold text-[#1a1a1a] mb-2">Eligibility</p>
+                <div className="mt-4 rounded-xl border border-emerald-500/15 bg-emerald-50 p-4">
+                  <p className="text-xs font-bold text-emerald-700 mb-2">✅ Distribution Complete</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#1a1a1a]/55">
                     <p>✅ Hold at least <span className="font-bold text-[#1a1a1a]">50K $MAD</span></p>
-                    <p>✅ Hold for <span className="font-bold text-[#1a1a1a]">12 hours</span> after 1M MC</p>
+                    <p>✅ Held for <span className="font-bold text-[#1a1a1a]">12 hours</span> after 1M MC</p>
                   </div>
                 </div>
 
-                <CountdownTimer />
+                <div className="mt-4 rounded-xl border border-[#1a1a1a]/10 bg-[#F5F1E8] p-4 text-center">
+                  <p className="text-[10px] font-black uppercase tracking-[0.34em] text-[#8B7355]">Reward Distribution</p>
+                  <p className="mt-1 text-sm font-bold text-emerald-600">Completed · Winners Paid</p>
+                </div>
               </div>
             </div>
 
