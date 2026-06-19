@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import MadCommandCenter from "./components/MadCommandCenter";
 
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
@@ -1070,6 +1071,7 @@ export default function Home() {
 
       <main>
         <TheCinema />
+        <MadCommandCenter />
         <WhyMADStrip />
         <TheDashboard />
         <WhatIsMAD />
