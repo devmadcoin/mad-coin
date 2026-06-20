@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import NumerologyOracle from "./NumerologyOracle";
 import MadArchetypeQuiz from "./MadArchetypeQuiz";
+import FrequencyMeter from "./FrequencyMeter";
 import MadBagCalculator from "./MadBagCalculator";
 
 /* ─── Data ─── */
@@ -240,6 +241,7 @@ export default function MadClawIdentity() {
         <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
           <TheOracle />
           <MadArchetypeQuiz />
+          <FrequencyMeter />
           <MadBagCalculator />
           <TheFork />
           <TheKey />

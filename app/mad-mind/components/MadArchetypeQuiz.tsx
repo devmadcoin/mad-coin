@@ -466,6 +466,13 @@ export default function MadArchetypeQuiz() {
   });
   const [result, setResult] = useState<Archetype | null>(null);
 
+  // Store result in localStorage for Frequency Meter to read
+  const storeArchetype = useCallback((archetype: Archetype) => {
+    try {
+      localStorage.setItem("mad-archetype-result", archetype);
+    } catch {}
+  }, []);
+
   const handleStart = useCallback(() => {
     setStarted(true);
     setCurrentQ(0);
@@ -502,6 +509,7 @@ export default function MadArchetypeQuiz() {
           setScores((finalScores) => {
             const winner = calculateArchetype(finalScores);
             setResult(winner);
+            storeArchetype(winner);
             return finalScores;
           });
         }, 300);
