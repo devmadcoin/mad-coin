@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 
 import NumerologyOracle from "./NumerologyOracle";
+import MadArchetypeQuiz from "./MadArchetypeQuiz";
 import MadBagCalculator from "./MadBagCalculator";
 
 /* ─── Data ─── */
@@ -238,6 +239,7 @@ export default function MadClawIdentity() {
       <div className="bg-[#0a0a0a] relative z-10">
         <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
           <TheOracle />
+          <MadArchetypeQuiz />
           <MadBagCalculator />
           <TheFork />
           <TheKey />
