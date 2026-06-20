@@ -52,7 +52,6 @@ function HoverLift({ children, className = "" }: { children: ReactNode; classNam
 
 /* ═══════════════════════════════════════════════════════════
    PARTICLES — Floating dust motes like the MAD Garden
-   (Mobile-safe: uses absolute positioning inside relative wrapper)
    ═══════════════════════════════════════════════════════════ */
 function FloatingDust() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -118,11 +117,7 @@ function FloatingDust() {
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full"
-        style={{ opacity: 0.6 }}
-      />
+      <canvas ref={canvasRef} className="w-full h-full" style={{ opacity: 0.6 }} />
     </div>
   );
 }
@@ -141,7 +136,6 @@ function ScrollProgress() {
       const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
       setProgress(Math.min(pct, 100));
 
-      /* Determine active mile based on scroll position */
       const mileEls = document.querySelectorAll("[data-mile]");
       let current = 0;
       mileEls.forEach((el, i) => {
@@ -157,29 +151,14 @@ function ScrollProgress() {
 
   return (
     <>
-      {/* Top progress bar */}
       <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-[#1a1a1a]/5">
-        <div
-          className="h-full bg-gradient-to-r from-[#FF2D2D] via-[#FF2D2D] to-[#FF6B00] transition-all duration-150"
-          style={{ width: `${progress}%`, boxShadow: "0 0 10px rgba(255,45,45,0.3)" }}
-        />
+        <div className="h-full bg-gradient-to-r from-[#FF2D2D] via-[#FF6B00] to-[#FF2D2D] transition-all duration-150" style={{ width: `${progress}%`, boxShadow: "0 0 10px rgba(255,45,45,0.3)" }} />
       </div>
-      {/* Side mile indicator */}
       <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-3">
         {["0", "25", "50", "100"].map((mile, i) => (
           <div key={mile} className="flex items-center gap-2">
-            <div
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${
-                i <= activeMile
-                  ? "bg-[#FF2D2D] shadow-[0_0_8px_rgba(255,45,45,0.4)]"
-                  : "bg-[#1a1a1a]/20"
-              }`}
-            />
-            <span
-              className={`text-[9px] font-black uppercase tracking-wider transition-all duration-500 ${
-                i === activeMile ? "text-[#FF2D2D] opacity-100" : "text-[#1a1a1a]/30 opacity-0"
-              }`}
-            >
+            <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${i <= activeMile ? "bg-[#FF2D2D] shadow-[0_0_8px_rgba(255,45,45,0.4)]" : "bg-[#1a1a1a]/20"}`} />
+            <span className={`text-[9px] font-black uppercase tracking-wider transition-all duration-500 ${i === activeMile ? "text-[#FF2D2D] opacity-100" : "text-[#1a1a1a]/30 opacity-0"}`}>
               Mile {mile}
             </span>
           </div>
@@ -210,15 +189,15 @@ const PROGRESS = { complete: 7, total: 10 };
 const percentComplete = Math.round((PROGRESS.complete / PROGRESS.total) * 100);
 
 const STATUS_CARDS = [
-  { label: "Website", value: "LIVE NOW", tone: "green" as const, icon: "🌐" },
-  { label: "MAD Mind AI", value: "4 TOOLS LIVE", tone: "green" as const, icon: "🧠" },
-  { label: "Token Burns", value: "50% BURNED", tone: "green" as const, icon: "🔥" },
-  { label: "Numerology", value: "LIVE NOW", tone: "green" as const, icon: "🔮" },
-  { label: "Community Support", value: "7 LOCKED", tone: "green" as const, icon: "🤝" },
-  { label: "MAD Games", value: "IN PROGRESS", tone: "red" as const, icon: "🎮" },
-  { label: "Archetype Quiz", value: "LIVE NOW", tone: "green" as const, icon: "⚡" },
-  { label: "Clothing", value: "TESTING", tone: "red" as const, icon: "👕" },
-  { label: "$MAD Art", value: "IN PROGRESS", tone: "red" as const, icon: "🖼️" },
+  { label: "Website", value: "LIVE", tone: "green" as const, icon: "🌐" },
+  { label: "MAD Mind", value: "4 TOOLS", tone: "green" as const, icon: "🧠" },
+  { label: "Burns", value: "50%", tone: "green" as const, icon: "🔥" },
+  { label: "Numerology", value: "LIVE", tone: "green" as const, icon: "🔮" },
+  { label: "Community", value: "7 LOCKED", tone: "green" as const, icon: "🤝" },
+  { label: "MAD Games", value: "WIP", tone: "red" as const, icon: "🎮" },
+  { label: "Archetypes", value: "LIVE", tone: "green" as const, icon: "⚡" },
+  { label: "Clothing", value: "TEST", tone: "red" as const, icon: "👕" },
+  { label: "$MAD Art", value: "WIP", tone: "red" as const, icon: "🖼️" },
 ] as const;
 
 const EXITS = [
@@ -305,7 +284,6 @@ function Shell({ children, className = "" }: { children: ReactNode; className?: 
   );
 }
 
-/* ─── Shell wrapper that accepts ref for scroll tracking ─── */
 const ShellWithRef = React.forwardRef<HTMLDivElement, { children: ReactNode; className?: string }>(
   ({ children, className = "" }, ref) => (
     <div ref={ref} className={cn(
@@ -349,88 +327,65 @@ function ChaosMeter() {
     <Shell className="p-4 sm:p-6">
       <div className="grid gap-4 sm:grid-cols-3">
         {/* Burn Progress */}
-        <div className="relative rounded-2xl border border-[#FF2D2D]/20 bg-[#1a1a1a]/[0.02] p-4 overflow-hidden group hover:border-[#FF2D2D]/40 transition-all">
-          <div
-            className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity"
-            style={{
-              background: `radial-gradient(circle at 50% 100%, rgba(255,45,45,${firePulse * 0.5}), transparent 70%)`,
-            }}
-          />
+        <div className="relative rounded-2xl border border-[#FF2D2D]/20 bg-[#1a1a1a]/[0.02] p-5 overflow-hidden group hover:border-[#FF2D2D]/40 transition-all duration-300">
+          <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+            style={{ background: `radial-gradient(circle at 50% 100%, rgba(255,45,45,${firePulse * 0.5}), transparent 70%)` }} />
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-4">
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#FF2D2D]/60">Token Burn</p>
-              <span className="text-lg animate-pulse">🔥</span>
+              <span className="text-xl animate-pulse">🔥</span>
             </div>
-            <div className="text-3xl font-black text-[#1a1a1a] mb-1">50%</div>
-            <p className="text-xs text-[#1a1a1a]/40 mb-3">of total supply already burned</p>
+            <div className="text-4xl font-black text-[#1a1a1a] mb-2">50%</div>
+            <p className="text-xs text-[#1a1a1a]/40 mb-4">of total supply already burned</p>
             <div className="h-3 rounded-full bg-[#1a1a1a]/10 overflow-hidden">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-[#FF2D2D] via-[#FF6B00] to-[#FF2D2D] transition-all duration-300"
-                style={{
-                  width: `50%`,
-                  boxShadow: `0 0 ${12 * firePulse}px rgba(255,45,45,0.5)`,
-                  transform: `scaleY(${firePulse})`,
-                }}
-              />
+              <div className="h-full rounded-full bg-gradient-to-r from-[#FF2D2D] via-[#FF6B00] to-[#FF2D2D] transition-all duration-300"
+                style={{ width: `50%`, boxShadow: `0 0 ${12 * firePulse}px rgba(255,45,45,0.5)`, transform: `scaleY(${firePulse})` }} />
             </div>
-            <p className="mt-2 text-[10px] text-[#1a1a1a]/30">~500M remaining. Burn #2 at 10K holders → 200M final.</p>
+            <p className="mt-3 text-[10px] text-[#1a1a1a]/30">~500M remaining. Burn #2 at 10K holders → 200M final.</p>
           </div>
         </div>
 
         {/* Community Conviction */}
-        <div className="relative rounded-2xl border border-emerald-500/20 bg-[#1a1a1a]/[0.02] p-4 overflow-hidden group hover:border-emerald-500/40 transition-all">
+        <div className="relative rounded-2xl border border-emerald-500/20 bg-[#1a1a1a]/[0.02] p-5 overflow-hidden group hover:border-emerald-500/40 transition-all duration-300">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-emerald-500 animate-ping" style={{ animationDuration: "3s" }} />
           </div>
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-4">
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/70">Conviction</p>
-              <span className="text-lg">💓</span>
+              <span className="text-xl">💓</span>
             </div>
-            <div className="text-3xl font-black text-[#1a1a1a] mb-1">STRONG</div>
-            <p className="text-xs text-[#1a1a1a]/40 mb-3">Community heartbeat detected</p>
+            <div className="text-4xl font-black text-[#1a1a1a] mb-2">STRONG</div>
+            <p className="text-xs text-[#1a1a1a]/40 mb-4">Community heartbeat detected</p>
             <div className="flex items-center gap-2">
               {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-2 rounded-full bg-emerald-500 transition-all"
-                  style={{
-                    width: "100%",
-                    opacity: 0.3 + Math.sin(Date.now() / 1000 + i * 0.8) * 0.7,
-                    animation: `pulse ${1.5 + i * 0.3}s ease-in-out infinite`,
-                  }}
-                />
+                <div key={i} className="h-2 rounded-full bg-emerald-500 transition-all"
+                  style={{ width: "100%", opacity: 0.3 + Math.sin(Date.now() / 1000 + i * 0.8) * 0.7, animation: `pulse ${1.5 + i * 0.3}s ease-in-out infinite` }} />
               ))}
             </div>
-            <p className="mt-2 text-[10px] text-[#1a1a1a]/30">Pulse sync: active</p>
+            <p className="mt-3 text-[10px] text-[#1a1a1a]/30">Pulse sync: active</p>
           </div>
         </div>
 
-        {/* Mad Claw Status */}
-        <div className="relative rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-4 overflow-hidden group cursor-pointer hover:border-[#FF2D2D]/30 transition-all">
+        {/* Mad Mind Status */}
+        <div className="relative rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 overflow-hidden group cursor-pointer hover:border-[#FF2D2D]/30 transition-all duration-300">
           <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br from-[#FF2D2D] to-transparent" />
           <a href={LINKS.madMind} className="relative z-10 block">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/50">Mad Mind AI</p>
-              <span className="text-lg animate-pulse">👁️</span>
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/50">MAD Mind AI</p>
+              <span className="text-xl animate-pulse">👁️</span>
             </div>
-            <div className="text-3xl font-black text-[#1a1a1a] mb-1">4 TOOLS LIVE</div>
-            <p className="text-xs text-[#1a1a1a]/40 mb-3">Numerology · Quiz · Frequency · Bag Calc</p>
+            <div className="text-4xl font-black text-[#1a1a1a] mb-2">4 LIVE</div>
+            <p className="text-xs text-[#1a1a1a]/40 mb-4">Numerology · Quiz · Frequency · Bag</p>
             <div className="flex gap-2">
               {["🔮", "⚡", "📡", "💰"].map((icon, i) => (
-                <div
-                  key={icon}
-                  className="w-8 h-8 rounded-lg bg-[#1a1a1a]/5 border border-[#1a1a1a]/10 flex items-center justify-center text-xs"
-                  style={{
-                    animation: `pulse ${2 + i * 0.4}s ease-in-out infinite`,
-                    animationDelay: `${i * 0.2}s`,
-                  }}
-                >
+                <div key={icon} className="w-9 h-9 rounded-lg bg-[#1a1a1a]/5 border border-[#1a1a1a]/10 flex items-center justify-center text-sm transition-transform group-hover:scale-110"
+                  style={{ animation: `pulse ${2 + i * 0.4}s ease-in-out infinite`, animationDelay: `${i * 0.2}s` }}>
                   {icon}
                 </div>
               ))}
             </div>
-            <p className="mt-2 text-[10px] text-[#1a1a1a]/30">Click to visit →</p>
+            <p className="mt-3 text-[10px] text-[#1a1a1a]/30">Click to visit →</p>
           </a>
         </div>
       </div>
@@ -448,19 +403,15 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-[#1a1a1a]/40 backdrop-blur-sm" />
-      <div
-        className="relative z-10 w-full max-w-lg rounded-[2rem] border border-[#1a1a1a]/10 bg-[#F5F1E8] p-4 sm:p-8 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="relative z-10 w-full max-w-lg rounded-[2rem] border border-[#1a1a1a]/10 bg-[#F5F1E8] p-4 sm:p-8 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-6">
           <div>
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30">{exit.mile}</span>
             <h3 className="text-xl sm:text-2xl font-black text-[#1a1a1a] break-words">{exit.title}</h3>
           </div>
-          <button
-            onClick={onClose}
-            className="w-10 h-10 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/5 flex items-center justify-center text-[#1a1a1a]/50 hover:text-[#1a1a1a] hover:bg-[#1a1a1a]/10 transition"
-          >
+          <button onClick={onClose} aria-label="Close proof modal"
+            className="w-10 h-10 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/5 flex items-center justify-center text-[#1a1a1a]/50 hover:text-[#1a1a1a] hover:bg-[#1a1a1a]/10 transition">
             ✕
           </button>
         </div>
@@ -472,13 +423,8 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30 mb-3">Proof of Work</p>
             <div className="grid gap-2">
               {exit.proof.map((p) => (
-                <a
-                  key={p.label}
-                  href={p.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-3 p-3 rounded-xl border border-[#1a1a1a]/5 bg-[#1a1a1a]/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/5 transition group"
-                >
+                <a key={p.label} href={p.url} target="_blank" rel="noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-xl border border-[#1a1a1a]/5 bg-[#1a1a1a]/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/5 transition group">
                   <div className="w-8 h-8 rounded-lg bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center text-sm group-hover:scale-110 transition">
                     {p.type === "tx" ? "🔗" : "🌐"}
                   </div>
@@ -504,19 +450,14 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30 mb-3">Milestone Checklist</p>
           <div className="space-y-2">
             {exit.items.map((item) => (
-              <div
-                key={item.text}
-                className={cn(
-                  "flex items-center gap-3 p-3 rounded-xl border min-w-0",
-                  item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-[#1a1a1a]/[0.02] border-[#1a1a1a]/5"
-                )}
-              >
-                <div
-                  className={cn(
-                    "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0",
-                    item.done ? "bg-emerald-500 text-white" : "bg-[#1a1a1a]/10 text-[#1a1a1a]/30"
-                  )}
-                >
+              <div key={item.text} className={cn(
+                "flex items-center gap-3 p-3 rounded-xl border min-w-0",
+                item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-[#1a1a1a]/[0.02] border-[#1a1a1a]/5"
+              )}>
+                <div className={cn(
+                  "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0",
+                  item.done ? "bg-emerald-500 text-white" : "bg-[#1a1a1a]/10 text-[#1a1a1a]/30"
+                )}>
                   {item.done ? "✓" : "○"}
                 </div>
                 <span className={cn("text-sm break-words min-w-0", item.done ? "text-[#1a1a1a]/80" : "text-[#1a1a1a]/40")}>{item.text}</span>
@@ -530,43 +471,47 @@ function ProofModal({ isOpen, onClose, exit }: { isOpen: boolean; onClose: () =>
 }
 
 /* ═══════════════════════════════════════════════════════════
-   STATUS CARDS
+   STATUS CARDS — Compact grid with enhanced visuals
    ═══════════════════════════════════════════════════════════ */
 
 function StatusMiniCard({ label, value, tone, icon }: { label: string; value: string; tone: "red" | "green"; icon: string }) {
   return (
     <HoverLift>
-    <div className={cn(
-      "rounded-[1.25rem] border p-3 sm:p-4 transition duration-300 cursor-pointer",
-      tone === "green"
-        ? "border-emerald-500/25 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),rgba(245,241,232,0.92))] shadow-[0_0_25px_rgba(16,185,129,0.06)]"
-        : "border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] shadow-[0_0_20px_rgba(255,45,45,0.06)]",
-    )}>
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#1a1a1a]/50">{label}</p>
-        <div className="text-lg">{icon}</div>
+      <div className={cn(
+        "rounded-[1.25rem] border p-3 sm:p-4 transition-all duration-300 cursor-pointer group",
+        tone === "green"
+          ? "border-emerald-500/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.95))] hover:border-emerald-500/40 hover:shadow-[0_0_25px_rgba(16,185,129,0.08)]"
+          : "border-[#FF2D2D]/15 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.04),rgba(245,241,232,0.95))] hover:border-[#FF2D2D]/30 hover:shadow-[0_0_20px_rgba(255,45,45,0.06)]",
+      )}>
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#1a1a1a]/40">{label}</p>
+          <div className="text-lg group-hover:scale-110 transition-transform">{icon}</div>
+        </div>
+        <p className={cn("mt-3 text-lg font-black leading-tight sm:text-2xl", tone === "green" ? "text-emerald-600" : "text-[#FF2D2D]")}>
+          {value}
+        </p>
       </div>
-      <p className={cn("mt-3 text-lg font-black leading-tight sm:text-2xl", tone === "green" ? "text-emerald-600" : "text-[#FF2D2D]")}>
-        {value}
-      </p>
-    </div>
     </HoverLift>
   );
 }
 
+/* ═══════════════════════════════════════════════════════════
+   PROGRESS STRIP — Overall completion with visual polish
+   ═══════════════════════════════════════════════════════════ */
+
 function ProgressStrip() {
   return (
-    <Shell className="p-4 sm:p-6">
+    <Shell className="p-5 sm:p-7">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
-          <p className="text-xs font-black uppercase tracking-[0.35em] text-[#1a1a1a]/40">Overall Progress</p>
-          <h2 className="mt-2 text-2xl font-black text-[#1a1a1a] sm:text-3xl break-words">{percentComplete}% complete</h2>
-          <p className="mt-2 text-sm text-[#1a1a1a]/50 break-words">{PROGRESS.complete} of {PROGRESS.total} roadmap milestones are live, proven, or in motion.</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.35em] text-[#1a1a1a]/30">Overall Progress</p>
+          <h2 className="mt-2 text-3xl font-black text-[#1a1a1a] sm:text-4xl break-words">{percentComplete}%</h2>
+          <p className="mt-2 text-sm text-[#1a1a1a]/50 break-words">{PROGRESS.complete} of {PROGRESS.total} milestones are live, proven, or in motion.</p>
         </div>
         <div className="rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-2 text-sm font-bold text-[#1a1a1a]/70">Conviction. Loyalty. Utility.</div>
       </div>
-      <div className="mt-5 h-4 overflow-hidden rounded-full bg-[#1a1a1a]/10">
-        <div className="h-full rounded-full bg-[linear-gradient(90deg,#22c55e,#10b981,#FF2D2D)] shadow-[0_0_24px_rgba(16,185,129,0.15)] transition-all duration-500" style={{ width: `${percentComplete}%` }} />
+      <div className="mt-6 h-5 overflow-hidden rounded-full bg-[#1a1a1a]/10">
+        <div className="h-full rounded-full bg-[linear-gradient(90deg,#22c55e,#10b981,#FF2D2D)] shadow-[0_0_24px_rgba(16,185,129,0.15)] transition-all duration-700 ease-out" style={{ width: `${percentComplete}%` }} />
       </div>
     </Shell>
   );
@@ -574,9 +519,6 @@ function ProgressStrip() {
 
 /* ═══════════════════════════════════════════════════════════
    HIGHWAY — Scroll-activated with living car + particles
-   ═══════════════════════════════════════════════════════════
-   NOTE: Highway is intentionally kept DARK — it's the asphalt
-   road cutting through the crème page. A dramatic contrast.
    ═══════════════════════════════════════════════════════════ */
 
 function RoadSign({ mile, title, color }: { mile: string; title: string; color: string }) {
@@ -614,40 +556,38 @@ function ExitCard({ exit, side, onClick }: { exit: typeof EXITS[0]; side: "left"
 
   return (
     <HoverLift>
-    <div className={cn("relative", side === "left" ? "lg:pr-8" : "lg:pl-8")}>
-      <div
-        onClick={onClick}
-        className="rounded-[1.4rem] border border-white/10 bg-neutral-900/80 p-4 sm:p-6 hover:border-red-500/20 hover:bg-neutral-900/90 transition-all cursor-pointer group"
-      >
-        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition hidden sm:block">
-          <span className="text-[10px] font-black uppercase tracking-wider text-red-400">Click for proof →</span>
-        </div>
-        <div className={cn("flex items-center gap-3 mb-3 flex-wrap", side === "left" ? "lg:justify-end" : "")}>
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">{exit.mile}</span>
-          <span className={cn("px-2.5 py-1 rounded-full border text-[10px] font-black tracking-wider", statusBadge)}>
-            {exit.status}
-          </span>
-        </div>
-        <h3 className={cn("text-xl sm:text-3xl font-black text-white mb-1", side === "left" ? "lg:text-right" : "")}>
-          {exit.title}
-        </h3>
-        <p className={cn("text-sm text-white/50 mb-5", side === "left" ? "lg:text-right" : "")}>
-          {exit.summary}
-        </p>
-        <div className={cn("space-y-2", side === "left" ? "lg:ml-auto" : "", "max-w-full sm:max-w-sm")}>
-          {exit.items.map((item) => (
-            <div key={item.text} className={cn("flex items-center gap-3 p-3 rounded-xl border min-w-0",
-              item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-white/[0.02] border-white/5")}>
-              <div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0",
-                item.done ? "bg-emerald-500 text-black" : "bg-white/10 text-white/30")}>
-                {item.done ? "✓" : "○"}
+      <div className={cn("relative", side === "left" ? "lg:pr-8" : "lg:pl-8")}>
+        <div onClick={onClick}
+          className="rounded-[1.4rem] border border-white/10 bg-neutral-900/80 p-5 sm:p-6 hover:border-red-500/20 hover:bg-neutral-900/90 transition-all cursor-pointer group">
+          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition hidden sm:block">
+            <span className="text-[10px] font-black uppercase tracking-wider text-red-400">Click for proof →</span>
+          </div>
+          <div className={cn("flex items-center gap-3 mb-3 flex-wrap", side === "left" ? "lg:justify-end" : "")}>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">{exit.mile}</span>
+            <span className={cn("px-2.5 py-1 rounded-full border text-[10px] font-black tracking-wider", statusBadge)}>
+              {exit.status}
+            </span>
+          </div>
+          <h3 className={cn("text-xl sm:text-3xl font-black text-white mb-2", side === "left" ? "lg:text-right" : "")}>
+            {exit.title}
+          </h3>
+          <p className={cn("text-sm text-white/50 mb-5", side === "left" ? "lg:text-right" : "")}>
+            {exit.summary}
+          </p>
+          <div className={cn("space-y-2", side === "left" ? "lg:ml-auto" : "", "max-w-full sm:max-w-sm")}>
+            {exit.items.map((item) => (
+              <div key={item.text} className={cn("flex items-center gap-3 p-3 rounded-xl border min-w-0",
+                item.done ? "bg-emerald-500/5 border-emerald-500/10" : "bg-white/[0.02] border-white/5")}>
+                <div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0",
+                  item.done ? "bg-emerald-500 text-black" : "bg-white/10 text-white/30")}>
+                  {item.done ? "✓" : "○"}
+                </div>
+                <span className={cn("text-sm font-medium break-words min-w-0", item.done ? "text-white/80" : "text-white/40")}>{item.text}</span>
               </div>
-              <span className={cn("text-sm font-medium break-words min-w-0", item.done ? "text-white/80" : "text-white/40")}>{item.text}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-    </div>
     </HoverLift>
   );
 }
@@ -663,22 +603,13 @@ function TravelingCar({ scrollProgress }: { scrollProgress: number }) {
   }, [scrollProgress]);
 
   return (
-    <div
-      ref={carRef}
-      className="absolute left-1/2 -translate-x-1/2 z-30 transition-all duration-300"
-      style={{ top: "0%" }}
-    >
+    <div ref={carRef} className="absolute left-1/2 -translate-x-1/2 z-30 transition-all duration-300" style={{ top: "0%" }}>
       <div className="relative flex flex-col items-center">
-        {/* Headlight beam */}
         <div className="absolute top-full left-1/2 -translate-x-1/2 w-12 h-20 bg-gradient-to-b from-amber-400/30 to-transparent rounded-full blur-xl" />
-        {/* Car body — elongated, not square */}
         <div className="relative w-12 h-8 bg-red-500 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.6)] animate-pulse border border-red-400">
-          {/* Windshield */}
           <div className="absolute top-1 left-2 right-2 h-3 bg-white/20 rounded-lg" />
-          {/* Car emoji + wheels */}
           <span className="text-xl relative z-10">🚗</span>
         </div>
-        {/* Wheels */}
         <div className="flex gap-5 mt-0.5">
           <div className="w-2.5 h-2.5 bg-neutral-700 rounded-full border border-neutral-500" />
           <div className="w-2.5 h-2.5 bg-neutral-700 rounded-full border border-neutral-500" />
@@ -699,8 +630,6 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
       const viewportHeight = window.innerHeight;
       const highwayTop = rect.top;
       const highwayHeight = rect.height;
-      
-      /* Progress: 0 when highway enters viewport, 1 when it leaves */
       const progress = Math.max(0, Math.min(1, (-highwayTop + viewportHeight * 0.3) / (highwayHeight + viewportHeight * 0.3)));
       setScrollProgress(progress);
     };
@@ -712,24 +641,17 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
   return (
     <ShellWithRef className="p-0 border-[#1a1a1a]/20" ref={highwayRef}>
       <div className="relative py-10 sm:py-16 overflow-hidden">
-        {/* Base asphalt */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#1a1a1a_0%,#111_50%,#1a1a1a_100%)]" />
-        
-        {/* Tire tracks overlay */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: `
             repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.3) 60px, rgba(255,255,255,0.3) 62px),
             repeating-linear-gradient(85deg, transparent, transparent 120px, rgba(255,255,255,0.15) 120px, rgba(255,255,255,0.15) 124px)
           `,
         }} />
-        
-        {/* Skid marks near Mile 0 */}
         <div className="absolute top-[12%] left-[20%] w-40 h-40 opacity-10" style={{
           background: "radial-gradient(ellipse, rgba(255,255,255,0.3) 0%, transparent 70%)",
           transform: "rotate(-30deg) scaleY(0.3)",
         }} />
-        
-        {/* Crash debris at Mile 0 */}
         <div className="absolute top-[8%] left-1/2 -translate-x-1/2 z-20 flex items-center gap-1">
           <span className="text-2xl opacity-60">💀</span>
           <span className="text-xl opacity-40">🔥</span>
@@ -738,52 +660,32 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
         <div className="absolute top-[10%] left-1/2 -translate-x-1/2 z-20 mt-6">
           <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20 text-center">Some launch casualties.<br />We kept driving.</p>
         </div>
-
-        {/* Lane markers */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.5) 40px, rgba(255,255,255,0.5) 41px)`,
         }} />
-        
-        {/* Road edges */}
         <div className="absolute left-4 sm:left-8 top-0 bottom-0 w-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0.1)_100%)]" />
         <div className="absolute right-4 sm:right-8 top-0 bottom-0 w-1 bg-[linear-gradient(180deg,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0.1)_100%)]" />
-        
-        {/* Center dashed line — animated */}
         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-1 flex flex-col overflow-hidden">
           {Array.from({ length: 40 }).map((_, i) => (
-            <div 
-              key={i} 
-              className="h-6 sm:h-8 my-1 sm:my-1.5 bg-[linear-gradient(180deg,#fbbf24,#f59e0b)] rounded-sm opacity-80 transition-all" 
-              style={{ 
-                boxShadow: "0 0 8px rgba(251,191,36,0.3)",
-                opacity: i / 40 < scrollProgress ? 0.3 + Math.sin(Date.now() / 500 + i) * 0.2 : 0.8,
-              }} 
-            />
+            <div key={i} className="h-6 sm:h-8 my-1 sm:my-1.5 bg-[linear-gradient(180deg,#fbbf24,#f59e0b)] rounded-sm opacity-80 transition-all"
+              style={{ boxShadow: "0 0 8px rgba(251,191,36,0.3)", opacity: i / 40 < scrollProgress ? 0.3 + Math.sin(Date.now() / 500 + i) * 0.2 : 0.8 }} />
           ))}
         </div>
-
-        {/* Traveling car */}
         <div className="absolute inset-0 pointer-events-none">
           <TravelingCar scrollProgress={scrollProgress} />
         </div>
-
-        {/* Floating road particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {Array.from({ length: 12 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 rounded-full bg-red-500/40"
+            <div key={i} className="absolute w-1 h-1 rounded-full bg-red-500/40"
               style={{
                 left: `${20 + Math.random() * 60}%`,
                 top: `${Math.random() * 100}%`,
                 animation: `floatUp ${4 + Math.random() * 6}s linear infinite`,
                 animationDelay: `${Math.random() * 5}s`,
                 boxShadow: "0 0 6px rgba(255,68,68,0.4)",
-              }}
-            />
+              }} />
           ))}
         </div>
-
         <div className="relative z-10 max-w-5xl mx-auto px-3 sm:px-8">
           <div className="text-center mb-10">
             <p className="text-[11px] font-black uppercase tracking-[0.4em] text-white/30">The $MAD Proof Sequence</p>
@@ -847,11 +749,11 @@ function Highway({ onCardClick }: { onCardClick: (exit: typeof EXITS[0]) => void
 
 function BurnMechanics() {
   return (
-    <Shell className="p-4 sm:p-8">
+    <Shell className="p-5 sm:p-8">
       <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:items-stretch">
-        <div className="flex flex-col justify-between rounded-[1.75rem] border border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
+        <div className="flex flex-col justify-between rounded-[1.75rem] border border-[#FF2D2D]/20 bg-[radial-gradient(circle_at_top_left,rgba(255,45,45,0.06),rgba(245,241,232,0.92))] p-5 sm:p-7">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.35em] text-[#FF2D2D]/70">Deflation Protocol</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.35em] text-[#FF2D2D]/70">Deflation Protocol</p>
             <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl break-words">50% Burned. More Coming.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 break-words">
               Supply is already cut in half. Burn #2 drops it to 200M — but only when 10,000 people hold $MAD. Not a promise. A protocol.
@@ -859,20 +761,20 @@ function BurnMechanics() {
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-3xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/5 px-4 py-5 sm:px-6">
-              <p className="text-xs font-black uppercase tracking-[0.28em] text-[#FF2D2D]/70">Current Supply</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#FF2D2D]/70">Current Supply</p>
               <p className="mt-2 text-3xl font-black text-[#FF2D2D]">~500M</p>
               <p className="mt-1 text-sm text-[#1a1a1a]/40">Down from 1B at launch</p>
             </div>
             <div className="rounded-3xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-5 sm:px-6">
-              <p className="text-xs font-black uppercase tracking-[0.28em] text-[#1a1a1a]/40">Final Target</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#1a1a1a]/40">Final Target</p>
               <p className="mt-2 text-3xl font-black text-[#1a1a1a]">200M</p>
               <p className="mt-1 text-sm text-[#1a1a1a]/40">80% total reduction</p>
             </div>
           </div>
         </div>
-        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-4 sm:p-6">
+        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Burn Trigger</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Burn Trigger</p>
             <span className="rounded-full border border-[#FF2D2D]/25 bg-[#FF2D2D]/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-[#FF2D2D]">Phase 2</span>
           </div>
           <div className="mt-4 rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] p-4 sm:p-5">
@@ -930,11 +832,11 @@ function BurnMechanics() {
 
 function CommunitySupport() {
   return (
-    <Shell className="p-4 sm:p-8">
+    <Shell className="p-5 sm:p-8">
       <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-stretch">
-        <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-4 sm:p-7">
+        <div className="flex flex-col justify-between rounded-[1.75rem] border border-emerald-400/20 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.06),rgba(245,241,232,0.92))] p-5 sm:p-7">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.35em] text-emerald-600/70">Alliance Expansion</p>
             <h2 className="mt-3 text-2xl font-black text-[#1a1a1a] sm:text-5xl break-words">7 Communities Supported.</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-[#1a1a1a]/55 break-words">
               7 communities supported. Tokens locked to 2060. Public receipts on X. Loyalty proven before trust asked.
@@ -942,102 +844,94 @@ function CommunitySupport() {
           </div>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-3xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-5 sm:px-6">
-              <p className="text-xs font-black uppercase tracking-[0.28em] text-emerald-600/70">Support Status</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.28em] text-emerald-600/70">Support Status</p>
               <p className="mt-2 text-3xl font-black text-emerald-600">7 Locked</p>
               <p className="mt-1 text-sm text-[#1a1a1a]/40">Backed publicly with receipts</p>
             </div>
             <div className="rounded-3xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-5 sm:px-6">
-              <p className="text-xs font-black uppercase tracking-[0.28em] text-[#1a1a1a]/40">Signal Sent</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#1a1a1a]/40">Signal Sent</p>
               <p className="mt-2 text-3xl font-black text-[#1a1a1a]">Locked Up</p>
               <p className="mt-1 text-sm text-[#1a1a1a]/40">Commitment over quick exits</p>
             </div>
           </div>
         </div>
-        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-4 sm:p-6">
+        <div className="rounded-[1.75rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 sm:p-6">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Proof of Work</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">Proof of Work</p>
             <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-emerald-600">Verified Signal</span>
           </div>
-            <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Supported seven communities.</p>
-            <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl break-words">Locked all the tokens.</p>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
-                <img src="/derpydave-lock-proof.png" alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #1 — Apr 21, 2026</p>
-                  <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">8,155,311 $DERPYDAVE · Streamflow · Non-cancelable until 2060</p>
-                </div>
-              </div>
-              <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
-                <img src="/rndy-lock-proof.png" alt="1,754,679 RNDY tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #2 — May 8, 2026</p>
-                  <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
-                </div>
-              </div>
-              <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
-                <img src="/touchgrass-lock-proof.png" alt="1,019,634 TOUCHGRASS tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #3 — May 10, 2026</p>
-                  <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,019,634 $TOUCHGRASS · Streamflow · Non-cancelable until 2060</p>
-                </div>
-              </div>
-              <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
-                <img src="/hineycoin-lock-proof.png" alt="1,027,002 HINEY tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #4 — May 21, 2026</p>
-                  <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,027,002 $HINEY · Streamflow · Non-cancelable until 2060</p>
-                </div>
-              </div>
-              <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
-                <img src="/digikoinz-lock-proof.png" alt="1,038,763 KOINZ tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #5 — May 24, 2026</p>
-                  <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,038,763 $KOINZ · Streamflow · Non-cancelable until 2060</p>
-                </div>
-              </div>
-              <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
-                <img src="/stash-lock-proof.png" alt="33,890 STASH tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #6 — May 28, 2026</p>
-                  <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">33,890 $STASH · Streamflow · Non-cancelable until 2060</p>
-                </div>
-              </div>
-              <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
-                <img src="/luxxlounge-lock-proof.png" alt="1,036,883 TLLT tokens locked via Streamflow until 2060" className="w-full h-auto" />
-                <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #7 — Jun 7, 2026</p>
-                  <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,036,883 $TLLT · Streamflow · Non-cancelable until 2060</p>
-                </div>
+          <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Supported seven communities.</p>
+          <p className="mt-2 text-lg font-black text-emerald-600 sm:text-xl break-words">Locked all the tokens.</p>
+          <div className="mt-4 grid grid-cols-3 gap-3">
+            <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
+              <img src="/derpydave-lock-proof.png" alt="8,155,311 DERPYDAVE tokens locked via Streamflow until 2060" className="w-full h-auto" />
+              <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #1 — Apr 21, 2026</p>
+                <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">8,155,311 $DERPYDAVE · Streamflow · Non-cancelable until 2060</p>
               </div>
             </div>
-            <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
-              50% burned. 7 communities locked to 2060. Not theory. Proof.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <a href={LINKS.communityProof} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
-                Proof #1 →
-              </a>
-              <a href={LINKS.communityProof2} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
-                Proof #2 →
-              </a>
-              <a href={LINKS.communityProof3} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
-                Proof #3 →
-              </a>
-              <a href={LINKS.communityProof4} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
-                Proof #4 →
-              </a>
-              <a href={LINKS.communityProof5} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
-                Proof #5 →
-              </a>
-              <a href={LINKS.communityProof6} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
-                Proof #6 →
-              </a>
-              <a href={LINKS.communityProof7} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
-                Proof #7 →
-              </a>
-              <span className="inline-flex items-center rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-3 text-sm font-semibold text-[#1a1a1a]/60">Public receipts on X</span>
+            <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
+              <img src="/rndy-lock-proof.png" alt="1,754,679 RNDY tokens locked via Streamflow until 2060" className="w-full h-auto" />
+              <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #2 — May 8, 2026</p>
+                <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,754,679 $RNDY · Streamflow · Non-cancelable until 2060</p>
+              </div>
             </div>
+            <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
+              <img src="/touchgrass-lock-proof.png" alt="1,019,634 TOUCHGRASS tokens locked via Streamflow until 2060" className="w-full h-auto" />
+              <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #3 — May 10, 2026</p>
+                <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,019,634 $TOUCHGRASS · Streamflow · Non-cancelable until 2060</p>
+              </div>
+            </div>
+            <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
+              <img src="/hineycoin-lock-proof.png" alt="1,027,002 HINEY tokens locked via Streamflow until 2060" className="w-full h-auto" />
+              <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #4 — May 21, 2026</p>
+                <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,027,002 $HINEY · Streamflow · Non-cancelable until 2060</p>
+              </div>
+            </div>
+            <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
+              <img src="/digikoinz-lock-proof.png" alt="1,038,763 KOINZ tokens locked via Streamflow until 2060" className="w-full h-auto" />
+              <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #5 — May 24, 2026</p>
+                <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,038,763 $KOINZ · Streamflow · Non-cancelable until 2060</p>
+              </div>
+            </div>
+            <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
+              <img src="/stash-lock-proof.png" alt="33,890 STASH tokens locked via Streamflow until 2060" className="w-full h-auto" />
+              <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #6 — May 28, 2026</p>
+                <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">33,890 $STASH · Streamflow · Non-cancelable until 2060</p>
+              </div>
+            </div>
+            <div className="rounded-[1rem] border border-[#1a1a1a]/10 overflow-hidden bg-white">
+              <img src="/luxxlounge-lock-proof.png" alt="1,036,883 TLLT tokens locked via Streamflow until 2060" className="w-full h-auto" />
+              <div className="px-3 py-2.5 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Proof #7 — Jun 7, 2026</p>
+                <p className="text-[11px] text-[#1a1a1a]/40 mt-0.5 break-words">1,036,883 $TLLT · Streamflow · Non-cancelable until 2060</p>
+              </div>
+            </div>
+          </div>
+          <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
+            50% burned. 7 communities locked to 2060. Not theory. Proof.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            {[
+              { url: LINKS.communityProof, label: "Proof #1" },
+              { url: LINKS.communityProof2, label: "Proof #2" },
+              { url: LINKS.communityProof3, label: "Proof #3" },
+              { url: LINKS.communityProof4, label: "Proof #4" },
+              { url: LINKS.communityProof5, label: "Proof #5" },
+              { url: LINKS.communityProof6, label: "Proof #6" },
+              { url: LINKS.communityProof7, label: "Proof #7" },
+            ].map((proof) => (
+              <a key={proof.label} href={proof.url} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 sm:px-5 sm:py-3 text-sm font-black text-emerald-600 transition hover:scale-[1.02] hover:bg-emerald-400/15">
+                {proof.label} →
+              </a>
+            ))}
+            <span className="inline-flex items-center rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] px-4 py-3 text-sm font-semibold text-[#1a1a1a]/60">Public receipts on X</span>
+          </div>
         </div>
       </div>
     </Shell>
@@ -1046,14 +940,13 @@ function CommunitySupport() {
 
 function CTASection() {
   return (
-    <Shell className="p-4 sm:p-8">
+    <Shell className="p-5 sm:p-8">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <h2 className="text-2xl sm:text-4xl font-black text-[#1a1a1a] break-words">THE $MAD PROOF SEQUENCE.</h2>
           <p className="mt-4 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg break-words">Conviction. Loyalty. Utility. Scale. Every stage verifiable. Nothing promised.</p>
         </div>
         <div style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
-          <style>{`@keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(255,45,45,0.15)} 50%{box-shadow:0 0 35px rgba(255,45,45,0.28)}`}</style>
           <a href={LINKS.buy} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-[#FF2D2D]/35 bg-[#FF2D2D] px-5 py-3 text-sm sm:px-8 sm:py-4 sm:text-base font-black text-white shadow-[0_0_22px_rgba(255,45,45,0.15)] transition hover:scale-[1.02] hover:bg-[#FF6B00]">
             Start Your Journey →
           </a>
@@ -1065,7 +958,7 @@ function CTASection() {
 
 function RiskNotice() {
   return (
-    <Shell className="border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] px-4 py-6 sm:px-10 sm:py-10">
+    <Shell className="border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] px-5 py-6 sm:px-10 sm:py-10">
       <p className="text-center text-xs font-black uppercase tracking-[0.38em] text-[#FF2D2D]/70">Risk Notice</p>
       <p className="mx-auto mt-5 max-w-6xl text-center text-base leading-9 text-[#1a1a1a]/60 break-words sm:text-xl">
         $MAD is a meme coin and speculative digital asset. Nothing on this website is financial advice or a guarantee of returns. Crypto is risky and volatile. Never risk money you cannot afford to lose. Always do your own research.
@@ -1094,6 +987,10 @@ function GlobalStyles() {
         0%, 100% { opacity: 0.4; }
         50% { opacity: 1; }
       }
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
     `}</style>
   );
 }
@@ -1118,8 +1015,28 @@ export default function RoadmapPage() {
       <ScrollProgress />
 
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,45,45,0.06),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.04),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(26,26,26,0.03),transparent_25%)]" />
-      
+
       <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-20 pt-6 relative z-10">
+        {/* Hero Header */}
+        <div className="relative pt-16 pb-10 sm:pt-24 sm:pb-16 text-center">
+          <FadeIn>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60 mb-4">
+              The Journey
+            </p>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-[#1a1a1a] leading-[0.95] mb-6">
+              ROADMAP
+            </h1>
+            <p className="text-sm sm:text-base text-[#1a1a1a]/50 max-w-lg mx-auto leading-relaxed mb-8">
+              Four stages from launch to legacy. <br className="hidden sm:block" />
+              Every milestone proven, every promise kept.
+            </p>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-bold text-[#1a1a1a]/60">{percentComplete}% Complete — Mile {PROGRESS.complete} of {PROGRESS.total}</span>
+            </div>
+          </FadeIn>
+        </div>
+
         <div className="grid gap-6">
           <FadeIn>
             <ProgressStrip />
