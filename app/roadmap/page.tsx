@@ -202,7 +202,8 @@ const LINKS = {
   communityProof5: "https://x.com/madrichclub_/status/2058759994485715249?s=20",
   communityProof6: "https://x.com/madrichclub_/status/2060080223954346354?s=20",
   communityProof7: "https://x.com/madrichclub_/status/2063766619059638771?s=20",
-  madMind: "https://madrichclub.com/mad-mind",
+  madMind: "https://www.madrichclub.com/mad-mind",
+  numerology: "https://www.madrichclub.com/mad-mind",
 } as const;
 
 const PROGRESS = { complete: 7, total: 10 };
@@ -210,12 +211,12 @@ const percentComplete = Math.round((PROGRESS.complete / PROGRESS.total) * 100);
 
 const STATUS_CARDS = [
   { label: "Website", value: "LIVE NOW", tone: "green" as const, icon: "🌐" },
-  { label: "Confessions", value: "LIVE NOW", tone: "green" as const, icon: "💬" },
+  { label: "MAD Mind AI", value: "4 TOOLS LIVE", tone: "green" as const, icon: "🧠" },
   { label: "Token Burns", value: "50% BURNED", tone: "green" as const, icon: "🔥" },
-  { label: "MAD AI", value: "LIVE NOW", tone: "green" as const, icon: "🤖" },
+  { label: "Numerology", value: "LIVE NOW", tone: "green" as const, icon: "🔮" },
   { label: "Community Support", value: "7 LOCKED", tone: "green" as const, icon: "🤝" },
   { label: "MAD Games", value: "IN PROGRESS", tone: "red" as const, icon: "🎮" },
-  { label: "Stickers", value: "LIVE NOW", tone: "green" as const, icon: "😈" },
+  { label: "Archetype Quiz", value: "LIVE NOW", tone: "green" as const, icon: "⚡" },
   { label: "Clothing", value: "TESTING", tone: "red" as const, icon: "👕" },
   { label: "$MAD Art", value: "IN PROGRESS", tone: "red" as const, icon: "🖼️" },
 ] as const;
@@ -258,19 +259,22 @@ const EXITS = [
   {
     mile: "MILE 50", title: "Proof of Utility", status: "IN PROGRESS" as const, color: "yellow",
     proof: [
-      { label: "MAD Mind AI", url: LINKS.madMind, type: "link" as const },
-      { label: "Moltbook Agent", url: "https://www.moltbook.com/u/themadclaw", type: "link" as const },
+      { label: "MAD Mind — Numerology Oracle", url: LINKS.numerology, type: "link" as const },
+      { label: "MAD Mind — Archetype Quiz", url: LINKS.madMind, type: "link" as const },
+      { label: "MAD Mind — Frequency Meter", url: LINKS.madMind, type: "link" as const },
+      { label: "MAD Mind — Bag Calculator", url: LINKS.madMind, type: "link" as const },
       { label: "Mad Phonk Awakening (Roblox)", url: "https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening", type: "link" as const },
     ],
     items: [
-      { text: "MAD Mind AI live", done: true },
-      { text: "MAD Confessions platform", done: true },
-      { text: "Roblox game with $MAD", done: true },
-      { text: "Moltbook agent deployed", done: true },
+      { text: "MAD Mind AI — Numerology Oracle (birthday divination)", done: true },
+      { text: "MAD Mind AI — $MAD Archetype Quiz (8 questions, 5 types)", done: true },
+      { text: "MAD Mind AI — Frequency Meter (vibe check + prescription)", done: true },
+      { text: "MAD Mind AI — Bag Calculator (investment projections)", done: true },
+      { text: "Roblox game with $MAD integration", done: true },
       { text: "Burn #2 at 10K holders", done: false },
       { text: "Marketplace + partnerships", done: false },
     ],
-    summary: "The token does something. AI. Games. Community. Not a ticker — a toolkit.",
+    summary: "The token does something. Numerology. Quizzes. Bag math. Games. Not a ticker — a toolkit.",
   },
   {
     mile: "MILE 100", title: "Proof of Scale", status: "UP NEXT" as const, color: "red",
@@ -407,13 +411,13 @@ function ChaosMeter() {
           <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br from-[#FF2D2D] to-transparent" />
           <a href={LINKS.madMind} className="relative z-10 block">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/50">Mad Claw</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/50">Mad Mind AI</p>
               <span className="text-lg animate-pulse">👁️</span>
             </div>
-            <div className="text-3xl font-black text-[#1a1a1a] mb-1">WATCHING</div>
-            <p className="text-xs text-[#1a1a1a]/40 mb-3">Live across 4 platforms</p>
+            <div className="text-3xl font-black text-[#1a1a1a] mb-1">4 TOOLS LIVE</div>
+            <p className="text-xs text-[#1a1a1a]/40 mb-3">Numerology · Quiz · Frequency · Bag Calc</p>
             <div className="flex gap-2">
-              {["X", "🦞", "✈️", "🌐"].map((icon, i) => (
+              {["🔮", "⚡", "📡", "💰"].map((icon, i) => (
                 <div
                   key={icon}
                   className="w-8 h-8 rounded-lg bg-[#1a1a1a]/5 border border-[#1a1a1a]/10 flex items-center justify-center text-xs"
@@ -875,10 +879,33 @@ function BurnMechanics() {
             <p className="text-lg font-black text-[#1a1a1a] sm:text-xl break-words">Burn #2 activates at 10,000 holders.</p>
             <p className="mt-2 text-lg font-black text-[#FF2D2D] sm:text-xl break-words">No earlier. No later.</p>
             <div className="mt-4 rounded-[1.25rem] border border-[#1a1a1a]/10 overflow-hidden">
-              <img src="/solscan-mad-token.png" alt="$MAD token on Solscan — 276 holders, ~500M supply" className="w-full h-auto" />
+              <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-b border-[#1a1a1a]/5">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">MAD Mind AI — Interactive Tools</p>
+              </div>
+              <div className="grid grid-cols-2 gap-2 p-3">
+                <div className="rounded-xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/5 p-3 text-center">
+                  <span className="text-lg">🔮</span>
+                  <p className="text-[10px] font-bold text-[#1a1a1a]/70 mt-1">Numerology Oracle</p>
+                  <p className="text-[9px] text-[#1a1a1a]/40">Birthday divination</p>
+                </div>
+                <div className="rounded-xl border border-[#FF6B00]/20 bg-[#FF6B00]/5 p-3 text-center">
+                  <span className="text-lg">⚡</span>
+                  <p className="text-[10px] font-bold text-[#1a1a1a]/70 mt-1">Archetype Quiz</p>
+                  <p className="text-[9px] text-[#1a1a1a]/40">8 questions, 5 types</p>
+                </div>
+                <div className="rounded-xl border border-[#A855F7]/20 bg-[#A855F7]/5 p-3 text-center">
+                  <span className="text-lg">📡</span>
+                  <p className="text-[10px] font-bold text-[#1a1a1a]/70 mt-1">Frequency Meter</p>
+                  <p className="text-[9px] text-[#1a1a1a]/40">Vibe check + prescription</p>
+                </div>
+                <div className="rounded-xl border border-[#00D4FF]/20 bg-[#00D4FF]/5 p-3 text-center">
+                  <span className="text-lg">💰</span>
+                  <p className="text-[10px] font-bold text-[#1a1a1a]/70 mt-1">Bag Calculator</p>
+                  <p className="text-[9px] text-[#1a1a1a]/40">Investment projections</p>
+                </div>
+              </div>
               <div className="px-4 py-3 bg-[#1a1a1a]/[0.02] border-t border-[#1a1a1a]/5">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/30">Live on Solscan</p>
-                <p className="text-xs text-[#1a1a1a]/40 mt-0.5 break-all">Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump · Verifiable · On-chain</p>
+                <p className="text-xs text-[#1a1a1a]/40 text-center">All tools live at <a href="https://www.madrichclub.com/mad-mind" className="text-[#FF2D2D] font-bold">madrichclub.com/mad-mind</a></p>
               </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-[#1a1a1a]/55 sm:text-base">
