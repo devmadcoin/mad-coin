@@ -217,7 +217,7 @@ export default function RewardsPage() {
               <span className="relative flex h-2 w-2">
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
               </span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">2M $MAD Distributed · 50 Winners Paid</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">2.5M $MAD Distributed · 50 Winners Paid</span>
             </div>
             <p className="mt-1 text-[10px] text-white/30 uppercase tracking-widest">Phase 2 ($10M) Revealed Below · The Mission Continues</p>
           </div>
@@ -267,7 +267,7 @@ export default function RewardsPage() {
             <div className="text-center">
               <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Reward Wallet Balance</p>
               <div className="mt-3 flex items-baseline justify-center gap-2">
-                <span className="text-4xl sm:text-6xl font-black tracking-tight text-white">11,000,000</span>
+                <span className="text-4xl sm:text-6xl font-black tracking-tight text-white">10,500,000</span>
                 <span className="text-lg sm:text-2xl font-black text-[#FF2D2D]">$MAD</span>
               </div>
               <p className="mt-2 text-sm text-white/40">Remaining supply after Phase 1 distribution · 100% community funded</p>
@@ -415,7 +415,7 @@ export default function RewardsPage() {
                   $1M Market Cap <span className="text-emerald-400">Completed</span>
                 </h3>
                 <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                  $MAD hit $1M market cap and held for <span className="font-bold text-white">12 hours</span>. 2M $MAD tokens distributed to 50 eligible holders. <span className="font-bold text-emerald-400">Reward window closed.</span>
+                  $MAD hit $1M market cap and held for <span className="font-bold text-white">12 hours</span>. 2.5M $MAD tokens distributed to 50 eligible holders. <span className="font-bold text-emerald-400">Reward window closed.</span>
                 </p>
 
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">

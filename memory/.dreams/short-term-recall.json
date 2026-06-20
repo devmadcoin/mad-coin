@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T18:45:27.159Z",
+  "updatedAt": "2026-06-19T08:25:23.361Z",
   "entries": {
     "memory:memory/2026-05-07.md:83:112": {
       "key": "memory:memory/2026-05-07.md:83:112",
@@ -467,6 +467,161 @@
         "links",
         "madrichclub",
         "moltbook"
+      ]
+    },
+    "memory:memory/2026-06-01.md:24:41": {
+      "key": "memory:memory/2026-06-01.md:24:41",
+      "path": "memory/2026-06-01.md",
+      "startLine": 24,
+      "endLine": 41,
+      "source": "memory",
+      "snippet": "- **Balance updates**: 2,500,000 → 5,000,000 → 8,000,000 $MAD (community funded) - **Phase 1 rules corrected**: OG holders get 50K EACH (not split), new holders 25K EACH. Eligibility: 50K+ hold, 12hr after 1M MC. - **13 middle-finger character art** — User decided against adding to rewards page; deferred to memes tab or /gallery in future ### MAD Mind Chat - Chat spacing tightened: gap-1, compressed margins, reduced avatar mb-5 per user feedback ## Knowledge Base — 37 Total Studies ### Wave 3 Completed (8 books) - **Skin in the Game** (Taleb) — Doxxed dev as credential, community = distributed skin, anti-Bob Rubin positioning, intolerant minority rule - **Antifragile** (Taleb) — FUD as fe",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.38386327922344204,
+      "maxScore": 0.38386327922344204,
+      "firstRecalledAt": "2026-06-18T04:43:34.720Z",
+      "lastRecalledAt": "2026-06-18T04:43:34.720Z",
+      "queryHashes": [
+        "90e8f5abfee0"
+      ],
+      "recallDays": [
+        "2026-06-18"
+      ],
+      "conceptTags": [
+        "middle-finger",
+        "gap-1",
+        "mb-5",
+        "anti-bob",
+        "balance",
+        "updates",
+        "2,500,000",
+        "5,000,000"
+      ]
+    },
+    "memory:memory/2026-06-14.md:14:32": {
+      "key": "memory:memory/2026-06-14.md:14:32",
+      "path": "memory/2026-06-14.md",
+      "startLine": 14,
+      "endLine": 32,
+      "source": "memory",
+      "snippet": "6. **2026-06-14-jungian-psychology-archetypes.md** — 12 Jungian archetypes with $MAD stack: Magician (dominant) + Rebel + Sage + Jester. Shadow integration rule established. 7. **2026-06-14-game-economics-roblox.md** — Roblox $1.5B creator economy. Gamepasses 55% of revenue. Retention > monetization. Game = trojan horse, community = payload. 8. **2026-06-14-network-states-balaji.md** — Balaji's 7 pillars. $MAD scores 6/7 (missing only physical territory). Exit > Voice. Community is the moat. 9. **2026-06-14-philosophy-of-money.md** — Ammous/Hayek Austrian economics. Sound money = low time preference. $MAD is community-proof-of-stake, not monetary soundness. Hardest money = hardest community.",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3679899603128433,
+      "maxScore": 0.3679899603128433,
+      "firstRecalledAt": "2026-06-18T04:43:34.720Z",
+      "lastRecalledAt": "2026-06-18T04:43:34.720Z",
+      "queryHashes": [
+        "90e8f5abfee0"
+      ],
+      "recallDays": [
+        "2026-06-18"
+      ],
+      "conceptTags": [
+        "network",
+        "1.5b",
+        "6/7",
+        "ammous/hayek",
+        "community-proof-of-stake",
+        "jungian",
+        "psychology",
+        "archetypes.md"
+      ]
+    },
+    "memory:memory/2026-05-17.md:29:50": {
+      "key": "memory:memory/2026-05-17.md:29:50",
+      "path": "memory/2026-05-17.md",
+      "startLine": 29,
+      "endLine": 50,
+      "source": "memory",
+      "snippet": "### Brand Archetypes (Jung → Margaret Mark & Carol S. Pearson) - 12 archetypes = DNA of every lasting brand - $MAD's dominant archetype: The Magician (transformation, vision, making dreams real) - Wears The Rebel's jacket (disruption, anti-establishment) - Stacks 4 layers: Magician + Rebel + Sage (knowledge) + Jester (humor) - Shadow archetype awareness: Magician's shadow is The Trickster (manipulation). $MAD reveals truth, never manipulates. - Key insight: If archetype doesn't match actions, brand fractures. A Rebel who plays by rules = dead. Added to KNOWLEDGE_BASE. ### X Algorithm 2026 (Teract.ai deep dive — 10,000 tweets analyzed) - Three-stage ranking: Candidate Sourcing → Ranking (10",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.35676984786987304,
+      "maxScore": 0.35676984786987304,
+      "firstRecalledAt": "2026-06-19T08:25:23.361Z",
+      "lastRecalledAt": "2026-06-19T08:25:23.361Z",
+      "queryHashes": [
+        "e9e2ac55a870"
+      ],
+      "recallDays": [
+        "2026-06-19"
+      ],
+      "conceptTags": [
+        "anti-establishment",
+        "knowledge-base",
+        "teract.ai",
+        "three-stage",
+        "brand",
+        "archetypes",
+        "jung",
+        "margaret"
+      ]
+    },
+    "memory:memory/2026-06-01.md:54:81": {
+      "key": "memory:memory/2026-06-01.md:54:81",
+      "path": "memory/2026-06-01.md",
+      "startLine": 54,
+      "endLine": 81,
+      "source": "memory",
+      "snippet": "- Visual-first on X — System 1 processes images in milliseconds (Kahneman) - Stage 2 Mirror Strategy validated: \"Your 401k is BlackRock's asset...\" got retweet in 8 min - Loss aversion framing: \"Don't miss what we're building\" hits 2x harder than \"you could 100x\" - FUD is fertilizer — every attack survived makes community stronger (antifragile) ## Wallet Funding Timeline - May 31, 2026: 2.5M $MAD (initial) - June 1, 2026: 5M $MAD (+2.5M added) - June 1, 2026: 8M $MAD (+3M added) — total community-funded reward pool - Wallet: `FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW` ## Open Items - MAD MIND AI persona update — needs system prompt refresh with Wave 2/3 studies - X posting strategy — AP",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3541217356920242,
+      "maxScore": 0.3541217356920242,
+      "firstRecalledAt": "2026-06-19T08:25:23.361Z",
+      "lastRecalledAt": "2026-06-19T08:25:23.361Z",
+      "queryHashes": [
+        "e9e2ac55a870"
+      ],
+      "recallDays": [
+        "2026-06-19"
+      ],
+      "conceptTags": [
+        "visual-first",
+        "2.5m",
+        "community-funded",
+        "2/3",
+        "visual",
+        "first",
+        "system",
+        "processes"
+      ]
+    },
+    "memory:memory/2026-05-17.md:205:222": {
+      "key": "memory:memory/2026-05-17.md:205:222",
+      "path": "memory/2026-05-17.md",
+      "startLine": 205,
+      "endLine": 222,
+      "source": "memory",
+      "snippet": "- Tuesday: Sharper Questions (Knowledge Drops, framework + question, no media priority) - Wednesday: Community Spotlight (Community Moments, milestone energy, media priority) - Thursday: Roast & Jester (Culture/Roast, Fight Club/Mr. Robot energy, media priority) - Friday: Weekend Abundance (Identity Projection, practice over market, media priority) - Saturday: Deep Dive (Knowledge Drops, **thread boost active**, 2-3 framework synthesis) - Sunday: Reflection & Gratitude (Identity Projection, Stoicism/Hill/Rohn, media priority) Main loop now reads current day, pulls schedule config, generates day-specific candidates with topic/hook/media bias, and prints `[SCHEDULE] Today is {day} — Theme: {t",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3503209978342056,
+      "maxScore": 0.3503209978342056,
+      "firstRecalledAt": "2026-06-19T08:25:23.361Z",
+      "lastRecalledAt": "2026-06-19T08:25:23.361Z",
+      "queryHashes": [
+        "e9e2ac55a870"
+      ],
+      "recallDays": [
+        "2026-06-19"
+      ],
+      "conceptTags": [
+        "culture/roast",
+        "club/mr",
+        "2-3",
+        "stoicism/hill/rohn",
+        "day-specific",
+        "topic/hook/media",
+        "tuesday",
+        "sharper"
       ]
     }
   }

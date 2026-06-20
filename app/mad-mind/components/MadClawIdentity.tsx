@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-import useChat from "./useChat";
-import ChatInterface from "./ChatInterface";
+import NumerologyOracle from "./NumerologyOracle";
 import MadBagCalculator from "./MadBagCalculator";
 
 /* ─── Data ─── */
@@ -100,22 +99,9 @@ function TheGate() {
   );
 }
 
-/* ─── THE ORACLE (Chat) ─── */
-function TheOracle({ messages, status, typing, sendMessage, clearChat, scrollRef, sessionId, switchSession }: any) {
-  return (
-    <section className="mb-1">
-      <ChatInterface
-        messages={messages}
-        status={status}
-        typing={typing}
-        sendMessage={sendMessage}
-        clearChat={clearChat}
-        scrollRef={scrollRef}
-        sessionId={sessionId}
-        switchSession={switchSession}
-      />
-    </section>
-  );
+/* ─── THE ORACLE (Numerology) ─── */
+function TheOracle() {
+  return <NumerologyOracle />;
 }
 
 /* ─── THE FORK ─── */
@@ -245,24 +231,13 @@ function triggerClawReaction() {
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadClawIdentity() {
-  const { messages, status, typing, sendMessage, clearChat, scrollRef, sessionId, switchSession } = useChat();
-
   return (
     <div className="space-y-0">
       <TheGate />
       {/* Content below hero on dark background */}
       <div className="bg-[#0a0a0a] relative z-10">
         <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
-          <TheOracle
-            messages={messages}
-            status={status}
-            typing={typing}
-            sendMessage={sendMessage}
-            clearChat={clearChat}
-            scrollRef={scrollRef}
-            sessionId={sessionId}
-            switchSession={switchSession}
-          />
+          <TheOracle />
           <MadBagCalculator />
           <TheFork />
           <TheKey />
