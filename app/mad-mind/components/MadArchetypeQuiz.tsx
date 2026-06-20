@@ -312,7 +312,7 @@ function calculateArchetype(scores: Record<Archetype, number>): Archetype {
 
 function getShareText(archetype: Archetype): string {
   const a = ARCHETYPES[archetype];
-  return `I am ${a.emoji} ${a.name} on the $MAD Archetype Quiz.\n\n"${a.tagline}"\n\nFind your frequency 👇\nhttps://mad-coin.vercel.app/mad-mind\n\n#MADRichClub #StayMAD`;
+  return `I am ${a.emoji} ${a.name} on the $MAD Archetype Quiz.\n\n"${a.tagline}"\n\nFind your frequency 👇\nhttps://www.madrichclub.com/mad-mind\n\n#MADRichClub #StayMAD`;
 }
 
 /* ─── Progress Bar ─── */
