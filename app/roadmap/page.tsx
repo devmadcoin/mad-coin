@@ -947,7 +947,12 @@ function CTASection() {
           <p className="mt-4 max-w-2xl text-base leading-8 text-[#1a1a1a]/55 sm:text-lg break-words">Conviction. Loyalty. Utility. Scale. Every stage verifiable. Nothing promised.</p>
         </div>
         <div style={{ animation: "glowPulse 3s ease-in-out infinite" }}>
-          <a href={LINKS.buy} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-[#FF2D2D]/35 bg-[#FF2D2D] px-5 py-3 text-sm sm:px-8 sm:py-4 sm:text-base font-black text-white shadow-[0_0_22px_rgba(255,45,45,0.15)] transition hover:scale-[1.02] hover:bg-[#FF6B00]">
+          <a
+            href={LINKS.buy}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-5 py-3 text-sm sm:px-8 sm:py-4 sm:text-base font-black text-white shadow-[0_0_25px_rgba(255,45,45,0.3)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(255,45,45,0.5)] hover:from-[#FF6B00] hover:to-[#FF2D2D]"
+          >
             Start Your Journey →
           </a>
         </div>
@@ -964,6 +969,56 @@ function RiskNotice() {
         $MAD is a meme coin and speculative digital asset. Nothing on this website is financial advice or a guarantee of returns. Crypto is risky and volatile. Never risk money you cannot afford to lose. Always do your own research.
       </p>
     </Shell>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FLOATING GEOMETRIC SHAPES — Red/orange polygons drifting
+   ═══════════════════════════════════════════════════════════ */
+function FloatingShapes() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-5">
+      <div
+        className="absolute w-72 h-72 rounded-full opacity-[0.03]"
+        style={{
+          background: "radial-gradient(circle, rgba(255,45,45,0.5) 0%, transparent 70%)",
+          top: "10%",
+          left: "5%",
+          animation: "floatShape 20s ease-in-out infinite",
+        }}
+      />
+      <div
+        className="absolute w-96 h-96 rounded-full opacity-[0.02]"
+        style={{
+          background: "radial-gradient(circle, rgba(255,107,0,0.5) 0%, transparent 70%)",
+          top: "60%",
+          right: "10%",
+          animation: "floatShape 25s ease-in-out infinite reverse",
+        }}
+      />
+      <div
+        className="absolute w-48 h-48 opacity-[0.04]"
+        style={{
+          background: "linear-gradient(135deg, rgba(255,45,45,0.3), rgba(255,107,0,0.3))",
+          borderRadius: "30% 70% 70% 30% / 30% 30% 70% 70%",
+          top: "30%",
+          right: "20%",
+          animation: "floatShape 18s ease-in-out infinite",
+          animationDelay: "-5s",
+        }}
+      />
+      <div
+        className="absolute w-64 h-64 opacity-[0.03]"
+        style={{
+          background: "linear-gradient(45deg, rgba(255,107,0,0.2), rgba(255,215,0,0.2))",
+          borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
+          bottom: "15%",
+          left: "15%",
+          animation: "floatShape 22s ease-in-out infinite reverse",
+          animationDelay: "-8s",
+        }}
+      />
+    </div>
   );
 }
 
@@ -991,6 +1046,12 @@ function GlobalStyles() {
         0% { background-position: -200% 0; }
         100% { background-position: 200% 0; }
       }
+      @keyframes floatShape {
+        0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        25% { transform: translate(30px, -20px) rotate(5deg) scale(1.05); }
+        50% { transform: translate(-20px, 30px) rotate(-3deg) scale(0.95); }
+        75% { transform: translate(20px, 20px) rotate(2deg) scale(1.02); }
+      }
     `}</style>
   );
 }
@@ -1016,6 +1077,8 @@ export default function RoadmapPage() {
 
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,45,45,0.06),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.04),transparent_22%),radial-gradient(circle_at_50%_80%,rgba(26,26,26,0.03),transparent_25%)]" />
 
+      <FloatingShapes />
+
       <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pb-20 pt-6 relative z-10">
         {/* Hero Header */}
         <div className="relative pt-16 pb-10 sm:pt-24 sm:pb-16 text-center">
@@ -1023,7 +1086,15 @@ export default function RoadmapPage() {
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60 mb-4">
               The Journey
             </p>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-[#1a1a1a] leading-[0.95] mb-6">
+            <h1
+              className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] mb-6"
+              style={{
+                background: "linear-gradient(135deg, #FF2D2D, #FF6B00, #FFD700)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
               ROADMAP
             </h1>
             <p className="text-sm sm:text-base text-[#1a1a1a]/50 max-w-lg mx-auto leading-relaxed mb-8">
