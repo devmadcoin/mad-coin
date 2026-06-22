@@ -236,6 +236,52 @@ function TheGallery() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   FEATURED BANNER — The "Everyone Getting MAD" hero artwork
+   ═══════════════════════════════════════════════════════════ */
+function FeaturedBanner() {
+  return (
+    <section className="relative w-full bg-[#080808] overflow-hidden">
+      {/* Full-width banner image */}
+      <div className="relative w-full aspect-[3/1] sm:aspect-[4/1] max-h-[500px]">
+        <Image
+          src="/mad-art/mad-banner-everyone-getting-mad.png"
+          alt="Everyone Getting MAD — MAD Rich Club"
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+        />
+        {/* Bottom fade into next section */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#F5F1E8] to-transparent" />
+      </div>
+      
+      {/* Caption / attribution bar */}
+      <div className="bg-[#F5F1E8] px-4 sm:px-6 py-6">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.34em] text-[#1a1a1a]/40 mb-1">
+              Featured Art
+            </p>
+            <p className="text-lg font-black text-[#1a1a1a]">
+              EVERYONE GETTING <span className="text-[#FF2D2D]">MAD</span>
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-[#1a1a1a]/50">
+              By the <span className="font-bold text-[#1a1a1a]/70">$MAD Artist</span>
+            </p>
+            <span className="text-[#1a1a1a]/20">|</span>
+            <p className="text-xs text-[#1a1a1a]/50">
+              Banner vibe: <span className="font-bold text-[#FF2D2D]">9</span> (Completion)
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    MAD STORIES — Cinematic moments with sound
    ═══════════════════════════════════════════════════════════ */
 function MadStories() {
@@ -592,6 +638,7 @@ export default function MadArtPage() {
 
       <main>
         <TheStage />
+        <FeaturedBanner />
         <MadStories />
         <AnimatedGallery />
         <TheGallery />
