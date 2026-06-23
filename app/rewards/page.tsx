@@ -101,8 +101,191 @@ function ConfettiBurst() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   COUNTDOWN TIMER — 12 Hour Reward Distribution
+   GIVEAWAY TRACKER — Time-locked winner system
    ═══════════════════════════════════════════════════════════ */
+function GiveawayTracker() {
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [giveawayState, setGiveawayState] = useState<"locked" | "active" | "claimable" | "claimed">("locked");
+  const [winners, setWinners] = useState<Array<{
+    wallet: string;
+    registeredAt: string;
+    unlockTime: string;
+    checked: boolean;
+    disqualified: boolean;
+    claimed: boolean;
+  }>>([]);
+
+  // Demo: toggle between states for preview
+  const [demoMode, setDemoMode] = useState(false);
+
+  useEffect(() => {
+    // Load winners from JSON (in production this would be an API call)
+    const demoWinners = [
+      {
+        wallet: "HDtFFYfxnNULqgeycX1ipsBJ4vkrQnYCw9jd4anpoCrcZ",
+        registeredAt: "2026-06-23T17:40:58.784380+00:00",
+        unlockTime: "2026-06-24T05:40:58.784380+00:00",
+        checked: true,
+        disqualified: false,
+        claimed: false,
+      },
+      {
+        wallet: "ABC123...",
+        registeredAt: "2026-06-23T17:41:00.000000+00:00",
+        unlockTime: "2026-06-24T05:41:00.000000+00:00",
+        checked: true,
+        disqualified: false,
+        claimed: true,
+      },
+    ];
+    setWinners(demoWinners);
+
+    // Check if we're past unlock time
+    const now = Date.now();
+    const unlockTime = new Date(demoWinners[0]?.unlockTime || "").getTime();
+    if (unlockTime && now >= unlockTime) {
+      setGiveawayState("claimable");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (giveawayState !== "active" && !demoMode) return;
+
+    const targetTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours from now
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const diff = targetTime - now;
+      if (diff <= 0) {
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        setGiveawayState("claimable");
+        clearInterval(interval);
+      } else {
+        setTimeLeft({
+          hours: Math.floor(diff / (1000 * 60 * 60)),
+          minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((diff % (1000 * 60)) / 1000),
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [giveawayState, demoMode]);
+
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  const shortenWallet = (w: string) => w.slice(0, 4) + "..." + w.slice(-4);
+
+  return (
+    <div className="mt-6 rounded-[1.4rem] border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.03] p-5 sm:p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.34em] text-[#FF2D2D]/70">
+            🎉 Community Giveaway
+          </p>
+          <p className="text-sm font-bold text-white/70 mt-1">
+            80 Winners · 12.5K $MAD Each
+          </p>
+        </div>
+        <div className={`inline-flex rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wider ${
+          giveawayState === "locked" ? "bg-white/5 text-white/30" :
+          giveawayState === "active" ? "bg-[#FF2D2D]/15 text-[#FF2D2D] animate-pulse" :
+          giveawayState === "claimable" ? "bg-emerald-500/15 text-emerald-400" :
+          "bg-emerald-500/10 text-emerald-500"
+        }`}>
+          {giveawayState === "locked" && "🔒 Locked"}
+          {giveawayState === "active" && "🔴 Live — Hold Period"}
+          {giveawayState === "claimable" && "🎁 Claim Now"}
+          {giveawayState === "claimed" && "✅ Complete"}
+        </div>
+      </div>
+
+      {/* Countdown (shown when active) */}
+      {(giveawayState === "active" || demoMode) && (
+        <div className="mb-5 rounded-xl border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.05] p-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-2 text-center">
+            Hold Period Remaining
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            {[
+              { value: timeLeft.hours, label: "Hours" },
+              { value: timeLeft.minutes, label: "Minutes" },
+              { value: timeLeft.seconds, label: "Seconds" },
+            ].map((item) => (
+              <div key={item.label} className="flex flex-col items-center">
+                <div className="rounded-lg border border-[#FF2D2D]/20 bg-[#1a1a1a] px-3 py-2 min-w-[56px] text-center">
+                  <span className="text-lg font-black text-[#FF2D2D]">{pad(item.value)}</span>
+                </div>
+                <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-white/30">{item.label}</span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-center text-[10px] text-white/30">
+            Hold 1K+ $MAD for 24 hours after $10M MC to be eligible
+          </p>
+        </div>
+      )}
+
+      {/* Winners List */}
+      <div className="space-y-2">
+        <p className="text-[10px] font-black uppercase tracking-[0.34em] text-white/30 mb-2">
+          Selected Winners ({winners.filter(w => !w.disqualified).length}/80)
+        </p>
+        {winners.slice(0, 5).map((winner, i) => (
+          <div
+            key={winner.wallet}
+            className={`flex items-center justify-between rounded-xl border p-3 ${
+              winner.disqualified
+                ? "border-red-500/20 bg-red-500/[0.03] opacity-50"
+                : winner.claimed
+                ? "border-emerald-500/20 bg-emerald-500/[0.03]"
+                : "border-white/5 bg-white/[0.02]"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-black ${
+                winner.disqualified ? "bg-red-500/10 text-red-400" :
+                winner.claimed ? "bg-emerald-500/10 text-emerald-400" :
+                "bg-[#FF2D2D]/10 text-[#FF2D2D]"
+              }`}>
+                {winner.disqualified ? "✕" : winner.claimed ? "✓" : (i + 1)}
+              </div>
+              <div>
+                <p className="text-xs font-mono text-white/70">{shortenWallet(winner.wallet)}</p>
+                <p className="text-[9px] text-white/30">
+                  {winner.disqualified ? "Disqualified" :
+                   winner.claimed ? "Claimed" :
+                   giveawayState === "claimable" ? "Ready to claim" :
+                   "Pending verification"}
+                </p>
+              </div>
+            </div>
+            {giveawayState === "claimable" && !winner.disqualified && !winner.claimed && (
+              <button className="rounded-full bg-[#FF2D2D] px-4 py-1.5 text-[10px] font-black text-white hover:bg-[#FF6B00] transition">
+                CLAIM
+              </button>
+            )}
+          </div>
+        ))}
+        {winners.length > 5 && (
+          <p className="text-center text-[10px] text-white/20 py-2">
+            +{winners.length - 5} more winners...
+          </p>
+        )}
+      </div>
+
+      {/* Demo toggle (remove in production) */}
+      <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+        <p className="text-[9px] text-white/20 uppercase tracking-wider">Community-built giveaway system</p>
+        <button
+          onClick={() => setDemoMode(!demoMode)}
+          className="text-[9px] text-white/30 hover:text-white/50 transition"
+        >
+          {demoMode ? "Hide Preview" : "Preview Active State"}
+        </button>
+      </div>
+    </div>
+  );
+}
 function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [target, setTarget] = useState<number | null>(null);
@@ -488,6 +671,9 @@ export default function RewardsPage() {
                     <p>🔒 Hold for <span className="font-bold text-white/50">24 hours</span> after $10M MC</p>
                   </div>
                 </div>
+
+                {/* Community Giveaway Tracker */}
+                <GiveawayTracker />
               </div>
             </div>
 
