@@ -305,6 +305,11 @@ function MadStories() {
       title: "Bullish MAD",
       desc: "The charts don't lie. The community doesn't fold.",
     },
+    {
+      src: "/mad-art/stories/matrix-mad.mp4",
+      title: "MATRIX MAD",
+      desc: "Wake up. The system is the simulation. $MAD is the red pill.",
+    },
   ];
 
   const handleToggle = (i: number) => {
