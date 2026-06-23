@@ -310,6 +310,11 @@ function MadStories() {
       title: "MATRIX MAD",
       desc: "Wake up. The system is the simulation. $MAD is the red pill.",
     },
+    {
+      src: "/mad-art/stories/im-mad-getting-rugged.mp4",
+      title: "I'M MAD GETTING RUGGED",
+      desc: "They rugged you. You're still here. That's not failure — that's initiation.",
+    },
   ];
 
   const handleToggle = (i: number) => {
