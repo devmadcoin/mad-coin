@@ -6,6 +6,7 @@ import NumerologyOracle from "./NumerologyOracle";
 import MadArchetypeQuiz from "./MadArchetypeQuiz";
 import FrequencyMeter from "./FrequencyMeter";
 import MadBagCalculator from "./MadBagCalculator";
+import ChineseAstrology from "./ChineseAstrology";
 
 /* ─── Data ─── */
 const CONTRACT = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
@@ -240,6 +241,7 @@ export default function MadClawIdentity() {
       <div className="bg-[#0a0a0a] relative z-10">
         <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
           <TheOracle />
+          <ChineseAstrology />
           <MadArchetypeQuiz />
           <FrequencyMeter />
           <MadBagCalculator />
