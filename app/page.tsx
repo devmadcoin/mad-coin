@@ -869,73 +869,6 @@ function TheProof() {
             </div>
           </div>
 
-          {/* Sapient — $MAD Experience Testimony — Full Width */}
-          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Video player */}
-              <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
-                <video
-                  src="/testimonials/sapient-russian-experience.mp4"
-                  controls
-                  muted
-                  playsInline
-                  loop
-                  className="w-full h-full object-cover"
-                  poster=""
-                />
-              </div>
-              
-              {/* Testimony Content */}
-              <div className="p-6 sm:p-8 flex flex-col justify-center">
-                <div className="mb-4">
-                  <StarRating />
-                </div>
-
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
-                    <Image
-                      src="/testimonials/sapient-pfp.png"
-                      alt="Sapient"
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-[#1a1a1a]">Sapient</p>
-                    <p className="text-[10px] text-[#1a1a1a]/50">@therealsapient · $MAD Holder</p>
-                  </div>
-                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                    </span>
-                    Verified
-                  </span>
-                </div>
-
-                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                  Most projects sell a future and <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span> sells a present. Dev is doxxed, real product and real holders. <span className="text-[#FF2D2D] font-bold not-italic">We are still very early here.</span> Grab a bag and let's get more <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span>.
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-                </blockquote>
-
-                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                  <p className="text-[10px] text-[#1a1a1a]/40">June 19, 2026 · 1.8K Views</p>
-                  <a 
-                    href="https://x.com/therealsapient/status/2067957958256771072?s=20" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                  >
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    See on X
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
@@ -1212,15 +1145,16 @@ function PodcastSection() {
         {/* Podcast Card */}
         <div className="relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
           <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-            {/* YouTube embed */}
+            {/* Video player */}
             <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
-              <iframe
-                src="https://www.youtube.com/embed/gJsb2p2Uig8?start=1"
-                title="$MAD Founder Interview"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="w-full h-full border-0"
-                loading="lazy"
+              <video
+                src="/testimonials/sapient-russian-experience.mp4"
+                controls
+                muted
+                playsInline
+                loop
+                className="w-full h-full object-cover"
+                poster=""
               />
             </div>
             
@@ -1233,16 +1167,16 @@ function PodcastSection() {
               <div className="flex items-center gap-3 mb-5">
                 <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
                   <Image
-                    src="/testimonials/tlt-podcast-logo.png"
-                    alt="TLT Podcast"
+                    src="/testimonials/sapient-pfp.png"
+                    alt="Sapient"
                     fill
                     className="object-cover"
                     sizes="40px"
                   />
                 </div>
                 <div>
-                  <p className="text-sm font-black text-[#1a1a1a]">The Luxurious Lounge</p>
-                  <p className="text-[10px] text-[#1a1a1a]/50">TLT Podcast · Crypto · Money · Lifestyle</p>
+                  <p className="text-sm font-black text-[#1a1a1a]">Sapient</p>
+                  <p className="text-[10px] text-[#1a1a1a]/50">@therealsapient · $MAD Holder</p>
                 </div>
                 <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
                   <span className="relative flex h-1.5 w-1.5">
@@ -1255,20 +1189,20 @@ function PodcastSection() {
 
               <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
                 <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                The world is full of opportunities, but the world is run on <span className="text-[#FF2D2D] font-bold not-italic">MAD</span> — Motivation, Alignment, and Discipline. <span className="text-[#FF2D2D] font-bold not-italic">We are building something that will last.</span>
+                Most projects sell a future and <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span> sells a present. Dev is doxxed, real product and real holders. <span className="text-[#FF2D2D] font-bold not-italic">We are still very early here.</span> Grab a bag and let's get more <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span>.
                 <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
               </blockquote>
 
               <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                <p className="text-[10px] text-[#1a1a1a]/40">YouTube Podcast · TLT x Coffee Collects</p>
+                <p className="text-[10px] text-[#1a1a1a]/40">June 19, 2026 · 1.8K Views</p>
                 <a 
-                  href="https://www.youtube.com/watch?v=gJsb2p2Uig8" 
+                  href="https://x.com/therealsapient/status/2067957958256771072?s=20" 
                   target="_blank" 
                   rel="noreferrer"
                   className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
                 >
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M10 15l5.19-3L10 9v6zm11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
-                  Watch on YouTube
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  See on X
                 </a>
               </div>
             </div>
