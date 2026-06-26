@@ -267,7 +267,7 @@ export default function RewardsPage() {
             <div className="text-center">
               <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-white/40">Reward Wallet Balance</p>
               <div className="mt-3 flex items-baseline justify-center gap-2">
-                <span className="text-4xl sm:text-6xl font-black tracking-tight text-white">10,500,000</span>
+                <span className="text-4xl sm:text-6xl font-black tracking-tight text-white">11,500,000</span>
                 <span className="text-lg sm:text-2xl font-black text-[#FF2D2D]">$MAD</span>
               </div>
               <p className="mt-2 text-sm text-white/40">Remaining supply after Phase 1 distribution · 100% community funded</p>
