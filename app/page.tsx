@@ -869,6 +869,62 @@ function TheProof() {
             </div>
           </div>
 
+          {/* Crypt0wiz — Article Testimony — Full Width */}
+          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
+            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
+              {/* Article image placeholder — using a dark themed card */}
+              <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden flex items-center justify-center p-6">
+                <div className="text-center">
+                  <div className="text-6xl font-black text-[#FF2D2D]/20 mb-2">$MAD</div>
+                  <p className="text-xs text-white/40 uppercase tracking-wider">The Matrix</p>
+                </div>
+              </div>
+              
+              {/* Testimony Content */}
+              <div className="p-6 sm:p-8 flex flex-col justify-center">
+                <div className="mb-4">
+                  <StarRating />
+                </div>
+
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 flex items-center justify-center">
+                    <span className="text-sm font-black text-[#FF2D2D]">C</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-black text-[#1a1a1a]">crypt0wiz</p>
+                    <p className="text-[10px] text-[#1a1a1a]/50">@crypt0wiz__ · $MAD Rich</p>
+                  </div>
+                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
+                    </span>
+                    Verified
+                  </span>
+                </div>
+
+                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
+                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
+                  The second you stop caring about the noise, you become unstoppable. Not because you&apos;re numb. Because you finally see the matrix for what it is. And once you see it, you can never unsee it. That quiet exhale. That moment you stop caring. <span className="text-[#FF2D2D] font-bold not-italic">That is where $MAD Rich begins.</span> Being $MAD Rich means you have realized that wealth isn&apos;t a number on a screen. Wealth is the freedom to not care about the number on the screen. Wealth is watching the world panic and feeling nothing but calm.
+                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
+                </blockquote>
+
+                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
+                  <p className="text-[10px] text-[#1a1a1a]/40">June 23, 2026 · 3.5K Likes</p>
+                  <a 
+                    href="https://x.com/crypt0wiz__/status/2069216610804486539?s=20" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Read on X
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
