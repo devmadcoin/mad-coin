@@ -399,6 +399,51 @@ export default function GamePage() {
           </SectionShell>
         </FadeIn>
 
+        <FadeIn delay={0.1}>
+          <SectionShell className="mt-8 overflow-hidden p-0">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="flex flex-col justify-center p-6 sm:p-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#FF2D2D]/60">
+                  DIGITAL WEARABLES
+                </p>
+
+                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-[#1a1a1a] sm:text-5xl">
+                  MAD Brown Pants
+                </h2>
+
+                <p className="mt-5 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
+                  Complete the look. Official $MAD brown pants to match the
+                  skate shirt. Available now in the Roblox catalog.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <GlowPulse>
+                    <a
+                      href="https://www.roblox.com/catalog/97286453888370/MAD-brown-pants?pid=share&is_retargeting=false&deep_link_value=7e80bdd167716648b5fbca1ea0d248c9"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-[#FF6B00]"
+                    >
+                      Get the Pants →
+                    </a>
+                  </GlowPulse>
+
+                  <Pill tone="red">Roblox Catalog</Pill>
+                </div>
+              </div>
+
+              <div className="relative aspect-square w-full bg-[#0a0a0a]">
+                <Image
+                  src="/game/mad-brown-pants.png"
+                  alt="MAD Brown Pants — Roblox Digital Wearable"
+                  fill
+                  className="object-contain p-6"
+                />
+              </div>
+            </div>
+          </SectionShell>
+        </FadeIn>
+
         <FadeIn>
           <SectionShell className="overflow-hidden p-0">
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.95fr]">
