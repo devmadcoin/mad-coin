@@ -353,6 +353,52 @@ export default function GamePage() {
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
 
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+        <FadeIn delay={0.1}>
+          <SectionShell className="mt-8 overflow-hidden p-0">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="flex flex-col justify-center p-6 sm:p-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#FF2D2D]/60">
+                  DIGITAL WEARABLES
+                </p>
+
+                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-[#1a1a1a] sm:text-5xl">
+                  MAD Digital Wearables
+                </h2>
+
+                <p className="mt-5 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
+                  Rock the $MAD brand inside Roblox. Official digital clothing
+                  and accessories now available in the Roblox catalog. Rep the
+                  community everywhere you go.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <GlowPulse>
+                    <a
+                      href="https://www.roblox.com/catalog/89506653556378/MAD-brown-skate-shirt?pid=share&is_retargeting=false&deep_link_value=e7539c73239ae04f8ce2aa95f20fd3df"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-[#FF6B00]"
+                    >
+                      Get the Shirt →
+                    </a>
+                  </GlowPulse>
+
+                  <Pill tone="red">Roblox Catalog</Pill>
+                </div>
+              </div>
+
+              <div className="relative aspect-square w-full bg-[#0a0a0a]">
+                <Image
+                  src="/game/mad-brown-skate-shirt.png"
+                  alt="MAD Brown Skate Shirt — Roblox Digital Wearable"
+                  fill
+                  className="object-contain p-6"
+                />
+              </div>
+            </div>
+          </SectionShell>
+        </FadeIn>
+
         <FadeIn>
           <SectionShell className="overflow-hidden p-0">
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.95fr]">
@@ -615,52 +661,6 @@ export default function GamePage() {
                     Visit @Kubo100x →
                   </a>
                 </div>
-              </div>
-            </div>
-          </SectionShell>
-        </FadeIn>
-
-        <FadeIn delay={0.1}>
-          <SectionShell className="mt-8 overflow-hidden p-0">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="flex flex-col justify-center p-6 sm:p-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#FF2D2D]/60">
-                  DIGITAL WEARABLES
-                </p>
-
-                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-[#1a1a1a] sm:text-5xl">
-                  MAD Digital Wearables
-                </h2>
-
-                <p className="mt-5 max-w-xl text-base leading-8 text-[#1a1a1a]/55">
-                  Rock the $MAD brand inside Roblox. Official digital clothing
-                  and accessories now available in the Roblox catalog. Rep the
-                  community everywhere you go.
-                </p>
-
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <GlowPulse>
-                    <a
-                      href="https://www.roblox.com/catalog/89506653556378/MAD-brown-skate-shirt?pid=share&is_retargeting=false&deep_link_value=e7539c73239ae04f8ce2aa95f20fd3df"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02] hover:bg-[#FF6B00]"
-                    >
-                      Get the Shirt →
-                    </a>
-                  </GlowPulse>
-
-                  <Pill tone="red">Roblox Catalog</Pill>
-                </div>
-              </div>
-
-              <div className="relative aspect-square w-full bg-[#0a0a0a]">
-                <Image
-                  src="/game/mad-brown-skate-shirt.png"
-                  alt="MAD Brown Skate Shirt — Roblox Digital Wearable"
-                  fill
-                  className="object-contain p-6"
-                />
               </div>
             </div>
           </SectionShell>
