@@ -1231,8 +1231,8 @@ export default function Home() {
         <TheDashboard />
         <WhatIsMAD />
         <TheVerified />
-        <TheProof />
         <PodcastSection />
+        <TheProof />
         <TheArchitects />
       </main>
 
