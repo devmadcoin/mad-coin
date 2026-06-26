@@ -103,6 +103,23 @@ function ConfettiBurst() {
 /* ═══════════════════════════════════════════════════════════
    GIVEAWAY TRACKER — Time-locked winner system
    ═══════════════════════════════════════════════════════════ */
+function CountdownTimer() {
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [target, setTarget] = useState<number | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("mad-rewards-target");
+    let targetTime: number;
+
+    if (stored) {
+      targetTime = parseInt(stored, 10);
+    } else {
+      targetTime = Date.now() + 12 * 60 * 60 * 1000;
+      localStorage.setItem("mad-rewards-target", targetTime.toString());
+    }
+
+    setTarget(targetTime);
+
     const interval = setInterval(() => {
       const now = Date.now();
       const diff = targetTime - now;
@@ -473,6 +490,7 @@ export default function RewardsPage() {
                 </div>
 
                 {/* Community Giveaway Tracker */}
+
               </div>
             </div>
 
