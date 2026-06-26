@@ -827,7 +827,7 @@ function TheProof() {
                 <div className="flex items-center gap-3 mb-5">
                   <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
                     <Image
-                      src="/testimonials/mluffy-pfp.svg"
+                      src="/testimonials/mluffy-pfp.png"
                       alt="Luffy"
                       fill
                       className="object-cover"
