@@ -236,6 +236,11 @@ function triggerClawReaction() {
 export default function MadClawIdentity() {
   return (
     <div className="space-y-0">
+      <div className="bg-[#0a0a0a] relative z-10">
+        <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
+          <MadBagCalculator />
+        </div>
+      </div>
       <TheGate />
       {/* Content below hero on dark background */}
       <div className="bg-[#0a0a0a] relative z-10">
@@ -244,7 +249,6 @@ export default function MadClawIdentity() {
           <ChineseAstrology />
           <MadArchetypeQuiz />
           <FrequencyMeter />
-          <MadBagCalculator />
           <TheFork />
           <TheKey />
           <FrequencyCheckpoints />
