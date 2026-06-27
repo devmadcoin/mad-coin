@@ -163,7 +163,7 @@ function ContractBlock() {
    ═══════════════════════════════════════════════════════════ */
 function TheCinema() {
   return (
-    <section className="relative h-[55vh] min-h-[420px] flex flex-col items-center justify-end overflow-hidden">
+    <section className="relative h-[45vh] min-h-[360px] flex flex-col items-center justify-center overflow-hidden">
       {/* Video background */}
       <div className="absolute inset-0 z-0">
         <video 
@@ -176,12 +176,12 @@ function TheCinema() {
         >
           <source src="/game/mad-banner.mp4" type="video/mp4" />
         </video>
-        {/* Banner gradient — fades to crème background so next section seams in */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#F5F1E8_100%)]" />
+        {/* Gradient: dark center for text, fade to crème at bottom */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_10%,rgba(8,8,8,0.3)_40%,rgba(8,8,8,0.6)_70%,rgba(245,241,232,0.95)_95%,#F5F1E8_100%)]" />
       </div>
 
-      {/* Content overlay at bottom */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pb-8 sm:pb-10">
+      {/* Content overlay — centered */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 text-center">
         {/* The Declaration */}
         <h1 className="text-center">
           <span className="block text-[2rem] sm:text-[3rem] lg:text-[4rem] font-black tracking-[-0.02em] text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
@@ -196,7 +196,7 @@ function TheCinema() {
         </h1>
 
         {/* Contract + Buy */}
-        <div className="mt-8 max-w-xl mx-auto">
+        <div className="mt-6 max-w-xl mx-auto">
           <ContractBlock />
         </div>
 
@@ -212,15 +212,6 @@ function TheCinema() {
             SWAP ON JUPITER
           </a>
         </div>
-
-        {/* Minimal chips */}
-        {/* Removed — stats now in WhatIsMAD section */}
-      </div>
-
-      {/* Scroll hint */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/15 z-10">
-        <span className="text-[9px] font-bold uppercase tracking-[0.34em]">Explore</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="animate-bounce"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       </div>
     </section>
   );
