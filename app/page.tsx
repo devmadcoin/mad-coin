@@ -159,30 +159,15 @@ function ContractBlock() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE CINEMA — Banner-style video hero (not full-viewport)
+   THE HERO — Dark text header, standalone (separated from banner)
    ═══════════════════════════════════════════════════════════ */
-function TheCinema() {
+function TheHero() {
   return (
-    <section className="relative h-[45vh] min-h-[360px] flex flex-col items-center justify-center overflow-hidden">
-      {/* Video background */}
-      <div className="absolute inset-0 z-0">
-        <video 
-          autoPlay 
-          muted 
-          loop 
-          playsInline 
-          preload="auto"
-          className="w-full h-full object-cover"
-        >
-          <source src="/game/mad-banner.mp4" type="video/mp4" />
-        </video>
-        {/* Gradient: dark center for text, fade to crème at bottom */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_10%,rgba(8,8,8,0.3)_40%,rgba(8,8,8,0.6)_70%,rgba(245,241,232,0.95)_95%,#F5F1E8_100%)]" />
-      </div>
-
-      {/* Content overlay — centered */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 text-center">
-        {/* The Declaration */}
+    <section className="relative bg-[#080808] text-white py-10 sm:py-14 overflow-hidden">
+      {/* Subtle radial glow behind text */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.08),transparent_60%)]" />
+      
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center">
         <h1 className="text-center">
           <span className="block text-[2rem] sm:text-[3rem] lg:text-[4rem] font-black tracking-[-0.02em] text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
             STOP
@@ -195,12 +180,10 @@ function TheCinema() {
           </span>
         </h1>
 
-        {/* Contract + Buy */}
         <div className="mt-6 max-w-xl mx-auto">
           <ContractBlock />
         </div>
 
-        {/* Buy button */}
         <div className="mt-4 flex justify-center">
           <a 
             href={LINKS.buy} 
@@ -212,6 +195,30 @@ function TheCinema() {
             SWAP ON JUPITER
           </a>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THE BANNER — Standalone video strip between hero and content
+   ═══════════════════════════════════════════════════════════ */
+function TheBanner() {
+  return (
+    <section className="relative h-[35vh] min-h-[280px] overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          preload="auto"
+          className="w-full h-full object-cover"
+        >
+          <source src="/game/mad-banner.mp4" type="video/mp4" />
+        </video>
+        {/* Fade to crème at bottom so next section flows in */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_30%,rgba(8,8,8,0.2)_60%,rgba(245,241,232,0.95)_95%,#F5F1E8_100%)]" />
       </div>
     </section>
   );
@@ -1339,7 +1346,8 @@ export default function Home() {
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.03),transparent_50%)]" />
 
       <main>
-        <TheCinema />
+        <TheHero />
+        <TheBanner />
         <MadCommandCenter />
         <WhyMADStrip />
         <TheDashboard />
