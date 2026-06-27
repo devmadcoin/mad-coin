@@ -174,7 +174,7 @@ function TheCinema() {
           preload="auto"
           className="w-full h-full object-cover"
         >
-          <source src="/loops/im-mad-getting-rugged.mp4" type="video/mp4" />
+          <source src="/game/mad-banner.mp4" type="video/mp4" />
         </video>
         {/* Dark gradient overlay — fades from clear top to solid bottom */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#080808_100%)]" />

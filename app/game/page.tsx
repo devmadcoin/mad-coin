@@ -352,21 +352,6 @@ export default function GamePage() {
     <div className="relative overflow-hidden bg-[#F5F1E8] text-[#1a1a1a]">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
 
-      {/* Banner Video */}
-      <div className="relative w-full overflow-hidden">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="w-full h-auto object-cover"
-          style={{ maxHeight: "400px" }}
-        >
-          <source src="/game/mad-banner.mp4" type="video/mp4" />
-        </video>
-      </div>
-
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
         <FadeIn delay={0.1}>
           <SectionShell className="mt-8 overflow-hidden p-0">
