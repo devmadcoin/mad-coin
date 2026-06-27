@@ -159,11 +159,11 @@ function ContractBlock() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE CINEMA — Full-viewport video hero (stays dark)
+   THE CINEMA — Banner-style video hero (not full-viewport)
    ═══════════════════════════════════════════════════════════ */
 function TheCinema() {
   return (
-    <section className="relative min-h-[100dvh] flex flex-col items-center justify-end overflow-hidden">
+    <section className="relative h-[55vh] min-h-[420px] flex flex-col items-center justify-end overflow-hidden">
       {/* Video background */}
       <div className="absolute inset-0 z-0">
         <video 
@@ -176,12 +176,12 @@ function TheCinema() {
         >
           <source src="/game/mad-banner.mp4" type="video/mp4" />
         </video>
-        {/* Dark gradient overlay — fades from clear top to solid bottom */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#080808_100%)]" />
+        {/* Banner gradient — fades to crème background so next section seams in */}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#F5F1E8_100%)]" />
       </div>
 
       {/* Content overlay at bottom */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pb-8 sm:pb-10">
         {/* The Declaration */}
         <h1 className="text-center">
           <span className="block text-[2rem] sm:text-[3rem] lg:text-[4rem] font-black tracking-[-0.02em] text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
