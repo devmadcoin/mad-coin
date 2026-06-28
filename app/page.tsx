@@ -164,8 +164,9 @@ function TheMADFAM() {
 
   return (
     <section id="fam" className="relative py-24 sm:py-32 bg-[#080808] overflow-hidden">
-      {/* Background texture */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,45,45,0.05),transparent_50%)]" />
+      {/* Light red glow behind content */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.12),transparent_60%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,45,45,0.06),transparent_50%)]" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
