@@ -45,18 +45,29 @@ function FadeIn({
    ═══════════════════════════════════════════════════════════ */
 function MadFace({ className = "", size = 120 }: { className?: string; size?: number }) {
   return (
-    <img
-      src="/mad-logo.png"
-      alt="$MAD"
-      width={size}
-      height={size}
+    <div
       className={className}
       style={{
+        width: size,
+        height: size,
         borderRadius: "50%",
-        objectFit: "cover",
+        overflow: "hidden",
         border: "3px solid #1a1a1a",
       }}
-    />
+    >
+      <img
+        src="/mad-logo.png"
+        alt="$MAD"
+        width={size}
+        height={size}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+        }}
+      />
+    </div>
   );
 }
 
@@ -103,7 +114,7 @@ const BUBBLES: BubbleData[] = [
     status: "wip",
     color: "#FF6B00",
     glowColor: "rgba(255,107,0,0.3)",
-    angle: 320,
+    angle: 321,
     distance: 38,
     milestones: [
       { text: "Design system & story-driven items", done: true },
@@ -120,7 +131,7 @@ const BUBBLES: BubbleData[] = [
     status: "coming",
     color: "#FFD700",
     glowColor: "rgba(255,215,0,0.3)",
-    angle: 20,
+    angle: 13,
     distance: 38,
     milestones: [
       { text: "MAD Phonk soundtrack EP", done: false },
@@ -137,7 +148,7 @@ const BUBBLES: BubbleData[] = [
     status: "coming",
     color: "#22c55e",
     glowColor: "rgba(34,197,94,0.3)",
-    angle: 70,
+    angle: 64,
     distance: 38,
     milestones: [
       { text: "$MAD Bites concept", done: false },
@@ -154,7 +165,7 @@ const BUBBLES: BubbleData[] = [
     status: "live",
     color: "#A855F7",
     glowColor: "rgba(168,85,247,0.3)",
-    angle: 120,
+    angle: 115,
     distance: 38,
     milestones: [
       { text: "'I'M MAD GETTING RUGGED' animation", done: true },
@@ -171,7 +182,7 @@ const BUBBLES: BubbleData[] = [
     status: "coming",
     color: "#00D4FF",
     glowColor: "rgba(0,212,255,0.3)",
-    angle: 170,
+    angle: 166,
     distance: 38,
     milestones: [
       { text: "Solana Breakpoint activation", done: false },
@@ -188,7 +199,7 @@ const BUBBLES: BubbleData[] = [
     status: "live",
     color: "#10b981",
     glowColor: "rgba(16,185,129,0.3)",
-    angle: 220,
+    angle: 217,
     distance: 38,
     milestones: [
       { text: "50% supply burned", done: true },
@@ -223,8 +234,8 @@ function BubbleMap() {
 
   const centerX = dimensions.width / 2;
   const centerY = dimensions.height / 2;
-  const centerRadius = Math.min(dimensions.width, dimensions.height) * 0.13;
-  const bubbleRadius = Math.min(dimensions.width, dimensions.height) * 0.1;
+  const centerRadius = Math.min(dimensions.width, dimensions.height) * 0.11;
+  const bubbleRadius = Math.min(dimensions.width, dimensions.height) * 0.095;
 
   const getBubblePos = (bubble: BubbleData) => {
     const rad = (bubble.angle * Math.PI) / 180;
@@ -260,13 +271,21 @@ function BubbleMap() {
           const pos = getBubblePos(bubble);
           const isHovered = hoveredBubble === bubble.id;
           const isActive = activeBubble === bubble.id;
+
+          // Calculate line endpoints (edge-to-edge, not center-to-center)
+          const angleRad = (bubble.angle * Math.PI) / 180;
+          const startX = centerX + Math.cos(angleRad) * centerRadius;
+          const startY = centerY + Math.sin(angleRad) * centerRadius;
+          const endX = pos.x - Math.cos(angleRad) * bubbleRadius;
+          const endY = pos.y - Math.sin(angleRad) * bubbleRadius;
+
           return (
             <g key={`line-${bubble.id}`}>
               <line
-                x1={centerX}
-                y1={centerY}
-                x2={pos.x}
-                y2={pos.y}
+                x1={startX}
+                y1={startY}
+                x2={endX}
+                y2={endY}
                 stroke={isHovered || isActive ? bubble.color : "#1a1a1a"}
                 strokeWidth={isHovered || isActive ? 3 : 1.5}
                 strokeOpacity={isHovered || isActive ? 0.5 : 0.08}
@@ -293,7 +312,7 @@ function BubbleMap() {
         })}
       </svg>
 
-      {/* Center MAD Face */}
+      {/* Center MAD Logo — perfectly circular */}
       <div
         className="absolute flex items-center justify-center"
         style={{
@@ -304,18 +323,31 @@ function BubbleMap() {
           zIndex: 10,
         }}
       >
-        <div className="relative group cursor-pointer" onClick={() => setActiveBubble(null)}>
-          <div
-            className="absolute inset-0 rounded-full opacity-20 group-hover:opacity-40 transition-opacity"
+        <div
+          className="relative cursor-pointer group"
+          style={{
+            width: centerRadius * 2,
+            height: centerRadius * 2,
+            borderRadius: "50%",
+            overflow: "hidden",
+            border: "3px solid #1a1a1a",
+            boxShadow: "0 0 30px rgba(255,45,45,0.2), 0 4px 20px rgba(0,0,0,0.15)",
+          }}
+          onClick={() => setActiveBubble(null)}
+        >
+          <img
+            src="/mad-logo.png"
+            alt="$MAD"
             style={{
-              background: "radial-gradient(circle, rgba(255,45,45,0.4), transparent 70%)",
-              transform: "scale(1.3)",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
             }}
           />
-          <MadFace size={centerRadius * 2} className="drop-shadow-xl" />
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">$MAD Core</span>
-          </div>
+        </div>
+        <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">$MAD Core</span>
         </div>
       </div>
 
