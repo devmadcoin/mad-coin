@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
+import MadCommandCenter from "./components/MadCommandCenter";
+
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
 const LINKS = {
@@ -234,109 +236,6 @@ function TheMADFAM() {
 /* ═══════════════════════════════════════════════════════════
    ENTER THE MAD WORLD — Ecosystem (Azuki-style multiple entry)
    ═══════════════════════════════════════════════════════════ */
-function TheWorld() {
-  const worlds = [
-    {
-      title: "Mad Phonk Awakening",
-      subtitle: "Roblox Game",
-      desc: "Live. Playable. Crushing it.",
-      href: "/game",
-      image: "/game/mad-phonk-awakening-hero.png",
-      status: "LIVE",
-      color: "#22c55e",
-    },
-    {
-      title: "MAD Chronicles",
-      subtitle: "Animation",
-      desc: "Episode 1: The Betrayal",
-      href: "/mad-art",
-      image: "/memes/MAD-ROLLERCOASTER.png",
-      status: "NOW PLAYING",
-      color: "#FF2D2D",
-    },
-    {
-      title: "MAD Mind",
-      subtitle: "AI Experience",
-      desc: "Talk to the MAD Mind",
-      href: "/mad-mind",
-      image: "/MAD-MIND-HEAD.png",
-      status: "LIVE",
-      color: "#22c55e",
-    },
-    {
-      title: "MAD Merch",
-      subtitle: "Physical Goods",
-      desc: "Real products. Real quality.",
-      href: "/merch",
-      image: "/merch/hero/merch-hero-bg.jpg",
-      status: "SHOP NOW",
-      color: "#FF6B00",
-    },
-    {
-      title: "The Roadmap",
-      subtitle: "The Plan",
-      desc: "Where we're headed",
-      href: "/roadmap",
-      image: "/roadmap/the-mad-roadmap.png",
-      status: "EXPLORE",
-      color: "#FF6B00",
-    },
-    {
-      title: "MAD Rewards",
-      subtitle: "For the FAM",
-      desc: "Hold. Unlock. Earn.",
-      href: "/rewards",
-      image: "/memes/MAD-KINGS-ONLY.png",
-      status: "ACTIVE",
-      color: "#22c55e",
-    },
-  ];
-
-  return (
-    <section id="world" className="relative py-24 sm:py-32 bg-[#0a0a0a]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-16">
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
-            The Ecosystem
-          </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4">
-            Enter the <span className="text-[#FF2D2D]">MAD World</span>
-          </h2>
-          <p className="text-sm text-white/30 max-w-md mx-auto">
-            Multiple ways in. One world. Pick your entry point.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {worlds.map((w) => (
-            <Link key={w.title} href={w.href}
-              className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] hover:border-white/10 transition-all duration-500 hover:-translate-y-1"
-            >
-              {/* Image */}
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image src={w.image} alt={w.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_30%,rgba(10,10,10,0.9)_100%)]" />
-                {/* Status badge */}
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider"
-                  style={{ background: `${w.color}15`, color: w.color, border: `1px solid ${w.color}30` }}
-                >
-                  {w.status}
-                </div>
-              </div>
-              {/* Text */}
-              <div className="p-5">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 mb-1">{w.subtitle}</p>
-                <p className="text-lg font-black text-white group-hover:text-[#FF2D2D] transition-colors">{w.title}</p>
-                <p className="text-xs text-white/30 mt-1">{w.desc}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ═══════════════════════════════════════════════════════════
    MAD CHRONICLES — Episodic Content (Azuki anime model)
    ═══════════════════════════════════════════════════════════ */
@@ -735,7 +634,7 @@ export default function Home() {
       <VideoBanner />
       <StopPanicking />
       <TheMADFAM />
-      <TheWorld />
+      <MadCommandCenter />
       <Chronicles />
       <BuiltDifferent />
       <ProofOfMAD />
