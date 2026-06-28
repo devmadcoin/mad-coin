@@ -378,9 +378,20 @@ function Chronicles() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Video */}
-          <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/5 bg-[#0a0a0a]">
-            <video src="/game/getting-rugged-animation.mp4" controls muted playsInline loop className="w-full h-full object-cover" poster="/memes/MAD-GETTING-RUGGED-THUMB.png" />
+          {/* Video — vertical/portrait orientation */}
+          <div className="relative flex items-center justify-center">
+            <div className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[9/16] rounded-3xl overflow-hidden border border-white/5 bg-[#0a0a0a] shadow-[0_0_60px_rgba(255,45,45,0.1)]">
+              <video 
+                src="/mad-chronicles-ep1.mp4" 
+                controls 
+                playsInline 
+                loop 
+                className="w-full h-full object-cover" 
+                poster="/memes/MAD-GETTING-RUGGED-THUMB.png" 
+              />
+            </div>
+            {/* Glow behind video */}
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.12),transparent_60%)]" />
           </div>
 
           {/* Content */}
