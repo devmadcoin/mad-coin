@@ -457,12 +457,14 @@ function Footer() {
         <p className="text-[10px] text-white/15 font-mono">{CA.slice(0, 12)}...{CA.slice(-4)}</p>
       </div>
       {/* Disclaimer */}
-      <div className="max-w-6xl mx-auto mt-6 text-center">
-        <p className="text-[9px] text-white/10 leading-relaxed">
-          ⚠️ $MAD is a memecoin for entertainment purposes only. Not financial advice. Always DYOR. 
-          The MAD FAM is a community — not a company, not a guarantee, not a promise. 
-          Tokens may go up, down, or sideways. Never invest more than you can afford to lose.
-        </p>
+      <div className="max-w-3xl mx-auto mt-8 text-center px-4">
+        <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+          <p className="text-xs text-white/50 leading-relaxed">
+            ⚠️ <span className="font-bold text-white/70">$MAD is a memecoin for entertainment purposes only.</span> Not financial advice. Always DYOR. 
+            The MAD FAM is a community — not a company, not a guarantee, not a promise. 
+            Tokens may go up, down, or sideways. Never invest more than you can afford to lose.
+          </p>
+        </div>
       </div>
     </footer>
   );
