@@ -122,7 +122,7 @@ function StopPanicking() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.08),transparent_60%)]" />
       
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] tracking-[-0.02em]">
+        <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] tracking-[-0.02em] mb-10">
           <span className="text-white">STOP</span>
           <br />
           <span className="text-[#FF2D2D]">PANICKING.</span>
@@ -132,6 +132,19 @@ function StopPanicking() {
           <br />
           <span className="text-white">RICH.</span>
         </h2>
+
+        {/* Solana Contract */}
+        <div className="inline-block text-left">
+          <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-2">Solana Contract</p>
+          <div className="flex items-center gap-3 px-5 py-3 rounded-xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04]">
+            <code className="text-[#FF2D2D] font-mono text-xs sm:text-sm">{CA}</code>
+            <CopyButtonInline text={CA} />
+          </div>
+          <p className="text-[9px] font-bold uppercase tracking-wider text-white/20 mt-2 flex items-center gap-1">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Tap to Copy
+          </p>
+        </div>
       </div>
     </section>
   );
