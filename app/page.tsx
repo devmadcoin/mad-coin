@@ -126,17 +126,17 @@ function Hero() {
 
         {/* Headline */}
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[0.95] tracking-[-0.03em] mb-6">
-          They rugged you.
+          Built for the ones
           <br />
-          <span className="text-[#FF2D2D]">You're still here.</span>
+          who <span className="text-[#FF2D2D]">refuse to quit.</span>
         </h1>
 
         <p className="text-base sm:text-lg text-white/50 max-w-xl mx-auto mb-4 leading-relaxed">
-          That's not failure — that's <span className="text-white font-bold">initiation</span>.
+          Tired of broken promises? <span className="text-white font-bold">So were we.</span>
         </p>
         <p className="text-sm text-white/30 max-w-lg mx-auto mb-10 leading-relaxed">
-          $MAD is a world built by the MAD FAM — a community of survivors who turned getting rugged into getting rich. 
-          Doxxed dev. Real game. Real products. No permission needed.
+          $MAD is a world built by real people — a community of survivors who turned setbacks into comebacks. 
+          Public founder. Real game. Real products. No permission needed.
         </p>
 
         {/* CTAs */}
@@ -148,7 +148,7 @@ function Hero() {
             Join the MAD FAM
           </a>
           <a href="#chronicles" className="flex items-center gap-2 px-8 py-4 border border-white/10 hover:border-white/30 text-white/60 hover:text-white text-sm font-bold rounded-full transition-all">
-            Watch Episode 1
+            Watch Our Story
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           </a>
         </div>
@@ -213,8 +213,8 @@ function TheMADFAM() {
             </h2>
             <p className="text-sm sm:text-base text-white/40 leading-relaxed mb-8">
               We're not investors. We're not traders. We're <span className="text-white font-bold">survivors</span> who found each other 
-              in the trenches and decided to build something real. The MAD FAM is a global community of creators, gamers, 
-              artists, and believers who chose to GET MAD instead of getting even.
+              at rock bottom and decided to build something real. The MAD FAM is a global community of creators, gamers, 
+              artists, and believers who chose to GET MAD instead of giving up.
             </p>
 
             {/* Stats */}
@@ -279,7 +279,7 @@ function TheWorld() {
     {
       title: "MAD Chronicles",
       subtitle: "Animation",
-      desc: "Episode 1: Getting Rugged",
+      desc: "Episode 1: The Betrayal",
       href: "/mad-art",
       image: "/memes/MAD-ROLLERCOASTER.png",
       status: "NOW PLAYING",
@@ -401,11 +401,11 @@ function Chronicles() {
             </p>
             <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
               Episode 1:<br />
-              <span className="text-[#FF2D2D]">Getting Rugged</span>
+              <span className="text-[#FF2D2D]">The Betrayal</span>
             </h2>
             <p className="text-sm text-white/40 leading-relaxed mb-6">
-              They promised the moon. They delivered a rug. But you didn't quit — you got MAD. 
-              This is the origin story of every MAD FAM member. The animation that started it all.
+              They promised everything. They delivered nothing. But you didn't quit — you got MAD. 
+              This is the origin story of every MAD FAM member. The moment that started it all.
             </p>
 
             <div className="flex items-center gap-4 mb-8">
@@ -444,10 +444,10 @@ function Chronicles() {
    ═══════════════════════════════════════════════════════════ */
 function BuiltDifferent() {
   const proofs = [
-    { icon: "👤", title: "Doxxed Dev", desc: "Coffee Collects. Real face. Real name. Not a LARP." },
+    { icon: "👤", title: "Public Founder", desc: "Coffee Collects. Real face. Real name. No hiding." },
     { icon: "🎮", title: "Real Game", desc: "Mad Phonk Awakening on Roblox. Live. Playable. Crushing." },
     { icon: "🔐", title: "7 Communities", desc: "Tokens locked to 2060. Proof over promises." },
-    { icon: "🚫", title: "No BS", desc: "0% tax. No presale. No VC. Fair launch." },
+    { icon: "🚫", title: "No BS", desc: "No hidden fees. No insider deals. Fair for everyone." },
     { icon: "📺", title: "3 YouTube Channels", desc: "Coffee Collects HQ, VR, Blox. Content machine." },
     { icon: "🌎", title: "Global FAM", desc: "Indonesia, Nigeria, Russia, USA. The MAD FAM is everywhere." },
   ];
@@ -619,7 +619,7 @@ function Architects() {
             The <span className="text-[#FF2D2D]">Architects</span>
           </h2>
           <p className="text-sm text-white/30 max-w-md mx-auto">
-            Doxxed. Real. Building in public.
+            Public. Real. Building in the open.
           </p>
         </div>
 
@@ -748,7 +748,7 @@ function Footer() {
         </div>
       </div>
       <div className="max-w-6xl mx-auto mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-[10px] text-white/15">Doxxed. Building. Not asking permission.</p>
+        <p className="text-[10px] text-white/15">Public. Real. Building in the open.</p>
         <p className="text-[10px] text-white/15 font-mono">{CA.slice(0, 12)}...{CA.slice(-4)}</p>
       </div>
     </footer>
