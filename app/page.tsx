@@ -93,19 +93,19 @@ function Navbar() {
 
 /* ═══════════════════════════════════════════════════════════
 /* ═══════════════════════════════════════════════════════════
-   VIDEO BANNER — Horizontal strip below navbar
+   VIDEO BANNER — Full logo visible, no cropping
    ═══════════════════════════════════════════════════════════ */
 function VideoBanner() {
   return (
-    <div className="relative w-full h-[260px] sm:h-[360px] lg:h-[440px] overflow-hidden bg-[#080808]">
+    <div className="relative w-full overflow-hidden bg-white flex items-center justify-center">
       <video
         autoPlay muted loop playsInline preload="auto"
-        className="w-full h-full object-cover object-center"
+        className="w-full h-auto object-contain"
       >
         <source src="/game/mad-banner.mp4" type="video/mp4" />
       </video>
-      {/* Gentle fade to black at bottom */}
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,rgba(8,8,8,0.7)_85%,#080808_100%)]" />
+      {/* Fade to black at bottom for smooth transition */}
+      <div className="absolute bottom-0 left-0 right-0 h-20 bg-[linear-gradient(180deg,transparent,#080808)]" />
     </div>
   );
 }
