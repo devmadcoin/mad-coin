@@ -292,21 +292,6 @@ function BubbleMap() {
                 strokeDasharray={bubble.status === "coming" ? "6,4" : "none"}
                 style={{ transition: "all 0.3s ease" }}
               />
-              {/* Animated pulse on hover */}
-              {(isHovered || isActive) && (
-                <circle
-                  cx={pos.x}
-                  cy={pos.y}
-                  r={bubbleRadius * 1.3}
-                  fill="none"
-                  stroke={bubble.color}
-                  strokeWidth="2"
-                  opacity="0.3"
-                >
-                  <animate attributeName="r" values={`${bubbleRadius * 1.2};${bubbleRadius * 1.5};${bubbleRadius * 1.2}`} dur="2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite" />
-                </circle>
-              )}
             </g>
           );
         })}
@@ -388,6 +373,17 @@ function BubbleMap() {
                 transform: isHovered || isActive ? "scale(1.15)" : "scale(1)",
               }}
             >
+              {/* Pulse ring — CSS-based so it can't misalign */}
+              {(isHovered || isActive) && (
+                <div
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{
+                    border: `2px solid ${bubble.color}`,
+                    opacity: 0.4,
+                    animation: "madPulse 2s ease-in-out infinite",
+                  }}
+                />
+              )}
               {/* Status dot */}
               <div
                 className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full"
@@ -574,6 +570,10 @@ function GlobalStyles() {
         25% { transform: translate(30px, -20px) rotate(5deg) scale(1.05); }
         50% { transform: translate(-20px, 30px) rotate(-3deg) scale(0.95); }
         75% { transform: translate(20px, 20px) rotate(2deg) scale(1.02); }
+      }
+      @keyframes madPulse {
+        0%, 100% { transform: scale(1); opacity: 0.4; }
+        50% { transform: scale(1.25); opacity: 0.1; }
       }
     `}</style>
   );
