@@ -399,9 +399,16 @@ function JoinCTA() {
         </div>
 
         {/* Contract */}
-        <div className="mt-10 inline-flex items-center gap-3 px-5 py-3 rounded-full border border-white/5 bg-white/[0.02]">
-          <span className="text-[10px] font-mono text-white/20">{CA}</span>
-          <CopyButtonInline text={CA} />
+        <div className="mt-10 inline-block text-left">
+          <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-2">Solana Contract</p>
+          <div className="flex items-center gap-3 px-5 py-3 rounded-xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04]">
+            <code className="text-[#FF2D2D] font-mono text-xs sm:text-sm">{CA}</code>
+            <CopyButtonInline text={CA} />
+          </div>
+          <p className="text-[9px] font-bold uppercase tracking-wider text-white/20 mt-2 flex items-center gap-1">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Tap to Copy
+          </p>
         </div>
       </div>
     </section>
