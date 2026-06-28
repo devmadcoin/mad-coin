@@ -97,15 +97,15 @@ function Navbar() {
    ═══════════════════════════════════════════════════════════ */
 function VideoBanner() {
   return (
-    <div className="relative w-full h-[240px] sm:h-[280px] lg:h-[320px] overflow-hidden bg-[#080808]">
+    <div className="relative w-full h-[260px] sm:h-[360px] lg:h-[440px] overflow-hidden bg-[#080808]">
       <video
         autoPlay muted loop playsInline preload="auto"
-        className="w-full h-full object-cover object-top"
+        className="w-full h-full object-cover object-center"
       >
         <source src="/game/mad-banner.mp4" type="video/mp4" />
       </video>
-      {/* Fade to black at bottom */}
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_30%,rgba(8,8,8,0.7)_70%,#080808_100%)]" />
+      {/* Gentle fade to black at bottom */}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,rgba(8,8,8,0.7)_85%,#080808_100%)]" />
     </div>
   );
 }
