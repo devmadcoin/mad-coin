@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
 
@@ -126,7 +126,7 @@ function StopPanicking() {
           <span className="text-[#FF2D2D]">PANICKING.</span>
           <br />
           <span className="text-white">GET </span>
-          <span className="text-[#FF2D2D]">$MAD</span>
+          <span className="text-[#22c55e]">$MAD</span>
           <br />
           <span className="text-white">RICH.</span>
         </h2>
@@ -136,73 +136,8 @@ function StopPanicking() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HERO — Clean dark background, no video behind text
+   COPY BUTTON
    ═══════════════════════════════════════════════════════════ */
-function Hero() {
-  return (
-    <section className="relative py-20 sm:py-28 bg-[#080808] overflow-hidden">
-      {/* Subtle ambient glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,45,45,0.06),transparent_50%)]" />
-
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/5 mb-8">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2D2D] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF2D2D]" />
-          </span>
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#FF2D2D]/80">
-            A Next-Gen Entertainment Company
-          </span>
-        </div>
-
-        {/* Headline */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[0.95] tracking-[-0.03em] mb-6">
-          Built for the ones
-          <br />
-          who <span className="text-[#FF2D2D]">refuse to quit.</span>
-        </h1>
-
-        <p className="text-base sm:text-lg text-white/50 max-w-xl mx-auto mb-4 leading-relaxed">
-          Tired of broken promises? <span className="text-white font-bold">So were we.</span>
-        </p>
-        <p className="text-sm text-white/30 max-w-lg mx-auto mb-10 leading-relaxed">
-          $MAD is a world built by real people — a community of survivors who turned setbacks into comebacks. 
-          Public founder. Real game. Real products. No permission needed.
-        </p>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <a href={LINKS.buy} target="_blank" rel="noreferrer"
-            className="group flex items-center gap-2 px-8 py-4 bg-[#FF2D2D] hover:bg-[#FF2D2D]/80 text-white text-sm font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_40px_rgba(255,45,45,0.3)]"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            Join the MAD FAM
-          </a>
-          <a href="#chronicles" className="flex items-center gap-2 px-8 py-4 border border-white/10 hover:border-white/30 text-white/60 hover:text-white text-sm font-bold rounded-full transition-all">
-            Watch Our Story
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          </a>
-        </div>
-
-        {/* Contract */}
-        <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-white/5 bg-white/[0.02]">
-          <span className="text-[10px] font-mono text-white/30">{CA.slice(0, 8)}...{CA.slice(-8)}</span>
-          <CopyButtonInline text={CA} />
-        </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="mt-16 flex flex-col items-center gap-2">
-        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20">Scroll</span>
-        <div className="w-5 h-8 rounded-full border border-white/10 flex items-start justify-center p-1.5">
-          <div className="w-1 h-2 rounded-full bg-white/30 animate-bounce" />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function CopyButtonInline({ text }: { text: string }) {
   const { copied, copy } = useCopyToClipboard();
   return (
@@ -797,7 +732,6 @@ export default function Home() {
       <Navbar />
       <VideoBanner />
       <StopPanicking />
-      <Hero />
       <TheMADFAM />
       <TheWorld />
       <Chronicles />
