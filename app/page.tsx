@@ -2,55 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import MadCommandCenter from "./components/MadCommandCenter";
+import { useState, useEffect, useCallback } from "react";
 
 const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
-
-const DASHBOARD_CARDS = [
-  {
-    title: "Game",
-    subtitle: "Mad Phonk Awakening",
-    href: "/game",
-    image: "/game/mad-phonk-awakening-hero.png",
-    cta: "Play",
-  },
-  {
-    title: "Memes",
-    subtitle: "32 Pieces. All Rare.",
-    href: "/memes",
-    image: "/memes/MAD-ROLLERCOASTER.png",
-    cta: "Download",
-  },
-  {
-    title: "MAD Mind",
-    subtitle: "Talk to the bot",
-    href: "/mad-mind",
-    image: "/MAD-MIND-HEAD.png",
-    cta: "Chat",
-  },
-  {
-    title: "Rewards",
-    subtitle: "Hold. Unlock. Earn.",
-    href: "/rewards",
-    image: "/memes/MAD-KINGS-ONLY.png",
-    cta: "View",
-  },
-  {
-    title: "Merch",
-    subtitle: "Real $MAD goods",
-    href: "/merch",
-    image: "/merch/hero/merch-hero-bg.jpg",
-    cta: "Shop",
-  },
-  {
-    title: "Roadmap",
-    subtitle: "The plan ahead",
-    href: "/roadmap",
-    image: "/roadmap/the-mad-roadmap.png",
-    cta: "Explore",
-  },
-];
 
 const LINKS = {
   telegram: "https://t.me/MadRichClub",
@@ -83,7 +37,6 @@ function useCopyToClipboard(timeout = 2000) {
   return { copied, copy };
 }
 
-/* ─── SCANLINE OVERLAY ─── */
 function Scanlines() {
   return (
     <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.02]"
@@ -95,163 +48,214 @@ function Scanlines() {
   );
 }
 
-/* ─── FLOATING PARTICLES ─── */
-function FloatingParticles() {
+/* ═══════════════════════════════════════════════════════════
+   NAVBAR
+   ═══════════════════════════════════════════════════════════ */
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const nav = [
+    { label: "World", href: "#world" },
+    { label: "Chronicles", href: "#chronicles" },
+    { label: "FAM", href: "#fam" },
+    { label: "Proof", href: "#proof" },
+    { label: "Team", href: "#team" },
+  ];
+
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {[...Array(12)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full bg-[#FF2D2D]/10 blur-sm"
-          style={{
-            width: `${Math.random() * 4 + 2}px`,
-            height: `${Math.random() * 4 + 2}px`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animation: `floatUp ${Math.random() * 4 + 4}s ease-in-out infinite`,
-            animationDelay: `${Math.random() * 5}s`,
-          }}
-        />
-      ))}
-    </div>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#080808]/90 backdrop-blur-xl border-b border-white/5" : "bg-transparent"}`}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-full bg-[#FF2D2D] flex items-center justify-center text-white font-black text-sm">
+            M
+          </div>
+          <span className="text-white font-black text-sm tracking-tight">$MAD</span>
+        </Link>
+        <div className="hidden md:flex items-center gap-6">
+          {nav.map((n) => (
+            <a key={n.label} href={n.href} className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/40 hover:text-[#FF2D2D] transition-colors">
+              {n.label}
+            </a>
+          ))}
+        </div>
+        <a href={LINKS.buy} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-full bg-[#FF2D2D] text-white text-[11px] font-black uppercase tracking-wider hover:bg-[#FF2D2D]/80 transition-colors">
+          Join FAM
+        </a>
+      </div>
+    </nav>
   );
 }
 
-/* ─── COPY BUTTON ─── */
-function CopyButton({ text = CA, label = "Copy CA" }: { text?: string; label?: string }) {
+/* ═══════════════════════════════════════════════════════════
+   HERO — The Initiation. Story-first. Emotional.
+   ═══════════════════════════════════════════════════════════ */
+function Hero() {
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#080808]">
+      {/* Background video */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay muted loop playsInline preload="auto"
+          className="w-full h-full object-cover opacity-40"
+          onLoadedData={() => setVideoLoaded(true)}
+        >
+          <source src="/game/mad-banner.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,8,0.3)_0%,rgba(8,8,8,0.6)_50%,#080808_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(8,8,8,0.8)_100%)]" />
+      </div>
+
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/5 mb-8">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2D2D] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF2D2D]" />
+          </span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#FF2D2D]/80">
+            A Next-Gen Entertainment Company
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[0.95] tracking-[-0.03em] mb-6">
+          They rugged you.
+          <br />
+          <span className="text-[#FF2D2D]">You're still here.</span>
+        </h1>
+
+        <p className="text-base sm:text-lg text-white/50 max-w-xl mx-auto mb-4 leading-relaxed">
+          That's not failure — that's <span className="text-white font-bold">initiation</span>.
+        </p>
+        <p className="text-sm text-white/30 max-w-lg mx-auto mb-10 leading-relaxed">
+          $MAD is a world built by the MAD FAM — a community of survivors who turned getting rugged into getting rich. 
+          Doxxed dev. Real game. Real products. No permission needed.
+        </p>
+
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+          <a href={LINKS.buy} target="_blank" rel="noreferrer"
+            className="group flex items-center gap-2 px-8 py-4 bg-[#FF2D2D] hover:bg-[#FF2D2D]/80 text-white text-sm font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_40px_rgba(255,45,45,0.3)]"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Join the MAD FAM
+          </a>
+          <a href="#chronicles" className="flex items-center gap-2 px-8 py-4 border border-white/10 hover:border-white/30 text-white/60 hover:text-white text-sm font-bold rounded-full transition-all">
+            Watch Episode 1
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </a>
+        </div>
+
+        {/* Contract */}
+        <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full border border-white/5 bg-white/[0.02]">
+          <span className="text-[10px] font-mono text-white/30">{CA.slice(0, 8)}...{CA.slice(-8)}</span>
+          <CopyButtonInline text={CA} />
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20">Scroll</span>
+        <div className="w-5 h-8 rounded-full border border-white/10 flex items-start justify-center p-1.5">
+          <div className="w-1 h-2 rounded-full bg-white/30 animate-bounce" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CopyButtonInline({ text }: { text: string }) {
   const { copied, copy } = useCopyToClipboard();
   return (
-    <button onClick={() => copy(text)} className={[
-      "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition duration-300",
-      copied ? "border border-[#FF6B00]/30 bg-[#FF6B00]/10 text-[#FF6B00]" : "border border-[#FF2D2D]/30 bg-[#FF2D2D]/10 text-[#FF2D2D] hover:bg-[#FF2D2D]/20",
-    ].join(" ")}>
+    <button onClick={() => copy(text)} className="text-white/30 hover:text-[#FF2D2D] transition-colors">
       {copied ? (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
       ) : (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
       )}
-      {copied ? "Copied!" : label}
     </button>
   );
 }
 
-/* ─── CONTRACT BLOCK ─── */
-function ContractBlock() {
-  const { copied, copy } = useCopyToClipboard();
-  return (
-    <div 
-      onClick={() => copy(CA)}
-      className="group cursor-pointer relative overflow-hidden rounded-[24px] border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04] p-5 sm:p-6 backdrop-blur-sm transition-all duration-500 hover:border-[#FF2D2D]/50 hover:shadow-[0_0_40px_rgba(255,45,45,0.15)] hover:bg-[#FF2D2D]/[0.07]"
-    >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,45,45,0.08),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="relative z-10">
-        <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-3">Solana Contract</p>
-        <code className="block text-[#FF2D2D] font-mono text-sm sm:text-base break-all leading-relaxed">{CA}</code>
-        <div className="mt-4 flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/40">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            {copied ? "COPIED — PASTE INTO PHANTOM" : "TAP TO COPY"}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ═══════════════════════════════════════════════════════════
-   THE HERO — Dark text header, standalone (separated from banner)
+   MAD FAM — Community Identity (like Pudgy's "The Huddle")
    ═══════════════════════════════════════════════════════════ */
-function TheHero() {
-  return (
-    <section className="relative bg-[#080808] text-white py-10 sm:py-14 overflow-hidden">
-      {/* Subtle radial glow behind text */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.08),transparent_60%)]" />
-      
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        <h1 className="text-center">
-          <span className="block text-[2rem] sm:text-[3rem] lg:text-[4rem] font-black tracking-[-0.02em] text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-            STOP
-          </span>
-          <span className="block text-[2rem] sm:text-[3rem] lg:text-[4rem] font-black tracking-[-0.02em] text-[#FF2D2D] drop-shadow-[0_0_20px_rgba(255,45,45,0.4)]">
-            PANICKING.
-          </span>
-          <span className="block text-[3rem] sm:text-[5rem] lg:text-[7rem] font-black leading-[0.85] tracking-[-0.05em] text-white mt-2">
-            GET <span className="text-green-400">$MAD</span> RICH.
-          </span>
-        </h1>
-
-        <div className="mt-6 max-w-xl mx-auto">
-          <ContractBlock />
-        </div>
-
-        <div className="mt-4 flex justify-center">
-          <a 
-            href={LINKS.buy} 
-            target="_blank" 
-            rel="noreferrer"
-            className="group flex items-center gap-2 px-8 py-4 bg-[#FF6B00] hover:bg-[#FF8533] text-white text-base font-black rounded-full transition-all hover:scale-[1.02] shadow-[0_0_30px_rgba(255,107,0,0.25)]"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            SWAP ON JUPITER
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   THE BANNER — Standalone video strip between hero and content
-   ═══════════════════════════════════════════════════════════ */
-function TheBanner() {
-  return (
-    <section className="relative h-[35vh] min-h-[280px] overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <video 
-          autoPlay 
-          muted 
-          loop 
-          playsInline 
-          preload="auto"
-          className="w-full h-full object-cover"
-        >
-          <source src="/game/mad-banner.mp4" type="video/mp4" />
-        </video>
-        {/* Fade to crème at bottom so next section flows in */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_30%,rgba(8,8,8,0.2)_60%,rgba(245,241,232,0.95)_95%,#F5F1E8_100%)]" />
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   WHY $MAD STRIP — Elevator pitch credibility cluster
-   Six trust signals. One glance. Zero doubt.
-   ═══════════════════════════════════════════════════════════ */
-function WhyMADStrip() {
-  const signals = [
-    { icon: "👤", label: "Doxxed", sub: "Not a LARP" },
-    { icon: "🎮", label: "Real Game", sub: "Roblox Live" },
-    { icon: "💰", label: "0% Tax", sub: "Every Trade" },
-    { icon: "🚫", label: "No VC", sub: "Community First" },
-    { icon: "🔐", label: "Locked", sub: "6 Communities" },
-    { icon: "⚡", label: "No Presale", sub: "Fair Launch" },
+function TheMADFAM() {
+  const stats = [
+    { value: "519+", label: "MAD FAM Members" },
+    { value: "7", label: "Communities Locked" },
+    { value: "1", label: "Live Roblox Game" },
+    { value: "∞", label: "Vibes" },
   ];
 
   return (
-    <section className="px-4 sm:px-6 py-8 sm:py-10 bg-[#F5F1E8] border-b border-[#1a1a1a]/10">
-      <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4">
-          {signals.map((s) => (
-            <div
-              key={s.label}
-              className="flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.03] transition-all duration-300 group"
-            >
-              <span className="text-xl sm:text-2xl mb-1 group-hover:scale-110 transition-transform">{s.icon}</span>
-              <p className="text-xs sm:text-sm font-black text-[#1a1a1a] uppercase tracking-wider">{s.label}</p>
-              <p className="text-[9px] sm:text-[10px] text-[#1a1a1a]/40 mt-0.5">{s.sub}</p>
+    <section id="fam" className="relative py-24 sm:py-32 bg-[#080808] overflow-hidden">
+      {/* Background texture */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,45,45,0.05),transparent_50%)]" />
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Left — Content */}
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
+              The Community
+            </p>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-6 leading-[1.1]">
+              Welcome to the<br />
+              <span className="text-[#FF2D2D]">MAD FAM</span>
+            </h2>
+            <p className="text-sm sm:text-base text-white/40 leading-relaxed mb-8">
+              We're not investors. We're not traders. We're <span className="text-white font-bold">survivors</span> who found each other 
+              in the trenches and decided to build something real. The MAD FAM is a global community of creators, gamers, 
+              artists, and believers who chose to GET MAD instead of getting even.
+            </p>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              {stats.map((s) => (
+                <div key={s.label} className="p-4 rounded-2xl border border-white/5 bg-white/[0.02]">
+                  <p className="text-2xl sm:text-3xl font-black text-[#FF2D2D]">{s.value}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 mt-1">{s.label}</p>
+                </div>
+              ))}
             </div>
-          ))}
+
+            <a href={LINKS.telegram} target="_blank" rel="noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#FF2D2D]/20 text-[#FF2D2D] text-xs font-bold uppercase tracking-wider hover:bg-[#FF2D2D]/10 transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              Join the Telegram
+            </a>
+          </div>
+
+          {/* Right — Community grid */}
+          <div className="relative">
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                "/testimonials/dkwtt-chadwick-pfp.png",
+                "/testimonials/kimdunk77-pfp.png",
+                "/testimonials/mluffy-pfp.png",
+                "/testimonials/sapient-pfp.png",
+              ].map((src, i) => (
+                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden border border-white/5">
+                  <Image src={src} alt="MAD FAM member" fill className="object-cover" sizes="200px" />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(0,0,0,0.6)_100%)]" />
+                </div>
+              ))}
+            </div>
+            {/* Floating badge */}
+            <div className="absolute -bottom-4 -right-4 px-4 py-3 rounded-2xl bg-[#FF2D2D] text-white">
+              <p className="text-xs font-black">MAD FAM</p>
+              <p className="text-[9px] font-bold opacity-70">EST. 2026</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -259,53 +263,102 @@ function WhyMADStrip() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE DASHBOARD — Chimpers-style command center
+   ENTER THE MAD WORLD — Ecosystem (Azuki-style multiple entry)
    ═══════════════════════════════════════════════════════════ */
-function TheDashboard() {
-  return (
-    <section className="px-4 sm:px-6 py-12 sm:py-16 bg-[#F5F1E8]">
-      <div className="max-w-6xl mx-auto">
-        {/* Section label */}
-        <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355] mb-2">
-          Everything $MAD
-        </p>
-        <h2 className="text-2xl sm:text-3xl font-black text-[#1a1a1a] mb-8">
-          The <span className="text-[#FF2D2D]">Command Center</span>
-        </h2>
+function TheWorld() {
+  const worlds = [
+    {
+      title: "Mad Phonk Awakening",
+      subtitle: "Roblox Game",
+      desc: "Live. Playable. Crushing it.",
+      href: "/game",
+      image: "/game/mad-phonk-awakening-hero.png",
+      status: "LIVE",
+      color: "#22c55e",
+    },
+    {
+      title: "MAD Chronicles",
+      subtitle: "Animation",
+      desc: "Episode 1: Getting Rugged",
+      href: "/mad-art",
+      image: "/memes/MAD-ROLLERCOASTER.png",
+      status: "NOW PLAYING",
+      color: "#FF2D2D",
+    },
+    {
+      title: "MAD Mind",
+      subtitle: "AI Experience",
+      desc: "Talk to the MAD Mind",
+      href: "/mad-mind",
+      image: "/MAD-MIND-HEAD.png",
+      status: "LIVE",
+      color: "#22c55e",
+    },
+    {
+      title: "MAD Merch",
+      subtitle: "Physical Goods",
+      desc: "Real products. Real quality.",
+      href: "/merch",
+      image: "/merch/hero/merch-hero-bg.jpg",
+      status: "SHOP NOW",
+      color: "#FF6B00",
+    },
+    {
+      title: "The Roadmap",
+      subtitle: "The Plan",
+      desc: "Where we're headed",
+      href: "/roadmap",
+      image: "/roadmap/the-mad-roadmap.png",
+      status: "EXPLORE",
+      color: "#FF6B00",
+    },
+    {
+      title: "MAD Rewards",
+      subtitle: "For the FAM",
+      desc: "Hold. Unlock. Earn.",
+      href: "/rewards",
+      image: "/memes/MAD-KINGS-ONLY.png",
+      status: "ACTIVE",
+      color: "#22c55e",
+    },
+  ];
 
-        {/* Card grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-5">
-          {DASHBOARD_CARDS.map((card) => (
-            <Link
-              key={card.title}
-              href={card.href}
-              className="group relative overflow-hidden rounded-[1.5rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] hover:border-[#FF2D2D]/30 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+  return (
+    <section id="world" className="relative py-24 sm:py-32 bg-[#0a0a0a]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-16">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
+            The Ecosystem
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4">
+            Enter the <span className="text-[#FF2D2D]">MAD World</span>
+          </h2>
+          <p className="text-sm text-white/30 max-w-md mx-auto">
+            Multiple ways in. One world. Pick your entry point.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {worlds.map((w) => (
+            <Link key={w.title} href={w.href}
+              className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] hover:border-white/10 transition-all duration-500 hover:-translate-y-1"
             >
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
-                  src={card.image}
-                  alt={card.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 640px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(245,241,232,0.95)_90%)]" />
+                <Image src={w.image} alt={w.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_30%,rgba(10,10,10,0.9)_100%)]" />
+                {/* Status badge */}
+                <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider"
+                  style={{ background: `${w.color}15`, color: w.color, border: `1px solid ${w.color}30` }}
+                >
+                  {w.status}
+                </div>
               </div>
               {/* Text */}
-              <div className="p-4 sm:p-5">
-                <p className="text-sm sm:text-base font-black text-[#1a1a1a] group-hover:text-[#FF2D2D] transition-colors">
-                  {card.title}
-                </p>
-                <p className="text-[10px] sm:text-xs text-[#1a1a1a]/40 mt-0.5">
-                  {card.subtitle}
-                </p>
-                <div className="mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#FF2D2D]/70 group-hover:text-[#FF2D2D] transition-colors">
-                  {card.cta}
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                  </svg>
-                </div>
+              <div className="p-5">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 mb-1">{w.subtitle}</p>
+                <p className="text-lg font-black text-white group-hover:text-[#FF2D2D] transition-colors">{w.title}</p>
+                <p className="text-xs text-white/30 mt-1">{w.desc}</p>
               </div>
             </Link>
           ))}
@@ -316,59 +369,58 @@ function TheDashboard() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   WHAT IS $MAD — Venetian crème
+   MAD CHRONICLES — Episodic Content (Azuki anime model)
    ═══════════════════════════════════════════════════════════ */
-function WhatIsMAD() {
+function Chronicles() {
   return (
-    <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8]">
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#1a1a1a] mb-8 sm:mb-10">
-          What is <span className="text-[#FF2D2D]">$MAD</span>
-        </h2>
+    <section id="chronicles" className="relative py-24 sm:py-32 bg-[#080808] overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(255,45,45,0.05),transparent_50%)]" />
 
-        <div className="space-y-6 text-sm sm:text-base leading-relaxed text-[#1a1a1a]/60">
-          <p>
-            <span className="text-[#1a1a1a] font-bold">$MAD is not a token. It&apos;s a frequency.</span> Most projects sell you a future. $MAD sells you a present — the present where you are already mad rich, already part of something, already holding.
-          </p>
-          <p>
-            The dev is <span className="text-[#1a1a1a] font-bold">doxxed</span>. The <Link href="/game" className="text-[#FF2D2D] hover:text-[#1a1a1a] transition-colors">Roblox game</Link> is real. There was no presale, no VC, no tax. Just a contract, a community, and a group of people who decided they were done folding.
-          </p>
-          <p>
-            Before asking anyone to trust the mission, $MAD showed loyalty in public: <span className="text-[#1a1a1a] font-bold">seven communities supported</span>, tokens locked to 2060. Not theory. Proof. Seven times.
-          </p>
-          <p>
-            The supply shrinks toward <span className="text-[#FF2D2D] font-bold">200M</span>. Every holder is a participant in a <span className="text-[#1a1a1a] font-bold">Life Economy</span> exit — no bosses, no quarterly reports, just the daily practice of staying $MAD.
-          </p>
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Video */}
+          <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/5 bg-[#0a0a0a]">
+            <video src="/game/getting-rugged-animation.mp4" controls muted playsInline loop className="w-full h-full object-cover" poster="/memes/MAD-GETTING-RUGGED-THUMB.png" />
+          </div>
 
-          {/* Closing punch */}
-          <div className="mt-8 p-5 sm:p-6 rounded-2xl border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03]">
-            <p className="text-base sm:text-lg font-bold text-[#1a1a1a]/80 leading-relaxed">
-              The daily practice of staying <span className="text-[#FF2D2D]">$MAD Rich</span>. No worrying about your portfolio. No fear of AI layoffs. The world is only going to <span className="text-[#FF2D2D]">GET MORE $MAD</span>.
+          {/* Content */}
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
+              MAD Chronicles
             </p>
-          </div>
-        </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
+              Episode 1:<br />
+              <span className="text-[#FF2D2D]">Getting Rugged</span>
+            </h2>
+            <p className="text-sm text-white/40 leading-relaxed mb-6">
+              They promised the moon. They delivered a rug. But you didn't quit — you got MAD. 
+              This is the origin story of every MAD FAM member. The animation that started it all.
+            </p>
 
-        {/* Stats */}
-        <div className="mt-12 pt-10 border-t border-[#1a1a1a]/10 grid grid-cols-2 sm:grid-cols-5 gap-6">
-          <div>
-            <p className="text-3xl sm:text-4xl font-black text-[#1a1a1a]">519</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Holders</p>
-          </div>
-          <div>
-            <p className="text-3xl sm:text-4xl font-black text-[#1a1a1a]">7</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Communities Locked</p>
-          </div>
-          <div>
-            <p className="text-3xl sm:text-4xl font-black text-[#1a1a1a]">1</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Real Game</p>
-          </div>
-          <div>
-            <p className="text-3xl sm:text-4xl font-black text-[#FF2D2D]">50%</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Supply Burn</p>
-          </div>
-          <div>
-            <p className="text-3xl sm:text-4xl font-black text-[#FF2D2D]">0%</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40">Tax</p>
+            <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-2 text-white/30 text-xs">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                2:34
+              </div>
+              <div className="flex items-center gap-2 text-white/30 text-xs">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                4.2K views
+              </div>
+            </div>
+
+            <Link href="/mad-art"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF2D2D] text-white text-xs font-black uppercase tracking-wider hover:bg-[#FF2D2D]/80 transition-colors"
+            >
+              Watch Now
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </Link>
+
+            {/* Coming next */}
+            <div className="mt-8 p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-white/20 mb-1">Coming Next</p>
+              <p className="text-sm font-bold text-white/60">Episode 2: The Initiation</p>
+              <p className="text-xs text-white/20 mt-1">The skyscraper calls. What's inside?</p>
+            </div>
           </div>
         </div>
       </div>
@@ -377,49 +429,40 @@ function WhatIsMAD() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE VERIFIED — Exchange badges (crème edition)
+   BUILT DIFFERENT — Trust signals (reframed as proof-of-work)
    ═══════════════════════════════════════════════════════════ */
-function TheVerified() {
-  const exchanges = [
-    { name: "Jupiter", src: "/logos/jupiter.png", href: LINKS.jupiter },
-    { name: "OKX DEX", src: "/logos/okx.png", href: LINKS.okx },
-    { name: "Gate", src: "/logos/gate.png", href: LINKS.gate },
-    { name: "MEXC", src: "/logos/mexc.png", href: LINKS.mexc },
-    { name: "DEX Screener", src: "/logos/DEX-screener.png", href: LINKS.dexscreener },
-    { name: "Birdeye", src: "/logos/birdeye.png", href: LINKS.birdeye },
-    { name: "Solscan", src: "/logos/solscan.png", href: LINKS.solscan },
-    { name: "CoinGecko", src: "/logos/coingecko.png", href: "https://www.coingecko.com/en/coins/mad-coin" },
+function BuiltDifferent() {
+  const proofs = [
+    { icon: "👤", title: "Doxxed Dev", desc: "Coffee Collects. Real face. Real name. Not a LARP." },
+    { icon: "🎮", title: "Real Game", desc: "Mad Phonk Awakening on Roblox. Live. Playable. Crushing." },
+    { icon: "🔐", title: "7 Communities", desc: "Tokens locked to 2060. Proof over promises." },
+    { icon: "🚫", title: "No BS", desc: "0% tax. No presale. No VC. Fair launch." },
+    { icon: "📺", title: "3 YouTube Channels", desc: "Coffee Collects HQ, VR, Blox. Content machine." },
+    { icon: "🌎", title: "Global FAM", desc: "Indonesia, Nigeria, Russia, USA. The MAD FAM is everywhere." },
   ];
 
   return (
-    <section className="px-4 sm:px-6 py-14 sm:py-18 bg-[#F5F1E8] border-y border-[#1a1a1a]/10">
-      <div className="max-w-4xl mx-auto">
-        <p className="text-center text-[11px] font-bold uppercase tracking-[0.34em] text-[#1a1a1a]/40 mb-8">
-          Verified On-Chain
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-          {exchanges.map((dex) => (
-            <a 
-              key={dex.name}
-              href={dex.href}
-              target="_blank"
-              rel="noreferrer"
-              className="group flex flex-col items-center gap-2 px-5 py-4 sm:px-6 sm:py-5 rounded-2xl border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] hover:bg-[#1a1a1a]/[0.06] hover:border-[#FF2D2D]/20 transition-all duration-300"
-              title={dex.name}
-            >
-              {/* Unified dark container for all logos */}
-              <div className="relative h-9 sm:h-10 w-32 sm:w-36 flex items-center justify-center rounded-xl bg-[#0a0a0a]/80 px-3 py-2">
-                <Image
-                  src={dex.src}
-                  alt={dex.name}
-                  fill
-                  className="object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300 p-1"
-                />
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#1a1a1a]/40 group-hover:text-[#1a1a1a]/60 transition-colors">
-                {dex.name}
-              </span>
-            </a>
+    <section className="relative py-24 sm:py-32 bg-[#0a0a0a]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-16">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
+            Proof of Work
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4">
+            Built <span className="text-[#FF2D2D]">Different</span>
+          </h2>
+          <p className="text-sm text-white/30 max-w-md mx-auto">
+            While others promise, we ship. Here's the receipt.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {proofs.map((p) => (
+            <div key={p.title} className="group p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:border-[#FF2D2D]/20 transition-all duration-300">
+              <span className="text-2xl mb-3 block">{p.icon}</span>
+              <p className="text-sm font-black text-white mb-1">{p.title}</p>
+              <p className="text-xs text-white/30 leading-relaxed">{p.desc}</p>
+            </div>
           ))}
         </div>
       </div>
@@ -428,13 +471,13 @@ function TheVerified() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   THE PROOF — Mad Rich Tub + Testimony (Venetian crème)
+   PROOF OF MAD — Testimonials (keep existing data)
    ═══════════════════════════════════════════════════════════ */
 function StarRating() {
   return (
     <div className="flex items-center gap-1">
       {[...Array(5)].map((_, i) => (
-        <svg key={i} width="20" height="20" viewBox="0 0 24 24" fill="#C5A572" className="drop-shadow-[0_0_2px_rgba(197,165,114,0.5)]">
+        <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#FF2D2D" className="opacity-60">
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </svg>
       ))}
@@ -442,599 +485,97 @@ function StarRating() {
   );
 }
 
-function TheProof() {
-  return (
-    <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8]">
-      <div className="max-w-6xl mx-auto">
-        {/* Section header */}
-        <div className="mb-10 sm:mb-14 text-center">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5A572" strokeWidth="1.5">
-              <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
-            </svg>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C5A572" strokeWidth="1.5">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5A572" strokeWidth="1.5">
-              <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z" />
-            </svg>
-          </div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">Holder Review</p>
-          <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-black text-[#1a1a1a]">
-            The <span className="text-[#FF2D2D]">Proof</span> is Real
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Tub Image */}
-          <div className="relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 aspect-[4/3]">
-            <Image
-              src="/memes/MAD-RICH-IN-THE-TUB.png"
-              alt="Mad Rich in the Tub"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(245,241,232,0.9)_90%)]" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-              <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/70">The Lifestyle</p>
-              <p className="mt-1 text-lg sm:text-xl font-black text-[#1a1a1a]">Mad Rich in the Tub</p>
-            </div>
-          </div>
-          
-          {/* Abraxas Testimony Card */}
-          <div className="relative overflow-hidden rounded-[24px] border border-[#C5A572]/30 bg-white p-6 sm:p-8 flex flex-col justify-center shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-            <div className="relative z-10">
-              {/* Stars */}
-              <div className="mb-4">
-                <StarRating />
-              </div>
-
-              {/* Avatar row */}
-              <div className="flex items-center gap-3 mb-5">
-                <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
-                  <Image
-                    src="/testimonials/abraxas-pfp.png"
-                    alt="Abraxas"
-                    fill
-                    className="object-cover"
-                    sizes="40px"
-                  />
-                </div>
-                <div>
-                  <p className="text-sm font-black text-[#1a1a1a]">Abraxas</p>
-                  <p className="text-[10px] text-[#1a1a1a]/50">$MAD Holder · Giveaway Winner</p>
-                </div>
-                <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                  </span>
-                  Verified
-                </span>
-              </div>
-
-              <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                When I first encountered Mad Rich, I won a 200k MAD giveaway. The profits on holding the $120 worth of $MAD lasted me 2 months. <span className="text-[#FF2D2D] font-bold not-italic">$MAD relieved me of most my debts.</span> $MAD saved me during the hard times.
-                <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-              </blockquote>
-
-              <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                <p className="text-[10px] text-[#1a1a1a]/40">Shared via DM · With permission</p>
-                <a 
-                  href="https://x.com/madrichclub_/status/2052836164311322949" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                >
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                  See on X
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* DKWTT Testimony — Full Width */}
-          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Tweet Image */}
-              <div className="relative aspect-square md:aspect-auto">
-                <Image
-                  src="/proof-american-dad-hat.png"
-                  alt="DKWTT wearing $MAD American Dad hat with MAD game on tablet"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 320px"
-                />
-              </div>
-              
-              {/* Tweet Content */}
-              <div className="p-6 sm:p-8 flex flex-col justify-center">
-                <div className="mb-4">
-                  <StarRating />
-                </div>
-
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
-                    <Image
-                      src="/testimonials/dkwtt-chadwick-pfp.png"
-                      alt="DKWTT"
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-[#1a1a1a]">DKWTT (CHADWICK BASEMAN)</p>
-                    <p className="text-[10px] text-[#1a1a1a]/50">@lit_terrestrial · $MAD Merch Buyer</p>
-                  </div>
-                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                    </span>
-                    Verified
-                  </span>
-                </div>
-
-                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                  Ordered the <span className="text-[#FF2D2D] font-bold not-italic">$MAD American Dad hat</span> on the day that my Dad passed, he was an Army Veteran as well. This is not just a hat to me, <span className="text-[#FF2D2D] font-bold not-italic">$MAD is not just a meme coin to me</span>, Its deeper than just a feeling... It&apos;s Motivation Alignment &amp; Discipline.
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-                </blockquote>
-
-                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                  <p className="text-[10px] text-[#1a1a1a]/40">May 26, 2026 · 603 Views</p>
-                  <a 
-                    href="https://x.com/lit_terrestrial/status/2059486216567824581?s=20" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                  >
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    See on X
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* KIMDUNK77 Video Testimony — Full Width */}
-          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Video player */}
-              <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
-                <video
-                  src="/testimonials/kimdunk77-mad-promo-indonesia.mp4"
-                  controls
-                  muted
-                  playsInline
-                  loop
-                  className="w-full h-full object-cover"
-                  poster=""
-                />
-              </div>
-              
-              {/* Testimony Content */}
-              <div className="p-6 sm:p-8 flex flex-col justify-center">
-                <div className="mb-4">
-                  <StarRating />
-                </div>
-
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
-                    <Image
-                      src="/testimonials/kimdunk77-pfp.png"
-                      alt="KIMDUNK77"
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-[#1a1a1a]">KIMDUNK77</p>
-                    <p className="text-[10px] text-[#1a1a1a]/50">@KIMDUNK77 · $MAD Community Builder</p>
-                  </div>
-                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                    </span>
-                    Verified
-                  </span>
-                </div>
-
-                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                  The long road to <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span> 😡 so that everyone knows $MAD 😡 Everyday, everywhere $MAD 😡 STAY $MAD 😡
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-                </blockquote>
-
-                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                  <p className="text-[10px] text-[#1a1a1a]/40">May 31, 2026 · Promoting $MAD in Indonesia</p>
-                  <a 
-                    href="https://x.com/KIMDUNK77/status/2061078380376936606?s=20" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                  >
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    Watch on X
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* idclord Campus Flyer Testimony — Full Width */}
-          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Video */}
-              <div className="relative aspect-square md:aspect-auto bg-[#0a0a0a] overflow-hidden">
-                <video
-                  src="/testimonials/idclord-mad-campus.mp4"
-                  controls
-                  muted
-                  playsInline
-                  loop
-                  className="w-full h-full object-cover"
-                  poster=""
-                />
-              </div>
-              
-              {/* Testimony Content */}
-              <div className="p-6 sm:p-8 flex flex-col justify-center">
-                <div className="mb-4">
-                  <StarRating />
-                </div>
-
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
-                    <Image
-                      src="/testimonials/idclord-pfp.png"
-                      alt="idclord"
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-[#1a1a1a]">Better ✨️</p>
-                    <p className="text-[10px] text-[#1a1a1a]/50">@idclord · $MAD Street Team</p>
-                  </div>
-                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                    </span>
-                    Verified
-                  </span>
-                </div>
-
-                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                  Decided to spread the word today <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span>. <span className="text-[#FF2D2D] font-bold not-italic">$MAD stands out.</span> Dropped a couple of these around several locations in my campus, lecture room entrances, bus-stops and many other places.
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-                </blockquote>
-
-                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                  <p className="text-[10px] text-[#1a1a1a]/40">June 18, 2026 · 546 Views</p>
-                  <a 
-                    href="https://x.com/idclord/status/2067553952539783554?s=20" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                  >
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    See on X
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Notebook Video */}
-              <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
-                <video
-                  src="/testimonials/silverwing-notebook.mp4"
-                  controls
-                  muted
-                  playsInline
-                  loop
-                  className="w-full h-full object-cover"
-                  poster="/testimonials/silverwing-notebook.jpg"
-                />
-              </div>
-              
-              {/* Testimony Content */}
-              <div className="p-6 sm:p-8 flex flex-col justify-center">
-                <div className="mb-4">
-                  <StarRating />
-                </div>
-
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
-                    <Image
-                      src="/testimonials/silverwing-pfp.png"
-                      alt="Silverwing"
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-[#1a1a1a]">Silverwing</p>
-                    <p className="text-[10px] text-[#1a1a1a]/50">@treshon_jarrell · $MAD Notebook Ambassador</p>
-                  </div>
-                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                    </span>
-                    Verified
-                  </span>
-                </div>
-
-                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                  It&apos;s night over here but I was able to give it out to some kids in my community. Would be making more and taking it to a school tomorrow !! And hopefully recreating some <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span> memories!!
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-                </blockquote>
-
-                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                  <p className="text-[10px] text-[#1a1a1a]/40">June 15, 2026 · Community Giveaway</p>
-                  <a 
-                    href="https://x.com/treshon_jarrell/status/2066614866517827995" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                  >
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    See on X
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Luffy — School Meetup Testimony — Full Width */}
-          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Video player */}
-              <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
-                <video
-                  src="/testimonials/mluffy-school-meetup.mp4"
-                  controls
-                  muted
-                  playsInline
-                  loop
-                  className="w-full h-full object-cover"
-                  poster=""
-                />
-              </div>
-              
-              {/* Testimony Content */}
-              <div className="p-6 sm:p-8 flex flex-col justify-center">
-                <div className="mb-4">
-                  <StarRating />
-                </div>
-
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
-                    <Image
-                      src="/testimonials/mluffy-pfp.png"
-                      alt="Luffy"
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-[#1a1a1a]">Luffy</p>
-                    <p className="text-[10px] text-[#1a1a1a]/50">@mluffy_onsol · $MAD Campus Ambassador</p>
-                  </div>
-                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                    </span>
-                    Verified
-                  </span>
-                </div>
-
-                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                  Today, a few friends and I organized a small Web3 meetup in school to introduce more people to <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span> Coin. It was great seeing students genuinely curious about blockchain, digital communities, and what <span className="text-[#FF2D2D] font-bold not-italic">@madrichclub_</span> is building.
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-                </blockquote>
-
-                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                  <p className="text-[10px] text-[#1a1a1a]/40">June 25, 2026 · 676 Views</p>
-                  <a 
-                    href="https://x.com/mluffy_onsol/status/2070074141906985200?s=20" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                  >
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    See on X
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Crypt0wiz — Article Testimony — Full Width */}
-          <div className="lg:col-span-2 relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-            <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-              {/* Article image placeholder — using a dark themed card */}
-              <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden flex items-center justify-center p-6">
-                <div className="text-center">
-                  <div className="text-6xl font-black text-[#FF2D2D]/20 mb-2">$MAD</div>
-                  <p className="text-xs text-white/40 uppercase tracking-wider">The Matrix</p>
-                </div>
-              </div>
-              
-              {/* Testimony Content */}
-              <div className="p-6 sm:p-8 flex flex-col justify-center">
-                <div className="mb-4">
-                  <StarRating />
-                </div>
-
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 flex items-center justify-center">
-                    <span className="text-sm font-black text-[#FF2D2D]">C</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-black text-[#1a1a1a]">crypt0wiz</p>
-                    <p className="text-[10px] text-[#1a1a1a]/50">@crypt0wiz__ · $MAD Rich</p>
-                  </div>
-                  <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                    </span>
-                    Verified
-                  </span>
-                </div>
-
-                <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                  The second you stop caring about the noise, you become unstoppable. Not because you&apos;re numb. Because you finally see the matrix for what it is. And once you see it, you can never unsee it. That quiet exhale. That moment you stop caring. <span className="text-[#FF2D2D] font-bold not-italic">That is where $MAD Rich begins.</span> Being $MAD Rich means you have realized that wealth isn&apos;t a number on a screen. Wealth is the freedom to not care about the number on the screen. Wealth is watching the world panic and feeling nothing but calm.
-                  <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-                </blockquote>
-
-                <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                  <p className="text-[10px] text-[#1a1a1a]/40">June 23, 2026 · 3.5K Likes</p>
-                  <a 
-                    href="https://x.com/crypt0wiz__/status/2069216610804486539?s=20" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                  >
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    Read on X
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   THE ARCHITECTS — Team (crème edition)
-   ═══════════════════════════════════════════════════════════ */
-function TheArchitects() {
-  const team = [
+function ProofOfMAD() {
+  const testimonials = [
     {
-      role: "Dev / Founder",
-      name: "$MAD Dev",
-      handle: "Coffee Collects",
-      image: "/team/mad-dev-coffee-collects.png",
-      links: [
-        { label: "X", href: "https://x.com/madrichclub_" },
-        { label: "YouTube", href: "https://www.youtube.com/@CoffeeCollectsHQ" },
-      ],
+      name: "Abraxas",
+      handle: "@abraxas",
+      image: "/testimonials/abraxas-pfp.png",
+      role: "$MAD Holder · Giveaway Winner",
+      quote: "When I first encountered Mad Rich, I won a 200k MAD giveaway. The profits on holding the $120 worth of $MAD lasted me 2 months. $MAD relieved me of most my debts. $MAD saved me during the hard times.",
+      date: "Shared via DM · With permission",
+      link: "https://x.com/madrichclub_/status/2052836164311322949",
     },
     {
-      role: "Community Builder",
-      name: "crypto guru",
-      handle: "@followdv80",
-      image: "/rewards/crypto-guru-followdv80.png",
-      links: [
-        { label: "X", href: "https://x.com/followdv80" },
-      ],
+      name: "DKWTT",
+      handle: "@lit_terrestrial",
+      image: "/testimonials/dkwtt-chadwick-pfp.png",
+      role: "$MAD Merch Buyer",
+      quote: "Ordered the $MAD American Dad hat on the day that my Dad passed, he was an Army Veteran as well. This is not just a hat to me, $MAD is not just a meme coin to me, Its deeper than just a feeling... It's Motivation Alignment & Discipline.",
+      date: "May 26, 2026 · 603 Views",
+      link: "https://x.com/lit_terrestrial/status/2059486216567824581?s=20",
     },
     {
-      role: "Community Builder",
-      name: "Perspective 360",
-      handle: "@Derrick152667",
-      image: "/rewards/perspective-360-kakashi.png",
-      links: [
-        { label: "X", href: "https://x.com/Derrick152667" },
-      ],
+      name: "KIMDUNK77",
+      handle: "@KIMDUNK77",
+      image: "/testimonials/kimdunk77-pfp.png",
+      role: "$MAD Community Builder",
+      quote: "The long road to $MAD 😡 so that everyone knows $MAD 😡 Everyday, everywhere $MAD 😡 STAY $MAD 😡",
+      date: "May 31, 2026 · Promoting $MAD in Indonesia",
+      link: "https://x.com/KIMDUNK77/status/2061078380376936606?s=20",
     },
     {
-      role: "Community Builder",
-      name: "Dino",
-      handle: "@Iam__dino9",
-      image: "/team/dino-moderator.png",
-      links: [
-        { label: "X", href: "https://x.com/Iam__dino9" },
-      ],
+      name: "Luffy",
+      handle: "@mluffy_onsol",
+      image: "/testimonials/mluffy-pfp.png",
+      role: "$MAD Campus Ambassador",
+      quote: "Today, a few friends and I organized a small Web3 meetup in school to introduce more people to $MAD Coin. It was great seeing students genuinely curious about blockchain, digital communities, and what @madrichclub_ is building.",
+      date: "June 25, 2026 · 676 Views",
+      link: "https://x.com/mluffy_onsol/status/2070074141906985200?s=20",
     },
     {
-      role: "Mad Artist",
-      name: "Heydun",
-      handle: "@Grpx_Heydun",
-      image: "/team/mad-artist-heydun.png",
-      links: [
-        { label: "X", href: "https://x.com/Grpx_Heydun" },
-      ],
+      name: "crypt0wiz",
+      handle: "@crypt0wiz__",
+      image: null,
+      initial: "C",
+      role: "$MAD Rich",
+      quote: "The second you stop caring about the noise, you become unstoppable. Not because you're numb. Because you finally see the matrix for what it is. And once you see it, you can never unsee it. That quiet exhale. That moment you stop caring. That is where $MAD Rich begins.",
+      date: "June 23, 2026 · 3.5K Likes",
+      link: "https://x.com/crypt0wiz__/status/2069216610804486539?s=20",
     },
   ];
 
   return (
-    <section className="px-4 sm:px-6 py-16 sm:py-20 bg-[#F5F1E8] border-y border-[#1a1a1a]/10">
-      <div className="max-w-4xl mx-auto">
-        <p className="text-center text-[10px] font-bold uppercase tracking-[0.34em] text-[#1a1a1a]/40 mb-2">
-          The People Behind It
-        </p>
-        <h2 className="text-center text-2xl sm:text-3xl font-black text-[#1a1a1a] mb-10 sm:mb-14">
-          The <span className="text-[#FF2D2D]">Architects</span>
-        </h2>
+    <section id="proof" className="relative py-24 sm:py-32 bg-[#080808]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-16">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
+            From the FAM
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4">
+            Proof of <span className="text-[#FF2D2D]">MAD</span>
+          </h2>
+          <p className="text-sm text-white/30 max-w-md mx-auto">
+            Real people. Real stories. Real impact.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {team.map((member) => (
-            <div
-              key={member.role}
-              className="group relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-6 sm:p-8 text-center transition-all duration-300 hover:border-[#FF2D2D]/20 hover:bg-[#1a1a1a]/[0.04]"
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,45,45,0.04),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative z-10">
-                {/* Avatar */}
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-[#1a1a1a]/10 group-hover:border-[#FF2D2D]/30 transition-colors">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover"
-                    sizes="96px"
-                  />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {testimonials.map((t) => (
+            <div key={t.name} className="group p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:border-white/10 transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                {t.image ? (
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/10">
+                    <Image src={t.image} alt={t.name} fill className="object-cover" sizes="40px" />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center">
+                    <span className="text-sm font-black text-[#FF2D2D]">{t.initial}</span>
+                  </div>
+                )}
+                <div>
+                  <p className="text-sm font-black text-white">{t.name}</p>
+                  <p className="text-[10px] text-white/30">{t.role}</p>
                 </div>
-
-                <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-2">
-                  {member.role}
-                </p>
-                <p className="text-lg font-black text-[#1a1a1a]">{member.name}</p>
-                <p className="mt-1 text-xs text-[#1a1a1a]/40">{member.handle}</p>
-                <div className="mt-4 flex items-center justify-center gap-2">
-                  {member.links.map((link) => (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={link.label}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] hover:bg-[#1a1a1a]/[0.06] hover:border-[#FF2D2D]/20 text-[#1a1a1a]/50 hover:text-[#1a1a1a] text-[10px] font-bold uppercase tracking-wider transition-all"
-                    >
-                      {link.label === "X" ? (
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                      ) : (
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                      )}
-                      {link.label !== "X" && link.label}
-                    </a>
-                  ))}
-                </div>
+              </div>
+              <blockquote className="text-sm text-white/50 leading-relaxed italic mb-4">
+                "{t.quote}"
+              </blockquote>
+              <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                <p className="text-[10px] text-white/20">{t.date}</p>
+                <a href={t.link} target="_blank" rel="noreferrer" className="text-[10px] font-bold text-white/30 hover:text-[#FF2D2D] transition-colors">
+                  See on X →
+                </a>
               </div>
             </div>
           ))}
@@ -1045,20 +586,52 @@ function TheArchitects() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   DISCLAIMER — Legal protection (crème edition)
+   THE ARCHITECTS — Team
    ═══════════════════════════════════════════════════════════ */
-function Disclaimer() {
+function Architects() {
+  const team = [
+    { role: "Dev / Founder", name: "$MAD Dev", handle: "Coffee Collects", image: "/team/mad-dev-coffee-collects.png", links: [{ label: "X", href: "https://x.com/madrichclub_" }, { label: "YouTube", href: "https://www.youtube.com/@CoffeeCollectsHQ" }] },
+    { role: "Community Builder", name: "crypto guru", handle: "@followdv80", image: "/rewards/crypto-guru-followdv80.png", links: [{ label: "X", href: "https://x.com/followdv80" }] },
+    { role: "Community Builder", name: "Perspective 360", handle: "@Derrick152667", image: "/rewards/perspective-360-kakashi.png", links: [{ label: "X", href: "https://x.com/Derrick152667" }] },
+    { role: "Community Builder", name: "Dino", handle: "@Iam__dino9", image: "/team/dino-moderator.png", links: [{ label: "X", href: "https://x.com/Iam__dino9" }] },
+    { role: "Mad Artist", name: "Heydun", handle: "@Grpx_Heydun", image: "/team/mad-artist-heydun.png", links: [{ label: "X", href: "https://x.com/Grpx_Heydun" }] },
+  ];
+
   return (
-    <section className="px-4 sm:px-6 py-10 bg-[#F5F1E8] border-t border-[#1a1a1a]/10">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-start justify-center gap-3">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 shrink-0 text-[#FF2D2D]/50">
-            <path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-          </svg>
-          <p className="text-[11px] leading-relaxed text-[#1a1a1a]/50 text-center">
-            <span className="font-bold text-[#1a1a1a]/70">$MAD is a memecoin for entertainment purposes only.</span> Not financial advice. 
-            Cryptocurrency may lose value. DYOR. <span className="text-[#FF2D2D]/70 font-bold">No guarantees. No refunds. No hand-holding.</span>
+    <section id="team" className="relative py-24 sm:py-32 bg-[#0a0a0a]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-16">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
+            The People
           </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4">
+            The <span className="text-[#FF2D2D]">Architects</span>
+          </h2>
+          <p className="text-sm text-white/30 max-w-md mx-auto">
+            Doxxed. Real. Building in public.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {team.map((member) => (
+            <div key={member.name} className="group p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:border-white/10 transition-all duration-300 text-center">
+              <div className="relative w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#FF2D2D]/30 transition-colors">
+                <Image src={member.image} alt={member.name} fill className="object-cover" sizes="80px" />
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#FF2D2D]/60 mb-1">{member.role}</p>
+              <p className="text-base font-black text-white">{member.name}</p>
+              <p className="text-xs text-white/30 mb-4">{member.handle}</p>
+              <div className="flex items-center justify-center gap-2">
+                {member.links.map((link) => (
+                  <a key={link.label} href={link.href} target="_blank" rel="noreferrer"
+                    className="px-3 py-1.5 rounded-full border border-white/5 bg-white/[0.03] text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white hover:border-white/10 transition-all"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -1066,7 +639,48 @@ function Disclaimer() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   FOOTER — Full navigation footer (crème edition)
+   JOIN THE FAM — CTA Footer
+   ═══════════════════════════════════════════════════════════ */
+function JoinCTA() {
+  return (
+    <section className="relative py-24 sm:py-32 bg-[#080808] overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.08),transparent_50%)]" />
+      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
+        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-[0.95]">
+          Join the<br />
+          <span className="text-[#FF2D2D]">MAD FAM</span>
+        </h2>
+        <p className="text-sm text-white/30 max-w-md mx-auto mb-8">
+          The world is full of opportunities, but the world is run on MAD — Motivation, Alignment, and Discipline. 
+          We are building something that will last.
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href={LINKS.telegram} target="_blank" rel="noreferrer"
+            className="flex items-center gap-2 px-8 py-4 bg-[#FF2D2D] text-white text-sm font-black rounded-full hover:bg-[#FF2D2D]/80 transition-colors shadow-[0_0_40px_rgba(255,45,45,0.3)]"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            Join Telegram
+          </a>
+          <a href={LINKS.x} target="_blank" rel="noreferrer"
+            className="flex items-center gap-2 px-8 py-4 border border-white/10 text-white/60 text-sm font-bold rounded-full hover:border-white/30 hover:text-white transition-all"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Follow on X
+          </a>
+        </div>
+
+        {/* Contract */}
+        <div className="mt-10 inline-flex items-center gap-3 px-5 py-3 rounded-full border border-white/5 bg-white/[0.02]">
+          <span className="text-[10px] font-mono text-white/20">{CA}</span>
+          <CopyButtonInline text={CA} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
    ═══════════════════════════════════════════════════════════ */
 function Footer() {
   const nav = [
@@ -1079,76 +693,42 @@ function Footer() {
   ];
 
   const socials = [
-    { icon: "tg", label: "Telegram", href: LINKS.telegram },
-    { icon: "x", label: "X", href: LINKS.x },
-    { icon: "ig", label: "Instagram", href: LINKS.instagram },
-    { icon: "tt", label: "TikTok", href: LINKS.tiktok },
+    { label: "Telegram", href: LINKS.telegram },
+    { label: "X", href: LINKS.x },
+    { label: "Instagram", href: LINKS.instagram },
+    { label: "TikTok", href: LINKS.tiktok },
   ];
 
   return (
-    <footer className="border-t border-[#1a1a1a]/10 px-4 sm:px-6 py-12 sm:py-16 bg-[#F5F1E8]">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-        {/* Left — Brand + tagline + socials */}
+    <footer className="border-t border-white/5 px-4 sm:px-6 py-12 bg-[#080808]">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
         <div>
-          {/* Logo row */}
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-full bg-[#FF2D2D] flex items-center justify-center text-white font-black text-xl shrink-0">
-              M
-            </div>
+            <div className="w-10 h-10 rounded-full bg-[#FF2D2D] flex items-center justify-center text-white font-black text-sm">M</div>
             <div>
-              <span className="text-[#1a1a1a] font-black text-xl tracking-tight">$MAD</span>
-              <span className="block text-[#1a1a1a]/40 text-[10px] tracking-[0.3em] uppercase font-bold">STAY $MAD</span>
+              <span className="text-white font-black text-lg tracking-tight">$MAD</span>
+              <span className="block text-white/20 text-[9px] tracking-[0.3em] uppercase font-bold">A Next-Gen Entertainment Company</span>
             </div>
           </div>
-
-          {/* Tagline */}
-          <p className="text-sm text-[#1a1a1a]/50 leading-relaxed max-w-xs mb-6">
-            The Supreme of Solana. Limited. Exclusive. Cult.
+          <p className="text-xs text-white/30 leading-relaxed max-w-xs mb-6">
+            The MAD FAM is a global community building the future of entertainment through games, animation, AI, and culture.
           </p>
-
-          {/* Social buttons */}
           <div className="flex items-center gap-3">
             {socials.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={s.label}
-                className="w-11 h-11 rounded-full border border-[#1a1a1a]/15 bg-transparent flex items-center justify-center text-[#1a1a1a]/40 hover:text-[#FF2D2D] hover:border-[#FF2D2D]/30 transition-all duration-300"
+              <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
+                className="px-3 py-1.5 rounded-full border border-white/5 text-[10px] font-bold uppercase tracking-wider text-white/30 hover:text-white hover:border-white/10 transition-all"
               >
-                {s.icon === "tg" && (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>
-                  </svg>
-                )}
-                {s.icon === "x" && (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
-                )}
-                {s.icon === "ig" && (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                  </svg>
-                )}
-                {s.icon === "tt" && (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-                  </svg>
-                )}
+                {s.label}
               </a>
             ))}
           </div>
         </div>
-
-        {/* Right — Navigation */}
         <div className="md:text-right">
-          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40 mb-5">NAVIGATION</p>
-          <ul className="space-y-3">
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-4">Navigation</p>
+          <ul className="space-y-2">
             {nav.map((item) => (
               <li key={item.label}>
-                <Link href={item.href} className="text-sm font-bold text-[#1a1a1a]/60 hover:text-[#FF2D2D] transition-colors duration-300">
+                <Link href={item.href} className="text-xs font-bold text-white/40 hover:text-[#FF2D2D] transition-colors">
                   {item.label}
                 </Link>
               </li>
@@ -1156,180 +736,11 @@ function Footer() {
           </ul>
         </div>
       </div>
-
-      {/* Bottom bar */}
-      <div className="max-w-6xl mx-auto mt-12 pt-6 border-t border-[#1a1a1a]/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-[10px] text-[#1a1a1a]/30">
-          Doxxed. Building. Not asking permission.
-        </p>
-        <p className="text-[10px] text-[#1a1a1a]/30 font-mono">
-          {CA.slice(0, 12)}...{CA.slice(-4)}
-        </p>
+      <div className="max-w-6xl mx-auto mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-[10px] text-white/15">Doxxed. Building. Not asking permission.</p>
+        <p className="text-[10px] text-white/15 font-mono">{CA.slice(0, 12)}...{CA.slice(-4)}</p>
       </div>
     </footer>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
-   PODCAST SECTION — TLT x Coffee Collects Feature
-   ═══════════════════════════════════════════════════════════ */
-function PodcastSection() {
-  return (
-    <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#F5F1E8]">
-      <div className="max-w-6xl mx-auto">
-        {/* Section header */}
-        <div className="mb-10 sm:mb-14 text-center">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5A572" strokeWidth="1.5">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C5A572" strokeWidth="1.5">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C5A572" strokeWidth="1.5">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-          </div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#8B7355]">Featured</p>
-          <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-black text-[#1a1a1a]">
-            The <span className="text-[#FF2D2D]">Podcast</span>
-          </h2>
-        </div>
-
-        {/* Card 1 — Sapient Video */}
-        <div className="relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-            {/* Video player */}
-            <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
-              <video
-                src="/testimonials/sapient-russian-experience.mp4"
-                controls
-                muted
-                playsInline
-                loop
-                className="w-full h-full object-cover"
-                poster=""
-              />
-            </div>
-            
-            {/* Content */}
-            <div className="p-6 sm:p-8 flex flex-col justify-center">
-              <div className="mb-4">
-                <StarRating />
-              </div>
-
-              <div className="flex items-center gap-3 mb-5">
-                <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
-                  <Image
-                    src="/testimonials/sapient-pfp.png"
-                    alt="Sapient"
-                    fill
-                    className="object-cover"
-                    sizes="40px"
-                  />
-                </div>
-                <div>
-                  <p className="text-sm font-black text-[#1a1a1a]">Sapient</p>
-                  <p className="text-[10px] text-[#1a1a1a]/50">@therealsapient · $MAD Holder</p>
-                </div>
-                <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                  </span>
-                  Verified
-                </span>
-              </div>
-
-              <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                Most projects sell a future and <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span> sells a present. Dev is doxxed, real product and real holders. <span className="text-[#FF2D2D] font-bold not-italic">We are still very early here.</span> Grab a bag and let's get more <span className="text-[#FF2D2D] font-bold not-italic">$MAD</span>.
-                <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-              </blockquote>
-
-              <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                <p className="text-[10px] text-[#1a1a1a]/40">June 19, 2026 · 1.8K Views</p>
-                <a 
-                  href="https://x.com/therealsapient/status/2067957958256771072?s=20" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                >
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                  See on X
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 2 — TLT Podcast */}
-        <div className="relative overflow-hidden rounded-[24px] border border-[#1a1a1a]/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
-          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-            {/* YouTube embed */}
-            <div className="relative aspect-video md:aspect-auto bg-[#0a0a0a] overflow-hidden">
-              <iframe
-                src="https://www.youtube.com/embed/gJsb2p2Uig8?start=1"
-                title="$MAD Founder Interview"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="w-full h-full border-0"
-                loading="lazy"
-              />
-            </div>
-            
-            {/* Podcast Info */}
-            <div className="p-6 sm:p-8 flex flex-col justify-center">
-              <div className="mb-4">
-                <StarRating />
-              </div>
-
-              <div className="flex items-center gap-3 mb-5">
-                <div className="relative h-10 w-10 rounded-full overflow-hidden border border-[#FF2D2D]/20">
-                  <Image
-                    src="/testimonials/tlt-podcast-logo.png"
-                    alt="TLT Podcast"
-                    fill
-                    className="object-cover"
-                    sizes="40px"
-                  />
-                </div>
-                <div>
-                  <p className="text-sm font-black text-[#1a1a1a]">The Luxurious Lounge</p>
-                  <p className="text-[10px] text-[#1a1a1a]/50">TLT Podcast · Crypto · Money · Lifestyle</p>
-                </div>
-                <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] border border-[#FF6B00]/20">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF6B00]" />
-                  </span>
-                  Verified
-                </span>
-              </div>
-
-              <blockquote className="text-sm sm:text-base leading-relaxed text-[#1a1a1a]/70 italic">
-                <span className="text-[#FF2D2D] text-lg font-black not-italic mr-1">&quot;</span>
-                The world is full of opportunities, but the world is run on <span className="text-[#FF2D2D] font-bold not-italic">MAD</span> — Motivation, Alignment, and Discipline. <span className="text-[#FF2D2D] font-bold not-italic">We are building something that will last.</span>
-                <span className="text-[#FF2D2D] text-lg font-black not-italic ml-1">&quot;</span>
-              </blockquote>
-
-              <div className="mt-6 pt-5 border-t border-[#1a1a1a]/10 flex items-center justify-between">
-                <p className="text-[10px] text-[#1a1a1a]/40">YouTube Podcast · TLT x Coffee Collects</p>
-                <a 
-                  href="https://www.youtube.com/watch?v=gJsb2p2Uig8" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#1a1a1a]/50 hover:text-[#FF2D2D] transition-colors"
-                >
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M10 15l5.19-3L10 9v6zm11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
-                  Watch on YouTube
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -1338,27 +749,17 @@ function PodcastSection() {
    ═══════════════════════════════════════════════════════════ */
 export default function Home() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#F5F1E8] text-[#1a1a1a]">
+    <div className="min-h-screen bg-[#080808] text-white overflow-x-hidden">
       <Scanlines />
-      <FloatingParticles />
-      
-      {/* Subtle ambient warmth */}
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.03),transparent_50%)]" />
-
-      <main>
-        <TheHero />
-        <TheBanner />
-        <MadCommandCenter />
-        <WhyMADStrip />
-        <TheDashboard />
-        <WhatIsMAD />
-        <TheVerified />
-        <PodcastSection />
-        <TheProof />
-        <TheArchitects />
-      </main>
-
-      <Disclaimer />
+      <Navbar />
+      <Hero />
+      <TheMADFAM />
+      <TheWorld />
+      <Chronicles />
+      <BuiltDifferent />
+      <ProofOfMAD />
+      <Architects />
+      <JoinCTA />
       <Footer />
     </div>
   );
