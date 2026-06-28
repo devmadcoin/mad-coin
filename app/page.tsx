@@ -265,7 +265,7 @@ function Chronicles() {
           {/* Content */}
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
-              MAD Chronicles
+              HOW I GOT MAD 😡
             </p>
             <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
               Episode 1:<br />
@@ -276,29 +276,18 @@ function Chronicles() {
               This is the origin story of every MAD FAM member. The moment that started it all.
             </p>
 
-            <div className="flex items-center gap-4 mb-8">
-              <div className="flex items-center gap-2 text-white/30 text-xs">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                2:34
-              </div>
-              <div className="flex items-center gap-2 text-white/30 text-xs">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                4.2K views
-              </div>
-            </div>
-
-            <Link href="/mad-art"
+            <a href="https://youtube.com/shorts/xXHGyQz0i5Y?si=r0y8UzKDErqDW4qw" target="_blank" rel="noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF2D2D] text-white text-xs font-black uppercase tracking-wider hover:bg-[#FF2D2D]/80 transition-colors"
             >
               Watch Now
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-            </Link>
+            </a>
 
             {/* Coming next */}
             <div className="mt-8 p-4 rounded-xl border border-white/5 bg-white/[0.02]">
               <p className="text-[10px] font-bold uppercase tracking-wider text-white/20 mb-1">Coming Next</p>
-              <p className="text-sm font-bold text-white/60">Episode 2: The Initiation</p>
-              <p className="text-xs text-white/20 mt-1">The skyscraper calls. What's inside?</p>
+              <p className="text-sm font-bold text-white/60">Episode 2: Coming Soon</p>
+              <p className="text-xs text-white/20 mt-1">The next chapter is loading...</p>
             </div>
           </div>
         </div>
