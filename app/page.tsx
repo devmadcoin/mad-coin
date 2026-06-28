@@ -456,6 +456,14 @@ function Footer() {
         <p className="text-[10px] text-white/15">Public. Real. Building in the open.</p>
         <p className="text-[10px] text-white/15 font-mono">{CA.slice(0, 12)}...{CA.slice(-4)}</p>
       </div>
+      {/* Disclaimer */}
+      <div className="max-w-6xl mx-auto mt-6 text-center">
+        <p className="text-[9px] text-white/10 leading-relaxed">
+          ⚠️ $MAD is a memecoin for entertainment purposes only. Not financial advice. Always DYOR. 
+          The MAD FAM is a community — not a company, not a guarantee, not a promise. 
+          Tokens may go up, down, or sideways. Never invest more than you can afford to lose.
+        </p>
+      </div>
     </footer>
   );
 }
