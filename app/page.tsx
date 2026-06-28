@@ -111,6 +111,31 @@ function VideoBanner() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   STOP PANICKING — Bold statement between banner and hero
+   ═══════════════════════════════════════════════════════════ */
+function StopPanicking() {
+  return (
+    <section className="relative py-16 sm:py-20 bg-[#080808] overflow-hidden">
+      {/* Subtle red glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.08),transparent_60%)]" />
+      
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] tracking-[-0.02em]">
+          <span className="text-white">STOP</span>
+          <br />
+          <span className="text-[#FF2D2D]">PANICKING.</span>
+          <br />
+          <span className="text-white">GET </span>
+          <span className="text-[#FF2D2D]">$MAD</span>
+          <br />
+          <span className="text-white">RICH.</span>
+        </h2>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    HERO — Clean dark background, no video behind text
    ═══════════════════════════════════════════════════════════ */
 function Hero() {
@@ -771,6 +796,7 @@ export default function Home() {
       <Scanlines />
       <Navbar />
       <VideoBanner />
+      <StopPanicking />
       <Hero />
       <TheMADFAM />
       <TheWorld />
