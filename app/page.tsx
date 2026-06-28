@@ -173,16 +173,17 @@ function TheMADFAM() {
           {/* Left — Content */}
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
-              The Community
+              The Movement
             </p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-6 leading-[1.1]">
               Welcome to the<br />
               <span className="text-[#FF2D2D]">MAD FAM</span>
             </h2>
             <p className="text-sm sm:text-base text-white/40 leading-relaxed mb-8">
-              We're not investors. We're not traders. We're <span className="text-white font-bold">survivors</span> who found each other 
-              at rock bottom and decided to build something real. The MAD FAM is a global community of creators, gamers, 
-              artists, and believers who chose to GET MAD instead of giving up.
+              We're regular people who got tired of empty promises. So we built something different. 
+              The MAD FAM is a worldwide family of doers — creators, gamers, artists, and everyday people 
+              who chose <span className="text-white font-bold">Motivation, Alignment, and Discipline</span> over excuses. 
+              We don't just dream. We <span className="text-[#FF2D2D] font-black">GET MAD</span> and make it real.
             </p>
 
             {/* Stats */}
