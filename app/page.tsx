@@ -371,11 +371,11 @@ function JoinCTA() {
           We are building something that will last.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href={LINKS.telegram} target="_blank" rel="noreferrer"
+          <a href="https://www.youtube.com/@madrichclub" target="_blank" rel="noreferrer"
             className="flex items-center gap-2 px-8 py-4 bg-[#FF2D2D] text-white text-sm font-black rounded-full hover:bg-[#FF2D2D]/80 transition-colors shadow-[0_0_40px_rgba(255,45,45,0.3)]"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-            Join Telegram
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            Subscribe on YouTube
           </a>
           <a href={LINKS.x} target="_blank" rel="noreferrer"
             className="flex items-center gap-2 px-8 py-4 border border-white/10 text-white/60 text-sm font-bold rounded-full hover:border-white/30 hover:text-white transition-all"
