@@ -92,25 +92,32 @@ function Navbar() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HERO — The Initiation. Story-first. Emotional.
+/* ═══════════════════════════════════════════════════════════
+   VIDEO BANNER — Horizontal strip below navbar
+   ═══════════════════════════════════════════════════════════ */
+function VideoBanner() {
+  return (
+    <div className="relative w-full h-[240px] sm:h-[280px] lg:h-[320px] overflow-hidden bg-[#080808]">
+      <video
+        autoPlay muted loop playsInline preload="auto"
+        className="w-full h-full object-cover object-top"
+      >
+        <source src="/game/mad-banner.mp4" type="video/mp4" />
+      </video>
+      {/* Fade to black at bottom */}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_30%,rgba(8,8,8,0.7)_70%,#080808_100%)]" />
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HERO — Clean dark background, no video behind text
    ═══════════════════════════════════════════════════════════ */
 function Hero() {
-  const [videoLoaded, setVideoLoaded] = useState(false);
-
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#080808]">
-      {/* Background video */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay muted loop playsInline preload="auto"
-          className="w-full h-full object-cover opacity-40"
-          onLoadedData={() => setVideoLoaded(true)}
-        >
-          <source src="/game/mad-banner.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,8,0.3)_0%,rgba(8,8,8,0.6)_50%,#080808_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(8,8,8,0.8)_100%)]" />
-      </div>
+    <section className="relative py-20 sm:py-28 bg-[#080808] overflow-hidden">
+      {/* Subtle ambient glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,45,45,0.06),transparent_50%)]" />
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
         {/* Badge */}
@@ -161,7 +168,7 @@ function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+      <div className="mt-16 flex flex-col items-center gap-2">
         <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/20">Scroll</span>
         <div className="w-5 h-8 rounded-full border border-white/10 flex items-start justify-center p-1.5">
           <div className="w-1 h-2 rounded-full bg-white/30 animate-bounce" />
@@ -763,6 +770,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#080808] text-white overflow-x-hidden">
       <Scanlines />
       <Navbar />
+      <VideoBanner />
       <Hero />
       <TheMADFAM />
       <TheWorld />
