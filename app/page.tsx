@@ -249,13 +249,13 @@ function Chronicles() {
           {/* Video — vertical/portrait orientation */}
           <div className="relative flex items-center justify-center">
             <div className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[9/16] rounded-3xl overflow-hidden border border-white/5 bg-[#0a0a0a] shadow-[0_0_60px_rgba(255,45,45,0.1)]">
-              <video 
-                src="/mad-chronicles-ep1.mp4" 
-                controls 
-                playsInline 
-                loop 
-                className="w-full h-full object-cover" 
-                poster="/memes/MAD-GETTING-RUGGED-THUMB.png" 
+              <iframe
+                src="https://www.youtube.com/embed/xXHGyQz0i5Y?autoplay=0&rel=0&modestbranding=1"
+                title="MAD Chronicles: Episode 1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+                style={{ border: "none" }}
               />
             </div>
             {/* Glow behind video */}
