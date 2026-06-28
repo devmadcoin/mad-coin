@@ -194,11 +194,11 @@ function TheMADFAM() {
               ))}
             </div>
 
-            <a href={LINKS.telegram} target="_blank" rel="noreferrer"
+            <a href="https://x.com/i/communities/2019256566248312879" target="_blank" rel="noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#FF2D2D]/20 text-[#FF2D2D] text-xs font-bold uppercase tracking-wider hover:bg-[#FF2D2D]/10 transition-colors"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-              Join the Telegram
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              Join the X Community
             </a>
           </div>
 
