@@ -41,34 +41,22 @@ function FadeIn({
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MAD FACE SVG — The iconic center
+   MAD FACE — Using the actual logo image
    ═══════════════════════════════════════════════════════════ */
 function MadFace({ className = "", size = 120 }: { className?: string; size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 120 120" className={className}>
-      {/* Head */}
-      <circle cx="60" cy="60" r="55" fill="#FF2D2D" stroke="#1a1a1a" strokeWidth="3"/>
-      {/* Left eye — angry */}
-      <path d="M32 52 L48 58" stroke="#1a1a1a" strokeWidth="4" strokeLinecap="round"/>
-      <circle cx="38" cy="58" r="7" fill="#1a1a1a"/>
-      <circle cx="40" cy="56" r="2.5" fill="white"/>
-      {/* Right eye — angry */}
-      <path d="M88 52 L72 58" stroke="#1a1a1a" strokeWidth="4" strokeLinecap="round"/>
-      <circle cx="82" cy="58" r="7" fill="#1a1a1a"/>
-      <circle cx="84" cy="56" r="2.5" fill="white"/>
-      {/* Angry eyebrows */}
-      <path d="M28 45 L50 52" stroke="#1a1a1a" strokeWidth="4.5" strokeLinecap="round"/>
-      <path d="M92 45 L70 52" stroke="#1a1a1a" strokeWidth="4.5" strokeLinecap="round"/>
-      {/* Mouth — gritted teeth */}
-      <path d="M38 78 Q60 72 82 78" stroke="#1a1a1a" strokeWidth="3" fill="none" strokeLinecap="round"/>
-      <rect x="42" y="78" width="36" height="8" rx="2" fill="white" stroke="#1a1a1a" strokeWidth="2"/>
-      <line x1="50" y1="78" x2="50" y2="86" stroke="#1a1a1a" strokeWidth="1.5"/>
-      <line x1="60" y1="78" x2="60" y2="86" stroke="#1a1a1a" strokeWidth="1.5"/>
-      <line x1="70" y1="78" x2="70" y2="86" stroke="#1a1a1a" strokeWidth="1.5"/>
-      {/* Anger vein */}
-      <path d="M85 42 Q90 38 88 35" stroke="#1a1a1a" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      <path d="M87 40 Q92 36 90 33" stroke="#1a1a1a" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-    </svg>
+    <img
+      src="/mad-logo.png"
+      alt="$MAD"
+      width={size}
+      height={size}
+      className={className}
+      style={{
+        borderRadius: "50%",
+        objectFit: "cover",
+        border: "3px solid #1a1a1a",
+      }}
+    />
   );
 }
 
