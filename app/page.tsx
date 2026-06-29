@@ -171,7 +171,7 @@ function CopyButtonInline({ text }: { text: string }) {
    ═══════════════════════════════════════════════════════════ */
 function TheMADFAM() {
   const stats = [
-    { value: "519+", label: "MAD FAM Members" },
+    { value: "4.5K+", label: "MAD FAM Members" },
     { value: "7", label: "Communities Locked" },
     { value: "1", label: "Live Roblox Game" },
     { value: "∞", label: "Vibes" },
