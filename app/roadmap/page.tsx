@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
@@ -219,6 +220,13 @@ function PillarCard({ pillar, index }: { pillar: typeof PILLARS[0]; index: numbe
             <span className="text-2xl font-black" style={{ color: pillar.color }}>{pct}%</span>
           </div>
 
+          {/* Game image for Games pillar */}
+          {pillar.id === "games" && (
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
+              <Image src="/game/mad-shot-hero.png" alt="MAD Games" fill className="object-cover" />
+            </div>
+          )}
+
           {/* Description */}
           <p className="text-sm mb-5" style={{ color: "#999999" }}>{pillar.desc}</p>
 
@@ -341,6 +349,12 @@ function PillarCarousel() {
               </div>
               <span className="text-2xl font-black" style={{ color: pillar.color }}>{pct}%</span>
             </div>
+            {/* Game image for Games pillar */}
+            {pillar.id === "games" && (
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
+                <Image src="/game/mad-shot-hero.png" alt="MAD Games" fill className="object-cover" />
+              </div>
+            )}
             <p className="text-sm mb-5" style={{ color: "#999999" }}>{pillar.desc}</p>
             {/* Progress */}
             <div className="mb-5">
