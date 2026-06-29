@@ -73,11 +73,11 @@ export default function MadMindPage() {
 
       <main className="pt-14">
         {/* Banner */}
-        <section className="relative w-full overflow-hidden">
+        <section className="relative w-full overflow-hidden max-h-[50vh]">
           <img
             src="/mad-ai-banner.png"
             alt="$MAD AI — AI Built $MAD"
-            className="w-full h-auto object-cover object-center"
+            className="w-full h-full object-cover object-center"
           />
         </section>
 
