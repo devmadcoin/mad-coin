@@ -65,7 +65,7 @@ function Navbar() {
 const PILLARS = [
   {
     id: "games", label: "Games", icon: "🎮",
-    desc: "+1 MAD PER SECOND on Roblox. Our first game. Live and growing. MAD SHOT — our second game. Just dropped.",
+    desc: "+1 MAD PER SECOND on Roblox. Our first game. Live and growing. MAD SHOT — our second game. Just dropped. Optimized and available for console, computers, mobile, tablet, and VR.",
     status: "live" as const,
     color: "#FF2D2D",
     milestones: [
