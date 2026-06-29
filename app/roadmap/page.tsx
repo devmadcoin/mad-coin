@@ -246,45 +246,33 @@ const PILLARS: PillarData[] = [
 ];
 
 /* ═══════════════════════════════════════════════════════════
-   QUICK STATS — High contrast for mobile visibility
+   QUICK STATS — Solid colored backgrounds, no inline styles
    ═══════════════════════════════════════════════════════════ */
 function QuickStats() {
-  const stats = [
-    { label: "Market Cap", value: "$90M+", color: "#FF2D2D", bg: "#FF2D2D", bgOpacity: 12 },
-    { label: "Supply Burned", value: "50%", color: "#FF6B00", bg: "#FF6B00", bgOpacity: 12 },
-    { label: "Communities", value: "7 Locked", color: "#22c55e", bg: "#22c55e", bgOpacity: 12 },
-    { label: "Holders", value: "3,940+", color: "#A855F7", bg: "#A855F7", bgOpacity: 12 },
-  ];
-
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {stats.map((s) => (
-        <div
-          key={s.label}
-          className="rounded-2xl p-4 text-center border border-white/10"
-          style={{
-            backgroundColor: s.bg,
-            opacity: 1,
-            background: `linear-gradient(135deg, ${s.bg}18, ${s.bg}08)`,
-          }}
-        >
-          <p
-            className="text-xl sm:text-2xl font-black"
-            style={{ color: s.color }}
-          >
-            {s.value}
-          </p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">
-            {s.label}
-          </p>
-        </div>
-      ))}
+      <div className="rounded-2xl p-4 text-center border border-red-500/20 bg-red-500/10">
+        <p className="text-xl sm:text-2xl font-black text-red-400">$90M+</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">Market Cap</p>
+      </div>
+      <div className="rounded-2xl p-4 text-center border border-orange-500/20 bg-orange-500/10">
+        <p className="text-xl sm:text-2xl font-black text-orange-400">50%</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">Supply Burned</p>
+      </div>
+      <div className="rounded-2xl p-4 text-center border border-emerald-500/20 bg-emerald-500/10">
+        <p className="text-xl sm:text-2xl font-black text-emerald-400">7 Locked</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">Communities</p>
+      </div>
+      <div className="rounded-2xl p-4 text-center border border-purple-500/20 bg-purple-500/10">
+        <p className="text-xl sm:text-2xl font-black text-purple-400">3,940+</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">Holders</p>
+      </div>
     </div>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PILLAR CARD
+   PILLAR CARD — Tailwind only, solid backgrounds
    ═══════════════════════════════════════════════════════════ */
 function PillarCard({ bubble }: { bubble: PillarData }) {
   const completedCount = bubble.milestones.filter((m) => m.done).length;
@@ -292,34 +280,32 @@ function PillarCard({ bubble }: { bubble: PillarData }) {
   const progressPct = Math.round((completedCount / totalCount) * 100);
 
   const statusConfig = {
-    live: { label: "● LIVE", bg: "rgba(34,197,94,0.15)", color: "#22c55e" },
-    wip: { label: "◐ IN PROGRESS", bg: "rgba(255,107,0,0.15)", color: "#FF6B00" },
-    coming: { label: "○ COMING SOON", bg: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)" },
+    live: { label: "● LIVE", bg: "bg-emerald-500/15", color: "text-emerald-400" },
+    wip: { label: "◐ IN PROGRESS", bg: "bg-orange-500/15", color: "text-orange-400" },
+    coming: { label: "○ COMING SOON", bg: "bg-white/10", color: "text-white/50" },
   };
   const status = statusConfig[bubble.status];
 
+  // Color map for border/progress
+  const colorMap: Record<string, { border: string; bar: string; checkBg: string; checkText: string; glow: string }> = {
+    "#FF2D2D": { border: "border-red-500/30", bar: "bg-red-500", checkBg: "bg-red-500", checkText: "text-white", glow: "shadow-red-500/20" },
+    "#FF6B00": { border: "border-orange-500/30", bar: "bg-orange-500", checkBg: "bg-orange-500", checkText: "text-white", glow: "shadow-orange-500/20" },
+    "#FFD700": { border: "border-yellow-500/30", bar: "bg-yellow-500", checkBg: "bg-yellow-500", checkText: "text-black", glow: "shadow-yellow-500/20" },
+    "#22c55e": { border: "border-emerald-500/30", bar: "bg-emerald-500", checkBg: "bg-emerald-500", checkText: "text-white", glow: "shadow-emerald-500/20" },
+    "#A855F7": { border: "border-purple-500/30", bar: "bg-purple-500", checkBg: "bg-purple-500", checkText: "text-white", glow: "shadow-purple-500/20" },
+    "#00D4FF": { border: "border-cyan-500/30", bar: "bg-cyan-400", checkBg: "bg-cyan-400", checkText: "text-black", glow: "shadow-cyan-500/20" },
+    "#10b981": { border: "border-teal-500/30", bar: "bg-teal-500", checkBg: "bg-teal-500", checkText: "text-white", glow: "shadow-teal-500/20" },
+  };
+  const cm = colorMap[bubble.color] || colorMap["#FF2D2D"];
+
   return (
-    <div
-      className="rounded-2xl border p-5 sm:p-6 transition-all duration-300 hover:scale-[1.02]"
-      style={{
-        background: "#1a1a1a",
-        borderColor: `${bubble.color}40`,
-        boxShadow: `0 0 20px ${bubble.glowColor}`,
-        minHeight: "280px",
-      }}
-    >
+    <div className={`rounded-2xl border-2 p-5 sm:p-6 bg-[#1a1a1a] transition-all duration-300 hover:scale-[1.02] ${cm.border} ${cm.glow} shadow-lg`}>
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <span className="text-3xl">{bubble.icon}</span>
         <div className="flex-1">
           <h3 className="text-lg font-black text-white">{bubble.label}</h3>
-          <span
-            className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full inline-block mt-1"
-            style={{
-              background: status.bg,
-              color: status.color,
-            }}
-          >
+          <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full inline-block mt-1 ${status.bg} ${status.color}`}>
             {status.label}
           </span>
         </div>
@@ -340,10 +326,10 @@ function PillarCard({ bubble }: { bubble: PillarData }) {
             {completedCount}/{totalCount}
           </span>
         </div>
-        <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+        <div className="h-2 rounded-full bg-white/5 overflow-hidden">
           <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{ width: `${progressPct}%`, background: bubble.color }}
+            className={`h-full rounded-full transition-all duration-500 ${cm.bar}`}
+            style={{ width: `${progressPct}%` }}
           />
         </div>
       </div>
@@ -353,17 +339,13 @@ function PillarCard({ bubble }: { bubble: PillarData }) {
         {bubble.milestones.map((m) => (
           <div key={m.text} className="flex items-center gap-2.5">
             <div
-              className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black shrink-0"
-              style={{
-                background: m.done ? bubble.color : "rgba(255,255,255,0.06)",
-                color: m.done ? "white" : "rgba(255,255,255,0.2)",
-              }}
+              className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${
+                m.done ? `${cm.checkBg} ${cm.checkText}` : "bg-white/[0.08] text-white/25"
+              }`}
             >
               {m.done ? "✓" : "○"}
             </div>
-            <span
-              className={`text-xs ${m.done ? "text-white/70" : "text-white/30"}`}
-            >
+            <span className={`text-xs ${m.done ? "text-white/70" : "text-white/30"}`}>
               {m.text}
             </span>
           </div>
@@ -391,7 +373,7 @@ function RoadmapCards() {
   const handleScroll = () => {
     if (!scrollRef.current) return;
     const scrollLeft = scrollRef.current.scrollLeft;
-    const cardWidth = scrollRef.current.offsetWidth * 0.85 + 16; // 85vw + gap
+    const cardWidth = scrollRef.current.offsetWidth * 0.85 + 16;
     const newIndex = Math.round(scrollLeft / cardWidth);
     setActiveIndex(Math.min(Math.max(newIndex, 0), PILLARS.length - 1));
   };
@@ -419,7 +401,7 @@ function RoadmapCards() {
         }}
       >
         {PILLARS.map((bubble) => (
-          <div key={bubble.id} className="snap-center w-[85vw]">
+          <div key={bubble.id} className="snap-center" style={{ width: "85vw", flexShrink: 0 }}>
             <PillarCard bubble={bubble} />
           </div>
         ))}
