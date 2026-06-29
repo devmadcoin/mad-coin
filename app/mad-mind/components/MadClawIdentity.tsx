@@ -181,6 +181,16 @@ export default function MadClawIdentity() {
       <div className="bg-[#0a0a0a] relative z-10">
         <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
           <TheOracle />
+
+          {/* Chinese Astrology Divider */}
+          <section className="w-full py-4">
+            <img
+              src="/mad-chinese-astrology-divider.jpg"
+              alt="$MAD Chinese Astrology"
+              className="w-full max-w-3xl mx-auto h-auto rounded-xl"
+            />
+          </section>
+
           <ChineseAstrology />
           <MadArchetypeQuiz />
           <FrequencyMeter />
