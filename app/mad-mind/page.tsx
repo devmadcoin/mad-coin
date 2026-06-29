@@ -72,6 +72,15 @@ export default function MadMindPage() {
       <Navbar />
 
       <main className="pt-14">
+        {/* Banner */}
+        <section className="relative w-full overflow-hidden">
+          <img
+            src="/mad-ai-banner.png"
+            alt="$MAD AI — AI Built $MAD"
+            className="w-full h-auto object-cover object-center"
+          />
+        </section>
+
         <MadClawIdentity />
       </main>
 
