@@ -192,6 +192,16 @@ export default function MadClawIdentity() {
           </section>
 
           <ChineseAstrology />
+
+          {/* Archetype Divider */}
+          <section className="w-full py-4">
+            <img
+              src="/mad-archetype-divider.jpg"
+              alt="$MAD AI Archetype"
+              className="w-full max-w-3xl mx-auto h-auto rounded-xl"
+            />
+          </section>
+
           <MadArchetypeQuiz />
           <FrequencyMeter />
           <TheFork />
