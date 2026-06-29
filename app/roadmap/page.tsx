@@ -331,17 +331,24 @@ function RoadmapCards() {
    ═══════════════════════════════════════════════════════════ */
 function QuickStats() {
   const stats = [
-    { label: "Market Cap", value: "$90M+", color: "#FF2D2D" },
-    { label: "Supply Burned", value: "50%", color: "#FF6B00" },
-    { label: "Communities", value: "7 Locked", color: "#22c55e" },
-    { label: "Holders", value: "3,940+", color: "#A855F7" },
+    { label: "Market Cap", value: "$90M+", color: "#FF2D2D", bg: "rgba(255,45,45,0.08)" },
+    { label: "Supply Burned", value: "50%", color: "#FF6B00", bg: "rgba(255,107,0,0.08)" },
+    { label: "Communities", value: "7 Locked", color: "#22c55e", bg: "rgba(34,197,94,0.08)" },
+    { label: "Holders", value: "3,940+", color: "#A855F7", bg: "rgba(168,85,247,0.08)" },
   ];
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       {stats.map((s) => (
-        <div key={s.label} className="rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 text-center">
+        <div
+          key={s.label}
+          className="rounded-2xl border p-4 text-center"
+          style={{
+            background: s.bg,
+            borderColor: `${s.color}25`,
+          }}
+        >
           <p className="text-xl sm:text-2xl font-black" style={{ color: s.color }}>{s.value}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-white/50 mt-1">{s.label}</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-white/60 mt-1">{s.label}</p>
         </div>
       ))}
     </div>
