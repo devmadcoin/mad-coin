@@ -3,8 +3,6 @@
 import Link from "next/link";
 import MadClawIdentity from "./components/MadClawIdentity";
 
-
-
 /* ─── Scanlines ─── */
 function Scanlines() {
   return (

@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-
 import NumerologyOracle from "./NumerologyOracle";
 import MadArchetypeQuiz from "./MadArchetypeQuiz";
 import FrequencyMeter from "./FrequencyMeter";
@@ -32,7 +30,7 @@ export default function MadClawIdentity() {
       {/* Content below hero on dark background */}
       <div className="bg-[#0a0a0a] relative z-10">
         <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
-          <TheOracle />
+          <NumerologyOracle />
 
           {/* Chinese Astrology Divider */}
           <section className="w-full py-4">
@@ -71,5 +69,3 @@ export default function MadClawIdentity() {
     </div>
   );
 }
-
-export { triggerClawReaction };
