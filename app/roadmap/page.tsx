@@ -82,7 +82,7 @@ const PILLARS = [
     desc: "Physical + digital drops. Every item tells a story. 1st Limited edition with only 26 hats was given a special reward of 1M Mad Tokens.",
     status: "wip" as const,
     color: "#FF6B00",
-    image: "/merch/mad-hat-limited-001.png",
+    image: "/merch/mad-hat-limited-001-v2.png",
     milestones: [
       { text: "Design system & story-driven items", done: true },
       { text: "MAD // LIMITED 001 — 26 hats, 1M $MAD reward", done: true },
