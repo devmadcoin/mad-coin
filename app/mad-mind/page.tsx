@@ -1,16 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import MadClawIdentity from "./components/MadClawIdentity";
 
-const CA = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
-const LINKS = {
-  telegram: "https://t.me/MadRichClub",
-  x: "https://x.com/madrichclub_",
-  instagram: "https://www.instagram.com/madrichclub/",
-  tiktok: "https://www.tiktok.com/@madrichclub",
-};
+
 
 /* ─── Scanlines ─── */
 function Scanlines() {
@@ -109,7 +102,6 @@ export default function MadMindPage() {
       </main>
 
       <Disclaimer />
-      <Footer />
     </div>
   );
 }
@@ -131,44 +123,4 @@ function Disclaimer() {
   );
 }
 
-/* ─── Footer (matches homepage) ─── */
-function Footer() {
-  const socials = [
-    { label: "Telegram", href: LINKS.telegram },
-    { label: "X", href: LINKS.x },
-    { label: "Instagram", href: LINKS.instagram },
-    { label: "TikTok", href: LINKS.tiktok },
-  ];
 
-  return (
-    <footer className="border-t border-white/5 px-4 sm:px-6 py-12 bg-[#080808]">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-[#FF2D2D] flex items-center justify-center text-white font-black text-sm">M</div>
-            <div>
-              <span className="text-white font-black text-lg tracking-tight">$MAD</span>
-              <span className="block text-white/20 text-[9px] tracking-[0.3em] uppercase font-bold">A Next-Gen Entertainment Company</span>
-            </div>
-          </div>
-          <p className="text-xs text-white/30 leading-relaxed max-w-xs">
-            The MAD FAM is a global community building the future of entertainment through games, animation, AI, and culture.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          {socials.map((s) => (
-            <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
-              className="px-3 py-1.5 rounded-full border border-white/5 text-[10px] font-bold uppercase tracking-wider text-white/30 hover:text-white hover:border-white/10 transition-all"
-            >
-              {s.label}
-            </a>
-          ))}
-        </div>
-      </div>
-      <div className="max-w-6xl mx-auto mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-[10px] text-white/15">Public. Real. Building in the open.</p>
-        <p className="text-[10px] text-white/15 font-mono">{CA.slice(0, 12)}...{CA.slice(-4)}</p>
-      </div>
-    </footer>
-  );
-}
