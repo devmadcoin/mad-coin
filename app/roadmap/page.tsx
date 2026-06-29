@@ -161,7 +161,7 @@ function QuickStats() {
     marketCap: "$90M+",
     supplyBurned: "50%",
     communitiesLocked: "7",
-    holders: "3,940+",
+    holders: "532",
     loading: true,
   });
 
@@ -176,18 +176,24 @@ function QuickStats() {
         const pair = json.pairs?.[0] || json.pair;
 
         let marketCap = "$90M+";
+        let holders = "532";
         if (pair?.marketCap) {
           const mc = Number(pair.marketCap);
           if (mc >= 1e9) marketCap = `$${(mc / 1e9).toFixed(2)}B`;
           else if (mc >= 1e6) marketCap = `$${(mc / 1e6).toFixed(1)}M`;
           else if (mc >= 1e3) marketCap = `$${(mc / 1e3).toFixed(1)}K`;
         }
+        if (pair?.holders) {
+          const h = Number(pair.holders);
+          if (h >= 1000) holders = `${(h / 1000).toFixed(1)}K`;
+          else holders = h.toString();
+        }
 
         setData({
           marketCap,
           supplyBurned: "50%",
           communitiesLocked: "7",
-          holders: "3,940+",
+          holders,
           loading: false,
         });
       } catch (e) {
