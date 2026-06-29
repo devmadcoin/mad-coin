@@ -37,7 +37,7 @@ function TheGate() {
       {/* Background image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/images/mad-claw-hero.webp"
+          src="/mad-claw-hero.png"
           alt=""
           className="w-full h-full object-cover object-center"
         />
