@@ -86,20 +86,20 @@ const PILLARS = [
     milestones: [
       { text: "Design system & story-driven items", done: true },
       { text: "MAD // LIMITED 001 — 26 hats, 1M $MAD reward", done: true },
-      { text: "Digital twin NFTs for each item", done: false },
       { text: "Next drop — tees & accessories", done: false },
+      { text: "Community-designed apparel", done: false },
     ],
   },
   {
     id: "music", label: "Music", icon: "🎵",
-    desc: "Soundtrack to the madness. Phonk, rage, victory.",
+    desc: "Soundtrack to the madness. Phonk, rage, victory. Mello Will collaboration locked in.",
     status: "coming" as const,
     color: "#FFD700",
     milestones: [
-      { text: "MAD Phonk soundtrack EP", done: false },
-      { text: "Artist collaborations", done: false },
-      { text: "Music NFT drops", done: false },
-      { text: "Live DJ sets / Events", done: false },
+      { text: "Collaboration with Mello Will", done: true },
+      { text: "$MAD anthem — original track", done: false },
+      { text: "Soundtrack for games & content", done: false },
+      { text: "Community music submissions", done: false },
     ],
   },
   {
