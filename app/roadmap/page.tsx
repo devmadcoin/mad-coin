@@ -1,7 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 /* ═══════════════════════════════════════════════════════════
    ANIMATION UTILITIES
@@ -40,34 +41,52 @@ function FadeIn({
   );
 }
 
-/* ═══════════════════════════════════════════════════════════
-   MAD FACE — Using the actual logo image
-   ═══════════════════════════════════════════════════════════ */
-function MadFace({ className = "", size = 120 }: { className?: string; size?: number }) {
+/* ─── Scanlines ─── */
+function Scanlines() {
   return (
-    <div
-      className={className}
+    <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.02]"
       style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        overflow: "hidden",
-        border: "3px solid #1a1a1a",
+        backgroundImage: "linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px)",
+        backgroundSize: "100% 3px",
       }}
-    >
-      <img
-        src="/mad-logo.png"
-        alt="$MAD"
-        width={size}
-        height={size}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-        }}
-      />
-    </div>
+    />
+  );
+}
+
+/* ─── Navbar (matches homepage) ─── */
+function Navbar() {
+  const links = [
+    { label: "Home", href: "/" },
+    { label: "MAD AI", href: "/mad-mind" },
+    { label: "Roadmap", href: "/roadmap", active: true },
+    { label: "Game", href: "/game" },
+    { label: "MAD Art", href: "/mad-art" },
+    { label: "Rewards", href: "/rewards" },
+    { label: "Merch", href: "/merch" },
+  ];
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#080808]/80 backdrop-blur-md border-b border-white/5">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-[#FF2D2D] flex items-center justify-center text-white font-black text-sm">M</div>
+          <span className="text-white font-black text-sm tracking-tight">$MAD</span>
+        </Link>
+        <div className="hidden md:flex items-center gap-1">
+          {links.map((l) => (
+            <Link key={l.label} href={l.href}
+              className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${
+                l.active
+                  ? "bg-[#FF2D2D]/10 text-[#FF2D2D]"
+                  : "text-white/40 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </nav>
   );
 }
 
@@ -84,21 +103,16 @@ interface BubbleData {
   milestones: { text: string; done: boolean }[];
   color: string;
   glowColor: string;
-  angle: number; // degrees around center
-  distance: number; // percentage from center
+  angle: number;
+  distance: number;
 }
 
 const BUBBLES: BubbleData[] = [
   {
-    id: "games",
-    label: "Games",
-    icon: "🎮",
+    id: "games", label: "Games", icon: "🎮",
     description: "Mad Phonk Awakening on Roblox. Built. Live. Crushing.",
-    status: "live",
-    color: "#FF2D2D",
-    glowColor: "rgba(255,45,45,0.3)",
-    angle: 270, // top
-    distance: 38,
+    status: "live", color: "#FF2D2D", glowColor: "rgba(255,45,45,0.3)",
+    angle: 270, distance: 38,
     milestones: [
       { text: "Mad Phonk Awakening launched on Roblox", done: true },
       { text: "$MAD token integration in-game", done: true },
@@ -107,15 +121,10 @@ const BUBBLES: BubbleData[] = [
     ],
   },
   {
-    id: "merch",
-    label: "Merch",
-    icon: "👕",
+    id: "merch", label: "Merch", icon: "👕",
     description: "Physical + digital drops. Every item tells a story.",
-    status: "wip",
-    color: "#FF6B00",
-    glowColor: "rgba(255,107,0,0.3)",
-    angle: 321,
-    distance: 38,
+    status: "wip", color: "#FF6B00", glowColor: "rgba(255,107,0,0.3)",
+    angle: 321, distance: 38,
     milestones: [
       { text: "Design system & story-driven items", done: true },
       { text: "The Rugged Tee concept", done: true },
@@ -124,15 +133,10 @@ const BUBBLES: BubbleData[] = [
     ],
   },
   {
-    id: "music",
-    label: "Music",
-    icon: "🎵",
+    id: "music", label: "Music", icon: "🎵",
     description: "Soundtrack to the madness. Phonk, rage, victory.",
-    status: "coming",
-    color: "#FFD700",
-    glowColor: "rgba(255,215,0,0.3)",
-    angle: 13,
-    distance: 38,
+    status: "coming", color: "#FFD700", glowColor: "rgba(255,215,0,0.3)",
+    angle: 13, distance: 38,
     milestones: [
       { text: "MAD Phonk soundtrack EP", done: false },
       { text: "Artist collaborations", done: false },
@@ -141,15 +145,10 @@ const BUBBLES: BubbleData[] = [
     ],
   },
   {
-    id: "food",
-    label: "Food",
-    icon: "🍔",
+    id: "food", label: "Food", icon: "🍔",
     description: "$MAD Bites. Fuel for the trenches.",
-    status: "coming",
-    color: "#22c55e",
-    glowColor: "rgba(34,197,94,0.3)",
-    angle: 64,
-    distance: 38,
+    status: "coming", color: "#22c55e", glowColor: "rgba(34,197,94,0.3)",
+    angle: 64, distance: 38,
     milestones: [
       { text: "$MAD Bites concept", done: false },
       { text: "Pop-up food truck at events", done: false },
@@ -158,15 +157,10 @@ const BUBBLES: BubbleData[] = [
     ],
   },
   {
-    id: "content",
-    label: "Content",
-    icon: "📹",
+    id: "content", label: "Content", icon: "📹",
     description: "The MAD Show. Animations, lore, weekly drops.",
-    status: "live",
-    color: "#A855F7",
-    glowColor: "rgba(168,85,247,0.3)",
-    angle: 115,
-    distance: 38,
+    status: "live", color: "#A855F7", glowColor: "rgba(168,85,247,0.3)",
+    angle: 115, distance: 38,
     milestones: [
       { text: "'I'M MAD GETTING RUGGED' animation", done: true },
       { text: "Coffee Collects YouTube (3 channels)", done: true },
@@ -175,15 +169,10 @@ const BUBBLES: BubbleData[] = [
     ],
   },
   {
-    id: "events",
-    label: "Events",
-    icon: "🎉",
+    id: "events", label: "Events", icon: "🎉",
     description: "IRL activations. The Initiation. Pop-ups. Chaos.",
-    status: "coming",
-    color: "#00D4FF",
-    glowColor: "rgba(0,212,255,0.3)",
-    angle: 166,
-    distance: 38,
+    status: "coming", color: "#00D4FF", glowColor: "rgba(0,212,255,0.3)",
+    angle: 166, distance: 38,
     milestones: [
       { text: "Solana Breakpoint activation", done: false },
       { text: "MAD Initiation scavenger hunt", done: false },
@@ -192,15 +181,10 @@ const BUBBLES: BubbleData[] = [
     ],
   },
   {
-    id: "finance",
-    label: "Finance",
-    icon: "💰",
+    id: "finance", label: "Finance", icon: "💰",
     description: "Staking, burns, treasury. The economic engine.",
-    status: "live",
-    color: "#10b981",
-    glowColor: "rgba(16,185,129,0.3)",
-    angle: 217,
-    distance: 38,
+    status: "live", color: "#10b981", glowColor: "rgba(16,185,129,0.3)",
+    angle: 217, distance: 38,
     milestones: [
       { text: "50% supply burned", done: true },
       { text: "7 communities locked to 2060", done: true },
@@ -257,22 +241,17 @@ function BubbleMap() {
         viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
       >
         <defs>
-          {BUBBLES.map((bubble) => {
-            const pos = getBubblePos(bubble);
-            return (
-              <linearGradient key={bubble.id} id={`line-${bubble.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={bubble.color} stopOpacity="0.3" />
-                <stop offset="100%" stopColor={bubble.color} stopOpacity="0.1" />
-              </linearGradient>
-            );
-          })}
+          {BUBBLES.map((bubble) => (
+            <linearGradient key={bubble.id} id={`line-${bubble.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor={bubble.color} stopOpacity="0.3" />
+              <stop offset="100%" stopColor={bubble.color} stopOpacity="0.1" />
+            </linearGradient>
+          ))}
         </defs>
         {BUBBLES.map((bubble) => {
           const pos = getBubblePos(bubble);
           const isHovered = hoveredBubble === bubble.id;
           const isActive = activeBubble === bubble.id;
-
-          // Calculate line endpoints (edge-to-edge, not center-to-center)
           const angleRad = (bubble.angle * Math.PI) / 180;
           const startX = centerX + Math.cos(angleRad) * centerRadius;
           const startY = centerY + Math.sin(angleRad) * centerRadius;
@@ -282,11 +261,8 @@ function BubbleMap() {
           return (
             <g key={`line-${bubble.id}`}>
               <line
-                x1={startX}
-                y1={startY}
-                x2={endX}
-                y2={endY}
-                stroke={isHovered || isActive ? bubble.color : "#1a1a1a"}
+                x1={startX} y1={startY} x2={endX} y2={endY}
+                stroke={isHovered || isActive ? bubble.color : "rgba(255,255,255,0.08)"}
                 strokeWidth={isHovered || isActive ? 3 : 1.5}
                 strokeOpacity={isHovered || isActive ? 0.5 : 0.08}
                 strokeDasharray={bubble.status === "coming" ? "6,4" : "none"}
@@ -297,7 +273,7 @@ function BubbleMap() {
         })}
       </svg>
 
-      {/* Center MAD Logo — perfectly circular */}
+      {/* Center MAD Logo */}
       <div
         className="absolute flex items-center justify-center"
         style={{
@@ -315,24 +291,19 @@ function BubbleMap() {
             height: centerRadius * 2,
             borderRadius: "50%",
             overflow: "hidden",
-            border: "3px solid #1a1a1a",
-            boxShadow: "0 0 30px rgba(255,45,45,0.2), 0 4px 20px rgba(0,0,0,0.15)",
+            border: "3px solid rgba(255,255,255,0.1)",
+            boxShadow: "0 0 30px rgba(255,45,45,0.2), 0 4px 20px rgba(0,0,0,0.3)",
           }}
           onClick={() => setActiveBubble(null)}
         >
           <img
             src="/mad-logo.png"
             alt="$MAD"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />
         </div>
         <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/40">$MAD Core</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">$MAD Core</span>
         </div>
       </div>
 
@@ -365,15 +336,14 @@ function BubbleMap() {
               style={{
                 background: isHovered || isActive
                   ? `radial-gradient(circle at 30% 30%, ${bubble.color}22, ${bubble.color}08)`
-                  : "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(245,241,232,0.95))",
-                border: `2.5px solid ${isHovered || isActive ? bubble.color : "rgba(26,26,26,0.1)"}`,
+                  : "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
+                border: `2.5px solid ${isHovered || isActive ? bubble.color : "rgba(255,255,255,0.08)"}`,
                 boxShadow: isHovered || isActive
-                  ? `0 0 40px ${bubble.glowColor}, 0 8px 32px rgba(0,0,0,0.1)`
-                  : "0 4px 20px rgba(0,0,0,0.06)",
+                  ? `0 0 40px ${bubble.glowColor}, 0 8px 32px rgba(0,0,0,0.3)`
+                  : "0 4px 20px rgba(0,0,0,0.2)",
                 transform: isHovered || isActive ? "scale(1.15)" : "scale(1)",
               }}
             >
-              {/* Pulse ring — CSS-based so it can't misalign */}
               {(isHovered || isActive) && (
                 <div
                   className="absolute inset-0 rounded-full pointer-events-none"
@@ -384,17 +354,15 @@ function BubbleMap() {
                   }}
                 />
               )}
-              {/* Status dot */}
               <div
                 className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full"
                 style={{
-                  background: bubble.status === "live" ? "#22c55e" : bubble.status === "wip" ? "#FF6B00" : "#1a1a1a",
-                  boxShadow: `0 0 8px ${bubble.status === "live" ? "rgba(34,197,94,0.5)" : bubble.status === "wip" ? "rgba(255,107,0,0.5)" : "rgba(26,26,26,0.3)"}`,
+                  background: bubble.status === "live" ? "#22c55e" : bubble.status === "wip" ? "#FF6B00" : "rgba(255,255,255,0.3)",
+                  boxShadow: `0 0 8px ${bubble.status === "live" ? "rgba(34,197,94,0.5)" : bubble.status === "wip" ? "rgba(255,107,0,0.5)" : "rgba(255,255,255,0.2)"}`,
                 }}
               />
               <span className="text-2xl sm:text-3xl mb-1">{bubble.icon}</span>
-              <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#1a1a1a]/80">{bubble.label}</span>
-              {/* Mini progress ring */}
+              <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-white/70">{bubble.label}</span>
               <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="46" fill="none" stroke={bubble.color} strokeWidth="2" opacity="0.15" />
                 <circle
@@ -416,16 +384,12 @@ function BubbleMap() {
       {activeData && (
         <div
           className="absolute z-30 w-full max-w-md"
-          style={{
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
+          style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
         >
           <div
             className="rounded-[2rem] border p-6 sm:p-8 shadow-2xl backdrop-blur-xl"
             style={{
-              background: "rgba(245,241,232,0.95)",
+              background: "rgba(18,18,18,0.95)",
               borderColor: `${activeData.color}40`,
               boxShadow: `0 0 60px ${activeData.glowColor}`,
             }}
@@ -434,12 +398,12 @@ function BubbleMap() {
               <div className="flex items-center gap-3">
                 <span className="text-3xl">{activeData.icon}</span>
                 <div>
-                  <h3 className="text-xl font-black text-[#1a1a1a]">{activeData.label}</h3>
+                  <h3 className="text-xl font-black text-white">{activeData.label}</h3>
                   <span
                     className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full"
                     style={{
-                      background: activeData.status === "live" ? "rgba(34,197,94,0.15)" : activeData.status === "wip" ? "rgba(255,107,0,0.15)" : "rgba(26,26,26,0.08)",
-                      color: activeData.status === "live" ? "#22c55e" : activeData.status === "wip" ? "#FF6B00" : "#1a1a1a",
+                      background: activeData.status === "live" ? "rgba(34,197,94,0.15)" : activeData.status === "wip" ? "rgba(255,107,0,0.15)" : "rgba(255,255,255,0.08)",
+                      color: activeData.status === "live" ? "#22c55e" : activeData.status === "wip" ? "#FF6B00" : "rgba(255,255,255,0.5)",
                     }}
                   >
                     {activeData.status === "live" ? "LIVE" : activeData.status === "wip" ? "IN PROGRESS" : "COMING SOON"}
@@ -448,30 +412,30 @@ function BubbleMap() {
               </div>
               <button
                 onClick={(e) => { e.stopPropagation(); setActiveBubble(null); }}
-                className="w-8 h-8 rounded-full border border-[#1a1a1a]/10 flex items-center justify-center text-[#1a1a1a]/40 hover:text-[#1a1a1a] transition"
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition"
               >
                 ✕
               </button>
             </div>
-            <p className="text-sm text-[#1a1a1a]/60 mb-5">{activeData.description}</p>
+            <p className="text-sm text-white/50 mb-5">{activeData.description}</p>
             <div className="space-y-2">
               {activeData.milestones.map((m) => (
                 <div key={m.text} className="flex items-center gap-3 p-2.5 rounded-xl border min-w-0"
                   style={{
-                    background: m.done ? `${activeData.color}08` : "rgba(26,26,26,0.02)",
-                    borderColor: m.done ? `${activeData.color}20` : "rgba(26,26,26,0.06)",
+                    background: m.done ? `${activeData.color}08` : "rgba(255,255,255,0.02)",
+                    borderColor: m.done ? `${activeData.color}20` : "rgba(255,255,255,0.06)",
                   }}
                 >
                   <div
                     className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0"
                     style={{
-                      background: m.done ? activeData.color : "rgba(26,26,26,0.08)",
-                      color: m.done ? "white" : "rgba(26,26,26,0.3)",
+                      background: m.done ? activeData.color : "rgba(255,255,255,0.08)",
+                      color: m.done ? "white" : "rgba(255,255,255,0.3)",
                     }}
                   >
                     {m.done ? "✓" : "○"}
                   </div>
-                  <span className={cn("text-sm break-words min-w-0", m.done ? "text-[#1a1a1a]/80" : "text-[#1a1a1a]/40")}>
+                  <span className={`text-sm break-words min-w-0 ${m.done ? "text-white/80" : "text-white/40"}`}>
                     {m.text}
                   </span>
                 </div>
@@ -485,15 +449,15 @@ function BubbleMap() {
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 z-10">
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full bg-emerald-500" />
-          <span className="text-[10px] font-bold text-[#1a1a1a]/40 uppercase tracking-wider">Live</span>
+          <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider">Live</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full bg-[#FF6B00]" />
-          <span className="text-[10px] font-bold text-[#1a1a1a]/40 uppercase tracking-wider">WIP</span>
+          <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider">WIP</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-[#1a1a1a]/30" />
-          <span className="text-[10px] font-bold text-[#1a1a1a]/40 uppercase tracking-wider">Soon</span>
+          <div className="w-2 h-2 rounded-full bg-white/30" />
+          <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider">Soon</span>
         </div>
       </div>
     </div>
@@ -513,9 +477,9 @@ function QuickStats() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       {stats.map((s) => (
-        <div key={s.label} className="rounded-2xl border border-[#1a1a1a]/5 bg-[#1a1a1a]/[0.02] p-4 text-center">
+        <div key={s.label} className="rounded-2xl border border-white/5 bg-white/[0.03] p-4 text-center">
           <p className="text-lg sm:text-2xl font-black" style={{ color: s.color }}>{s.value}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-[#1a1a1a]/40 mt-1">{s.label}</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-white/40 mt-1">{s.label}</p>
         </div>
       ))}
     </div>
@@ -527,9 +491,9 @@ function QuickStats() {
    ═══════════════════════════════════════════════════════════ */
 function CTASection() {
   return (
-    <div className="rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-6 sm:p-10 text-center">
-      <h2 className="text-2xl sm:text-4xl font-black text-[#1a1a1a] mb-4">THE $MAD ECOSYSTEM.</h2>
-      <p className="text-sm sm:text-base text-[#1a1a1a]/50 max-w-xl mx-auto mb-6">
+    <div className="rounded-[2rem] border border-white/5 bg-white/[0.03] p-6 sm:p-10 text-center">
+      <h2 className="text-2xl sm:text-4xl font-black text-white mb-4">THE $MAD ECOSYSTEM.</h2>
+      <p className="text-sm sm:text-base text-white/40 max-w-xl mx-auto mb-6">
         Seven bubbles. One core. Every piece connected. Click any bubble to explore.
       </p>
       <a
@@ -551,7 +515,7 @@ function RiskNotice() {
   return (
     <div className="rounded-[2rem] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] px-5 py-6 sm:px-10 sm:py-8 text-center">
       <p className="text-[10px] font-black uppercase tracking-[0.38em] text-[#FF2D2D]/70 mb-3">Risk Notice</p>
-      <p className="text-xs sm:text-sm text-[#1a1a1a]/50 max-w-3xl mx-auto leading-relaxed">
+      <p className="text-xs sm:text-sm text-white/40 max-w-3xl mx-auto leading-relaxed">
         $MAD is a meme coin and speculative digital asset. Nothing on this website is financial advice.
         Crypto is risky and volatile. Never risk money you cannot afford to lose.
       </p>
@@ -565,12 +529,6 @@ function RiskNotice() {
 function GlobalStyles() {
   return (
     <style>{`
-      @keyframes floatShape {
-        0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-        25% { transform: translate(30px, -20px) rotate(5deg) scale(1.05); }
-        50% { transform: translate(-20px, 30px) rotate(-3deg) scale(0.95); }
-        75% { transform: translate(20px, 20px) rotate(2deg) scale(1.02); }
-      }
       @keyframes madPulse {
         0%, 100% { transform: scale(1); opacity: 0.4; }
         50% { transform: scale(1.25); opacity: 0.1; }
@@ -579,18 +537,16 @@ function GlobalStyles() {
   );
 }
 
-function cn(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
-
 /* ═══════════════════════════════════════════════════════════
    PAGE
    ═══════════════════════════════════════════════════════════ */
 
 export default function RoadmapPage() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#F5F1E8] text-[#1a1a1a] relative">
+    <div className="min-h-screen overflow-x-hidden bg-[#080808] text-white relative">
       <GlobalStyles />
+      <Scanlines />
+      <Navbar />
 
       {/* Background gradient */}
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_30%,rgba(255,45,45,0.04),transparent_50%),radial-gradient(circle_at_20%_80%,rgba(255,107,0,0.03),transparent_40%)]" />
@@ -613,7 +569,7 @@ export default function RoadmapPage() {
             >
               ROADMAP
             </h1>
-            <p className="text-sm sm:text-base text-[#1a1a1a]/50 max-w-md mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base text-white/40 max-w-md mx-auto leading-relaxed">
               Seven bubbles. One MAD core. <br className="hidden sm:block" />
               Click to explore every pillar of the universe.
             </p>
@@ -621,17 +577,15 @@ export default function RoadmapPage() {
         </div>
 
         <div className="grid gap-6">
-          {/* Quick Stats */}
           <FadeIn delay={0.05}>
             <QuickStats />
           </FadeIn>
 
-          {/* The Bubble Map */}
           <FadeIn delay={0.1}>
-            <div className="rounded-[2rem] border border-[#1a1a1a]/10 bg-white/50 shadow-[0_18px_60px_rgba(0,0,0,0.06)] overflow-hidden">
+            <div className="rounded-[2rem] border border-white/5 bg-[#121212] shadow-[0_18px_60px_rgba(0,0,0,0.3)] overflow-hidden">
               <div className="p-4 sm:p-6">
                 <div className="text-center mb-2">
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30">
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
                     Click any bubble to explore
                   </p>
                 </div>
@@ -640,12 +594,10 @@ export default function RoadmapPage() {
             </div>
           </FadeIn>
 
-          {/* CTA */}
           <FadeIn delay={0.15}>
             <CTASection />
           </FadeIn>
 
-          {/* Risk */}
           <FadeIn delay={0.2}>
             <RiskNotice />
           </FadeIn>
