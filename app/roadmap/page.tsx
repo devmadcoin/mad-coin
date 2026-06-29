@@ -246,14 +246,14 @@ const PILLARS: PillarData[] = [
 ];
 
 /* ═══════════════════════════════════════════════════════════
-   QUICK STATS
+   QUICK STATS — High contrast for mobile visibility
    ═══════════════════════════════════════════════════════════ */
 function QuickStats() {
   const stats = [
-    { label: "Market Cap", value: "$90M+", color: "#FF2D2D" },
-    { label: "Supply Burned", value: "50%", color: "#FF6B00" },
-    { label: "Communities", value: "7 Locked", color: "#22c55e" },
-    { label: "Holders", value: "3,940+", color: "#A855F7" },
+    { label: "Market Cap", value: "$90M+", color: "#FF2D2D", bg: "#FF2D2D", bgOpacity: 12 },
+    { label: "Supply Burned", value: "50%", color: "#FF6B00", bg: "#FF6B00", bgOpacity: 12 },
+    { label: "Communities", value: "7 Locked", color: "#22c55e", bg: "#22c55e", bgOpacity: 12 },
+    { label: "Holders", value: "3,940+", color: "#A855F7", bg: "#A855F7", bgOpacity: 12 },
   ];
 
   return (
@@ -261,10 +261,11 @@ function QuickStats() {
       {stats.map((s) => (
         <div
           key={s.label}
-          className="rounded-2xl p-4 text-center border"
+          className="rounded-2xl p-4 text-center border border-white/10"
           style={{
-            background: `${s.color}10`,
-            borderColor: `${s.color}30`,
+            backgroundColor: s.bg,
+            opacity: 1,
+            background: `linear-gradient(135deg, ${s.bg}18, ${s.bg}08)`,
           }}
         >
           <p
@@ -273,7 +274,7 @@ function QuickStats() {
           >
             {s.value}
           </p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-white/60 mt-1">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">
             {s.label}
           </p>
         </div>
@@ -299,11 +300,12 @@ function PillarCard({ bubble }: { bubble: PillarData }) {
 
   return (
     <div
-      className="rounded-2xl border p-5 sm:p-6 h-full transition-all duration-300 hover:scale-[1.02] shrink-0"
+      className="rounded-2xl border p-5 sm:p-6 transition-all duration-300 hover:scale-[1.02]"
       style={{
-        background: "rgba(18,18,18,0.9)",
-        borderColor: `${bubble.color}35`,
-        boxShadow: `0 0 30px ${bubble.glowColor}`,
+        background: "#1a1a1a",
+        borderColor: `${bubble.color}40`,
+        boxShadow: `0 0 20px ${bubble.glowColor}`,
+        minHeight: "280px",
       }}
     >
       {/* Header */}
@@ -410,7 +412,11 @@ function RoadmapCards() {
         ref={scrollRef}
         onScroll={handleScroll}
         className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 sm:hidden"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          WebkitOverflowScrolling: "touch",
+        }}
       >
         {PILLARS.map((bubble) => (
           <div key={bubble.id} className="snap-center w-[85vw]">
