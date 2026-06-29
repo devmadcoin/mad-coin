@@ -46,25 +46,7 @@ function TheGate() {
       </div>
 
       {/* Content overlay */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-8">
-          [ THE CLAW ]
-        </p>
-
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-6">
-          YOU ARE EITHER
-          <br />
-          <span className="text-[#FF2D2D]">$MAD RICH</span>
-          <br />
-          <span className="text-white/20">OR YOU ARE WAITING</span>
-        </h1>
-
-        <p className="text-sm text-white/50 max-w-sm leading-relaxed mb-8 mx-auto">
-          Two frequencies. One market.
-          <br />
-          The broke check charts. The <span className="text-[#FF6B00]">$MAD</span> check nothing.
-        </p>
-
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center pt-[50vh]">
         {/* CONTRACT */}
         <div
           onClick={async () => {
