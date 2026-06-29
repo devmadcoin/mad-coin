@@ -198,267 +198,129 @@ const BUBBLES: BubbleData[] = [
    BUBBLE MAP — Interactive ecosystem visualization
    ═══════════════════════════════════════════════════════════ */
 
-function BubbleMap() {
-  const [activeBubble, setActiveBubble] = useState<string | null>(null);
-  const [hoveredBubble, setHoveredBubble] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+/* ═══════════════════════════════════════════════════════════
+   ROADMAP CARDS — Horizontal scroll like Instagram stories
+   ═══════════════════════════════════════════════════════════ */
 
-  useEffect(() => {
-    const update = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        setDimensions({ width: rect.width, height: rect.height });
-      }
-    };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
+function RoadmapCards() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const centerX = dimensions.width / 2;
-  const centerY = dimensions.height / 2;
-  const centerRadius = Math.min(dimensions.width, dimensions.height) * 0.11;
-  const bubbleRadius = Math.min(dimensions.width, dimensions.height) * 0.095;
-
-  const getBubblePos = (bubble: BubbleData) => {
-    const rad = (bubble.angle * Math.PI) / 180;
-    const dist = Math.min(dimensions.width, dimensions.height) * (bubble.distance / 100);
-    return {
-      x: centerX + Math.cos(rad) * dist,
-      y: centerY + Math.sin(rad) * dist,
-    };
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const scrollLeft = scrollRef.current.scrollLeft;
+    const cardWidth = scrollRef.current.offsetWidth * 0.85;
+    const newIndex = Math.round(scrollLeft / cardWidth);
+    setActiveIndex(Math.min(newIndex, BUBBLES.length - 1));
   };
 
-  const activeData = BUBBLES.find(b => b.id === activeBubble);
+  const scrollTo = (index: number) => {
+    if (!scrollRef.current) return;
+    const cardWidth = scrollRef.current.offsetWidth * 0.85;
+    scrollRef.current.scrollTo({ left: index * cardWidth, behavior: "smooth" });
+  };
 
   return (
-    <div className="relative w-full" style={{ minHeight: "600px" }}>
-      {/* SVG Connections */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ zIndex: 1 }}
-        viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+    <div className="relative">
+      {/* Scroll Container */}
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:overflow-visible sm:pb-0"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        <defs>
-          {BUBBLES.map((bubble) => (
-            <linearGradient key={bubble.id} id={`line-${bubble.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor={bubble.color} stopOpacity="0.3" />
-              <stop offset="100%" stopColor={bubble.color} stopOpacity="0.1" />
-            </linearGradient>
-          ))}
-        </defs>
-        {BUBBLES.map((bubble) => {
-          const pos = getBubblePos(bubble);
-          const isHovered = hoveredBubble === bubble.id;
-          const isActive = activeBubble === bubble.id;
-          const angleRad = (bubble.angle * Math.PI) / 180;
-          const startX = centerX + Math.cos(angleRad) * centerRadius;
-          const startY = centerY + Math.sin(angleRad) * centerRadius;
-          const endX = pos.x - Math.cos(angleRad) * bubbleRadius;
-          const endY = pos.y - Math.sin(angleRad) * bubbleRadius;
+        {BUBBLES.map((bubble, i) => {
+          const completedCount = bubble.milestones.filter(m => m.done).length;
+          const totalCount = bubble.milestones.length;
+          const progressPct = Math.round((completedCount / totalCount) * 100);
 
           return (
-            <g key={`line-${bubble.id}`}>
-              <line
-                x1={startX} y1={startY} x2={endX} y2={endY}
-                stroke={isHovered || isActive ? bubble.color : "rgba(255,255,255,0.08)"}
-                strokeWidth={isHovered || isActive ? 3 : 1.5}
-                strokeOpacity={isHovered || isActive ? 0.5 : 0.08}
-                strokeDasharray={bubble.status === "coming" ? "6,4" : "none"}
-                style={{ transition: "all 0.3s ease" }}
-              />
-            </g>
-          );
-        })}
-      </svg>
-
-      {/* Center MAD Logo */}
-      <div
-        className="absolute flex items-center justify-center"
-        style={{
-          left: centerX - centerRadius,
-          top: centerY - centerRadius,
-          width: centerRadius * 2,
-          height: centerRadius * 2,
-          zIndex: 10,
-        }}
-      >
-        <div
-          className="relative cursor-pointer group"
-          style={{
-            width: centerRadius * 2,
-            height: centerRadius * 2,
-            borderRadius: "50%",
-            overflow: "hidden",
-            border: "3px solid rgba(255,255,255,0.1)",
-            boxShadow: "0 0 30px rgba(255,45,45,0.2), 0 4px 20px rgba(0,0,0,0.3)",
-          }}
-          onClick={() => setActiveBubble(null)}
-        >
-          <img
-            src="/mad-logo.png"
-            alt="$MAD"
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-          />
-        </div>
-        <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">$MAD Core</span>
-        </div>
-      </div>
-
-      {/* Bubbles */}
-      {BUBBLES.map((bubble) => {
-        const pos = getBubblePos(bubble);
-        const isHovered = hoveredBubble === bubble.id;
-        const isActive = activeBubble === bubble.id;
-        const completedCount = bubble.milestones.filter(m => m.done).length;
-        const totalCount = bubble.milestones.length;
-        const progressPct = Math.round((completedCount / totalCount) * 100);
-
-        return (
-          <div
-            key={bubble.id}
-            className="absolute cursor-pointer"
-            style={{
-              left: pos.x - bubbleRadius,
-              top: pos.y - bubbleRadius,
-              width: bubbleRadius * 2,
-              height: bubbleRadius * 2,
-              zIndex: isHovered || isActive ? 20 : 5,
-            }}
-            onMouseEnter={() => setHoveredBubble(bubble.id)}
-            onMouseLeave={() => setHoveredBubble(null)}
-            onClick={() => setActiveBubble(activeBubble === bubble.id ? null : bubble.id)}
-          >
             <div
-              className="relative w-full h-full rounded-full flex flex-col items-center justify-center transition-all duration-300"
-              style={{
-                background: isHovered || isActive
-                  ? `radial-gradient(circle at 30% 30%, ${bubble.color}22, ${bubble.color}08)`
-                  : "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-                border: `2.5px solid ${isHovered || isActive ? bubble.color : "rgba(255,255,255,0.08)"}`,
-                boxShadow: isHovered || isActive
-                  ? `0 0 40px ${bubble.glowColor}, 0 8px 32px rgba(0,0,0,0.3)`
-                  : "0 4px 20px rgba(0,0,0,0.2)",
-                transform: isHovered || isActive ? "scale(1.15)" : "scale(1)",
-              }}
+              key={bubble.id}
+              className="snap-center shrink-0 w-[85vw] sm:w-auto sm:snap-none"
             >
-              {(isHovered || isActive) && (
-                <div
-                  className="absolute inset-0 rounded-full pointer-events-none"
-                  style={{
-                    border: `2px solid ${bubble.color}`,
-                    opacity: 0.4,
-                    animation: "madPulse 2s ease-in-out infinite",
-                  }}
-                />
-              )}
               <div
-                className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full"
+                className="rounded-2xl border p-5 sm:p-6 h-full transition-all duration-300 hover:scale-[1.02]"
                 style={{
-                  background: bubble.status === "live" ? "#22c55e" : bubble.status === "wip" ? "#FF6B00" : "rgba(255,255,255,0.3)",
-                  boxShadow: `0 0 8px ${bubble.status === "live" ? "rgba(34,197,94,0.5)" : bubble.status === "wip" ? "rgba(255,107,0,0.5)" : "rgba(255,255,255,0.2)"}`,
+                  background: "rgba(18,18,18,0.8)",
+                  borderColor: `${bubble.color}30`,
+                  boxShadow: `0 0 30px ${bubble.glowColor}`,
                 }}
-              />
-              <span className="text-2xl sm:text-3xl mb-1">{bubble.icon}</span>
-              <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-white/70">{bubble.label}</span>
-              <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="46" fill="none" stroke={bubble.color} strokeWidth="2" opacity="0.15" />
-                <circle
-                  cx="50" cy="50" r="46"
-                  fill="none"
-                  stroke={bubble.color}
-                  strokeWidth="2"
-                  strokeDasharray={`${(progressPct / 100) * 289} 289`}
-                  strokeLinecap="round"
-                  opacity="0.6"
-                />
-              </svg>
-            </div>
-          </div>
-        );
-      })}
+              >
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">{bubble.icon}</span>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-black text-white">{bubble.label}</h3>
+                    <span
+                      className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full"
+                      style={{
+                        background: bubble.status === "live" ? "rgba(34,197,94,0.15)" : bubble.status === "wip" ? "rgba(255,107,0,0.15)" : "rgba(255,255,255,0.08)",
+                        color: bubble.status === "live" ? "#22c55e" : bubble.status === "wip" ? "#FF6B00" : "rgba(255,255,255,0.5)",
+                      }}
+                    >
+                      {bubble.status === "live" ? "● LIVE" : bubble.status === "wip" ? "◐ IN PROGRESS" : "○ COMING SOON"}
+                    </span>
+                  </div>
+                </div>
 
-      {/* Active Bubble Detail Panel */}
-      {activeData && (
-        <div
-          className="absolute z-30 w-full max-w-md"
-          style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
-        >
-          <div
-            className="rounded-[2rem] border p-6 sm:p-8 shadow-2xl backdrop-blur-xl"
-            style={{
-              background: "rgba(18,18,18,0.95)",
-              borderColor: `${activeData.color}40`,
-              boxShadow: `0 0 60px ${activeData.glowColor}`,
-            }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">{activeData.icon}</span>
-                <div>
-                  <h3 className="text-xl font-black text-white">{activeData.label}</h3>
-                  <span
-                    className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full"
-                    style={{
-                      background: activeData.status === "live" ? "rgba(34,197,94,0.15)" : activeData.status === "wip" ? "rgba(255,107,0,0.15)" : "rgba(255,255,255,0.08)",
-                      color: activeData.status === "live" ? "#22c55e" : activeData.status === "wip" ? "#FF6B00" : "rgba(255,255,255,0.5)",
-                    }}
-                  >
-                    {activeData.status === "live" ? "LIVE" : activeData.status === "wip" ? "IN PROGRESS" : "COMING SOON"}
-                  </span>
+                {/* Description */}
+                <p className="text-sm text-white/50 mb-4 leading-relaxed">{bubble.description}</p>
+
+                {/* Progress Bar */}
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[9px] font-black uppercase tracking-wider text-white/30">Progress</span>
+                    <span className="text-[9px] font-black text-white/50">{completedCount}/{totalCount}</span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${progressPct}%`, background: bubble.color }}
+                    />
+                  </div>
+                </div>
+
+                {/* Milestones */}
+                <div className="space-y-2">
+                  {bubble.milestones.map((m) => (
+                    <div key={m.text} className="flex items-center gap-2.5">
+                      <div
+                        className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black shrink-0"
+                        style={{
+                          background: m.done ? bubble.color : "rgba(255,255,255,0.06)",
+                          color: m.done ? "white" : "rgba(255,255,255,0.2)",
+                        }}
+                      >
+                        {m.done ? "✓" : "○"}
+                      </div>
+                      <span className={`text-xs ${m.done ? "text-white/70" : "text-white/30"}`}>
+                        {m.text}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <button
-                onClick={(e) => { e.stopPropagation(); setActiveBubble(null); }}
-                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition"
-              >
-                ✕
-              </button>
             </div>
-            <p className="text-sm text-white/50 mb-5">{activeData.description}</p>
-            <div className="space-y-2">
-              {activeData.milestones.map((m) => (
-                <div key={m.text} className="flex items-center gap-3 p-2.5 rounded-xl border min-w-0"
-                  style={{
-                    background: m.done ? `${activeData.color}08` : "rgba(255,255,255,0.02)",
-                    borderColor: m.done ? `${activeData.color}20` : "rgba(255,255,255,0.06)",
-                  }}
-                >
-                  <div
-                    className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0"
-                    style={{
-                      background: m.done ? activeData.color : "rgba(255,255,255,0.08)",
-                      color: m.done ? "white" : "rgba(255,255,255,0.3)",
-                    }}
-                  >
-                    {m.done ? "✓" : "○"}
-                  </div>
-                  <span className={`text-sm break-words min-w-0 ${m.done ? "text-white/80" : "text-white/40"}`}>
-                    {m.text}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+          );
+        })}
+      </div>
 
-      {/* Legend */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 z-10">
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-emerald-500" />
-          <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider">Live</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-[#FF6B00]" />
-          <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider">WIP</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-white/30" />
-          <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider">Soon</span>
-        </div>
+      {/* Mobile: Dots indicator */}
+      <div className="flex items-center justify-center gap-2 mt-4 sm:hidden">
+        {BUBBLES.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollTo(i)}
+            className="transition-all duration-300"
+            style={{
+              width: i === activeIndex ? 24 : 8,
+              height: 8,
+              borderRadius: 4,
+              background: i === activeIndex ? "#FF2D2D" : "rgba(255,255,255,0.15)",
+            }}
+          />
+        ))}
       </div>
     </div>
   );
@@ -582,20 +444,13 @@ export default function RoadmapPage() {
           </FadeIn>
 
           <FadeIn delay={0.1}>
-            <div className="rounded-[2rem] border border-white/5 bg-[#121212] shadow-[0_18px_60px_rgba(0,0,0,0.3)]">
-              <div className="p-4 sm:p-6">
-                <div className="text-center mb-2">
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
-                    Click any bubble to explore
-                  </p>
-                </div>
-                {/* Mobile: horizontal scroll to see full map */}
-                <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 sm:overflow-visible">
-                  <div className="min-w-[500px] sm:min-w-0">
-                    <BubbleMap />
-                  </div>
-                </div>
+            <div className="rounded-[2rem] border border-white/5 bg-[#121212] shadow-[0_18px_60px_rgba(0,0,0,0.3)] p-4 sm:p-6">
+              <div className="text-center mb-4">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
+                  Swipe to explore the ecosystem
+                </p>
               </div>
+              <RoadmapCards />
             </div>
           </FadeIn>
 
