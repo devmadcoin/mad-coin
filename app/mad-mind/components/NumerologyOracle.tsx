@@ -198,12 +198,12 @@ export default function NumerologyOracle() {
       <div className="rounded-none sm:rounded-2xl border-0 sm:border border-white/5 bg-[#121212] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.3)] relative">
         
         {/* Header */}
-        <div className="shrink-0 flex items-center justify-center px-4 sm:px-6 py-4 sm:py-5 border-b border-white/5">
+        <div className="shrink-0 flex items-center justify-center px-4 sm:px-6 py-5 sm:py-6 border-b border-white/5">
           <div className="text-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60 mb-1">
-              [ THE ORACLE ]
-            </p>
-            <p className="text-xs text-white/40">
+            <h2 className="text-xl sm:text-2xl font-black text-[#FF2D2D] tracking-tight mb-1">
+              $MAD NUMEROLOGY 🔢
+            </h2>
+            <p className="text-[11px] text-white/30">
               Enter your birthday. The numbers reveal your frequency.
             </p>
           </div>
