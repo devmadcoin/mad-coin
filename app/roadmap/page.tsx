@@ -293,6 +293,116 @@ function RiskNotice() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   PILLAR CAROUSEL — Mobile: slide 1 card. Desktop: grid.
+   ═══════════════════════════════════════════════════════════ */
+function PillarCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const next = () => setCurrent((prev) => (prev + 1) % PILLARS.length);
+  const prev = () => setCurrent((prev) => (prev - 1 + PILLARS.length) % PILLARS.length);
+
+  const onTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
+  const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+  const onTouchEnd = () => {
+    if (touchStart - touchEnd > 75) next();
+    if (touchEnd - touchStart > 75) prev();
+  };
+
+  const pillar = PILLARS[current];
+  const completed = pillar.milestones.filter((m) => m.done).length;
+  const total = pillar.milestones.length;
+  const pct = Math.round((completed / total) * 100);
+
+  // Mobile: one card carousel
+  if (isMobile) {
+    return (
+      <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+        <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: "#121212", border: `1px solid ${pillar.color}40` }}>
+          <div className="h-1" style={{ backgroundColor: pillar.color }} />
+          <div className="p-5">
+            {/* Header */}
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{pillar.icon}</span>
+                <div>
+                  <h3 className="text-base font-black text-white">{pillar.label}</h3>
+                  <StatusBadge status={pillar.status} />
+                </div>
+              </div>
+              <span className="text-2xl font-black" style={{ color: pillar.color }}>{pct}%</span>
+            </div>
+            <p className="text-sm mb-5" style={{ color: "#999999" }}>{pillar.desc}</p>
+            {/* Progress */}
+            <div className="mb-5">
+              <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: "#1a1a1a" }}>
+                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, backgroundColor: pillar.color }} />
+              </div>
+              <p className="text-[10px] font-bold mt-1.5" style={{ color: "#666666" }}>{completed} of {total} milestones completed</p>
+            </div>
+            {/* Milestones */}
+            <div className="space-y-2.5">
+              {pillar.milestones.map((m, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                    style={{ backgroundColor: m.done ? pillar.color : "#222222", color: m.done ? "#FFFFFF" : "#555555" }}>
+                    {m.done ? "✓" : "○"}
+                  </div>
+                  <span className="text-xs leading-relaxed" style={{ color: m.done ? "#CCCCCC" : "#555555" }}>{m.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="flex items-center justify-center gap-4 mt-5">
+          <button onClick={prev}
+            className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div className="flex items-center gap-2">
+            {PILLARS.map((_, i) => (
+              <button key={i} onClick={() => setCurrent(i)}
+                className="rounded-full transition-all duration-300"
+                style={{ width: i === current ? 24 : 8, height: 8, backgroundColor: i === current ? "#FF2D2D" : "#333333" }}
+              />
+            ))}
+          </div>
+          <button onClick={next}
+            className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+        <p className="text-center text-[10px] font-bold mt-2" style={{ color: "#444444" }}>{current + 1} / {PILLARS.length}</p>
+      </div>
+    );
+  }
+
+  // Desktop: grid
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      {PILLARS.map((pillar, i) => (
+        <PillarCard key={pillar.id} pillar={pillar} index={i} />
+      ))}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    PAGE
    ═══════════════════════════════════════════════════════════ */
 export default function RoadmapPage() {
@@ -318,11 +428,7 @@ export default function RoadmapPage() {
           <FadeIn delay={0.05}><QuickStats /></FadeIn>
 
           <FadeIn delay={0.1}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {PILLARS.map((pillar, i) => (
-                <PillarCard key={pillar.id} pillar={pillar} index={i} />
-              ))}
-            </div>
+            <PillarCarousel />
           </FadeIn>
 
           <FadeIn delay={0.15}><CTASection /></FadeIn>
