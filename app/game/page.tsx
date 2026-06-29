@@ -330,6 +330,167 @@ const Icons = {
 };
 
 /* ═══════════════════════════════════════════════════════════
+   GAME CAROUSEL — Slide-through game cards with arrows
+   ═══════════════════════════════════════════════════════════ */
+function GameCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const games = [
+    {
+      title: "MAD INCREMENTAL",
+      tagline: "The Reincarnation Update",
+      desc: "The first official $MAD game. Step into the arena, wield the MAD blade, and prove your conviction. New auras, new madness.",
+      image: "/game/mad-incremental-hero.png",
+      link: "https://www.roblox.com/games/123392566067659/MAD-INCREMENTAL",
+      status: "live" as const,
+      stats: { visits: "68.6K+", favorites: "265", updated: "6/18/2026" },
+    },
+    {
+      title: "1 MAD PER SECOND",
+      tagline: "The Grind Never Stops",
+      desc: "Pure incremental chaos. Stack MAD, evolve your character, and climb the leaderboards. The official $MAD clicker experience.",
+      image: "/game/mad-incremental-hero.png",
+      link: "https://www.roblox.com/games/123392566067659/1-MAD-PER-SECOND",
+      status: "live" as const,
+      stats: { visits: "Active", favorites: "Growing", updated: "Now" },
+    },
+    {
+      title: "MAD Tower Defense",
+      tagline: "Coming Soon",
+      desc: "Bigger, wilder, and more strategic. Build your defenses, withstand the chaos, and prove your $MAD discipline.",
+      image: "/game/mad-incremental-hero.png",
+      link: "https://streamable.com/yc9dot",
+      status: "coming" as const,
+      stats: { visits: "—", favorites: "—", updated: "In Dev" },
+    },
+  ];
+
+  const next = () => setCurrent((prev) => (prev + 1) % games.length);
+  const prev = () => setCurrent((prev) => (prev - 1 + games.length) % games.length);
+
+  // Touch handlers for swipe
+  const onTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
+  const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+  const onTouchEnd = () => {
+    if (touchStart - touchEnd > 75) next();
+    if (touchEnd - touchStart > 75) prev();
+  };
+
+  const g = games[current];
+
+  return (
+    <FadeIn>
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/5 bg-[#121212] shadow-[0_18px_50px_rgba(0,0,0,0.3)]"
+        onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
+      >
+        {/* Top color bar */}
+        <div className="h-1" style={{ backgroundColor: g.status === "live" ? "#FF2D2D" : "#666666" }} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.9fr]">
+          {/* Left: Info */}
+          <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10 order-2 lg:order-1">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider"
+                style={{ backgroundColor: g.status === "live" ? "#10b981" : "#444444", color: "#FFFFFF" }}
+              >
+                {g.status === "live" && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
+                {g.status === "live" ? "LIVE NOW" : "COMING SOON"}
+              </span>
+              <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: "#FF6B00" }}>{g.tagline}</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-5xl font-black text-white leading-none mb-4">
+              {g.title}
+            </h2>
+
+            <p className="text-sm sm:text-base leading-7 mb-6" style={{ color: "#999999" }}>
+              {g.desc}
+            </p>
+
+            {/* Mini stats row */}
+            <div className="flex gap-4 mb-6">
+              <div>
+                <p className="text-lg font-black text-white">{g.stats.visits}</p>
+                <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#666666" }}>Visits</p>
+              </div>
+              <div className="w-px bg-white/10" />
+              <div>
+                <p className="text-lg font-black text-white">{g.stats.favorites}</p>
+                <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#666666" }}>Favorites</p>
+              </div>
+              <div className="w-px bg-white/10" />
+              <div>
+                <p className="text-lg font-black text-white">{g.stats.updated}</p>
+                <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: "#666666" }}>Updated</p>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="flex flex-wrap gap-3">
+              <a href={g.link} target="_blank" rel="noreferrer"
+                className="inline-flex rounded-full px-8 py-4 text-base font-black text-white transition-transform hover:scale-105"
+                style={{ background: "linear-gradient(135deg, #FF2D2D, #FF6B00)" }}
+              >
+                {g.status === "live" ? "Play Now →" : "Watch Teaser →"}
+              </a>
+            </div>
+
+            {/* Slide indicators + arrows */}
+            <div className="flex items-center gap-4 mt-8">
+              {/* Arrow left */}
+              <button onClick={prev}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
+                aria-label="Previous game"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+
+              {/* Dots */}
+              <div className="flex items-center gap-2">
+                {games.map((_, i) => (
+                  <button key={i} onClick={() => setCurrent(i)}
+                    className="rounded-full transition-all duration-300"
+                    style={{
+                      width: i === current ? 24 : 8,
+                      height: 8,
+                      backgroundColor: i === current ? "#FF2D2D" : "#333333",
+                    }}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
+              </div>
+
+              {/* Arrow right */}
+              <button onClick={next}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
+                aria-label="Next game"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+
+              <span className="text-[10px] font-bold ml-auto" style={{ color: "#444444" }}>
+                {current + 1} / {games.length}
+              </span>
+            </div>
+          </div>
+
+          {/* Right: Image */}
+          <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-full order-1 lg:order-2">
+            <Image src={g.image} alt={g.title} fill priority className="object-cover" />
+            {/* Gradient overlay for text readability on mobile */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent lg:hidden" />
+          </div>
+        </div>
+      </div>
+    </FadeIn>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    PAGE
    ═══════════════════════════════════════════════════════════ */
 
@@ -449,70 +610,10 @@ export default function GamePage() {
           </SectionShell>
         </FadeIn>
 
-        {/* MAD INCREMENTAL Hero */}
-        <FadeIn>
-          <SectionShell className="overflow-hidden p-0">
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.95fr]">
-              <div className="p-6 sm:p-8 lg:p-10">
-                <p className="text-[10px] font-black uppercase tracking-[0.34em] text-[#FF6B00]/60">
-                  Official $MAD Experience — Now Live
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Pill tone="red">🔥 REINCARNATION UPDATE</Pill>
-                </div>
-                <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl">
-                  MAD{" "}
-                  <span className="text-[#FF2D2D] drop-shadow-[0_0_14px_rgba(255,45,45,0.25)]">
-                    INCREMENTAL
-                  </span>
-                </h1>
-                <p className="mt-5 max-w-2xl text-base leading-8 text-white/50 sm:text-lg">
-                  The first official $MAD game just dropped. Step into the arena,
-                  wield the MAD blade, and prove your conviction. This isn&apos;t a
-                  prototype — this is the real signal.
-                  <br className="hidden sm:block" />
-                  <span className="mt-2 inline-block text-[#FF2D2D]/70">
-                    🔥 The Reincarnation update is live. New auras, new madness.
-                  </span>
-                </p>
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <Pill tone="green">Official Launch</Pill>
-                  <Pill tone="red">By {CREATOR}</Pill>
-                  <Pill>Server Size {GAME_STATS.serverSize}</Pill>
-                </div>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <GlowPulse>
-                    <a
-                      href={GAME_LINK}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02]"
-                    >
-                      Play MAD INCREMENTAL →
-                    </a>
-                  </GlowPulse>
-                  <a
-                    href={TUTORIAL_VIDEO.replace("/embed/", "/watch?v=")}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-7 py-4 text-base font-black text-white/70 transition hover:border-white/20 hover:bg-white/[0.05]"
-                  >
-                    Watch Tutorial
-                  </a>
-                </div>
-              </div>
-              <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-full">
-                <Image
-                  src="/game/mad-incremental-hero.png"
-                  alt="MAD INCREMENTAL — Official $MAD Game"
-                  fill
-                  priority
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          </SectionShell>
-        </FadeIn>
+        {/* Game Carousel — Slide through games */}
+        <div className="mt-6">
+          <GameCarousel />
+        </div>
 
         {/* Live Stats */}
         <FadeIn delay={0.1}>
