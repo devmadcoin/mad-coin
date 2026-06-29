@@ -71,8 +71,8 @@ const PILLARS = [
     milestones: [
       { text: "+1 MAD PER SECOND launched on Roblox", done: true },
       { text: "MAD SHOT shooter launched", done: true },
-      { text: "Leaderboards & competitive modes", done: false },
-      { text: "Mobile port", done: false },
+      { text: "Leaderboards & competitive modes", done: true },
+      { text: "MAD games to infinity — more coming", done: true },
     ],
   },
   {
