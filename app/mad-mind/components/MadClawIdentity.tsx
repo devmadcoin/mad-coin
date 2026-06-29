@@ -203,6 +203,16 @@ export default function MadClawIdentity() {
           </section>
 
           <MadArchetypeQuiz />
+
+          {/* Frequency Divider */}
+          <section className="w-full py-4">
+            <img
+              src="/mad-frequency-divider.jpg"
+              alt="$MAD AI Check Your Frequency"
+              className="w-full max-w-3xl mx-auto h-auto rounded-xl"
+            />
+          </section>
+
           <FrequencyMeter />
           <TheFork />
           <TheKey />
