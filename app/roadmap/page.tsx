@@ -69,6 +69,7 @@ const PILLARS = [
     desc: "+1 MAD PER SECOND on Roblox. Our first game. Live and growing. MAD SHOT — our second game. Just dropped. Optimized and available for console, computers, mobile, tablet, and VR.",
     status: "live" as const,
     color: "#FF2D2D",
+    image: "/game/mad-shot-hero.png",
     milestones: [
       { text: "+1 MAD PER SECOND launched on Roblox", done: true },
       { text: "MAD SHOT shooter launched", done: true },
@@ -78,14 +79,15 @@ const PILLARS = [
   },
   {
     id: "merch", label: "Merch", icon: "👕",
-    desc: "Physical + digital drops. Every item tells a story.",
+    desc: "Physical + digital drops. Every item tells a story. 1st Limited edition with only 26 hats was given a special reward of 1M Mad Tokens.",
     status: "wip" as const,
     color: "#FF6B00",
+    image: "/merch/mad-hat-limited-001.png",
     milestones: [
       { text: "Design system & story-driven items", done: true },
-      { text: "The Rugged Tee concept", done: true },
+      { text: "MAD // LIMITED 001 — 26 hats, 1M $MAD reward", done: true },
       { text: "Digital twin NFTs for each item", done: false },
-      { text: "First drop live", done: false },
+      { text: "Next drop — tees & accessories", done: false },
     ],
   },
   {
@@ -220,10 +222,10 @@ function PillarCard({ pillar, index }: { pillar: typeof PILLARS[0]; index: numbe
             <span className="text-2xl font-black" style={{ color: pillar.color }}>{pct}%</span>
           </div>
 
-          {/* Game image for Games pillar */}
-          {pillar.id === "games" && (
+          {/* Image for Games and Merch pillars */}
+          {(pillar.id === "games" || pillar.id === "merch") && pillar.image && (
             <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
-              <Image src="/game/mad-shot-hero.png" alt="MAD Games" fill className="object-cover" />
+              <Image src={pillar.image} alt={pillar.label} fill className="object-cover" />
             </div>
           )}
 
@@ -349,10 +351,10 @@ function PillarCarousel() {
               </div>
               <span className="text-2xl font-black" style={{ color: pillar.color }}>{pct}%</span>
             </div>
-            {/* Game image for Games pillar */}
-            {pillar.id === "games" && (
+            {/* Image for Games and Merch pillars */}
+            {(pillar.id === "games" || pillar.id === "merch") && pillar.image && (
               <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
-                <Image src="/game/mad-shot-hero.png" alt="MAD Games" fill className="object-cover" />
+                <Image src={pillar.image} alt={pillar.label} fill className="object-cover" />
               </div>
             )}
             <p className="text-sm mb-5" style={{ color: "#999999" }}>{pillar.desc}</p>
