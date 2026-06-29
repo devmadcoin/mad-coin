@@ -10,7 +10,6 @@ import ChineseAstrology from "./ChineseAstrology";
 
 /* ─── Data ─── */
 const CONTRACT = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
-const PUMPSWAP_URL = "https://jup.ag/?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHExJpchtrBtKXnWe6CgHpump";
 
 const DEATH = [
   "Still checking charts at 3am? There's another frequency.",
@@ -29,60 +28,6 @@ const PLATFORMS = [
   { icon: "✈️", handle: "@madrichclub", url: "https://t.me/madrichclub" },
   { icon: "🎮", handle: "Mad Phonk Awakening", url: "https://www.roblox.com/games/123392566067659/Mad-Phonk-Awakening" },
 ];
-
-/* ─── THE GATE — Cinematic hero with MAD Claw background ─── */
-function TheGate() {
-  return (
-    <section className="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden">
-      {/* Background image */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="/mad-claw-hero.png"
-          alt=""
-          className="w-full h-full object-cover object-center"
-        />
-        {/* Dark gradient overlay — fades from clear top to solid bottom */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#080808_100%)]" />
-      </div>
-
-      {/* Content overlay */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center pt-[50vh]">
-        {/* CONTRACT */}
-        <div
-          onClick={async () => {
-            try {
-              await navigator.clipboard.writeText(CONTRACT);
-              const el = document.getElementById('contract-flash');
-              if (el) { el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 1500); }
-            } catch {}
-          }}
-          className="cursor-pointer group mb-8 inline-block"
-        >
-          <div className="border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.06] px-5 py-4 hover:border-[#FF2D2D]/50 transition-all shadow-[0_0_30px_rgba(255,45,45,0.08)]">
-            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF6B00]/70 mb-2">
-              Solana Contract — Tap to Copy
-            </p>
-            <p className="text-xs sm:text-sm font-mono text-[#FF2D2D] break-all leading-relaxed">
-              {CONTRACT}
-            </p>
-          </div>
-          <div id="contract-flash" className="mt-2 text-center transition-opacity duration-300 opacity-0">
-            <p className="text-[10px] text-[#FF6B00] font-bold uppercase tracking-wider">
-              ✓ Copied — Paste into Phantom
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-[9px] uppercase tracking-[0.3em] text-white/30">Scroll to talk to The Claw</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/15 animate-bounce">
-            <path d="M12 5v14M5 12l7 7 7-7"/>
-          </svg>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ─── THE ORACLE (Numerology) ─── */
 function TheOracle() {
@@ -211,8 +156,7 @@ function triggerClawReaction() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MAD CLAW IDENTITY — The Frequency Gate (V4 / Dark Theme)
-   Gate → Oracle → Calculator → Fork → Key → Checkpoints
+   MAD CLAW IDENTITY — The Frequency Gate
    ═══════════════════════════════════════════════════════════ */
 
 export default function MadClawIdentity() {
@@ -223,7 +167,6 @@ export default function MadClawIdentity() {
           <MadBagCalculator />
         </div>
       </div>
-      <TheGate />
       {/* Content below hero on dark background */}
       <div className="bg-[#0a0a0a] relative z-10">
         <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
