@@ -177,27 +177,28 @@ const COLOR_MAP: Record<string, { border: string; fill: string; glow: string; te
 };
 
 /* ═══════════════════════════════════════════════════════════
-   QUICK STATS
+   QUICK STATS — Inline styles for mobile Safari compatibility
    ═══════════════════════════════════════════════════════════ */
 function QuickStats() {
+  const stats = [
+    { value: "$90M+", label: "Market Cap", bg: "#1a0a0a", border: "rgba(255,45,45,0.25)", text: "#FF5555" },
+    { value: "50%", label: "Supply Burned", bg: "#1a0f00", border: "rgba(255,107,0,0.25)", text: "#FF8833" },
+    { value: "7 Locked", label: "Communities", bg: "#0a1a0f", border: "rgba(34,197,94,0.25)", text: "#44DD77" },
+    { value: "3,940+", label: "Holders", bg: "#120a1a", border: "rgba(168,85,247,0.25)", text: "#BB77FF" },
+  ];
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div className="rounded-2xl p-4 text-center border border-red-500/20 bg-red-500/10">
-        <p className="text-xl sm:text-2xl font-black text-red-400">$90M+</p>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">Market Cap</p>
-      </div>
-      <div className="rounded-2xl p-4 text-center border border-orange-500/20 bg-orange-500/10">
-        <p className="text-xl sm:text-2xl font-black text-orange-400">50%</p>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">Supply Burned</p>
-      </div>
-      <div className="rounded-2xl p-4 text-center border border-emerald-500/20 bg-emerald-500/10">
-        <p className="text-xl sm:text-2xl font-black text-emerald-400">7 Locked</p>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">Communities</p>
-      </div>
-      <div className="rounded-2xl p-4 text-center border border-purple-500/20 bg-purple-500/10">
-        <p className="text-xl sm:text-2xl font-black text-purple-400">3,940+</p>
-        <p className="text-[10px] font-bold uppercase tracking-wider text-white/70 mt-1">Holders</p>
-      </div>
+      {stats.map((s) => (
+        <div
+          key={s.label}
+          className="rounded-2xl p-4 text-center"
+          style={{ backgroundColor: s.bg, border: `1px solid ${s.border}` }}
+        >
+          <p className="text-xl sm:text-2xl font-black" style={{ color: s.text }}>{s.value}</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider mt-1" style={{ color: "rgba(255,255,255,0.6)" }}>{s.label}</p>
+        </div>
+      ))}
     </div>
   );
 }
