@@ -72,8 +72,17 @@ export default function MadMindPage() {
       <Navbar />
 
       <main className="pt-14">
+        {/* Banner */}
+        <section className="relative w-full overflow-hidden">
+          <img
+            src="/mad-ai-banner.png"
+            alt="$MAD AI — AI Built $MAD"
+            className="w-full h-auto object-cover object-center"
+          />
+        </section>
+
         {/* Intro */}
-        <section className="relative px-4 sm:px-6 py-16 sm:py-20 bg-[#080808] overflow-hidden">
+        <section className="relative px-4 sm:px-6 py-12 sm:py-16 bg-[#080808] overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.06),transparent_60%)]" />
           <div className="relative z-10 max-w-3xl mx-auto text-center">
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF2D2D]/60 mb-4">
@@ -83,9 +92,8 @@ export default function MadMindPage() {
               MAD <span className="text-[#FF2D2D]">MIND</span> AI
             </h1>
             <p className="text-sm text-white/40 max-w-lg mx-auto leading-relaxed mb-8">
-              Your personal AI oracle. Unlock your numerology, discover your MAD archetype, 
-              check your frequency, and calculate your $MAD bag. The numbers don't lie — 
-              but they do whisper secrets to those who listen.
+              Discover your personal numbers, find your MAD archetype, and see what the universe says about your wealth potential. 
+              This is your AI-powered crystal ball — built different, built $MAD.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2">
               {["🔢 Numerology", "🐉 Chinese Astrology", "🎭 Archetype Quiz", "📊 Frequency Meter", "💰 Bag Calculator"].map((feature) => (
@@ -95,15 +103,6 @@ export default function MadMindPage() {
               ))}
             </div>
           </div>
-        </section>
-
-        {/* Banner */}
-        <section className="relative w-full overflow-hidden">
-          <img
-            src="/mad-ai-banner.png"
-            alt="$MAD AI — AI Built $MAD"
-            className="w-full h-auto object-cover object-center"
-          />
         </section>
 
         <MadClawIdentity />
