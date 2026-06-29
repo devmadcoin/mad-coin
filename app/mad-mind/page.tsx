@@ -72,6 +72,31 @@ export default function MadMindPage() {
       <Navbar />
 
       <main className="pt-14">
+        {/* Intro */}
+        <section className="relative px-4 sm:px-6 py-16 sm:py-20 bg-[#080808] overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.06),transparent_60%)]" />
+          <div className="relative z-10 max-w-3xl mx-auto text-center">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF2D2D]/60 mb-4">
+              [ THE FREQUENCY GATE ]
+            </p>
+            <h1 className="text-3xl sm:text-5xl font-black text-white leading-[1.1] mb-6">
+              MAD <span className="text-[#FF2D2D]">MIND</span> AI
+            </h1>
+            <p className="text-sm text-white/40 max-w-lg mx-auto leading-relaxed mb-8">
+              Your personal AI oracle. Unlock your numerology, discover your MAD archetype, 
+              check your frequency, and calculate your $MAD bag. The numbers don't lie — 
+              but they do whisper secrets to those who listen.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {["🔢 Numerology", "🐉 Chinese Astrology", "🎭 Archetype Quiz", "📊 Frequency Meter", "💰 Bag Calculator"].map((feature) => (
+                <span key={feature} className="px-3 py-1.5 rounded-full border border-white/5 bg-white/[0.03] text-[10px] font-bold text-white/30">
+                  {feature}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Banner */}
         <section className="relative w-full overflow-hidden">
           <img
