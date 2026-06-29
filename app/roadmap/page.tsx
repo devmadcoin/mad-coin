@@ -582,14 +582,19 @@ export default function RoadmapPage() {
           </FadeIn>
 
           <FadeIn delay={0.1}>
-            <div className="rounded-[2rem] border border-white/5 bg-[#121212] shadow-[0_18px_60px_rgba(0,0,0,0.3)] overflow-hidden">
+            <div className="rounded-[2rem] border border-white/5 bg-[#121212] shadow-[0_18px_60px_rgba(0,0,0,0.3)]">
               <div className="p-4 sm:p-6">
                 <div className="text-center mb-2">
                   <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
                     Click any bubble to explore
                   </p>
                 </div>
-                <BubbleMap />
+                {/* Mobile: horizontal scroll to see full map */}
+                <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 sm:overflow-visible">
+                  <div className="min-w-[500px] sm:min-w-0">
+                    <BubbleMap />
+                  </div>
+                </div>
               </div>
             </div>
           </FadeIn>
