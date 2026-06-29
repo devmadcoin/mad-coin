@@ -419,15 +419,6 @@ function JoinCTA() {
    FOOTER
    ═══════════════════════════════════════════════════════════ */
 function Footer() {
-  const nav = [
-    { label: "MAD AI", href: "/mad-mind" },
-    { label: "Roadmap", href: "/roadmap" },
-    { label: "Game", href: "/game" },
-    { label: "MAD Art", href: "/mad-art" },
-    { label: "Rewards", href: "/rewards" },
-    { label: "Merch", href: "/merch" },
-  ];
-
   const socials = [
     { label: "Telegram", href: LINKS.telegram },
     { label: "X", href: LINKS.x },
@@ -437,7 +428,7 @@ function Footer() {
 
   return (
     <footer className="border-t border-white/5 px-4 sm:px-6 py-12 bg-[#080808]">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-[#FF2D2D] flex items-center justify-center text-white font-black text-sm">M</div>
@@ -446,30 +437,18 @@ function Footer() {
               <span className="block text-white/20 text-[9px] tracking-[0.3em] uppercase font-bold">A Next-Gen Entertainment Company</span>
             </div>
           </div>
-          <p className="text-xs text-white/30 leading-relaxed max-w-xs mb-6">
+          <p className="text-xs text-white/30 leading-relaxed max-w-xs">
             The MAD FAM is a global community building the future of entertainment through games, animation, AI, and culture.
           </p>
-          <div className="flex items-center gap-3">
-            {socials.map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
-                className="px-3 py-1.5 rounded-full border border-white/5 text-[10px] font-bold uppercase tracking-wider text-white/30 hover:text-white hover:border-white/10 transition-all"
-              >
-                {s.label}
-              </a>
-            ))}
-          </div>
         </div>
-        <div className="md:text-right">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 mb-4">Navigation</p>
-          <ul className="space-y-2">
-            {nav.map((item) => (
-              <li key={item.label}>
-                <Link href={item.href} className="text-xs font-bold text-white/40 hover:text-[#FF2D2D] transition-colors">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <div className="flex items-center gap-3">
+          {socials.map((s) => (
+            <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
+              className="px-3 py-1.5 rounded-full border border-white/5 text-[10px] font-bold uppercase tracking-wider text-white/30 hover:text-white hover:border-white/10 transition-all"
+            >
+              {s.label}
+            </a>
+          ))}
         </div>
       </div>
       <div className="max-w-6xl mx-auto mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
