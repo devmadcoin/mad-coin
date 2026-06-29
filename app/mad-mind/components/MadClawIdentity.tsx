@@ -167,6 +167,16 @@ export default function MadClawIdentity() {
           <MadBagCalculator />
         </div>
       </div>
+
+      {/* Divider — separates calculator from oracle */}
+      <section className="w-full bg-[#0a0a0a] py-4">
+        <img
+          src="/mad-ai-divider.jpg"
+          alt="$MAD AI Numerology"
+          className="w-full max-w-3xl mx-auto h-auto rounded-xl"
+        />
+      </section>
+
       {/* Content below hero on dark background */}
       <div className="bg-[#0a0a0a] relative z-10">
         <div className="mx-auto max-w-5xl px-2 sm:px-4 pb-2 pt-1 sm:pt-2">
