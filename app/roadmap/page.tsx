@@ -289,7 +289,8 @@ function PillarCard({ pillar, index }: { pillar: typeof PILLARS[0]; index: numbe
               <video 
                 src={pillar.video} 
                 controls 
-                preload="metadata" 
+                playsInline
+                preload="auto" 
                 className="w-full h-full object-cover"
               />
             </div>
@@ -430,7 +431,8 @@ function PillarCarousel() {
                 <video 
                   src={pillar.video} 
                   controls 
-                  preload="metadata" 
+                  playsInline
+                  preload="auto" 
                   className="w-full h-full object-cover"
                 />
               </div>
