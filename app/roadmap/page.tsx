@@ -120,6 +120,7 @@ const PILLARS = [
     desc: "The MAD Show. Animations, lore, weekly drops.",
     status: "live" as const,
     color: "#A855F7",
+    video: "/content/bullish-mad.mp4",
     milestones: [
       { text: "'I'M MAD GETTING RUGGED' animation", done: true },
       { text: "Coffee Collects YouTube (3 channels)", done: true },
@@ -282,6 +283,18 @@ function PillarCard({ pillar, index }: { pillar: typeof PILLARS[0]; index: numbe
             </div>
           )}
 
+          {/* Video for Content pillar */}
+          {pillar.id === "content" && pillar.video && (
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
+              <video 
+                src={pillar.video} 
+                controls 
+                preload="metadata" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
           {/* Description */}
           <p className="text-sm mb-5" style={{ color: "#999999" }}>{pillar.desc}</p>
 
@@ -408,6 +421,18 @@ function PillarCarousel() {
             {(pillar.id === "games" || pillar.id === "merch" || pillar.id === "music") && pillar.image && (
               <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
                 <Image src={pillar.image} alt={pillar.label} fill className="object-cover" />
+              </div>
+            )}
+
+            {/* Video for Content pillar */}
+            {pillar.id === "content" && pillar.video && (
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
+                <video 
+                  src={pillar.video} 
+                  controls 
+                  preload="metadata" 
+                  className="w-full h-full object-cover"
+                />
               </div>
             )}
             <p className="text-sm mb-5" style={{ color: "#999999" }}>{pillar.desc}</p>
