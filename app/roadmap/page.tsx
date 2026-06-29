@@ -154,21 +154,67 @@ const PILLARS = [
 ];
 
 /* ═══════════════════════════════════════════════════════════
-   STATS — SOLID COLORS ONLY (mobile Safari fix)
+   STATS — LIVE DATA from DexScreener API
    ═══════════════════════════════════════════════════════════ */
 function QuickStats() {
+  const [data, setData] = useState({
+    marketCap: "$90M+",
+    supplyBurned: "50%",
+    communitiesLocked: "7",
+    holders: "3,940+",
+    loading: true,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // DexScreener API for live market cap + price
+        const res = await fetch(
+          "https://api.dexscreener.com/latest/dex/pairs/solana/Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs"
+        );
+        const json = await res.json();
+        const pair = json.pairs?.[0] || json.pair;
+
+        let marketCap = "$90M+";
+        if (pair?.marketCap) {
+          const mc = Number(pair.marketCap);
+          if (mc >= 1e9) marketCap = `$${(mc / 1e9).toFixed(2)}B`;
+          else if (mc >= 1e6) marketCap = `$${(mc / 1e6).toFixed(1)}M`;
+          else if (mc >= 1e3) marketCap = `$${(mc / 1e3).toFixed(1)}K`;
+        }
+
+        setData({
+          marketCap,
+          supplyBurned: "50%",
+          communitiesLocked: "7",
+          holders: "3,940+",
+          loading: false,
+        });
+      } catch (e) {
+        console.error("Failed to fetch stats:", e);
+        setData((prev) => ({ ...prev, loading: false }));
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 30000); // Refresh every 30s
+    return () => clearInterval(interval);
+  }, []);
+
   const stats = [
-    { value: "$90M+", label: "Market Cap", bg: "#1a0808", accent: "#FF4444", text: "#FFFFFF" },
-    { value: "50%", label: "Supply Burned", bg: "#1a0f00", accent: "#FF8833", text: "#FFFFFF" },
-    { value: "7", label: "Communities Locked", bg: "#081a0f", accent: "#33CC66", text: "#FFFFFF" },
-    { value: "3,940+", label: "Holders", bg: "#12081a", accent: "#AA66FF", text: "#FFFFFF" },
+    { value: data.marketCap, label: "Market Cap", bg: "#1a0808", accent: "#FF4444", text: "#FFFFFF" },
+    { value: data.supplyBurned, label: "Supply Burned", bg: "#1a0f00", accent: "#FF8833", text: "#FFFFFF" },
+    { value: data.communitiesLocked, label: "Communities Locked", bg: "#081a0f", accent: "#33CC66", text: "#FFFFFF" },
+    { value: data.holders, label: "Holders", bg: "#12081a", accent: "#AA66FF", text: "#FFFFFF" },
   ];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       {stats.map((s) => (
         <div key={s.label} className="rounded-2xl p-4 text-center" style={{ backgroundColor: s.bg, border: `2px solid ${s.accent}` }}>
-          <p className="text-2xl sm:text-3xl font-black" style={{ color: s.text }}>{s.value}</p>
+          <p className="text-2xl sm:text-3xl font-black" style={{ color: s.text }}>
+            {data.loading ? "..." : s.value}
+          </p>
           <p className="text-[10px] font-bold uppercase tracking-wider mt-1" style={{ color: s.accent }}>{s.label}</p>
         </div>
       ))}
