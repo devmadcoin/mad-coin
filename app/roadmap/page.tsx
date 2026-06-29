@@ -95,6 +95,7 @@ const PILLARS = [
     desc: "Soundtrack to the madness. Phonk, rage, victory. Mello Will collaboration locked in.",
     status: "coming" as const,
     color: "#FFD700",
+    image: "/music/mello-will-collab.png",
     milestones: [
       { text: "Collaboration with Mello Will", done: true },
       { text: "$MAD anthem — original track", done: false },
@@ -222,8 +223,8 @@ function PillarCard({ pillar, index }: { pillar: typeof PILLARS[0]; index: numbe
             <span className="text-2xl font-black" style={{ color: pillar.color }}>{pct}%</span>
           </div>
 
-          {/* Image for Games and Merch pillars */}
-          {(pillar.id === "games" || pillar.id === "merch") && pillar.image && (
+          {/* Image for Games, Merch, and Music pillars */}
+          {(pillar.id === "games" || pillar.id === "merch" || pillar.id === "music") && pillar.image && (
             <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
               <Image src={pillar.image} alt={pillar.label} fill className="object-cover" />
             </div>
@@ -351,8 +352,8 @@ function PillarCarousel() {
               </div>
               <span className="text-2xl font-black" style={{ color: pillar.color }}>{pct}%</span>
             </div>
-            {/* Image for Games and Merch pillars */}
-            {(pillar.id === "games" || pillar.id === "merch") && pillar.image && (
+            {/* Image for Games, Merch, and Music pillars */}
+            {(pillar.id === "games" || pillar.id === "merch" || pillar.id === "music") && pillar.image && (
               <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
                 <Image src={pillar.image} alt={pillar.label} fill className="object-cover" />
               </div>
