@@ -339,9 +339,9 @@ function QuickStats() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       {stats.map((s) => (
-        <div key={s.label} className="rounded-2xl border border-white/5 bg-white/[0.03] p-4 text-center">
-          <p className="text-lg sm:text-2xl font-black" style={{ color: s.color }}>{s.value}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-white/40 mt-1">{s.label}</p>
+        <div key={s.label} className="rounded-2xl border border-white/10 bg-[#1a1a1a] p-4 text-center">
+          <p className="text-xl sm:text-2xl font-black" style={{ color: s.color }}>{s.value}</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-white/50 mt-1">{s.label}</p>
         </div>
       ))}
     </div>
