@@ -65,12 +65,12 @@ function Navbar() {
 const PILLARS = [
   {
     id: "games", label: "Games", icon: "🎮",
-    desc: "Mad Phonk Awakening on Roblox. Built. Live. Crushing.",
+    desc: "+1 MAD PER SECOND on Roblox. Our first game. Live and growing. MAD SHOT — our second game. Just dropped.",
     status: "live" as const,
     color: "#FF2D2D",
     milestones: [
-      { text: "Mad Phonk Awakening launched on Roblox", done: true },
-      { text: "$MAD token integration in-game", done: true },
+      { text: "+1 MAD PER SECOND launched on Roblox", done: true },
+      { text: "MAD SHOT shooter launched", done: true },
       { text: "Leaderboards & competitive modes", done: false },
       { text: "Mobile port", done: false },
     ],
