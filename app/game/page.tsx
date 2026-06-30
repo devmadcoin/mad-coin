@@ -556,6 +556,14 @@ function DigitalWearablesCarousel() {
       link: "https://www.roblox.com/catalog/113611821499264/MAD-Red-Faded-Jeans",
       cta: "Get the Jeans →",
     },
+    {
+      title: "MAD Grey Knit Shirt",
+      subtitle: "Digital Wearables",
+      desc: "Subtle heat. Official $MAD grey knit shirt — textured, tonal, unmistakably MAD. Low key, high impact.",
+      image: "/game/mad-grey-knit-shirt-card.png",
+      link: "https://www.roblox.com/catalog/105117227780245/MAD-Grey-Knit-Shirt",
+      cta: "Get the Shirt →",
+    },
   ];
 
   const next = () => setCurrent((prev) => (prev + 1) % items.length);
