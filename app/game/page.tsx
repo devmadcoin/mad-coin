@@ -689,37 +689,6 @@ export default function GamePage() {
           </FadeIn>
         </div>
 
-        {/* How It Works */}
-        <FadeIn delay={0.1}>
-          <SectionShell className="mt-6 p-6 sm:p-8">
-            <p className="text-[10px] font-black uppercase tracking-[0.32em] text-white/30">
-              How It Works
-            </p>
-            <StaggerGrid className="mt-6 grid gap-4 md:grid-cols-3" staggerDelay={0.1}>
-              <SimpleCard
-                title="1. Make Roblox"
-                text="No account yet? Create one at roblox.com. It's free and takes 2 minutes."
-                icon={Icons.user}
-              />
-              <SimpleCard
-                title="2. Watch Help"
-                text="New to Roblox? Use our tutorial for the easiest setup and first-game walkthrough."
-                icon={Icons.play}
-              />
-              <SimpleCard
-                title="3. Join $MAD"
-                text="Click Play Now, join the official $MAD game, and start making decisions."
-                icon={Icons.gamepad}
-              />
-            </StaggerGrid>
-          </SectionShell>
-        </FadeIn>
-
-        {/* Digital Wearables Carousel */}
-        <div className="mt-6">
-          <DigitalWearablesCarousel />
-        </div>
-
         {/* Game Carousel — Slide through games */}
         <div className="mt-6">
           <GameCarousel />
@@ -767,6 +736,37 @@ export default function GamePage() {
             </div>
           </SectionShell>
         </FadeIn>
+
+        {/* How It Works */}
+        <FadeIn delay={0.1}>
+          <SectionShell className="mt-6 p-6 sm:p-8">
+            <p className="text-[10px] font-black uppercase tracking-[0.32em] text-white/30">
+              How It Works
+            </p>
+            <StaggerGrid className="mt-6 grid gap-4 md:grid-cols-3" staggerDelay={0.1}>
+              <SimpleCard
+                title="1. Make Roblox"
+                text="No account yet? Create one at roblox.com. It's free and takes 2 minutes."
+                icon={Icons.user}
+              />
+              <SimpleCard
+                title="2. Watch Help"
+                text="New to Roblox? Use our tutorial for the easiest setup and first-game walkthrough."
+                icon={Icons.play}
+              />
+              <SimpleCard
+                title="3. Join $MAD"
+                text="Click Play Now, join the official $MAD game, and start making decisions."
+                icon={Icons.gamepad}
+              />
+            </StaggerGrid>
+          </SectionShell>
+        </FadeIn>
+
+        {/* Digital Wearables Carousel */}
+        <div className="mt-6">
+          <DigitalWearablesCarousel />
+        </div>
 
         {/* Quick Help + Kubo */}
         <FadeIn delay={0.1}>
