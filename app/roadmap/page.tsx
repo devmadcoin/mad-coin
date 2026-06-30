@@ -130,6 +130,7 @@ const PILLARS = [
     desc: "Challenges, rewards, IRL activations. The community shows up.",
     status: "wip" as const,
     color: "#00D4FF",
+    video: "/events/irl-event.mp4",
     milestones: [
       { text: "MAD Health Challenge — 100 winners, $20 $MAD each", done: true },
       { text: "MAD Rich Animal Challenge — 100 winners, $20 $MAD each", done: true },
@@ -280,15 +281,14 @@ function PillarCard({ pillar, index }: { pillar: typeof PILLARS[0]; index: numbe
             </div>
           )}
 
-          {/* Video for Content pillar */}
-          {pillar.id === "content" && pillar.video && (
+          {/* Video for Content and Events pillars */}
+          {(pillar.id === "content" || pillar.id === "events") && pillar.video && (
             <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
               <video 
                 src={pillar.video} 
                 controls 
                 playsInline
                 preload="auto" 
-                crossOrigin="anonymous"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -423,15 +423,14 @@ function PillarCarousel() {
               </div>
             )}
 
-            {/* Video for Content pillar */}
-            {pillar.id === "content" && pillar.video && (
+            {/* Video for Content and Events pillars */}
+            {(pillar.id === "content" || pillar.id === "events") && pillar.video && (
               <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
                 <video 
                   src={pillar.video} 
                   controls 
                   playsInline
                   preload="auto" 
-                  crossOrigin="anonymous"
                   className="w-full h-full object-cover"
                 />
               </div>
