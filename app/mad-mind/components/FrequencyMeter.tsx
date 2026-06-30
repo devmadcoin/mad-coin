@@ -418,7 +418,7 @@ export default function FrequencyMeter() {
         {/* Header */}
         <div className="shrink-0 flex items-center justify-center px-4 sm:px-6 py-4 sm:py-5 border-b border-white/5">
           <div className="text-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60 mb-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF2D2D]/60 mb-1">
               [ THE METER ]
             </p>
             <p className="text-xs text-white/40">
@@ -434,7 +434,7 @@ export default function FrequencyMeter() {
               <div className="w-16 h-16 rounded-full bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 flex items-center justify-center mb-6">
                 <span className="text-2xl">📡</span>
               </div>
-              <h3 className="text-lg sm:text-xl font-black text-white mb-2 text-center">
+              <h3 className="text-xl sm:text-2xl font-black text-[#FF2D2D] tracking-tight mb-2 text-center">
                 Check Your Frequency
               </h3>
               <p className="text-xs text-white/40 text-center max-w-sm mb-6 leading-relaxed">
