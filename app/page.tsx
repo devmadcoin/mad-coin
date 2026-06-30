@@ -317,6 +317,14 @@ function TheMADFAM() {
                     quote: "Real community. Real stickers. Real holders. $MAD isn't just a token, it's a movement you can hold in your hands.",
                   },
                   {
+                    name: "Heydun",
+                    handle: "@Grpx_Heydun",
+                    image: "/testimonials/heydun-pfp.png",
+                    video: "/testimonials/heydun-art.mp4",
+                    link: "https://x.com/Grpx_Heydun/status/2070831387914170412",
+                    quote: "Keep Building, Believe, Never stop, Every small step change the future, Together, we're creating something bigger. The $MAD community is strong and unstoppable.",
+                  },
+                  {
                     name: "Treshon",
                     handle: "@treshon_jarrell",
                     image: "/testimonials/treshon-pfp.png",
