@@ -324,6 +324,14 @@ function TheMADFAM() {
                     quote: "Real community. Real stickers. Real holders. $MAD isn't just a token, it's a movement you can hold in your hands.",
                   },
                   {
+                    name: "Treshon",
+                    handle: "@treshon_jarrell",
+                    image: "/testimonials/treshon-pfp.png",
+                    video: "/testimonials/treshon-notebooks.mp4",
+                    link: "https://x.com/treshon_jarrell/status/2067302160744784190",
+                    quote: "Thanks to the $MAD team for the success of this. Thank you for listening to me. Thank you for impacting the next generation. Thank you so much $MAD.",
+                  },
+                  {
                     name: "IDC Lord",
                     handle: "@idclord",
                     image: "/testimonials/idclord-pfp.png",
