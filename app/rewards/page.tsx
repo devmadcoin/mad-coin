@@ -628,14 +628,15 @@ export default function RewardsPage() {
 
           <div className="rounded-[1.4rem] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-5 sm:p-6 overflow-hidden">
             <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-8">
-              {/* Video thumbnail / image placeholder */}
-              <div className="relative w-full sm:w-56 shrink-0 aspect-[4/5] rounded-[1.2rem] overflow-hidden border border-[#1a1a1a]/10 bg-[#1a1a1a]/5">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-5xl">💪</span>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-3 bg-[#1a1a1a]/60 backdrop-blur-sm">
-                  <p className="text-[10px] font-black text-white uppercase tracking-wider">🎥 Watch on X</p>
-                </div>
+              {/* Video player */}
+              <div className="relative w-full sm:w-56 shrink-0 aspect-[4/5] rounded-[1.2rem] overflow-hidden border border-[#1a1a1a]/10 bg-black">
+                <video
+                  src="/rewards/mad-health-competition.mp4"
+                  controls
+                  playsInline
+                  className="w-full h-full object-cover"
+                  poster="/mad-claw-hero.png"
+                />
               </div>
 
               <div className="flex-1">
