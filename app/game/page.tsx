@@ -536,88 +536,124 @@ export default function GamePage() {
           </FadeIn>
         </div>
 
-        {/* Digital Wearables — Shirt */}
-        <FadeIn delay={0.1}>
-          <SectionShell className="overflow-hidden p-0">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="flex flex-col justify-center p-6 sm:p-8">
-                <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#FF6B00]/60">
-                  Digital Wearables
-                </p>
-                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
-                  MAD Skate Shirt
-                </h2>
-                <p className="mt-5 max-w-xl text-base leading-8 text-white/50">
-                  Rock the $MAD brand inside Roblox. Official digital clothing
-                  and accessories now available in the Roblox catalog. Rep the
-                  community everywhere you go.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <GlowPulse>
-                    <a
-                      href="https://www.roblox.com/catalog/89506653556378/MAD-brown-skate-shirt"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02]"
-                    >
-                      Get the Shirt →
-                    </a>
-                  </GlowPulse>
-                  <Pill tone="red">Roblox Catalog</Pill>
-                </div>
-              </div>
-              <div className="relative aspect-square w-full bg-[#0a0a0a]">
-                <Image
-                  src="/game/mad-brown-skate-shirt.png"
-                  alt="MAD Brown Skate Shirt — Roblox Digital Wearable"
-                  fill
-                  className="object-contain p-6"
-                />
-              </div>
-            </div>
-          </SectionShell>
-        </FadeIn>
+/* ═══════════════════════════════════════════════════════════
+   DIGITAL WEARABLES CAROUSEL — Roblox Catalog Items
+   ═══════════════════════════════════════════════════════════ */
+function DigitalWearablesCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
-        {/* Digital Wearables — Pants */}
-        <FadeIn delay={0.1}>
-          <SectionShell className="mt-6 overflow-hidden p-0">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="flex flex-col justify-center p-6 sm:p-8">
-                <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#FF6B00]/60">
-                  Digital Wearables
-                </p>
-                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
-                  MAD Brown Pants
-                </h2>
-                <p className="mt-5 max-w-xl text-base leading-8 text-white/50">
-                  Complete the look. Official $MAD brown pants to match the
-                  skate shirt. Available now in the Roblox catalog.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <GlowPulse>
-                    <a
-                      href="https://www.roblox.com/catalog/97286453888370/MAD-brown-pants"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02]"
-                    >
-                      Get the Pants →
-                    </a>
-                  </GlowPulse>
-                  <Pill tone="red">Roblox Catalog</Pill>
-                </div>
-              </div>
-              <div className="relative aspect-square w-full bg-[#0a0a0a]">
-                <Image
-                  src="/game/mad-brown-pants.png"
-                  alt="MAD Brown Pants — Roblox Digital Wearable"
-                  fill
-                  className="object-contain p-6"
-                />
-              </div>
+  const items = [
+    {
+      title: "MAD Skate Shirt",
+      subtitle: "Digital Wearables",
+      desc: "Rock the $MAD brand inside Roblox. Official digital clothing and accessories now available in the Roblox catalog. Rep the community everywhere you go.",
+      image: "/game/mad-skate-shirt-card.png",
+      link: "https://www.roblox.com/catalog/89506653556378/MAD-brown-skate-shirt",
+      cta: "Get the Shirt →",
+    },
+    {
+      title: "MAD Brown Pants",
+      subtitle: "Digital Wearables",
+      desc: "Complete the look. Official $MAD brown pants to match the skate shirt. Available now in the Roblox catalog.",
+      image: "/game/mad-brown-pants-card.png",
+      link: "https://www.roblox.com/catalog/97286453888370/MAD-brown-pants",
+      cta: "Get the Pants →",
+    },
+  ];
+
+  const next = () => setCurrent((prev) => (prev + 1) % items.length);
+  const prev = () => setCurrent((prev) => (prev - 1 + items.length) % items.length);
+
+  const onTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
+  const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+  const onTouchEnd = () => {
+    if (touchStart - touchEnd > 75) next();
+    if (touchEnd - touchStart > 75) prev();
+  };
+
+  const item = items[current];
+
+  return (
+    <FadeIn>
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/5 bg-[#121212] shadow-[0_18px_50px_rgba(0,0,0,0.3)]"
+        onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
+      >
+        {/* Top color bar */}
+        <div className="h-1 bg-[#FF6B00]" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.9fr]">
+          {/* Left: Info */}
+          <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10 order-2 lg:order-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#FF6B00]/60">
+              {item.subtitle}
+            </p>
+            <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
+              {item.title}
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-8 text-white/50">
+              {item.desc}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <GlowPulse>
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02]"
+                >
+                  {item.cta}
+                </a>
+              </GlowPulse>
+              <Pill tone="red">Roblox Catalog</Pill>
             </div>
-          </SectionShell>
-        </FadeIn>
+
+            {/* Controls */}
+            <div className="flex items-center gap-4 mt-8">
+              <button onClick={prev}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
+                aria-label="Previous item"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <div className="flex items-center gap-2">
+                {items.map((_, i) => (
+                  <button key={i} onClick={() => setCurrent(i)}
+                    className="rounded-full transition-all duration-300"
+                    style={{ width: i === current ? 24 : 8, height: 8, backgroundColor: i === current ? "#FF6B00" : "#333333" }}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
+              </div>
+              <button onClick={next}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
+                aria-label="Next item"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+              <span className="text-[10px] font-bold ml-auto text-white/30">
+                {current + 1} / {items.length}
+              </span>
+            </div>
+          </div>
+
+          {/* Right: Image */}
+          <div className="relative min-h-[280px] sm:min-h-[360px] lg:min-h-full order-1 lg:order-2 bg-[#0a0a0a]">
+            <Image src={item.image} alt={item.title} fill className="object-contain p-4 sm:p-6" />
+          </div>
+        </div>
+      </div>
+    </FadeIn>
+  );
+}
+
+        {/* Digital Wearables Carousel */}
+        <div className="mt-6">
+          <DigitalWearablesCarousel />
+        </div>
 
         {/* Game Carousel — Slide through games */}
         <div className="mt-6">
