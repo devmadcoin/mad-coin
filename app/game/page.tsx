@@ -357,15 +357,6 @@ function GameCarousel() {
       stats: { visits: "Active", favorites: "Growing", updated: "Now" },
     },
     {
-      title: "MAD SHOT",
-      tagline: "Lock In. Shoot. Win.",
-      desc: "The official $MAD shooter. Fast-paced action, competitive modes, and pure MAD energy. Lock in and prove your aim.",
-      image: "/game/mad-shot-hero.png",
-      link: "https://www.roblox.com/games/134848900359215/MAD-SHOT",
-      status: "live" as const,
-      stats: { visits: "Active", favorites: "Growing", updated: "Now" },
-    },
-    {
       title: "MAD AFK Smash Gods",
       tagline: "Coming Soon",
       desc: "AFK and earn. Smash the competition while you're away. The gods of idle gameplay meet $MAD energy.",
