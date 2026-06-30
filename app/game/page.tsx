@@ -532,6 +532,14 @@ function DigitalWearablesCarousel() {
       link: "https://www.roblox.com/catalog/117800329844621/MAD-beige-button-up",
       cta: "Get the Shirt →",
     },
+    {
+      title: "MAD Ice Washed Denim",
+      subtitle: "Digital Wearables",
+      desc: "Ice cold drip. Official $MAD ice washed denim jeans for that premium Roblox look. Fresh fit, fresh mood.",
+      image: "/game/mad-ice-denim-card.png",
+      link: "https://www.roblox.com/catalog/89146674743225/MAD-Ice-Washed-Denim",
+      cta: "Get the Denim →",
+    },
   ];
 
   const next = () => setCurrent((prev) => (prev + 1) % items.length);
