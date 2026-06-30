@@ -665,6 +665,20 @@ export default function GamePage() {
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
 
       <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-20 pt-6 relative z-10">
+        {/* Banner Image */}
+        <FadeIn delay={0.05}>
+          <div className="mt-2 overflow-hidden rounded-[1.6rem] border border-white/5 shadow-[0_18px_50px_rgba(0,0,0,0.3)]">
+            <Image
+              src="/game/mad-games-banner.png"
+              alt="$MAD Games - Play. Earn. Dominate."
+              width={1200}
+              height={400}
+              className="w-full h-auto object-cover"
+              priority
+            />
+          </div>
+        </FadeIn>
+
         {/* Hero Header */}
         <div className="relative pt-12 pb-6 sm:pt-20 sm:pb-10 text-center">
           <FadeIn>
@@ -687,20 +701,6 @@ export default function GamePage() {
             </p>
           </FadeIn>
         </div>
-
-        {/* Banner Image */}
-        <FadeIn delay={0.05}>
-          <div className="mt-2 overflow-hidden rounded-[1.6rem] border border-white/5 shadow-[0_18px_50px_rgba(0,0,0,0.3)]">
-            <Image
-              src="/game/mad-games-banner.png"
-              alt="$MAD Games - Play. Earn. Dominate."
-              width={1200}
-              height={400}
-              className="w-full h-auto object-cover"
-              priority
-            />
-          </div>
-        </FadeIn>
 
         {/* Game Carousel — Slide through games */}
         <div className="mt-6">
