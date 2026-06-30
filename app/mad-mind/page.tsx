@@ -87,7 +87,7 @@ export default function MadMindPage() {
               This is your AI-powered crystal ball — built different, built $MAD.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2">
-              {["🔢 Numerology", "🐉 Chinese Astrology", "🎭 Archetype Quiz", "📊 Frequency Meter", "💰 Bag Calculator"].map((feature) => (
+              {["🔢 Numerology", "🐉 $MAD ASTROLOGY", "🎭 Archetype Quiz", "📊 Frequency Meter", "💰 Bag Calculator"].map((feature) => (
                 <span key={feature} className="px-3 py-1.5 rounded-full border border-white/5 bg-white/[0.03] text-[10px] font-bold text-white/30">
                   {feature}
                 </span>
