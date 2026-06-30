@@ -185,7 +185,6 @@ function Navbar() {
 
 const TUTORIAL_VIDEO = "https://www.youtube.com/embed/V0LBY-ZiklY";
 const GAME_LINK = "https://www.roblox.com/games/123392566067659/MAD-INCREMENTAL";
-const TOWER_DEFENSE_TEASER = "https://streamable.com/e/yc9dot";
 const CREATOR = "@CoffeeCollectsBlox";
 const CREATOR_LINK = "https://www.roblox.com/users/5183792958/profile";
 
@@ -689,6 +688,20 @@ export default function GamePage() {
           </FadeIn>
         </div>
 
+        {/* Banner Image */}
+        <FadeIn delay={0.05}>
+          <div className="mt-2 overflow-hidden rounded-[1.6rem] border border-white/5 shadow-[0_18px_50px_rgba(0,0,0,0.3)]">
+            <Image
+              src="/game/mad-games-banner.png"
+              alt="$MAD Games - Play. Earn. Dominate."
+              width={1200}
+              height={400}
+              className="w-full h-auto object-cover"
+              priority
+            />
+          </div>
+        </FadeIn>
+
         {/* Game Carousel — Slide through games */}
         <div className="mt-6">
           <GameCarousel />
@@ -830,49 +843,6 @@ export default function GamePage() {
                     Visit @Kubo100x →
                   </a>
                 </div>
-              </div>
-            </div>
-          </SectionShell>
-        </FadeIn>
-
-        {/* Tower Defense Teaser */}
-        <FadeIn delay={0.1}>
-          <SectionShell className="mt-6 overflow-hidden p-0">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="flex flex-col justify-center p-6 sm:p-8">
-                <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#FF6B00]/60">
-                  Coming Soon
-                </p>
-                <h2 className="mt-4 text-4xl font-black leading-[0.95] text-white sm:text-5xl">
-                  MAD Tower Defense
-                </h2>
-                <p className="mt-5 max-w-xl text-base leading-8 text-white/50">
-                  Bigger, wilder, and more strategic. Build your defenses,
-                  withstand the chaos, and prove your $MAD discipline. Still in
-                  active development.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <GlowPulse>
-                    <a
-                      href={TOWER_DEFENSE_TEASER.replace("/e/", "/")}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D]/15 px-6 py-3 text-sm font-black text-[#FF2D2D] transition hover:bg-[#FF2D2D]/25"
-                    >
-                      Watch Teaser →
-                    </a>
-                  </GlowPulse>
-                  <Pill>More Coming</Pill>
-                </div>
-              </div>
-              <div className="relative aspect-video w-full bg-black">
-                <iframe
-                  src={TOWER_DEFENSE_TEASER}
-                  title="MAD Tower Defense teaser"
-                  className="absolute inset-0 h-full w-full"
-                  allow="autoplay; fullscreen"
-                  allowFullScreen
-                />
               </div>
             </div>
           </SectionShell>
