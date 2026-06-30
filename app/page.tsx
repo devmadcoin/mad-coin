@@ -277,9 +277,10 @@ function TheMADFAM() {
                     name: "DKWTT",
                     handle: "@lit_terrestrial",
                     image: "/testimonials/dkwtt-chadwick-pfp.png",
+                    media: "/testimonials/dkwtt-mad-hat-game.png",
                     video: null,
                     link: "https://x.com/lit_terrestrial/status/2059486216567824581?s=20",
-                    quote: "I've been in crypto since 2017. $MAD is the first project where the community actually feels like family. Not a cult — a crew.",
+                    quote: "Ordered the $MAD American Dad hat on the day that my Dad passed, he was an Army Veteran as well. This is not just a hat to me, $MAD is not just a meme coin to me, Its deeper than just a feeling… It's Motivation Alignment & Discipline.",
                   },
                   {
                     name: "Kimdunk77",
