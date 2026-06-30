@@ -167,6 +167,66 @@ function CopyButtonInline({ text }: { text: string }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   EXCHANGE MARQUEE — Where $MAD is Listed
+   ═══════════════════════════════════════════════════════════ */
+function ExchangeMarquee() {
+  const exchanges = [
+    { name: "Jupiter", href: "https://jup.ag/tokens/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "J" },
+    { name: "DEXScreener", href: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs", icon: "D" },
+    { name: "Solscan", href: "https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "S" },
+    { name: "Birdeye", href: "https://birdeye.so/solana/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "B" },
+    { name: "OKX", href: "https://web3.okx.com/dex-swap?chain=solana,solana&token=11111111111111111111111111111111,Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "O" },
+    { name: "Gate.io", href: "https://www.gate.com/alpha/sol-Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "G" },
+    { name: "MEXC", href: "https://www.mexc.com/dex/trade?pair_ca=Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs&chain_id=100000&token_ca=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump&from=search", icon: "M" },
+  ];
+
+  return (
+    <section className="relative py-6 bg-[#080808] border-y border-white/5 overflow-hidden">
+      <style>{`
+        @keyframes exchangeScroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .exchange-track {
+          display: flex;
+          gap: 2rem;
+          animation: exchangeScroll 30s linear infinite;
+          width: max-content;
+        }
+        .exchange-track:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 mb-4">
+        <p className="text-[9px] font-black uppercase tracking-[0.34em] text-white/20 text-center">
+          Listed On
+        </p>
+      </div>
+      <div className="relative overflow-hidden">
+        <div className="exchange-track">
+          {[...Array(2)].flatMap((_, dup) =>
+            exchanges.map((ex) => (
+              <a
+                key={`${dup}-${ex.name}`}
+                href={ex.href}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/5 bg-white/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.04] transition-all shrink-0"
+              >
+                <div className="w-6 h-6 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-[#FF2D2D] font-black text-[10px]">
+                  {ex.icon}
+                </div>
+                <span className="text-xs font-bold text-white/50 whitespace-nowrap">{ex.name}</span>
+              </a>
+            ))
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    MAD FAM — Community Identity (like Pudgy's "The Huddle")
    ═══════════════════════════════════════════════════════════ */
 function TheMADFAM() {
@@ -668,6 +728,7 @@ export default function Home() {
       <Navbar />
       <VideoBanner />
       <StopPanicking />
+      <ExchangeMarquee />
       <TheMADFAM />
       <MadTalks />
       <MadCommandCenter />
