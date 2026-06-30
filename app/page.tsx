@@ -368,10 +368,10 @@ function TheMADFAM() {
                           href={t.link}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-[10px] font-bold text-[#FF2D2D]/70 hover:text-[#FF2D2D] transition-colors flex items-center gap-1"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FF2D2D]/10 border border-[#FF2D2D]/20 text-[10px] font-black text-[#FF2D2D] hover:bg-[#FF2D2D] hover:text-white transition-all"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                           View
                         </a>
                       </div>
