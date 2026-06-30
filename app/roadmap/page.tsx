@@ -127,14 +127,14 @@ const PILLARS = [
   },
   {
     id: "events", label: "Events", icon: "🎉",
-    desc: "IRL activations. The Initiation. Pop-ups. Chaos.",
-    status: "coming" as const,
+    desc: "Challenges, rewards, IRL activations. The community shows up.",
+    status: "wip" as const,
     color: "#00D4FF",
     milestones: [
-      { text: "Solana Breakpoint activation", done: false },
-      { text: "MAD Initiation scavenger hunt", done: false },
-      { text: "Community meetups", done: false },
-      { text: "Global tour", done: false },
+      { text: "MAD Health Challenge — 100 winners, $20 $MAD each", done: true },
+      { text: "MAD Rich Animal Challenge — 100 winners, $20 $MAD each", done: true },
+      { text: "$MAD Rewards at 1M MC — $4,000 to 50 people", done: true },
+      { text: "IRL Event — August 8th", done: false },
     ],
   },
   {
