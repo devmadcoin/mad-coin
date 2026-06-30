@@ -242,7 +242,7 @@ function TheMADFAM() {
           </div>
         </div>
 
-        {/* Testimonials */}
+        {/* Testimonials — Auto-scrolling carousel */}
         <div className="mt-20 sm:mt-28">
           <div className="text-center mb-10 sm:mb-14">
             <p className="text-[9px] font-black uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-2">
@@ -253,60 +253,115 @@ function TheMADFAM() {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {[
-              {
-                name: "DKWTT",
-                handle: "@dkwtt_chadwick",
-                image: "/testimonials/dkwtt-chadwick-pfp.png",
-                quote: "I've been in crypto since 2017. $MAD is the first project where the community actually feels like family. Not a cult — a crew.",
-              },
-              {
-                name: "Kimdunk77",
-                handle: "@kimdunk77",
-                image: "/testimonials/kimdunk77-pfp.png",
-                quote: "Made a whole promo video for $MAD because I actually believe in it. The dev is doxxed, the game is live, and the vibes are unmatched.",
-              },
-              {
-                name: "M Luffy",
-                handle: "@mluffy_crypto",
-                image: "/testimonials/mluffy-pfp.png",
-                quote: "Met up with other $MAD holders at school. We talk charts, we talk dreams, we talk about what's next. This isn't just a coin.",
-              },
-              {
-                name: "Sapient",
-                handle: "@sapient_ru",
-                image: "/testimonials/sapient-pfp.png",
-                quote: "The Russian $MAD community is strong. We don't just hold — we build, we create, we spread the word. $MAD doesn't sleep.",
-              },
-              {
-                name: "Abraxas",
-                handle: "@abraxas_mad",
-                image: "/testimonials/abraxas-pfp.png",
-                quote: "Found $MAD at 200K market cap. Watched it hit 1M. The journey is the reward, but the gains don't hurt either. LFG.",
-              },
-              {
-                name: "IDC Lord",
-                handle: "@idclord",
-                image: "/testimonials/idclord-pfp.png",
-                quote: "Brought $MAD to campus. Showed the game to my friends. Now they're holders too. Organic growth, real believers.",
-              },
-            ].map((t, i) => (
-              <div key={i} className="rounded-2xl border border-white/5 bg-white/[0.02] p-5 sm:p-6 flex flex-col">
-                <p className="text-sm text-white/50 leading-relaxed flex-1 mb-5">
-                  "{t.quote}"
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/10">
-                    <Image src={t.image} alt={t.name} fill className="object-cover" sizes="40px" />
+          <style>{`
+            @keyframes scrollCarousel {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+            .carousel-track {
+              display: flex;
+              gap: 1rem;
+              animation: scrollCarousel 40s linear infinite;
+              width: max-content;
+            }
+            .carousel-track:hover {
+              animation-play-state: paused;
+            }
+          `}</style>
+
+          <div className="relative overflow-hidden">
+            <div className="carousel-track">
+              {[...Array(2)].flatMap((_, dup) =>
+                [
+                  {
+                    name: "DKWTT",
+                    handle: "@dkwtt_chadwick",
+                    image: "/testimonials/dkwtt-chadwick-pfp.png",
+                    video: null,
+                    quote: "I've been in crypto since 2017. $MAD is the first project where the community actually feels like family. Not a cult — a crew.",
+                  },
+                  {
+                    name: "Kimdunk77",
+                    handle: "@kimdunk77",
+                    image: "/testimonials/kimdunk77-pfp.png",
+                    video: "/testimonials/kimdunk77-mad-promo-indonesia.mp4",
+                    quote: "Made a whole promo video for $MAD because I actually believe in it. The dev is doxxed, the game is live, and the vibes are unmatched.",
+                  },
+                  {
+                    name: "M Luffy",
+                    handle: "@mluffy_crypto",
+                    image: "/testimonials/mluffy-pfp.png",
+                    video: "/testimonials/mluffy-school-meetup.mp4",
+                    quote: "Met up with other $MAD holders at school. We talk charts, we talk dreams, we talk about what's next. This isn't just a coin.",
+                  },
+                  {
+                    name: "Sapient",
+                    handle: "@sapient_ru",
+                    image: "/testimonials/sapient-pfp.png",
+                    video: "/testimonials/sapient-russian-experience.mp4",
+                    quote: "The Russian $MAD community is strong. We don't just hold — we build, we create, we spread the word. $MAD doesn't sleep.",
+                  },
+                  {
+                    name: "Abraxas",
+                    handle: "@abraxas_mad",
+                    image: "/testimonials/abraxas-pfp.png",
+                    video: null,
+                    quote: "Found $MAD at 200K market cap. Watched it hit 1M. The journey is the reward, but the gains don't hurt either. LFG.",
+                  },
+                  {
+                    name: "IDC Lord",
+                    handle: "@idclord",
+                    image: "/testimonials/idclord-pfp.png",
+                    video: "/testimonials/idclord-mad-campus.mp4",
+                    quote: "Brought $MAD to campus. Showed the game to my friends. Now they're holders too. Organic growth, real believers.",
+                  },
+                ].map((t, i) => (
+                  <div
+                    key={`${dup}-${i}`}
+                    className="w-[300px] sm:w-[340px] shrink-0 rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden flex flex-col"
+                  >
+                    {/* Media */}
+                    <div className="relative h-44 sm:h-52 bg-black/40 overflow-hidden">
+                      {t.video ? (
+                        <video
+                          src={t.video}
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Image
+                          src={t.image}
+                          alt={t.name}
+                          fill
+                          className="object-cover"
+                          sizes="340px"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(0,0,0,0.7)_100%)]" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-4 sm:p-5 flex flex-col flex-1">
+                      <p className="text-sm text-white/50 leading-relaxed flex-1 mb-4">
+                        "{t.quote}"
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <div className="relative w-9 h-9 rounded-full overflow-hidden border border-white/10">
+                          <Image src={t.image} alt={t.name} fill className="object-cover" sizes="36px" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-black text-white">{t.name}</p>
+                          <p className="text-[10px] text-white/30">{t.handle}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs font-black text-white">{t.name}</p>
-                    <p className="text-[10px] text-white/30">{t.handle}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>
