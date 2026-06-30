@@ -339,7 +339,7 @@ function GameCarousel() {
 
   const games = [
     {
-      title: "MAD INCREMENTAL",
+      title: "+1 MAD PER SECOND",
       tagline: "The Reincarnation Update",
       desc: "The first official $MAD game. Step into the arena, wield the MAD blade, and prove your conviction. New auras, new madness.",
       image: "/game/mad-incremental-hero.png",
