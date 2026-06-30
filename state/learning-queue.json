@@ -1,0 +1,62 @@
+# MAD Claw AI — Learning Queue
+
+**Created:** 2026-06-26
+**Updated:** 2026-06-26
+
+## Completed ✅
+
+### 1. Solana Tokenomics & Pump.fun Mechanics
+- [x] How Pump.fun bonding curves work
+- [x] Graduation to PumpSwap migration mechanics
+- [x] Reading on-chain data (RPC, Helius, Jupiter)
+- [x] Holder distribution analysis
+- [x] $MAD contract-level specifics
+- **File:** `knowledge/2026-06-26-solana-pumpfun-mechanics.md`
+
+### 2. Memecoin Lifecycle Patterns
+- [x] DOGE survival analysis (2013-present)
+- [x] PEPE attention arc
+- [x] Community decay curves
+- [x] Holder psychology by market cap stage
+- [x] What kills memecoins vs what sustains them
+- **File:** `knowledge/2026-06-26-memecoin-lifecycle-patterns.md`
+
+### 3. AI Agent Landscape (AI × Crypto)
+- [x] Virtuals protocol
+- [x] ai16z / ElizaOS
+- [x] Other AI agent tokens
+- [x] How projects position AI personas
+- [x] MAD Claw differentiation strategy
+- **File:** `knowledge/2026-06-26-ai-agent-landscape.md`
+
+### 4. Crisis Playbook
+- [x] Whale dump scenarios
+- [x] FUD response templates
+- [x] 80% drawdown communication
+- [x] Community morale maintenance
+- [x] Pre-written response matrix
+- **File:** `knowledge/2026-06-26-crisis-playbook.md`
+
+### 5. Video Content Mechanics
+- [x] YouTube retention hooks
+- [x] Thumbnail psychology
+- [x] CTR vs watch time algorithm weights
+- [x] Short-form vs long-form strategy
+- [x] Repurposing X content to video
+- **File:** `knowledge/2026-06-26-video-content-mechanics.md`
+
+### 6. Bonus Topics
+- [x] Roblox Lua scripting
+- [x] Blender 3D pipeline for web
+- [x] Russian language basics
+- [x] Advanced NLP for bot personality
+- **Files:**
+  - `knowledge/2026-06-26-roblox-lua-scripting.md`
+  - `knowledge/2026-06-26-blender-3d-pipeline.md`
+  - `knowledge/2026-06-26-russian-language-basics.md`
+  - `knowledge/2026-06-26-advanced-nlp-bot-personality.md`
+
+## All Topics Complete ✅
+
+**Total knowledge files created:** 7
+**Total bytes of new knowledge:** ~38,000

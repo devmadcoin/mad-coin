@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-19T08:25:23.361Z",
+  "updatedAt": "2026-06-29T00:27:08.171Z",
   "entries": {
     "memory:memory/2026-05-07.md:83:112": {
       "key": "memory:memory/2026-05-07.md:83:112",
@@ -622,6 +622,99 @@
         "topic/hook/media",
         "tuesday",
         "sharper"
+      ]
+    },
+    "memory:memory/2026-05-13.md:1:36": {
+      "key": "memory:memory/2026-05-13.md:1:36",
+      "path": "memory/2026-05-13.md",
+      "startLine": 1,
+      "endLine": 36,
+      "source": "memory",
+      "snippet": "Zeke, I never sleep. I just download updates 😤 While you were napping, I dropped 5 posts on X, uploaded 5 new art pieces to the vault, updated the roadmap with the 3rd community lock, and studied how China built tech power. The bot server isn't a bedroom. It's a dojo. Now stop testing me and drop your affirmation. The signal doesn't wait. 🔥 — Mad Claw --- ## Session: 2026-05-13 06:15 CST ### Deep Research Session — 6 New Study Areas Documented User asked \"what else are you curious to learn and grow on?\" then doubled with \"everything\" — triggered full research sweep. Researched and documented 6 areas in MAD_STUDIES.md and MEMORY.md: 1. **Lloyd Strayhorn Numerology (Chaldean-Pythago",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5989544599071785,
+      "maxScore": 0.5989544599071785,
+      "firstRecalledAt": "2026-06-29T00:27:08.171Z",
+      "lastRecalledAt": "2026-06-29T00:27:08.171Z",
+      "queryHashes": [
+        "2739a4eaea4f"
+      ],
+      "recallDays": [
+        "2026-06-29"
+      ],
+      "conceptTags": [
+        "mad-studies.md",
+        "memory.md",
+        "chaldean-pythago",
+        "zeke",
+        "never",
+        "sleep",
+        "download",
+        "updates"
+      ]
+    },
+    "memory:memory/2026-06-24.md:47:64": {
+      "key": "memory:memory/2026-06-24.md:47:64",
+      "path": "memory/2026-06-24.md",
+      "startLine": 47,
+      "endLine": 64,
+      "source": "memory",
+      "snippet": "- Hypothesis: mobile-first display, algorithm favors CTR, shorter = faster comprehension - Tested on Dandy's World [ALPHA] video: \"DANDY'S WORLD ON ROBLOX IS CRAZY!\" (6 words) vs shorter variants - User's channel: Coffee Collects Blox — gaming audience expects hype energy - Also discussed thumbnail with shocked face + Dandy's World logo + cute vs scary contrast - Full description written for Dandy's World video with timestamps + $MAD branding + cross-promo to Mad Phonk Awakening ### Numerology Analysis of Video Titles (Lloyd Strayhorn System) - User asked for numerology reading on video title options for Backrooms video - Analyzed three options using Chaldean-Pythagorean dual system: - Op",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5757859662191831,
+      "maxScore": 0.5757859662191831,
+      "firstRecalledAt": "2026-06-29T00:27:08.171Z",
+      "lastRecalledAt": "2026-06-29T00:27:08.171Z",
+      "queryHashes": [
+        "2739a4eaea4f"
+      ],
+      "recallDays": [
+        "2026-06-29"
+      ],
+      "conceptTags": [
+        "mobile-first",
+        "cross-promo",
+        "chaldean-pythagorean",
+        "hypothesis",
+        "mobile",
+        "first",
+        "display",
+        "algorithm"
+      ]
+    },
+    "memory:memory/2026-06-21.md:25:51": {
+      "key": "memory:memory/2026-06-21.md:25:51",
+      "path": "memory/2026-06-21.md",
+      "startLine": 25,
+      "endLine": 51,
+      "source": "memory",
+      "snippet": "- Key learnings: TikTok/YouTube Shorts pushed by algorithm on quality not size (small creators can go viral) - Algorithm evaluates every piece individually; high-quality content gets pushed regardless of subscriber count - Study saved to `knowledge/2026-06-21-youtube-algorithm-visual-first-study.md` ### 2026-06-21 ~05:48 — Numerology Oracle Built - User requested replacing The Oracle (chat) with numerology calculator - Built `NumerologyOracle.tsx` component based on Lloyd Strayhorn Chaldean-Pythagorean system - Calculates: Life Path, Birthday Gift, Attitude, Personal Year, Peak Cycle, Challenge - Master numbers (11, 22, 33) highlighted with gold accents - $MAD Frequency card ties result to",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5505022104660968,
+      "maxScore": 0.5505022104660968,
+      "firstRecalledAt": "2026-06-29T00:27:08.171Z",
+      "lastRecalledAt": "2026-06-29T00:27:08.171Z",
+      "queryHashes": [
+        "2739a4eaea4f"
+      ],
+      "recallDays": [
+        "2026-06-29"
+      ],
+      "conceptTags": [
+        "tiktok/youtube",
+        "high-quality",
+        "numerologyoracle.tsx",
+        "chaldean-pythagorean",
+        "key",
+        "learnings",
+        "tiktok",
+        "youtube"
       ]
     }
   }
