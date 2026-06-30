@@ -291,6 +291,7 @@ function PillarCard({ pillar, index }: { pillar: typeof PILLARS[0]; index: numbe
                 controls 
                 playsInline
                 preload="auto" 
+                crossOrigin="anonymous"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -433,6 +434,7 @@ function PillarCarousel() {
                   controls 
                   playsInline
                   preload="auto" 
+                  crossOrigin="anonymous"
                   className="w-full h-full object-cover"
                 />
               </div>
