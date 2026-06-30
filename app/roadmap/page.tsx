@@ -105,14 +105,11 @@ const PILLARS = [
   },
   {
     id: "food", label: "Food", icon: "🍔",
-    desc: "$MAD Bites. Fuel for the trenches.",
+    desc: "Coming.",
     status: "coming" as const,
     color: "#22c55e",
     milestones: [
-      { text: "$MAD Bites concept", done: false },
-      { text: "Pop-up food truck at events", done: false },
       { text: "Collaboration with food brands", done: false },
-      { text: "MAD Meal NFT combos", done: false },
     ],
   },
   {
