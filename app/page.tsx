@@ -306,14 +306,7 @@ function TheMADFAM() {
                     link: "https://x.com/therealsapient/status/2067957958256771072?s=20",
                     quote: "Most projects sell a future. $MAD sells a present. Doxxed dev, real product, real holders. We are still very early here.",
                   },
-                  {
-                    name: "Abraxas",
-                    handle: "@abraxas_mad",
-                    image: "/testimonials/abraxas-pfp.png",
-                    video: null,
-                    link: "https://x.com/abraxas_mad",
-                    quote: "Found $MAD at 200K market cap. Watched it hit 1M. The journey is the reward, but the gains don't hurt either. LFG.",
-                  },
+
                   {
                     name: "Dino",
                     handle: "@Iam__dino9",
