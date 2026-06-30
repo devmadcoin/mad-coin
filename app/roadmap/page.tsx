@@ -148,7 +148,6 @@ const PILLARS = [
       { text: "50% supply burned", done: true },
       { text: "7 communities locked to 2060", done: true },
       { text: "Burn #2 protocol (10K holders)", done: false },
-      { text: "Staking + revenue share", done: false },
     ],
   },
 ];
