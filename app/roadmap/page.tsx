@@ -120,7 +120,7 @@ const PILLARS = [
     desc: "The MAD Show. Animations, lore, weekly drops.",
     status: "live" as const,
     color: "#A855F7",
-    video: "https://raw.githubusercontent.com/devmadcoin/mad-coin/main/public/content/bullish-mad.mp4",
+    video: "/loops/bullish-mad.mp4",
     milestones: [
       { text: "'I'M MAD GETTING RUGGED' animation", done: true },
       { text: "Coffee Collects YouTube (3 channels)", done: true },
