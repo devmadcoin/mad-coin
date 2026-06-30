@@ -241,6 +241,74 @@ function TheMADFAM() {
             </div>
           </div>
         </div>
+
+        {/* Testimonials */}
+        <div className="mt-20 sm:mt-28">
+          <div className="text-center mb-10 sm:mb-14">
+            <p className="text-[9px] font-black uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-2">
+              What the MAD FAM Says
+            </p>
+            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Real People. Real Conviction.
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {[
+              {
+                name: "DKWTT",
+                handle: "@dkwtt_chadwick",
+                image: "/testimonials/dkwtt-chadwick-pfp.png",
+                quote: "I've been in crypto since 2017. $MAD is the first project where the community actually feels like family. Not a cult — a crew.",
+              },
+              {
+                name: "Kimdunk77",
+                handle: "@kimdunk77",
+                image: "/testimonials/kimdunk77-pfp.png",
+                quote: "Made a whole promo video for $MAD because I actually believe in it. The dev is doxxed, the game is live, and the vibes are unmatched.",
+              },
+              {
+                name: "M Luffy",
+                handle: "@mluffy_crypto",
+                image: "/testimonials/mluffy-pfp.png",
+                quote: "Met up with other $MAD holders at school. We talk charts, we talk dreams, we talk about what's next. This isn't just a coin.",
+              },
+              {
+                name: "Sapient",
+                handle: "@sapient_ru",
+                image: "/testimonials/sapient-pfp.png",
+                quote: "The Russian $MAD community is strong. We don't just hold — we build, we create, we spread the word. $MAD doesn't sleep.",
+              },
+              {
+                name: "Abraxas",
+                handle: "@abraxas_mad",
+                image: "/testimonials/abraxas-pfp.png",
+                quote: "Found $MAD at 200K market cap. Watched it hit 1M. The journey is the reward, but the gains don't hurt either. LFG.",
+              },
+              {
+                name: "IDC Lord",
+                handle: "@idclord",
+                image: "/testimonials/idclord-pfp.png",
+                quote: "Brought $MAD to campus. Showed the game to my friends. Now they're holders too. Organic growth, real believers.",
+              },
+            ].map((t, i) => (
+              <div key={i} className="rounded-2xl border border-white/5 bg-white/[0.02] p-5 sm:p-6 flex flex-col">
+                <p className="text-sm text-white/50 leading-relaxed flex-1 mb-5">
+                  "{t.quote}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/10">
+                    <Image src={t.image} alt={t.name} fill className="object-cover" sizes="40px" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-white">{t.name}</p>
+                    <p className="text-[10px] text-white/30">{t.handle}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
