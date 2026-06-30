@@ -143,7 +143,7 @@ const PILLARS = [
     desc: "Staking, burns, treasury. The economic engine.",
     status: "live" as const,
     color: "#10b981",
-    images: ["/roadmap/finance-card.png", "/roadmap/market-overview.png"],
+    image: "/roadmap/market-overview.png",
     milestones: [
       { text: "50% supply burned", done: true },
       { text: "7 communities locked to 2060", done: true },
@@ -358,21 +358,10 @@ function PillarCard({ pillar, index }: { pillar: typeof PILLARS[0]; index: numbe
             <span className="text-2xl font-black" style={{ color: pillar.color }}>{pct}%</span>
           </div>
 
-          {/* Image for Games, Merch, and Music pillars */}
-          {(pillar.id === "games" || pillar.id === "merch" || pillar.id === "music") && pillar.image && (
-            <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
-              <Image src={pillar.image} alt={pillar.label} fill className="object-cover" />
-            </div>
-          )}
-
-          {/* Images for Finance pillar */}
-          {pillar.id === "finance" && pillar.images && (
-            <div className="grid grid-cols-1 gap-3 mb-4">
-              {pillar.images.map((img, i) => (
-                <div key={i} className="relative w-full rounded-xl overflow-hidden border border-white/10">
-                  <Image src={img} alt={`${pillar.label} ${i + 1}`} width={600} height={300} className="w-full h-auto object-cover" />
-                </div>
-              ))}
+          {/* Image for Games, Merch, Music, and Finance pillars */}
+          {(pillar.id === "games" || pillar.id === "merch" || pillar.id === "music" || pillar.id === "finance") && pillar.image && (
+            <div className="relative w-full rounded-xl overflow-hidden mb-4 border border-white/10">
+              <Image src={pillar.image} alt={pillar.label} width={600} height={300} className="w-full h-auto object-cover" />
             </div>
           )}
 
@@ -511,21 +500,10 @@ function PillarCarousel() {
               </div>
               <span className="text-2xl font-black" style={{ color: pillar.color }}>{pct}%</span>
             </div>
-            {/* Image for Games, Merch, and Music pillars */}
-            {(pillar.id === "games" || pillar.id === "merch" || pillar.id === "music") && pillar.image && (
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4">
-                <Image src={pillar.image} alt={pillar.label} fill className="object-cover" />
-              </div>
-            )}
-
-            {/* Images for Finance pillar */}
-            {pillar.id === "finance" && pillar.images && (
-              <div className="grid grid-cols-1 gap-3 mb-4">
-                {pillar.images.map((img, i) => (
-                  <div key={i} className="relative w-full rounded-xl overflow-hidden border border-white/10">
-                    <Image src={img} alt={`${pillar.label} ${i + 1}`} width={600} height={300} className="w-full h-auto object-cover" />
-                  </div>
-                ))}
+            {/* Image for Games, Merch, Music, and Finance pillars */}
+            {(pillar.id === "games" || pillar.id === "merch" || pillar.id === "music" || pillar.id === "finance") && pillar.image && (
+              <div className="relative w-full rounded-xl overflow-hidden mb-4 border border-white/10">
+                <Image src={pillar.image} alt={pillar.label} width={600} height={300} className="w-full h-auto object-cover" />
               </div>
             )}
 
