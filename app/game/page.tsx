@@ -396,7 +396,7 @@ function GameCarousel() {
                 style={{ backgroundColor: g.status === "live" ? "#10b981" : "#444444", color: "#FFFFFF" }}
               >
                 {g.status === "live" && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
-                {g.status === "live" ? "LIVE NOW" : "COMING SOON"}
+                {g.title === "MAD SHOT" ? "BETA (LIVE)" : g.status === "live" ? "LIVE NOW" : "COMING SOON"}
               </span>
               <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: "#FF6B00" }}>{g.tagline}</span>
             </div>
