@@ -329,7 +329,7 @@ function TheMADFAM() {
                     handle: "@idclord",
                     image: "/testimonials/idclord-pfp.png",
                     video: "/testimonials/idclord-mad-campus.mp4",
-                    link: "https://x.com/idclord",
+                    link: "https://x.com/idclord/status/2067553952539783554?s=20",
                     quote: "Brought $MAD to campus. Showed the game to my friends. Now they're holders too. Organic growth, real believers.",
                   },
                 ].map((t, i) => (
