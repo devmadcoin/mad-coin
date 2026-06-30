@@ -213,9 +213,15 @@ function ExchangeMarquee() {
                 rel="noreferrer"
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/5 bg-white/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.04] transition-all shrink-0"
               >
-                <div className="w-6 h-6 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-[#FF2D2D] font-black text-[10px]">
-                  {ex.icon}
-                </div>
+                {ex.name === "MEXC" ? (
+                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/mexc.png" alt="MEXC" width={24} height={24} className="object-contain" />
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-[#FF2D2D] font-black text-[10px]">
+                    {ex.icon}
+                  </div>
+                )}
                 <span className="text-xs font-bold text-white/50 whitespace-nowrap">{ex.name}</span>
               </a>
             ))
