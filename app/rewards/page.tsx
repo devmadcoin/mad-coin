@@ -203,6 +203,18 @@ export default function RewardsPage() {
       `}</style>
 
       <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+        {/* Banner Image */}
+        <div className="mb-6 overflow-hidden rounded-[1.6rem] border border-white/5 shadow-[0_18px_50px_rgba(0,0,0,0.3)]">
+          <Image
+            src="/rewards-banner.png"
+            alt="$MAD Rewards - Bigger Market Cap, Bigger Cash Giveaways"
+            width={1200}
+            height={400}
+            className="w-full h-auto object-cover"
+            priority
+          />
+        </div>
+
         {/* PHASE 1 VICTORY BANNER */}
         <div className="mb-6 overflow-hidden rounded-[1.6rem] border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.06] p-6 sm:p-8 text-center" style={{animation: 'pulseFire 3s ease-in-out infinite'}}>
           <div className="flex flex-col items-center gap-3">
