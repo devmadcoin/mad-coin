@@ -133,11 +133,8 @@ function Navbar() {
    ═══════════════════════════════════════════════════════════ */
 function TheStage() {
   return (
-    <section className="relative min-h-[100dvh] flex flex-col items-center justify-end overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#080808_100%)]" />
-      </div>
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 text-center">
+    <section className="relative flex flex-col items-center justify-center py-20 sm:py-28 overflow-hidden">
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 text-center">
         <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-4">[ MAD ART ]</p>
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[0.95] mb-4">
           THE <span className="text-[#FF2D2D]">MOVEMENT</span>
