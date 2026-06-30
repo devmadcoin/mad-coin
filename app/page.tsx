@@ -278,6 +278,7 @@ function TheMADFAM() {
                     handle: "@dkwtt_chadwick",
                     image: "/testimonials/dkwtt-chadwick-pfp.png",
                     video: null,
+                    link: "https://x.com/dkwtt_chadwick",
                     quote: "I've been in crypto since 2017. $MAD is the first project where the community actually feels like family. Not a cult — a crew.",
                   },
                   {
@@ -285,6 +286,7 @@ function TheMADFAM() {
                     handle: "@kimdunk77",
                     image: "/testimonials/kimdunk77-pfp.png",
                     video: "/testimonials/kimdunk77-mad-promo-indonesia.mp4",
+                    link: "https://x.com/kimdunk77",
                     quote: "Made a whole promo video for $MAD because I actually believe in it. The dev is doxxed, the game is live, and the vibes are unmatched.",
                   },
                   {
@@ -292,6 +294,7 @@ function TheMADFAM() {
                     handle: "@mluffy_crypto",
                     image: "/testimonials/mluffy-pfp.png",
                     video: "/testimonials/mluffy-school-meetup.mp4",
+                    link: "https://x.com/mluffy_crypto",
                     quote: "Met up with other $MAD holders at school. We talk charts, we talk dreams, we talk about what's next. This isn't just a coin.",
                   },
                   {
@@ -299,6 +302,7 @@ function TheMADFAM() {
                     handle: "@sapient_ru",
                     image: "/testimonials/sapient-pfp.png",
                     video: "/testimonials/sapient-russian-experience.mp4",
+                    link: "https://x.com/sapient_ru",
                     quote: "The Russian $MAD community is strong. We don't just hold — we build, we create, we spread the word. $MAD doesn't sleep.",
                   },
                   {
@@ -306,6 +310,7 @@ function TheMADFAM() {
                     handle: "@abraxas_mad",
                     image: "/testimonials/abraxas-pfp.png",
                     video: null,
+                    link: "https://x.com/abraxas_mad",
                     quote: "Found $MAD at 200K market cap. Watched it hit 1M. The journey is the reward, but the gains don't hurt either. LFG.",
                   },
                   {
@@ -313,6 +318,7 @@ function TheMADFAM() {
                     handle: "@idclord",
                     image: "/testimonials/idclord-pfp.png",
                     video: "/testimonials/idclord-mad-campus.mp4",
+                    link: "https://x.com/idclord",
                     quote: "Brought $MAD to campus. Showed the game to my friends. Now they're holders too. Organic growth, real believers.",
                   },
                 ].map((t, i) => (
@@ -348,14 +354,26 @@ function TheMADFAM() {
                       <p className="text-sm text-white/50 leading-relaxed flex-1 mb-4">
                         "{t.quote}"
                       </p>
-                      <div className="flex items-center gap-3">
-                        <div className="relative w-9 h-9 rounded-full overflow-hidden border border-white/10">
-                          <Image src={t.image} alt={t.name} fill className="object-cover" sizes="36px" />
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-9 h-9 rounded-full overflow-hidden border border-white/10">
+                            <Image src={t.image} alt={t.name} fill className="object-cover" sizes="36px" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-black text-white">{t.name}</p>
+                            <p className="text-[10px] text-white/30">{t.handle}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-xs font-black text-white">{t.name}</p>
-                          <p className="text-[10px] text-white/30">{t.handle}</p>
-                        </div>
+                        <a
+                          href={t.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[10px] font-bold text-[#FF2D2D]/70 hover:text-[#FF2D2D] transition-colors flex items-center gap-1"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                          View
+                        </a>
                       </div>
                     </div>
                   </div>
