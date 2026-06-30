@@ -410,6 +410,72 @@ function TheMADFAM() {
    ENTER THE MAD WORLD — Ecosystem (Azuki-style multiple entry)
    ═══════════════════════════════════════════════════════════ */
 /* ═══════════════════════════════════════════════════════════
+   MAD TALKS — Podcast & Real Conversations
+   ═══════════════════════════════════════════════════════════ */
+function MadTalks() {
+  return (
+    <section id="talks" className="relative py-24 sm:py-32 bg-[#0a0a0a] overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.10),transparent_60%)]" />
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-10 sm:mb-14">
+          <p className="text-[9px] font-black uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-2">
+            Real Conversations. Real Conviction.
+          </p>
+          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            MAD Talks
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Video — 16:9 landscape */}
+          <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/5 bg-[#0a0a0a] shadow-[0_0_60px_rgba(255,45,45,0.1)]">
+            <iframe
+              src="https://www.youtube.com/embed/gJsb2p2Uig8?autoplay=0&rel=0&modestbranding=1"
+              title="MAD Talks Podcast"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+              style={{ border: "none" }}
+            />
+          </div>
+
+          {/* Content */}
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
+              Featured Episode
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
+              The <span className="text-[#FF2D2D]">MAD Mind</span><br />
+              Unfiltered
+            </h2>
+            <p className="text-sm text-white/40 leading-relaxed mb-6">
+              Raw conversations with the MAD FAM. No scripts, no filters — just real people 
+              talking about why they chose Motivation, Alignment, and Discipline. 
+              This is what conviction sounds like.
+            </p>
+
+            <a href="https://www.youtube.com/watch?v=gJsb2p2Uig8&t=1s" target="_blank" rel="noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF2D2D] text-white text-xs font-black uppercase tracking-wider hover:bg-[#FF2D2D]/80 transition-colors"
+            >
+              Watch on YouTube
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </a>
+
+            {/* Episode info */}
+            <div className="mt-8 p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-white/20 mb-1">Next Episode</p>
+              <p className="text-sm font-bold text-white/60">Coming Soon</p>
+              <p className="text-xs text-white/20 mt-1">The story continues...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    MAD CHRONICLES — Episodic Content (Azuki anime model)
    ═══════════════════════════════════════════════════════════ */
 function Chronicles() {
@@ -603,6 +669,7 @@ export default function Home() {
       <VideoBanner />
       <StopPanicking />
       <TheMADFAM />
+      <MadTalks />
       <MadCommandCenter />
       <Chronicles />
       <Architects />
