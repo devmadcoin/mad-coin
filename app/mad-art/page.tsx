@@ -297,94 +297,6 @@ function FeaturedBanner() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MAD STORIES — Cinematic moments with sound (dark mode)
-   ═══════════════════════════════════════════════════════════ */
-function MadStories() {
-  const [active, setActive] = useState<number | null>(null);
-  const [muted, setMuted] = useState(true);
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-
-  const stories = [
-    { src: "/mad-art/stories/mad-dancing.mp4", title: "MAD Dancing", desc: "The rhythm of conviction. When the beat drops, you hold." },
-    { src: "/mad-art/stories/mad-winning.mp4", title: "MAD Winning", desc: "Victory is a mindset. The bag is already yours." },
-    { src: "/mad-art/stories/bullish-mad.mp4", title: "Bullish MAD", desc: "The charts don't lie. The community doesn't fold." },
-    { src: "/mad-art/stories/matrix-mad.mp4", title: "MATRIX MAD", desc: "Wake up. The system is the simulation. $MAD is the red pill." },
-    { src: "/mad-art/stories/im-mad-getting-rugged.mp4", title: "I'M MAD GETTING RUGGED", desc: "They rugged you. You're still here. That's not failure — that's initiation." },
-  ];
-
-  const handleToggle = (i: number) => {
-    if (active === i) { setActive(null); } else { setActive(i); setMuted(false); }
-  };
-
-  useEffect(() => {
-    stories.forEach((_, i) => {
-      const el = videoRefs.current[i];
-      if (!el) return;
-      if (active === i) { el.muted = muted; el.play().catch(() => {}); }
-      else { el.pause(); el.currentTime = 0; el.muted = true; }
-    });
-  }, [active, muted]);
-
-  return (
-    <section className="px-4 sm:px-6 py-20 sm:py-28 bg-[#080808] border-y border-white/5">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12 sm:mb-16">
-          <p className="text-[10px] font-black uppercase tracking-[0.34em] text-white/30 mb-3">Sound On 🔊</p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white">
-            MAD <span className="text-[#FF2D2D]">STORIES</span>
-          </h2>
-          <p className="text-sm text-white/40 mt-3 max-w-md mx-auto">Cinematic moments. Tap to play. Turn up the volume.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-          {stories.map((story, i) => (
-            <div key={i}
-              className={`group relative overflow-hidden rounded-2xl border border-white/5 bg-[#121212] cursor-pointer ${
-                i === 1 || i === 2 ? 'aspect-[9/16] md:aspect-[16/9] md:col-span-2' : 'aspect-[9/16]'
-              }`}
-              onClick={() => handleToggle(i)}
-            >
-              <video ref={(el) => { videoRefs.current[i] = el; }} src={story.src} loop playsInline muted={active !== i} preload="metadata"
-                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-              />
-              {active !== i && (
-                <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center transition-opacity">
-                  <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M8 5v14l11-7z"/></svg>
-                  </div>
-                  <p className="text-white font-black text-lg">{story.title}</p>
-                  <p className="text-white/60 text-xs mt-1 max-w-[80%] text-center">{story.desc}</p>
-                </div>
-              )}
-              {active === i && (
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-14 h-14 rounded-full bg-black/40 backdrop-blur flex items-center justify-center">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="none">
-                      <rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>
-                    </svg>
-                  </div>
-                </div>
-              )}
-              {active === i && !muted && (
-                <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/40 backdrop-blur px-2 py-1">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="none">
-                    <path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/>
-                  </svg>
-                  <span className="text-[9px] font-bold text-white">ON</span>
-                </div>
-              )}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.7)_100%)]">
-                <p className="text-xs font-bold text-white/80">{story.title}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════
    ANIMATED GALLERY — Looping MAD moments (dark mode)
    ═══════════════════════════════════════════════════════════ */
 function AnimatedGallery() {
@@ -472,7 +384,6 @@ export default function MadArtPage() {
       <main>
         <FeaturedBanner />
         <TheStage />
-        <MadStories />
         <AnimatedGallery />
         <TheGallery />
         <CTASection />
