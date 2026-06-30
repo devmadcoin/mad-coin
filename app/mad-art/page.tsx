@@ -470,8 +470,8 @@ export default function MadArtPage() {
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.03),transparent_50%)]" />
 
       <main>
-        <TheStage />
         <FeaturedBanner />
+        <TheStage />
         <MadStories />
         <AnimatedGallery />
         <TheGallery />
