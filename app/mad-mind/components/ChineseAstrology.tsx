@@ -296,17 +296,17 @@ export default function ChineseAstrology() {
   return (
     <section className="relative rounded-[1.5rem] border border-white/[0.08] bg-white/[0.02] overflow-hidden mb-2">
       {/* Header */}
-      <div className="px-4 sm:px-6 py-4 border-b border-white/[0.06]">
-        <div className="flex items-center gap-2 mb-1">
+      <div className="px-4 sm:px-6 py-4 border-b border-white/[0.06] text-center">
+        <div className="flex items-center justify-center gap-2 mb-1">
           <span className="text-lg">🔮</span>
           <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#FF2D2D]/60">
             ANCIENT WISDOM
           </p>
         </div>
-        <h2 className="text-lg sm:text-xl font-black text-[#FF2D2D] leading-tight">
+        <h2 className="text-xl sm:text-2xl font-black text-[#FF2D2D] tracking-tight mb-1">
           $MAD ASTROLOGY
         </h2>
-        <p className="text-[11px] text-white/40 mt-1 max-w-md leading-relaxed">
+        <p className="text-[11px] text-white/40 max-w-md mx-auto leading-relaxed">
           Discover your zodiac animal, element, and cosmic allies.
           Ancient wisdom meets $MAD frequency.
         </p>
