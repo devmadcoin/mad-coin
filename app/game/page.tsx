@@ -540,6 +540,14 @@ function DigitalWearablesCarousel() {
       link: "https://www.roblox.com/catalog/89146674743225/MAD-Ice-Washed-Denim",
       cta: "Get the Denim →",
     },
+    {
+      title: "MAD Red Cybersigilism Tee",
+      subtitle: "Digital Wearables",
+      desc: "Bold red energy. Official $MAD cybersigilism tee — cyberpunk vibes with the MAD edge. Stand out in every server.",
+      image: "/game/mad-red-cybersigilism-tee-card.png",
+      link: "https://www.roblox.com/catalog/122315809395599/MAD-Red-Cybersigilism-Tee",
+      cta: "Get the Tee →",
+    },
   ];
 
   const next = () => setCurrent((prev) => (prev + 1) % items.length);
