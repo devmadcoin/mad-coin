@@ -275,10 +275,10 @@ function TheMADFAM() {
                 [
                   {
                     name: "DKWTT",
-                    handle: "@dkwtt_chadwick",
+                    handle: "@lit_terrestrial",
                     image: "/testimonials/dkwtt-chadwick-pfp.png",
                     video: null,
-                    link: "https://x.com/dkwtt_chadwick",
+                    link: "https://x.com/lit_terrestrial/status/2059486216567824581?s=20",
                     quote: "I've been in crypto since 2017. $MAD is the first project where the community actually feels like family. Not a cult — a crew.",
                   },
                   {
