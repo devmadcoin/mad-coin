@@ -699,49 +699,6 @@ export default function GamePage() {
           <GameCarousel />
         </div>
 
-        {/* Live Stats */}
-        <FadeIn delay={0.1}>
-          <SectionShell className="mt-6 p-6 sm:p-8">
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#FF6B00]/60">
-                  Live Stats
-                </p>
-                <h2 className="mt-2 text-2xl font-black text-white">
-                  Game Activity
-                </h2>
-              </div>
-              <a
-                href={GAME_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs text-white/30 transition-colors hover:text-[#FF2D2D]"
-              >
-                View on Roblox →
-              </a>
-            </div>
-            <StaggerGrid className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" staggerDelay={0.06}>
-              <StatCard value="68.6K+" label="Visits" icon={Icons.eye} />
-              <StatCard value={GAME_STATS.favorites.toString()} label="Favorites" icon={Icons.heart} />
-              <StatCard value={GAME_STATS.active.toString()} label="Active Now" icon={Icons.users} />
-              <StatCard value={`${GAME_STATS.serverSize}`} label="Server Size" icon={Icons.server} />
-              <StatCard value={GAME_STATS.voiceChat} label="Voice Chat" icon={Icons.server} />
-              <StatCard value={GAME_STATS.camera} label="Camera" icon={Icons.eye} />
-            </StaggerGrid>
-            <div className="mt-4 flex flex-wrap gap-4 text-xs text-white/20">
-              <span>Created {GAME_STATS.created}</span>
-              <span>Updated {GAME_STATS.updated}</span>
-              <span>Genre {GAME_STATS.genre}</span>
-              <span>
-                By{" "}
-                <a href={CREATOR_LINK} target="_blank" rel="noreferrer" className="text-[#FF6B00]/60 hover:text-[#FF2D2D]">
-                  {CREATOR}
-                </a>
-              </span>
-            </div>
-          </SectionShell>
-        </FadeIn>
-
         {/* YouTube Video Section */}
         <FadeIn delay={0.15}>
           <SectionShell className="mt-6 overflow-hidden p-0">
