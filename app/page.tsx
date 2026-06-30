@@ -291,10 +291,10 @@ function TheMADFAM() {
                   },
                   {
                     name: "M Luffy",
-                    handle: "@mluffy_crypto",
+                    handle: "@mluffy_onsol",
                     image: "/testimonials/mluffy-pfp.png",
                     video: "/testimonials/mluffy-school-meetup.mp4",
-                    link: "https://x.com/mluffy_crypto",
+                    link: "https://x.com/mluffy_onsol/status/2070074141906985200?s=20",
                     quote: "Met up with other $MAD holders at school. We talk charts, we talk dreams, we talk about what's next. This isn't just a coin.",
                   },
                   {
