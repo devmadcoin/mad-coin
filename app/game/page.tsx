@@ -548,6 +548,14 @@ function DigitalWearablesCarousel() {
       link: "https://www.roblox.com/catalog/122315809395599/MAD-Red-Cybersigilism-Tee",
       cta: "Get the Tee →",
     },
+    {
+      title: "MAD Red Faded Jeans",
+      subtitle: "Digital Wearables",
+      desc: "Red wash, faded perfection. Official $MAD red faded jeans — the bottom half that completes the fit. Available now in the Roblox catalog.",
+      image: "/game/mad-red-faded-jeans-card.png",
+      link: "https://www.roblox.com/catalog/113611821499264/MAD-Red-Faded-Jeans",
+      cta: "Get the Jeans →",
+    },
   ];
 
   const next = () => setCurrent((prev) => (prev + 1) % items.length);
