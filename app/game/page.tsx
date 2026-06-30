@@ -697,7 +697,9 @@ export default function GamePage() {
               MAD GAMES
             </h1>
             <p className="text-sm sm:text-base text-white/40 max-w-md mx-auto leading-relaxed">
-              Built on Roblox. Powered by conviction. The official $MAD gaming universe.
+              The next generation isn't on PCs — they're on tablets, phones, and consoles.
+              Roblox has 300M+ monthly players, built-in for every screen. That's why
+              $MAD lives there. Meet your audience where they already are.
             </p>
           </FadeIn>
         </div>
