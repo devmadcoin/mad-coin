@@ -302,7 +302,7 @@ function TheMADFAM() {
                     handle: "@sapient_ru",
                     image: "/testimonials/sapient-pfp.png",
                     video: "/testimonials/sapient-russian-experience.mp4",
-                    link: "https://x.com/sapient_ru",
+                    link: "https://x.com/therealsapient/status/2067957958256771072?s=20",
                     quote: "The Russian $MAD community is strong. We don't just hold — we build, we create, we spread the word. $MAD doesn't sleep.",
                   },
                   {
