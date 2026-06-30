@@ -317,6 +317,7 @@ function TheMADFAM() {
                     name: "Dino",
                     handle: "@Iam__dino9",
                     image: "/testimonials/dino-pfp.png",
+                    media: "/testimonials/dino-stickers.png",
                     video: null,
                     link: "https://x.com/Iam__dino9/status/2061859571363381318?s=20",
                     quote: "Real community. Real stickers. Real holders. $MAD isn't just a token, it's a movement you can hold in your hands.",
@@ -347,7 +348,7 @@ function TheMADFAM() {
                         />
                       ) : (
                         <Image
-                          src={t.image}
+                          src={t.media || t.image}
                           alt={t.name}
                           fill
                           className="object-cover"
