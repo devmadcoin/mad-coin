@@ -153,6 +153,89 @@ const PILLARS = [
 ];
 
 /* ═══════════════════════════════════════════════════════════
+   TOKENOMICS — The Deflation Engine
+   ═══════════════════════════════════════════════════════════ */
+function TokenomicsSection() {
+  return (
+    <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: "#121212", border: "1px solid #FF2D2D30" }}>
+      {/* Top bar */}
+      <div className="h-1" style={{ backgroundColor: "#FF2D2D" }} />
+      
+      <div className="p-6 sm:p-10">
+        <div className="text-center mb-8">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-3" style={{ color: "#FF6B00" }}>The Engine</p>
+          <h2 className="text-2xl sm:text-4xl font-black text-white mb-3">
+            200M CAP. <span style={{ color: "#FF2D2D" }}>BURN THE REST.</span>
+          </h2>
+          <p className="text-sm max-w-xl mx-auto" style={{ color: "#888888" }}>
+            $MAD is designed to get scarcer over time. Every burn makes your bag heavier. The math is simple — less supply, more demand, same community.
+          </p>
+        </div>
+
+        {/* Tokenomics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="rounded-xl p-6 text-center" style={{ backgroundColor: "#1a1a1a", border: "1px solid #222222" }}>
+            <p className="text-3xl sm:text-4xl font-black text-white mb-1">200M</p>
+            <p className="text-[10px] font-black uppercase tracking-wider" style={{ color: "#FF2D2D" }}>Max Supply</p>
+            <p className="text-xs mt-2" style={{ color: "#666666" }}>Hard cap. No more tokens will ever be minted.</p>
+          </div>
+          <div className="rounded-xl p-6 text-center" style={{ backgroundColor: "#1a1a1a", border: "1px solid #222222" }}>
+            <p className="text-3xl sm:text-4xl font-black mb-1" style={{ color: "#FF6B00" }}>50%</p>
+            <p className="text-[10px] font-black uppercase tracking-wider" style={{ color: "#FF6B00" }}>Already Burned</p>
+            <p className="text-xs mt-2" style={{ color: "#666666" }}>Gone forever. Reduced supply increases scarcity.</p>
+          </div>
+          <div className="rounded-xl p-6 text-center" style={{ backgroundColor: "#1a1a1a", border: "1px solid #222222" }}>
+            <p className="text-3xl sm:text-4xl font-black text-white mb-1">7</p>
+            <p className="text-[10px] font-black uppercase tracking-wider" style={{ color: "#10b981" }}>Communities Locked</p>
+            <p className="text-xs mt-2" style={{ color: "#666666" }}>Locked until 2060. Long-term holders only.</p>
+          </div>
+        </div>
+
+        {/* Deflation explanation */}
+        <div className="rounded-xl p-5 sm:p-6" style={{ backgroundColor: "#1a1a1a", border: "1px solid #222222" }}>
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#FF2D2D20" }}>
+              <span className="text-lg">🔥</span>
+            </div>
+            <div>
+              <h3 className="text-sm font-black text-white mb-2">Deflation by Design</h3>
+              <p className="text-xs leading-relaxed" style={{ color: "#888888" }}>
+                $MAD doesn't inflate — it <span className="text-white font-bold">deflates</span>. With a hard cap of 200M tokens and regular burns, 
+                the circulating supply shrinks while the community grows. Burn #1 removed 50% of total supply. 
+                Burn #2 triggers at 10K holders. Every burn makes the remaining tokens more scarce. 
+                The holders who stay $MAD the longest benefit the most.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Burn milestones */}
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="rounded-xl p-5 flex items-center gap-4" style={{ backgroundColor: "#1a1a1a", border: "1px solid #10b98140" }}>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#10b98120" }}>
+              <span className="text-sm">✓</span>
+            </div>
+            <div>
+              <p className="text-xs font-black text-white">Burn #1 — Complete</p>
+              <p className="text-[10px]" style={{ color: "#666666" }}>50% supply burned at launch</p>
+            </div>
+          </div>
+          <div className="rounded-xl p-5 flex items-center gap-4" style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333" }}>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "#222222" }}>
+              <span className="text-sm" style={{ color: "#555555" }}>🔒</span>
+            </div>
+            <div>
+              <p className="text-xs font-black text-white">Burn #2 — Locked</p>
+              <p className="text-[10px]" style={{ color: "#666666" }}>Triggers at 10,000 holders</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    STATS — LIVE DATA from DexScreener API
    ═══════════════════════════════════════════════════════════ */
 function QuickStats() {
@@ -519,7 +602,8 @@ export default function RoadmapPage() {
         </div>
 
         <div className="space-y-6">
-          <FadeIn delay={0.05}><QuickStats /></FadeIn>
+          <FadeIn delay={0.05}><TokenomicsSection /></FadeIn>
+          <FadeIn delay={0.1}><QuickStats /></FadeIn>
 
           <FadeIn delay={0.1}>
             <PillarCarousel />
