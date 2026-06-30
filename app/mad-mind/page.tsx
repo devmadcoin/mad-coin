@@ -24,7 +24,7 @@ function Navbar() {
     { label: "Game", href: "/game" },
     { label: "MAD Art", href: "/mad-art" },
     { label: "Rewards", href: "/rewards" },
-    { label: "Merch", href: "/merch" },
+    { label: "Shop", href: "/merch" },
   ];
 
   return (

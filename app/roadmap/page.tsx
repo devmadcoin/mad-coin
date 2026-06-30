@@ -39,7 +39,7 @@ function Navbar() {
   const links = [
     { label: "Home", href: "/" }, { label: "MAD AI", href: "/mad-mind" },
     { label: "Roadmap", href: "/roadmap", active: true }, { label: "Game", href: "/game" },
-    { label: "MAD Art", href: "/mad-art" }, { label: "Rewards", href: "/rewards" }, { label: "Merch", href: "/merch" },
+    { label: "MAD Art", href: "/mad-art" }, { label: "Rewards", href: "/rewards" }, { label: "Shop", href: "/merch" },
   ];
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#080808]/80 backdrop-blur-md border-b border-white/5">

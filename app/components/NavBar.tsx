@@ -62,7 +62,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/game", label: "Game", mobileLabel: "Game", icon: Icons.game },
   { href: "/mad-art", label: "MAD Art", mobileLabel: "Art", icon: Icons.art },
   { href: "/rewards", label: "Rewards", mobileLabel: "Rewards", icon: Icons.rewards },
-  { href: "/merch", label: "Merch", mobileLabel: "Merch", variant: "cta", icon: Icons.merch },
+  { href: "/merch", label: "Shop", mobileLabel: "Shop", variant: "cta", icon: Icons.merch },
 ];
 
 function cn(...classes: Array<string | false | null | undefined>) {
