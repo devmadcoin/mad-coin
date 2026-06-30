@@ -286,7 +286,7 @@ function TheMADFAM() {
                     handle: "@kimdunk77",
                     image: "/testimonials/kimdunk77-pfp.png",
                     video: "/testimonials/kimdunk77-mad-promo-indonesia.mp4",
-                    link: "https://x.com/kimdunk77",
+                    link: "https://x.com/KIMDUNK77/status/2061078380376936606?s=20",
                     quote: "Made a whole promo video for $MAD because I actually believe in it. The dev is doxxed, the game is live, and the vibes are unmatched.",
                   },
                   {
