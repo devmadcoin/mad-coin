@@ -314,6 +314,14 @@ function TheMADFAM() {
                     quote: "Found $MAD at 200K market cap. Watched it hit 1M. The journey is the reward, but the gains don't hurt either. LFG.",
                   },
                   {
+                    name: "Dino",
+                    handle: "@Iam__dino9",
+                    image: "/testimonials/dino-pfp.png",
+                    video: null,
+                    link: "https://x.com/Iam__dino9/status/2061859571363381318?s=20",
+                    quote: "Real community. Real stickers. Real holders. $MAD isn't just a token, it's a movement you can hold in your hands.",
+                  },
+                  {
                     name: "IDC Lord",
                     handle: "@idclord",
                     image: "/testimonials/idclord-pfp.png",
