@@ -184,8 +184,8 @@ function ExchangeMarquee() {
     <section className="relative py-6 bg-[#080808] border-y border-white/5 overflow-hidden">
       <style>{`
         @keyframes exchangeScroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
         }
         .exchange-track {
           display: flex;
