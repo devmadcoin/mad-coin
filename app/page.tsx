@@ -303,7 +303,7 @@ function TheMADFAM() {
                     image: "/testimonials/sapient-pfp.png",
                     video: "/testimonials/sapient-russian-experience.mp4",
                     link: "https://x.com/therealsapient/status/2067957958256771072?s=20",
-                    quote: "The Russian $MAD community is strong. We don't just hold — we build, we create, we spread the word. $MAD doesn't sleep.",
+                    quote: "Most projects sell a future. $MAD sells a present. Doxxed dev, real product, real holders. We are still very early here.",
                   },
                   {
                     name: "Abraxas",
