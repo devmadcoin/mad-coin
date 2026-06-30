@@ -500,43 +500,6 @@ function GameCarousel() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PAGE
-   ═══════════════════════════════════════════════════════════ */
-
-export default function GamePage() {
-  return (
-    <div className="min-h-screen overflow-x-hidden bg-[#080808] text-white relative">
-      <Scanlines />
-      <Navbar />
-
-      {/* Background gradient */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
-
-      <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-20 pt-6 relative z-10">
-        {/* Hero Header */}
-        <div className="relative pt-12 pb-6 sm:pt-20 sm:pb-10 text-center">
-          <FadeIn>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60 mb-3">
-              Official $MAD Experience
-            </p>
-            <h1
-              className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] mb-4"
-              style={{
-                background: "linear-gradient(135deg, #FF2D2D, #FF6B00, #FFD700)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              MAD GAMES
-            </h1>
-            <p className="text-sm sm:text-base text-white/40 max-w-md mx-auto leading-relaxed">
-              Built on Roblox. Powered by conviction. The official $MAD gaming universe.
-            </p>
-          </FadeIn>
-        </div>
-
-/* ═══════════════════════════════════════════════════════════
    DIGITAL WEARABLES CAROUSEL — Roblox Catalog Items
    ═══════════════════════════════════════════════════════════ */
 function DigitalWearablesCarousel() {
@@ -649,6 +612,43 @@ function DigitalWearablesCarousel() {
     </FadeIn>
   );
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE
+   ═══════════════════════════════════════════════════════════ */
+
+export default function GamePage() {
+  return (
+    <div className="min-h-screen overflow-x-hidden bg-[#080808] text-white relative">
+      <Scanlines />
+      <Navbar />
+
+      {/* Background gradient */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
+
+      <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-20 pt-6 relative z-10">
+        {/* Hero Header */}
+        <div className="relative pt-12 pb-6 sm:pt-20 sm:pb-10 text-center">
+          <FadeIn>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60 mb-3">
+              Official $MAD Experience
+            </p>
+            <h1
+              className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] mb-4"
+              style={{
+                background: "linear-gradient(135deg, #FF2D2D, #FF6B00, #FFD700)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              MAD GAMES
+            </h1>
+            <p className="text-sm sm:text-base text-white/40 max-w-md mx-auto leading-relaxed">
+              Built on Roblox. Powered by conviction. The official $MAD gaming universe.
+            </p>
+          </FadeIn>
+        </div>
 
         {/* Digital Wearables Carousel */}
         <div className="mt-6">
