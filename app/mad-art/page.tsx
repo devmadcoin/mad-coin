@@ -135,9 +135,6 @@ function TheStage() {
   return (
     <section className="relative min-h-[100dvh] flex flex-col items-center justify-end overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <video autoPlay muted loop playsInline preload="auto" className="w-full h-full object-cover">
-          <source src="/loops/mad-dancing.mp4" type="video/mp4" />
-        </video>
         <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_20%,rgba(8,8,8,0.5)_50%,rgba(8,8,8,0.92)_75%,#080808_100%)]" />
       </div>
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16 text-center">
