@@ -524,6 +524,14 @@ function DigitalWearablesCarousel() {
       link: "https://www.roblox.com/catalog/97286453888370/MAD-brown-pants",
       cta: "Get the Pants →",
     },
+    {
+      title: "MAD Beige Button-Up",
+      subtitle: "Digital Wearables",
+      desc: "Clean and classic. Official $MAD beige button-up shirt with the signature MAD face. Elevate your Roblox wardrobe.",
+      image: "/game/mad-beige-buttonup-card.png",
+      link: "https://www.roblox.com/catalog/117800329844621/MAD-beige-button-up",
+      cta: "Get the Shirt →",
+    },
   ];
 
   const next = () => setCurrent((prev) => (prev + 1) % items.length);
