@@ -564,6 +564,14 @@ function DigitalWearablesCarousel() {
       link: "https://www.roblox.com/catalog/105117227780245/MAD-Grey-Knit-Shirt",
       cta: "Get the Shirt →",
     },
+    {
+      title: "MAD Black Jeans",
+      subtitle: "Digital Wearables",
+      desc: "Dark mode drip. Official $MAD black jeans — sleek, versatile, essential. The foundation of every MAD fit.",
+      image: "/game/mad-black-jeans-card.png",
+      link: "https://www.roblox.com/catalog/94746335770817/MAD-Black-Jeans",
+      cta: "Get the Jeans →",
+    },
   ];
 
   const next = () => setCurrent((prev) => (prev + 1) % items.length);
