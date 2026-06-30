@@ -588,6 +588,20 @@ export default function RoadmapPage() {
       <Navbar />
 
       <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-20 pt-20">
+        {/* Banner Image */}
+        <FadeIn delay={0.02}>
+          <div className="mb-6 overflow-hidden rounded-[1.6rem] border border-white/5 shadow-[0_18px_50px_rgba(0,0,0,0.3)]">
+            <Image
+              src="/roadmap-banner.png"
+              alt="$MAD Roadmap - Built by the Fam, For the Future"
+              width={1200}
+              height={400}
+              className="w-full h-auto object-cover"
+              priority
+            />
+          </div>
+        </FadeIn>
+
         {/* Hero */}
         <div className="text-center py-10 sm:py-16">
           <FadeIn>
