@@ -688,13 +688,13 @@ export default function GamePage() {
             <h1
               className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] mb-4"
               style={{
-                background: "linear-gradient(135deg, #FF2D2D, #FF6B00, #FFD700)",
+                background: "linear-gradient(135deg, #FFFFFF, #FFFFFF)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
               }}
             >
-              MAD GAMES
+              $MAD <span style={{ color: "#FF2D2D", WebkitTextFillColor: "#FF2D2D" }}>GAMES</span>
             </h1>
             <p className="text-sm sm:text-base text-white/40 max-w-md mx-auto leading-relaxed">
               The next generation isn't on PCs — they're on tablets, phones, and consoles.
