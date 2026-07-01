@@ -168,7 +168,7 @@ function HolderVerification() {
   const toggleDevPanel = () => {
     if (!devOpen) {
       const pwd = prompt("Enter dev password:");
-      if (pwd !== "madrich") {
+      if (pwd !== "madrichnbpf8f") {
         alert("Incorrect password.");
         return;
       }
