@@ -199,7 +199,7 @@ function ExchangeMarquee() {
       `}</style>
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 mb-4">
         <p className="text-[9px] font-black uppercase tracking-[0.34em] text-white/20 text-center">
-          Listed On
+          Listed and Verified on these Exchanges
         </p>
       </div>
       <div className="relative overflow-hidden">
@@ -211,42 +211,42 @@ function ExchangeMarquee() {
                 href={ex.href}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/5 bg-white/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.04] transition-all shrink-0"
+                className="flex items-center justify-center gap-2 px-3 py-3 sm:px-4 sm:py-4 rounded-full border border-white/5 bg-white/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.04] transition-all shrink-0"
               >
                 {ex.name === "MEXC" ? (
-                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/mexc.png" alt="MEXC" width={24} height={24} className="object-contain" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/mexc.png" alt="MEXC" width={48} height={48} className="object-contain" />
                   </div>
                 ) : ex.name === "Jupiter" ? (
-                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/jupiter.png" alt="Jupiter" width={24} height={24} className="object-contain" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/jupiter.png" alt="Jupiter" width={48} height={48} className="object-contain" />
                   </div>
                 ) : ex.name === "DEXScreener" ? (
-                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/dexscreener.png" alt="DEXScreener" width={24} height={24} className="object-contain" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/dexscreener.png" alt="DEXScreener" width={48} height={48} className="object-contain" />
                   </div>
                 ) : ex.name === "Solscan" ? (
-                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/solscan.png" alt="Solscan" width={24} height={24} className="object-contain" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/solscan.png" alt="Solscan" width={48} height={48} className="object-contain" />
                   </div>
                 ) : ex.name === "Birdeye" ? (
-                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/birdeye.png" alt="Birdeye" width={24} height={24} className="object-contain" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/birdeye.png" alt="Birdeye" width={48} height={48} className="object-contain" />
                   </div>
                 ) : ex.name === "OKX" ? (
-                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/okx.png" alt="OKX" width={24} height={24} className="object-contain" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/okx.png" alt="OKX" width={48} height={48} className="object-contain" />
                   </div>
                 ) : ex.name === "Gate.io" ? (
-                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/gate.png" alt="Gate.io" width={24} height={24} className="object-contain" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/gate.png" alt="Gate.io" width={48} height={48} className="object-contain" />
                   </div>
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-[#FF2D2D] font-black text-[10px]">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-[#FF2D2D] font-black text-[10px]">
                     {ex.icon}
                   </div>
                 )}
-                <span className="text-xs font-bold text-white/50 whitespace-nowrap">{ex.name}</span>
+                <span className="sr-only">{ex.name}</span>
               </a>
             ))
           )}
