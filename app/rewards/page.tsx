@@ -121,53 +121,111 @@ function HolderVerification() {
     isTooLate: boolean;
   } | null>(null);
   const [error, setError] = useState("");
+  const [devOpen, setDevOpen] = useState(false);
 
-  // Config (matching the community tool defaults)
-  const CONFIG = {
-    minBalance: 1000,
-    oldCutoff: new Date("2025-01-01T00:00:00Z"),
-    newCutoff: new Date("2026-12-31T23:59:59Z"),
-    oldSpots: 50,
-    newSpots: 30,
-    target: "10M",
+  // Dev config with localStorage persistence
+  const [config, setConfig] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("mad-verifier-config");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          return {
+            minBalance: parsed.minBalance ?? 1000,
+            oldCutoff: new Date(parsed.oldCutoff || "2025-01-01T00:00:00Z"),
+            newCutoff: new Date(parsed.newCutoff || "2026-12-31T23:59:59Z"),
+            oldSpots: parsed.oldSpots ?? 50,
+            newSpots: parsed.newSpots ?? 30,
+            target: parsed.target ?? "10M",
+            rpcUrl: parsed.rpcUrl ?? SOLANA_RPC,
+          };
+        } catch { /* fall through */ }
+      }
+    }
+    return {
+      minBalance: 1000,
+      oldCutoff: new Date("2025-01-01T00:00:00Z"),
+      newCutoff: new Date("2026-12-31T23:59:59Z"),
+      oldSpots: 50,
+      newSpots: 30,
+      target: "10M",
+      rpcUrl: SOLANA_RPC,
+    };
+  });
+
+  const saveConfig = () => {
+    localStorage.setItem("mad-verifier-config", JSON.stringify({
+      minBalance: config.minBalance,
+      oldCutoff: config.oldCutoff.toISOString(),
+      newCutoff: config.newCutoff.toISOString(),
+      oldSpots: config.oldSpots,
+      newSpots: config.newSpots,
+      target: config.target,
+      rpcUrl: config.rpcUrl,
+    }));
+  };
+
+  const toggleDevPanel = () => {
+    if (!devOpen) {
+      const pwd = prompt("Enter dev password:");
+      if (pwd !== "madrich") {
+        alert("Incorrect password.");
+        return;
+      }
+    }
+    setDevOpen(!devOpen);
   };
 
   async function rpc(method: string, params: unknown[]) {
-    const res = await fetch(SOLANA_RPC, {
+    const res = await fetch(config.rpcUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
     });
+    if (!res.ok) {
+      throw new Error(`RPC HTTP error: ${res.status} ${res.statusText}`);
+    }
     const data = await res.json();
+    if (data.error) {
+      throw new Error(`RPC error: ${data.error.message || JSON.stringify(data.error)}`);
+    }
     return data.result;
   }
 
   async function getTokenBalance(addr: string): Promise<number> {
-    const result = await rpc("getTokenAccountsByOwner", [
-      addr,
-      { mint: MAD_MINT },
-      { encoding: "jsonParsed" },
-    ]);
-    if (!result || !result.value || result.value.length === 0) return 0;
-    return result.value[0].account.data.parsed.info.tokenAmount.uiAmount || 0;
+    try {
+      const result = await rpc("getTokenAccountsByOwner", [
+        addr,
+        { mint: MAD_MINT },
+        { encoding: "jsonParsed" },
+      ]);
+      if (!result || !result.value || result.value.length === 0) return 0;
+      return result.value[0].account.data.parsed.info.tokenAmount.uiAmount || 0;
+    } catch (e) {
+      throw new Error(`Balance check failed: ${e instanceof Error ? e.message : "Unknown error"}`);
+    }
   }
 
   async function getFirstHoldDate(addr: string): Promise<Date | null> {
-    const accounts = await rpc("getTokenAccountsByOwner", [
-      addr,
-      { mint: MAD_MINT },
-      { encoding: "jsonParsed" },
-    ]);
-    if (!accounts || !accounts.value || accounts.value.length === 0) return null;
-    const tokenAccount = accounts.value[0].pubkey;
-    const sigs = await rpc("getSignaturesForAddress", [
-      tokenAccount,
-      { limit: 1000, commitment: "confirmed" },
-    ]);
-    if (!sigs || sigs.length === 0) return null;
-    const oldest = sigs[sigs.length - 1];
-    if (!oldest.blockTime) return null;
-    return new Date(oldest.blockTime * 1000);
+    try {
+      const accounts = await rpc("getTokenAccountsByOwner", [
+        addr,
+        { mint: MAD_MINT },
+        { encoding: "jsonParsed" },
+      ]);
+      if (!accounts || !accounts.value || accounts.value.length === 0) return null;
+      const tokenAccount = accounts.value[0].pubkey;
+      const sigs = await rpc("getSignaturesForAddress", [
+        tokenAccount,
+        { limit: 1000, commitment: "confirmed" },
+      ]);
+      if (!sigs || sigs.length === 0) return null;
+      const oldest = sigs[sigs.length - 1];
+      if (!oldest.blockTime) return null;
+      return new Date(oldest.blockTime * 1000);
+    } catch (e) {
+      throw new Error(`First hold date check failed: ${e instanceof Error ? e.message : "Unknown error"}`);
+    }
   }
 
   function formatBalance(n: number): string {
@@ -186,7 +244,7 @@ function HolderVerification() {
     setResult(null);
 
     if (!wallet || wallet.length < 32) {
-      setError("Please enter a valid Solana wallet address.");
+      setError("Please enter a valid Solana wallet address (at least 32 characters).");
       return;
     }
     if (!tg) {
@@ -201,16 +259,16 @@ function HolderVerification() {
         getFirstHoldDate(wallet),
       ]);
 
-      const isOld = !!firstHeld && firstHeld <= CONFIG.oldCutoff;
-      const isNew = !!firstHeld && firstHeld > CONFIG.oldCutoff && firstHeld <= CONFIG.newCutoff;
-      const isTooLate = !!firstHeld && firstHeld > CONFIG.newCutoff;
+      const isOld = !!firstHeld && firstHeld <= config.oldCutoff;
+      const isNew = !!firstHeld && firstHeld > config.oldCutoff && firstHeld <= config.newCutoff;
+      const isTooLate = !!firstHeld && firstHeld > config.newCutoff;
 
       let category = "invalid";
       let categoryLabel = "Too Late";
       if (isOld) { category = "old"; categoryLabel = "Old Holder"; }
       else if (isNew) { category = "new"; categoryLabel = "New Holder"; }
 
-      const qualified = balance >= CONFIG.minBalance && (isOld || isNew);
+      const qualified = balance >= config.minBalance && (isOld || isNew);
 
       setResult({
         balance,
@@ -223,8 +281,9 @@ function HolderVerification() {
         isTooLate,
       });
     } catch (err) {
-      setError("Could not fetch wallet data. Check the address and try again.");
-      console.error(err);
+      const msg = err instanceof Error ? err.message : "Unknown error occurred";
+      setError(`Failed to verify: ${msg}. Check wallet address and try again.`);
+      console.error("Verification error:", err);
     } finally {
       setLoading(false);
     }
@@ -236,9 +295,90 @@ function HolderVerification() {
       <div className="rounded-xl border-l-4 border-[#FFD700]/60 bg-[#FFD700]/[0.04] p-4 mb-8 flex items-center gap-3">
         <span className="text-xl">🎯</span>
         <p className="text-sm text-white/60">
-          <span className="font-bold text-[#FFD700]">{CONFIG.oldSpots} old holders + {CONFIG.newSpots} new holders</span> will receive rewards at {CONFIG.target} market cap. Minimum holding: <span className="font-bold text-[#FFD700]">{CONFIG.minBalance.toLocaleString()} MAD</span>.
+          <span className="font-bold text-[#FFD700]">{config.oldSpots} old holders + {config.newSpots} new holders</span> will receive rewards at {config.target} market cap. Minimum holding: <span className="font-bold text-[#FFD700]">{config.minBalance.toLocaleString()} MAD</span>.
         </p>
       </div>
+
+      {/* Dev Settings Toggle */}
+      <div className="mb-6 text-center">
+        <button
+          onClick={toggleDevPanel}
+          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-white/40 hover:text-white/60 transition"
+        >
+          <span>⚙️</span>
+          <span>Dev Configuration</span>
+        </button>
+      </div>
+
+      {/* Dev Settings Panel */}
+      {devOpen && (
+        <div className="mb-8 rounded-2xl border border-[#FF6B00]/20 bg-[#FF6B00]/[0.03] p-6">
+          <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#FF6B00]/70 mb-4">⚙️ Dev Configuration</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-white/30 mb-1.5">Old Holder Cutoff</label>
+              <input
+                type="date"
+                value={config.oldCutoff.toISOString().split('T')[0]}
+                onChange={(e) => setConfig({ ...config, oldCutoff: new Date(e.target.value + "T00:00:00Z") })}
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg text-white font-mono text-sm px-3 py-2.5 outline-none focus:border-[#FF6B00]/50 transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-white/30 mb-1.5">New Holder End Date</label>
+              <input
+                type="date"
+                value={config.newCutoff.toISOString().split('T')[0]}
+                onChange={(e) => setConfig({ ...config, newCutoff: new Date(e.target.value + "T23:59:59Z") })}
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg text-white font-mono text-sm px-3 py-2.5 outline-none focus:border-[#FF6B00]/50 transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-white/30 mb-1.5">Min Balance (MAD)</label>
+              <input
+                type="number"
+                value={config.minBalance}
+                onChange={(e) => setConfig({ ...config, minBalance: parseInt(e.target.value) || 1000 })}
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg text-white font-mono text-sm px-3 py-2.5 outline-none focus:border-[#FF6B00]/50 transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-white/30 mb-1.5">Old Holder Spots</label>
+              <input
+                type="number"
+                value={config.oldSpots}
+                onChange={(e) => setConfig({ ...config, oldSpots: parseInt(e.target.value) || 50 })}
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg text-white font-mono text-sm px-3 py-2.5 outline-none focus:border-[#FF6B00]/50 transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-white/30 mb-1.5">New Holder Spots</label>
+              <input
+                type="number"
+                value={config.newSpots}
+                onChange={(e) => setConfig({ ...config, newSpots: parseInt(e.target.value) || 30 })}
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg text-white font-mono text-sm px-3 py-2.5 outline-none focus:border-[#FF6B00]/50 transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-mono font-bold uppercase tracking-wider text-white/30 mb-1.5">Target Market Cap</label>
+              <input
+                type="text"
+                value={config.target}
+                onChange={(e) => setConfig({ ...config, target: e.target.value })}
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg text-white font-mono text-sm px-3 py-2.5 outline-none focus:border-[#FF6B00]/50 transition-colors"
+              />
+            </div>
+          </div>
+          <button
+            onClick={saveConfig}
+            className="mt-4 bg-[#FF6B00]/20 text-[#FF6B00] font-bold text-xs rounded-lg px-5 py-2.5 transition hover:bg-[#FF6B00]/30"
+          >
+            Save Settings
+          </button>
+          <p className="mt-2 text-[10px] font-mono text-white/20">Settings are saved in the browser. Update before sharing the page link.</p>
+        </div>
+      )}
 
       {/* Input Card */}
       <div className="rounded-2xl border border-white/5 bg-[#111111] p-6 sm:p-8">
@@ -281,8 +421,9 @@ function HolderVerification() {
 
       {/* Error */}
       {error && (
-        <div className="mt-4 rounded-xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04] p-4 text-sm text-[#FF2D2D] font-mono">
-          {error}
+        <div className="mt-4 rounded-xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04] p-4">
+          <p className="text-sm text-[#FF2D2D] font-mono font-bold mb-1">Verification Failed</p>
+          <p className="text-xs text-white/50 font-mono">{error}</p>
         </div>
       )}
 
@@ -323,7 +464,7 @@ function HolderVerification() {
                   { label: "Telegram", value: tg },
                   { label: "MAD Balance", value: formatBalance(result.balance) },
                   { label: "Holding Since", value: formatDate(result.firstHeld) },
-                  { label: "Minimum Required", value: CONFIG.minBalance.toLocaleString() + " MAD" },
+                  { label: "Minimum Required", value: config.minBalance.toLocaleString() + " MAD" },
                 ].map((stat) => (
                   <div key={stat.label} className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
                     <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-white/30">{stat.label}</span>
@@ -353,15 +494,15 @@ function HolderVerification() {
               {/* Notice */}
               <div className="mt-5 rounded-xl border border-white/5 bg-[#0a0a0a] p-4 text-sm text-white/40 leading-relaxed">
                 {result.qualified && result.isOld ? (
-                  <p><span className="font-bold text-white">Old Holder</span> — You held $MAD on or before {formatDate(CONFIG.oldCutoff)}. You're in the old holder pool ({CONFIG.oldSpots} spots). Winners selected randomly by the dev at {CONFIG.target} market cap.</p>
+                  <p><span className="font-bold text-white">Old Holder</span> — You held $MAD on or before {formatDate(config.oldCutoff)}. You're in the old holder pool ({config.oldSpots} spots). Winners selected randomly by the dev at {config.target} market cap.</p>
                 ) : result.qualified && result.isNew ? (
-                  <p><span className="font-bold text-white">New Holder</span> — You started holding $MAD between {formatDate(CONFIG.oldCutoff)} and {formatDate(CONFIG.newCutoff)}. You're in the new holder pool ({CONFIG.newSpots} spots). Winners selected randomly by the dev at {CONFIG.target} market cap.</p>
-                ) : result.isTooLate && result.balance >= CONFIG.minBalance ? (
-                  <p>You hold enough $MAD but your wallet first received tokens <span className="font-bold text-white">after the cutoff date ({formatDate(CONFIG.newCutoff)})</span>. Late buyers are not eligible for this giveaway round.</p>
+                  <p><span className="font-bold text-white">New Holder</span> — You started holding $MAD between {formatDate(config.oldCutoff)} and {formatDate(config.newCutoff)}. You're in the new holder pool ({config.newSpots} spots). Winners selected randomly by the dev at {config.target} market cap.</p>
+                ) : result.isTooLate && result.balance >= config.minBalance ? (
+                  <p>You hold enough $MAD but your wallet first received tokens <span className="font-bold text-white">after the cutoff date ({formatDate(config.newCutoff)})</span>. Late buyers are not eligible for this giveaway round.</p>
                 ) : result.balance === 0 ? (
-                  <p>Your wallet holds no $MAD tokens. Buy at least <span className="font-bold text-white">{CONFIG.minBalance.toLocaleString()} MAD</span> on Jupiter to qualify for future giveaways.</p>
+                  <p>Your wallet holds no $MAD tokens. Buy at least <span className="font-bold text-white">{config.minBalance.toLocaleString()} MAD</span> on Jupiter to qualify for future giveaways.</p>
                 ) : (
-                  <p>Your wallet holds <span className="font-bold text-white">{formatBalance(result.balance)}</span> — you need at least <span className="font-bold text-white">{CONFIG.minBalance.toLocaleString()} MAD</span> to qualify.</p>
+                  <p>Your wallet holds <span className="font-bold text-white">{formatBalance(result.balance)}</span> — you need at least <span className="font-bold text-white">{config.minBalance.toLocaleString()} MAD</span> to qualify.</p>
                 )}
               </div>
             </div>
