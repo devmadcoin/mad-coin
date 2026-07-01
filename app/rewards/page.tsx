@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
+const MAD_MINT = "Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump";
+const SOLANA_RPC = "https://api.mainnet-beta.solana.com";
+
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -96,6 +99,296 @@ function ConfettiBurst() {
           />
         </div>
       ))}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HOLDER VERIFICATION — On-chain balance + hold date checker
+   ═══════════════════════════════════════════════════════════ */
+function HolderVerification() {
+  const [wallet, setWallet] = useState("");
+  const [tg, setTg] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{
+    balance: number;
+    firstHeld: Date | null;
+    qualified: boolean;
+    category: string;
+    categoryLabel: string;
+    isOld: boolean;
+    isNew: boolean;
+    isTooLate: boolean;
+  } | null>(null);
+  const [error, setError] = useState("");
+
+  // Config (matching the community tool defaults)
+  const CONFIG = {
+    minBalance: 1000,
+    oldCutoff: new Date("2025-01-01T00:00:00Z"),
+    newCutoff: new Date("2026-12-31T23:59:59Z"),
+    oldSpots: 50,
+    newSpots: 30,
+    target: "10M",
+  };
+
+  async function rpc(method: string, params: unknown[]) {
+    const res = await fetch(SOLANA_RPC, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+    });
+    const data = await res.json();
+    return data.result;
+  }
+
+  async function getTokenBalance(addr: string): Promise<number> {
+    const result = await rpc("getTokenAccountsByOwner", [
+      addr,
+      { mint: MAD_MINT },
+      { encoding: "jsonParsed" },
+    ]);
+    if (!result || !result.value || result.value.length === 0) return 0;
+    return result.value[0].account.data.parsed.info.tokenAmount.uiAmount || 0;
+  }
+
+  async function getFirstHoldDate(addr: string): Promise<Date | null> {
+    const accounts = await rpc("getTokenAccountsByOwner", [
+      addr,
+      { mint: MAD_MINT },
+      { encoding: "jsonParsed" },
+    ]);
+    if (!accounts || !accounts.value || accounts.value.length === 0) return null;
+    const tokenAccount = accounts.value[0].pubkey;
+    const sigs = await rpc("getSignaturesForAddress", [
+      tokenAccount,
+      { limit: 1000, commitment: "confirmed" },
+    ]);
+    if (!sigs || sigs.length === 0) return null;
+    const oldest = sigs[sigs.length - 1];
+    if (!oldest.blockTime) return null;
+    return new Date(oldest.blockTime * 1000);
+  }
+
+  function formatBalance(n: number): string {
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + "M MAD";
+    if (n >= 1_000) return (n / 1_000).toFixed(1) + "K MAD";
+    return n.toFixed(0) + " MAD";
+  }
+
+  function formatDate(d: Date | null): string {
+    if (!d) return "Unknown";
+    return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  }
+
+  async function verify() {
+    setError("");
+    setResult(null);
+
+    if (!wallet || wallet.length < 32) {
+      setError("Please enter a valid Solana wallet address.");
+      return;
+    }
+    if (!tg) {
+      setError("Please enter your Telegram username.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const [balance, firstHeld] = await Promise.all([
+        getTokenBalance(wallet),
+        getFirstHoldDate(wallet),
+      ]);
+
+      const isOld = !!firstHeld && firstHeld <= CONFIG.oldCutoff;
+      const isNew = !!firstHeld && firstHeld > CONFIG.oldCutoff && firstHeld <= CONFIG.newCutoff;
+      const isTooLate = !!firstHeld && firstHeld > CONFIG.newCutoff;
+
+      let category = "invalid";
+      let categoryLabel = "Too Late";
+      if (isOld) { category = "old"; categoryLabel = "Old Holder"; }
+      else if (isNew) { category = "new"; categoryLabel = "New Holder"; }
+
+      const qualified = balance >= CONFIG.minBalance && (isOld || isNew);
+
+      setResult({
+        balance,
+        firstHeld,
+        qualified,
+        category,
+        categoryLabel,
+        isOld,
+        isNew,
+        isTooLate,
+      });
+    } catch (err) {
+      setError("Could not fetch wallet data. Check the address and try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      {/* Milestone Banner */}
+      <div className="rounded-xl border-l-4 border-[#FFD700]/60 bg-[#FFD700]/[0.04] p-4 mb-8 flex items-center gap-3">
+        <span className="text-xl">🎯</span>
+        <p className="text-sm text-white/60">
+          <span className="font-bold text-[#FFD700]">{CONFIG.oldSpots} old holders + {CONFIG.newSpots} new holders</span> will receive rewards at {CONFIG.target} market cap. Minimum holding: <span className="font-bold text-[#FFD700]">{CONFIG.minBalance.toLocaleString()} MAD</span>.
+        </p>
+      </div>
+
+      {/* Input Card */}
+      <div className="rounded-2xl border border-white/5 bg-[#111111] p-6 sm:p-8">
+        <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-white/40 mb-3">
+          Your Solana Wallet Address
+        </label>
+        <input
+          type="text"
+          value={wallet}
+          onChange={(e) => setWallet(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && verify()}
+          placeholder="Paste your wallet address..."
+          className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg text-white font-mono text-sm px-4 py-3.5 outline-none focus:border-[#FF2D2D]/50 transition-colors mb-4 placeholder:text-white/10"
+        />
+
+        <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-white/40 mb-3">
+          Your Telegram Username
+        </label>
+        <input
+          type="text"
+          value={tg}
+          onChange={(e) => setTg(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && verify()}
+          placeholder="@yourusername"
+          className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg text-white font-mono text-sm px-4 py-3.5 outline-none focus:border-[#FF2D2D]/50 transition-colors mb-5 placeholder:text-white/10"
+        />
+
+        <button
+          onClick={verify}
+          disabled={loading}
+          className="w-full bg-[#FF2D2D] text-white font-bold text-sm rounded-lg px-6 py-3.5 transition hover:bg-[#FF2D2D]/80 active:scale-[0.98] disabled:bg-white/10 disabled:cursor-not-allowed"
+        >
+          {loading ? "Checking on-chain..." : "Check My Wallet"}
+        </button>
+
+        <p className="mt-3 text-[11px] text-white/30">
+          Read-only check. Nothing is sent or signed. Your TG username helps the dev identify winners.
+        </p>
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div className="mt-4 rounded-xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04] p-4 text-sm text-[#FF2D2D] font-mono">
+          {error}
+        </div>
+      )}
+
+      {/* Loading */}
+      {loading && (
+        <div className="mt-8 text-center">
+          <div className="flex justify-center gap-2 mb-3">
+            {[0, 0.2, 0.4].map((d) => (
+              <span key={d} className="w-2 h-2 rounded-full bg-[#FF2D2D] animate-bounce" style={{ animationDelay: `${d}s` }} />
+            ))}
+          </div>
+          <p className="text-[11px] font-mono text-white/30 tracking-wider">Checking on-chain data...</p>
+        </div>
+      )}
+
+      {/* Result */}
+      {result && (
+        <div className="mt-8">
+          <div className={`rounded-2xl border border-white/5 bg-[#111111] overflow-hidden ${result.qualified ? "border-l-4 border-l-emerald-500" : "border-l-4 border-l-[#FF2D2D]"}`}>
+            {/* Header */}
+            <div className="p-6 sm:p-8 flex items-center gap-4">
+              <span className="text-3xl">{result.qualified ? "✅" : "❌"}</span>
+              <div>
+                <p className={`text-lg font-black ${result.qualified ? "text-emerald-400" : "text-[#FF2D2D]"}`}>
+                  {result.qualified ? "Qualified" : "Not Qualified"}
+                </p>
+                <p className="text-xs font-mono text-white/30">
+                  {result.qualified ? "Your wallet meets the requirement" : "Your wallet does not qualify for this giveaway"}
+                </p>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="px-6 sm:px-8 pb-6 sm:pb-8">
+              <div className="space-y-3">
+                {[
+                  { label: "Wallet", value: wallet.slice(0, 6) + "..." + wallet.slice(-4) },
+                  { label: "Telegram", value: tg },
+                  { label: "MAD Balance", value: formatBalance(result.balance) },
+                  { label: "Holding Since", value: formatDate(result.firstHeld) },
+                  { label: "Minimum Required", value: CONFIG.minBalance.toLocaleString() + " MAD" },
+                ].map((stat) => (
+                  <div key={stat.label} className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-white/30">{stat.label}</span>
+                    <span className="text-sm font-mono font-bold text-white/70">{stat.value}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-white/30">Category</span>
+                  <div>
+                    {result.balance === 0 ? (
+                      <span className="text-sm font-mono font-bold text-white/50">—</span>
+                    ) : (
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold font-mono tracking-wider border ${
+                        result.category === "old"
+                          ? "bg-[#FFD700]/10 text-[#FFD700] border-[#FFD700]/20"
+                          : result.category === "new"
+                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                          : "bg-[#FF2D2D]/10 text-[#FF2D2D] border-[#FF2D2D]/20"
+                      }`}>
+                        {result.categoryLabel}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Notice */}
+              <div className="mt-5 rounded-xl border border-white/5 bg-[#0a0a0a] p-4 text-sm text-white/40 leading-relaxed">
+                {result.qualified && result.isOld ? (
+                  <p><span className="font-bold text-white">Old Holder</span> — You held $MAD on or before {formatDate(CONFIG.oldCutoff)}. You're in the old holder pool ({CONFIG.oldSpots} spots). Winners selected randomly by the dev at {CONFIG.target} market cap.</p>
+                ) : result.qualified && result.isNew ? (
+                  <p><span className="font-bold text-white">New Holder</span> — You started holding $MAD between {formatDate(CONFIG.oldCutoff)} and {formatDate(CONFIG.newCutoff)}. You're in the new holder pool ({CONFIG.newSpots} spots). Winners selected randomly by the dev at {CONFIG.target} market cap.</p>
+                ) : result.isTooLate && result.balance >= CONFIG.minBalance ? (
+                  <p>You hold enough $MAD but your wallet first received tokens <span className="font-bold text-white">after the cutoff date ({formatDate(CONFIG.newCutoff)})</span>. Late buyers are not eligible for this giveaway round.</p>
+                ) : result.balance === 0 ? (
+                  <p>Your wallet holds no $MAD tokens. Buy at least <span className="font-bold text-white">{CONFIG.minBalance.toLocaleString()} MAD</span> on Jupiter to qualify for future giveaways.</p>
+                ) : (
+                  <p>Your wallet holds <span className="font-bold text-white">{formatBalance(result.balance)}</span> — you need at least <span className="font-bold text-white">{CONFIG.minBalance.toLocaleString()} MAD</span> to qualify.</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* How it works */}
+      <div className="mt-10">
+        <p className="text-[11px] font-mono font-bold uppercase tracking-wider text-white/20 text-center mb-5">How it works</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            { num: "01", text: "Paste your wallet and Telegram username above" },
+            { num: "02", text: "We check your MAD balance and when you first held" },
+            { num: "03", text: "Your category is confirmed. Dev picks winners at 10M" },
+          ].map((step) => (
+            <div key={step.num} className="rounded-xl border border-white/5 bg-[#111111] p-5 text-center">
+              <p className="text-[11px] font-mono font-bold text-[#FF2D2D] tracking-wider mb-2">{step.num}</p>
+              <p className="text-sm text-white/40 leading-relaxed">{step.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p className="mt-8 text-center text-[11px] font-mono text-white/15">
+        Read-only on-chain verification. No wallet connection required.
+      </p>
     </div>
   );
 }
@@ -342,6 +635,24 @@ export default function RewardsPage() {
             setInterval(fmt, 30000);
           })();
         `}} />
+
+        {/* ═══════════════════════════════════════════════════════════
+            HOLDER VERIFICATION — Check if you qualify
+            ═══════════════════════════════════════════════════════════ */}
+        <SectionShell className="mt-8 p-6 sm:p-10">
+          <div className="text-center mb-10">
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60">
+              Are you $MAD enough?
+            </p>
+            <h2 className="mt-3 text-2xl font-black text-white sm:text-3xl">
+              Holder <span className="text-[#FF2D2D]">Verification</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-white/50">
+              Check if your wallet qualifies for the next giveaway. No wallet connection needed — just paste your address.
+            </p>
+          </div>
+          <HolderVerification />
+        </SectionShell>
 
         {/* ═══════════════════════════════════════════════════════════
             REWARD MILESTONES — Chart Ascending to $100M
