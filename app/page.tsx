@@ -175,7 +175,7 @@ function ExchangeMarquee() {
     { name: "DEXScreener", href: "https://dexscreener.com/solana/gt3dwhhkrd2mnqmmchpzdetpg4ttaa23exn1m2vwinfs", icon: "D" },
     { name: "Solscan", href: "https://solscan.io/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "S" },
     { name: "Birdeye", href: "https://birdeye.so/solana/token/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "B" },
-    { name: "OKX", href: "https://web3.okx.com/dex-swap?chain=solana,solana&token=11111111111111111111111111111111,Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "O" },
+    { name: "OKX", href: "https://web3.okx.com/token/solana/Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "O" },
     { name: "Gate.io", href: "https://www.gate.com/alpha/sol-Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump", icon: "G" },
     { name: "MEXC", href: "https://www.mexc.com/dex/trade?pair_ca=Gt3dWHHKRd2mNQmmCHPzdeTpG4tTAa23exN1m2vwinfs&chain_id=100000&token_ca=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump&from=search", icon: "M" },
   ];
@@ -232,6 +232,10 @@ function ExchangeMarquee() {
                 ) : ex.name === "Birdeye" ? (
                   <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
                     <Image src="/exchanges/birdeye.png" alt="Birdeye" width={24} height={24} className="object-contain" />
+                  </div>
+                ) : ex.name === "OKX" ? (
+                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/okx.png" alt="OKX" width={24} height={24} className="object-contain" />
                   </div>
                 ) : (
                   <div className="w-6 h-6 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-[#FF2D2D] font-black text-[10px]">
