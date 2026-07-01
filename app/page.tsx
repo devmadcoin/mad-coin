@@ -237,6 +237,10 @@ function ExchangeMarquee() {
                   <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
                     <Image src="/exchanges/okx.png" alt="OKX" width={24} height={24} className="object-contain" />
                   </div>
+                ) : ex.name === "Gate.io" ? (
+                  <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center">
+                    <Image src="/exchanges/gate.png" alt="Gate.io" width={24} height={24} className="object-contain" />
+                  </div>
                 ) : (
                   <div className="w-6 h-6 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-[#FF2D2D] font-black text-[10px]">
                     {ex.icon}
