@@ -66,13 +66,14 @@ function Navbar() {
 const PILLARS = [
   {
     id: "games", label: "Games", icon: "🎮",
-    desc: "+1 MAD PER SECOND on Roblox. Our first game. Live and growing. MAD SHOT — our second game. Just dropped. Optimized and available for console, computers, mobile, tablet, and VR.",
+    desc: "+1 MAD PER SECOND on Roblox. Our first game. Live and growing. MAD SHOT — our second game. Just dropped. What Makes You Mad? ASMR Tower Obby — our third game, now live. Optimized and available for console, computers, mobile, tablet, and VR.",
     status: "live" as const,
     color: "#FF2D2D",
     image: "/game/mad-shot-hero.png",
     milestones: [
       { text: "+1 MAD PER SECOND launched on Roblox", done: true },
       { text: "MAD SHOT shooter launched", done: true },
+      { text: "What Makes You Mad? ASMR Tower Obby launched", done: true },
       { text: "Leaderboards & competitive modes", done: true },
       { text: "MAD games to infinity — more coming", done: true },
     ],
