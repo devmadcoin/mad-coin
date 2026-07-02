@@ -347,6 +347,15 @@ function GameCarousel() {
       stats: { visits: "68.6K+", favorites: "265", updated: "6/18/2026" },
     },
     {
+      title: "MAD ASMR OBBY",
+      tagline: "Live Now — Butter Rush",
+      desc: "The newest $MAD experience on Roblox. Slide, jump, and butter your way through chaotic ASMR-inspired obstacle courses. Pure MAD energy.",
+      image: "/game/mad-asmr-obby-hero.png",
+      link: "https://www.roblox.com/games/132696523579831/Mad-ASMR-Obby",
+      status: "live" as const,
+      stats: { visits: "52", favorites: "0", updated: "7/1/2026" },
+    },
+    {
       title: "MAD SHOT",
       tagline: "Lock In. Shoot. Win.",
       desc: "The official $MAD shooter. Fast-paced action, competitive modes, and pure MAD energy. Lock in and prove your aim.",
