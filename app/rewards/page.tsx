@@ -153,6 +153,8 @@ function HolderVerification() {
     };
   });
 
+  const [configSaved, setConfigSaved] = useState(false);
+
   const saveConfig = () => {
     localStorage.setItem("mad-verifier-config", JSON.stringify({
       minBalance: config.minBalance,
@@ -163,6 +165,8 @@ function HolderVerification() {
       target: config.target,
       rpcUrl: config.rpcUrl,
     }));
+    setConfigSaved(true);
+    setTimeout(() => setConfigSaved(false), 2000);
   };
 
   const toggleDevPanel = () => {
@@ -177,7 +181,8 @@ function HolderVerification() {
   };
 
   async function rpc(method: string, params: unknown[]) {
-    const res = await fetch(config.rpcUrl, {
+    // Use local API proxy to bypass CORS
+    const res = await fetch("/api/solana-rpc", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
@@ -372,9 +377,13 @@ function HolderVerification() {
           </div>
           <button
             onClick={saveConfig}
-            className="mt-4 bg-[#FF6B00]/20 text-[#FF6B00] font-bold text-xs rounded-lg px-5 py-2.5 transition hover:bg-[#FF6B00]/30"
+            className={`mt-4 font-bold text-xs rounded-lg px-5 py-2.5 transition ${
+              configSaved
+                ? "bg-emerald-500/20 text-emerald-400"
+                : "bg-[#FF6B00]/20 text-[#FF6B00] hover:bg-[#FF6B00]/30"
+            }`}
           >
-            Save Settings
+            {configSaved ? "✅ Saved!" : "Save Settings"}
           </button>
           <p className="mt-2 text-[10px] font-mono text-white/20">Settings are saved in the browser. Update before sharing the page link.</p>
         </div>
