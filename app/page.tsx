@@ -263,7 +263,7 @@ function TheMADFAM() {
   const stats = [
     { value: "4.5K+", label: "MAD FAM Members" },
     { value: "7", label: "Communities Locked" },
-    { value: "1", label: "Live Roblox Game" },
+    { value: "3", label: "Live Roblox Game" },
     { value: "∞", label: "Vibes" },
   ];
 
