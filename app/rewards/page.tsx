@@ -132,8 +132,8 @@ function HolderVerification() {
           const parsed = JSON.parse(saved);
           return {
             minBalance: parsed.minBalance ?? 1000,
-            oldCutoff: new Date(parsed.oldCutoff || "2025-01-01T00:00:00Z"),
-            newCutoff: new Date(parsed.newCutoff || "2026-12-31T23:59:59Z"),
+            oldCutoff: new Date(parsed.oldCutoff || "2026-05-01T00:00:00Z"),
+            newCutoff: new Date(parsed.newCutoff || "2026-07-31T23:59:59Z"),
             oldSpots: parsed.oldSpots ?? 50,
             newSpots: parsed.newSpots ?? 30,
             target: parsed.target ?? "10M",
@@ -144,8 +144,8 @@ function HolderVerification() {
     }
     return {
       minBalance: 1000,
-      oldCutoff: new Date("2025-01-01T00:00:00Z"),
-      newCutoff: new Date("2026-12-31T23:59:59Z"),
+      oldCutoff: new Date("2026-05-01T00:00:00Z"),
+      newCutoff: new Date("2026-07-31T23:59:59Z"),
       oldSpots: 50,
       newSpots: 30,
       target: "10M",
