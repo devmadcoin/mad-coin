@@ -678,6 +678,27 @@ export default function RewardsPage() {
           </div>
         </div>
 
+        {/* PHASE 2 — IN PROGRESS */}
+        <div className="mb-6 overflow-hidden rounded-[1.6rem] border border-[#FF6B00]/30 bg-[#FF6B00]/[0.04] p-6 sm:p-8 text-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="text-4xl">🎯</div>
+            <p className="text-lg sm:text-xl font-black tracking-tight text-white">
+              PHASE 2 <span className="text-[#FF6B00]">INCOMPLETE</span>
+            </p>
+            <p className="text-sm font-black text-white/60 tracking-wider">
+              $10,000,000 MARKET CAP <span className="text-[#FF6B00]/60">IN PROGRESS</span>
+            </p>
+            <div className="mt-2 flex items-center gap-2 rounded-full border border-[#FF6B00]/20 bg-[#FF6B00]/10 px-4 py-1.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B00]" />
+              </span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#FF6B00]">12.5M $MAD Ready · 80 Winners Pending</span>
+            </div>
+            <p className="mt-1 text-[10px] text-white/30 uppercase tracking-widest">Hold 1K+ $MAD · Stay $MAD · Get Rewarded</p>
+          </div>
+        </div>
+
         {/* Hero */}
         <SectionShell className="border-white/5 bg-white/[0.02] p-6 sm:p-10 lg:p-14">
           <div className="text-center">
