@@ -693,7 +693,7 @@ export default function RewardsPage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B00]" />
               </span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#FF6B00]">12.5M $MAD Ready · 80 Winners Pending</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#FF6B00]">12.5M $MAD Ready ($20,000) · 80 Winners Pending</span>
             </div>
             <p className="mt-1 text-[10px] text-white/30 uppercase tracking-widest">Hold 1K+ $MAD · Stay $MAD · Get Rewarded</p>
           </div>
