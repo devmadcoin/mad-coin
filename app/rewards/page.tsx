@@ -959,7 +959,7 @@ export default function RewardsPage() {
                   </h3>
                 </div>
                 <p className="mt-2 text-sm text-white/40 leading-relaxed">
-                  When $MAD hits $10M market cap, <span className="font-bold text-white/70">12.5K $MAD</span> (≈$250) distributed to <span className="font-bold text-white/70">80 eligible holders</span>.
+                  When $MAD hits $10M market cap, <span className="font-bold text-white/70">$20,000 total giveaway</span> — <span className="font-bold text-white/70">12.5K $MAD</span> (≈$250 each) distributed to <span className="font-bold text-white/70">80 eligible holders</span>.
                 </p>
 
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
