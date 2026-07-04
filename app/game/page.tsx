@@ -718,48 +718,134 @@ export default function GamePage() {
           <GameCarousel />
         </div>
 
-        {/* YouTube Video Section */}
-        <FadeIn delay={0.15}>
-          <SectionShell className="mt-6 overflow-hidden p-0">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="flex flex-col justify-center p-6 sm:p-8">
-                <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#FF6B00]/60">
-                  Watch the Madness
-                </p>
-                <h2 className="mt-4 text-3xl font-black leading-[0.95] text-white sm:text-4xl">
-                  10K ROBUX Spent
-                </h2>
-                <p className="mt-5 max-w-xl text-base leading-8 text-white/50">
-                  Coffee Blox just dropped 10,000 ROBUX into MAD INCREMENTAL.
-                  Unlocking crazy auras, evolving from weak to overpowered.
-                  Real gameplay. Real chaos. Real $MAD.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <GlowPulse>
-                    <a
-                      href="https://www.youtube.com/watch?v=Pte0bOa16xI&t=840s"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02]"
-                    >
-                      Watch on YouTube →
-                    </a>
-                  </GlowPulse>
-                  <Pill tone="red">NEW</Pill>
-                </div>
-              </div>
-              <div className="relative aspect-video w-full bg-black">
-                <iframe
-                  src="https://www.youtube.com/embed/Pte0bOa16xI?start=840"
-                  title="I Spent 10,000 ROBUX In MAD INCREMENTAL! (ROBLOX)"
-                  className="absolute inset-0 h-full w-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
+        {/* Video Carousel — YouTube gameplay */}
+        <div className="mt-6">
+          <VideoCarousel />
+        </div>
+
+/* ═══════════════════════════════════════════════════════════
+   VIDEO CAROUSEL — Roblox gameplay videos
+   ═══════════════════════════════════════════════════════════ */
+function VideoCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const videos = [
+    {
+      title: "10K ROBUX Spent",
+      subtitle: "Watch the Madness",
+      desc: "Coffee Blox just dropped 10,000 ROBUX into MAD INCREMENTAL. Unlocking crazy auras, evolving from weak to overpowered. Real gameplay. Real chaos. Real $MAD.",
+      embed: "https://www.youtube.com/embed/Pte0bOa16xI?start=840",
+      link: "https://www.youtube.com/watch?v=Pte0bOa16xI&t=840s",
+      cta: "Watch on YouTube →",
+      badge: "NEW",
+      badgeTone: "red" as const,
+    },
+    {
+      title: "Coffee Blox x SugarStar | 🧈😡 Mad ASMR Obby",
+      subtitle: "Latest Drop",
+      desc: "We teamed up with SugarStar to play the WEIRDEST Roblox game ever. What Makes You Mad? ASMR Tower Obby — slide, jump, and butter your way through chaotic ASMR-inspired obstacle courses. Pure MAD energy.",
+      embed: "https://www.youtube.com/embed/IZe9GScHUNM",
+      link: "https://www.youtube.com/watch?v=IZe9GScHUNM",
+      cta: "Watch on YouTube →",
+      badge: "COLLAB",
+      badgeTone: "green" as const,
+    },
+  ];
+
+  const next = () => setCurrent((prev) => (prev + 1) % videos.length);
+  const prev = () => setCurrent((prev) => (prev - 1 + videos.length) % videos.length);
+
+  const onTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
+  const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+  const onTouchEnd = () => {
+    if (touchStart - touchEnd > 75) next();
+    if (touchEnd - touchStart > 75) prev();
+  };
+
+  const v = videos[current];
+
+  return (
+    <FadeIn delay={0.15}>
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/5 bg-[#121212] shadow-[0_18px_50px_rgba(0,0,0,0.3)]"
+        onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
+      >
+        {/* Top color bar */}
+        <div className="h-1 bg-[#FF6B00]" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          {/* Left: Info */}
+          <div className="flex flex-col justify-center p-6 sm:p-8">
+            <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#FF6B00]/60">
+              {v.subtitle}
+            </p>
+            <h2 className="mt-4 text-3xl font-black leading-[0.95] text-white sm:text-4xl">
+              {v.title}
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-8 text-white/50">
+              {v.desc}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <GlowPulse>
+                <a
+                  href={v.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-7 py-4 text-base font-black text-white transition hover:scale-[1.02]"
+                >
+                  {v.cta}
+                </a>
+              </GlowPulse>
+              <Pill tone={v.badgeTone}>{v.badge}</Pill>
             </div>
-          </SectionShell>
-        </FadeIn>
+
+            {/* Controls */}
+            <div className="flex items-center gap-4 mt-8">
+              <button onClick={prev}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
+                aria-label="Previous video"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <div className="flex items-center gap-2">
+                {videos.map((_, i) => (
+                  <button key={i} onClick={() => setCurrent(i)}
+                    className="rounded-full transition-all duration-300"
+                    style={{ width: i === current ? 24 : 8, height: 8, backgroundColor: i === current ? "#FF6B00" : "#333333" }}
+                    aria-label={`Go to video ${i + 1}`}
+                  />
+                ))}
+              </div>
+              <button onClick={next}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
+                aria-label="Next video"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+              <span className="text-[10px] font-bold ml-auto text-white/30">
+                {current + 1} / {videos.length}
+              </span>
+            </div>
+          </div>
+
+          {/* Right: Video */}
+          <div className="relative aspect-video w-full bg-black">
+            <iframe
+              src={v.embed}
+              title={v.title}
+              className="absolute inset-0 h-full w-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </div>
+    </FadeIn>
+  );
+}
 
         {/* How It Works */}
         <FadeIn delay={0.1}>
