@@ -353,7 +353,7 @@ function GameCarousel() {
       image: "/game/mad-asmr-obby-hero.png",
       link: "https://www.roblox.com/games/132696523579831/Mad-ASMR-Obby",
       status: "live" as const,
-      stats: { visits: "12.7K+", favorites: "49", updated: "7/3/2026" },
+      stats: { visits: "14.9K+", favorites: "53", updated: "7/4/2026" },
     },
     {
       title: "MAD SHOT",
