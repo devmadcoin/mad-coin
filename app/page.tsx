@@ -167,6 +167,73 @@ function CopyButtonInline({ text }: { text: string }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   LATEST DROP — Featured video ( Coffee Blox x SugarStar )
+   ═══════════════════════════════════════════════════════════ */
+function LatestDrop() {
+  return (
+    <section className="relative py-16 sm:py-20 bg-[#080808] overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,107,0,0.08),transparent_60%)]" />
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-8 sm:mb-10">
+          <p className="text-[9px] font-black uppercase tracking-[0.34em] text-[#FF6B00]/60 mb-2">
+            Latest Drop
+          </p>
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            Coffee Blox x SugarStar | 🧈😡 Mad ASMR Obby
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-8 items-center">
+          {/* Video */}
+          <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/5 bg-[#0a0a0a] shadow-[0_0_60px_rgba(255,107,0,0.08)]">
+            <iframe
+              src="https://www.youtube.com/embed/IZe9GScHUNM?autoplay=0&rel=0&modestbranding=1"
+              title="Coffee Blox x SugarStar | Mad ASMR Obby"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+              style={{ border: "none" }}
+            />
+          </div>
+
+          {/* Content */}
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF6B00]/60 mb-4">
+              The Collab
+            </p>
+            <p className="text-sm text-white/40 leading-relaxed mb-6">
+              We teamed up with <span className="text-white font-bold">SugarStar</span> to play the WEIRDEST Roblox game ever. 
+              What Makes You Mad? ASMR Tower Obby — slide, jump, and butter your way through chaotic ASMR-inspired obstacle courses. 
+              Pure MAD energy. 🧈😡
+            </p>
+
+            <div className="flex flex-wrap gap-3 mb-6">
+              <a href="https://www.roblox.com/games/132696523579831/Mad-ASMR-Obby" target="_blank" rel="noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FF2D2D] text-white text-xs font-black uppercase tracking-wider hover:bg-[#FF2D2D]/80 transition-colors"
+              >
+                🎮 Play the Game
+              </a>
+              <a href="https://www.youtube.com/@coffeecollectsblox" target="_blank" rel="noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 text-white/60 text-xs font-bold hover:border-white/30 hover:text-white transition-all"
+              >
+                📺 Coffee Blox
+              </a>
+            </div>
+
+            <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-white/20 mb-1">Next Episode</p>
+              <p className="text-sm font-bold text-white/60">Coming Soon</p>
+              <p className="text-xs text-white/20 mt-1">The story continues...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    EXCHANGE MARQUEE — Where $MAD is Listed
    ═══════════════════════════════════════════════════════════ */
 function ExchangeMarquee() {
@@ -758,6 +825,7 @@ export default function Home() {
       <Navbar />
       <VideoBanner />
       <StopPanicking />
+      <LatestDrop />
       <ExchangeMarquee />
       <TheMADFAM />
       <MadTalks />
