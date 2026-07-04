@@ -661,69 +661,6 @@ function DigitalWearablesCarousel() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PAGE
-   ═══════════════════════════════════════════════════════════ */
-
-export default function GamePage() {
-  return (
-    <div className="min-h-screen overflow-x-hidden bg-[#080808] text-white relative">
-      <Scanlines />
-      <Navbar />
-
-      {/* Background gradient */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
-
-      <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-20 pt-6 relative z-10">
-        {/* Banner Image */}
-        <FadeIn delay={0.05}>
-          <div className="mt-2 overflow-hidden rounded-[1.6rem] border border-white/5 shadow-[0_18px_50px_rgba(0,0,0,0.3)]">
-            <Image
-              src="/game/mad-games-banner.png"
-              alt="$MAD Games - Play. Earn. Dominate."
-              width={1200}
-              height={400}
-              className="w-full h-auto object-cover"
-              priority
-            />
-          </div>
-        </FadeIn>
-
-        {/* Hero Header */}
-        <div className="relative pt-12 pb-6 sm:pt-20 sm:pb-10 text-center">
-          <FadeIn>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60 mb-3">
-              Official $MAD Experience
-            </p>
-            <h1
-              className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] mb-4"
-              style={{
-                background: "linear-gradient(135deg, #FFFFFF, #FFFFFF)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              $MAD <span style={{ color: "#FF2D2D", WebkitTextFillColor: "#FF2D2D" }}>GAMES</span>
-            </h1>
-            <p className="text-sm sm:text-base text-white/40 max-w-md mx-auto leading-relaxed">
-              The next generation isn't on PCs — they're on tablets, phones, and consoles.
-              Roblox has 300M+ monthly players, built-in for every screen. That's why
-              $MAD lives there. Meet your audience where they already are.
-            </p>
-          </FadeIn>
-        </div>
-
-        {/* Game Carousel — Slide through games */}
-        <div className="mt-6">
-          <GameCarousel />
-        </div>
-
-        {/* Video Carousel — YouTube gameplay */}
-        <div className="mt-6">
-          <VideoCarousel />
-        </div>
-
-/* ═══════════════════════════════════════════════════════════
    VIDEO CAROUSEL — Roblox gameplay videos
    ═══════════════════════════════════════════════════════════ */
 function VideoCarousel() {
@@ -846,6 +783,69 @@ function VideoCarousel() {
     </FadeIn>
   );
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE
+   ═══════════════════════════════════════════════════════════ */
+
+export default function GamePage() {
+  return (
+    <div className="min-h-screen overflow-x-hidden bg-[#080808] text-white relative">
+      <Scanlines />
+      <Navbar />
+
+      {/* Background gradient */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
+
+      <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-20 pt-6 relative z-10">
+        {/* Banner Image */}
+        <FadeIn delay={0.05}>
+          <div className="mt-2 overflow-hidden rounded-[1.6rem] border border-white/5 shadow-[0_18px_50px_rgba(0,0,0,0.3)]">
+            <Image
+              src="/game/mad-games-banner.png"
+              alt="$MAD Games - Play. Earn. Dominate."
+              width={1200}
+              height={400}
+              className="w-full h-auto object-cover"
+              priority
+            />
+          </div>
+        </FadeIn>
+
+        {/* Hero Header */}
+        <div className="relative pt-12 pb-6 sm:pt-20 sm:pb-10 text-center">
+          <FadeIn>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60 mb-3">
+              Official $MAD Experience
+            </p>
+            <h1
+              className="text-4xl sm:text-6xl lg:text-7xl font-black leading-[0.95] mb-4"
+              style={{
+                background: "linear-gradient(135deg, #FFFFFF, #FFFFFF)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              $MAD <span style={{ color: "#FF2D2D", WebkitTextFillColor: "#FF2D2D" }}>GAMES</span>
+            </h1>
+            <p className="text-sm sm:text-base text-white/40 max-w-md mx-auto leading-relaxed">
+              The next generation isn't on PCs — they're on tablets, phones, and consoles.
+              Roblox has 300M+ monthly players, built-in for every screen. That's why
+              $MAD lives there. Meet your audience where they already are.
+            </p>
+          </FadeIn>
+        </div>
+
+        {/* Game Carousel — Slide through games */}
+        <div className="mt-6">
+          <GameCarousel />
+        </div>
+
+        {/* Video Carousel — YouTube gameplay */}
+        <div className="mt-6">
+          <VideoCarousel />
+        </div>
 
         {/* How It Works */}
         <FadeIn delay={0.1}>
