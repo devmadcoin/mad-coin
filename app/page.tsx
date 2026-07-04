@@ -278,36 +278,22 @@ function ExchangeMarquee() {
                 href={ex.href}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 px-3 py-3 sm:px-4 sm:py-4 rounded-full border border-white/5 bg-white/[0.02] hover:border-[#FF2D2D]/20 hover:bg-[#FF2D2D]/[0.04] transition-all shrink-0"
+                className="flex items-center justify-center px-4 py-2 hover:opacity-100 transition-all shrink-0"
               >
                 {ex.name === "MEXC" ? (
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/mexc.png" alt="MEXC" width={48} height={48} className="object-contain" />
-                  </div>
+                  <Image src="/exchanges/mexc.png" alt="MEXC" width={96} height={32} className="object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 ) : ex.name === "Jupiter" ? (
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/jupiter.png" alt="Jupiter" width={48} height={48} className="object-contain" />
-                  </div>
+                  <Image src="/exchanges/jupiter.png" alt="Jupiter" width={96} height={32} className="object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 ) : ex.name === "DEXScreener" ? (
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/dexscreener.png" alt="DEXScreener" width={48} height={48} className="object-contain" />
-                  </div>
+                  <Image src="/exchanges/dexscreener.png" alt="DEXScreener" width={96} height={32} className="object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 ) : ex.name === "Solscan" ? (
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/solscan.png" alt="Solscan" width={48} height={48} className="object-contain" />
-                  </div>
+                  <Image src="/exchanges/solscan.png" alt="Solscan" width={96} height={32} className="object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 ) : ex.name === "Birdeye" ? (
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/birdeye.png" alt="Birdeye" width={48} height={48} className="object-contain" />
-                  </div>
+                  <Image src="/exchanges/birdeye.png" alt="Birdeye" width={96} height={32} className="object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 ) : ex.name === "OKX" ? (
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/okx.png" alt="OKX" width={48} height={48} className="object-contain" />
-                  </div>
+                  <Image src="/exchanges/okx.png" alt="OKX" width={96} height={32} className="object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 ) : ex.name === "Gate.io" ? (
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex items-center justify-center">
-                    <Image src="/exchanges/gate.png" alt="Gate.io" width={48} height={48} className="object-contain" />
-                  </div>
+                  <Image src="/exchanges/gate.png" alt="Gate.io" width={96} height={32} className="object-contain opacity-70 hover:opacity-100 transition-opacity" />
                 ) : (
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#FF2D2D]/10 flex items-center justify-center text-[#FF2D2D] font-black text-[10px]">
                     {ex.icon}
