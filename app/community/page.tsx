@@ -26,6 +26,7 @@ const COMMUNITIES: Community[] = [
     txHash: "vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
     description: "Locked 1.0344M Normie tokens via Streamflow to support the Normie community ecosystem and cross-community collaboration.",
     logo: "/community/normie.png",
+    xPost: "https://x.com/madrichclub_/status/2074232348292661547",
   },
 ];
 
@@ -39,6 +40,7 @@ type Community = {
   txHash: string;
   description: string;
   logo?: string;
+  xPost?: string;
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -288,18 +290,33 @@ function CommunityCard({ community, delay }: { community: Community; delay: numb
             <p className="text-lg font-black text-[#FF2D2D]">${community.amountUSD.toLocaleString()}</p>
             <p className="text-[10px] text-white/30">{(community.amountMAD / 1_000_000).toFixed(2)}M $MAD</p>
           </div>
-          <a
-            href={`https://app.streamflow.finance/contract/solana/mainnet/${community.txHash}`}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 transition hover:bg-emerald-500/20"
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-            Verify
-          </a>
+          <div className="flex items-center gap-2">
+            {community.xPost && (
+              <a
+                href={community.xPost}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-bold text-white/60 transition hover:bg-white/5 hover:text-white"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                View Post
+              </a>
+            )}
+            <a
+              href={`https://app.streamflow.finance/contract/solana/mainnet/${community.txHash}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 transition hover:bg-emerald-500/20"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              Verify
+            </a>
+          </div>
         </div>
       </div>
     </FadeIn>
