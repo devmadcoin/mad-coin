@@ -307,13 +307,6 @@ function AnimatedGallery() {
     { src: "/mad-art/loops/mad-planning.mp4", title: "MAD Planning" },
     { src: "/mad-art/mad-wealthy.mp4", title: "MAD Wealthy" },
     { src: "/mad-art/very-mad.mp4", title: "Very MAD" },
-    { src: "/mad-art/mad-sinister.png", title: "MAD Sinister" },
-    { src: "/mad-art/mad-chill.png", title: "MAD Chill" },
-    { src: "/mad-art/mad-pirate.png", title: "MAD Pirate" },
-    { src: "/mad-art/mad-grind.png", title: "MAD Grind" },
-    { src: "/mad-art/mad-dose.png", title: "MAD Dose" },
-    { src: "/mad-art/mad-toxic.png", title: "MAD Toxic" },
-    { src: "/mad-art/mad-power.png", title: "MAD Power" },
   ];
 
   return (
