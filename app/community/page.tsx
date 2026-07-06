@@ -9,8 +9,8 @@ import { useState } from "react";
    ═══════════════════════════════════════════════════════════ */
 
 const IMPACT_STATS = {
-  communitiesSupported: 6,
-  totalDonatedUSD: 1779,
+  communitiesSupported: 7,
+  totalDonatedUSD: 1911,
   totalTokensDonated: 0,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
 };
@@ -43,6 +43,19 @@ const COMMUNITIES: Community[] = [
     xPost: "https://x.com/madrichclub_/status/2063766619059638771",
   },
   {
+    name: "HINEY",
+    handle: "@hineycoin",
+    platform: "X",
+    amountUSD: 169,
+    tokenAmount: 1027002,
+    tokenSymbol: "HINEY",
+    date: "2026-05-21",
+    txHash: "FvH6cCN9vNAEqXFsQrYrAjoKD1Bs12BqqVKokWc66xiS",
+    description: "Locked 1,027,002 $HINEY tokens via Streamflow to support the HINEY community ecosystem. Non-cancelable until 2060.",
+    logo: "/community/hiney.png",
+    xPost: "https://x.com/madrichclub_/status/2057508965567877497",
+  },
+  {
     name: "Stash",
     handle: "@gostashxyz",
     platform: "X",
@@ -56,6 +69,19 @@ const COMMUNITIES: Community[] = [
     xPost: "https://x.com/madrichclub_/status/2060080223954346354",
   },
   {
+    name: "TouchGrass",
+    handle: "@XTouchGrass",
+    platform: "X",
+    amountUSD: 132,
+    tokenAmount: 1019634,
+    tokenSymbol: "TOUCHGRASS",
+    date: "2026-05-09",
+    txHash: "HBkYVaUT3GB1iGWxJhaMGNsYLnVvaL1ymo5ML8aoTZuR",
+    description: "Locked 1,019,634 $TOUCHGRASS tokens via Streamflow to support the TouchGrass community ecosystem. Non-cancelable until 2060.",
+    logo: "/community/touchgrass.png",
+    xPost: "https://x.com/madrichclub_/status/2053391015109955771",
+  },
+  {
     name: "DIGIKOINZ",
     handle: "@DIGI_KOINZ",
     platform: "X",
@@ -67,19 +93,6 @@ const COMMUNITIES: Community[] = [
     description: "Locked 1,038,763 $KOINZ tokens via Streamflow to support the DIGIKOINZ community ecosystem. Non-cancelable until 2060.",
     logo: "/community/digikoinz.png",
     xPost: "https://x.com/madrichclub_/status/2058759994485715249",
-  },
-  {
-    name: "HINEY",
-    handle: "@hineycoin",
-    platform: "X",
-    amountUSD: 169,
-    tokenAmount: 1027002,
-    tokenSymbol: "HINEY",
-    date: "2026-05-21",
-    txHash: "FvH6cCN9vNAEqXFsQrYrAjoKD1Bs12BqqVKokWc66xiS",
-    description: "Locked 1,027,002 $HINEY tokens via Streamflow to support the HINEY community ecosystem. Non-cancelable until 2060.",
-    logo: "/community/hiney.png",
-    xPost: "https://x.com/madrichclub_/status/2057508965567877497",
   },
   {
     name: "RandyCoin",
