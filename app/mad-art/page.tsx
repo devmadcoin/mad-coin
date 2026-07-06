@@ -307,6 +307,14 @@ function AnimatedGallery() {
     { src: "/mad-art/loops/mad-planning.mp4", title: "MAD Planning" },
     { src: "/mad-art/mad-wealthy.mp4", title: "MAD Wealthy" },
     { src: "/mad-art/very-mad.mp4", title: "Very MAD" },
+    { src: "/mad-art/loops/mad-regret.mp4", title: "MAD Regret" },
+    { src: "/mad-art/loops/stay-mad-sword.mp4", title: "STAY MAD Sword" },
+    { src: "/mad-art/loops/super-mad.mp4", title: "SUPER MAD" },
+    { src: "/mad-art/loops/mad-spirit-bomb.mp4", title: "MAD Spirit Bomb" },
+    { src: "/mad-art/loops/madly-positive.mp4", title: "MADly Positive" },
+    { src: "/mad-art/loops/mad-workout.mp4", title: "MAD Workout" },
+    { src: "/mad-art/loops/mad-pirate.mp4", title: "MAD Pirate" },
+    { src: "/mad-art/loops/mad-green-fart-cloud.mp4", title: "MAD Green Cloud" },
   ];
 
   return (
