@@ -9,8 +9,8 @@ import { useState } from "react";
    ═══════════════════════════════════════════════════════════ */
 
 const IMPACT_STATS = {
-  communitiesSupported: 5,
-  totalDonatedUSD: 1495,
+  communitiesSupported: 6,
+  totalDonatedUSD: 1779,
   totalTokensDonated: 0,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
 };
@@ -28,6 +28,19 @@ const COMMUNITIES: Community[] = [
     description: "Locked 1.0344M Normie tokens via Streamflow to support the Normie community ecosystem and cross-community collaboration.",
     logo: "/community/normie.png",
     xPost: "https://x.com/madrichclub_/status/2074232348292661547",
+  },
+  {
+    name: "TheLuxxLounge",
+    handle: "@TheLuxxLounge",
+    platform: "X",
+    amountUSD: 284,
+    tokenAmount: 1036883,
+    tokenSymbol: "TLLT",
+    date: "2026-06-07",
+    txHash: "4noTMqJg5w6noGRGEnDaUcFHFUhhcHvG9ALT31c7mcBR",
+    description: "Locked 1,036,883 $TLLT tokens via Streamflow to support TheLuxxLounge community ecosystem. Non-cancelable until 2060.",
+    logo: "/community/theluxxlounge.png",
+    xPost: "https://x.com/madrichclub_/status/2063766619059638771",
   },
   {
     name: "Stash",
