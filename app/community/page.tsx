@@ -9,8 +9,8 @@ import { useState } from "react";
    ═══════════════════════════════════════════════════════════ */
 
 const IMPACT_STATS = {
-  communitiesSupported: 4,
-  totalDonatedUSD: 1424,
+  communitiesSupported: 5,
+  totalDonatedUSD: 1495,
   totalTokensDonated: 0,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
 };
@@ -67,6 +67,19 @@ const COMMUNITIES: Community[] = [
     description: "Locked 1,027,002 $HINEY tokens via Streamflow to support the HINEY community ecosystem. Non-cancelable until 2060.",
     logo: "/community/hiney.png",
     xPost: "https://x.com/madrichclub_/status/2057508965567877497",
+  },
+  {
+    name: "RandyCoin",
+    handle: "@RandyCoinAI",
+    platform: "X",
+    amountUSD: 72,
+    tokenAmount: 1754679,
+    tokenSymbol: "RNDY",
+    date: "2026-05-08",
+    txHash: "CUTM1NuyFpoU5UNmXbjiRtJRL53dssyWrDkX9Xv6ziiy",
+    description: "Locked 1,754,679 $RNDY tokens via Streamflow to support the RandyCoin community ecosystem. Non-cancelable until 2060.",
+    logo: "/community/randycoin.png",
+    xPost: "https://x.com/madrichclub_/status/2052921091342107024",
   },
 ];
 
