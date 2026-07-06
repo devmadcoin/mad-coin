@@ -39,6 +39,7 @@ const COMMUNITIES: Community[] = [
     date: "2026-05-28",
     txHash: "2KDGBDDab2AQCBwnF1eWsEupVUdgS6uHMGtVD2CXJ7j9",
     description: "Locked 33,890 $STASH tokens via Streamflow to support the Stash community ecosystem. Non-cancelable until 2060.",
+    logo: "/community/stash.png",
     xPost: "https://x.com/madrichclub_/status/2060080223954346354",
   },
 ];
