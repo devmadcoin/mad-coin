@@ -21,7 +21,8 @@ const COMMUNITIES: Community[] = [
     handle: "@NormieCEO",
     platform: "X",
     amountUSD: 1061,
-    amountMAD: 0,
+    tokenAmount: 1034400,
+    tokenSymbol: "Normie",
     date: "2026-07-07",
     txHash: "vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
     description: "Locked 1.0344M Normie tokens via Streamflow to support the Normie community ecosystem and cross-community collaboration.",
@@ -35,7 +36,8 @@ type Community = {
   handle?: string;
   platform: string;
   amountUSD: number;
-  amountMAD: number;
+  tokenAmount: number;
+  tokenSymbol: string;
   date: string;
   txHash: string;
   description: string;
@@ -288,7 +290,7 @@ function CommunityCard({ community, delay }: { community: Community; delay: numb
         <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-4">
           <div>
             <p className="text-lg font-black text-[#FF2D2D]">${community.amountUSD.toLocaleString()}</p>
-            <p className="text-[10px] text-white/30">{(community.amountMAD / 1_000_000).toFixed(2)}M $MAD</p>
+            <p className="text-[10px] text-white/30">{(community.tokenAmount / 1_000_000).toFixed(2)}M {community.tokenSymbol}</p>
           </div>
           <div className="flex items-center gap-2">
             {community.xPost && (
