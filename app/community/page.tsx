@@ -9,8 +9,8 @@ import { useState } from "react";
    ═══════════════════════════════════════════════════════════ */
 
 const IMPACT_STATS = {
-  communitiesSupported: 7,
-  totalDonatedUSD: 1911,
+  communitiesSupported: 8,
+  totalDonatedUSD: 2669,
   totalTokensDonated: 0,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
 };
@@ -28,6 +28,18 @@ const COMMUNITIES: Community[] = [
     description: "Locked 1.0344M Normie tokens via Streamflow to support the Normie community ecosystem and cross-community collaboration.",
     logo: "/community/normie.png",
     xPost: "https://x.com/madrichclub_/status/2074232348292661547",
+  },
+  {
+    name: "DerpyDave",
+    handle: "@Being_DerpyAF",
+    platform: "X",
+    amountUSD: 758,
+    tokenAmount: 8155300,
+    tokenSymbol: "DERPYDAVE",
+    date: "2026-05-20",
+    txHash: "61gPdDSq4Qcft5rNkLr6iFaTefU7UdtSHWPpwbtveuGW",
+    description: "Locked 8.155M $DERPYDAVE tokens via Streamflow to support the DerpyDave community ecosystem. Non-cancelable until 2060.",
+    logo: "/community/derpydave.png",
   },
   {
     name: "TheLuxxLounge",
