@@ -672,7 +672,7 @@ export default function RewardsPage() {
               <span className="relative flex h-2 w-2">
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
               </span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">2.5M $MAD Distributed ($4,000) · 50 Winners Paid</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">2.5M $MAD Distributed ($5,000) · 50 Winners Paid</span>
             </div>
             <p className="mt-1 text-[10px] text-white/30 uppercase tracking-widest">Phase 2 ($10M) Revealed Below · The Mission Continues</p>
           </div>
@@ -909,7 +909,7 @@ export default function RewardsPage() {
                   $1M Market Cap <span className="text-emerald-400">Completed</span>
                 </h3>
                 <p className="mt-2 text-sm text-white/50 leading-relaxed">
-                  $MAD hit $1M market cap and held for <span className="font-bold text-white">12 hours</span>. 2.5M $MAD tokens ($4,000 value) distributed to 50 eligible holders. <span className="font-bold text-emerald-400">Reward window closed.</span>
+                  $MAD hit $1M market cap and held for <span className="font-bold text-white">12 hours</span>. 2.5M $MAD tokens ($5,000 value) distributed to 50 eligible holders. <span className="font-bold text-emerald-400">Reward window closed.</span>
                 </p>
 
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
