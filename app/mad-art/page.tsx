@@ -307,6 +307,13 @@ function AnimatedGallery() {
     { src: "/mad-art/loops/mad-planning.mp4", title: "MAD Planning" },
     { src: "/mad-art/mad-wealthy.mp4", title: "MAD Wealthy" },
     { src: "/mad-art/very-mad.mp4", title: "Very MAD" },
+    { src: "/mad-art/mad-sinister.png", title: "MAD Sinister" },
+    { src: "/mad-art/mad-chill.png", title: "MAD Chill" },
+    { src: "/mad-art/mad-pirate.png", title: "MAD Pirate" },
+    { src: "/mad-art/mad-grind.png", title: "MAD Grind" },
+    { src: "/mad-art/mad-dose.png", title: "MAD Dose" },
+    { src: "/mad-art/mad-toxic.png", title: "MAD Toxic" },
+    { src: "/mad-art/mad-power.png", title: "MAD Power" },
   ];
 
   return (
@@ -323,10 +330,14 @@ function AnimatedGallery() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {loops.map((loop, i) => (
             <div key={i} className="group relative overflow-hidden rounded-2xl border border-white/5 bg-[#121212] aspect-square">
-              <video autoPlay muted loop playsInline preload="auto"
-                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300">
-                <source src={loop.src} type="video/mp4" />
-              </video>
+              {loop.src.endsWith(".mp4") ? (
+                <video autoPlay muted loop playsInline preload="auto"
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+                  <source src={loop.src} type="video/mp4" />
+                </video>
+              ) : (
+                <Image src={loop.src} alt={loop.title} fill className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+              )}
               <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,rgba(0,0,0,0.5)_100%)]" />
               <div className="absolute bottom-0 left-0 right-0 p-3">
                 <p className="text-xs font-bold text-white">{loop.title}</p>
