@@ -9,25 +9,24 @@ import { useState } from "react";
    ═══════════════════════════════════════════════════════════ */
 
 const IMPACT_STATS = {
-  communitiesSupported: 0,
-  totalDonatedUSD: 0,
+  communitiesSupported: 1,
+  totalDonatedUSD: 1061,
   totalTokensDonated: 0,
-  onChainProof: "#", // Link to wallet explorer
+  onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
 };
 
 const COMMUNITIES: Community[] = [
-  // Template — fill in with real data:
-  // {
-  //   name: "Community Name",
-  //   handle: "@handle",
-  //   platform: "X / Telegram / Discord",
-  //   amountUSD: 0,
-  //   amountMAD: 0,
-  //   date: "2026-07-01",
-  //   txHash: "...",
-  //   description: "What was supported and why",
-  //   logo: "/community/logo.png",
-  // },
+  {
+    name: "Normie",
+    handle: "@NormieCoin",
+    platform: "X",
+    amountUSD: 1061,
+    amountMAD: 0,
+    date: "2026-07-07",
+    txHash: "vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
+    description: "Locked 1.0344M Normie tokens via Streamflow to support the Normie community ecosystem and cross-community collaboration.",
+    logo: "/community/normie.png",
+  },
 ];
 
 type Community = {
@@ -290,7 +289,7 @@ function CommunityCard({ community, delay }: { community: Community; delay: numb
             <p className="text-[10px] text-white/30">{(community.amountMAD / 1_000_000).toFixed(2)}M $MAD</p>
           </div>
           <a
-            href={`https://solscan.io/tx/${community.txHash}`}
+            href={`https://app.streamflow.finance/contract/solana/mainnet/${community.txHash}`}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 transition hover:bg-emerald-500/20"
