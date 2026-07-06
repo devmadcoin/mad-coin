@@ -9,8 +9,8 @@ import { useState } from "react";
    ═══════════════════════════════════════════════════════════ */
 
 const IMPACT_STATS = {
-  communitiesSupported: 1,
-  totalDonatedUSD: 1061,
+  communitiesSupported: 2,
+  totalDonatedUSD: 1185,
   totalTokensDonated: 0,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
 };
@@ -27,6 +27,18 @@ const COMMUNITIES: Community[] = [
     txHash: "vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
     description: "Locked 1.0344M Normie tokens via Streamflow to support the Normie community ecosystem and cross-community collaboration.",
     logo: "/community/normie.png",
+    xPost: "https://x.com/madrichclub_/status/2074232348292661547",
+  },
+  {
+    name: "Stash",
+    handle: "@gostashxyz",
+    platform: "X",
+    amountUSD: 124,
+    tokenAmount: 33890,
+    tokenSymbol: "STASH",
+    date: "2026-05-28",
+    txHash: "2KDGBDDab2AQCBwnF1eWsEupVUdgS6uHMGtVD2CXJ7j9",
+    description: "Locked 33,890 $STASH tokens via Streamflow to support the Stash community ecosystem. Non-cancelable until 2060.",
     xPost: "https://x.com/madrichclub_/status/2062897412516217028",
   },
 ];
@@ -412,7 +424,7 @@ function DevLock() {
                 Verify on Streamflow
               </a>
               <a
-                href="https://x.com/madrichclub_/status/2074232348292661547"
+                href="https://x.com/madrichclub_/status/2062897412516217028"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-bold text-white/60 transition hover:bg-white/5 hover:text-white"
