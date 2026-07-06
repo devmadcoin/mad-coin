@@ -27,7 +27,7 @@ const COMMUNITIES: Community[] = [
     txHash: "vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
     description: "Locked 1.0344M Normie tokens via Streamflow to support the Normie community ecosystem and cross-community collaboration.",
     logo: "/community/normie.png",
-    xPost: "https://x.com/madrichclub_/status/2074232348292661547",
+    xPost: "https://x.com/madrichclub_/status/2062897412516217028",
   },
 ];
 
