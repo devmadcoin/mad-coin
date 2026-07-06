@@ -43,6 +43,11 @@ const Icons = {
       <circle cx="12" cy="12" r="10" /><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32" />
     </svg>
   ),
+  community: (a: boolean) => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={a ? "#FF2D2D" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" />
+    </svg>
+  ),
   rewards: (a: boolean) => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={a ? "#FF2D2D" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="20 12 20 22 4 22 4 12" /><rect x="2" y="7" width="20" height="5" /><line x1="12" y1="22" x2="12" y2="7" /><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z" />
@@ -58,6 +63,7 @@ const Icons = {
 const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Home", mobileLabel: "Home", icon: Icons.home },
   { href: "/mad-mind", label: "MAD AI", mobileLabel: "AI", variant: "ai", icon: Icons.ai },
+  { href: "/community", label: "Community", mobileLabel: "Impact", icon: Icons.community },
   { href: "/roadmap", label: "Roadmap", mobileLabel: "Path", variant: "primary", icon: Icons.roadmap },
   { href: "/game", label: "Game", mobileLabel: "Game", icon: Icons.game },
   { href: "/mad-art", label: "MAD Art", mobileLabel: "Art", icon: Icons.art },
