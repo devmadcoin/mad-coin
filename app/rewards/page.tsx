@@ -693,7 +693,7 @@ export default function RewardsPage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B00]" />
               </span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#FF6B00]">12.5M $MAD Ready ($20,000) · 80 Winners Pending</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#FF6B00]">1M $MAD Ready ($20,000) · 80 Winners Pending</span>
             </div>
             <p className="mt-1 text-[10px] text-white/30 uppercase tracking-widest">Hold 1K+ $MAD · Stay $MAD · Get Rewarded</p>
           </div>
@@ -959,7 +959,7 @@ export default function RewardsPage() {
                   </h3>
                 </div>
                 <p className="mt-2 text-sm text-white/40 leading-relaxed">
-                  When $MAD hits $10M market cap, <span className="font-bold text-white/70">$20,000 total giveaway</span> — <span className="font-bold text-white/70">12.5K $MAD</span> (≈$250 each) distributed to <span className="font-bold text-white/70">80 eligible holders</span>.
+                  When $MAD hits $10M market cap, <span className="font-bold text-white/70">1M $MAD ($20,000 total)</span> distributed as <span className="font-bold text-white/70">12.5K $MAD each</span> (≈$250) to <span className="font-bold text-white/70">80 eligible holders</span>.
                 </p>
 
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
