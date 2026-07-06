@@ -64,7 +64,6 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Home", mobileLabel: "Home", icon: Icons.home },
   { href: "/mad-mind", label: "MAD AI", mobileLabel: "AI", variant: "ai", icon: Icons.ai },
   { href: "/community", label: "Community", mobileLabel: "Impact", icon: Icons.community },
-  { href: "/trust", label: "Trust", mobileLabel: "Trust", icon: Icons.rewards },
   { href: "/roadmap", label: "Roadmap", mobileLabel: "Path", variant: "primary", icon: Icons.roadmap },
   { href: "/game", label: "Game", mobileLabel: "Game", icon: Icons.game },
   { href: "/mad-art", label: "MAD Art", mobileLabel: "Art", icon: Icons.art },

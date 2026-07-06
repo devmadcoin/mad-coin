@@ -175,7 +175,7 @@ function DevLockBadge() {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6"
       >
-        <Link href="/trust" className="group flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] px-6 py-4 transition hover:border-emerald-500/30 hover:bg-emerald-500/[0.05]"
+        <Link href="/community" className="group flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] px-6 py-4 transition hover:border-emerald-500/30 hover:bg-emerald-500/[0.05]"
         >
           <div className="flex items-center gap-3"
           >

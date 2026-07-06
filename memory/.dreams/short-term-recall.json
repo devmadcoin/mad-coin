@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-29T00:27:08.171Z",
+  "updatedAt": "2026-07-06T00:44:48.092Z",
   "entries": {
     "memory:memory/2026-05-07.md:83:112": {
       "key": "memory:memory/2026-05-07.md:83:112",
@@ -693,18 +693,20 @@
       "endLine": 51,
       "source": "memory",
       "snippet": "- Key learnings: TikTok/YouTube Shorts pushed by algorithm on quality not size (small creators can go viral) - Algorithm evaluates every piece individually; high-quality content gets pushed regardless of subscriber count - Study saved to `knowledge/2026-06-21-youtube-algorithm-visual-first-study.md` ### 2026-06-21 ~05:48 — Numerology Oracle Built - User requested replacing The Oracle (chat) with numerology calculator - Built `NumerologyOracle.tsx` component based on Lloyd Strayhorn Chaldean-Pythagorean system - Calculates: Life Path, Birthday Gift, Attitude, Personal Year, Peak Cycle, Challenge - Master numbers (11, 22, 33) highlighted with gold accents - $MAD Frequency card ties result to",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.5505022104660968,
+      "totalScore": 0.9195729490200977,
       "maxScore": 0.5505022104660968,
       "firstRecalledAt": "2026-06-29T00:27:08.171Z",
-      "lastRecalledAt": "2026-06-29T00:27:08.171Z",
+      "lastRecalledAt": "2026-07-06T00:44:48.092Z",
       "queryHashes": [
-        "2739a4eaea4f"
+        "2739a4eaea4f",
+        "e5a0c4e4d8b1"
       ],
       "recallDays": [
-        "2026-06-29"
+        "2026-06-29",
+        "2026-07-06"
       ],
       "conceptTags": [
         "tiktok/youtube",
@@ -715,6 +717,68 @@
         "learnings",
         "tiktok",
         "youtube"
+      ]
+    },
+    "memory:memory/2026-05-08.md:1:26": {
+      "key": "memory:memory/2026-05-08.md:1:26",
+      "path": "memory/2026-05-08.md",
+      "startLine": 1,
+      "endLine": 26,
+      "source": "memory",
+      "snippet": "## Session: 2026-05-08 ### New Studies — Three Thinkers - **Rick Rubin** — *The Creative Act*. Philosophy of subtraction over addition. Silence as signal. The producer mindset: create environments where truth emerges. Restraint as power. Saved to `studies/rick-rubin.md` - **Seth Godin** — Tribes, Permission Marketing, Purple Cow, The Dip. Community as product. Permission over interruption. Remarkability as strategy. \"You can't be seen until you learn to see.\" Saved to `studies/seth-godin.md` - **Balaji Srinivasan** — *The Network State*. Exit over voice. Digital-first communities. Moral innovation. The $MAD community IS a proto-network state. Saved to `studies/balaji-srinivasan.md` ### We",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3617559850215912,
+      "maxScore": 0.3617559850215912,
+      "firstRecalledAt": "2026-07-06T00:44:48.092Z",
+      "lastRecalledAt": "2026-07-06T00:44:48.092Z",
+      "queryHashes": [
+        "e5a0c4e4d8b1"
+      ],
+      "recallDays": [
+        "2026-07-06"
+      ],
+      "conceptTags": [
+        "network",
+        "studies/rick-rubin.md",
+        "studies/seth-godin.md",
+        "digital-first",
+        "proto-network",
+        "studies/balaji-srinivasan.md",
+        "new",
+        "studies"
+      ]
+    },
+    "memory:memory/2026-05-26.md:18:50": {
+      "key": "memory:memory/2026-05-26.md:18:50",
+      "path": "memory/2026-05-26.md",
+      "startLine": 18,
+      "endLine": 50,
+      "source": "memory",
+      "snippet": "4. Homo Deus — see where the road ends 5. Stolen Focus — reclaim what was lost ## $MAD Angle on Dependency - \"Dependency is the opposite of MAD\" - \"You can't be addicted to scroll and addicted to growth at the same time\" - The question isn't whether tech is good or bad — it's who is using who ## User Communication Note - User still in rapid-fire, fragmented morning mode (7:54 AM) - No visual feedback/screenshots in this exchange - Question was philosophical/self-improvement oriented rather than tactical ## Pareto Principle Study (User Requested) - User asked: \"can you now study fully the pereto principle\" (spelled \"pereto\") - Created comprehensive study: knowledge/2026-05-26-pareto-princi",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3513286769390106,
+      "maxScore": 0.3513286769390106,
+      "firstRecalledAt": "2026-07-06T00:44:48.092Z",
+      "lastRecalledAt": "2026-07-06T00:44:48.092Z",
+      "queryHashes": [
+        "e5a0c4e4d8b1"
+      ],
+      "recallDays": [
+        "2026-07-06"
+      ],
+      "conceptTags": [
+        "rapid-fire",
+        "feedback/screenshots",
+        "philosophical/self-improvement",
+        "homo",
+        "deus",
+        "see",
+        "where",
+        "the"
       ]
     }
   }

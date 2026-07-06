@@ -8,13 +8,7 @@
       "commit": "2f59d6d"
     },
     {
-      "task": "community: add Community Impact page at /community",
-      "date": "2026-07-07",
-      "status": "deployed",
-      "commit": "27d5753"
-    },
-    {
-      "task": "trust: add Dev Transparency page at /trust with 100M lock badge on homepage",
+      "task": "community: add Community Impact page at /community with dev lock transparency",
       "date": "2026-07-07",
       "status": "deployed",
       "commit": "TBD"

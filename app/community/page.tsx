@@ -326,6 +326,111 @@ function CommunityCard({ community, delay }: { community: Community; delay: numb
 }
 
 /* ═══════════════════════════════════════════════════════════
+   DEV LOCK — Proof of Commitment
+   ═══════════════════════════════════════════════════════════ */
+function DevLock() {
+  return (
+    <section className="border-y border-white/5 bg-white/[0.01] px-4 py-16 sm:py-20">
+      <div className="mx-auto max-w-4xl">
+        <FadeIn>
+          <div className="text-center mb-10">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60">
+              Dev Commitment
+            </p>
+            <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
+              <span className="text-emerald-400">100M $MAD</span> Locked
+            </h2>
+            <p className="mt-2 text-lg font-bold text-white/40">$472,348 · Non-cancelable until Dec 2026</p>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.1}>
+          <div className="rounded-3xl border border-emerald-500/20 bg-emerald-500/[0.03] p-8 sm:p-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-black text-white">Non-Cancelable</p>
+                  <p className="text-xs text-white/40">Cannot be revoked or withdrawn</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-black text-white">On-Chain Verified</p>
+                  <p className="text-xs text-white/40">Immutable contract via Streamflow</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+              <div className="rounded-2xl border border-white/5 bg-[#0a0a0a] p-4 text-center">
+                <p className="text-lg font-black text-white">100M</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider">$MAD Locked</p>
+              </div>
+              <div className="rounded-2xl border border-white/5 bg-[#0a0a0a] p-4 text-center">
+                <p className="text-lg font-black text-emerald-400">$472K</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider">Current Value</p>
+              </div>
+              <div className="rounded-2xl border border-white/5 bg-[#0a0a0a] p-4 text-center">
+                <p className="text-lg font-black text-white">Jun 5</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider">Lock Date</p>
+              </div>
+              <div className="rounded-2xl border border-white/5 bg-[#0a0a0a] p-4 text-center">
+                <p className="text-lg font-black text-[#FF2D2D]">Dec 4</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider">Unlock Date</p>
+              </div>
+            </div>
+
+            <p className="text-sm text-white/40 leading-relaxed mb-6">
+              Developer locked 100M $MAD tokens via Streamflow. This is a non-cancelable, immutable contract 
+              that cannot be withdrawn, transferred, or revoked until December 2026. This is what accountability 
+              looks like in a space full of shadows.
+            </p>
+
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://app.streamflow.finance/contract/solana/mainnet/2Qg5Ugf2eH12ry9w3StU9sMvo5biuruK7ob2sni2Yref"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-6 py-3 text-sm font-bold text-emerald-400 transition hover:bg-emerald-500/20"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Verify on Streamflow
+              </a>
+              <a
+                href="https://x.com/madrichclub_/status/2074232348292661547"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-bold text-white/60 transition hover:bg-white/5 hover:text-white"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                View Announcement
+              </a>
+            </div>
+          </div>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    CTA — Join The Mission
    ═══════════════════════════════════════════════════════════ */
 function CTA() {
@@ -376,6 +481,7 @@ export default function CommunityPage() {
       <Hero />
       <Philosophy />
       <CommunitiesGrid />
+      <DevLock />
       <CTA />
     </div>
   );
