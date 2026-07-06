@@ -9,8 +9,8 @@ import { useState } from "react";
    ═══════════════════════════════════════════════════════════ */
 
 const IMPACT_STATS = {
-  communitiesSupported: 2,
-  totalDonatedUSD: 1185,
+  communitiesSupported: 3,
+  totalDonatedUSD: 1255,
   totalTokensDonated: 0,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
 };
@@ -41,6 +41,19 @@ const COMMUNITIES: Community[] = [
     description: "Locked 33,890 $STASH tokens via Streamflow to support the Stash community ecosystem. Non-cancelable until 2060.",
     logo: "/community/stash.png",
     xPost: "https://x.com/madrichclub_/status/2060080223954346354",
+  },
+  {
+    name: "DIGIKOINZ",
+    handle: "@DIGI_KOINZ",
+    platform: "X",
+    amountUSD: 70,
+    tokenAmount: 1038763,
+    tokenSymbol: "KOINZ",
+    date: "2026-05-24",
+    txHash: "J73caZFu4pUBCmU9QjLqJkLX4uX3xkHBQ7M2LHG1sUc5",
+    description: "Locked 1,038,763 $KOINZ tokens via Streamflow to support the DIGIKOINZ community ecosystem. Non-cancelable until 2060.",
+    logo: "/community/digikoinz.png",
+    xPost: "https://x.com/madrichclub_/status/2058759994485715249",
   },
 ];
 
