@@ -9,8 +9,8 @@ import { useState } from "react";
    ═══════════════════════════════════════════════════════════ */
 
 const IMPACT_STATS = {
-  communitiesSupported: 3,
-  totalDonatedUSD: 1255,
+  communitiesSupported: 4,
+  totalDonatedUSD: 1424,
   totalTokensDonated: 0,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
 };
@@ -54,6 +54,19 @@ const COMMUNITIES: Community[] = [
     description: "Locked 1,038,763 $KOINZ tokens via Streamflow to support the DIGIKOINZ community ecosystem. Non-cancelable until 2060.",
     logo: "/community/digikoinz.png",
     xPost: "https://x.com/madrichclub_/status/2058759994485715249",
+  },
+  {
+    name: "HINEY",
+    handle: "@hineycoin",
+    platform: "X",
+    amountUSD: 169,
+    tokenAmount: 1027002,
+    tokenSymbol: "HINEY",
+    date: "2026-05-21",
+    txHash: "FvH6cCN9vNAEqXFsQrYrAjoKD1Bs12BqqVKokWc66xiS",
+    description: "Locked 1,027,002 $HINEY tokens via Streamflow to support the HINEY community ecosystem. Non-cancelable until 2060.",
+    logo: "/community/hiney.png",
+    xPost: "https://x.com/madrichclub_/status/2057508965567877497",
   },
 ];
 
