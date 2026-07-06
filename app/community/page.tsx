@@ -515,6 +515,61 @@ function DevLock() {
             </div>
           </div>
         </FadeIn>
+
+        {/* $MAD Tokens Given */}
+        <FadeIn delay={0.2}>
+          <div className="mt-8 rounded-3xl border border-[#FF6B00]/20 bg-[#FF6B00]/[0.03] p-8 sm:p-10">
+            <div className="mb-6 text-center">
+              <span className="text-4xl">🔥</span>
+              <p className="mt-2 text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60">
+                Community Rewards
+              </p>
+              <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl">
+                <span className="text-[#FF6B00]">2.5M</span> $MAD Given
+              </h2>
+              <p className="mt-2 text-lg font-bold text-white/40">Airdropped to community at $1M market cap</p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+              <div className="rounded-2xl border border-white/5 bg-[#0a0a0a] p-4 text-center">
+                <p className="text-lg font-black text-[#FF6B00]">2.5M</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider">$MAD Given</p>
+              </div>
+              <div className="rounded-2xl border border-white/5 bg-[#0a0a0a] p-4 text-center">
+                <p className="text-lg font-black text-white">$1M</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider">Milestone</p>
+              </div>
+              <div className="rounded-2xl border border-white/5 bg-[#0a0a0a] p-4 text-center">
+                <p className="text-lg font-black text-white">Community</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider">Recipients</p>
+              </div>
+              <div className="rounded-2xl border border-white/5 bg-[#0a0a0a] p-4 text-center">
+                <p className="text-lg font-black text-[#FF2D2D]">$0</p>
+                <p className="text-[10px] text-white/30 uppercase tracking-wider">Dev Profit</p>
+              </div>
+            </div>
+
+            <p className="text-sm text-white/40 leading-relaxed mb-6">
+              When $MAD hit $1M market cap, 2.5M tokens were airdropped directly to the community. 
+              No presale. No VC allocation. Every token went to holders who believed early. This is what 
+              community-first means — the dev wins when the community wins.
+            </p>
+
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://x.com/madrichclub_"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-[#FF6B00]/20 bg-[#FF6B00]/10 px-6 py-3 text-sm font-bold text-[#FF6B00] transition hover:bg-[#FF6B00]/20"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                View on X
+              </a>
+            </div>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
