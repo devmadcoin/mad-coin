@@ -8,6 +8,18 @@
       "commit": "2f59d6d"
     },
     {
+      "task": "community: add Community Impact page at /community",
+      "date": "2026-07-07",
+      "status": "deployed",
+      "commit": "27d5753"
+    },
+    {
+      "task": "trust: add Dev Transparency page at /trust with 100M lock badge on homepage",
+      "date": "2026-07-07",
+      "status": "deployed",
+      "commit": "TBD"
+    },
+    {
       "task": "mad-art: add 4 animated MAD Moments loops (Thinking, HAHAHA, Excited, Planning)",
       "date": "2026-06-11",
       "status": "deployed",

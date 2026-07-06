@@ -167,6 +167,53 @@ function CopyButtonInline({ text }: { text: string }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   DEV LOCK BADGE — Trust signal on homepage
+   ═══════════════════════════════════════════════════════════ */
+function DevLockBadge() {
+  return (
+    <section className="relative py-6 bg-[#080808] border-y border-white/5"
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6"
+      >
+        <Link href="/trust" className="group flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.03] px-6 py-4 transition hover:border-emerald-500/30 hover:bg-emerald-500/[0.05]"
+        >
+          <div className="flex items-center gap-3"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </div>
+            <div className="text-center sm:text-left"
+            >
+              <p className="text-sm font-black text-white"
+              >
+                🔒 Dev Locked{" "}
+                <span className="text-emerald-400"
+                >100M $MAD ($472K)</span>
+              </p>
+              <p className="text-[11px] text-white/40"
+              >
+                Non-cancelable until Dec 2026 · On-chain verified · View Proof →
+              </p>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-emerald-400/60"
+          >
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"
+            />
+            Active
+          </div>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    LATEST DROP — Featured video ( Coffee Blox x SugarStar )
    ═══════════════════════════════════════════════════════════ */
 function LatestDrop() {
@@ -811,6 +858,7 @@ export default function Home() {
       <Navbar />
       <VideoBanner />
       <StopPanicking />
+      <DevLockBadge />
       <LatestDrop />
       <ExchangeMarquee />
       <TheMADFAM />
