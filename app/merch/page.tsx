@@ -126,9 +126,9 @@ function LiveTicker() {
 
   if (loading) {
     return (
-      <div className="fixed top-0 left-0 right-0 z-[60] bg-[#F5F1E8]/95 backdrop-blur-xl border-b border-[#1a1a1a]/10">
+      <div className="fixed top-0 left-0 right-0 z-[60] bg-[#080808]/95 backdrop-blur-xl border-b border-white/10">
         <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-center gap-4">
-          <span className="text-[#1a1a1a]/40 text-xs font-bold">Loading $MAD stats...</span>
+          <span className="text-white/40 text-xs font-bold">Loading $MAD stats...</span>
         </div>
       </div>
     );
@@ -138,21 +138,21 @@ function LiveTicker() {
 
   const items = [
     { label: "PRICE", value: stats.price },
-    { label: "24H", value: stats.change, color: stats.change.startsWith("+") ? "text-emerald-600" : stats.change.startsWith("-") ? "text-[#FF2D2D]" : "text-[#1a1a1a]/60" },
+    { label: "24H", value: stats.change, color: stats.change.startsWith("+") ? "text-emerald-400" : stats.change.startsWith("-") ? "text-[#FF2D2D]" : "text-white/60" },
     { label: "MCAP", value: stats.mcap },
     { label: "24H VOL", value: stats.volume },
     { label: "CA", value: CA.slice(0, 6) + "..." + CA.slice(-4) },
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-[#F5F1E8]/95 backdrop-blur-xl border-b border-[#1a1a1a]/10">
+    <div className="fixed top-0 left-0 right-0 z-[60] bg-[#080808]/95 backdrop-blur-xl border-b border-white/10">
       <div className="mx-auto max-w-7xl px-4 py-2 flex items-center justify-between gap-4 overflow-x-auto">
         <div className="flex items-center gap-6 min-w-max">
-          <span className="text-[#1a1a1a]/40 text-[10px] font-bold uppercase tracking-widest shrink-0">$MAD Live</span>
+          <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest shrink-0">$MAD Live</span>
           {items.map((item) => (
             <div key={item.label} className="flex items-center gap-1.5 shrink-0">
-              <span className="text-[#1a1a1a]/30 text-[10px] font-bold uppercase">{item.label}</span>
-              <span className={cn("text-xs font-black", item.color || "text-[#1a1a1a]")}>{item.value}</span>
+              <span className="text-white/30 text-[10px] font-bold uppercase">{item.label}</span>
+              <span className={cn("text-xs font-black", item.color || "text-white")}>{item.value}</span>
             </div>
           ))}
         </div>
@@ -161,7 +161,7 @@ function LiveTicker() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B00] opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF6B00]" />
           </span>
-          <span className="text-[10px] text-[#1a1a1a]/40 font-bold">LIVE</span>
+          <span className="text-[10px] text-white/40 font-bold">LIVE</span>
         </div>
       </div>
     </div>
@@ -188,14 +188,49 @@ function CopyButton({ text = CA }: { text?: string }) {
 
 function StockBadge({ tone, children }: { tone: "green" | "yellow" | "red"; children: React.ReactNode }) {
   const map = {
-    green: "border-emerald-400/25 bg-emerald-400/10 text-emerald-600",
-    yellow: "border-amber-400/25 bg-amber-400/10 text-amber-600",
+    green: "border-emerald-400/25 bg-emerald-400/10 text-emerald-400",
+    yellow: "border-amber-400/25 bg-amber-400/10 text-amber-400",
     red: "border-[#FF2D2D]/25 bg-[#FF2D2D]/10 text-[#FF2D2D]",
   };
   return (
     <span className={cn("rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] border", map[tone])}>
       {children}
     </span>
+  );
+}
+
+/* ─── NAVBAR ─── */
+function Navbar() {
+  const links = [
+    { label: "Home", href: "/" },
+    { label: "MAD AI", href: "/mad-mind" },
+    { label: "Roadmap", href: "/roadmap" },
+    { label: "Game", href: "/game" },
+    { label: "MAD Art", href: "/mad-art" },
+    { label: "Rewards", href: "/rewards" },
+    { label: "Shop", href: "/merch", active: true },
+  ];
+
+  return (
+    <nav className="fixed top-8 left-0 right-0 z-50 bg-[#080808]/80 backdrop-blur-md border-b border-white/5">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-[#FF2D2D] flex items-center justify-center text-white font-black text-sm">M</div>
+          <span className="text-white font-black text-sm tracking-tight">$MAD</span>
+        </Link>
+        <div className="hidden md:flex items-center gap-1">
+          {links.map((l) => (
+            <Link key={l.label} href={l.href}
+              className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${
+                l.active ? "bg-[#FF2D2D]/10 text-[#FF2D2D]" : "text-white/40 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </nav>
   );
 }
 
@@ -211,7 +246,7 @@ function MerchHero() {
       />
 
       {/* Gradient overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-[#080808]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#080808]" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 text-center">
@@ -251,8 +286,8 @@ function LegacyDrop() {
   return (
     <section className="py-12">
       <div className="mx-auto max-w-7xl px-4">
-        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-[#FF2D2D]/15 bg-[#1a1a1a]/[0.02] overflow-hidden">
-          <div className="p-8 flex items-center justify-center bg-[#1a1a1a]/[0.03]">
+        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-white/5 bg-[#121212] overflow-hidden">
+          <div className="p-8 flex items-center justify-center bg-[#0a0a0a]">
             <img
               src="/merch/mad-limited-001-hat.png"
               alt="MAD // LIMITED 001 Hat"
@@ -262,42 +297,42 @@ function LegacyDrop() {
 
           <div className="p-8 sm:p-12 flex flex-col justify-center">
             <div className="flex gap-3 mb-4 flex-wrap">
-              <span className="text-xs text-[#1a1a1a]/50">Drop 001 — Legacy</span>
-              <span className="rounded-full border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.03] px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-[#1a1a1a]/40">
+              <span className="text-xs text-white/50">Drop 001 — Legacy</span>
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
                 SOLD OUT FOREVER
               </span>
             </div>
 
-            <h2 className="text-4xl font-black text-[#1a1a1a] leading-tight">
+            <h2 className="text-4xl font-black text-white leading-tight">
               MAD // <span className="text-[#FF2D2D]">LIMITED 001</span>
             </h2>
-            <p className="mt-2 text-lg font-black text-[#1a1a1a]/30">
+            <p className="mt-2 text-lg font-black text-white/30">
               $mad America dad hat
             </p>
 
             <div className="mt-6 space-y-3">
               <div className="flex items-center gap-3">
                 <span className="h-2 w-2 rounded-full bg-[#FF2D2D]" />
-                <p className="text-sm text-[#1a1a1a]/70">
-                  Only <span className="font-black text-[#1a1a1a]">26</span> ever made. No restocks. No reprints.
+                <p className="text-sm text-white/70">
+                  Only <span className="font-black text-white">26</span> ever made. No restocks. No reprints.
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <span className="h-2 w-2 rounded-full bg-[#FF2D2D]" />
-                <p className="text-sm text-[#1a1a1a]/70">
-                  Every buyer received <span className="font-black text-[#1a1a1a]">1,000,000 $MAD</span> tokens each.
+                <p className="text-sm text-white/70">
+                  Every buyer received <span className="font-black text-white">1,000,000 $MAD</span> tokens each.
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <span className="h-2 w-2 rounded-full bg-[#FF2D2D]" />
-                <p className="text-sm text-[#1a1a1a]/70">
-                  This will <span className="font-black text-[#1a1a1a]">never happen again</span>.
+                <p className="text-sm text-white/70">
+                  This will <span className="font-black text-white">never happen again</span>.
                 </p>
               </div>
             </div>
 
             <div className="mt-8 rounded-[1.2rem] border border-[#FF2D2D]/15 bg-[#FF2D2D]/[0.03] p-5">
-              <p className="text-xs text-[#1a1a1a]/60 leading-relaxed">
+              <p className="text-xs text-white/60 leading-relaxed">
                 The hat that started the legend. If you own one, you are one of the 26. If you missed it, you missed the most exclusive $MAD drop in history. Next drops will never carry the same token bonus. This was a one-time artifact of conviction.
               </p>
             </div>
@@ -357,17 +392,17 @@ function ProofGrid() {
           <span className="rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-[#FF2D2D]">
             Verified Holders
           </span>
-          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-[#1a1a1a]">
+          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-white">
             Real People. Real <span className="text-[#FF2D2D]">$MAD</span> Stickers.
           </h2>
-          <p className="mt-2 text-sm text-[#1a1a1a]/50">Community submitted proof. Not paid actors.</p>
+          <p className="mt-2 text-sm text-white/50">Community submitted proof. Not paid actors.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {proofImages.map((item, i) => (
             <div
               key={i}
-              className="group overflow-hidden rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] hover:border-[#1a1a1a]/20 hover:bg-[#1a1a1a]/[0.04] transition-all duration-300"
+              className="group overflow-hidden rounded-[2rem] border border-white/5 bg-[#121212] hover:border-white/10 hover:bg-[#1a1a1a] transition-all duration-300"
             >
               <div className="relative aspect-square overflow-hidden">
                 <Image
@@ -377,7 +412,7 @@ function ProofGrid() {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a]/70 via-[#1a1a1a]/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                 <div className="absolute top-4 left-4">
                   <span className="rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-[#FF2D2D]">
                     Proof #{String(i + 1).padStart(2, "0")}
@@ -385,8 +420,8 @@ function ProofGrid() {
                 </div>
               </div>
               <div className="p-5">
-                <p className="text-lg font-black text-[#1a1a1a]">{item.caption}</p>
-                <p className="mt-1 text-xs text-[#1a1a1a]/40">{item.alt}</p>
+                <p className="text-lg font-black text-white">{item.caption}</p>
+                <p className="mt-1 text-xs text-white/40">{item.alt}</p>
               </div>
             </div>
           ))}
@@ -422,13 +457,13 @@ function VideoGrid() {
           <span className="rounded-full border border-[#FF2D2D]/20 bg-[#FF2D2D]/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-[#FF2D2D]">
             Customer Proof
           </span>
-          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-[#1a1a1a]">
+          <h2 className="mt-4 text-2xl sm:text-3xl font-black text-white">
             Real <span className="text-[#FF2D2D]">$MAD</span> Energy In Action.
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {videos.map((video, i) => (
-            <div key={i} className="rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
+            <div key={i} className="rounded-[2rem] border border-white/5 bg-[#121212] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
               <div className="relative aspect-[9/16] w-full sm:aspect-video">
                 <iframe
                   src={video.src}
@@ -440,8 +475,8 @@ function VideoGrid() {
               </div>
               <div className="p-5 text-center">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF2D2D]">{video.label}</span>
-                <p className="mt-2 text-lg font-black text-[#1a1a1a]">{video.heading}</p>
-                <p className="mt-1 text-sm text-[#1a1a1a]/40">{video.caption}</p>
+                <p className="mt-2 text-lg font-black text-white">{video.heading}</p>
+                <p className="mt-1 text-sm text-white/40">{video.caption}</p>
               </div>
             </div>
           ))}
@@ -456,7 +491,7 @@ function FeaturedPiece() {
   return (
     <section className="py-12">
       <div className="mx-auto max-w-7xl px-4">
-        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] overflow-hidden">
+        <div className="grid lg:grid-cols-2 rounded-[2rem] border border-white/5 bg-[#121212] overflow-hidden">
           <div className="p-8 flex items-center justify-center">
             <img
               src={FEATURED.image}
@@ -467,17 +502,17 @@ function FeaturedPiece() {
 
           <div className="p-8 sm:p-12 flex flex-col justify-center">
             <div className="flex gap-3 mb-4">
-              <span className="text-xs text-[#1a1a1a]/50">{FEATURED.tag}</span>
+              <span className="text-xs text-white/50">{FEATURED.tag}</span>
               <StockBadge tone={FEATURED.stockTone}>{FEATURED.stock}</StockBadge>
             </div>
 
-            <h2 className="text-4xl font-black text-[#1a1a1a]">{FEATURED.name}</h2>
+            <h2 className="text-4xl font-black text-white">{FEATURED.name}</h2>
 
             <p className="mt-2 text-3xl font-black text-[#FF2D2D]">
               {FEATURED.price}
             </p>
 
-            <p className="mt-4 text-[#1a1a1a]/60 max-w-md">
+            <p className="mt-4 text-white/60 max-w-md">
               {FEATURED.featuredText}
             </p>
 
@@ -492,7 +527,7 @@ function FeaturedPiece() {
               </a>
               <a
                 href="#proof"
-                className="inline-flex w-fit px-6 py-4 border border-[#1a1a1a]/15 text-[#1a1a1a] rounded-full hover:bg-[#1a1a1a]/[0.03] transition-all text-sm font-bold"
+                className="inline-flex w-fit px-6 py-4 border border-white/10 text-white rounded-full hover:bg-white/[0.03] transition-all text-sm font-bold"
               >
                 View Customer Proof
               </a>
@@ -508,10 +543,10 @@ function FeaturedPiece() {
 function Marquee() {
   const text = "NOT FOR EVERYONE • LIMITED DROP • WHILE SUPPLIES LAST • ";
   return (
-    <div className="overflow-hidden border-y border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] py-4">
+    <div className="overflow-hidden border-y border-white/5 bg-[#121212] py-4">
       <div className="flex whitespace-nowrap animate-[marquee_20s_linear_infinite]">
         {Array.from({ length: 8 }).map((_, i) => (
-          <span key={i} className="text-xs sm:text-sm font-black uppercase tracking-[0.3em] text-[#1a1a1a]/30 mx-4">
+          <span key={i} className="text-xs sm:text-sm font-black uppercase tracking-[0.3em] text-white/30 mx-4">
             {text}
           </span>
         ))}
@@ -539,7 +574,7 @@ function StarRating({ count }: { count: number }) {
       {[...Array(5)].map((_, i) => {
         const filled = i + 1 <= count;
         return (
-          <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill={filled ? "#C5A572" : "#1a1a1a"} className={filled ? "drop-shadow-[0_0_1px_rgba(197,165,114,0.4)]" : "opacity-15"}>
+          <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill={filled ? "#C5A572" : "white"} className={filled ? "drop-shadow-[0_0_1px_rgba(197,165,114,0.4)]" : "opacity-15"}>
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
           </svg>
         );
@@ -553,7 +588,7 @@ function ProductGrid() {
   return (
     <section id="products" className="py-16">
       <div className="mx-auto max-w-7xl px-4">
-        <h2 className="text-4xl font-black text-[#1a1a1a] mb-10">
+        <h2 className="text-4xl font-black text-white mb-10">
           The <span className="text-[#FF2D2D]">$MAD</span> Drop.
         </h2>
 
@@ -564,7 +599,7 @@ function ProductGrid() {
               href={product.url}
               target="_blank"
               rel="noreferrer"
-              className="rounded-[2rem] border border-[#1a1a1a]/10 bg-[#1a1a1a]/[0.02] p-5 hover:border-[#1a1a1a]/20 hover:bg-[#1a1a1a]/[0.04] transition-all duration-300 group"
+              className="rounded-[2rem] border border-white/5 bg-[#121212] p-5 hover:border-white/10 hover:bg-[#1a1a1a] transition-all duration-300 group"
             >
               <img
                 src={product.image}
@@ -573,7 +608,7 @@ function ProductGrid() {
               />
 
               <div className="mt-5 flex justify-between items-center">
-                <span className="text-xs text-[#1a1a1a]/40">{product.tier}</span>
+                <span className="text-xs text-white/40">{product.tier}</span>
                 <StockBadge tone={product.stockTone}>{product.stock}</StockBadge>
               </div>
 
@@ -581,15 +616,15 @@ function ProductGrid() {
                 <StarRating count={product.stars} />
               </div>
 
-              <h3 className="mt-3 text-xl font-black text-[#1a1a1a]">
+              <h3 className="mt-3 text-xl font-black text-white">
                 {product.name}
               </h3>
 
-              <p className="mt-2 text-2xl font-black text-[#1a1a1a]">
+              <p className="mt-2 text-2xl font-black text-white">
                 {product.price}
               </p>
 
-              <p className="mt-2 text-sm text-[#1a1a1a]/50">{product.desc}</p>
+              <p className="mt-2 text-sm text-white/50">{product.desc}</p>
             </a>
           ))}
         </div>
@@ -608,7 +643,7 @@ function RiskNotice() {
             Risk Notice
           </p>
 
-          <p className="mt-4 text-[#1a1a1a]/60 max-w-4xl mx-auto text-sm sm:text-base">
+          <p className="mt-4 text-white/60 max-w-4xl mx-auto text-sm sm:text-base">
             $MAD is a meme coin and speculative digital asset. Nothing on this
             website is financial advice or a guarantee of returns. Crypto is risky and volatile. Never risk money you cannot afford to lose. Always do your own research.
           </p>
@@ -628,59 +663,59 @@ function Footer() {
   ];
 
   return (
-    <footer className="border-t border-[#1a1a1a]/10 bg-[#F5F1E8]">
+    <footer className="border-t border-white/5 bg-[#080808]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-[#FF2D2D] flex items-center justify-center text-white font-black text-lg">M</div>
               <div>
-                <span className="text-[#1a1a1a] font-black text-xl">$MAD</span>
-                <span className="block text-[#1a1a1a]/40 text-[10px] tracking-[0.3em] uppercase">Stay $MAD</span>
+                <span className="text-white font-black text-xl">$MAD</span>
+                <span className="block text-white/40 text-[10px] tracking-[0.3em] uppercase">Stay $MAD</span>
               </div>
             </div>
-            <p className="text-[#1a1a1a]/50 text-sm leading-relaxed mb-6">The Supreme of Solana. Limited. Exclusive. Cult.</p>
+            <p className="text-white/50 text-sm leading-relaxed mb-6">The Supreme of Solana. Limited. Exclusive. Cult.</p>
             <div className="flex items-center gap-2">
               {socials.map((s) => (
-                <a key={s.name} href={s.href} target="_blank" rel="noreferrer" className="w-10 h-10 bg-[#1a1a1a]/5 hover:bg-[#FF2D2D]/10 border border-[#1a1a1a]/5 hover:border-[#FF2D2D]/20 rounded-xl flex items-center justify-center text-[#1a1a1a]/40 hover:text-[#FF2D2D] transition-all" title={s.name}>{s.icon}</a>
+                <a key={s.name} href={s.href} target="_blank" rel="noreferrer" className="w-10 h-10 bg-white/5 hover:bg-[#FF2D2D]/10 border border-white/5 hover:border-[#FF2D2D]/20 rounded-xl flex items-center justify-center text-white/40 hover:text-[#FF2D2D] transition-all" title={s.name}>{s.icon}</a>
               ))}
             </div>
           </div>
           <div>
-            <h4 className="text-[#1a1a1a] font-bold text-sm mb-4 tracking-wide">NAVIGATION</h4>
+            <h4 className="text-white font-bold text-sm mb-4 tracking-wide">NAVIGATION</h4>
             <ul className="space-y-2.5">
               {[{l:"MAD AI",h:"/mad-mind"},{l:"Roadmap",h:"/roadmap"},{l:"Game",h:"/game"},{l:"Memes",h:"/memes"},{l:"Merch",h:"/merch"}].map((link)=>{
                 return (
-                  <li key={link.l}><Link href={link.h} className="text-[#1a1a1a]/50 hover:text-[#1a1a1a] text-sm font-medium transition-colors">{link.l}</Link></li>
+                  <li key={link.l}><Link href={link.h} className="text-white/50 hover:text-white text-sm font-medium transition-colors">{link.l}</Link></li>
                 );
               })}
             </ul>
           </div>
           <div>
-            <h4 className="text-[#1a1a1a] font-bold text-sm mb-4 tracking-wide">BUY & TRACK</h4>
+            <h4 className="text-white font-bold text-sm mb-4 tracking-wide">BUY & TRACK</h4>
             <ul className="space-y-2.5">
               {[{l:"Buy on Jupiter",h:LINKS.buy},{l:"Solscan",h:LINKS.solscan}].map((link)=>{
                 return (
-                  <li key={link.l}><a href={link.h} target="_blank" rel="noreferrer" className="text-[#1a1a1a]/50 hover:text-[#1a1a1a] text-sm font-medium transition-colors inline-flex items-center gap-1">{link.l}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a></li>
+                  <li key={link.l}><a href={link.h} target="_blank" rel="noreferrer" className="text-white/50 hover:text-white text-sm font-medium transition-colors inline-flex items-center gap-1">{link.l}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></a></li>
                 );
               })}
             </ul>
           </div>
           <div>
-            <h4 className="text-[#1a1a1a] font-bold text-sm mb-4 tracking-wide">CONTRACT ADDRESS</h4>
-            <div className="p-4 bg-[#1a1a1a]/[0.02] border border-[#1a1a1a]/10 rounded-xl">
+            <h4 className="text-white font-bold text-sm mb-4 tracking-wide">CONTRACT ADDRESS</h4>
+            <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl">
               <code className="text-xs text-[#FF2D2D] font-mono break-all block mb-3">{CA}</code>
               <CopyButton />
             </div>
-            <a href={LINKS.telegram} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-2 py-3 bg-[#1a1a1a]/5 hover:bg-[#1a1a1a]/10 border border-[#1a1a1a]/10 rounded-xl text-[#1a1a1a] text-sm font-bold transition-all">
+            <a href={LINKS.telegram} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-white text-sm font-bold transition-all">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.2 2L2 10.8l5.6 2.4L16.8 6 9.6 14.8l.8 5.2L13 16.8l4.8 3.2L22 2.8"/></svg>
               Join Telegram
             </a>
           </div>
         </div>
-        <div className="pt-8 border-t border-[#1a1a1a]/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[#1a1a1a]/40 text-xs">&copy; {new Date().getFullYear()} $MAD. All rights reserved.</p>
-          <p className="text-[#1a1a1a]/40 text-xs">Stay $MAD. Limited. Exclusive. Cult.</p>
+        <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-white/40 text-xs">&copy; {new Date().getFullYear()} $MAD. All rights reserved.</p>
+          <p className="text-white/40 text-xs">Stay $MAD. Limited. Exclusive. Cult.</p>
         </div>
       </div>
     </footer>
@@ -690,12 +725,13 @@ function Footer() {
 /* ─── MAIN PAGE ─── */
 export default function MerchPage() {
   return (
-    <div className="min-h-screen bg-[#F5F1E8] text-[#1a1a1a] overflow-x-hidden">
+    <div className="min-h-screen bg-[#080808] text-white overflow-x-hidden">
       <Scanlines />
       <FloatingParticles />
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.03),transparent_50%)]" />
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,45,45,0.04),transparent_50%)]" />
 
       <LiveTicker />
+      <Navbar />
 
       <MerchHero />
 
