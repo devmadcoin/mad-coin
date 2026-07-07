@@ -296,9 +296,9 @@ function LegacyDrop() {
           </div>
 
           <div className="p-8 sm:p-12 flex flex-col justify-center">
-            <div className="flex gap-3 mb-4 flex-wrap">
+            <div className="flex gap-3 mb-4 flex-wrap items-center">
               <span className="text-xs text-white/50">Drop 001 — Legacy</span>
-              <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
+              <span className="rounded-full border border-[#FF2D2D]/40 bg-[#FF2D2D]/15 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-[#FF2D2D] shadow-[0_0_15px_rgba(255,45,45,0.2)] animate-pulse">
                 SOLD OUT FOREVER
               </span>
             </div>
