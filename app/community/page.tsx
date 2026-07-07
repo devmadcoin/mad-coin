@@ -12,7 +12,7 @@ const IMPACT_STATS = {
   communitiesSupported: 8,
   totalDonatedUSD: 2669,
   totalTokensDonated: 27500000,
-  onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/vi57YgR8GGHL31EieLLN1Ekbzj5w4wTV6iXcDiU4R2G",
+  onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/2Qg5Ugf2eH12ry9w3StU9sMvo5biuruK7ob2sni2Yref",
 };
 
 const COMMUNITIES: Community[] = [
