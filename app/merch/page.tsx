@@ -744,8 +744,6 @@ export default function MerchPage() {
         <VideoGrid />
         <RiskNotice />
       </main>
-
-      <Footer />
     </div>
   );
 }
