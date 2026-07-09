@@ -13,6 +13,7 @@ const IMPACT_STATS = {
   totalDonatedUSD: 19949,
   crossCommunityUSD: 2669,
   madCommunityUSD: 17280,
+  tokensBurned: 30000,
   totalTokensDonated: 27500000,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/2Qg5Ugf2eH12ry9w3StU9sMvo5biuruK7ob2sni2Yref",
 };
@@ -184,7 +185,7 @@ function Hero() {
 
         {/* Stats Row */}
         <FadeIn delay={0.15}>
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatCard
               value={IMPACT_STATS.communitiesSupported.toString()}
               label="Communities Supported"
@@ -205,6 +206,12 @@ function Hero() {
             <StatCard
               value={`${(IMPACT_STATS.totalTokensDonated / 1_000_000).toFixed(1)}M`}
               label="$MAD Tokens Given"
+              icon="🔥"
+            />
+            <StatCard
+              value={`${(IMPACT_STATS.tokensBurned / 1_000).toFixed(0)}K`}
+              label="Tokens Burned"
+              sublabel="Supply redistributed to all holders"
               icon="🔥"
             />
           </div>
@@ -231,12 +238,13 @@ function Hero() {
   );
 }
 
-function StatCard({ value, label, icon }: { value: string; label: React.ReactNode; icon: string }) {
+function StatCard({ value, label, icon, sublabel }: { value: string; label: React.ReactNode; icon: string; sublabel?: string }) {
   return (
     <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-6 text-center transition hover:border-white/10">
       <div className="mb-2 text-2xl">{icon}</div>
       <div className="text-3xl font-black text-white">{value}</div>
       <div className="mt-1 text-[11px] uppercase tracking-[0.2em] text-white/40">{label}</div>
+      {sublabel && <div className="mt-1 text-[9px] normal-case tracking-normal text-white/25">{sublabel}</div>}
     </div>
   );
 }
