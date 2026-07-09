@@ -10,10 +10,10 @@ import { useState } from "react";
 
 const IMPACT_STATS = {
   communitiesSupported: 8,
-  totalDonatedUSD: 49949,
+  totalDonatedUSD: 59949,
   crossCommunityUSD: 2669,
   madCommunityUSD: 17280,
-  burnValueUSD: 30000,
+  burnValueUSD: 40000,
   totalTokensDonated: 27500000,
   tokensBurned: 30000,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/2Qg5Ugf2eH12ry9w3StU9sMvo5biuruK7ob2sni2Yref",
