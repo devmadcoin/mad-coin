@@ -10,7 +10,9 @@ import { useState } from "react";
 
 const IMPACT_STATS = {
   communitiesSupported: 8,
-  totalDonatedUSD: 2669,
+  totalDonatedUSD: 11669,
+  crossCommunityUSD: 2669,
+  madCommunityUSD: 9000,
   totalTokensDonated: 27500000,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/2Qg5Ugf2eH12ry9w3StU9sMvo5biuruK7ob2sni2Yref",
 };
@@ -190,7 +192,14 @@ function Hero() {
             />
             <StatCard
               value={`$${IMPACT_STATS.totalDonatedUSD.toLocaleString()}`}
-              label="Total Donated"
+              label={
+                <span className="flex flex-col items-center gap-1">
+                  <span>Total Donated</span>
+                  <span className="text-[9px] font-normal normal-case tracking-normal text-white/30">
+                    ${IMPACT_STATS.crossCommunityUSD.toLocaleString()} cross-community · ${IMPACT_STATS.madCommunityUSD.toLocaleString()} $MAD holders
+                  </span>
+                </span>
+              }
               icon="💰"
             />
             <StatCard
@@ -222,7 +231,7 @@ function Hero() {
   );
 }
 
-function StatCard({ value, label, icon }: { value: string; label: string; icon: string }) {
+function StatCard({ value, label, icon }: { value: string; label: React.ReactNode; icon: string }) {
   return (
     <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-6 text-center transition hover:border-white/10">
       <div className="mb-2 text-2xl">{icon}</div>
