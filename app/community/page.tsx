@@ -10,9 +10,9 @@ import { useState } from "react";
 
 const IMPACT_STATS = {
   communitiesSupported: 8,
-  totalDonatedUSD: 59949,
+  totalDonatedUSD: 60049,
   crossCommunityUSD: 2669,
-  madCommunityUSD: 17280,
+  madCommunityUSD: 17380,
   burnValueUSD: 40000,
   totalTokensDonated: 27500000,
   tokensBurned: 30000,
