@@ -15,7 +15,7 @@ const IMPACT_STATS = {
   madCommunityUSD: 17380,
   burnValueUSD: 40000,
   totalTokensDonated: 27500000,
-  tokensBurned: 30000,
+  tokensBurned: 500000000,
   onChainProof: "https://app.streamflow.finance/contract/solana/mainnet/2Qg5Ugf2eH12ry9w3StU9sMvo5biuruK7ob2sni2Yref",
 };
 
@@ -210,7 +210,7 @@ function Hero() {
               icon="🔥"
             />
             <StatCard
-              value={`${(IMPACT_STATS.tokensBurned / 1_000).toFixed(0)}K`}
+              value={`${(IMPACT_STATS.tokensBurned / 1_000_000).toFixed(0)}M`}
               label="Tokens Burned"
               sublabel="Supply redistributed to all holders"
               icon="🔥"
