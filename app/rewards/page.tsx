@@ -486,7 +486,7 @@ export default function RewardsPage() {
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
             $MAD <span className="text-[#FF2D2D]">Rewards</span>
           </h1>
-          <p className="mt-3 text-base text-white/50">Hold. Stay $MAD. Get rewarded.</p>
+          <p className="mt-3 text-base text-white/50">Hold a minimum of 1,000 $MAD tokens to be eligible.</p>
           <a
             href="https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump"
             target="_blank"
