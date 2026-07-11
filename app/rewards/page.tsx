@@ -448,6 +448,14 @@ export default function RewardsPage() {
           90% { opacity: 0.6; }
           100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
+        @keyframes madPulse {
+          0%, 100% { transform: scale(1); text-shadow: 0 0 30px rgba(255,45,45,0.3), 0 0 60px rgba(255,45,45,0.15); }
+          50% { transform: scale(1.02); text-shadow: 0 0 40px rgba(255,45,45,0.5), 0 0 80px rgba(255,45,45,0.25); }
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
       `}</style>
 
       <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-8 sm:px-6">
@@ -489,19 +497,44 @@ export default function RewardsPage() {
           </a>
         </div>
 
-        {/* Stats */}
-        <div className="mb-10 grid grid-cols-3 gap-3">
-          <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 text-center">
-            <p className="text-2xl font-black text-white">12M</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-white/30">$MAD Ready</p>
+        {/* HERO STAT — 12M $MAD */}
+        <div className="mb-8 rounded-2xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04] p-6 sm:p-10 text-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.12),transparent_70%)]" />
+          <div className="relative">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF2D2D]/70 mb-3">
+              🎁 Rewards Pool
+            </p>
+            <p
+              className="text-6xl sm:text-8xl font-black tracking-tighter text-white"
+              style={{ animation: 'madPulse 3s ease-in-out infinite' }}
+            >
+              12,000,000
+            </p>
+            <p className="mt-2 text-2xl sm:text-3xl font-black text-[#FF2D2D]">$MAD</p>
+            <p className="mt-3 text-sm text-white/40 max-w-md mx-auto">
+              Sitting in the reward wallet, waiting for the community. 100% community funded. Zero dev allocation.
+            </p>
+            <div className="mt-5 flex items-center justify-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+              </span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">Live on-chain</span>
+            </div>
           </div>
-          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-4 text-center">
-            <p className="text-2xl font-black text-emerald-400">50</p>
+        </div>
+
+        {/* Supporting Stats */}
+        <div className="mb-10 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-5 text-center">
+            <p className="text-3xl font-black text-emerald-400">50</p>
             <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400/60">Winners Paid</p>
+            <p className="mt-1 text-[10px] text-white/25">Phase 1 · $1M MC</p>
           </div>
-          <div className="rounded-2xl border border-[#FF6B00]/20 bg-[#FF6B00]/[0.04] p-4 text-center">
-            <p className="text-2xl font-black text-[#FF6B00]">80</p>
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00]/60">Spots Next</p>
+          <div className="rounded-2xl border border-[#FF6B00]/20 bg-[#FF6B00]/[0.04] p-5 text-center">
+            <p className="text-3xl font-black text-[#FF6B00]">80</p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B00]/60">Spots Open</p>
+            <p className="mt-1 text-[10px] text-white/25">Phase 2 · $10M MC</p>
           </div>
         </div>
 
