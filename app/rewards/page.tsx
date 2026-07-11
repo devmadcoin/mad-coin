@@ -427,12 +427,12 @@ function HolderVerification() {
    ═══════════════════════════════════════════════════════════ */
 
 const milestones = [
-  { mc: "$1M", status: "done", reward: "2.5M $MAD", winners: 50, label: "Phase 1" },
-  { mc: "$10M", status: "active", reward: "1M $MAD", winners: 80, label: "Phase 2" },
-  { mc: "$25M", status: "locked", reward: "?", winners: "?", label: "Phase 3" },
-  { mc: "$50M", status: "locked", reward: "?", winners: "?", label: "Phase 4" },
-  { mc: "$75M", status: "locked", reward: "?", winners: "?", label: "Phase 5" },
-  { mc: "$100M", status: "locked", reward: "?", winners: "?", label: "Phase 6" },
+  { mc: "$1M", status: "done", reward: "2.5M $MAD", usd: "$5,000", winners: 50, label: "Phase 1" },
+  { mc: "$10M", status: "active", reward: "1M $MAD", usd: "$20,000", winners: 80, label: "Phase 2" },
+  { mc: "$25M", status: "locked", reward: "?", usd: "?", winners: "?", label: "Phase 3" },
+  { mc: "$50M", status: "locked", reward: "?", usd: "?", winners: "?", label: "Phase 4" },
+  { mc: "$75M", status: "locked", reward: "?", usd: "?", winners: "?", label: "Phase 5" },
+  { mc: "$100M", status: "locked", reward: "?", usd: "?", winners: "?", label: "Phase 6" },
 ];
 
 export default function RewardsPage() {
@@ -611,7 +611,7 @@ export default function RewardsPage() {
                   m.status === "active" && "border-[#FF6B00]/20 bg-[#FF6B00]/[0.03]",
                   m.status === "locked" && "border-white/5 bg-white/[0.02] opacity-50",
                 )}>
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-black text-white">{m.mc}</span>
                     <span className={cn(
                       "text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full",
@@ -622,6 +622,12 @@ export default function RewardsPage() {
                       {m.status === "done" ? "Done" : m.status === "active" ? "Next" : "Locked"}
                     </span>
                   </div>
+                  {m.status !== "locked" && (
+                    <div className="mb-1">
+                      <span className="text-lg font-black text-[#FF2D2D]">{m.usd}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-white/30 ml-1">USD</span>
+                    </div>
+                  )}
                   <p className="text-xs text-white/40">
                     {m.status === "done" ? `${m.reward} · ${m.winners} winners paid` :
                      m.status === "active" ? `${m.reward} ready · ${m.winners} winners · Min 1K $MAD` :
