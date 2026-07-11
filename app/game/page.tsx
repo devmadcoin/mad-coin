@@ -788,32 +788,48 @@ function VideoCarousel() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SPONSOR SHOUTOUT — Simple mention that $MAD sponsors Strikeout
+   SPONSOR SHOUTOUT — $MAD x Strikeout with MAD Mondays image
    ═══════════════════════════════════════════════════════════ */
 function SponsorShoutout() {
   return (
-    <FadeIn delay={0.1}>
-      <SectionShell className="mt-6 p-6 sm:p-8">
-        <div className="flex flex-col sm:flex-row items-center gap-6">
-          <div className="flex-1 text-center sm:text-left">
+    <FadeIn delay={0.05}>
+      <SectionShell className="mt-6 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.85fr]">
+          {/* Left: Image */}
+          <div className="relative min-h-[200px] sm:min-h-[280px] order-1">
+            <Image
+              src="/game/mad-mondays-shoutout.png"
+              alt="MAD Mondays — $MAD sponsors Strikeout"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#121212]/90 lg:block hidden" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent lg:hidden" />
+          </div>
+
+          {/* Right: Info */}
+          <div className="flex flex-col justify-center p-6 sm:p-8 order-2">
             <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#FF6B00]/60">
               Sponsor
             </p>
-            <h3 className="mt-2 text-2xl font-black text-white">
+            <h3 className="mt-2 text-2xl sm:text-3xl font-black text-white">
               $MAD x <span className="text-[#FF2D2D]">Strikeout</span>
             </h3>
-            <p className="mt-2 text-sm text-white/50">
-              Proud sponsor of Strikeout on Roblox. Check it out.
+            <p className="mt-2 text-sm text-white/50 leading-relaxed">
+              Proud sponsor of Strikeout on Roblox. MAD Mondays hit different — lock in with the $MAD community.
             </p>
+            <div className="mt-5">
+              <a
+                href="https://www.roblox.com/games/130190330491603/Strikeout"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02]"
+              >
+                Play Strikeout →
+              </a>
+            </div>
           </div>
-          <a
-            href="https://www.roblox.com/games/130190330491603/Strikeout"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02] whitespace-nowrap"
-          >
-            Play Strikeout →
-          </a>
         </div>
       </SectionShell>
     </FadeIn>
@@ -843,6 +859,9 @@ export default function GamePage() {
             />
           </div>
         </FadeIn>
+
+        {/* Sponsor Shoutout — at the top */}
+        <SponsorShoutout />
 
         {/* Hero Header */}
         <div className="relative pt-12 pb-6 sm:pt-20 sm:pb-10 text-center">
@@ -909,9 +928,6 @@ export default function GamePage() {
         <div className="mt-6">
           <DigitalWearablesCarousel />
         </div>
-
-        {/* Sponsor Shoutout */}
-        <SponsorShoutout />
 
         {/* Quick Help + Kubo */}
         <FadeIn delay={0.1}>
