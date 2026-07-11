@@ -860,6 +860,26 @@ export default function GamePage() {
           </div>
         </FadeIn>
 
+        {/* Sponsor Section Header */}
+        <div className="relative pt-8 pb-2 text-center">
+          <FadeIn>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF6B00]/60 mb-3">
+              Official Partner
+            </p>
+            <h2
+              className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[0.95]"
+              style={{
+                background: "linear-gradient(135deg, #FFFFFF, #FFFFFF)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              $MAD <span style={{ color: "#FF2D2D", WebkitTextFillColor: "#FF2D2D" }}>SPONSOR</span>
+            </h2>
+          </FadeIn>
+        </div>
+
         {/* Sponsor Shoutout — at the top */}
         <SponsorShoutout />
 
