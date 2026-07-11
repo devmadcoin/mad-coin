@@ -482,16 +482,33 @@ export default function RewardsPage() {
         </div>
 
         {/* Hero */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-6">
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
             $MAD <span className="text-[#FF2D2D]">Rewards</span>
           </h1>
-          <p className="mt-3 text-base text-white/50">Hold a minimum of 1,000 $MAD tokens to be eligible.</p>
+        </div>
+
+        {/* ELIGIBILITY — can't miss it */}
+        <div className="mb-6 rounded-2xl border border-[#FF2D2D]/30 bg-[#FF2D2D]/[0.08] p-5 sm:p-6 text-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 -mt-2 -mr-2 h-16 w-16 rounded-full bg-[#FF2D2D]/10 blur-xl" />
+          <div className="relative flex items-center justify-center gap-3 mb-2">
+            <span className="text-2xl">⚠️</span>
+            <p className="text-sm font-black uppercase tracking-wider text-[#FF2D2D]">Eligibility Requirement</p>
+          </div>
+          <p className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            Hold <span className="text-[#FF2D2D]">1,000 $MAD</span> Minimum
+          </p>
+          <p className="mt-2 text-sm text-white/50">
+            No exceptions. Check your wallet below.
+          </p>
+        </div>
+
+        <div className="text-center mb-8">
           <a
             href="https://jup.ag/swap?sell=So11111111111111111111111111111111111111112&buy=Fa7ZE9nCEYnrHsnoeHuhEExJpchtrBtKXnWe6CgHpump"
             target="_blank"
             rel="noreferrer"
-            className="mt-5 inline-flex rounded-full bg-[#FF2D2D] px-7 py-3 text-sm font-black text-white transition hover:scale-[1.02]"
+            className="inline-flex rounded-full bg-[#FF2D2D] px-7 py-3 text-sm font-black text-white transition hover:scale-[1.02]"
           >
             Buy $MAD →
           </a>
