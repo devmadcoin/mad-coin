@@ -788,106 +788,32 @@ function VideoCarousel() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SPONSOR KIT — Pre-made X captions + assets for promoters
+   SPONSOR SHOUTOUT — Simple mention that $MAD sponsors Strikeout
    ═══════════════════════════════════════════════════════════ */
-function SponsorKit() {
-  const [copied, setCopied] = useState<number | null>(null);
-
-  const captions = [
-    "🔥 Just discovered $MAD Games on Roblox. This isn't just a game — it's a movement. Who's already playing? 👇",
-    "MAD Mondays hit different. New auras, new chaos, same $MAD energy. Lock in or get left behind. 😡",
-    "Your 401k is BlackRock's asset. Your time in $MAD Games? That's YOURS. Different game. Different rules. GET $MAD",
-    "300M+ players on Roblox. $MAD is building where the attention already is. Not early — just smarter. 🧠",
-    "From incremental to shooter to ASMR obby — $MAD Games keeps evolving. What mode are you running today?",
-  ];
-
-  const assets = [
-    { src: "/game/sponsor-mad-games-banner.png", alt: "$MAD Games Banner", label: "Promo Banner" },
-    { src: "/game/sponsor-mad-mondays.png", alt: "MAD Mondays", label: "MAD Mondays" },
-  ];
-
-  const copy = (text: string, idx: number) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(idx);
-      setTimeout(() => setCopied(null), 2000);
-    });
-  };
-
+function SponsorShoutout() {
   return (
     <FadeIn delay={0.1}>
-      <SectionShell className="mt-6 p-6 sm:p-8 lg:p-10">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-          {/* Left: Captions */}
-          <div className="flex-1">
+      <SectionShell className="mt-6 p-6 sm:p-8">
+        <div className="flex flex-col sm:flex-row items-center gap-6">
+          <div className="flex-1 text-center sm:text-left">
             <p className="text-[10px] font-black uppercase tracking-[0.32em] text-[#FF6B00]/60">
-              Sponsor Kit
+              Sponsor
             </p>
-            <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">
-              Promote <span className="text-[#FF2D2D]">$MAD</span>
-            </h2>
-            <p className="mt-4 max-w-xl text-base leading-8 text-white/50">
-              Copy-ready captions + assets. Post on X, tag @madrichclub_, and rep the movement.
+            <h3 className="mt-2 text-2xl font-black text-white">
+              $MAD x <span className="text-[#FF2D2D]">Strikeout</span>
+            </h3>
+            <p className="mt-2 text-sm text-white/50">
+              Proud sponsor of Strikeout on Roblox. Check it out.
             </p>
-
-            <div className="mt-6 space-y-3">
-              {captions.map((cap, i) => (
-                <div
-                  key={i}
-                  className="group relative rounded-xl border border-white/5 bg-white/[0.02] p-4 transition-colors hover:border-white/10"
-                >
-                  <p className="text-sm leading-6 text-white/70 pr-10">{cap}</p>
-                  <button
-                    type="button"
-                    onClick={() => copy(cap, i)}
-                    className="absolute top-3 right-3 rounded-lg px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wider transition-all"
-                    style={{
-                      backgroundColor: copied === i ? "#10b981" : "#1a1a1a",
-                      color: copied === i ? "#fff" : "#888",
-                      border: "1px solid #333",
-                    }}
-                  >
-                    {copied === i ? "Copied ✓" : "Copy"}
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6">
-              <a
-                href="https://www.roblox.com/games/130190330491603/Strikeout"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02]"
-              >
-                Visit Strikeout on Roblox →
-              </a>
-            </div>
           </div>
-
-          {/* Right: Assets */}
-          <div className="flex-1 lg:max-w-md">
-            <p className="text-[10px] font-black uppercase tracking-[0.32em] text-white/30 mb-4">
-              Downloadable Assets
-            </p>
-            <div className="space-y-4">
-              {assets.map((a, i) => (
-                <HoverLift key={i}>
-                  <div className="relative overflow-hidden rounded-[1.4rem] border border-white/5 bg-[#0a0a0a]">
-                    <Image
-                      src={a.src}
-                      alt={a.alt}
-                      width={600}
-                      height={340}
-                      className="w-full h-auto object-cover"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                      <p className="text-xs font-black text-white/80">{a.label}</p>
-                    </div>
-                  </div>
-                </HoverLift>
-              ))}
-            </div>
-          </div>
+          <a
+            href="https://www.roblox.com/games/130190330491603/Strikeout"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex rounded-full border border-[#FF2D2D]/40 bg-gradient-to-r from-[#FF2D2D] to-[#FF6B00] px-6 py-3 text-sm font-black text-white transition hover:scale-[1.02] whitespace-nowrap"
+          >
+            Play Strikeout →
+          </a>
         </div>
       </SectionShell>
     </FadeIn>
@@ -984,8 +910,8 @@ export default function GamePage() {
           <DigitalWearablesCarousel />
         </div>
 
-        {/* Sponsor Kit */}
-        <SponsorKit />
+        {/* Sponsor Shoutout */}
+        <SponsorShoutout />
 
         {/* Quick Help + Kubo */}
         <FadeIn delay={0.1}>
