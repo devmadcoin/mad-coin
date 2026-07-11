@@ -379,9 +379,10 @@ function GameCarousel() {
   const prev = () => setCurrent((prev) => (prev - 1 + games.length) % games.length);
 
   // Touch handlers for swipe
-  const onTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
+  const onTouchStart = (e: React.TouchEvent) => { setTouchStart(e.targetTouches[0].clientX); setTouchEnd(0); };
   const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
   const onTouchEnd = () => {
+    if (touchEnd === 0) return;
     if (touchStart - touchEnd > 75) next();
     if (touchEnd - touchStart > 75) prev();
   };
@@ -448,12 +449,12 @@ function GameCarousel() {
             {/* Slide indicators + arrows */}
             <div className="flex items-center gap-4 mt-8">
               {/* Arrow left */}
-              <button onClick={prev}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+              <button type="button" onClick={prev}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 z-10"
                 style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
                 aria-label="Previous game"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                <svg className="pointer-events-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
               </button>
 
               {/* Dots */}
@@ -472,12 +473,12 @@ function GameCarousel() {
               </div>
 
               {/* Arrow right */}
-              <button onClick={next}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+              <button type="button" onClick={next}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 z-10"
                 style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
                 aria-label="Next game"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                <svg className="pointer-events-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
               </button>
 
               <span className="text-[10px] font-bold ml-auto" style={{ color: "#444444" }}>
@@ -576,9 +577,10 @@ function DigitalWearablesCarousel() {
   const next = () => setCurrent((prev) => (prev + 1) % items.length);
   const prev = () => setCurrent((prev) => (prev - 1 + items.length) % items.length);
 
-  const onTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
+  const onTouchStart = (e: React.TouchEvent) => { setTouchStart(e.targetTouches[0].clientX); setTouchEnd(0); };
   const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
   const onTouchEnd = () => {
+    if (touchEnd === 0) return;
     if (touchStart - touchEnd > 75) next();
     if (touchEnd - touchStart > 75) prev();
   };
@@ -621,12 +623,12 @@ function DigitalWearablesCarousel() {
 
             {/* Controls */}
             <div className="flex items-center gap-4 mt-8">
-              <button onClick={prev}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+              <button type="button" onClick={prev}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 z-10"
                 style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
                 aria-label="Previous item"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                <svg className="pointer-events-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
               </button>
               <div className="flex items-center gap-2">
                 {items.map((_, i) => (
@@ -637,12 +639,12 @@ function DigitalWearablesCarousel() {
                   />
                 ))}
               </div>
-              <button onClick={next}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+              <button type="button" onClick={next}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 z-10"
                 style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
                 aria-label="Next item"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                <svg className="pointer-events-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
               </button>
               <span className="text-[10px] font-bold ml-auto text-white/30">
                 {current + 1} / {items.length}
@@ -694,9 +696,10 @@ function VideoCarousel() {
   const next = () => setCurrent((prev) => (prev + 1) % videos.length);
   const prev = () => setCurrent((prev) => (prev - 1 + videos.length) % videos.length);
 
-  const onTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
+  const onTouchStart = (e: React.TouchEvent) => { setTouchStart(e.targetTouches[0].clientX); setTouchEnd(0); };
   const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
   const onTouchEnd = () => {
+    if (touchEnd === 0) return;
     if (touchStart - touchEnd > 75) next();
     if (touchEnd - touchStart > 75) prev();
   };
@@ -739,12 +742,12 @@ function VideoCarousel() {
 
             {/* Controls */}
             <div className="flex items-center gap-4 mt-8">
-              <button onClick={prev}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+              <button type="button" onClick={prev}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 z-10"
                 style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
                 aria-label="Previous video"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                <svg className="pointer-events-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
               </button>
               <div className="flex items-center gap-2">
                 {videos.map((_, i) => (
@@ -755,12 +758,12 @@ function VideoCarousel() {
                   />
                 ))}
               </div>
-              <button onClick={next}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+              <button type="button" onClick={next}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 z-10"
                 style={{ backgroundColor: "#1a1a1a", border: "1px solid #333333", color: "#FFFFFF" }}
                 aria-label="Next video"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                <svg className="pointer-events-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
               </button>
               <span className="text-[10px] font-bold ml-auto text-white/30">
                 {current + 1} / {videos.length}
