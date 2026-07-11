@@ -514,6 +514,18 @@ export default function RewardsPage() {
           </a>
         </div>
 
+        {/* $MAD Wallet Visual */}
+        <div className="mb-8 rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden">
+          <Image
+            src="/rewards/mad-wallet.png"
+            alt="$MAD Wallet — Control your emotions. Control your wealth. Stay $MAD."
+            width={1200}
+            height={675}
+            className="w-full h-auto object-cover"
+            priority
+          />
+        </div>
+
         {/* HERO STAT — 12M $MAD */}
         <div className="mb-8 rounded-2xl border border-[#FF2D2D]/20 bg-[#FF2D2D]/[0.04] p-6 sm:p-10 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.12),transparent_70%)]" />
@@ -564,18 +576,6 @@ export default function RewardsPage() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* $MAD Wallet Visual */}
-        <div className="mb-8 rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden">
-          <Image
-            src="/rewards/mad-wallet.png"
-            alt="$MAD Wallet — Control your emotions. Control your wealth. Stay $MAD."
-            width={1200}
-            height={675}
-            className="w-full h-auto object-cover"
-            priority
-          />
         </div>
 
         {/* Supporting Stats */}
