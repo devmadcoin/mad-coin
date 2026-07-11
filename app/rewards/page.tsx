@@ -566,6 +566,18 @@ export default function RewardsPage() {
           </div>
         </div>
 
+        {/* $MAD Wallet Visual */}
+        <div className="mb-8 rounded-2xl border border-white/5 bg-white/[0.02] overflow-hidden">
+          <Image
+            src="/rewards/mad-wallet.png"
+            alt="$MAD Wallet — Control your emotions. Control your wealth. Stay $MAD."
+            width={1200}
+            height={675}
+            className="w-full h-auto object-cover"
+            priority
+          />
+        </div>
+
         {/* Supporting Stats */}
         <div className="mb-10 grid grid-cols-2 gap-3">
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-5 text-center">
