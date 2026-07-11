@@ -538,6 +538,31 @@ export default function RewardsPage() {
               </span>
               <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">Live on-chain</span>
             </div>
+
+            {/* Public Wallet Address */}
+            <div className="mt-6 mx-auto max-w-lg">
+              <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-4">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 mb-2">Public Reward Wallet</p>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 text-xs font-mono text-white/60 truncate">FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW</code>
+                  <button
+                    onClick={() => navigator.clipboard.writeText("FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW")}
+                    className="shrink-0 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-bold text-white/40 hover:text-white/70 transition"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <a
+                  href="https://solscan.io/account/FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-[#FF2D2D]/70 hover:text-[#FF2D2D] transition"
+                >
+                  Verify on Solscan
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
