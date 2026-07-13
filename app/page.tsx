@@ -669,6 +669,21 @@ function MadTalks() {
    MAD CHRONICLES — Episodic Content (Azuki anime model)
    ═══════════════════════════════════════════════════════════ */
 function Chronicles() {
+  const episodes = [
+    {
+      id: 1,
+      title: "The Betrayal",
+      videoId: "xXHGyQz0i5Y",
+      description: "They promised everything. They delivered nothing. But you didn't quit — you got MAD. This is the origin story of every MAD FAM member. The moment that started it all.",
+    },
+    {
+      id: 2,
+      title: "The Come-Up",
+      videoId: "xa2ygGIRblE",
+      description: "You took the hit. You got back up. Now you're building something they can't take away. This is how MAD FAM turns pain into power.",
+    },
+  ];
+
   return (
     <section id="chronicles" className="relative py-24 sm:py-32 bg-[#080808] overflow-hidden">
       {/* Light red glow for readability */}
@@ -676,51 +691,70 @@ function Chronicles() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(255,45,45,0.05),transparent_50%)]" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Video — vertical/portrait orientation */}
-          <div className="relative flex items-center justify-center">
-            <div className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[9/16] rounded-3xl overflow-hidden border border-white/5 bg-[#0a0a0a] shadow-[0_0_60px_rgba(255,45,45,0.1)]">
-              <iframe
-                src="https://www.youtube.com/embed/xXHGyQz0i5Y?autoplay=0&rel=0&modestbranding=1"
-                title="MAD Chronicles: Episode 1"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-                style={{ border: "none" }}
-              />
+        {/* Section Header */}
+        <div className="text-center mb-12 sm:mb-16">
+          <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
+            HOW I GOT MAD 😡
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
+            MAD <span className="text-[#FF2D2D]">Chronicles</span>
+          </h2>
+          <p className="text-sm text-white/40 max-w-md mx-auto">
+            The animated story of how regular people got MAD. New episodes drop weekly.
+          </p>
+        </div>
+
+        {/* Episodes Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {episodes.map((ep) => (
+            <div key={ep.id} className="grid grid-cols-1 sm:grid-cols-[1fr_1.2fr] gap-6 items-center">
+              {/* Video — vertical/portrait orientation */}
+              <div className="relative flex items-center justify-center">
+                <div className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-[9/16] rounded-3xl overflow-hidden border border-white/5 bg-[#0a0a0a] shadow-[0_0_60px_rgba(255,45,45,0.1)]">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${ep.videoId}?autoplay=0&rel=0&modestbranding=1`}
+                    title={`MAD Chronicles: Episode ${ep.id}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                    style={{ border: "none" }}
+                  />
+                </div>
+                {/* Glow behind video */}
+                <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.12),transparent_60%)]" />
+              </div>
+
+              {/* Content */}
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-2">
+                  Episode {ep.id}
+                </p>
+                <h3 className="text-2xl sm:text-3xl font-black text-white mb-3">
+                  {ep.title}
+                </h3>
+                <p className="text-sm text-white/40 leading-relaxed mb-5">
+                  {ep.description}
+                </p>
+
+                <a
+                  href={`https://youtube.com/shorts/${ep.videoId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FF2D2D] text-white text-xs font-black uppercase tracking-wider hover:bg-[#FF2D2D]/80 transition-colors"
+                >
+                  Watch Now
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                </a>
+              </div>
             </div>
-            {/* Glow behind video */}
-            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(255,45,45,0.12),transparent_60%)]" />
-          </div>
+          ))}
+        </div>
 
-          {/* Content */}
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.34em] text-[#FF2D2D]/60 mb-4">
-              HOW I GOT MAD 😡
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
-              Episode 1:<br />
-              <span className="text-[#FF2D2D]">The Betrayal</span>
-            </h2>
-            <p className="text-sm text-white/40 leading-relaxed mb-6">
-              They promised everything. They delivered nothing. But you didn't quit — you got MAD. 
-              This is the origin story of every MAD FAM member. The moment that started it all.
-            </p>
-
-            <a href="https://youtube.com/shorts/xXHGyQz0i5Y?si=r0y8UzKDErqDW4qw" target="_blank" rel="noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF2D2D] text-white text-xs font-black uppercase tracking-wider hover:bg-[#FF2D2D]/80 transition-colors"
-            >
-              Watch Now
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-            </a>
-
-            {/* Coming next */}
-            <div className="mt-8 p-4 rounded-xl border border-white/5 bg-white/[0.02]">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-white/20 mb-1">Coming Next</p>
-              <p className="text-sm font-bold text-white/60">Episode 2: Coming Soon</p>
-              <p className="text-xs text-white/20 mt-1">The next chapter is loading...</p>
-            </div>
-          </div>
+        {/* Coming Next */}
+        <div className="mt-12 sm:mt-16 max-w-md mx-auto p-5 rounded-2xl border border-white/5 bg-white/[0.02] text-center">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-white/20 mb-1">Coming Next</p>
+          <p className="text-lg font-black text-white/60">Episode 3: Coming Soon</p>
+          <p className="text-xs text-white/20 mt-1">The next chapter is loading...</p>
         </div>
       </div>
     </section>
