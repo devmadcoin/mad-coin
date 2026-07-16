@@ -1,0 +1,13 @@
+{
+  "settings": {
+    "lock_hours": 12
+  },
+  "winners": {
+    "HDtFFYfxnNULqgeycX1ipsBJ4vkrQnYCw9jd4anpoCrcZ": {
+      "registered_at": "2026-06-23T17:40:58.784380+00:00",
+      "unlock_time": "2026-06-24T05:40:58.784380+00:00",
+      "checked": false,
+      "disqualified": false
+    }
+  }
+}
