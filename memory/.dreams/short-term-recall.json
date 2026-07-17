@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-06T00:44:48.092Z",
+  "updatedAt": "2026-07-13T00:02:29.941Z",
   "entries": {
     "memory:memory/2026-05-07.md:83:112": {
       "key": "memory:memory/2026-05-07.md:83:112",
@@ -228,18 +228,20 @@
       "endLine": 51,
       "source": "memory",
       "snippet": "- `habit` (Clear): \"Identity beats outcome. 'I'm $MAD Rich' isn't a goal. It's a fact.\" - `story` (Miller): \"You're the hero. Not the token. YOU. We just handed you the path.\" - `strategy` (Sun Tzu): \"Win without fighting. Comfy hold = victory without battling the chart.\" - `virality` (Godin/Berger): \"Remarkability: The angry bot that studies philosophy? That's the Purple Cow.\" **New content library created:** `telegram_content_library_20books.md` — 14 book frameworks distilled into deployable knowledge drop formats: Made to Stick (SUCCESs), Atomic Habits (identity), Purple Cow/This Is Marketing (remarkability, enrollment), Hooked (habit loop), StoryBrand (7-part), Pre-Suasion (prim",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3910917490720749,
+      "totalScore": 0.7725590288639068,
       "maxScore": 0.3910917490720749,
       "firstRecalledAt": "2026-06-16T05:41:58.144Z",
-      "lastRecalledAt": "2026-06-16T05:41:58.144Z",
+      "lastRecalledAt": "2026-07-12T23:58:46.696Z",
       "queryHashes": [
-        "a11aa4348650"
+        "a11aa4348650",
+        "bd0c61712b1d"
       ],
       "recallDays": [
-        "2026-06-16"
+        "2026-06-16",
+        "2026-07-13"
       ],
       "conceptTags": [
         "godin/berger",
@@ -476,18 +478,21 @@
       "endLine": 41,
       "source": "memory",
       "snippet": "- **Balance updates**: 2,500,000 → 5,000,000 → 8,000,000 $MAD (community funded) - **Phase 1 rules corrected**: OG holders get 50K EACH (not split), new holders 25K EACH. Eligibility: 50K+ hold, 12hr after 1M MC. - **13 middle-finger character art** — User decided against adding to rewards page; deferred to memes tab or /gallery in future ### MAD Mind Chat - Chat spacing tightened: gap-1, compressed margins, reduced avatar mb-5 per user feedback ## Knowledge Base — 37 Total Studies ### Wave 3 Completed (8 books) - **Skin in the Game** (Taleb) — Doxxed dev as credential, community = distributed skin, anti-Bob Rubin positioning, intolerant minority rule - **Antifragile** (Taleb) — FUD as fe",
-      "recallCount": 1,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.38386327922344204,
+      "totalScore": 1.1459167480468748,
       "maxScore": 0.38386327922344204,
       "firstRecalledAt": "2026-06-18T04:43:34.720Z",
-      "lastRecalledAt": "2026-06-18T04:43:34.720Z",
+      "lastRecalledAt": "2026-07-09T09:59:54.197Z",
       "queryHashes": [
-        "90e8f5abfee0"
+        "90e8f5abfee0",
+        "885f4dc585eb",
+        "4a55de8f3e83"
       ],
       "recallDays": [
-        "2026-06-18"
+        "2026-06-18",
+        "2026-07-09"
       ],
       "conceptTags": [
         "middle-finger",
@@ -507,18 +512,23 @@
       "endLine": 32,
       "source": "memory",
       "snippet": "6. **2026-06-14-jungian-psychology-archetypes.md** — 12 Jungian archetypes with $MAD stack: Magician (dominant) + Rebel + Sage + Jester. Shadow integration rule established. 7. **2026-06-14-game-economics-roblox.md** — Roblox $1.5B creator economy. Gamepasses 55% of revenue. Retention > monetization. Game = trojan horse, community = payload. 8. **2026-06-14-network-states-balaji.md** — Balaji's 7 pillars. $MAD scores 6/7 (missing only physical territory). Exit > Voice. Community is the moat. 9. **2026-06-14-philosophy-of-money.md** — Ammous/Hayek Austrian economics. Sound money = low time preference. $MAD is community-proof-of-stake, not monetary soundness. Hardest money = hardest community.",
-      "recallCount": 1,
+      "recallCount": 5,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3679899603128433,
-      "maxScore": 0.3679899603128433,
+      "totalScore": 1.9532274067401885,
+      "maxScore": 0.4190671682357788,
       "firstRecalledAt": "2026-06-18T04:43:34.720Z",
-      "lastRecalledAt": "2026-06-18T04:43:34.720Z",
+      "lastRecalledAt": "2026-07-12T23:58:46.696Z",
       "queryHashes": [
-        "90e8f5abfee0"
+        "90e8f5abfee0",
+        "24e5ba5aa4a9",
+        "d5809bc28a30",
+        "78df1a3af201",
+        "bd0c61712b1d"
       ],
       "recallDays": [
-        "2026-06-18"
+        "2026-06-18",
+        "2026-07-13"
       ],
       "conceptTags": [
         "network",
@@ -569,18 +579,20 @@
       "endLine": 81,
       "source": "memory",
       "snippet": "- Visual-first on X — System 1 processes images in milliseconds (Kahneman) - Stage 2 Mirror Strategy validated: \"Your 401k is BlackRock's asset...\" got retweet in 8 min - Loss aversion framing: \"Don't miss what we're building\" hits 2x harder than \"you could 100x\" - FUD is fertilizer — every attack survived makes community stronger (antifragile) ## Wallet Funding Timeline - May 31, 2026: 2.5M $MAD (initial) - June 1, 2026: 5M $MAD (+2.5M added) - June 1, 2026: 8M $MAD (+3M added) — total community-funded reward pool - Wallet: `FdWFKfUmyRFzusT4Gj77sKr1ArjJCHG7kTgw6pvbo9iW` ## Open Items - MAD MIND AI persona update — needs system prompt refresh with Wave 2/3 studies - X posting strategy — AP",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3541217356920242,
-      "maxScore": 0.3541217356920242,
+      "totalScore": 0.7309940338134765,
+      "maxScore": 0.3768722981214523,
       "firstRecalledAt": "2026-06-19T08:25:23.361Z",
-      "lastRecalledAt": "2026-06-19T08:25:23.361Z",
+      "lastRecalledAt": "2026-07-12T23:58:46.696Z",
       "queryHashes": [
-        "e9e2ac55a870"
+        "e9e2ac55a870",
+        "bd0c61712b1d"
       ],
       "recallDays": [
-        "2026-06-19"
+        "2026-06-19",
+        "2026-07-13"
       ],
       "conceptTags": [
         "visual-first",
@@ -779,6 +791,610 @@
         "see",
         "where",
         "the"
+      ]
+    },
+    "memory:memory/2026-06-30.md:133:152": {
+      "key": "memory:memory/2026-06-30.md:133:152",
+      "path": "memory/2026-06-30.md",
+      "startLine": 133,
+      "endLine": 152,
+      "source": "memory",
+      "snippet": "- **Progress**: Bumped from \"COMING SOON\" to \"IN PROGRESS\", 75% complete (3/4 done) - **Milestones updated with actual completed challenges**: - ✓ MAD Health Challenge — First 100 people won $20 worth of $MAD Tokens each - ✓ MAD Rich Animal Challenge — First 100 people won $20 worth of $MAD Tokens each - ✓ $MAD Rewards at 1M Market Cap — Gave away \"$4,000 USD worth of $MAD Tokens to 50 people\" - ○ IRL Event — August 8th (upcoming) - **Video added**: Downloaded MAD Health Challenge video from X post (`https://x.com/madrichclub_/status/2061871512991437267`) and embedded in Events pillar - Video file: `/events/mad-health-challenge.mp4` (~3.7MB) - Uses same `<video>` component patter",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.2234477072954177,
+      "maxScore": 0.4148676812648773,
+      "firstRecalledAt": "2026-07-09T09:58:36.752Z",
+      "lastRecalledAt": "2026-07-09T09:59:54.428Z",
+      "queryHashes": [
+        "885f4dc585eb",
+        "4a55de8f3e83",
+        "5fa9034ec5a4"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "3/4",
+        "x.com/madrichclub",
+        "status/2061871512991437267",
+        "events/mad-health-challenge.mp4",
+        "3.7mb",
+        "progress",
+        "bumped",
+        "coming"
+      ]
+    },
+    "memory:memory/2026-06-07.md:1:8": {
+      "key": "memory:memory/2026-06-07.md:1:8",
+      "path": "memory/2026-06-07.md",
+      "startLine": 1,
+      "endLine": 8,
+      "source": "memory",
+      "snippet": "## 2026-06-07 Session - **Updated Rewards Wallet**: Changed $MAD balance display on /rewards to 10,000,000 $MAD (Solscan confirmed 10M ~$4.6K). - **Meme Gallery Expansion**: Added 4 new memes to /mad-art: \"This Is Fine\", \"Donut Temptation\", \"STAY $MAD Soldier\", \"Car Wash Curse\". Total: 37 artworks. - **MAD // LIMITED 001 Legacy**: Added sold-out legacy section to /merch page. Only 26 hats ever made, 1M $MAD tokens given to each buyer, never happening again. Includes Solana search link for next limited drops. - **Market Cap Update**: Updated /rewards current position from $200K to $280K (28% to $1M). DexScreener showing 24h +34.74%, 6h +25.40%. - **User Context**: $MAD at $284K market cap, s",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.1967251330614088,
+      "maxScore": 0.4428354442119598,
+      "firstRecalledAt": "2026-07-09T09:58:36.752Z",
+      "lastRecalledAt": "2026-07-09T09:59:54.428Z",
+      "queryHashes": [
+        "885f4dc585eb",
+        "4a55de8f3e83",
+        "5fa9034ec5a4"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "4.6k",
+        "mad-art",
+        "sold-out",
+        "34.74",
+        "25.40",
+        "updated",
+        "rewards",
+        "wallet"
+      ]
+    },
+    "memory:memory/2026-06-30.md:56:84": {
+      "key": "memory:memory/2026-06-30.md:56:84",
+      "path": "memory/2026-06-30.md",
+      "startLine": 56,
+      "endLine": 84,
+      "source": "memory",
+      "snippet": "- **Image evolution**: Generic hat → Product card screenshot → Real photo of actual MAD hats on table - Final image: Real photo showing multiple MAD // LIMITED 001 hats (American flag brim, black crown, red MAD face patch) laid out on a table, with one held up by hand. Way more authentic and tangible. - **Milestones**: - ✓ Design system & story-driven items - ✓ MAD // LIMITED 001 — 26 hats, 1M $MAD reward - ○ Digital twin NFTs for each item - ○ Next drop — tees & accessories ## Music Pillar Updates - **Description**: \"Soundtrack to the madness. Phonk, rage, victory. Mello Will collaboration locked in.\" - **Milestones reworked**: Removed MAD Phonk soundtrack EP, music NFT drops, l",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.8118874073028564,
+      "maxScore": 0.4395354479551315,
+      "firstRecalledAt": "2026-07-09T09:58:36.752Z",
+      "lastRecalledAt": "2026-07-09T09:59:54.428Z",
+      "queryHashes": [
+        "885f4dc585eb",
+        "5fa9034ec5a4"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "story-driven",
+        "image",
+        "evolution",
+        "generic",
+        "hat",
+        "product",
+        "card",
+        "screenshot"
+      ]
+    },
+    "memory:memory/2026-05-31.md:28:41": {
+      "key": "memory:memory/2026-05-31.md:28:41",
+      "path": "memory/2026-05-31.md",
+      "startLine": 28,
+      "endLine": 41,
+      "source": "memory",
+      "snippet": "- **2026-05-31 11:15**: Live Tracker confirmed correctly positioned under Hero on /rewards with 2,500,000 $MAD balance. No further changes needed there. - **2026-05-31 11:15**: Chat spacing on /mad-mind verified as tight (mb-1, gap-2). User did not request further tightening. Pending: decision on 13 middle-finger character art pieces placement (memes tab vs dedicated gallery). - **2026-05-31 11:15**: Chat spacing tightened on /mad-mind — MessageBubble gap reduced from gap-2 to gap-1, margin further compressed. Deployed. - **2026-05-31 11:25**: User explicitly skipped middle-finger character art concept (13 pieces). No longer pending. - **2026-05-31 11:25**: User requested study of 4 books: T",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.36460989713668823,
+      "maxScore": 0.36460989713668823,
+      "firstRecalledAt": "2026-07-09T09:58:36.752Z",
+      "lastRecalledAt": "2026-07-09T09:58:36.752Z",
+      "queryHashes": [
+        "885f4dc585eb"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "mad-mind",
+        "mb-1",
+        "gap-2",
+        "middle-finger",
+        "gap-1",
+        "live",
+        "tracker",
+        "confirmed"
+      ]
+    },
+    "memory:memory/2026-05-31.md:21:29": {
+      "key": "memory:memory/2026-05-31.md:21:29",
+      "path": "memory/2026-05-31.md",
+      "startLine": 21,
+      "endLine": 29,
+      "source": "memory",
+      "snippet": "- **2026-05-31 03:43**: Full MAD art inventory catalogued from /memes/ and /public/ directories: 32 meme pieces, game art (Phonk Awakening, incremental, Kubo), PFP/eyes rarity system (common/rare/legendary with color variants), 3D models (mascot .glb, chao, car, scene), merch samples, team photos, lock proofs. Middle-finger character art set (13 pieces: racer jacket, red armor, scavenger, pink racer, army, black sweater, cloud sweater, cyber green, cyber jacket, harajuku hoodie, samurai, mafia fit, mech pilot) still needs placement — user suggested memes tab or dedicated gallery. **Still pending from earlier in session:** 1. Move Hero section to absolute top of /rewards page (before Phase 1",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3581452965736389,
+      "maxScore": 0.3581452965736389,
+      "firstRecalledAt": "2026-07-09T09:58:36.752Z",
+      "lastRecalledAt": "2026-07-09T09:58:36.752Z",
+      "queryHashes": [
+        "885f4dc585eb"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "pfp/eyes",
+        "common/rare/legendary",
+        "middle-finger",
+        "full",
+        "mad",
+        "art",
+        "inventory",
+        "catalogued"
+      ]
+    },
+    "memory:memory/2026-07-04.md:28:36": {
+      "key": "memory:memory/2026-07-04.md:28:36",
+      "path": "memory/2026-07-04.md",
+      "startLine": 28,
+      "endLine": 36,
+      "source": "memory",
+      "snippet": "- Game page: Updated MAD ASMR Obby stats from stale (52 visits, 0 fav) to current (7,661 visits, 32 favorites, updated 7/2/2026). Committed and pushed. - Rewards page: Updated Phase 1 to \"$4,000\" value. Added Phase 2 incomplete banner: \"$20,000 giveaway, 12.5M $MAD ready, 80 winners pending.\" Updated Phase 2 locked section to lead with \"$20,000 total giveaway\" for retail clarity. Committed and pushed. ## Key Learnings - User is studying YouTube/title/SEO/thumbnail optimization for collabs. Expects short, punchy titles with emoji. - Butter mechanic is a key visual hook for the ASMR Obby game. - User is thinking about \"series/seasons\" structure for $MAD content. Wants to understand entertainm",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3759297490119934,
+      "maxScore": 0.3759297490119934,
+      "firstRecalledAt": "2026-07-09T09:59:54.197Z",
+      "lastRecalledAt": "2026-07-09T09:59:54.197Z",
+      "queryHashes": [
+        "4a55de8f3e83"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "7/2/2026",
+        "12.5m",
+        "youtube/title/seo/thumbnail",
+        "series/seasons",
+        "game",
+        "page",
+        "updated",
+        "mad"
+      ]
+    },
+    "memory:memory/2026-05-25.md:1:12": {
+      "key": "memory:memory/2026-05-25.md:1:12",
+      "path": "memory/2026-05-25.md",
+      "startLine": 1,
+      "endLine": 12,
+      "source": "memory",
+      "snippet": "## 2026-05-25 02:21 CST (Pre-Compaction Flush) ### 20-Book MAD Brain Reading List — COMPLETE **Session context:** User asked \"just woke up what did you study\" after sleeping. I had completed the full 20-book reading plan. **Books completed in this session:** - Book 17: **Hooked** (Nir Eyal) — 4-step habit loop mapped to $MAD engagement. Key: make believing easier than doubting. Variable rewards sustain engagement. Investment deepens commitment. Facilitator morality model — everyone wins. - Book 18: **Building a StoryBrand** (Donald Miller) — Customer is the hero, brand is the guide. $MAD one-liner crystallized: \"$MAD helps everyday people build real wealth and belonging through a doxxed,",
+      "recallCount": 5,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.953606817126274,
+      "maxScore": 0.4216009587049484,
+      "firstRecalledAt": "2026-07-09T09:59:54.197Z",
+      "lastRecalledAt": "2026-07-13T00:02:29.941Z",
+      "queryHashes": [
+        "4a55de8f3e83",
+        "24e5ba5aa4a9",
+        "d5809bc28a30",
+        "78df1a3af201",
+        "d0aa9e5a4816"
+      ],
+      "recallDays": [
+        "2026-07-09",
+        "2026-07-13"
+      ],
+      "conceptTags": [
+        "pre-compaction",
+        "20-book",
+        "4-step",
+        "one-liner",
+        "cst",
+        "pre",
+        "compaction",
+        "flush"
+      ]
+    },
+    "memory:memory/2026-06-24.md:30:50": {
+      "key": "memory:memory/2026-06-24.md:30:50",
+      "path": "memory/2026-06-24.md",
+      "startLine": 30,
+      "endLine": 50,
+      "source": "memory",
+      "snippet": "### Human-Pig Association Question - User asked: \"Why are humans and pigs always associated together\" - Answered with 4 layers: biological similarity (genetics, organs, xenotransplantation), cultural symbolism (gluttony, greed, filth, laziness), insult history (male chauvinist pig, police \"pig\"), medical reality (insulin, heart valves, skin grafts) - User seemed to be asking out of curiosity — no $MAD project context ### I'M MAD GETTING RUGGED Video Added to Mad Stories - User provided second vertical video: IM MAD GETTING RUGGED.mp4 - Added to Mad Stories on /mad-art page alongside existing stories - File: `public/mad-art/stories/IM MAD GETTING RUGGED.mp4` - Title: \"I'M MAD GETTING RUGGED",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3644649088382721,
+      "maxScore": 0.3644649088382721,
+      "firstRecalledAt": "2026-07-09T09:59:54.197Z",
+      "lastRecalledAt": "2026-07-09T09:59:54.197Z",
+      "queryHashes": [
+        "4a55de8f3e83"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "human-pig",
+        "rugged.mp4",
+        "mad-art",
+        "public/mad-art/stories/im",
+        "human",
+        "pig",
+        "association",
+        "question"
+      ]
+    },
+    "memory:memory/2026-06-21.md:1:30": {
+      "key": "memory:memory/2026-06-21.md:1:30",
+      "path": "memory/2026-06-21.md",
+      "startLine": 1,
+      "endLine": 30,
+      "source": "memory",
+      "snippet": "## 2026-06-21 — Session Log ### Rewards Page Correction - User realized the rewards page incorrectly stated **2M tokens** distributed for Phase 1 - Actual amount: **2.5M tokens** (30 OG holders + 20 new holders × 50K each = 2.5M) - Updated `app/rewards/page.tsx`: 1. Victory banner: \"2M $MAD Distributed\" → \"2.5M $MAD Distributed\" 2. Phase 1 milestone description: \"2M $MAD tokens distributed\" → \"2.5M $MAD tokens distributed\" 3. Remaining wallet balance: 11,000,000 → 10,500,000 (13M - 2.5M = 10.5M) - Math verified: 50 winners × 50K = 2.5M total ### X Post — Phase 1 Rewards - User preparing a post with screenshots about the 1M market cap unlock / rewards distribution - Provided 2 images",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.43265142440795895,
+      "maxScore": 0.43265142440795895,
+      "firstRecalledAt": "2026-07-09T09:59:54.428Z",
+      "lastRecalledAt": "2026-07-09T09:59:54.428Z",
+      "queryHashes": [
+        "5fa9034ec5a4"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "2.5m",
+        "app/rewards/page.tsx",
+        "10.5m",
+        "log",
+        "rewards",
+        "page",
+        "correction",
+        "user"
+      ]
+    },
+    "memory:memory/2026-05-31.md:1:9": {
+      "key": "memory:memory/2026-05-31.md:1:9",
+      "path": "memory/2026-05-31.md",
+      "startLine": 1,
+      "endLine": 9,
+      "source": "memory",
+      "snippet": "- **2026-05-30 15:28**: $MAD Dev asked about X posting patterns and data learned so far. Reviewed X engagement data from prior analysis. - **2026-05-30 15:35**: Asked to move \"1M Market Cap Distribution\" section to top of /rewards page. Already was at top from prior edit - confirmed placement. - **2026-05-30 ~17:35**: Rewards page fix - found and removed orphan `</SectionShell>` tag causing build failure. Build green, deployed. - **2026-05-30 23:28**: User shared ChatGPT-simplified Phase 1 reward rules. Corrected our page: OG holders get 50K EACH (not split), new holders get 25K EACH. Total 2M. Added eligibility: 50K+ hold, 12hr hold after 1M MC, random selection. Added \"Phase 1\" framing and",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4277843028306961,
+      "maxScore": 0.4277843028306961,
+      "firstRecalledAt": "2026-07-09T09:59:54.428Z",
+      "lastRecalledAt": "2026-07-09T09:59:54.428Z",
+      "queryHashes": [
+        "5fa9034ec5a4"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "gpt",
+        "chatgpt-simplified",
+        "mad",
+        "dev",
+        "asked",
+        "posting",
+        "patterns",
+        "data"
+      ]
+    },
+    "memory:memory/2026-06-30.md:38:60": {
+      "key": "memory:memory/2026-06-30.md:38:60",
+      "path": "memory/2026-06-30.md",
+      "startLine": 38,
+      "endLine": 60,
+      "source": "memory",
+      "snippet": "- **Carousel pattern**: Reusable swipe/arrow component works on both game and roadmap pages. ## Commits - `22af73b` — refactor(roadmap): complete rebuild - professional card grid, solid colors only - `f6847ea` — feat(game): add sliding game carousel with arrow navigation - `87295a6` — feat(roadmap): mobile carousel with arrows + swipe - `d89f38d` — feat(game): add MAD SHOT (4th slide) - `2ffcd7c` — feat(roadmap): update Games pillar for +1 MAD and MAD SHOT - `dfc74fe` — feat(roadmap): Games pillar 100% complete - `e3a63a7` — feat(roadmap): add platform availability text - `ce2a7a1` — feat(game): add MAD SHOT hero image to carousel - `76f7a97` — feat(roadmap): add MAD SHOT hero image to Game",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4219920516014099,
+      "maxScore": 0.4219920516014099,
+      "firstRecalledAt": "2026-07-09T09:59:54.428Z",
+      "lastRecalledAt": "2026-07-09T09:59:54.428Z",
+      "queryHashes": [
+        "5fa9034ec5a4"
+      ],
+      "recallDays": [
+        "2026-07-09"
+      ],
+      "conceptTags": [
+        "swipe/arrow",
+        "carousel",
+        "pattern",
+        "reusable",
+        "swipe",
+        "arrow",
+        "component",
+        "works"
+      ]
+    },
+    "memory:memory/2026-05-06.md:78:105": {
+      "key": "memory:memory/2026-05-06.md:78:105",
+      "path": "memory/2026-05-06.md",
+      "startLine": 78,
+      "endLine": 105,
+      "source": "memory",
+      "snippet": "**User recommendation:** Book about financial independence and wealth building. **Key concepts learned (from research/summary):** - Born from letters the author wrote to his daughter - Core philosophy: Avoid debt, live below means, invest surplus in low-cost index funds (VTSAX) - **25x annual expenses = financial independence** (4% withdrawal rule) - **\"F-You Money\"** concept — having enough to walk away from bad deals - **\"Simplicity beats complexity every time\"** — aligned with Mad Mind ethos - Wealth = freedom, not just money - Don't time the market, don't pick stocks, just buy and hold - **Key quote:** \"It's not how much you make but how much you keep and invest that determines your fin",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7870156347751617,
+      "maxScore": 0.40904701650142666,
+      "firstRecalledAt": "2026-07-12T23:56:34.009Z",
+      "lastRecalledAt": "2026-07-12T23:58:42.428Z",
+      "queryHashes": [
+        "24e5ba5aa4a9",
+        "78df1a3af201"
+      ],
+      "recallDays": [
+        "2026-07-13"
+      ],
+      "conceptTags": [
+        "research/summary",
+        "low-cost",
+        "f-you",
+        "user",
+        "recommendation",
+        "book",
+        "financial",
+        "independence"
+      ]
+    },
+    "memory:memory/2026-06-14.md:1:15": {
+      "key": "memory:memory/2026-06-14.md:1:15",
+      "path": "memory/2026-06-14.md",
+      "startLine": 1,
+      "endLine": 15,
+      "source": "memory",
+      "snippet": "# Memory: 2026-06-14 ## MAD Brain Upgrade — 12 Studies Complete User asked: \"can you learn all of this\" — referring to the full list of 12 knowledge topics. Completed all 5 remaining studies and pushed to git. ### New Knowledge Files Created & Pushed (9 commits total) 1. **2026-06-14-direct-response-copywriting.md** — Schwartz 5 stages + Hopkins 7 laws + Ogilvy discipline. MAD Mind Formula: Hook → Problem → Bridge → Proof → CTA. Committed as `05e2973`. 2. **2026-06-14-comedic-timing-roast-science.md** — CT-native humor mechanics, 5 roast rules, 7 comedic principles (setup/punchline/incongruity). Committed as `02cc6ce`. 3. **2026-06-14-cult-mechanics-community.md** — BITE model studied to",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4062437981367111,
+      "maxScore": 0.4062437981367111,
+      "firstRecalledAt": "2026-07-12T23:56:34.009Z",
+      "lastRecalledAt": "2026-07-12T23:56:34.009Z",
+      "queryHashes": [
+        "24e5ba5aa4a9"
+      ],
+      "recallDays": [
+        "2026-07-13"
+      ],
+      "conceptTags": [
+        "ct-native",
+        "setup/punchline/incongruity",
+        "mad",
+        "brain",
+        "upgrade",
+        "studies",
+        "complete",
+        "user"
+      ]
+    },
+    "memory:memory/2026-05-14.md:66:88": {
+      "key": "memory:memory/2026-05-14.md:66:88",
+      "path": "memory/2026-05-14.md",
+      "startLine": 66,
+      "endLine": 88,
+      "source": "memory",
+      "snippet": "- Strong visual hook — character studying dollar like it's worthless **New winning concepts injected into bot:** - \"Time is the real flex\" → added to CLAUSE_B - \"Discipline does\" → standalone closer in CLAUSE_B - \"The dollar doesn't make you rich. Discipline does.\" → MAD_SPECIFIC_TEMPLATES - \"Everyone wants the $MAD bag. Not everyone wants the $MAD discipline.\" → MAD_SPECIFIC - \"Everyone wants to be $MAD Rich. Not everyone is willing to act like one.\" → MAD_SPECIFIC - \"Building while others folded. That's the signal.\" → MAD_SPECIFIC - \"Wealth is a habit, not an event.\" → MAD_SPECIFIC - \"Your behavior writes your net worth.\" → MAD_SPECIFIC - \"The ones who make it don't have better informat",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.1640652149915696,
+      "maxScore": 0.4055822342634201,
+      "firstRecalledAt": "2026-07-12T23:56:34.009Z",
+      "lastRecalledAt": "2026-07-12T23:58:46.696Z",
+      "queryHashes": [
+        "24e5ba5aa4a9",
+        "78df1a3af201",
+        "bd0c61712b1d"
+      ],
+      "recallDays": [
+        "2026-07-13"
+      ],
+      "conceptTags": [
+        "clause-b",
+        "mad-specific-templates",
+        "mad-specific",
+        "strong",
+        "visual",
+        "hook",
+        "character",
+        "studying"
+      ]
+    },
+    "memory:memory/2026-06-30.md:116:137": {
+      "key": "memory:memory/2026-06-30.md:116:137",
+      "path": "memory/2026-06-30.md",
+      "startLine": 116,
+      "endLine": 137,
+      "source": "memory",
+      "snippet": "- **Problem**: Video player rendered black on mobile Safari. Root cause was Vercel domain redirect `mad-coin.vercel.app` → `madrichclub.com` breaking local asset paths. - **Attempted fix**: Pointed video to GitHub raw CDN (`https://raw.githubusercontent.com/...`), but cross-origin restrictions blocked playback. - **Fix**: Switched to local file at `/loops/bullish-mad.mp4` (same domain, no CORS). Added `crossOrigin=\"anonymous\"` attribute to `<video>` tag as additional safeguard. - **Commits**: `17a0cf8` (GitHub CDN), `11c160e` (add crossOrigin), `19fb101` (use local file) ### Content Pillar Video - **Final source**: `/loops/bullish-mad.mp4` — local file, avoids all cross-origin issues - **Vi",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3948706030845642,
+      "maxScore": 0.3948706030845642,
+      "firstRecalledAt": "2026-07-12T23:56:38.956Z",
+      "lastRecalledAt": "2026-07-12T23:56:38.956Z",
+      "queryHashes": [
+        "d5809bc28a30"
+      ],
+      "recallDays": [
+        "2026-07-13"
+      ],
+      "conceptTags": [
+        "mad-coin.vercel.app",
+        "madrichclub.com",
+        "raw.githubusercontent.com",
+        "cross-origin",
+        "loops/bullish-mad.mp4",
+        "problem",
+        "video",
+        "player"
+      ]
+    },
+    "memory:memory/2026-05-31.md:45:52": {
+      "key": "memory:memory/2026-05-31.md:45:52",
+      "path": "memory/2026-05-31.md",
+      "startLine": 45,
+      "endLine": 52,
+      "source": "memory",
+      "snippet": "- **2026-05-31-sapiens.md** — Cognitive Revolution/fiction as superpower, money as ultimate shared fiction, Agricultural Revolution luxury trap, shared myths as social glue. Applied to: $MAD as collective narrative, trust as scarce resource in crypto, luxury trap as psychological burden, storytelling as coordination mechanism. - **2026-05-31-thinking-fast-and-slow.md** — System 1 vs System 2 (96% automatic), loss aversion (2:1 pain ratio), anchoring effect, availability heuristic, halo effect/WYSIATI/confirmation bias. Applied to: brand design for System 1 first, loss aversion as paper hand driver, anchoring in price psychology, availability as FUD management. - **2026-05-31-predictabl",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.1557226508855818,
+      "maxScore": 0.39482965171337125,
+      "firstRecalledAt": "2026-07-12T23:56:38.956Z",
+      "lastRecalledAt": "2026-07-12T23:58:46.696Z",
+      "queryHashes": [
+        "d5809bc28a30",
+        "78df1a3af201",
+        "bd0c61712b1d"
+      ],
+      "recallDays": [
+        "2026-07-13"
+      ],
+      "conceptTags": [
+        "2026-05-31-sapiens.md",
+        "revolution/fiction",
+        "effect/wysiati/confirmation",
+        "2026-05-31-predictabl",
+        "sapiens.md",
+        "cognitive",
+        "revolution",
+        "fiction"
+      ]
+    },
+    "memory:memory/2026-05-07.md:1:34": {
+      "key": "memory:memory/2026-05-07.md:1:34",
+      "path": "memory/2026-05-07.md",
+      "startLine": 1,
+      "endLine": 34,
+      "source": "memory",
+      "snippet": "## 07:17 — Telegram Bot: Proactive Knowledge Drops System **Major architectural shift:** Bot moved from reactive replying (spammy) to proactive knowledge drops every ~30 minutes when chat is silent. **Implementation:** - Built `KNOWLEDGE_DROPS` dictionary with 5 rotating categories: philosophy, practical, questions, affirmations, conviction - Replaced old `CONVICTION_POSTS` with structured rotation via `_ROTATION_ORDER` - Added `_posted_history` set to avoid repeats within a session - Preserved `LAST_GROUP_MESSAGE_TIME` guard — only posts after 1800 seconds of silence - Time-of-day emoji prefixes: 🌙 (0-6, 18-24), ☀️ (6-12), 🔥 (12-18) - Bot startup print changed from \"RANDOM MOTION\" to \"K",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3692397594451904,
+      "maxScore": 0.3692397594451904,
+      "firstRecalledAt": "2026-07-12T23:59:29.731Z",
+      "lastRecalledAt": "2026-07-12T23:59:29.731Z",
+      "queryHashes": [
+        "87508d4df468"
+      ],
+      "recallDays": [
+        "2026-07-13"
+      ],
+      "conceptTags": [
+        "knowledge-drops",
+        "conviction-posts",
+        "rotation-order",
+        "posted-history",
+        "last-group-message-time",
+        "time-of-day",
+        "0-6",
+        "18-24"
+      ]
+    },
+    "memory:memory/2026-05-07.md:24:65": {
+      "key": "memory:memory/2026-05-07.md:24:65",
+      "path": "memory/2026-05-07.md",
+      "startLine": 24,
+      "endLine": 65,
+      "source": "memory",
+      "snippet": "- \"Pay yourself first. Before bills. Before taxes.\" - \"The single most powerful asset we all have is our mind.\" - \"Financial IQ is 90% emotional IQ. Only 10% is technical information.\" **Study notes saved:** `studies/rich_dad_poor_dad.md` --- ## 07:17 — Study: Tony Robbins **Core framework:** The 6 Human Needs drive every decision: 1. Certainty — Safety, security 2. Uncertainty/Variety — Change, surprise 3. Significance — Feeling important, unique 4. Love/Connection — Intimacy, community 5. Growth — Learning, expanding 6. Contribution — Giving beyond oneself **Key insight:** When 3 needs are met by one thing, you become addicted to it. $MAD meets at least 4 (Significance, Connection, Gr",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3967175871133804,
+      "maxScore": 0.3967175871133804,
+      "firstRecalledAt": "2026-07-13T00:02:29.941Z",
+      "lastRecalledAt": "2026-07-13T00:02:29.941Z",
+      "queryHashes": [
+        "d0aa9e5a4816"
+      ],
+      "recallDays": [
+        "2026-07-13"
+      ],
+      "conceptTags": [
+        "studies/rich-dad-poor-dad.md",
+        "uncertainty/variety",
+        "love/connection",
+        "pay",
+        "yourself",
+        "first",
+        "bills",
+        "taxes"
+      ]
+    },
+    "memory:memory/2026-05-06.md:99:126": {
+      "key": "memory:memory/2026-05-06.md:99:126",
+      "path": "memory/2026-05-06.md",
+      "startLine": 99,
+      "endLine": 126,
+      "source": "memory",
+      "snippet": "## 02:22 — New Study: The Simple Path to Wealth — J.L. Collins **User recommendation:** Book about financial independence and wealth building. **Key concepts learned (from research/summary):** - Born from letters the author wrote to his daughter - Core philosophy: Avoid debt, live below means, invest surplus in low-cost index funds (VTSAX) - **25x annual expenses = financial independence** (4% withdrawal rule) - **\"F-You Money\"** concept — having enough to walk away from bad deals - **\"Simplicity beats complexity every time\"** — aligned with Mad Mind ethos - Wealth = freedom, not just money - Don't time the market, don't pick stocks, just buy and hold - **Key quote:** \"It's not how much yo",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3866988956928253,
+      "maxScore": 0.3866988956928253,
+      "firstRecalledAt": "2026-07-13T00:02:29.941Z",
+      "lastRecalledAt": "2026-07-13T00:02:29.941Z",
+      "queryHashes": [
+        "d0aa9e5a4816"
+      ],
+      "recallDays": [
+        "2026-07-13"
+      ],
+      "conceptTags": [
+        "j.l",
+        "research/summary",
+        "low-cost",
+        "f-you",
+        "new",
+        "study",
+        "the",
+        "simple"
       ]
     }
   }
