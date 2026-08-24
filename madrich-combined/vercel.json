@@ -5,14 +5,15 @@
   "installCommand": "npm install",
   "framework": "vite",
   "rewrites": [
-    {
-      "source": "/:path(.*\\.(png|jpg|jpeg|webp|gif|mp4|glb|svg|mp3))",
-      "destination": "/:path"
-    },
-    {
-      "source": "/((?!.*\\.(?:js|css|png|jpg|jpeg|webp|gif|mp4|glb|svg|mp3|ico|woff|woff2|txt|map|json)).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/:path(.*\\.png)", "destination": "/:path" },
+    { "source": "/:path(.*\\.jpg)", "destination": "/:path" },
+    { "source": "/:path(.*\\.jpeg)", "destination": "/:path" },
+    { "source": "/:path(.*\\.webp)", "destination": "/:path" },
+    { "source": "/:path(.*\\.gif)", "destination": "/:path" },
+    { "source": "/:path(.*\\.mp4)", "destination": "/:path" },
+    { "source": "/:path(.*\\.glb)", "destination": "/:path" },
+    { "source": "/:path(.*\\.svg)", "destination": "/:path" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {
