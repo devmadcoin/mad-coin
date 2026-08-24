@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import DeskFloor from "@/components/DeskFloor";
 import PageShell from "@/components/PageShell";
 import PhantomConnect from "@/components/PhantomConnect";
 import Reveal from "@/components/Reveal";
@@ -304,6 +305,7 @@ export default function Tools() {
         </>
       }
       sub="Holder tools on Solana. Hold 50,000 $MAD to unlock. We only read balance."
+      top={<DeskFloor />}
     >
       <Reveal>
         <PhantomConnect
