@@ -6,6 +6,7 @@ import Testimonials from "@/sections/Testimonials";
 import Chronicles from "@/sections/Chronicles";
 import CommandCenter from "@/sections/CommandCenter";
 import Team from "@/sections/Team";
+import BuiltOpen from "@/sections/BuiltOpen";
 import StatementMarquee from "@/sections/StatementMarquee";
 import Join from "@/sections/Join";
 
@@ -21,6 +22,7 @@ export default function Home() {
       <Chronicles />
       <CommandCenter />
       <Team />
+      <BuiltOpen />
       <StatementMarquee text="Get $MAD Rich" reverse />
       <Join />
     </>

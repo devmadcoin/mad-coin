@@ -11,6 +11,7 @@ import Game from "@/pages/Game";
 import MadArt from "@/pages/MadArt";
 import Rewards from "@/pages/Rewards";
 import Merch from "@/pages/Merch";
+import Tools from "@/pages/Tools";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -35,6 +36,7 @@ export default function App() {
         <Route path="/mad-art" element={<MadArt />} />
         <Route path="/rewards" element={<Rewards />} />
         <Route path="/merch" element={<Merch />} />
+        <Route path="/tools" element={<Tools />} />
         <Route path="*" element={<Home />} />
       </Routes>
       <Footer />
