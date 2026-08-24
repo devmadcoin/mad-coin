@@ -203,7 +203,7 @@ export default function Rewards() {
   return (
     <>
       <div className="relative h-[300px] overflow-hidden sm:h-[380px]">
-        <img src="/assets/rewards-banner.png" alt="$MAD Rewards" className="h-full w-full object-cover object-center" />
+        <img src="/rewards-banner.png" alt="$MAD Rewards" className="h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-transparent to-ink" />
       </div>
 

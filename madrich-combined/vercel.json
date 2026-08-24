@@ -5,7 +5,14 @@
   "installCommand": "npm install",
   "framework": "vite",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/:path(.*\\.(png|jpg|jpeg|webp|gif|mp4|glb|svg|mp3))",
+      "destination": "/:path"
+    },
+    {
+      "source": "/((?!.*\\.(?:js|css|png|jpg|jpeg|webp|gif|mp4|glb|svg|mp3|ico|woff|woff2|txt|map|json)).*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {

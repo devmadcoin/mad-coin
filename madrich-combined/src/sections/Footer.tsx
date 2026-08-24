@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="flex flex-col items-center gap-8">
           <div className="flex items-center gap-3">
-            <img src="/assets/mad-logo.png" alt="$MAD" className="h-9 w-9 rounded-full" />
+            <img src="/mad-logo.png" alt="$MAD" className="h-9 w-9 rounded-full" />
             <span className="font-display text-lg tracking-wide text-bone">$MAD RICH CLUB</span>
           </div>
 

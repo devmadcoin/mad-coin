@@ -23,7 +23,7 @@ export default function Game() {
       <Reveal>
         <div className="relative overflow-hidden rounded-3xl border border-mad/25 shadow-glow-sm">
           <video
-            src="/assets/game/mad-banner.mp4"
+            src="/game/mad-banner.mp4"
             autoPlay
             loop
             muted

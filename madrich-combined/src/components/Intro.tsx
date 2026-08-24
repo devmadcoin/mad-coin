@@ -17,7 +17,7 @@ export default function Intro() {
           className="fixed inset-0 z-[200] flex items-center justify-center bg-ink"
         >
           <motion.img
-            src="/assets/mad-logo.png"
+            src="/mad-logo.png"
             alt=""
             initial={{ scale: 0.5, opacity: 0, rotate: -12 }}
             animate={{ scale: 1, opacity: 1, rotate: 0 }}
