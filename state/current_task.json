@@ -1,17 +1,13 @@
 {
-  "current_focus": "Restore MadClaw f6eda7b site into madrich-combined + Clawd Phantom connect",
-  "started_at": "2026-08-24T11:22:00Z",
+  "current_focus": "Desk Floor visual on /tools — preview PR only, do not merge or production-deploy",
+  "started_at": "2026-08-24T12:04:00Z",
   "status": "in_progress",
-  "source_of_truth": "f6eda7bd5d2d9c696ac8a86b24f5a681e9ef65d4",
-  "later_fixes": [
-    "50k $MAD Solana-only gate",
-    "public image srcs",
-    "vercel.json media identity rewrites"
-  ],
-  "next_steps": [
-    "Build Vite app",
-    "Push PR",
-    "Wait for Vercel mad-coin READY",
-    "Merge to main"
+  "prior": "Restore MadClaw f6eda7b site into madrich-combined + Clawd Phantom connect",
+  "source_of_truth_note": "Live madrichclub.com is Instant Rollback to CLI snapshot dpl_Gxooye / mad-coin-nx2i8b0au. Git main is not the live site.",
+  "notes": [
+    "Smallest change: DeskFloor on /tools only",
+    "50k $MAD gate unchanged",
+    "No wallet keys",
+    "Human must CLI-deploy onto rolled-back site later — never merge-over production"
   ]
 }

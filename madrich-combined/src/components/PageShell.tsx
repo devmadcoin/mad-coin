@@ -6,17 +6,20 @@ export default function PageShell({
   eyebrow,
   title,
   sub,
+  top,
   children,
 }: {
   eyebrow: string;
   title: ReactNode;
   sub?: string;
+  top?: ReactNode;
   children: ReactNode;
 }) {
   return (
     <div className="relative min-h-screen pt-32">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[480px] bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(234,32,34,0.12),transparent_70%)]" />
       <div className="relative mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+        {top && <div className="mb-10">{top}</div>}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
