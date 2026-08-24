@@ -286,8 +286,8 @@ export default function Tools() {
               Hold {MAD_GATE_AMOUNT.toLocaleString()} $MAD to unlock. We only read balance.
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm text-ash">
-              Connect Phantom — no transaction, no signature, no spend. Chain switcher, pause, timer,
-              and LIVE chrome stay off until you unlock (this build is Solana-only).
+              Connect Phantom — no transaction, no signature, no spend. Solana only. No chain
+              switcher, pause, timer, or LIVE chrome.
             </p>
             <p className="mx-auto mt-4 max-w-xl break-all font-mono text-[11px] text-mad-bright sm:text-xs">
               {CA}
