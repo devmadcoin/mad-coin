@@ -93,7 +93,7 @@ export default function Hero() {
         >
           <div className="absolute inset-0 -z-10 scale-125 rounded-full bg-mad/25 blur-[70px] animate-pulse-glow" />
           <motion.img
-            src="/assets/mad-logo.png"
+            src="/mad-logo.png"
             alt="$MAD angry face"
             style={{ rotateX, rotateY }}
             className="h-32 w-32 animate-floaty drop-shadow-[0_0_35px_rgba(234,32,34,0.45)] sm:h-40 sm:w-40"

@@ -12,7 +12,7 @@ export default function MadArt() {
       <div className="relative w-full overflow-hidden">
         <div className="relative aspect-[3/1] w-full max-h-[500px]">
           <img
-            src="/assets/mad-art/mad-banner-everyone-getting-mad.png"
+            src="/mad-art/mad-banner-everyone-getting-mad.png"
             alt="Everyone Getting MAD"
             className="h-full w-full object-cover object-center"
           />

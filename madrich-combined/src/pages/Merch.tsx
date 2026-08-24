@@ -108,7 +108,7 @@ function MerchHero() {
   return (
     <section className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden">
       <img
-        src="/assets/merch/hero/merch-hero-bg.jpg"
+        src="/merch/hero/merch-hero-bg.jpg"
         alt="$MAD merch"
         className="absolute inset-0 h-full w-full object-cover"
       />
@@ -149,7 +149,7 @@ function LegacyDrop() {
         <div className="grid overflow-hidden rounded-3xl border border-white/5 bg-panel lg:grid-cols-2">
           <div className="flex items-center justify-center bg-black/40 p-8">
             <img
-              src="/assets/merch/mad-limited-001-hat.png"
+              src="/merch/mad-limited-001-hat.png"
               alt="MAD // LIMITED 001 Hat"
               className="max-h-72 object-contain"
             />
@@ -301,9 +301,9 @@ function ProductGrid() {
 /* ─── Proof Grid ─── */
 function ProofGrid() {
   const proofImages = [
-    { src: "/assets/proof/mad-sticker-1.png", alt: "Sticker on laptop", caption: "Got my sticker. Laptop game strong." },
-    { src: "/assets/proof/mad-sticker-2.png", alt: "Sticker on water bottle", caption: "Hydrated and $MAD." },
-    { src: "/assets/proof/mad-sticker-3.png", alt: "Sticker on phone case", caption: "Mobile $MAD energy." },
+    { src: "/proof/mad-sticker-1.png", alt: "Sticker on laptop", caption: "Got my sticker. Laptop game strong." },
+    { src: "/proof/mad-sticker-2.png", alt: "Sticker on water bottle", caption: "Hydrated and $MAD." },
+    { src: "/proof/mad-sticker-3.png", alt: "Sticker on phone case", caption: "Mobile $MAD energy." },
   ];
 
   return (

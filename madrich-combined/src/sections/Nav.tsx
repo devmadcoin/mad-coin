@@ -30,7 +30,7 @@ export default function Nav() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
           <Link to="/" className="flex shrink-0 items-center gap-3">
             <img
-              src="/assets/mad-logo.png"
+              src="/mad-logo.png"
               alt="$MAD"
               className="h-10 w-10 rounded-full shadow-glow-sm transition-transform duration-300 hover:rotate-[-8deg] hover:scale-110"
             />

@@ -460,7 +460,7 @@ export default function MadMind() {
   return (
     <>
       <div className="relative h-[300px] overflow-hidden sm:h-[380px]">
-        <img src="/assets/mad-ai-banner.png" alt="$MAD AI Labs" className="h-full w-full object-cover object-center" />
+        <img src="/mad-ai-banner.png" alt="$MAD AI Labs" className="h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-transparent to-ink" />
       </div>
 
