@@ -472,10 +472,8 @@ export default function Tools() {
                 </span>
               </div>
               <p className="text-sm leading-relaxed text-ash">
-                A Solana wallet lookup for $MAD is sketched in the repo but is not a live product — it
-                depends on a private RPC key and still has mock fallbacks. We are not shipping fake
-                scans, whale tags, or “smart money” signals. When it ships, it will read public Solana
-                data only.
+                Not live yet. A Solana wallet lookup for $MAD is sketched in the repo but unfinished.
+                We are not showing mock scans, whale tags, or trade signals.
               </p>
             </>
           )}
