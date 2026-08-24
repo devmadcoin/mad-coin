@@ -4,6 +4,7 @@ export const PAGE_LINKS = [
   { label: "Community", href: "/community" },
   { label: "Roadmap", href: "/roadmap" },
   { label: "Game", href: "/game" },
+  { label: "Tools", href: "/tools" },
   { label: "MAD Art", href: "/mad-art" },
   { label: "Rewards", href: "/rewards" },
   { label: "Shop", href: "/merch" },
