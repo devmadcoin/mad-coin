@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   AlertTriangle,
   Crosshair,
@@ -34,7 +34,7 @@ const AGENTS: Record<AgentId, Agent> = {
   SHILL: { id: "SHILL", name: "SHILL", role: "Noise", color: "#C084FC", Icon: Megaphone },
   SNIPER: { id: "SNIPER", name: "SNIPER", role: "Setup", color: "#4ADE80", Icon: Crosshair },
   RISK: { id: "RISK", name: "RISK", role: "Size", color: "#FBBF24", Icon: ShieldAlert },
-  EXIT: { id: "EXIT", name: "EXIT", role: "Leave", color: "#FB923C", Icon: LogOut },
+  EXIT: { id: "EXIT", name: "EXIT", role: "Out", color: "#FB923C", Icon: LogOut },
 };
 
 const TICKER = [
@@ -77,7 +77,7 @@ const TRADE_LINES: Line[] = [
 
 const ALPHA_SEATS: AgentId[] = ["SEARCH", "WHALE", "RUG", "SHILL"];
 const TRADE_SEATS: AgentId[] = ["SNIPER", "RISK", "EXIT"];
-const VISIBLE = 4;
+const VISIBLE = 3;
 
 function windowed(lines: Line[], tick: number) {
   const out: { agent: AgentId; text: string; k: number }[] = [];
@@ -118,21 +118,21 @@ function Nameplate({ id, speaking }: { id: AgentId; speaking: boolean }) {
 function Bubble({ agent, text }: { agent: AgentId; text: string }) {
   const a = AGENTS[agent];
   return (
-    <div className="flex items-start gap-2">
+    <div className="flex shrink-0 items-start gap-2">
       <span
         className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border"
-        style={{ background: `${a.color}18`, color: a.color, borderColor: `${a.color}55` }}
+        style={{ background: `${a.color}22`, color: a.color, borderColor: `${a.color}66` }}
       >
         <a.Icon className="h-3.5 w-3.5" strokeWidth={2.2} />
       </span>
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: a.color }}>
             {a.name === "Chief Of Memecoins" ? "CHIEF" : a.name}
           </span>
           <span className="truncate font-mono text-[9px] uppercase tracking-widest text-ash/70">{a.role}</span>
         </div>
-        <p className="mt-0.5 rounded-2xl rounded-tl-sm border border-white/8 bg-black/45 px-2.5 py-1.5 text-[11px] leading-snug text-bone/90 sm:text-xs">
+        <p className="mt-0.5 rounded-2xl rounded-tl-sm border border-white/10 bg-[#101018] px-2 py-1 text-[11px] leading-snug text-bone">
           {text}
         </p>
       </div>
@@ -158,7 +158,7 @@ function Room({
   const msgs = windowed(lines, tick);
   const speaking = msgs[msgs.length - 1]?.agent;
   return (
-    <div className="flex min-h-0 flex-col border-white/8 bg-[#07070a]/80 max-md:border-b md:border-r md:last:border-r-0">
+    <div className="flex min-h-0 flex-col border-white/8 bg-[#07070a]/80 border-r last:border-r-0">
       <div className="flex items-center justify-between gap-2 border-b border-white/8 px-3 py-2">
         <div className="flex items-center gap-2">
           <span className={cn("h-1.5 w-1.5 rounded-full", id === "alpha" ? "bg-cyan-400" : "bg-emerald-400")} />
@@ -172,23 +172,21 @@ function Room({
         ))}
         <Nameplate id="CHIEF" speaking={speaking === "CHIEF"} />
       </div>
-      <div className="relative h-[210px] overflow-hidden px-3 py-2.5 sm:h-[228px]">
-        <div className="flex h-full flex-col justify-end gap-2.5">
-          <AnimatePresence initial={false} mode="popLayout">
-            {msgs.map((m) => (
-              <motion.div
-                key={m.k}
-                initial={reduce ? false : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? undefined : { opacity: 0, y: -8 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <Bubble agent={m.agent} text={m.text} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+      <div className="relative h-[228px] overflow-hidden px-3 py-2">
+        <div className="flex h-full flex-col justify-end gap-2">
+          {msgs.map((m, i) => (
+            <motion.div
+              key={m.k}
+              initial={reduce ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: i === 0 ? 0.55 : 1, y: 0 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              className="shrink-0"
+            >
+              <Bubble agent={m.agent} text={m.text} />
+            </motion.div>
+          ))}
         </div>
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[#07070a] to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-7 bg-gradient-to-b from-[#07070a] to-transparent" />
       </div>
     </div>
   );
@@ -274,7 +272,7 @@ export default function DeskFloor() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-2">
         <Room
           id="alpha"
           title="Alpha floor"
