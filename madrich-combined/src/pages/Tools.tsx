@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PageShell from "@/components/PageShell";
+import PhantomConnect from "@/components/PhantomConnect";
 import Reveal from "@/components/Reveal";
-import { CA, LINKS } from "@/lib/data";
+import { CA } from "@/lib/data";
 import {
   MAD_GATE_AMOUNT,
   getMadBalance,
@@ -10,7 +11,6 @@ import {
 } from "@/lib/mad-gate";
 import { cn } from "@/lib/utils";
 
-const PHANTOM_INSTALL = "https://phantom.app/";
 const DCA_KEY = "madrich-dca";
 
 type ToolId = "overview" | "stream" | "tokens" | "wallet" | "scanner" | "dca" | "alerts" | "exits";
@@ -200,19 +200,20 @@ export default function Tools() {
   const [balance, setBalance] = useState(0);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState("");
+  const [status, setStatus] = useState("");
   const [open, setOpen] = useState<ToolId>("overview");
 
   const unlocked = !!address && balance >= MAD_GATE_AMOUNT;
   const mobile = useMemo(() => isMobileUserAgent(), []);
-  const need = Math.max(0, MAD_GATE_AMOUNT - balance);
-  const pct = Math.min(100, (balance / MAD_GATE_AMOUNT) * 100);
   const active = TOOLS.find((t) => t.id === open)!;
 
   async function readBalance(addr: string) {
     setChecking(true);
     setError("");
     try {
-      setBalance(await getMadBalance(addr));
+      const n = await getMadBalance(addr);
+      setBalance(n);
+      setStatus(`$MAD balance: ${n.toLocaleString()}`);
     } catch (err) {
       setBalance(0);
       setError(err instanceof Error ? err.message : "Balance check failed. Try again.");
@@ -221,8 +222,9 @@ export default function Tools() {
     }
   }
 
-  async function connect() {
+  async function connect(opts?: { onlyIfTrusted?: boolean }) {
     setError("");
+    if (!opts?.onlyIfTrusted) setStatus("");
     const provider = window.solana;
     if (!provider) {
       if (mobile) {
@@ -231,16 +233,19 @@ export default function Tools() {
         window.location.href = `https://phantom.app/ul/v1/connect?app_url=${origin}&redirect_link=${app}&cluster=mainnet-beta`;
         return;
       }
-      setError("Phantom not found.");
+      setError("Phantom not found. Install Phantom, then connect.");
       return;
     }
     try {
-      const res = await provider.connect();
+      const res = await provider.connect(opts);
       const addr = res.publicKey.toString();
       setAddress(addr);
+      setStatus(`Wallet connected: ${shortAddr(addr)}`);
       await readBalance(addr);
     } catch {
-      setError("Wallet connection cancelled or failed.");
+      if (!opts?.onlyIfTrusted) {
+        setError("Wallet connection cancelled or failed.");
+      }
     }
   }
 
@@ -252,6 +257,7 @@ export default function Tools() {
     }
     setAddress(null);
     setBalance(0);
+    setStatus("Wallet disconnected.");
     setError("");
   }
 
@@ -268,6 +274,27 @@ export default function Tools() {
     }, 300);
   }
 
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const provider = window.solana;
+      if (!provider?.connect) return;
+      try {
+        const res = await provider.connect({ onlyIfTrusted: true });
+        if (cancelled) return;
+        const addr = res.publicKey.toString();
+        setAddress(addr);
+        setStatus(`Wallet connected: ${shortAddr(addr)}`);
+        await readBalance(addr);
+      } catch {
+        /* origin not yet trusted — wait for an explicit Connect click */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <PageShell
       eyebrow="Solana · 50,000 $MAD"
@@ -279,112 +306,17 @@ export default function Tools() {
       sub="Holder tools on Solana. Hold 50,000 $MAD to unlock. We only read balance."
     >
       <Reveal>
-        <div className="overflow-hidden rounded-3xl border border-white/8 bg-panel">
-          <div className="border-b border-white/8 bg-black/40 px-6 py-5 text-center sm:px-8">
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-mad">Solana only · Phantom</p>
-            <h2 className="mt-2 font-display text-2xl uppercase text-bone sm:text-3xl">
-              Hold {MAD_GATE_AMOUNT.toLocaleString()} $MAD to unlock. We only read balance.
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-ash">
-              Connect Phantom — no transaction, no signature, no spend. Solana only. No chain
-              switcher, pause, timer, or LIVE chrome.
-            </p>
-            <p className="mx-auto mt-4 max-w-xl break-all font-mono text-[11px] text-mad-bright sm:text-xs">
-              {CA}
-            </p>
-            <div className="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <a
-                href={LINKS.buy}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full bg-mad px-6 py-3 text-sm font-bold uppercase tracking-wider text-white shadow-glow-sm transition hover:scale-105 hover:shadow-glow"
-              >
-                Buy $MAD on Jupiter
-              </a>
-              <button
-                type="button"
-                onClick={() => void navigator.clipboard.writeText(CA)}
-                className="rounded-full border border-white/15 px-6 py-3 text-sm font-bold uppercase tracking-wider text-bone transition hover:border-mad/50"
-              >
-                Copy CA
-              </button>
-            </div>
-          </div>
-
-          <div className="px-6 py-6 sm:px-8">
-            {!address ? (
-              <div className="flex flex-col items-center gap-4 text-center">
-                {mobile && (
-                  <p className="max-w-md text-sm text-ash">
-                    On mobile, open the <span className="text-bone">Phantom app</span>, tap the globe,
-                    and come back here.
-                  </p>
-                )}
-                <button
-                  onClick={() => void connect()}
-                  disabled={checking}
-                  className="rounded-full border border-mad/50 bg-mad/15 px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-bone transition hover:bg-mad hover:text-white disabled:opacity-60"
-                >
-                  {checking ? "Checking balance…" : "Connect wallet"}
-                </button>
-                <a
-                  href={PHANTOM_INSTALL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-mono text-xs uppercase tracking-widest text-mad-bright underline decoration-mad/40 underline-offset-4 hover:text-bone"
-                >
-                  Install Phantom →
-                </a>
-                {error && (
-                  <p className="font-mono text-xs text-mad-bright">
-                    {error}{" "}
-                    <a href={PHANTOM_INSTALL} target="_blank" rel="noreferrer" className="underline">
-                      Install Phantom
-                    </a>
-                  </p>
-                )}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-4 text-center">
-                <p className="font-mono text-xs text-ash">
-                  Connected <span className="text-green-400">{shortAddr(address)}</span>
-                </p>
-                <p className="font-display text-3xl text-bone">
-                  {checking ? "…" : balance.toLocaleString()}
-                  <span className="text-lg text-ash"> / {MAD_GATE_AMOUNT.toLocaleString()} $MAD</span>
-                </p>
-                <div className="h-2 w-full max-w-sm overflow-hidden rounded-full bg-black/50">
-                  <div
-                    className={cn("h-full rounded-full transition-all duration-500", unlocked ? "bg-green-500" : "bg-mad")}
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-                <p className="text-sm text-ash">
-                  {unlocked
-                    ? "Gate cleared. DCA tracker is local; other tabs stay Coming until they are wired."
-                    : balance === 0
-                      ? "No $MAD in this wallet."
-                      : `${need.toLocaleString()} more $MAD to unlock.`}
-                </p>
-                {error && <p className="font-mono text-xs text-mad-bright">{error}</p>}
-                <div className="flex flex-wrap justify-center gap-2">
-                  <button
-                    onClick={() => void switchWallet()}
-                    className="rounded-full border border-white/15 px-5 py-2 text-xs font-bold uppercase tracking-wider text-bone transition hover:border-mad/50"
-                  >
-                    Switch wallet
-                  </button>
-                  <button
-                    onClick={() => void disconnect()}
-                    className="rounded-full border border-white/10 px-5 py-2 text-xs font-bold uppercase tracking-wider text-ash transition hover:text-bone"
-                  >
-                    Disconnect
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        <PhantomConnect
+          address={address}
+          balance={balance}
+          checking={checking}
+          unlocked={unlocked}
+          error={error}
+          status={status}
+          onConnect={() => void connect()}
+          onDisconnect={() => void disconnect()}
+          onSwitch={() => void switchWallet()}
+        />
       </Reveal>
 
       <p className="mt-10 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-ash">
