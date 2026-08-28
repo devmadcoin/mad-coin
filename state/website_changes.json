@@ -2,6 +2,13 @@
   "queue": [],
   "completed": [
     {
+      "task": "Add public Grok Desk tab at /grok-desk",
+      "date": "2026-08-28",
+      "status": "pr",
+      "branch": "cursor/grok-desk-tab-04e4",
+      "pr": "https://github.com/devmadcoin/mad-coin/pull/6"
+    },
+    {
       "task": "rewards: add DexScreener clarification",
       "date": "2026-06-11",
       "status": "deployed",

@@ -1,17 +1,17 @@
-import { Routes, Route, useLocation } from "react-router";
+import { Routes, Route, Navigate, useLocation } from "react-router";
 import { useEffect } from "react";
 import Nav from "@/sections/Nav";
 import Footer from "@/sections/Footer";
 import Intro from "@/components/Intro";
 import Home from "@/pages/Home";
-import MadMind from "@/pages/MadMind";
+import About from "@/pages/About";
 import Community from "@/pages/Community";
-import Roadmap from "@/pages/Roadmap";
 import Game from "@/pages/Game";
 import MadArt from "@/pages/MadArt";
-import Rewards from "@/pages/Rewards";
+import MapPage from "@/pages/Map";
 import Merch from "@/pages/Merch";
 import Tools from "@/pages/Tools";
+import GrokDesk from "@/pages/GrokDesk";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -29,14 +29,19 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/mad-mind" element={<MadMind />} />
+        <Route path="/about" element={<About />} />
         <Route path="/community" element={<Community />} />
-        <Route path="/roadmap" element={<Roadmap />} />
-        <Route path="/game" element={<Game />} />
         <Route path="/mad-art" element={<MadArt />} />
-        <Route path="/rewards" element={<Rewards />} />
+        <Route path="/map" element={<MapPage />} />
+        <Route path="/game" element={<Game />} />
         <Route path="/merch" element={<Merch />} />
         <Route path="/tools" element={<Tools />} />
+        <Route path="/grok-desk" element={<GrokDesk />} />
+        <Route path="/mad-mind" element={<Navigate to="/about" replace />} />
+        <Route path="/roadmap" element={<Navigate to="/about" replace />} />
+        <Route path="/fuel" element={<Navigate to="/about" replace />} />
+        <Route path="/rewards" element={<Navigate to="/about" replace />} />
+        <Route path="/journal" element={<Home />} />
         <Route path="*" element={<Home />} />
       </Routes>
       <Footer />

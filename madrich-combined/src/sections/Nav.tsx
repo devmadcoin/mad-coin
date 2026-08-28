@@ -55,7 +55,7 @@ export default function Nav() {
                 end={l.href === "/"}
                 className={({ isActive }) =>
                   cn(
-                    "rounded-full px-3 py-1.5 text-[13px] font-medium transition-all duration-200",
+                    "rounded-full px-2.5 py-1.5 text-[12px] font-medium transition-all duration-200 xl:px-3 xl:text-[13px]",
                     isActive
                       ? l.label === "Shop"
                         ? "bg-mad text-white shadow-glow-sm"
