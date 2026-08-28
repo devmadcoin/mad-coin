@@ -139,10 +139,9 @@ function RiskSeat() {
   return (
     <Seat name="Risk" badge="PASS / WATCH / KILL">
       <p className="text-sm leading-relaxed text-ash">
-        PASS / WATCH / KILL plus one reason. WATCH is not a PASS. WATCH is not a quote.
-        Unverifiable is a kill. No quote. No buy button.
+        PASS / WATCH / KILL. Unverifiable is a kill. WATCH is not a quote.
       </p>
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2" aria-label="Risk gate">
         {["PASS", "WATCH", "KILL"].map((g) => (
           <span
             key={g}
@@ -157,6 +156,9 @@ function RiskSeat() {
           </span>
         ))}
       </div>
+      <p className="mt-3 text-sm leading-relaxed text-ash">
+        Only PASS can quote. WATCH is not a quote. No buy button. No autotrade.
+      </p>
       <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.25em] text-mad">Hard skips</p>
       <ul className="mt-2 space-y-1.5 text-sm text-ash">
         {skips.map((s) => (
