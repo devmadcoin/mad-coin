@@ -3,8 +3,9 @@
     {
       "task": "Grok Desk Risk copy: PASS / WATCH / KILL (unverifiable is a kill; WATCH is not a quote)",
       "date": "2026-08-28",
-      "status": "in_progress",
-      "branch": "cursor/grok-desk-risk-copy-04e4"
+      "status": "pr",
+      "branch": "cursor/grok-desk-risk-copy-04e4",
+      "pr": "https://github.com/devmadcoin/mad-coin/pull/7"
     },
     {
       "task": "Point www.madrichclub.com at merged Grok Desk (undo Instant Rollback)",

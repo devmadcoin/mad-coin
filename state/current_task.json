@@ -4,5 +4,6 @@
   "status": "in_progress",
   "route": "/grok-desk",
   "branch": "cursor/grok-desk-risk-copy-04e4",
+  "pr": "https://github.com/devmadcoin/mad-coin/pull/7",
   "notes": "No fake P&L, no autotrade, Buy $MAD only in header. www still on Instant Rollback until domain aliases move."
 }
