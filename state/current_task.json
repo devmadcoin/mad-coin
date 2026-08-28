@@ -1,17 +1,12 @@
 {
-  "current_focus": "Restore MadClaw f6eda7b site into madrich-combined + Clawd Phantom connect",
-  "started_at": "2026-08-24T11:22:00Z",
+  "current_focus": "Add public Grok Desk tab to MAD marketing site",
+  "started_at": "2026-08-28T09:08:00Z",
   "status": "in_progress",
-  "source_of_truth": "f6eda7bd5d2d9c696ac8a86b24f5a681e9ef65d4",
-  "later_fixes": [
-    "50k $MAD Solana-only gate",
-    "public image srcs",
-    "vercel.json media identity rewrites"
-  ],
+  "route": "/grok-desk",
+  "source_of_truth": "madrich-combined Vite app",
   "next_steps": [
-    "Build Vite app",
-    "Push PR",
-    "Wait for Vercel mad-coin READY",
-    "Merge to main"
+    "Commit and push cursor/grok-desk-tab-04e4",
+    "Open PR",
+    "Verify nav + page render"
   ]
 }

@@ -5,10 +5,33 @@ export const PAGE_LINKS = [
   { label: "Roadmap", href: "/roadmap" },
   { label: "Game", href: "/game" },
   { label: "Tools", href: "/tools" },
+  { label: "Grok Desk", href: "/grok-desk" },
   { label: "MAD Art", href: "/mad-art" },
   { label: "Rewards", href: "/rewards" },
   { label: "Shop", href: "/merch" },
 ];
+
+/* ---------------- GROK DESK ---------------- */
+
+export const GROK_DESK = {
+  quoteSol: 0.05,
+  lead: {
+    name: "Pump Desk",
+    badge: "Lead",
+    job: "Runs the Grok Bot Pump.fun desk. Quotes go to the human. Nothing fills without a confirm.",
+  },
+  seats: [
+    { name: "Tape", badge: "Scan", job: "Scans new Pump.fun mints." },
+    { name: "Risk", badge: "Guard", job: "Kills rugs." },
+    { name: "Fills", badge: "Quote", job: "Quotes 0.05 SOL. Confirm-only." },
+    { name: "Book", badge: "Watch", job: "Watches the $MAD bag." },
+  ],
+  rules: [
+    { label: "Confirm-only", copy: "Trades only happen after the human confirms. The bots do not autotrade." },
+    { label: "Default size", copy: "Fills quotes 0.05 SOL. That is the default ticket — not a live fill." },
+    { label: "House bag", copy: "$MAD is the bag on the book. CA, chart, and buy links below. No fake P&L." },
+  ],
+};
 
 /* ---------------- MAD AI ---------------- */
 
