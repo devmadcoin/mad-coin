@@ -5,6 +5,7 @@
   "installCommand": "npm install",
   "framework": "vite",
   "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/:path*" },
     { "source": "/:path(.*\\.png)", "destination": "/:path" },
     { "source": "/:path(.*\\.jpg)", "destination": "/:path" },
     { "source": "/:path(.*\\.jpeg)", "destination": "/:path" },

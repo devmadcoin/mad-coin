@@ -1,15 +1,15 @@
 {
-  "current_focus": "Add public Grok Desk tab to MAD marketing site",
-  "started_at": "2026-08-28T09:08:00Z",
-  "status": "done",
+  "current_focus": "Wire Grok Desk to real Pump.fun tape",
+  "started_at": "2026-08-28T21:00:00Z",
+  "status": "pr",
   "route": "/grok-desk",
-  "branch": "cursor/grok-desk-tab-04e4",
-  "pr": "https://github.com/devmadcoin/mad-coin/pull/6",
-  "source_of_truth": "madrich-combined Vite app",
+  "branch": "cursor/grok-desk-live-tape-8130",
+  "pr": "https://github.com/devmadcoin/mad-coin/pull/8",
+  "diagnosis": "Pump.fun 403s browser Origin madrichclub.com; proxy with Origin https://pump.fun",
   "verified": [
-    "Header and footer include Grok Desk",
-    "/grok-desk renders native PageShell look",
-    "No fake P&L or autotrade buttons",
-    "Desktop 1024/1280 and mobile 390"
+    "GET /api/pump-tape returns live prints, deskSol 0, no $MAD clips",
+    "Local /grok-desk walkers speak print/KILL from real tickets",
+    "Book Dex MC/liq from DexScreener; P&L em dash",
+    "Fills pad DARK; no buy/sign button"
   ]
 }

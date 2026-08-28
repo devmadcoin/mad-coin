@@ -22,10 +22,13 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const { pathname } = useLocation();
+  const desk = pathname === "/grok-desk";
+
   return (
     <>
-      <Intro />
-      <Nav />
+      {!desk && <Intro />}
+      {!desk && <Nav />}
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -44,7 +47,7 @@ export default function App() {
         <Route path="/journal" element={<Home />} />
         <Route path="*" element={<Home />} />
       </Routes>
-      <Footer />
+      {!desk && <Footer />}
     </>
   );
 }
