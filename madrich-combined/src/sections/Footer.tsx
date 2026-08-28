@@ -11,6 +11,7 @@ export default function Footer() {
             <span className="font-display text-lg tracking-wide text-bone">$MAD RICH CLUB</span>
           </div>
 
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ash/40">Quick Links</p>
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             {PAGE_LINKS.map((l) => (
               <Link

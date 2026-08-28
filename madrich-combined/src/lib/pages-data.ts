@@ -1,13 +1,12 @@
 export const PAGE_LINKS = [
   { label: "Home", href: "/" },
-  { label: "MAD AI", href: "/mad-mind" },
+  { label: "About $MAD", href: "/about" },
   { label: "Community", href: "/community" },
-  { label: "Roadmap", href: "/roadmap" },
-  { label: "Game", href: "/game" },
+  { label: "MAD Art", href: "/mad-art" },
+  { label: "Map", href: "/map" },
+  { label: "Games", href: "/game" },
   { label: "Tools", href: "/tools" },
   { label: "Grok Desk", href: "/grok-desk" },
-  { label: "MAD Art", href: "/mad-art" },
-  { label: "Rewards", href: "/rewards" },
   { label: "Shop", href: "/merch" },
 ];
 
@@ -15,23 +14,36 @@ export const PAGE_LINKS = [
 
 export const GROK_DESK = {
   quoteSol: 0.05,
+  slipPct: 15,
+  maxSol: 0.3,
+  ageOutMin: 45,
   lead: {
     name: "Pump Desk",
     badge: "Lead",
-    job: "Runs the Grok Bot Pump.fun desk. Quotes go to the human. Nothing fills without a confirm.",
+    job: "Confirm-only. Quotes go to the human. Phantom signs. Nothing fills without a greenlight.",
   },
-  seats: [
-    { name: "Tape", badge: "Scan", job: "Scans new Pump.fun mints." },
-    { name: "Risk", badge: "Guard", job: "Kills rugs." },
-    { name: "Fills", badge: "Quote", job: "Quotes 0.05 SOL. Confirm-only." },
-    { name: "Book", badge: "Watch", job: "Watches the $MAD bag." },
-  ],
-  rules: [
-    { label: "Confirm-only", copy: "Trades only happen after the human confirms. The bots do not autotrade." },
-    { label: "Default size", copy: "Fills quotes 0.05 SOL. That is the default ticket — not a live fill." },
-    { label: "House bag", copy: "$MAD is the bag on the book. CA, chart, and buy links below. No fake P&L." },
-  ],
 };
+
+export const MAP_BUSINESSES = [
+  {
+    id: "1",
+    name: "Driphouse Prints",
+    type: "Print Shop",
+    address: "25583 Avenue Stanford, Valencia, CA 91355",
+    description: "Premium printing services accepting $MAD. Custom apparel, stickers, and promotional materials.",
+    website: "https://www.driphouseprints.com/",
+    hours: "Mon–Fri: 9AM–6PM · Sat: 9AM–1PM · Sun: Closed",
+  },
+  {
+    id: "2",
+    name: "Warehouse Number Two",
+    type: "Retail / Streetwear",
+    address: "25000 Avenue Stanford, Santa Clarita, CA 91355",
+    description: "Underground streetwear and creative goods. Accepting $MAD for exclusive drops and community-driven fashion.",
+    website: "https://www.instagram.com/warehousenumber2two/",
+    hours: "Mon, Wed-Sun: 12PM - 5PM · Tue: Closed",
+  },
+];
 
 /* ---------------- MAD AI ---------------- */
 
