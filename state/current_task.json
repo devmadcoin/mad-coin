@@ -1,12 +1,15 @@
 {
   "current_focus": "Add public Grok Desk tab to MAD marketing site",
   "started_at": "2026-08-28T09:08:00Z",
-  "status": "in_progress",
+  "status": "done",
   "route": "/grok-desk",
+  "branch": "cursor/grok-desk-tab-04e4",
+  "pr": "https://github.com/devmadcoin/mad-coin/pull/6",
   "source_of_truth": "madrich-combined Vite app",
-  "next_steps": [
-    "Commit and push cursor/grok-desk-tab-04e4",
-    "Open PR",
-    "Verify nav + page render"
+  "verified": [
+    "Header and footer include Grok Desk",
+    "/grok-desk renders native PageShell look",
+    "No fake P&L or autotrade buttons",
+    "Desktop 1024/1280 and mobile 390"
   ]
 }
