@@ -2,6 +2,12 @@
   "queue": [],
   "completed": [
     {
+      "task": "Wire Grok Desk to real Pump.fun tape via same-origin proxy",
+      "date": "2026-08-28",
+      "status": "pr",
+      "branch": "cursor/grok-desk-live-tape-8130"
+    },
+    {
       "task": "Add public Grok Desk tab at /grok-desk",
       "date": "2026-08-28",
       "status": "pr",
