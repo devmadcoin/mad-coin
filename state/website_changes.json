@@ -1,13 +1,20 @@
 {
-  "queue": [],
-  "completed": [
+  "queue": [
     {
-      "task": "Add public Grok Desk tab at /grok-desk",
+      "task": "Grok Desk Risk copy: PASS / WATCH / KILL (unverifiable is a kill; WATCH is not a quote)",
       "date": "2026-08-28",
-      "status": "pr",
-      "branch": "cursor/grok-desk-tab-04e4",
-      "pr": "https://github.com/devmadcoin/mad-coin/pull/6"
+      "status": "in_progress",
+      "branch": "cursor/grok-desk-risk-copy-04e4"
     },
+    {
+      "task": "Point www.madrichclub.com at merged Grok Desk (undo Instant Rollback)",
+      "date": "2026-08-28",
+      "status": "blocked",
+      "pr": "https://github.com/devmadcoin/mad-coin/pull/6",
+      "note": "Git main has Grok Desk; www still aliases dpl_Gxooye Instant Rollback"
+    }
+  ],
+  "completed": [
     {
       "task": "rewards: add DexScreener clarification",
       "date": "2026-06-11",

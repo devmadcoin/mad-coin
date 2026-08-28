@@ -1,15 +1,8 @@
 {
-  "current_focus": "Add public Grok Desk tab to MAD marketing site",
-  "started_at": "2026-08-28T09:08:00Z",
-  "status": "done",
+  "current_focus": "Grok Desk Risk copy: PASS / WATCH / KILL, not “Kills rugs”",
+  "started_at": "2026-08-28T09:54:00Z",
+  "status": "in_progress",
   "route": "/grok-desk",
-  "branch": "cursor/grok-desk-tab-04e4",
-  "pr": "https://github.com/devmadcoin/mad-coin/pull/6",
-  "source_of_truth": "madrich-combined Vite app",
-  "verified": [
-    "Header and footer include Grok Desk",
-    "/grok-desk renders native PageShell look",
-    "No fake P&L or autotrade buttons",
-    "Desktop 1024/1280 and mobile 390"
-  ]
+  "branch": "cursor/grok-desk-risk-copy-04e4",
+  "notes": "No fake P&L, no autotrade, Buy $MAD only in header. www still on Instant Rollback until domain aliases move."
 }
