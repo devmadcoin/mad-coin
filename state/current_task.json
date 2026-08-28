@@ -4,7 +4,7 @@
   "status": "pr",
   "route": "/grok-desk",
   "branch": "cursor/grok-desk-live-tape-8130",
-  "source_of_truth": "madrich-combined Vite app",
+  "pr": "https://github.com/devmadcoin/mad-coin/pull/8",
   "diagnosis": "Pump.fun 403s browser Origin madrichclub.com; proxy with Origin https://pump.fun",
   "verified": [
     "GET /api/pump-tape returns live prints, deskSol 0, no $MAD clips",

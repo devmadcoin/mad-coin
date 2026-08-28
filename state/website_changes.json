@@ -5,7 +5,8 @@
       "task": "Wire Grok Desk to real Pump.fun tape via same-origin proxy",
       "date": "2026-08-28",
       "status": "pr",
-      "branch": "cursor/grok-desk-live-tape-8130"
+      "branch": "cursor/grok-desk-live-tape-8130",
+      "pr": "https://github.com/devmadcoin/mad-coin/pull/8"
     },
     {
       "task": "Add public Grok Desk tab at /grok-desk",
